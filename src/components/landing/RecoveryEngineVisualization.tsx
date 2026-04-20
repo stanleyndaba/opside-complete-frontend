@@ -33,44 +33,44 @@ const stageLabels = [
 const amazonNode: SceneNode = {
   id: 'amazon',
   label: 'Amazon',
-  x: 0.035,
-  y: 0.065,
+  x: 0.082,
+  y: 0.14,
   kind: 'input',
   iconSrc: '/AMZN.png',
   iconAlt: 'Amazon'
 };
 
 const inputNodes: SceneNode[] = [
-  { id: 'inventory', label: 'FBA Inventory', x: 0.14, y: 0.22, kind: 'input' },
-  { id: 'shipments', label: 'Shipments', x: 0.14, y: 0.34, kind: 'input' },
-  { id: 'returns', label: 'Returns / Refunds', x: 0.14, y: 0.46, kind: 'input' },
-  { id: 'fees', label: 'Fee Events', x: 0.14, y: 0.58, kind: 'input' },
-  { id: 'settlements', label: 'Settlement / Ledger', x: 0.14, y: 0.7, kind: 'input' },
-  { id: 'reimbursements', label: 'Reimbursements', x: 0.14, y: 0.82, kind: 'input' }
+  { id: 'inventory', label: 'FBA Inventory', x: 0.18, y: 0.26, kind: 'input' },
+  { id: 'shipments', label: 'Shipments', x: 0.18, y: 0.37, kind: 'input' },
+  { id: 'returns', label: 'Returns / Refunds', x: 0.18, y: 0.48, kind: 'input' },
+  { id: 'fees', label: 'Fee Events', x: 0.18, y: 0.59, kind: 'input' },
+  { id: 'settlements', label: 'Settlement / Ledger', x: 0.18, y: 0.7, kind: 'input' },
+  { id: 'reimbursements', label: 'Reimbursements', x: 0.18, y: 0.81, kind: 'input' }
 ];
 
 const stageNodes: SceneNode[] = [
-  { id: 'detect', label: 'Detect', x: 0.34, y: 0.52, kind: 'stage' },
-  { id: 'evidence', label: 'Evidence', x: 0.5, y: 0.52, kind: 'stage' },
-  { id: 'filing', label: 'Filing', x: 0.68, y: 0.52, kind: 'stage' },
-  { id: 'payout', label: 'Payout', x: 0.84, y: 0.52, kind: 'stage' }
+  { id: 'detect', label: 'Detect', x: 0.37, y: 0.52, kind: 'stage' },
+  { id: 'evidence', label: 'Evidence', x: 0.53, y: 0.52, kind: 'stage' },
+  { id: 'filing', label: 'Filing', x: 0.7, y: 0.52, kind: 'stage' },
+  { id: 'payout', label: 'Payout', x: 0.86, y: 0.52, kind: 'stage' }
 ];
 
 const outputNodes: SceneNode[] = [
-  { id: 'detected', label: 'Detected', x: 0.93, y: 0.22, kind: 'output' },
-  { id: 'evidence-ready', label: 'Evidence Ready', x: 0.93, y: 0.38, kind: 'output' },
-  { id: 'filed', label: 'Filed', x: 0.93, y: 0.52, kind: 'output' },
-  { id: 'approved', label: 'Approved', x: 0.93, y: 0.68, kind: 'output' },
-  { id: 'recovered', label: 'Recovered $', x: 0.93, y: 0.82, kind: 'output' }
+  { id: 'detected', label: 'Detected', x: 0.94, y: 0.24, kind: 'output' },
+  { id: 'evidence-ready', label: 'Evidence Ready', x: 0.94, y: 0.38, kind: 'output' },
+  { id: 'filed', label: 'Filed', x: 0.94, y: 0.52, kind: 'output' },
+  { id: 'approved', label: 'Approved', x: 0.94, y: 0.66, kind: 'output' },
+  { id: 'recovered', label: 'Recovered $', x: 0.94, y: 0.8, kind: 'output' }
 ];
 
 const evidenceSourceNodes: SceneNode[] = [
-  { id: 'gmail-source', label: 'Gmail', shortLabel: 'Gmail', x: 0.47, y: 0.3, kind: 'source', iconSrc: '/gmailicon.png', iconAlt: 'Gmail', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' },
-  { id: 'outlook-source', label: 'Outlook', shortLabel: 'Outlook', x: 0.4, y: 0.41, kind: 'source', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' },
-  { id: 'dropbox-source', label: 'Dropbox', shortLabel: 'Dropbox', x: 0.4, y: 0.63, kind: 'source', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' },
-  { id: 'onedrive-source', label: 'OneDrive', shortLabel: 'OneDrive', x: 0.47, y: 0.74, kind: 'source', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
-  { id: 'adobe-sign-source', label: 'Adobe Sign', shortLabel: 'Adobe Sign', x: 0.59, y: 0.3, kind: 'source', iconSrc: '/dobe.png', iconAlt: 'Adobe Sign' },
-  { id: 'slack-source', label: 'Slack', shortLabel: 'Slack', x: 0.59, y: 0.74, kind: 'source', iconSrc: '/slack-icon-2019.png', iconAlt: 'Slack', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' }
+  { id: 'gmail-source', label: 'Gmail', shortLabel: 'Gmail', x: 0.5, y: 0.29, kind: 'source', iconSrc: '/gmailicon.png', iconAlt: 'Gmail', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' },
+  { id: 'outlook-source', label: 'Outlook', shortLabel: 'Outlook', x: 0.42, y: 0.4, kind: 'source', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' },
+  { id: 'dropbox-source', label: 'Dropbox', shortLabel: 'Dropbox', x: 0.42, y: 0.64, kind: 'source', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' },
+  { id: 'onedrive-source', label: 'OneDrive', shortLabel: 'OneDrive', x: 0.5, y: 0.76, kind: 'source', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
+  { id: 'adobe-sign-source', label: 'Adobe Sign', shortLabel: 'Adobe Sign', x: 0.62, y: 0.29, kind: 'source', iconSrc: '/dobe.png', iconAlt: 'Adobe Sign' },
+  { id: 'slack-source', label: 'Slack', shortLabel: 'Slack', x: 0.62, y: 0.76, kind: 'source', iconSrc: '/slack-icon-2019.png', iconAlt: 'Slack', iconClassName: 'max-h-[18px] max-w-[18px]', tileClassName: 'h-[34px] w-[34px]' }
 ];
 
 const allNodes = [amazonNode, ...inputNodes, ...stageNodes, ...outputNodes, ...evidenceSourceNodes];
@@ -82,8 +82,8 @@ const routes: SceneRoute[] = [
     role: 'intake' as const,
     points: [
       { x: amazonNode.x, y: amazonNode.y },
-      { x: 0.08, y: amazonNode.y },
-      { x: 0.08, y: node.y },
+      { x: 0.11, y: amazonNode.y },
+      { x: 0.11, y: node.y },
       { x: node.x, y: node.y }
     ]
   })),
@@ -93,9 +93,9 @@ const routes: SceneRoute[] = [
     role: 'intake' as const,
     points: [
       { x: node.x, y: node.y },
-      { x: 0.25, y: node.y },
-      { x: 0.25, y: 0.52 },
-      { x: 0.34, y: 0.52 }
+      { x: 0.28, y: node.y },
+      { x: 0.28, y: 0.52 },
+      { x: 0.37, y: 0.52 }
     ]
   })),
   {
@@ -103,8 +103,8 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'trunk',
     points: [
-      { x: 0.34, y: 0.52 },
-      { x: 0.5, y: 0.52 }
+      { x: 0.37, y: 0.52 },
+      { x: 0.53, y: 0.52 }
     ]
   },
   {
@@ -112,8 +112,8 @@ const routes: SceneRoute[] = [
     stage: 2,
     role: 'trunk',
     points: [
-      { x: 0.5, y: 0.52 },
-      { x: 0.68, y: 0.52 }
+      { x: 0.53, y: 0.52 },
+      { x: 0.7, y: 0.52 }
     ]
   },
   {
@@ -121,8 +121,8 @@ const routes: SceneRoute[] = [
     stage: 3,
     role: 'trunk',
     points: [
-      { x: 0.68, y: 0.52 },
-      { x: 0.84, y: 0.52 }
+      { x: 0.7, y: 0.52 },
+      { x: 0.86, y: 0.52 }
     ]
   },
   {
@@ -130,9 +130,9 @@ const routes: SceneRoute[] = [
     stage: 0,
     role: 'output',
     points: [
-      { x: 0.34, y: 0.52 },
-      { x: 0.34, y: 0.22 },
-      { x: 0.93, y: 0.22 }
+      { x: 0.37, y: 0.52 },
+      { x: 0.37, y: 0.24 },
+      { x: 0.94, y: 0.24 }
     ]
   },
   {
@@ -140,9 +140,9 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'output',
     points: [
-      { x: 0.5, y: 0.52 },
-      { x: 0.5, y: 0.38 },
-      { x: 0.93, y: 0.38 }
+      { x: 0.53, y: 0.52 },
+      { x: 0.53, y: 0.38 },
+      { x: 0.94, y: 0.38 }
     ]
   },
   {
@@ -150,8 +150,8 @@ const routes: SceneRoute[] = [
     stage: 2,
     role: 'output',
     points: [
-      { x: 0.68, y: 0.52 },
-      { x: 0.93, y: 0.52 }
+      { x: 0.7, y: 0.52 },
+      { x: 0.94, y: 0.52 }
     ]
   },
   {
@@ -159,9 +159,9 @@ const routes: SceneRoute[] = [
     stage: 3,
     role: 'output',
     points: [
-      { x: 0.84, y: 0.52 },
-      { x: 0.84, y: 0.68 },
-      { x: 0.93, y: 0.68 }
+      { x: 0.86, y: 0.52 },
+      { x: 0.86, y: 0.66 },
+      { x: 0.94, y: 0.66 }
     ]
   },
   {
@@ -169,9 +169,9 @@ const routes: SceneRoute[] = [
     stage: 4,
     role: 'output',
     points: [
-      { x: 0.84, y: 0.52 },
-      { x: 0.84, y: 0.82 },
-      { x: 0.93, y: 0.82 }
+      { x: 0.86, y: 0.52 },
+      { x: 0.86, y: 0.8 },
+      { x: 0.94, y: 0.8 }
     ]
   },
   {
@@ -179,10 +179,10 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'evidence',
     points: [
-      { x: 0.47, y: 0.3 },
-      { x: 0.47, y: 0.42 },
+      { x: 0.5, y: 0.29 },
       { x: 0.5, y: 0.42 },
-      { x: 0.5, y: 0.52 }
+      { x: 0.53, y: 0.42 },
+      { x: 0.53, y: 0.52 }
     ]
   },
   {
@@ -190,10 +190,10 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'evidence',
     points: [
-      { x: 0.4, y: 0.41 },
-      { x: 0.46, y: 0.41 },
-      { x: 0.46, y: 0.52 },
-      { x: 0.5, y: 0.52 }
+      { x: 0.42, y: 0.4 },
+      { x: 0.48, y: 0.4 },
+      { x: 0.48, y: 0.52 },
+      { x: 0.53, y: 0.52 }
     ]
   },
   {
@@ -201,10 +201,10 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'evidence',
     points: [
-      { x: 0.4, y: 0.63 },
-      { x: 0.46, y: 0.63 },
-      { x: 0.46, y: 0.52 },
-      { x: 0.5, y: 0.52 }
+      { x: 0.42, y: 0.64 },
+      { x: 0.48, y: 0.64 },
+      { x: 0.48, y: 0.52 },
+      { x: 0.53, y: 0.52 }
     ]
   },
   {
@@ -212,10 +212,10 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'evidence',
     points: [
-      { x: 0.47, y: 0.74 },
-      { x: 0.47, y: 0.62 },
+      { x: 0.5, y: 0.76 },
       { x: 0.5, y: 0.62 },
-      { x: 0.5, y: 0.52 }
+      { x: 0.53, y: 0.62 },
+      { x: 0.53, y: 0.52 }
     ]
   },
   {
@@ -223,11 +223,11 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'evidence',
     points: [
-      { x: 0.59, y: 0.3 },
-      { x: 0.59, y: 0.42 },
-      { x: 0.54, y: 0.42 },
-      { x: 0.54, y: 0.52 },
-      { x: 0.5, y: 0.52 }
+      { x: 0.62, y: 0.29 },
+      { x: 0.62, y: 0.42 },
+      { x: 0.58, y: 0.42 },
+      { x: 0.58, y: 0.52 },
+      { x: 0.53, y: 0.52 }
     ]
   },
   {
@@ -235,14 +235,47 @@ const routes: SceneRoute[] = [
     stage: 1,
     role: 'evidence',
     points: [
-      { x: 0.59, y: 0.74 },
-      { x: 0.59, y: 0.62 },
-      { x: 0.54, y: 0.62 },
-      { x: 0.54, y: 0.52 },
-      { x: 0.5, y: 0.52 }
+      { x: 0.62, y: 0.76 },
+      { x: 0.62, y: 0.62 },
+      { x: 0.58, y: 0.62 },
+      { x: 0.58, y: 0.52 },
+      { x: 0.53, y: 0.52 }
     ]
   }
 ];
+
+const stageAccents = [
+  {
+    line: [0.42, 0.73, 1] as const,
+    glow: [0.22, 0.46, 1] as const,
+    packet: [0.94, 0.97, 1] as const,
+    output: [0.7, 0.84, 1] as const
+  },
+  {
+    line: [1, 0.56, 0.28] as const,
+    glow: [1, 0.36, 0.24] as const,
+    packet: [1, 0.9, 0.72] as const,
+    output: [1, 0.72, 0.42] as const
+  },
+  {
+    line: [1, 0.42, 0.32] as const,
+    glow: [1, 0.28, 0.22] as const,
+    packet: [1, 0.84, 0.7] as const,
+    output: [1, 0.62, 0.34] as const
+  },
+  {
+    line: [0.92, 0.94, 1] as const,
+    glow: [0.58, 0.68, 0.82] as const,
+    packet: [0.98, 0.98, 1] as const,
+    output: [1, 0.82, 0.5] as const
+  },
+  {
+    line: [0.78, 0.82, 0.9] as const,
+    glow: [0.6, 0.65, 0.74] as const,
+    packet: [0.98, 0.9, 0.72] as const,
+    output: [1, 0.86, 0.48] as const
+  }
+] as const;
 
 const toClipSpace = (x: number, y: number) => ({
   x: x * 2 - 1,
@@ -496,13 +529,20 @@ export function RecoveryEngineVisualization() {
 
       routes.forEach((route) => {
         const isActive = route.stage === stageIndex;
-        const routeColor = route.role === 'trunk'
-          ? isActive ? [0.98, 0.98, 1, 0.82] : [0.72, 0.74, 0.78, 0.38]
+        const accent = stageAccents[route.stage];
+        const routeColor = isActive
+          ? route.role === 'output'
+            ? [accent.output[0], accent.output[1], accent.output[2], 0.58]
+            : route.role === 'evidence'
+              ? [accent.glow[0], accent.glow[1], accent.glow[2], 0.48]
+              : route.role === 'trunk'
+                ? [accent.packet[0], accent.packet[1], accent.packet[2], 0.54]
+                : [accent.line[0], accent.line[1], accent.line[2], 0.46]
           : route.role === 'output'
-            ? isActive ? [0.96, 0.84, 0.44, 0.78] : [0.62, 0.62, 0.66, 0.22]
-            : isActive
-              ? [0.9, 0.92, 0.98, 0.72]
-              : [0.58, 0.58, 0.64, 0.2];
+            ? [0.5, 0.5, 0.54, 0.18]
+            : route.role === 'trunk'
+              ? [0.56, 0.58, 0.64, 0.24]
+              : [0.4, 0.42, 0.46, 0.18];
 
         for (let index = 1; index < route.points.length; index += 1) {
           const from = toClipSpace(route.points[index - 1].x, route.points[index - 1].y);
@@ -518,6 +558,16 @@ export function RecoveryEngineVisualization() {
       const haloColors: number[] = [];
       stageNodes.forEach((node) => {
         const clip = toClipSpace(node.x, node.y);
+        const nodeStage = node.id === 'detect'
+          ? 0
+          : node.id === 'evidence'
+            ? 1
+            : node.id === 'filing'
+              ? 2
+              : stageIndex >= 4
+                ? 4
+                : 3;
+        const accent = stageAccents[nodeStage];
         const isActive = (
           (stageIndex === 0 && node.id === 'detect')
           || (stageIndex === 1 && node.id === 'evidence')
@@ -526,31 +576,40 @@ export function RecoveryEngineVisualization() {
         );
         haloPositions.push(clip.x, clip.y);
         haloColors.push(
-          0.96,
-          0.96,
-          1,
+          accent.glow[0],
+          accent.glow[1],
+          accent.glow[2],
           node.id === 'evidence'
-            ? 0.1 + Math.sin(time * 2.1) * 0.04
+            ? 0.15 + Math.sin(time * 2.1) * 0.05
             : isActive
-              ? 0.09 + Math.sin(time * 2.6) * 0.04
-              : 0.02
+              ? 0.12 + Math.sin(time * 2.6) * 0.05
+              : 0.03
         );
       });
 
-      drawPointBatch(new Float32Array(haloPositions), new Float32Array(haloColors), 46);
+      drawPointBatch(new Float32Array(haloPositions), new Float32Array(haloColors), 54);
 
       const nodePositions: number[] = [];
       const nodeColors: number[] = [];
       allNodes.forEach((node) => {
         const clip = toClipSpace(node.x, node.y);
         nodePositions.push(clip.x, clip.y);
+        const stageColor = node.id === 'detect'
+          ? stageAccents[0].packet
+          : node.id === 'evidence'
+            ? stageAccents[1].packet
+            : node.id === 'filing'
+              ? stageAccents[2].packet
+              : node.id === 'payout'
+                ? stageAccents[Math.min(stageIndex, 4)].output
+                : null;
         const color = node.kind === 'output'
-          ? [0.96, 0.84, 0.44, 0.88]
-          : node.kind === 'stage'
-            ? [0.96, 0.96, 1, 0.9]
+          ? [0.98, 0.83, 0.48, 0.9]
+          : node.kind === 'stage' && stageColor
+            ? [stageColor[0], stageColor[1], stageColor[2], 0.92]
             : node.kind === 'source'
-              ? [0.82, 0.84, 0.9, 0.68]
-              : [0.68, 0.7, 0.75, 0.72];
+              ? [0.82, 0.86, 0.94, 0.76]
+              : [0.68, 0.72, 0.78, 0.72];
         nodeColors.push(...color);
       });
 
@@ -572,29 +631,50 @@ export function RecoveryEngineVisualization() {
         }
       });
 
-      const packetPositions: number[] = [];
-      const packetColors: number[] = [];
+      const packetGlowPositions: number[] = [];
+      const packetGlowColors: number[] = [];
+      const packetCorePositions: number[] = [];
+      const packetCoreColors: number[] = [];
 
       routes
         .filter((route) => route.stage === stageIndex)
         .forEach((route, routeIndex) => {
-          const pulseCount = route.role === 'intake' ? 2 : 1;
-          for (let pulse = 0; pulse < pulseCount; pulse += 1) {
-            const progress = prefersReducedMotion ? 0.5 : (stageProgress + pulse * 0.35 + routeIndex * 0.06) % 1;
-            const point = routePointAt(route, progress);
-            const clip = toClipSpace(point.x, point.y);
-            packetPositions.push(clip.x, clip.y);
-            packetColors.push(
-              route.role === 'output' ? 0.98 : 0.96,
-              route.role === 'output' ? 0.84 : 0.96,
-              route.role === 'output' ? 0.42 : 1,
-              0.98
-            );
+          const accent = stageAccents[route.stage];
+          const palette = route.role === 'output'
+            ? [accent.output, accent.packet, stageAccents[Math.max(route.stage - 1, 0)].line]
+            : route.role === 'evidence'
+              ? [accent.glow, accent.packet, accent.line]
+              : [accent.line, accent.packet, accent.glow];
+          const streamCount = route.role === 'intake' ? 2 : 1;
+          const trailOffsets = [0, 0.08, 0.16];
+
+          for (let stream = 0; stream < streamCount; stream += 1) {
+            const head = prefersReducedMotion
+              ? 0.55
+              : (stageProgress + stream * 0.28 + routeIndex * 0.055) % 1;
+
+            trailOffsets.forEach((trailOffset, trailIndex) => {
+              const progress = (head - trailOffset + 1) % 1;
+              const point = routePointAt(route, progress);
+              const clip = toClipSpace(point.x, point.y);
+              const color = palette[(trailIndex + routeIndex + stream) % palette.length];
+              const alpha = trailIndex === 0 ? 1 : trailIndex === 1 ? 0.48 : 0.18;
+
+              packetGlowPositions.push(clip.x, clip.y);
+              packetGlowColors.push(color[0], color[1], color[2], alpha * 0.52);
+
+              packetCorePositions.push(clip.x, clip.y);
+              packetCoreColors.push(color[0], color[1], color[2], alpha);
+            });
           }
         });
 
-      if (packetPositions.length > 0) {
-        drawPointBatch(new Float32Array(packetPositions), new Float32Array(packetColors), 14);
+      if (packetGlowPositions.length > 0) {
+        drawPointBatch(new Float32Array(packetGlowPositions), new Float32Array(packetGlowColors), 28);
+      }
+
+      if (packetCorePositions.length > 0) {
+        drawPointBatch(new Float32Array(packetCorePositions), new Float32Array(packetCoreColors), 11);
       }
 
       if (!prefersReducedMotion) {
@@ -622,18 +702,18 @@ export function RecoveryEngineVisualization() {
   const outputOverlayNodes = useMemo(() => outputNodes, []);
 
   return (
-    <div className="relative mt-16 overflow-hidden rounded-[28px] border border-white/10 bg-[#090909]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_55%)]" />
-      <div className="relative h-[700px] w-full md:h-[780px] xl:h-[820px]">
+    <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_52%_50%,rgba(59,130,246,0.06),transparent_32%),radial-gradient(circle_at_52%_50%,rgba(249,115,22,0.08),transparent_20%),linear-gradient(180deg,rgba(10,11,15,0.98)_0%,rgba(6,8,12,1)_100%)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.025),transparent_58%)]" />
+      <div className="relative h-[520px] w-full md:h-[620px] xl:h-[660px]">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
-        <div className="pointer-events-none absolute left-6 top-6 rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-tight text-white/68 backdrop-blur-sm">
+        <div className="pointer-events-none absolute left-6 top-5 rounded-full border border-white/10 bg-black/35 px-3.5 py-1.5 text-[10.5px] font-semibold tracking-tight text-white/64 backdrop-blur-sm">
           Amazon signals
         </div>
-        <div className="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-tight text-white/68 backdrop-blur-sm">
+        <div className="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-full border border-white/10 bg-black/35 px-3.5 py-1.5 text-[10.5px] font-semibold tracking-tight text-white/64 backdrop-blur-sm">
           Margin orchestration layer
         </div>
-        <div className="pointer-events-none absolute right-6 top-6 rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-tight text-white/68 backdrop-blur-sm">
+        <div className="pointer-events-none absolute right-6 top-5 rounded-full border border-white/10 bg-black/35 px-3.5 py-1.5 text-[10.5px] font-semibold tracking-tight text-white/64 backdrop-blur-sm">
           Resolved outcomes
         </div>
 
@@ -641,7 +721,7 @@ export function RecoveryEngineVisualization() {
           <div
             key={node.id}
             className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
-            style={{ left: `${(node.x + 0.032) * 100}%`, top: `${node.y * 100}%` }}
+            style={{ left: `${(node.x + 0.03) * 100}%`, top: `${node.y * 100}%` }}
           >
             <div className="text-[11px] font-medium tracking-tight text-white/68">{node.label}</div>
           </div>
@@ -651,7 +731,7 @@ export function RecoveryEngineVisualization() {
           <div
             key={node.id}
             className="pointer-events-none absolute hidden -translate-x-full -translate-y-1/2 md:block"
-            style={{ left: `${(node.x - 0.015) * 100}%`, top: `${node.y * 100}%` }}
+            style={{ left: `${(node.x - 0.012) * 100}%`, top: `${node.y * 100}%` }}
           >
             <div className="rounded-full border border-white/10 bg-black/45 px-3 py-1 text-[10.5px] font-medium tracking-tight text-white/78 backdrop-blur-sm">
               {node.label}
@@ -663,7 +743,7 @@ export function RecoveryEngineVisualization() {
           <div
             key={node.id}
             className="pointer-events-none absolute hidden -translate-x-1/2 md:block"
-            style={{ left: `${node.x * 100}%`, top: `${(node.y + 0.055) * 100}%` }}
+            style={{ left: `${node.x * 100}%`, top: `${(node.y + 0.06) * 100}%` }}
           >
             <div className="text-[11px] font-medium tracking-tight text-white/72">{node.label}</div>
           </div>
@@ -676,7 +756,7 @@ export function RecoveryEngineVisualization() {
             style={{ left: `${node.x * 100}%`, top: `${node.y * 100}%` }}
           >
             <div className="flex flex-col items-center gap-2">
-              <div className={`flex items-center justify-center rounded-xl border border-white/12 bg-black/55 backdrop-blur-sm ring-1 ring-white/5 ${node.tileClassName || 'h-10 w-10'}`}>
+              <div className={`flex items-center justify-center rounded-xl border border-white/10 bg-black/58 backdrop-blur-sm ring-1 ring-white/5 ${node.tileClassName || 'h-10 w-10'}`}>
                 {node.iconSrc ? (
                   <img
                     src={node.iconSrc}
@@ -692,9 +772,9 @@ export function RecoveryEngineVisualization() {
 
         <div
           className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
-          style={{ left: `${(amazonNode.x + 0.018) * 100}%`, top: `${amazonNode.y * 100}%` }}
+          style={{ left: `${(amazonNode.x + 0.03) * 100}%`, top: `${amazonNode.y * 100}%` }}
         >
-          <div className="flex items-center gap-2 rounded-full border border-white/12 bg-black/55 px-3 py-1 text-[10.5px] font-medium tracking-tight text-white/78 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/58 px-3 py-1 text-[10.5px] font-medium tracking-tight text-white/78 backdrop-blur-sm">
             {amazonNode.iconSrc ? (
               <img
                 src={amazonNode.iconSrc}
@@ -706,7 +786,7 @@ export function RecoveryEngineVisualization() {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute bottom-6 left-6 right-6">
+        <div className="pointer-events-none absolute bottom-5 left-6 right-6">
           <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
             <div className="flex flex-wrap gap-1.5">
               {stageLabels.map((label, index) => (

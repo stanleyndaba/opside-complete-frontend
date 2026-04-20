@@ -179,15 +179,15 @@ const faqs = [
   }
 ];
 
-const mobileIntegrationLogos = [
-  { name: 'Amazon', src: '/AMZN.png', className: 'max-h-4 max-w-[28px]' },
-  { name: 'Gmail', src: '/gmailicon.png', className: 'max-h-5 max-w-5' },
-  { name: 'Outlook', src: '/outlookicon.webp', className: 'max-h-5 max-w-5' },
-  { name: 'Google Drive', src: '/gd.png', className: 'max-h-5 max-w-5' },
-  { name: 'Dropbox', src: '/Dropbox_Icon.svg.png', className: 'max-h-5 max-w-5' },
-  { name: 'OneDrive', src: '/onedriive.png', className: 'max-h-5 max-w-5' },
-  { name: 'Adobe Sign', src: '/dobe.png', className: 'max-h-5 max-w-5' },
-  { name: 'Slack', src: '/slack-icon-2019.png', className: 'max-h-5 max-w-5' }
+const integrationLogos = [
+  { name: 'Amazon', src: '/AMZN.png', className: 'h-4 w-auto md:h-5' },
+  { name: 'Gmail', src: '/gmailicon.png', className: 'h-5 w-auto md:h-6' },
+  { name: 'Outlook', src: '/outlookicon.webp', className: 'h-5 w-auto md:h-6' },
+  { name: 'Google Drive', src: '/gd.png', className: 'h-5 w-auto md:h-6' },
+  { name: 'Dropbox', src: '/Dropbox_Icon.svg.png', className: 'h-5 w-auto md:h-6' },
+  { name: 'OneDrive', src: '/onedriive.png', className: 'h-5 w-auto md:h-6' },
+  { name: 'Adobe Sign', src: '/dobe.png', className: 'h-5 w-auto md:h-6' },
+  { name: 'Slack', src: '/slack-icon-2019.png', className: 'h-5 w-auto md:h-6' }
 ];
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
@@ -201,10 +201,10 @@ const revealProps = {
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
 
-function MobileIntegrationsCarousel() {
+function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   return (
     <motion.div {...revealProps}>
-      <div className="relative flex items-center justify-center py-1">
+      <div className="relative flex items-center justify-center py-1 md:py-2">
         <motion.div
           className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-sky-400/24 to-transparent"
           initial={{ scaleX: 0.55, opacity: 0 }}
@@ -212,30 +212,30 @@ function MobileIntegrationsCarousel() {
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         />
-        <div className="relative z-10 mx-auto inline-flex rounded-[6px] border border-sky-400/12 bg-[#070707] px-3 py-1 text-[10px] font-medium tracking-tight text-sky-100/56">
+        <div className="relative z-10 mx-auto inline-flex rounded-[6px] border border-sky-400/12 bg-[#070707] px-3 py-1 text-[10px] font-medium tracking-tight text-sky-100/56 md:px-4 md:py-1.5 md:text-[11px]">
           Integrations
         </div>
       </div>
 
-      <div className="relative mt-4 overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-[#070707] to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[#070707] to-transparent" />
+      <div className="relative mt-4 overflow-hidden md:mt-6">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#070707] to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#070707] to-transparent md:w-28" />
         <motion.div
-          className="flex w-max items-center gap-8 px-2"
+          className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: isMobileLayout ? 20 : 28, repeat: Infinity, ease: 'linear' }}
         >
-          {[...mobileIntegrationLogos, ...mobileIntegrationLogos].map((logo, index) => (
+          {[...integrationLogos, ...integrationLogos].map((logo, index) => (
             <div
               key={`${logo.name}-${index}`}
-              className="flex h-8 shrink-0 items-center justify-center"
+              className="flex h-9 w-[46px] shrink-0 items-center justify-center md:h-14 md:w-[92px] lg:w-[104px]"
               aria-label={logo.name}
               title={logo.name}
             >
               <img
                 src={logo.src}
                 alt={logo.name}
-                className={`${logo.className} object-contain opacity-90`}
+                className={`${logo.className} object-contain opacity-90 saturate-110`}
               />
             </div>
           ))}
@@ -456,11 +456,11 @@ export default function Index() {
 
         <section className="relative py-10 md:py-12">
           <div className={containerClass}>
-            <div className="max-w-[460px]">
+            <div className="max-w-[460px] md:mx-auto md:max-w-[660px] md:text-center">
               <div className="text-[10px] uppercase tracking-[0.16em] text-white/36">Works with the sources already inside your recovery workflow</div>
             </div>
-            <div className="mt-6">
-              <MobileIntegrationsCarousel />
+            <div className="mt-6 md:mt-8">
+              <IntegrationsCarousel isMobileLayout={isMobileLayout} />
             </div>
           </div>
         </section>
@@ -567,7 +567,7 @@ export default function Index() {
 
             <motion.div
               {...revealProps}
-              className="relative mt-14 hidden overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] md:block"
+              className="relative mx-auto mt-12 hidden max-w-[1120px] overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] md:block"
             >
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/30 to-transparent" />
               <div className="grid grid-cols-5 border-b border-white/8 px-8 py-4 text-[10px] uppercase tracking-[0.16em] text-white/38">
@@ -575,7 +575,7 @@ export default function Index() {
                   <div key={item.label}>{item.label}</div>
                 ))}
               </div>
-              <div className="px-6 py-8">
+              <div className="px-5 py-6 md:px-6 md:py-7">
                 <RecoveryEngineVisualization />
               </div>
             </motion.div>
