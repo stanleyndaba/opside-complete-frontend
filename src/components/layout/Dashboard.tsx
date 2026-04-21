@@ -543,6 +543,15 @@ const formatFindingDateLabel = (value?: string | null) => {
   return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
+const formatDaysRemainingLabel = (value?: number | string | null, expired?: boolean | null) => {
+  const parsed = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(parsed)) return 'Not available';
+  if (expired) return 'Expired';
+  const days = Math.max(0, Math.ceil(parsed));
+  if (days === 0) return '0 days left';
+  return `${days} ${days === 1 ? 'day' : 'days'} left`;
+};
+
 const formatFindingDateTimeLabel = (value?: string | null) => {
   if (!value) return 'Not available';
   const parsed = new Date(value);
@@ -635,6 +644,39 @@ const getRequiredEvidenceItems = (policy: any) => {
   }
 
   return [];
+};
+
+const getRequiredDocumentationItems = (policy: any) => {
+  const documentationCandidates = [
+    policy?.required_documentation,
+    policy?.requiredDocumentation,
+    policy?.documentation_requirements,
+    policy?.documentationRequirements,
+  ];
+
+  for (const candidate of documentationCandidates) {
+    if (!Array.isArray(candidate)) continue;
+
+    const normalized = candidate
+      .flatMap((item) => {
+        if (typeof item === 'string') {
+          const label = item.trim();
+          return label ? [{ label, detail: '' }] : [];
+        }
+
+        if (!item || typeof item !== 'object') return [];
+        const record = item as Record<string, unknown>;
+        const label = String(record.label || record.title || record.name || '').trim();
+        const detail = String(record.detail || record.description || record.summary || '').trim();
+        if (!label && !detail) return [];
+        return [{ label: label || 'Required documentation', detail }];
+      })
+      .slice(0, 8);
+
+    if (normalized.length) return normalized;
+  }
+
+  return getRequiredEvidenceItems(policy).map((label) => ({ label, detail: '' }));
 };
 
 const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
@@ -2211,8 +2253,16 @@ export function Dashboard() {
     () => getEvidencePreviewItems(activeDiscrepancy?.evidence),
     [activeDiscrepancy?.evidence]
   );
-  const activeDiscrepancyRequiredEvidenceItems = useMemo(
-    () => getRequiredEvidenceItems(activeDiscrepancy?.policyBasis || activeDiscrepancy?.policy_basis),
+  const activeDiscrepancyPolicyBasis = useMemo(
+    () => activeDiscrepancy?.policyBasis || activeDiscrepancy?.policy_basis || null,
+    [activeDiscrepancy]
+  );
+  const activeDiscrepancyRequiredDocumentationItems = useMemo(
+    () => getRequiredDocumentationItems(activeDiscrepancyPolicyBasis),
+    [activeDiscrepancyPolicyBasis]
+  );
+  const activeDiscrepancyDaysRemainingLabel = useMemo(
+    () => formatDaysRemainingLabel(activeDiscrepancy?.daysRemaining, activeDiscrepancy?.expired),
     [activeDiscrepancy]
   );
   const activeDiscrepancyMetaRows = useMemo(() => {
@@ -2265,17 +2315,18 @@ export function Dashboard() {
     ];
   }, [activeDiscrepancy]);
   const activeDiscrepancyPolicyRows = useMemo(() => {
-    const policy = activeDiscrepancy?.policyBasis || activeDiscrepancy?.policy_basis;
+    const policy = activeDiscrepancyPolicyBasis;
     if (!policy) {
       return [
-        { label: 'Policy basis', value: 'Policy basis pending verification' },
+        { label: 'Amazon policy', value: 'Policy basis pending verification' },
         { label: 'Source', value: 'Amazon Seller Central Help' },
+        { label: 'Days left', value: activeDiscrepancyDaysRemainingLabel },
       ];
     }
 
     return [
       {
-        label: 'Policy basis',
+        label: 'Amazon policy',
         value: policy.title || 'Policy basis pending verification',
       },
       {
@@ -2292,8 +2343,16 @@ export function Dashboard() {
         label: 'Verified',
         value: policy.last_verified_at ? formatFindingDateLabel(policy.last_verified_at) : 'Pending verification',
       },
+      {
+        label: 'Days left',
+        value: activeDiscrepancyDaysRemainingLabel,
+      },
+      {
+        label: 'Deadline',
+        value: formatFindingDateLabel(activeDiscrepancy?.deadlineDate),
+      },
     ];
-  }, [activeDiscrepancy]);
+  }, [activeDiscrepancy?.deadlineDate, activeDiscrepancyDaysRemainingLabel, activeDiscrepancyPolicyBasis]);
   const syncScopedEmptyState = useMemo(() => {
     if (!isSyncScopedDetections) return null;
 
@@ -3530,6 +3589,7 @@ export function Dashboard() {
                                   evidence: result.evidence,
                                   deadlineDate: result.deadline_date,
                                   daysRemaining: result.days_remaining,
+                                  expired: result.expired,
                                   reviewTier: result.review_tier,
                                   claimReadiness: result.claim_readiness,
                                   recommendedAction: result.recommended_action,
@@ -3979,7 +4039,7 @@ export function Dashboard() {
                   </div>
 
                   <div className="mt-3">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Policy basis</div>
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Amazon policy basis</div>
                     <div className="mt-2 grid grid-cols-2 border-y border-white/10">
                       {activeDiscrepancyPolicyRows.map((item) => (
                         <div key={item.label} className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
@@ -3988,19 +4048,19 @@ export function Dashboard() {
                         </div>
                       ))}
                     </div>
-                    {activeDiscrepancy.policyBasis?.summary ? (
+                    {activeDiscrepancyPolicyBasis?.summary ? (
                       <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.45]">
-                        {activeDiscrepancy.policyBasis.summary}
+                        {activeDiscrepancyPolicyBasis.summary}
                       </p>
                     ) : null}
-                    {activeDiscrepancy.policyBasis?.source_url ? (
+                    {activeDiscrepancyPolicyBasis?.source_url ? (
                       <a
-                        href={activeDiscrepancy.policyBasis.source_url}
+                        href={activeDiscrepancyPolicyBasis.source_url}
                         target="_blank"
                         rel="noreferrer"
                         className="mt-2 inline-flex text-[10px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
                       >
-                        Open policy reference
+                        Open Amazon policy reference
                       </a>
                     ) : null}
                   </div>
@@ -4068,7 +4128,7 @@ export function Dashboard() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                      Proof needed
+                      Proof needed (Documentation)
                     </div>
                     <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
                       Evidence required for this finding
@@ -4108,22 +4168,27 @@ export function Dashboard() {
 
                   <div className="mt-3 border-y border-white/10 py-2.5">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                      Required proof
+                      Required documentation
                     </div>
-                    {activeDiscrepancyRequiredEvidenceItems.length > 0 ? (
-                      <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
-                        {activeDiscrepancyRequiredEvidenceItems.map((item) => (
+                    {activeDiscrepancyRequiredDocumentationItems.length > 0 ? (
+                      <div className="mt-2 divide-y divide-white/[0.08] border-y border-white/[0.08]">
+                        {activeDiscrepancyRequiredDocumentationItems.map((item) => (
                           <div
-                            key={item}
-                            className="border border-white/[0.08] bg-white/[0.018] px-2.5 py-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.72]"
+                            key={`${item.label}-${item.detail}`}
+                            className="grid gap-1 px-2.5 py-2 sm:grid-cols-[minmax(130px,0.44fr)_minmax(0,1fr)] sm:gap-3"
                           >
-                            {item}
+                            <div className="text-[11px] font-sans font-medium leading-4 tracking-tight text-white/[0.84]">
+                              {item.label}
+                            </div>
+                            <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+                              {item.detail || 'Required for this detector family before the finding can be treated as supported.'}
+                            </div>
                           </div>
                         ))}
                       </div>
                     ) : (
                       <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.6]">
-                        Policy basis pending verification. Margin will not treat this as filing-ready until the required proof checklist is confirmed.
+                        Policy basis pending verification. Margin will not treat this as filing-ready until the required documentation checklist is confirmed.
                       </p>
                     )}
                   </div>
@@ -4181,23 +4246,78 @@ export function Dashboard() {
 
                   <div className="mt-3 border-y border-white/10 py-2.5">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                      Policy basis
+                      Amazon policy basis
                     </div>
                     <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white/[0.86]">
-                      {activeDiscrepancy.policyBasis?.title || 'Policy basis pending verification'}
+                      {activeDiscrepancyPolicyBasis?.title || 'Policy basis pending verification'}
                     </div>
                     <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.5]">
-                      {activeDiscrepancy.policyBasis?.summary || 'Margin will keep this proof requirement conservative until an official policy reference is available for this detector family.'}
+                      {activeDiscrepancyPolicyBasis?.summary || 'Margin will keep this proof requirement conservative until an official policy reference is available for this detector family.'}
                     </p>
+                    <div className="mt-2 divide-y divide-white/[0.08] border-y border-white/[0.08]">
+                      <div className="grid gap-1 px-2.5 py-2 sm:grid-cols-[120px_minmax(0,1fr)]">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                          Policy rule
+                        </div>
+                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+                          {activeDiscrepancyPolicyBasis?.amazon_policy_rule || 'Official policy rule pending verification for this detector family.'}
+                        </div>
+                      </div>
+                      <div className="grid gap-1 px-2.5 py-2 sm:grid-cols-[120px_minmax(0,1fr)]">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                          Claim window
+                        </div>
+                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+                          {activeDiscrepancyPolicyBasis?.policy_window?.rule || 'Window pending verification.'}
+                        </div>
+                      </div>
+                      <div className="grid gap-1 px-2.5 py-2 sm:grid-cols-[120px_minmax(0,1fr)]">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                          Starts from
+                        </div>
+                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+                          {activeDiscrepancyPolicyBasis?.policy_window?.start_event || 'Detector-specific event date.'}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 divide-x divide-white/[0.08]">
+                        <div className="px-2.5 py-2">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                            Days left
+                          </div>
+                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.82]">
+                            {activeDiscrepancyDaysRemainingLabel}
+                          </div>
+                        </div>
+                        <div className="px-2.5 py-2">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                            Deadline
+                          </div>
+                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.82]">
+                            {formatFindingDateLabel(activeDiscrepancy.deadlineDate)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
-                        {activeDiscrepancy.policyBasis?.source_name || 'Amazon Seller Central Help'}
+                        {activeDiscrepancyPolicyBasis?.source_name || 'Amazon Seller Central Help'}
                       </span>
                       <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
-                        {activeDiscrepancy.policyBasis?.last_verified_at
-                          ? `Verified ${formatFindingDateLabel(activeDiscrepancy.policyBasis.last_verified_at)}`
+                        {activeDiscrepancyPolicyBasis?.last_verified_at
+                          ? `Verified ${formatFindingDateLabel(activeDiscrepancyPolicyBasis.last_verified_at)}`
                           : 'Verification pending'}
                       </span>
+                      {activeDiscrepancyPolicyBasis?.source_url ? (
+                        <a
+                          href={activeDiscrepancyPolicyBasis.source_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.64] transition-colors hover:border-white/20 hover:text-white"
+                        >
+                          <Link2 className="h-2.5 w-2.5" />
+                          Amazon reference
+                        </a>
+                      ) : null}
                     </div>
                   </div>
 
@@ -4224,7 +4344,7 @@ export function Dashboard() {
 
               <DialogFooter className="flex flex-col gap-2 border-t border-white/10 px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
-                  Proof guidance is derived from backend finding truth and policy basis. It is not a filing guarantee.
+                  Proof guidance is derived from configured Amazon references, backend finding truth, and the stored deadline. It is not a filing guarantee.
                 </div>
                 <div className="flex items-center gap-3">
                   <Button
