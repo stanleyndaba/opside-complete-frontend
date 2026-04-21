@@ -54,13 +54,13 @@ export function isProductionApprovedReimbursementRow(row: any) {
   const status = normalize(row?.status);
   const payoutStatus = normalize(row?.payout_status);
   const reconciliationStatus = normalize(row?.reconciliation_status);
-  const hasApprovalStatus = APPROVED_CASE_STATUSES.has(status);
+  const hasApprovalTruth = row?.has_approval_truth === true;
   const hasVerifiedPayment = positiveCount(row?.reimbursement_event_count) > 0
     || (verifiedPaidAmount(row) ?? 0) > 0
     || VERIFIED_PAYOUT_STATUSES.has(payoutStatus)
     || VERIFIED_RECONCILIATION_STATUSES.has(reconciliationStatus);
 
-  return hasApprovalStatus || hasVerifiedPayment;
+  return hasApprovalTruth || hasVerifiedPayment;
 }
 
 function payoutTruthLabel(row: any) {
@@ -78,11 +78,11 @@ function payoutTruthLabel(row: any) {
     return 'Payment verified';
   }
 
-  if (APPROVED_CASE_STATUSES.has(status) && explicitApprovedAmount(row) !== null) {
+  if (row?.has_approval_truth === true && APPROVED_CASE_STATUSES.has(status) && explicitApprovedAmount(row) !== null) {
     return 'Approved, awaiting payout';
   }
 
-  if (APPROVED_CASE_STATUSES.has(status)) {
+  if (row?.has_approval_truth === true && APPROVED_CASE_STATUSES.has(status)) {
     return 'Approved, amount unverified';
   }
 

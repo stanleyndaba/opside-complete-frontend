@@ -31,7 +31,7 @@ type AppealCandidate = QueueRow & {
 };
 
 type AppealProgressSnapshot = {
-  label: 'Detected' | 'Evidence' | 'Filed' | 'Approved';
+  label: 'Detected' | 'Evidence' | 'Filed' | 'Amazon response';
   toneClass: string;
 };
 
@@ -48,10 +48,29 @@ const label = (value: string | null | undefined) =>
 const amount = (value: number | null | undefined) =>
   typeof value === 'number' && Number.isFinite(value) ? value : null;
 
+const normalize = (value: unknown) => String(value || '').trim().toLowerCase();
+
+const hasFiledTruth = (row: QueueRow) =>
+  row.has_filing_truth === true ||
+  row.submission_proof?.proof_present === true ||
+  Boolean(row.amazon_case_id || row.submission_proof?.amazon_case_id || row.submission_proof?.external_reference || row.submission_proof?.proof_reference);
+
+const hasApprovalTruth = (row: QueueRow) =>
+  row.has_approval_truth === true && hasFiledTruth(row);
+
+const hasRejectionTruth = (row: QueueRow) =>
+  row.has_rejection_truth === true && hasFiledTruth(row);
+
+const hasAmazonResponseTruth = (row: QueueRow) =>
+  (row.has_amazon_response_truth === true && hasFiledTruth(row)) ||
+  hasApprovalTruth(row) ||
+  hasRejectionTruth(row);
+
 const isDenied = (status: string | null | undefined) =>
   ['rejected', 'denied', 'lost'].includes(String(status || '').trim().toLowerCase());
 
 const lowballGap = (row: QueueRow) => {
+  if (!hasApprovalTruth(row)) return 0;
   const requested = amount(row.requested_amount);
   const approved = amount(row.approved_amount);
   if (requested == null || approved == null || approved >= requested) return 0;
@@ -61,39 +80,41 @@ const lowballGap = (row: QueueRow) => {
 const appealGap = (row: QueueRow) =>
   lowballGap(row) ||
   amount(row.requested_amount) ||
-  amount(row.approved_amount) ||
+  (hasApprovalTruth(row) ? amount(row.approved_amount) : null) ||
   amount(row.expected_payout_amount) ||
   0;
 
 const appealState = (row: QueueRow): AppealCandidate['appealState'] | null => {
   if (lowballGap(row) > 0) return 'underpaid';
-  if (isDenied(row.status)) return 'denied';
+  if (hasRejectionTruth(row) && isDenied(row.status)) return 'denied';
+  if (hasRejectionTruth(row) && (row.rejection_reason || row.rejection_category)) return 'denied';
   return null;
 };
 
 const appealReason = (row: QueueRow, state: AppealCandidate['appealState']) => {
+  if (state === 'underpaid') {
+    return 'Amazon approval is recorded below the requested claim value.';
+  }
   if (row.rejection_reason) return row.rejection_reason;
   if (row.rejection_category) return label(row.rejection_category);
-  return state === 'underpaid'
-    ? 'Amazon approved less than the documented claim value.'
-    : 'Amazon pushed this claim back before payout.';
+  return 'Amazon rejection is recorded for this submitted case, but no detailed response text is stored yet.';
 };
 
 const policyAngle = (row: QueueRow, state: AppealCandidate['appealState']) => {
   const reason = `${row.rejection_category || ''} ${row.rejection_reason || ''}`.toLowerCase();
   if (state === 'underpaid') {
-    return 'Challenge Amazon’s valuation with invoice-backed unit cost and a tighter reimbursement-value timeline.';
+    return 'Compare the recorded Amazon approval against the requested value, then verify invoice-backed unit cost before asking for correction.';
   }
   if (reason.includes('proof') || reason.includes('insufficient')) {
-    return 'Re-match invoices, receiving records, and linked files so the next appeal lands with stronger proof.';
+    return 'Add the exact missing proof Amazon asked for before any retry is treated as safe.';
   }
   if (reason.includes('value') || reason.includes('valuation')) {
-    return 'Anchor the appeal on documented cost and ask Amazon to correct the valuation basis it used.';
+    return 'Verify the documented cost basis and only challenge the valuation if the invoice trail supports it.';
   }
   if (reason.includes('duplicate') || reason.includes('already reimbursed')) {
-    return 'Show case history and payout truth to overturn the duplicate or already-paid response.';
+    return 'Check case history and payout truth before challenging a duplicate or already-paid response.';
   }
-  return 'Rebuild the case with clearer chronology, stronger supporting files, and a tighter reimbursement-policy argument.';
+  return 'Review the recorded Amazon response against the evidence trail before deciding whether retry is supportable.';
 };
 
 const assess = (row: QueueRow) => {
@@ -112,12 +133,12 @@ const assess = (row: QueueRow) => {
   score = Math.min(score, 96);
 
   if (score >= 80) {
-    return { score, tone: 'ready' as AppealTone, label: 'Ready to re-open', nextStep: 'Generate the appeal brief and resubmit.' };
+    return { score, tone: 'ready' as AppealTone, label: 'Ready to review', nextStep: 'Review the Amazon response and confirm the support packet before retry.' };
   }
   if (docs > 0) {
-    return { score, tone: 'strengthen' as AppealTone, label: 'Needs one stronger proof', nextStep: 'Pull a stronger invoice, shipment, or payout reference first.' };
+    return { score, tone: 'strengthen' as AppealTone, label: 'Needs stronger proof', nextStep: 'Add the missing proof source before moving this back to filing.' };
   }
-  return { score, tone: 'blocked' as AppealTone, label: 'Needs rebuild', nextStep: 'Reconnect the source records and rebuild the support packet.' };
+  return { score, tone: 'blocked' as AppealTone, label: 'Not retry-ready', nextStep: 'Do not retry yet. Link the required source records first.' };
 };
 
 const toneClass = (tone: AppealTone) =>
@@ -164,10 +185,83 @@ const cleanAmazonResponse = (value: string | null | undefined) => {
   return text;
 };
 
-const missingProofItems = (row: AppealCandidate) =>
-  Array.isArray(row.missing_requirements)
-    ? row.missing_requirements.filter((value): value is string => Boolean(value)).map((value) => label(value))
-    : [];
+const proofNeedFor = (rawValue: string, row: AppealCandidate) => {
+  const normalized = normalize(rawValue);
+  const caseContext = normalize(`${row.case_type || ''} ${row.anomaly_type || ''} ${row.rejection_category || ''}`);
+  const sourceRecord =
+    caseContext.includes('inbound') || caseContext.includes('shipment') || caseContext.includes('warehouse') || caseContext.includes('transfer')
+      ? 'shipment or receiving record tied to the units'
+      : caseContext.includes('return') || caseContext.includes('refund')
+        ? 'return, refund, or customer-order trail tied to the unit'
+        : caseContext.includes('fee')
+          ? 'fee event or settlement ledger entry tied to the charge'
+          : 'invoice, inventory, shipment, return, or settlement record tied to this case';
+
+  if (normalized === 'proof_snapshot') {
+    return {
+      title: 'Evidence decision snapshot',
+      detail: 'Missing policy lane, quantity/value math, deadline check, and matched source links for this case.'
+    };
+  }
+
+  if (normalized === 'supporting_document' || normalized === 'missing_evidence_links') {
+    return {
+      title: 'Linked source document',
+      detail: `Link a ${sourceRecord}.`
+    };
+  }
+
+  if (normalized === 'unit_cost_proof' || normalized === 'missing_unit_cost_proof') {
+    return {
+      title: 'Invoice unit-cost proof',
+      detail: 'Link an invoice or supplier document showing unit cost for the SKU/FNSKU/ASIN.'
+    };
+  }
+
+  if (normalized.startsWith('document_type:')) {
+    const documentType = label(normalized.split(':')[1]);
+    return {
+      title: `Required document: ${documentType}`,
+      detail: `Amazon response review needs a linked ${documentType.toLowerCase()} document before retry.`
+    };
+  }
+
+  if (normalized.startsWith('document_family:')) {
+    const family = normalized
+      .split(':')[1]
+      ?.split('|')
+      .map(label)
+      .join(' or ');
+    return {
+      title: family ? `Required document family: ${family}` : 'Required document family',
+      detail: family ? `Link one of these document types: ${family}.` : 'Link the required document family before retry.'
+    };
+  }
+
+  if (normalized.includes('quantity')) {
+    return {
+      title: 'Quantity movement proof',
+      detail: 'Link records showing units sent, received, refunded, adjusted, or reimbursed.'
+    };
+  }
+
+  if (normalized.includes('identifier')) {
+    return {
+      title: 'Verified case identifiers',
+      detail: 'Add the SKU/FNSKU/ASIN, order ID, shipment ID, or Amazon case reference needed to support this case.'
+    };
+  }
+
+  return {
+    title: label(rawValue),
+    detail: `Resolve this recorded blocker before retry: ${label(rawValue)}.`
+  };
+};
+
+const proofNeeds = (row: AppealCandidate) =>
+  (Array.isArray(row.missing_requirements) ? row.missing_requirements : [])
+    .filter((value): value is string => Boolean(value))
+    .map((value) => proofNeedFor(value, row));
 
 const responsePreview = (row: AppealCandidate) => {
   const cleaned = cleanAmazonResponse(row.rejection_reason);
@@ -178,7 +272,7 @@ const responsePreview = (row: AppealCandidate) => {
 
 const appealProgressTone = (label: AppealProgressSnapshot['label']) => {
   switch (label) {
-    case 'Approved':
+    case 'Amazon response':
       return 'text-blue-300';
     case 'Filed':
       return 'text-blue-100';
@@ -190,10 +284,10 @@ const appealProgressTone = (label: AppealProgressSnapshot['label']) => {
 };
 
 const getAppealProgressSnapshot = (row: AppealCandidate): AppealProgressSnapshot => {
-  if (row.appealState === 'underpaid' || amount(row.approved_amount) != null) {
-    return { label: 'Approved', toneClass: appealProgressTone('Approved') };
+  if (hasAmazonResponseTruth(row)) {
+    return { label: 'Amazon response', toneClass: appealProgressTone('Amazon response') };
   }
-  if (isDenied(row.status) || row.rejection_reason || row.rejection_category) {
+  if (hasFiledTruth(row)) {
     return { label: 'Filed', toneClass: appealProgressTone('Filed') };
   }
   if (Number(row.matched_document_count || 0) > 0) {
@@ -204,35 +298,35 @@ const getAppealProgressSnapshot = (row: AppealCandidate): AppealProgressSnapshot
 
 const reopenStateSummary = (row: AppealCandidate) =>
   row.strengthTone === 'ready'
-    ? 'Enough support is linked to move this case back into the filing queue.'
+    ? 'Enough support is linked to review this response without another evidence pass.'
     : row.strengthTone === 'strengthen'
-      ? 'The case has a starting proof trail, but one stronger document should be added first.'
-      : 'The support packet needs to be rebuilt before this case should be reopened.';
+      ? 'The case has a starting proof trail, but a stronger source should be added first.'
+      : 'Required source records are missing, so retry should stay blocked.';
 
 const missingProofSummary = (row: AppealCandidate) => {
-  const missing = missingProofItems(row);
+  const missing = proofNeeds(row);
   const documentCount = Math.max(Number(row.matched_document_count || 0), 0);
 
   if (missing.length > 0) {
-    return truncate(missing.slice(0, 2).join(' + ') + (missing.length > 2 ? ` +${missing.length - 2} more` : ''), 90);
+    return truncate(missing.slice(0, 2).map((item) => item.title).join(' + ') + (missing.length > 2 ? ` +${missing.length - 2} more` : ''), 90);
   }
 
   if (documentCount === 0) return 'No linked documents yet';
-  if (documentCount === 1) return '1 linked document';
-  return `${documentCount} linked documents`;
+  if (documentCount === 1) return 'No missing proof recorded';
+  return 'No missing proof recorded';
 };
 
 const evidenceRebuildSummary = (row: AppealCandidate) => {
-  const missing = missingProofItems(row);
+  const missing = proofNeeds(row);
   const documentCount = Math.max(Number(row.matched_document_count || 0), 0);
 
   if (missing.length > 0) {
-    return `Still missing ${missing.length === 1 ? missing[0].toLowerCase() : `${missing.length} proof items`}.`;
+    return truncate(missing.slice(0, 2).map((item) => item.detail).join(' '), 160);
   }
 
-  if (row.strengthTone === 'ready') return 'Support packet can be rebuilt now.';
+  if (row.strengthTone === 'ready') return `${documentCount} linked source document${documentCount === 1 ? '' : 's'}; verify they match the Amazon response before retry.`;
   if (documentCount === 0) return 'Source records need to be reconnected first.';
-  return 'One stronger proof source should be added before resubmission.';
+  return 'One stronger proof source should be added before retry.';
 };
 
 const twoLineClampStyle = {
@@ -274,7 +368,7 @@ export default function Appeals() {
     if (!activeTenantSlug) {
       setRows([]);
       setLoading(false);
-      setError('A tenant workspace is required before the Retry Filing page can load.');
+      setError('A tenant workspace is required before the Appeals page can load.');
       return;
     }
 
@@ -376,13 +470,13 @@ export default function Appeals() {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Retry Filing" midnight>
+      <PageLayout title="Appeals" midnight>
         <div className="min-h-screen bg-[#050505]">
           <div className="container mx-auto px-8 pb-20 pt-10">
             <Card className="rounded-2xl border-white/5 bg-[#0c0c0c] text-white">
               <CardContent className="space-y-3 p-8">
-                <h1 className="text-xl font-sans font-bold tracking-tight text-white">Retry Filing unavailable</h1>
-                <p className="text-sm font-sans text-white/50">Open this page from a tenant workspace before loading denied or underpaid reimbursements.</p>
+                <h1 className="text-xl font-sans font-bold tracking-tight text-white">Appeals unavailable</h1>
+                <p className="text-sm font-sans text-white/50">Open this page from a tenant workspace before loading verified Amazon response reviews.</p>
               </CardContent>
             </Card>
           </div>
@@ -392,19 +486,19 @@ export default function Appeals() {
   }
 
   return (
-    <PageLayout title="Retry Filing" midnight>
+    <PageLayout title="Appeals" midnight>
       <div className="relative min-h-screen overflow-hidden bg-[#070707] text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
         <div className="relative z-10 container mx-auto space-y-6 px-8 pb-20 pt-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Denied reimbursement recovery</div>
-              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Retry filing denied reimbursements</h1>
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amazon response review</div>
+              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Review verified reimbursement responses</h1>
               <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
-                When Amazon says no or pays short, Margin rebuilds the case with stronger proof and a tighter reimbursement argument.
+                When a filed case has a recorded Amazon response, Margin shows the response, the support gaps, and whether a retry is safe.
               </p>
               <p className="text-[11px] font-sans font-medium tracking-tight text-white/32">
-                Only denied or underpaid claims appear here.
+                Internal estimates do not appear here as Amazon approvals or denials.
               </p>
             </div>
 
@@ -429,10 +523,10 @@ export default function Appeals() {
               <div className="border-b border-white/8 px-6 py-5">
                 <div className="flex flex-col gap-4">
                   <div>
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Retry queue</div>
-                    <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">What Amazon pushed back on</h2>
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Verified response queue</div>
+                    <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Responses that need review</h2>
                     <p className="mt-2 max-w-3xl text-[12px] font-sans leading-5 text-white/42">
-                      Margin re-checks the denial reason, rebuilds the evidence, and prepares a stronger resubmission path from here.
+                      Margin only shows filed cases here when a recorded Amazon response creates a denial or approved-value gap.
                     </p>
                   </div>
 
@@ -450,14 +544,14 @@ export default function Appeals() {
 
                       <Select value={mode} onValueChange={(value) => setMode(value as AppealMode)}>
                         <SelectTrigger className="h-10 w-full rounded-lg border-white/10 bg-white/5 text-white md:w-[180px]">
-                          <SelectValue placeholder="Appeal state" />
+                          <SelectValue placeholder="Response state" />
                         </SelectTrigger>
                         <SelectContent className="border-white/10 bg-black text-white">
-                          <SelectItem value="all">All appeal cases</SelectItem>
-                          <SelectItem value="denied">Denied only</SelectItem>
-                          <SelectItem value="underpaid">Underpaid only</SelectItem>
-                          <SelectItem value="ready">Ready to re-open</SelectItem>
-                          <SelectItem value="needs_rebuild">Needs rebuild</SelectItem>
+                          <SelectItem value="all">All response cases</SelectItem>
+                          <SelectItem value="denied">Denied responses</SelectItem>
+                          <SelectItem value="underpaid">Approved-value gaps</SelectItem>
+                          <SelectItem value="ready">Ready to review</SelectItem>
+                          <SelectItem value="needs_rebuild">Needs proof first</SelectItem>
                         </SelectContent>
                       </Select>
 
@@ -484,23 +578,23 @@ export default function Appeals() {
               {loading ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
                   <RefreshCw className="h-5 w-5 animate-spin text-white/25" />
-                  <p className="text-sm font-sans font-bold text-white/60">Loading appeal candidates...</p>
+                  <p className="text-sm font-sans font-bold text-white/60">Loading verified response reviews...</p>
                 </div>
               ) : error ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
                   <AlertCircle className="h-5 w-5 text-white/35" />
-                  <p className="text-sm font-sans font-bold text-white/70">Failed to load Retry Filing</p>
+                  <p className="text-sm font-sans font-bold text-white/70">Failed to load Appeals</p>
                   <p className="max-w-xl text-xs font-sans text-white/40">{error}</p>
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
                   <p className="text-sm font-sans font-bold text-white/70">
-                    {candidates.length === 0 ? 'No denied or underpaid reimbursements found yet.' : 'No reopen cases match the current filters.'}
+                    {candidates.length === 0 ? 'No verified Amazon responses need review yet.' : 'No response cases match the current filters.'}
                   </p>
                   <p className="max-w-xl text-xs font-sans text-white/40">
                     {candidates.length === 0
-                      ? 'When Amazon denies a claim or pays below the documented value, Margin will bring it here for a stronger second pass.'
-                      : 'Try widening the filters to bring back denied or underpaid cases that still need a second pass.'}
+                      ? 'A case only appears here after Margin has filing truth and a recorded Amazon denial or approved-value gap.'
+                      : 'Try widening the filters to bring back verified responses that still need review.'}
                   </p>
                 </div>
               ) : (
@@ -517,7 +611,7 @@ export default function Appeals() {
                       </colgroup>
                       <thead className="border-b border-white/8 bg-white/[0.02]">
                         <tr className="text-left">
-                          {['Case', 'Amazon pushback', 'Retry state', 'Missing proof', 'Appeal direction', 'Next move'].map((header) => (
+                          {['Case', 'Verified response', 'Review state', 'Required proof', 'Review basis', 'Next step'].map((header) => (
                             <th key={header} className={tableHeaderClass}>{header}</th>
                           ))}
                         </tr>
@@ -525,13 +619,14 @@ export default function Appeals() {
                       <tbody>
                         {paged.map((row) => {
                           const progress = getAppealProgressSnapshot(row);
+                          const approvedAmount = hasApprovalTruth(row) ? amount(row.approved_amount) : null;
                           return (
                           <tr key={row.dispute_case_id} className="border-b border-white/[0.06] align-top transition-colors hover:bg-white/[0.02]">
                             <td className="px-6 py-5">
                               <div className="min-w-[250px] space-y-3">
                                 <div className="space-y-1.5">
                                   <div className="text-[15px] font-sans font-bold tracking-tight text-white">
-                                    {row.case_number || row.claim_number || row.amazon_case_id || 'Appeal case'}
+                                    {row.case_number || row.claim_number || row.amazon_case_id || 'Response case'}
                                   </div>
                                   <div className={tableMetaClass}>{row.store_name || 'Store unavailable'}</div>
                                   <div className={tableSupportClass}>
@@ -551,20 +646,20 @@ export default function Appeals() {
                                       <span className="text-right text-white/84">{money(row.requested_amount, row.currency)}</span>
                                     </div>
                                     <div className="flex items-center justify-between gap-4">
-                                      <span className="text-white/34">Approved</span>
-                                      <span className="text-right text-white/84">{money(row.approved_amount, row.currency)}</span>
+                                      <span className="text-white/34">Amazon approval</span>
+                                      <span className="text-right text-white/84">{money(approvedAmount, row.currency)}</span>
                                     </div>
                                     <div className="flex items-center justify-between gap-4">
-                                      <span className="text-white/34">Appeal gap</span>
+                                      <span className="text-white/34">Review gap</span>
                                       <span className={cn('text-right', row.appealGap > 0 ? 'text-white' : 'text-white/58')}>
                                         {money(row.appealGap, row.currency)}
                                       </span>
                                     </div>
                                   </div>
                                   <div className="text-[10px] font-sans leading-5 text-white/40">
-                                    {amount(row.requested_amount) != null || amount(row.approved_amount) != null
-                                      ? 'Requested vs approved value shown for the current appeal posture.'
-                                      : 'Awaiting payout comparison from the current appeal record.'}
+                                    {hasApprovalTruth(row)
+                                      ? 'Approval value is shown only because filing and approval truth are recorded.'
+                                      : 'No Amazon approval value is recorded for this response.'}
                                   </div>
                                 </div>
                               </div>
@@ -572,7 +667,7 @@ export default function Appeals() {
                             <td className="px-6 py-5">
                               <div className="min-w-[270px] space-y-3">
                                 <Badge className={cn('w-fit whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(row.appealState))}>
-                                  {row.appealState === 'underpaid' ? 'Underpaid' : 'Denied'}
+                                  {row.appealState === 'underpaid' ? 'Approved-value gap' : 'Denied response'}
                                 </Badge>
                                 <div className={tablePrimaryValueClass} style={twoLineClampStyle}>
                                   {responsePreview(row)}
@@ -584,7 +679,7 @@ export default function Appeals() {
                                     onClick={() => setSelectedCaseId(row.dispute_case_id)}
                                     className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 transition-colors hover:text-white"
                                   >
-                                    View full response
+                                    View source detail
                                   </button>
                                 </div>
                               </div>
@@ -597,10 +692,10 @@ export default function Appeals() {
                                 <div className={tableSecondaryValueClass}>{reopenStateSummary(row)}</div>
                                 <div className={tableMetaClass}>
                                   {row.strengthTone === 'ready'
-                                    ? 'Support is strong enough to reopen without another evidence pass.'
+                                    ? 'Support is strong enough to review without another evidence pass.'
                                     : row.strengthTone === 'strengthen'
                                       ? 'The support pack is close, but one stronger source should be added first.'
-                                      : 'This case should not be reopened until the support packet is rebuilt.'}
+                                      : 'This case should not be retried until the required proof is linked.'}
                                 </div>
                               </div>
                             </td>
@@ -628,7 +723,7 @@ export default function Appeals() {
                                   onClick={() => setSelectedCaseId(row.dispute_case_id)}
                                   className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/78 transition-colors hover:bg-white/[0.08] hover:text-white"
                                 >
-                                  Review appeal
+                                  Review response
                                   <ArrowUpRight className="h-3 w-3" />
                                 </button>
                               </div>
@@ -671,9 +766,9 @@ export default function Appeals() {
               {selectedRow ? (
                 <div className="flex h-full flex-col">
                   <SheetHeader className="border-b border-white/8 px-6 py-6 pr-14">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Appeal detail</div>
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Response detail</div>
                     <SheetTitle className="mt-2 text-2xl font-sans font-bold tracking-tight text-white">
-                      {selectedRow.case_number || selectedRow.claim_number || selectedRow.amazon_case_id || 'Appeal case'}
+                      {selectedRow.case_number || selectedRow.claim_number || selectedRow.amazon_case_id || 'Response case'}
                     </SheetTitle>
                     <SheetDescription className="text-[12px] font-sans leading-6 text-white/46">
                       {selectedRow.store_name || 'Store unavailable'}
@@ -684,7 +779,7 @@ export default function Appeals() {
                   <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
                     <div className={cn('overflow-hidden', detailCardClass)}>
                       <div className="grid gap-3 px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Recoverable upside</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Review value</div>
                         <div>
                           <div
                             className={cn(
@@ -696,13 +791,13 @@ export default function Appeals() {
                           </div>
                           <div className="mt-2 space-y-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">
                             {amount(selectedRow.requested_amount) != null ? <div>Claimed {money(selectedRow.requested_amount, selectedRow.currency)}</div> : null}
-                            {amount(selectedRow.approved_amount) != null ? <div>Approved {money(selectedRow.approved_amount, selectedRow.currency)}</div> : null}
+                            {hasApprovalTruth(selectedRow) && amount(selectedRow.approved_amount) != null ? <div>Amazon approval {money(selectedRow.approved_amount, selectedRow.currency)}</div> : null}
                           </div>
                         </div>
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Retry state</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Review state</div>
                         <div>
                           <Badge className={cn('w-fit whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(selectedRow.strengthTone))}>
                             {selectedRow.strengthLabel}
@@ -712,16 +807,16 @@ export default function Appeals() {
                           </div>
                           <div className="mt-2 text-[11px] font-sans leading-6 text-white/46">
                             {selectedRow.strengthTone === 'ready'
-                              ? 'This appeal can be reopened from a stronger proof position now.'
+                              ? 'This response can be reviewed from a stronger proof position now.'
                               : selectedRow.strengthTone === 'strengthen'
-                                ? 'This appeal is close, but one stronger proof source should be added first.'
-                                : 'This appeal still needs a rebuilt proof pack before it should move forward.'}
+                                ? 'This response is close, but one stronger proof source should be added first.'
+                                : 'This response still needs required proof before it should move forward.'}
                           </div>
                         </div>
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Missing proof</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Required proof</div>
                         <div>
                           <div className="text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
                             {missingProofSummary(selectedRow)}
@@ -746,10 +841,10 @@ export default function Appeals() {
                     </div>
 
                     <div className={cn('p-4', detailCardClass)}>
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Amazon pushback</div>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Verified Amazon response</div>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         <Badge className={cn('w-fit whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(selectedRow.appealState))}>
-                          {selectedRow.appealState === 'underpaid' ? 'Underpaid' : 'Denied'}
+                          {selectedRow.appealState === 'underpaid' ? 'Approved-value gap' : 'Denied response'}
                         </Badge>
                         {selectedRow.rejection_category ? (
                           <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/36">
@@ -763,7 +858,7 @@ export default function Appeals() {
                     </div>
 
                     <div className={cn('p-4', detailCardClass)}>
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Rebuild plan</div>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Review plan</div>
                       <div className="mt-3 text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
                         {selectedRow.policyAngle}
                       </div>
@@ -777,8 +872,8 @@ export default function Appeals() {
                         <div className={cn('p-4', detailInsetCardClass)}>
                           <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Missing requirements</div>
                           <div className="mt-2 text-[12px] font-sans leading-6 text-white/72">
-                            {missingProofItems(selectedRow).length > 0
-                              ? missingProofItems(selectedRow).join(' / ')
+                            {proofNeeds(selectedRow).length > 0
+                              ? proofNeeds(selectedRow).map((item) => `${item.title}: ${item.detail}`).join(' / ')
                               : 'No explicit missing requirements were returned for this case.'}
                           </div>
                         </div>

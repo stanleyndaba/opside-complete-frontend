@@ -2324,6 +2324,12 @@ export const api = {
           status: string | null;
           outcome: string | null;
         } | null;
+        has_submission_proof: boolean;
+        has_amazon_reference: boolean;
+        has_filing_truth: boolean;
+        has_approval_truth: boolean;
+        has_rejection_truth: boolean;
+        has_amazon_response_truth: boolean;
         submission_state_divergence?: boolean;
         submission_state_divergence_message?: string | null;
         can_file: boolean;
