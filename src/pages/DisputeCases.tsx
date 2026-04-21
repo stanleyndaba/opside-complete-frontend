@@ -92,6 +92,54 @@ function formatLabel(value: string | null | undefined) {
   return value.replace(/_/g, ' ');
 }
 
+function positiveAmount(value: number | null | undefined) {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : null;
+}
+
+function hasVerifiedFinancialPayout(summary?: FinancialTruthSummary | null) {
+  return Boolean(
+    summary &&
+    summary.payout_status === 'paid' &&
+    positiveAmount(summary.verified_paid_amount) !== null
+  );
+}
+
+function hasPartialFinancialPayout(summary?: FinancialTruthSummary | null) {
+  return Boolean(
+    summary &&
+    summary.payout_status === 'partially_paid' &&
+    positiveAmount(summary.verified_paid_amount) !== null
+  );
+}
+
+function hasVerifiedPayout(row: Pick<QueueRow, 'actual_payout_amount' | 'payout_proof_status'>, summary?: FinancialTruthSummary | null) {
+  return hasVerifiedFinancialPayout(summary) ||
+    positiveAmount(row.actual_payout_amount) !== null ||
+    (row.payout_proof_status === 'verified' && positiveAmount(row.actual_payout_amount) !== null);
+}
+
+function sellerSafeText(value: string | null | undefined, fallback = 'Margin is holding this record until the next safe filing step is available.') {
+  const raw = String(value || '').trim();
+  if (!raw) return fallback;
+  const lower = raw.toLowerCase();
+
+  if (
+    lower.includes('redis') ||
+    lower.includes('upstash') ||
+    lower.includes('max requests') ||
+    lower.includes('quota') ||
+    lower.includes('dispatch queue') ||
+    lower.includes('runtime')
+  ) {
+    return "Filing is temporarily paused because Margin's filing lane is at capacity. No Amazon submission is treated as complete from this paused state.";
+  }
+
+  return raw
+    .replace(/https?:\/\/\S+/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim() || fallback;
+}
+
 function formatSellerFilingStatus(row: Pick<QueueRow, 'filing_status' | 'eligibility_status' | 'eligible_to_file'>) {
   const filingStatus = String(row.filing_status || '').trim().toLowerCase();
   const eligibilityStatus = String(row.eligibility_status || '').trim().toUpperCase();
@@ -112,13 +160,13 @@ function formatSellerFilingStatus(row: Pick<QueueRow, 'filing_status' | 'eligibi
   return formatLabel(row.filing_status);
 }
 
-function filingTruthLine(row: Pick<QueueRow, 'filing_status' | 'eligibility_status' | 'eligible_to_file' | 'block_reasons' | 'last_error'>) {
+function filingTruthLine(row: Pick<QueueRow, 'filing_status' | 'eligibility_status' | 'eligible_to_file' | 'block_reasons' | 'last_error' | 'has_filing_truth'>) {
   const filingStatus = String(row.filing_status || '').trim().toLowerCase();
   const eligibilityStatus = String(row.eligibility_status || '').trim().toUpperCase();
   const blockers = Array.isArray(row.block_reasons)
     ? row.block_reasons.slice(0, 2).map(formatDisputeReason).join(', ')
     : '';
-  const lastError = String(row.last_error || '').trim();
+  const lastError = sellerSafeText(row.last_error, '');
 
   if (filingStatus === 'pending' && row.eligible_to_file === true && eligibilityStatus === 'READY') {
     return 'Proof requirements are complete; this has not been submitted yet.';
@@ -129,7 +177,9 @@ function filingTruthLine(row: Pick<QueueRow, 'filing_status' | 'eligibility_stat
   }
 
   if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') {
-    return 'Submission has moved beyond filing preparation. Proof and Amazon response tracking should stay visible.';
+    return row.has_filing_truth === true
+      ? 'Amazon submission proof or an Amazon reference is recorded for this case.'
+      : 'This is marked as filed internally, but no durable Amazon submission proof is recorded yet.';
   }
 
   if (filingStatus === 'payment_required') {
@@ -164,12 +214,119 @@ function badgeClass(value: string | null | undefined) {
 }
 
 function formatBlockReason(value: string) {
-  return formatDisputeReason(value);
+  return sellerSafeText(formatDisputeReason(value), formatDisputeReason(value));
 }
 
-function formatMissingRequirementCount(value: number) {
-  if (!Number.isFinite(value) || value <= 0) return 'No missing requirements';
-  return value === 1 ? '1 missing requirement' : `${value} missing requirements`;
+function proofNeedFor(requirement: string, row: QueueRow) {
+  const normalized = String(requirement || '').trim().toLowerCase();
+  const caseContext = String(`${row.case_type || ''} ${row.anomaly_type || ''} ${row.rejection_category || ''}`).toLowerCase();
+  const sourceRecord =
+    caseContext.includes('inbound') || caseContext.includes('shipment') || caseContext.includes('warehouse') || caseContext.includes('transfer')
+      ? 'shipment or receiving record tied to the units'
+      : caseContext.includes('return') || caseContext.includes('refund')
+        ? 'return, refund, or customer-order trail tied to the unit'
+        : caseContext.includes('fee')
+          ? 'fee event or settlement ledger entry tied to the charge'
+          : 'invoice, inventory, shipment, return, or settlement record tied to this case';
+
+  if (normalized === 'proof_snapshot') {
+    return {
+      title: 'Evidence decision snapshot',
+      detail: 'Needs policy lane, quantity/value math, deadline check, and source links.'
+    };
+  }
+
+  if (normalized === 'supporting_document' || normalized === 'missing_evidence_links') {
+    return {
+      title: 'Linked source document',
+      detail: `Link a ${sourceRecord}.`
+    };
+  }
+
+  if (normalized === 'unit_cost_proof' || normalized === 'missing_unit_cost_proof') {
+    return {
+      title: 'Invoice unit-cost proof',
+      detail: 'Link an invoice or supplier document showing unit cost for the SKU/FNSKU/ASIN.'
+    };
+  }
+
+  if (normalized.startsWith('document_type:')) {
+    const documentType = formatRequirement(normalized.split(':')[1]);
+    return {
+      title: `Required document: ${documentType}`,
+      detail: `Link a ${documentType.toLowerCase()} document before filing.`
+    };
+  }
+
+  if (normalized.startsWith('document_family:')) {
+    const family = normalized
+      .split(':')[1]
+      ?.split('|')
+      .map(formatRequirement)
+      .join(' or ');
+    return {
+      title: family ? `Required document family: ${family}` : 'Required document family',
+      detail: family ? `Link one of these document types: ${family}.` : 'Link the required document family before filing.'
+    };
+  }
+
+  if (normalized.includes('quantity')) {
+    return {
+      title: 'Quantity movement proof',
+      detail: 'Link records showing units sent, received, refunded, adjusted, or reimbursed.'
+    };
+  }
+
+  if (normalized.includes('identifier')) {
+    return {
+      title: 'Verified identifiers',
+      detail: 'Add the SKU/FNSKU/ASIN, order ID, shipment ID, or Amazon case reference needed to support this case.'
+    };
+  }
+
+  return {
+    title: formatRequirement(requirement),
+    detail: `Resolve this recorded evidence blocker: ${formatRequirement(requirement)}.`
+  };
+}
+
+function proofNeedsFor(row: QueueRow) {
+  return getMissingRequirements(row).map((requirement) => proofNeedFor(requirement, row));
+}
+
+function evidenceHeadline(row: QueueRow) {
+  const missing = proofNeedsFor(row);
+  const linkedCount = Number(row.matched_document_count || 0);
+
+  if (missing.length > 0 && linkedCount === 0) return 'Needs source records';
+  if (missing.length > 0) return 'Proof incomplete';
+  if (linkedCount > 0) return 'Proof linked';
+  return 'No proof linked';
+}
+
+function evidenceDetail(row: QueueRow) {
+  const missing = proofNeedsFor(row);
+  const linkedCount = Number(row.matched_document_count || 0);
+
+  if (missing.length > 0) {
+    return missing.slice(0, 2).map((item) => item.title).join(' + ');
+  }
+
+  if (linkedCount > 0) {
+    return `${linkedCount} source document${linkedCount === 1 ? '' : 's'} linked.`;
+  }
+
+  return 'Link source records before filing.';
+}
+
+function sellerNextActionLabel(row: QueueRow, posture: FilingPosture) {
+  const filingStatus = String(row.filing_status || '').trim().toLowerCase();
+  const operationalState = String(row.operational_state || '').trim().toLowerCase();
+
+  if (filingStatus === 'filed' && row.has_filing_truth !== true) return 'Verify filing proof';
+  if (operationalState === 'deferred_explicit') return 'Paused before filing';
+  if (operationalState === 'blocked_operational' || operationalState === 'failed_durable') return 'Filing temporarily paused';
+  return posture.headline || sellerSafeText(row.next_action, 'Review this record');
 }
 
 function formatCompactDate(value: string | null | undefined) {
@@ -272,24 +429,18 @@ function queueProgressTone(label: QueueProgressSnapshot['label']) {
 
 function getQueueProgressSnapshot(row: QueueRow, financialSummary?: FinancialTruthSummary | null): QueueProgressSnapshot {
   const billingStatus = String(row.billing_status || '').trim().toLowerCase();
-  const recoveryStatus = String(row.recovery_status || '').trim().toLowerCase();
-  const filingStatus = String(row.filing_status || '').trim().toLowerCase();
-  const status = String(row.status || '').trim().toLowerCase();
   const evidenceState = String(row.evidence_state || '').trim().toLowerCase();
   const proofStatus = String(getProofStatus(row) || '').trim().toLowerCase();
   const hasEvidence = Number(row.matched_document_count || 0) > 0
     || ['filing_ready', 'manual_review', 'supportable_but_not_case_eligible'].includes(proofStatus)
     || ['matched', 'ready', 'usable', 'linked strongly'].includes(evidenceState);
-  const hasFiled = Boolean(row.amazon_case_id || row.linked_dispute_case_id)
-    || ['submitted', 'pending', 'retrying', 'queued', 'approved', 'filed'].includes(filingStatus);
-  const hasApproved = ['approved', 'won'].includes(status) || row.approved_amount != null;
-  const hasRecovered = (financialSummary?.verified_paid_amount ?? null) != null
-    || row.actual_payout_amount != null
-    || ['reconciled', 'discrepancy'].includes(recoveryStatus);
+  const hasFiled = row.has_filing_truth === true;
+  const hasApproved = row.has_approval_truth === true;
+  const hasRecovered = hasVerifiedPayout(row, financialSummary);
   const hasLegacyBilling = ['pending', 'completed', 'sent', 'charged', 'paid', 'credited'].includes(billingStatus);
 
-  if (hasLegacyBilling) return { label: 'Legacy billed', toneClass: queueProgressTone('Legacy billed') };
   if (hasRecovered) return { label: 'Recovered', toneClass: queueProgressTone('Recovered') };
+  if (hasLegacyBilling) return { label: 'Legacy billed', toneClass: queueProgressTone('Legacy billed') };
   if (hasApproved) return { label: 'Approved', toneClass: queueProgressTone('Approved') };
   if (hasFiled) return { label: 'Filed', toneClass: queueProgressTone('Filed') };
   if (hasEvidence) return { label: 'Evidence', toneClass: queueProgressTone('Evidence') };
@@ -507,14 +658,16 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   const billingStatus = String(row.billing_status || '').toLowerCase();
   const evidenceState = String(row.evidence_state || '').toLowerCase();
   const operationalState = String(row.operational_state || '').toLowerCase();
-  const operationalSummary = summarizeOperationalExplanation(row.operational_explanation);
+  const operationalSummary = sellerSafeText(summarizeOperationalExplanation(row.operational_explanation), '');
   const blockReasons = Array.isArray(row.block_reasons) ? row.block_reasons : [];
   const lastError = String(row.last_error || '').trim();
+  const safeLastError = sellerSafeText(lastError, '');
   const proofStatus = getProofStatus(row);
   const missingRequirements = getMissingRequirements(row);
   const manualReviewReason = getManualReviewReason(row);
   const payoutProofStatus = getPayoutProofStatus(row);
-  const quarantineReason = getQuarantineReason(row);
+  const quarantineReason = sellerSafeText(getQuarantineReason(row), '');
+  const payoutVerified = hasVerifiedPayout(row, financialSummary);
 
   const strengths: string[] = [];
   const risks: string[] = [];
@@ -546,8 +699,8 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     risks.push(...blockReasons.map(formatBlockReason));
   }
 
-  if (lastError) {
-    risks.unshift(lastError);
+  if (safeLastError) {
+    risks.unshift(safeLastError);
   }
 
   if (proofStatus === 'filing_ready') {
@@ -570,9 +723,9 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     risks.push('Prior rejection to address');
   }
 
-  if (payoutProofStatus === 'verified') {
+  if (payoutVerified) {
     strengths.push('Payout verified');
-  } else if (payoutProofStatus === 'awaiting_payout') {
+  } else if (payoutProofStatus === 'awaiting_payout' && row.has_approval_truth === true) {
     strengths.push('Awaiting payout confirmation');
   } else if (payoutProofStatus === 'quarantined') {
     risks.push('Payout quarantined');
@@ -582,11 +735,11 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     risks.push(quarantineReason);
   }
 
-  if (row.expected_payout_date && row.approved_amount != null && row.actual_payout_amount == null) {
+  if (row.has_approval_truth === true && row.expected_payout_date && row.approved_amount != null && positiveAmount(row.actual_payout_amount) === null) {
     strengths.push(`Est. payout ${formatCompactDate(row.expected_payout_date)}`);
   }
 
-  if (payoutProofStatus === 'verified' && !financialSummary) {
+  if (payoutVerified && !financialSummary) {
     return {
       tone: 'resolved',
       headline: 'Payment verified',
@@ -596,7 +749,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     };
   }
 
-  if (financialSummary?.payout_status === 'paid') {
+  if (hasVerifiedFinancialPayout(financialSummary)) {
     if (billingStatus === 'credited' || billingStatus === 'completed' || row.billed_amount != null) {
       strengths.push('Legacy fee history present');
     }
@@ -609,7 +762,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     };
   }
 
-  if (financialSummary?.payout_status === 'partially_paid') {
+  if (hasPartialFinancialPayout(financialSummary)) {
     return {
       tone: 'in_flight',
       headline: 'Partial payment confirmed',
@@ -619,7 +772,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     };
   }
 
-  if (row.approved_amount != null && row.actual_payout_amount == null) {
+  if (row.has_approval_truth === true && row.approved_amount != null && positiveAmount(row.actual_payout_amount) === null) {
     return {
       tone: 'in_flight',
       headline: 'Awaiting financial confirmation',
@@ -669,7 +822,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'blocked',
       headline: 'Safety hold',
-      detail: lastError || 'Agent 7 is holding this case because the current proof or runtime state is not safe enough to submit.',
+      detail: safeLastError || 'Margin is holding this case because the current proof or filing state is not safe enough to submit.',
       strengths: strengths.slice(0, 2),
       risks: risks.slice(0, 3)
     };
@@ -735,6 +888,15 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
         risks: risks.slice(0, 2)
       };
     }
+    if (row.has_filing_truth !== true) {
+      return {
+        tone: 'attention',
+        headline: 'Filing proof missing',
+        detail: 'This record has an internal filed state, but no durable Amazon submission proof or Amazon reference is recorded yet.',
+        strengths: strengths.slice(0, 2),
+        risks: risks.slice(0, 3)
+      };
+    }
     return {
       tone: 'in_flight',
       headline: 'Filed / in Amazon review',
@@ -744,7 +906,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     };
   }
 
-  if (['rejected', 'denied', 'lost'].includes(status) || filingStatus === 'failed') {
+  if ((row.has_rejection_truth === true && ['rejected', 'denied', 'lost'].includes(status)) || filingStatus === 'failed') {
     if (!hasRealDisputeCase) {
       return {
         tone: 'attention',
@@ -769,8 +931,8 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'blocked',
       headline: 'Blocked before filing',
-      detail: lastError
-        ? lastError
+      detail: safeLastError
+        ? safeLastError
         : blockReasons.length
         ? 'The gate has already identified issues that should be fixed before submission.'
         : `This ${entityNoun} is not currently eligible to file.`,
@@ -793,7 +955,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
       return {
         tone: 'attention',
         headline: 'Retry scheduled',
-        detail: operationalSummary || 'Runtime controls have scheduled this filing for another attempt.',
+        detail: operationalSummary || 'Margin has scheduled this filing for another safe attempt.',
         strengths: strengths.slice(0, 2),
         risks: risks.slice(0, 2)
       };
@@ -801,8 +963,8 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     if (operationalState === 'deferred_explicit') {
       return {
         tone: 'attention',
-        headline: 'Deferred by runtime guard',
-        detail: operationalSummary || 'The case is supportable, but dispatch is intentionally deferred by a runtime guard.',
+        headline: 'Paused before filing',
+        detail: operationalSummary || 'The case is supportable, but Margin has paused filing until the filing lane is ready.',
         strengths: strengths.slice(0, 2),
         risks: risks.slice(0, 2)
       };
@@ -810,8 +972,8 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     if (operationalState === 'blocked_operational' || operationalState === 'failed_durable') {
       return {
         tone: 'blocked',
-        headline: operationalState === 'failed_durable' ? 'Runtime failure is durable' : 'Dispatch is operationally blocked',
-        detail: operationalSummary || 'A runtime failure is currently preventing dispatch.',
+        headline: operationalState === 'failed_durable' ? 'Filing needs attention' : 'Filing temporarily paused',
+        detail: operationalSummary || 'Margin cannot safely send this filing yet. The case remains unsubmitted until the filing lane clears.',
         strengths: strengths.slice(0, 2),
         risks: risks.slice(0, 3)
       };
@@ -1867,7 +2029,7 @@ export default function DisputeCases() {
                   <table className="w-full min-w-[1440px]">
                     <thead className="bg-white/[0.02] border-b border-white/5">
                       <tr className="text-left">
-                        {['Queue record', 'Record status', 'Amount at stake', 'Evidence', 'Next best move', 'Updated', 'Actions'].map((header) => (
+                        {['Queue record', 'Record status', 'Amount at stake', 'Evidence', 'Next action', 'Updated', 'Actions'].map((header) => (
                           <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
                             {header}
                           </th>
@@ -1895,8 +2057,16 @@ export default function DisputeCases() {
                         const syntheticOpportunityReference = isSyntheticOpportunityReference(row);
                         const hasRealDisputeCase = row.has_real_dispute_case === true;
                         const gateState = getQueueGateState(row);
-                        const missingRequirements = getMissingRequirements(row);
+                        const evidenceNeeds = proofNeedsFor(row);
+                        const evidenceStatus = evidenceHeadline(row);
                         const progressSnapshot = getQueueProgressSnapshot(row, financialSummary);
+                        const approvedAmount = row.has_approval_truth === true ? row.approved_amount : null;
+                        const safeDecisionExplanation = sellerSafeText(decisionExplanation, '');
+                        const safeManualReviewReason = getManualReviewReason(row)
+                          ? proofNeedFor(getManualReviewReason(row) || '', row).title
+                          : null;
+                        const safeQuarantineReason = sellerSafeText(getQuarantineReason(row), '');
+                        const nextActionLabel = sellerNextActionLabel(row, posture);
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
@@ -1963,7 +2133,7 @@ export default function DisputeCases() {
                             <td className="px-6 py-5">
                               <div className="space-y-1 min-w-[220px] text-[12px] font-sans text-white/70">
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-white/35">Approved</span><span>{formatMoney(row.approved_amount, row.currency)}</span></div>
+                                <div className="flex justify-between gap-4"><span className="text-white/35">Amazon approval</span><span>{formatMoney(approvedAmount, row.currency)}</span></div>
                                   <div className="flex justify-between gap-4"><span className="text-white/35">Paid back (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
                                   <div className="pt-1">
                                     <Badge variant="outline" className={cn('border', financialStatusTone(financialSummary?.payout_status))}>
@@ -1977,18 +2147,24 @@ export default function DisputeCases() {
                             <td className="px-6 py-5">
                               <div className="min-w-[190px] max-w-[220px] space-y-2.5">
                                 <Badge variant="outline" className={cn('w-fit max-w-full border', badgeClass(row.evidence_state))}>
-                                  {row.evidence_state}
+                                  {evidenceStatus}
                                 </Badge>
                                 <div className="space-y-1.5 text-[11px] font-sans text-white/50">
                                   <div className="flex items-start justify-between gap-3">
-                                    <span className="text-white/32">Documents linked</span>
-                                    <span className="text-right text-white/65">{row.matched_document_count}</span>
+                                    <span className="text-white/32">Source docs linked</span>
+                                    <span className="text-right text-white/65">{row.matched_document_count ?? 0}</span>
                                   </div>
-                                  {missingRequirements.length ? (
+                                  <div className="space-y-1">
+                                    <div className="text-white/32">Needed now</div>
+                                    <div className="break-words leading-snug text-white/62">
+                                      {evidenceDetail(row)}
+                                    </div>
+                                  </div>
+                                  {evidenceNeeds.length ? (
                                     <div className="space-y-1">
-                                      <div className="text-white/32">Evidence gaps</div>
+                                      <div className="text-white/32">Specific gaps</div>
                                       <div className="break-words leading-snug text-white/62">
-                                        {formatMissingRequirementCount(missingRequirements.length)}
+                                        {evidenceNeeds.slice(0, 2).map((item) => item.detail).join(' ')}
                                       </div>
                                     </div>
                                   ) : null}
@@ -1999,7 +2175,7 @@ export default function DisputeCases() {
                             <td className="px-6 py-5">
                               <div className="min-w-[280px] space-y-3">
                                 <div className="flex flex-wrap items-center gap-2">
-                                  <p className="text-[13px] font-sans font-bold tracking-tight text-white">{row.next_action}</p>
+                                  <p className="text-[13px] font-sans font-bold tracking-tight text-white">{nextActionLabel}</p>
                                   <Badge variant="outline" className={cn('border', postureBadgeClass(posture.tone))}>
                                     {posture.headline}
                                   </Badge>
@@ -2011,21 +2187,21 @@ export default function DisputeCases() {
                                 </div>
                                 <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
                                 <p className="text-[11px] font-sans leading-5 text-white/42">
-                                  Filing truth: {filingTruthLine(row)}
+                                  Filing state: {filingTruthLine(row)}
                                 </p>
-                                {decisionExplanation ? (
+                                {safeDecisionExplanation ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/45">
-                                    Why this record is in this state: {decisionExplanation}
+                                    Why this record is in this state: {safeDecisionExplanation}
                                   </p>
                                 ) : null}
-                                {getManualReviewReason(row) ? (
+                                {safeManualReviewReason ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/38">
-                                    Needs review because: {formatDisputeReason(getManualReviewReason(row))}
+                                    Needs review because: {safeManualReviewReason}
                                   </p>
                                 ) : null}
-                                {getQuarantineReason(row) ? (
+                                {safeQuarantineReason ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/38">
-                                    Held because: {getQuarantineReason(row)}
+                                    Held because: {safeQuarantineReason}
                                   </p>
                                 ) : null}
                                 {posture.strengths.length ? (
@@ -2186,6 +2362,8 @@ export default function DisputeCases() {
             const detailsProofStatus = getProofStatus(detailsRow);
             const detailsPayoutProofStatus = getPayoutProofStatus(detailsRow);
             const detailsMissingRequirements = getMissingRequirements(detailsRow);
+            const detailsProofNeeds = proofNeedsFor(detailsRow);
+            const detailsPosture = deriveFilingPosture(detailsRow, financialSummary);
             return (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
               <DetailSection
@@ -2216,30 +2394,30 @@ export default function DisputeCases() {
                   { label: 'Proof Status', value: formatProofStatus(detailsProofStatus) },
                   { label: 'Payout Proof', value: formatPayoutProofStatus(detailsPayoutProofStatus) },
                   { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
-                  { label: 'Next Action', value: detailsRow.next_action || 'Not Available' },
-                  { label: 'Filing Truth', value: filingTruthLine(detailsRow) },
+                  { label: 'Next Action', value: sellerNextActionLabel(detailsRow, detailsPosture) },
+                  { label: 'Filing State', value: filingTruthLine(detailsRow) },
                 ]}
               />
               <DetailSection
                 title="Filing Posture"
                 rows={[
-                  { label: 'Posture', value: deriveFilingPosture(detailsRow).headline },
-                  { label: 'Detail', value: deriveFilingPosture(detailsRow).detail },
-                  { label: 'Decision Explanation', value: summarizeExplanationPayload(detailsRow.explanation_payload) || 'Not Available' },
-                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.operational_explanation) || 'Not Available' },
+                  { label: 'Posture', value: detailsPosture.headline },
+                  { label: 'Detail', value: detailsPosture.detail },
+                  { label: 'Decision Explanation', value: sellerSafeText(summarizeExplanationPayload(detailsRow.explanation_payload), 'Not Available') },
+                  { label: 'Filing Lane Note', value: sellerSafeText(summarizeOperationalExplanation(detailsRow.operational_explanation), 'Not Available') },
                   { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Not Available' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
                   { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'Not Available' },
-                  { label: 'Last Filing Error', value: detailsRow.last_error || 'Not Available' },
-                  { label: 'Missing Requirements', value: formatRequirementList(detailsMissingRequirements) },
-                  { label: 'Manual Review Reason', value: getManualReviewReason(detailsRow) ? formatDisputeReason(getManualReviewReason(detailsRow)) : 'Not Available' },
-                  { label: 'Quarantine Reason', value: getQuarantineReason(detailsRow) || 'Not Available' },
+                  { label: 'Last Filing Note', value: sellerSafeText(detailsRow.last_error, 'Not Available') },
+                  { label: 'Required Proof', value: detailsProofNeeds.length ? detailsProofNeeds.map((item) => item.title).join(', ') : formatRequirementList(detailsMissingRequirements) },
+                  { label: 'Manual Review Reason', value: getManualReviewReason(detailsRow) ? proofNeedFor(getManualReviewReason(detailsRow) || '', detailsRow).title : 'Not Available' },
+                  { label: 'Hold Reason', value: sellerSafeText(getQuarantineReason(detailsRow), 'Not Available') },
                 ]}
               />
               <DetailSection
                 title="Money"
                 rows={[
                   { label: 'Requested Amount', value: formatMoney(detailsRow.requested_amount, detailsRow.currency) },
-                  { label: 'Approved Amount', value: formatMoney(detailsRow.approved_amount, detailsRow.currency) },
+                  { label: 'Amazon Approval', value: formatMoney(detailsRow.has_approval_truth === true ? detailsRow.approved_amount : null, detailsRow.currency) },
                   { label: 'Paid (Verified)', value: formatMoney(financialSummary?.verified_paid_amount, detailsRow.currency) },
                   { label: 'Record Recovery Field (Legacy)', value: formatMoney(detailsRow.actual_payout_amount, detailsRow.currency) },
                   { label: 'Legacy Billed Amount', value: formatMoney(detailsRow.billed_amount, detailsRow.currency) },
@@ -2261,11 +2439,11 @@ export default function DisputeCases() {
               <DetailSection
                 title="Evidence"
                 rows={[
-                  { label: 'Evidence State', value: detailsRow.evidence_state || 'Not Available' },
-                  { label: 'Matched Documents', value: String(detailsRow.matched_document_count ?? 0) },
+                  { label: 'Evidence State', value: evidenceHeadline(detailsRow) },
+                  { label: 'Source Docs Linked', value: String(detailsRow.matched_document_count ?? 0) },
                   { label: 'Proof Status', value: formatProofStatus(detailsProofStatus) },
                   { label: 'Payout Proof', value: formatPayoutProofStatus(detailsPayoutProofStatus) },
-                  { label: 'Still Needed', value: formatRequirementList(detailsMissingRequirements) },
+                  { label: 'Still Needed', value: detailsProofNeeds.length ? detailsProofNeeds.map((item) => `${item.title}: ${item.detail}`).join(' ') : formatRequirementList(detailsMissingRequirements) },
                   { label: 'Rejection Category', value: detailsRow.rejection_category || 'Not Available' },
                   { label: 'Rejection Reason', value: detailsRow.rejection_reason || 'Not Available' },
                 ]}
@@ -2290,21 +2468,21 @@ export default function DisputeCases() {
                   </div>
                   <div className="space-y-2 text-[11px] font-sans">
                     <div className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-2">
-                      <span className="text-white/35">Documents linked</span>
+                      <span className="text-white/35">Source docs linked</span>
                       <span className="text-right font-semibold tracking-tight text-white/82">
                         {String(detailsRow.matched_document_count ?? 0)}
                       </span>
                     </div>
                     <div className="space-y-2">
                       <div className="text-white/35">Still needed</div>
-                      {detailsMissingRequirements.length ? (
+                      {detailsProofNeeds.length ? (
                         <div className="flex flex-wrap gap-2">
-                          {detailsMissingRequirements.map((requirement) => (
+                          {detailsProofNeeds.map((requirement) => (
                             <span
-                              key={`detail-missing-${detailsRow.dispute_case_id}-${requirement}`}
+                              key={`detail-missing-${detailsRow.dispute_case_id}-${requirement.title}`}
                               className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold tracking-tight text-white/72"
                             >
-                              {formatRequirement(requirement)}
+                              {requirement.title}
                             </span>
                           ))}
                         </div>

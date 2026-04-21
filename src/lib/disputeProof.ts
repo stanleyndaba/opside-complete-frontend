@@ -130,8 +130,18 @@ export function getManualReviewReason(record: DisputeProofLike | null | undefine
 
 export function getPayoutProofStatus(record: DisputeProofLike | null | undefined): string | null {
   const explicit = normalizeToken(record?.payout_proof_status);
-  if (explicit) return explicit;
-  if (record?.actual_payout_amount != null || record?.recovered_amount != null) return 'verified';
+  const actualPayout = Number(record?.actual_payout_amount);
+  const recoveredAmount = Number(record?.recovered_amount);
+  const hasPositivePayout =
+    (Number.isFinite(actualPayout) && actualPayout > 0) ||
+    (Number.isFinite(recoveredAmount) && recoveredAmount > 0);
+
+  if (explicit && explicit !== 'verified') return explicit;
+  if (explicit === 'verified' && !hasPositivePayout) return null;
+
+  if (hasPositivePayout) {
+    return 'verified';
+  }
   if (normalizeToken(record?.recovery_status) === 'quarantined') return 'quarantined';
   if (record?.approved_amount != null || ['approved', 'resolved', 'won'].includes(normalizeToken(record?.status))) {
     return 'awaiting_payout';
