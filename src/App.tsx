@@ -74,6 +74,7 @@ const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
 const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
 const AboutMargin = lazy(() => import("./pages/AboutMargin"));
 const Research = lazy(() => import("./pages/Research"));
+const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 
 
 // New Evidence Pages
@@ -148,6 +149,7 @@ const App = () => (
                         <Route path="/research" element={<Research />} />
                         <Route path="/fba-reimbursement-research" element={<Research />} />
                         <Route path="/pricing" element={<PricingAdjust />} />
+                        <Route path="/payment/success" element={<PaymentSuccess />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/developer-api" element={<ApiLanding />} />

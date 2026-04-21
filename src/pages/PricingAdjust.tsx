@@ -15,6 +15,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { buildYocoCheckoutUrl, PendingYocoCheckoutContext } from '@/lib/yocoCheckout';
 
 type PricingTier = {
   name: string;
@@ -23,6 +24,7 @@ type PricingTier = {
   priceContext: string;
   purpose: string;
   features: string[];
+  checkoutUrl?: string;
   ctaLabel?: string;
   salesLed?: boolean;
   featured?: boolean;
@@ -37,13 +39,14 @@ const pricingTiers: PricingTier[] = [
     name: 'Recovery Scan / Activation',
     price: '$99 one-time',
     priceContext: 'Credited toward subscription',
-    purpose: 'First payment today. Low-risk entry. Credit toward subscription.',
+    purpose: 'Low-risk entry. Credit toward subscription.',
     features: [
       'Initial FBA recovery scan',
       'Supported opportunities surfaced clearly',
       'Recovery workspace prepared from the findings',
       'Credit toward your first subscription if you continue',
     ],
+    checkoutUrl: 'https://pay.yoco.com/r/4GlRw8',
     ctaLabel: 'Start Recovery Scan',
     salesLed: true,
     badgeLabel: 'Entry',
@@ -61,13 +64,14 @@ const pricingTiers: PricingTier[] = [
       '5 claims per month',
       'Recovery and payout tracking',
     ],
+    checkoutUrl: 'https://pay.yoco.com/r/mErEdy',
   },
   {
     name: 'Pro',
     planKey: 'pro',
     price: '$199/mo',
     priceContext: 'Main plan. No commission.',
-    purpose: 'Main plan. No commission. Serious sellers.',
+    purpose: 'Main plan for serious sellers. No commission.',
     features: [
       'Continuous recovery coverage',
       '7 core recovery categories live today',
@@ -77,6 +81,7 @@ const pricingTiers: PricingTier[] = [
       'Real-time alerts for new filing opportunities',
       'Priority support',
     ],
+    checkoutUrl: 'https://pay.yoco.com/r/4ZDLyo',
     featured: true,
   },
   {
@@ -94,6 +99,7 @@ const pricingTiers: PricingTier[] = [
       'API access',
       'High-priority operational coverage',
     ],
+    checkoutUrl: 'https://pay.yoco.com/r/2bLVnw',
   },
   {
     name: 'Enterprise',
@@ -139,12 +145,19 @@ export default function PricingAdjust() {
     navigate('/sales');
   };
 
-  const openYocoCheckout = (checkoutUrl: string) => {
+  const openYocoCheckout = (checkoutUrl: string, context: PendingYocoCheckoutContext = {}) => {
     if (typeof window === 'undefined') {
       return;
     }
 
-    window.location.assign(checkoutUrl);
+    const returnPath = activeSlug
+      ? `/app/${activeSlug}/billing`
+      : `/login?next=${encodeURIComponent('/app')}`;
+    window.location.assign(buildYocoCheckoutUrl(checkoutUrl, {
+      returnPath,
+      tenantSlug: activeSlug || null,
+      ...context,
+    }));
   };
 
   const startSubscribeIntent = async (plan: SelectablePlan, interval: BillingView) => {
@@ -216,7 +229,12 @@ export default function PricingAdjust() {
         } catch {
           // Checkout redirect should not depend on local storage.
         }
-        openYocoCheckout(checkoutUrl);
+        openYocoCheckout(checkoutUrl, {
+          kind: 'subscription',
+          plan,
+          offer: plan === 'pro' ? 'Pro' : plan === 'enterprise' ? 'Scale / Ultra' : 'Starter',
+          invoiceId,
+        });
         return;
       }
 
@@ -326,6 +344,15 @@ export default function PricingAdjust() {
           <div className="mt-auto flex flex-col gap-4">
             <Button
               onClick={() => {
+                if (tier.checkoutUrl) {
+                  openYocoCheckout(tier.checkoutUrl, {
+                    kind: tier.name.toLowerCase().includes('scan') ? 'recovery_scan' : 'subscription',
+                    plan: tier.planKey || null,
+                    offer: tier.name,
+                    price: tier.price,
+                  });
+                  return;
+                }
                 if (tier.salesLed || !tier.planKey) {
                   openSalesPage();
                   return;
@@ -402,30 +429,10 @@ export default function PricingAdjust() {
               <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight mx-auto">
                 Start with a $99 Recovery Scan, then continue with flat monthly monitoring if the findings are useful. Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time.
               </p>
+              <p className="mx-auto max-w-2xl text-[11px] font-sans font-medium leading-5 text-white/32">
+                Checkout is processed by Yoco and may show the local South African rand amount for the selected plan.
+              </p>
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mb-8 max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]"
-          >
-            <div className="hidden grid-cols-[1fr_0.7fr_1.8fr] border-b border-white/10 px-4 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/42 md:grid md:px-6">
-              <div>Offer</div>
-              <div>Price</div>
-              <div>Purpose</div>
-            </div>
-            {pricingTiers.map((tier) => (
-              <div
-                key={tier.name}
-                className="grid grid-cols-1 gap-2 border-b border-white/10 px-4 py-4 text-sm text-white/78 last:border-b-0 md:grid-cols-[1fr_0.7fr_1.8fr] md:items-center md:px-6"
-              >
-                <div className="font-medium text-white">{tier.name}</div>
-                <div className="font-semibold text-white/88">{tier.price}</div>
-                <div className="leading-6 text-white/52">{tier.purpose}</div>
-              </div>
-            ))}
           </motion.div>
 
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">

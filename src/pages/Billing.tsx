@@ -10,6 +10,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
+import { buildYocoCheckoutUrl } from '@/lib/yocoCheckout';
 
 type BillingRecordStatus =
   | 'draft'
@@ -570,7 +571,15 @@ export default function Billing() {
                                   variant="outline"
                                   className="rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                                   onClick={() => {
-                                    window.open(record.paymentLinkUrl || '', '_blank', 'noopener,noreferrer');
+                                    const checkoutUrl = buildYocoCheckoutUrl(record.paymentLinkUrl || '', {
+                                      kind: 'invoice',
+                                      offer: record.planTierLabel || record.summaryLabel || 'Subscription Invoice',
+                                      price: formatMoney(record.totalAmount, record.currency),
+                                      tenantSlug: activeSlug || null,
+                                      invoiceId: record.invoiceId || record.id,
+                                      returnPath: activeSlug ? `/app/${activeSlug}/billing` : '/app',
+                                    });
+                                    window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
                                   }}
                                 >
                                   Pay Subscription Invoice
