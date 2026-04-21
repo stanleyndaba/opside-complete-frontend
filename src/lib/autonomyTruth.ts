@@ -55,6 +55,44 @@ export function formatAutonomyLabel(value?: string | null) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+const FILING_LANE_CAPACITY_MESSAGE =
+  "Filing is temporarily paused because Margin's filing lane is at capacity. No Amazon submission is treated as complete from this paused state.";
+
+function isInternalOperationalText(value?: string | null) {
+  const lower = String(value || '').toLowerCase();
+  return Boolean(
+    lower.includes('redis') ||
+    lower.includes('upstash') ||
+    lower.includes('max requests') ||
+    lower.includes('quota') ||
+    lower.includes('dispatch queue') ||
+    lower.includes('runtime')
+  );
+}
+
+export function sellerSafeOperationalText(value?: string | null, fallback = '') {
+  const raw = String(value || '').trim();
+  if (!raw) return fallback;
+
+  if (isInternalOperationalText(raw)) {
+    return FILING_LANE_CAPACITY_MESSAGE;
+  }
+
+  return raw
+    .replace(/https?:\/\/\S+/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim() || fallback;
+}
+
+function formatOperationalNextAction(value?: string | null) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (!normalized) return null;
+  if (normalized.includes('wait') && normalized.includes('queue') && normalized.includes('resume')) {
+    return 'Wait for filing capacity, then resume dispatch safely';
+  }
+  return formatAutonomyLabel(value);
+}
+
 export function getParsingTruth(record: any): ParsingTruth {
   const parsedMetadata = record?.parsed_metadata || {};
   const metadata = record?.metadata || {};
@@ -156,8 +194,9 @@ export function summarizeMatchExplanation(explanation?: MatchExplanation | null)
 export function summarizeOperationalExplanation(explanation?: OperationalExplanation | null) {
   if (!explanation) return null;
   const parts: string[] = [];
-  if (explanation.reason) parts.push(explanation.reason);
-  if (explanation.next_action) parts.push(`Next: ${formatAutonomyLabel(explanation.next_action)}`);
+  if (explanation.reason) parts.push(sellerSafeOperationalText(explanation.reason));
+  const nextAction = formatOperationalNextAction(explanation.next_action);
+  if (nextAction) parts.push(`Next: ${nextAction}`);
   if (explanation.retry_at) {
     const retryDate = new Date(explanation.retry_at);
     parts.push(`Retry: ${Number.isNaN(retryDate.getTime()) ? explanation.retry_at : retryDate.toLocaleString()}`);

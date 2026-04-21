@@ -30,7 +30,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
-import { formatAutonomyLabel, summarizeExplanationPayload, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
+import { formatAutonomyLabel, sellerSafeOperationalText, summarizeExplanationPayload, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import {
   formatEligibilityStatus,
   formatDisputeReason,
@@ -250,15 +250,51 @@ const toStatusLabel = (value?: string | null) => {
 
 const normalizeLifecycleValue = (value?: unknown) => String(value || '').trim().toLowerCase();
 
+const positiveAmount = (value: unknown): number | null => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+};
+
+const hasTrustedFilingTruth = (caseData: any) => Boolean(
+  caseData?.has_filing_truth === true ||
+  caseData?.has_submission_proof === true ||
+  caseData?.has_amazon_reference === true ||
+  (
+    caseData?.has_submission === true &&
+    (
+      caseData?.submission_proof?.proof_present === true ||
+      caseData?.submission_proof?.proof_reference ||
+      caseData?.amazonCaseId ||
+      caseData?.amazon_case_id ||
+      caseData?.provider_case_id
+    )
+  )
+);
+
+const hasTrustedApprovalTruth = (caseData: any) => Boolean(
+  hasTrustedFilingTruth(caseData) && caseData?.has_approval_truth === true
+);
+
+const hasTrustedPayoutTruth = (caseData: any) => Boolean(
+  caseData?.has_payout === true &&
+  (
+    positiveAmount(caseData?.actual_payout_amount) !== null ||
+    positiveAmount(caseData?.recovered_amount) !== null ||
+    caseData?.payout_proof_status === 'verified'
+  )
+);
+
 const getCaseBlockerSummary = (caseData: any) => {
   const blockers = Array.isArray(caseData?.block_reasons)
     ? caseData.block_reasons.slice(0, 2).map((reason: string) => formatDisputeReason(reason)).filter(Boolean)
     : [];
+  const lastError = String(caseData?.last_error || '').trim();
+  const safeLastError = sellerSafeOperationalText(lastError, '');
 
+  if (safeLastError && safeLastError !== lastError) return safeLastError;
   if (blockers.length > 0) return blockers.join(', ');
 
-  const lastError = String(caseData?.last_error || '').trim();
-  return lastError || null;
+  return safeLastError || null;
 };
 
 const hasCaseSubmissionDivergence = (caseData: any) => {
@@ -278,7 +314,9 @@ const formatSellerCaseFilingStatus = (caseData: any, proofStatus?: string | null
   }
   if (filingStatus === 'pending') return 'Waiting for proof';
   if (filingStatus === 'submitting') return 'Being filed now';
-  if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') return 'Filed';
+  if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') {
+    return hasTrustedFilingTruth(caseData) ? 'Filed' : 'Filing proof needed';
+  }
   if (filingStatus === 'blocked') return 'Blocked';
   if (filingStatus === 'payment_required') return 'Payment required';
   if (filingStatus === 'pending_safety_verification') return 'Needs safety verification';
@@ -307,9 +345,9 @@ const getCaseFilingTruthLine = (caseData: any, proofStatus?: string | null) => {
   }
 
   if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') {
-    return caseData?.has_submission === true
+    return hasTrustedFilingTruth(caseData)
       ? 'Submission proof has been recorded.'
-      : 'Filed state is recorded, but proof details are not available in this view.';
+      : 'Internal filed state is recorded, but Margin has not verified an Amazon submission reference for this case yet.';
   }
 
   if (filingStatus === 'payment_required') {
@@ -317,12 +355,16 @@ const getCaseFilingTruthLine = (caseData: any, proofStatus?: string | null) => {
   }
 
   if (filingStatus === 'blocked' || filingStatus === 'pending_safety_verification' || filingStatus === 'failed') {
-    return blockers
-      ? `Blocked until ${blockers.toLowerCase()} is cleared.`
-      : 'Blocked until the recorded filing gate clears.';
+    if (blockers) {
+      const safeBlocker = sellerSafeOperationalText(blockers, blockers);
+      return safeBlocker !== blockers
+        ? safeBlocker
+        : `Blocked until ${blockers.toLowerCase()} is cleared.`;
+    }
+    return 'Blocked until the recorded filing gate clears.';
   }
 
-  return blockers || 'Margin files only when proof requirements are met.';
+  return sellerSafeOperationalText(blockers || '', 'Margin files only when proof requirements are met.');
 };
 
 const toEntityLabel = (value?: string | null) => {
@@ -374,7 +416,12 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   dispute_case_id: null,
   linked_dispute_case_id: null,
   has_submission: null,
+  has_submission_proof: null,
+  has_amazon_reference: null,
+  has_filing_truth: null,
+  has_approval_truth: null,
   has_payout: null,
+  submission_proof: null,
   detection_result_id: null,
   title: NOT_AVAILABLE,
   status: null,
@@ -479,7 +526,12 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
   dispute_case_id: apiData.dispute_case_id || null,
   linked_dispute_case_id: apiData.linked_dispute_case_id || null,
   has_submission: typeof apiData.has_submission === 'boolean' ? apiData.has_submission : null,
+  has_submission_proof: typeof apiData.has_submission_proof === 'boolean' ? apiData.has_submission_proof : null,
+  has_amazon_reference: typeof apiData.has_amazon_reference === 'boolean' ? apiData.has_amazon_reference : null,
+  has_filing_truth: typeof apiData.has_filing_truth === 'boolean' ? apiData.has_filing_truth : null,
+  has_approval_truth: typeof apiData.has_approval_truth === 'boolean' ? apiData.has_approval_truth : null,
   has_payout: typeof apiData.has_payout === 'boolean' ? apiData.has_payout : null,
+  submission_proof: apiData.submission_proof || null,
   detection_result_id: apiData.detection_result_id || null,
   title: apiData.title || apiData.details || apiData.anomaly_type || 'Claim Details',
   status: apiData.status || null,
@@ -1035,6 +1087,9 @@ export default function CaseDetail() {
     ? backendTruthCase.actual_payout_amount
     : (typeof backendTruthCase?.recovered_amount === 'number' ? backendTruthCase.recovered_amount : null);
   const billedAmount = typeof backendTruthCase?.billed_amount === 'number' ? backendTruthCase.billed_amount : null;
+  const trustedApprovedAmount = hasTrustedApprovalTruth(backendTruthCase) ? approvedAmount : null;
+  const trustedRecoveredAmount = hasTrustedPayoutTruth(backendTruthCase) ? recoveredAmount : null;
+  const trustedBilledAmount = hasTrustedPayoutTruth(backendTruthCase) && positiveAmount(billedAmount) !== null ? billedAmount : null;
   const explicitValuePerUnit = typeof backendTruthCase?.value_per_unit === 'number' ? backendTruthCase.value_per_unit : null;
   const backendUnitCost = typeof backendTruthCase?.unitCost === 'number'
     ? backendTruthCase.unitCost
@@ -1092,7 +1147,7 @@ export default function CaseDetail() {
     ? backendTruthCase.payout_proof_status
     : null;
   const quarantineReason = typeof backendTruthCase?.quarantine_reason === 'string' && backendTruthCase.quarantine_reason.trim()
-    ? backendTruthCase.quarantine_reason
+    ? sellerSafeOperationalText(backendTruthCase.quarantine_reason)
     : null;
   const approvalGuidance = useMemo(() => {
     const hasMatchedDocs = typeof matchedCount === 'number' && matchedCount > 0;
@@ -1292,9 +1347,9 @@ export default function CaseDetail() {
     return legacy && escalationPlaybooks[legacy as RejectionReason] ? legacy as RejectionReason : null;
   }, [effectiveCase?.rejection_category, effectiveCase?.rejection_code]);
   const lifecycleSteps = useMemo(() => {
-    if (effectiveCase?.truth_unavailable) {
+    if (!hasResolvedBackend || effectiveCase?.truth_unavailable || !backendTruthCase) {
       return [
-        { label: 'Detected', active: false },
+        { label: 'Detected', active: Boolean(caseId) },
         { label: 'Evidence', active: false },
         { label: 'Filed', active: false },
         { label: 'Approved', active: false },
@@ -1302,21 +1357,21 @@ export default function CaseDetail() {
         { label: 'Legacy Billed', active: false }
       ];
     }
-    const currentStatus = String(effectiveCase?.status || '').toLowerCase();
-    const recoveryStatus = String(effectiveCase?.recovery_status || '').toLowerCase();
     const billingStatus = String(effectiveCase?.billing_status || '').toLowerCase();
     const hasEvidence = backendTruthCase?.evidence_summary?.has_documents === true;
-    const hasSubmission = backendTruthCase?.has_submission === true;
-    const hasPayout = backendTruthCase?.has_payout === true;
+    const hasSubmission = hasTrustedFilingTruth(backendTruthCase);
+    const hasPayout = hasTrustedPayoutTruth(backendTruthCase);
+    const hasApproval = hasTrustedApprovalTruth(backendTruthCase) || hasPayout;
+    const hasLegacyBilling = hasPayout && ['pending', 'completed'].includes(billingStatus) && positiveAmount(billedAmount) !== null;
     return [
       { label: 'Detected', active: Boolean(effectiveCase?.id) },
       { label: 'Evidence', active: hasEvidence },
       { label: 'Filed', active: hasSubmission },
-      { label: 'Approved', active: ['approved'].includes(currentStatus) || typeof approvedAmount === 'number' },
-      { label: 'Recovered', active: hasPayout || ['reconciled', 'discrepancy'].includes(recoveryStatus) || typeof recoveredAmount === 'number' },
-      { label: 'Legacy Billed', active: ['pending', 'completed'].includes(billingStatus) }
+      { label: 'Approved', active: hasApproval },
+      { label: 'Recovered', active: hasPayout },
+      { label: 'Legacy Billed', active: hasLegacyBilling }
     ];
-  }, [approvedAmount, backendTruthCase?.evidence_summary?.has_documents, backendTruthCase?.has_payout, backendTruthCase?.has_submission, effectiveCase?.billing_status, effectiveCase?.id, effectiveCase?.recovery_status, effectiveCase?.status, recoveredAmount]);
+  }, [backendTruthCase, billedAmount, caseId, effectiveCase?.billing_status, effectiveCase?.id, effectiveCase?.truth_unavailable, hasResolvedBackend]);
 
   useEffect(() => {
     return () => {
@@ -1776,8 +1831,8 @@ export default function CaseDetail() {
             {activeTab === 'RECORD' && (
               <div className="flex flex-col gap-0 border border-white/10 divide-y divide-white/10 rounded-2xl overflow-hidden">
                 {/* Tile 1: Audit Narrative & Logistics */}
-                <div className="p-8 bg-white/[0.02]">
-                  <div className="border-b border-white/10 pb-4">
+                <div className="p-5 sm:p-6 bg-white/[0.02]">
+                  <div className="border-b border-white/10 pb-3">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                       <div>
                         <h3 className="text-[15px] font-sans font-medium tracking-tight text-white">Why This Case Exists</h3>
@@ -1786,7 +1841,7 @@ export default function CaseDetail() {
                         </p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {findingReadinessLabel && (
+                        {hasResolvedBackend && findingReadinessLabel && (
                           <Badge variant="outline" className={cn(
                             "rounded-full px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight",
                             isReviewOnlyFinding
@@ -1796,7 +1851,7 @@ export default function CaseDetail() {
                             {findingReadinessLabel}
                           </Badge>
                         )}
-                        {claimReadiness === 'not_claim_ready' && (
+                        {hasResolvedBackend && claimReadiness === 'not_claim_ready' && (
                           <Badge variant="outline" className="rounded-full border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/45">
                             Not claim-ready
                           </Badge>
@@ -1804,7 +1859,18 @@ export default function CaseDetail() {
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-8">
+                  {!hasResolvedBackend ? (
+                    <div className="mt-4 flex items-start gap-3 border border-white/10 bg-white/[0.025] px-4 py-3">
+                      <Loader2 className="mt-0.5 h-4 w-4 animate-spin text-white/45" />
+                      <div>
+                        <p className="text-[12px] font-sans font-medium tracking-tight text-white/80">Loading backend case basis</p>
+                        <p className="mt-1 max-w-2xl text-[11px] font-sans leading-5 tracking-tight text-white/45">
+                          Waiting for verified detection, evidence, policy, and filing movement before showing this explanation.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                  <div className="space-y-4">
                     <div className="border-b border-white/10">
                       <div className="py-4">
                         <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">What Margin found</p>
@@ -1883,7 +1949,10 @@ export default function CaseDetail() {
                             {filingMovement?.label || nextStep?.title || NOT_AVAILABLE}
                           </p>
                           <p className="mt-2 max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.52]">
-                            {filingMovement?.detail || nextStep?.description || 'Margin is tracking this case through the filing workflow.'}
+                            {sellerSafeOperationalText(
+                              filingMovement?.detail || nextStep?.description,
+                              'Margin is tracking this case through the filing workflow.'
+                            )}
                           </p>
                         </div>
                         {filingMovement?.next_action_label && (
@@ -1957,6 +2026,7 @@ export default function CaseDetail() {
                       )}
                     </div>
                   </div>
+                  )}
                 </div>
 
                 {/* Tile 2: Transaction Details */}
@@ -2303,23 +2373,23 @@ export default function CaseDetail() {
                         </div>
                         <div className="flex items-center justify-between text-white/60">
                           <span>Approved Amount</span>
-                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(approvedAmount, effectiveCase?.currency || 'USD')}</span>
+                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(trustedApprovedAmount, effectiveCase?.currency || 'USD')}</span>
                         </div>
                         <div className="flex items-center justify-between text-white/60">
                           <span>Recovered Amount</span>
-                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(recoveredAmount, effectiveCase?.currency || 'USD')}</span>
+                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(trustedRecoveredAmount, effectiveCase?.currency || 'USD')}</span>
                         </div>
                         <div className="flex items-center justify-between text-white/60">
                           <span>Legacy Billed Amount</span>
-                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(billedAmount, effectiveCase?.currency || 'USD')}</span>
+                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(trustedBilledAmount, effectiveCase?.currency || 'USD')}</span>
                         </div>
                       </div>
 
-                      {typeof recoveredAmount === 'number' && (
+                      {typeof trustedRecoveredAmount === 'number' && (
                         <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg inline-block min-w-[200px]">
                           <div className="flex justify-between items-center mb-1.5">
                             <span className="text-[11px] text-white/40 font-bold uppercase">Actual Payout</span>
-                            <span className="text-xs font-sans font-bold text-blue-400">{formatCurrencyOrDash(recoveredAmount, effectiveCase?.currency || 'USD')}</span>
+                            <span className="text-xs font-sans font-bold text-blue-400">{formatCurrencyOrDash(trustedRecoveredAmount, effectiveCase?.currency || 'USD')}</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-[10px] text-emerald-500 font-bold tracking-tight">
                             <CheckCircle className="h-3 w-3" /> {toStatusLabel(effectiveCase.recovery_status || 'reconciled')}
@@ -2412,7 +2482,7 @@ export default function CaseDetail() {
                       <div className="text-[10px] text-white/30 font-bold uppercase tracking-tight mb-2">Next System Step</div>
                       <div className="text-sm font-bold text-white">{nextStep?.title || 'Unknown next step'}</div>
                       <div className="text-[11px] text-white/60 mt-1 leading-relaxed">
-                        {nextStep?.description || 'The backend did not return next-step context for this case.'}
+                        {sellerSafeOperationalText(nextStep?.description, 'The backend did not return next-step context for this case.')}
                       </div>
                     </div>
 
