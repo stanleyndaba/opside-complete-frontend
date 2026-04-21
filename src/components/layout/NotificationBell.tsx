@@ -71,6 +71,14 @@ const getNotificationPreview = (notification: any) => {
   const requestType = firstValue(payload.request_type, Array.isArray(payload.requested_documents) ? payload.requested_documents[0] : '');
   const syncIdentifier = firstValue(payload.sync_id, payload.syncId);
   const status = String(payload.status || '').toLowerCase();
+  const entityType = String(payload.entity_type || payload.entityType || '').toLowerCase();
+  const payoutTruthSource = String(payload.payout_truth_source || payload.payoutTruthSource || '').toLowerCase();
+  const recoveryIdentifier = firstValue(payload.recovery_id, payload.recoveryId);
+  const hasRecoveryPayoutTruth = Boolean(
+    recoveryIdentifier ||
+    entityType === 'recovery' ||
+    payoutTruthSource === 'recovery_reconciliation'
+  );
   const amount =
     payload.amount ||
     payload.recovery_amount ||
@@ -149,12 +157,39 @@ const getNotificationPreview = (notification: any) => {
     };
   }
 
-  if (type === 'funds_deposited' || type === 'reimbursement_payout' || type === 'refund_approved') {
+  if (type === 'refund_approved' || type === 'approved') {
+    return {
+      eyebrow: 'Approval',
+      header: rawTitle || (formattedAmount ? `${formattedAmount} approved` : 'Reimbursement approved'),
+      message: rawMessage || 'Amazon approval is recorded. Margin will keep tracking until payout proof confirms payment.',
+      tone: 'success' as NotificationTone,
+    };
+  }
+
+  if (type === 'paid') {
     return {
       eyebrow: 'Payout',
-      header: formattedAmount ? `${formattedAmount} payout received` : 'Payout received',
-      message: rawMessage || 'Amazon has credited the approved reimbursement to your account.',
+      header: rawTitle || (formattedAmount ? `${formattedAmount} payout issued` : 'Payout issued'),
+      message: rawMessage || 'Amazon confirmed reimbursement on the linked case.',
       tone: 'success' as NotificationTone,
+    };
+  }
+
+  if (type === 'funds_deposited' || type === 'reimbursement_payout') {
+    if (hasRecoveryPayoutTruth) {
+      return {
+        eyebrow: 'Payout',
+        header: formattedAmount ? `${formattedAmount} recovery payout confirmed` : 'Recovery payout confirmed',
+        message: rawMessage || 'A payout was matched to a recovery record and verified against the settlement trail.',
+        tone: 'success' as NotificationTone,
+      };
+    }
+
+    return {
+      eyebrow: 'Financial record',
+      header: formattedAmount ? `${formattedAmount} settlement activity` : 'Settlement activity recorded',
+      message: 'Amazon financial activity was imported. Margin will only call it recovered after it matches a filed recovery and verified payout proof.',
+      tone: 'neutral' as NotificationTone,
     };
   }
 

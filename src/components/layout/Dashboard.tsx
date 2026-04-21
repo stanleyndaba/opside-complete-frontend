@@ -410,6 +410,108 @@ const formatFindingValueLabel = (result: any) => {
   return 'Estimated value';
 };
 
+const cleanSellerText = (value?: unknown) => {
+  const text = typeof value === 'string' ? value.trim() : '';
+  return text.length ? text : null;
+};
+
+const normalizeBlockReasonKey = (value?: unknown) =>
+  String(value || '').trim().toLowerCase();
+
+const formatBlockReasonLabel = (reason?: unknown) => {
+  const normalized = normalizeBlockReasonKey(reason);
+  if (!normalized) return 'Filing hold';
+  if (normalized.includes('review_only_detection_not_claim_ready')) return 'Review-only, not claim-ready';
+  if (normalized.includes('duplicate')) return 'Possible duplicate';
+  if (normalized.includes('already_reimbursed')) return 'Already reimbursed';
+  if (normalized.includes('safety_hold')) return 'Safety hold';
+  if (normalized.includes('thread_only')) return 'Thread-only case';
+  if (normalized.includes('insufficient_data')) return 'Missing required evidence';
+  if (normalized.includes('payment_required')) return 'Account setup required';
+  if (normalized.includes('quarantined_dangerous_doc')) return 'Document safety hold';
+  if (normalized.includes('redis_quota_exceeded')) return 'Filing queue paused';
+  return toTitleCase(String(reason).replace(/[_-]+/g, ' '));
+};
+
+const getBlockReasonLabels = (reasons?: unknown) => {
+  if (!Array.isArray(reasons)) return [];
+  return Array.from(new Set(
+    reasons
+      .map(formatBlockReasonLabel)
+      .filter(Boolean)
+  ));
+};
+
+const getFindingBlockContext = (finding?: any, movementOverride?: any) => {
+  if (!finding && !movementOverride) return null;
+  const movement = movementOverride || finding?.filingMovement || finding?.filing_movement || null;
+  const movementState = String(
+    finding?.movementState
+    || movement?.state
+    || finding?.filing_movement?.state
+    || ''
+  ).toLowerCase();
+  const rawReasons = [
+    ...(Array.isArray(finding?.blockReasons) ? finding.blockReasons : []),
+    ...(Array.isArray(movement?.block_reasons) ? movement.block_reasons : []),
+    ...(Array.isArray(finding?.filing_movement?.block_reasons) ? finding.filing_movement.block_reasons : []),
+  ];
+  const labels = getBlockReasonLabels(rawReasons);
+  const isBlocked = movementState === 'blocked' || rawReasons.length > 0;
+
+  if (!isBlocked) return null;
+
+  const whyNotClaimReady = cleanSellerText(
+    finding?.whyNotClaimReady
+    || finding?.why_not_claim_ready
+    || finding?.evidence?.why_not_claim_ready
+  );
+  const normalizedReasons = rawReasons.map(normalizeBlockReasonKey);
+  const hasReviewOnlyHold = normalizedReasons.some((reason) => reason.includes('review_only_detection_not_claim_ready'));
+  const hasDuplicateHold = normalizedReasons.some((reason) => reason.includes('duplicate'));
+  const hasAlreadyReimbursedHold = normalizedReasons.some((reason) => reason.includes('already_reimbursed'));
+  const hasEvidenceHold = normalizedReasons.some((reason) => reason.includes('insufficient_data'));
+
+  let reason = whyNotClaimReady;
+  if (!reason && hasReviewOnlyHold) {
+    reason = 'This finding is visible for reconciliation, but it is not claim-ready yet. Margin is holding it until the records show a supported loss, missing reimbursement, or policy-backed recovery gap.';
+  } else if (!reason && hasDuplicateHold) {
+    reason = 'Margin found a possible duplicate or previously handled recovery path, so it is holding this before another Amazon submission is created.';
+  } else if (!reason && hasAlreadyReimbursedHold) {
+    reason = 'A reimbursement or payout trail already appears linked to this issue, so Margin is holding the case instead of filing a duplicate claim.';
+  } else if (!reason && hasEvidenceHold) {
+    reason = 'The required identifiers, documents, or reconciliation records are not complete enough to support a filing yet.';
+  } else if (!reason) {
+    reason = 'A filing gate has not cleared yet, so Margin is holding this finding before any Amazon submission is made.';
+  }
+
+  const nextStep = hasReviewOnlyHold
+    ? 'Next: reconcile the source records. Margin will only move it toward filing if the data later supports an actual reimbursement claim.'
+    : hasEvidenceHold
+      ? 'Next: add or reconnect the missing proof so Margin can decide whether the case is supportable.'
+      : 'Next: review the hold reason and linked records before Margin allows filing to continue.';
+
+  return {
+    labels: labels.length ? labels : ['Filing hold'],
+    reason,
+    nextStep,
+  };
+};
+
+const getSellerFilingMovementDetail = (movement?: any, fallbackStatus?: string | null, finding?: any) => {
+  const blockContext = getFindingBlockContext(finding, movement);
+  if (blockContext) {
+    return `Blocked: ${blockContext.reason}`;
+  }
+
+  const rawDetail = cleanSellerText(movement?.detail);
+  if (rawDetail && !/Margin is holding this case:\s*[a-z0-9_,:\s-]+\./i.test(rawDetail)) {
+    return rawDetail;
+  }
+
+  return getFindingStateMeta(fallbackStatus).detail;
+};
+
 const getFindingStateMeta = (status?: string | null) => {
   const normalized = (status || '').toLowerCase();
 
@@ -479,8 +581,10 @@ const getFindingMovementMeta = (
     label?: string;
     detail?: string;
     next_action_label?: string;
+    block_reasons?: string[];
   } | null,
-  fallbackStatus?: string | null
+  fallbackStatus?: string | null,
+  finding?: any
 ) => {
   const state = (movement?.state || '').toLowerCase();
   const fallback = getFindingStateMeta(fallbackStatus);
@@ -529,7 +633,7 @@ const getFindingMovementMeta = (
 
   return {
     label: movement?.label || fallback.label,
-    detail: movement?.detail || fallback.detail,
+    detail: getSellerFilingMovementDetail(movement, fallbackStatus, finding),
     actionLabel: movement?.next_action_label || fallback.actionLabel,
     tone: resolved?.tone || fallback.tone,
     Icon: resolved?.Icon || fallback.Icon,
@@ -2249,6 +2353,10 @@ export function Dashboard() {
       evidenceSummary: activeDiscrepancy.evidenceSummary || 'Structured evidence is available on the backend detection record.',
     };
   }, [activeDiscrepancy]);
+  const activeDiscrepancyBlockContext = useMemo(
+    () => getFindingBlockContext(activeDiscrepancy),
+    [activeDiscrepancy]
+  );
   const activeDiscrepancyEvidenceItems = useMemo(
     () => getEvidencePreviewItems(activeDiscrepancy?.evidence),
     [activeDiscrepancy?.evidence]
@@ -2444,9 +2552,9 @@ export function Dashboard() {
   }, [launchMonitor?.recent_events]);
   const overviewHeadline = useMemo(() => {
     const readyCount = launchMetrics?.agent7_ready_count ?? 0;
-    const filedCount = launchMetrics?.agent7_filed_count ?? filedClaimsCount;
-    const approvedCount = launchMetrics?.agent7_approved_count ?? approvedClaimsCount;
-    const paidCount = launchMetrics?.agent7_paid_count ?? 0;
+    const filedCount = filedClaimsCount;
+    const approvedCount = approvedClaimsCount;
+    const paidCount = recoveredClaimsCount;
     const needsEvidenceCount = launchMetrics?.agent7_needs_evidence_count ?? 0;
     const safetyVerificationCount = launchMetrics?.agent7_pending_safety_verification_count ?? 0;
     const insufficientDataCount = launchMetrics?.agent7_insufficient_data_count ?? 0;
@@ -2488,6 +2596,7 @@ export function Dashboard() {
     formatCurrencyWithSelection,
     launchMetrics,
     launchMonitor,
+    recoveredClaimsCount,
     recoveredCashTotal,
     recoveredCurrency,
     syncTriggered
@@ -2527,9 +2636,9 @@ export function Dashboard() {
     const duplicateBlockedCount = launchMetrics?.agent7_duplicate_blocked_count ?? 0;
     const insufficientDataCount = launchMetrics?.agent7_insufficient_data_count ?? 0;
     const safetyVerificationCount = launchMetrics?.agent7_pending_safety_verification_count ?? 0;
-    const filedCount = launchMetrics?.agent7_filed_count ?? filedClaimsCount;
-    const approvedCount = launchMetrics?.agent7_approved_count ?? approvedClaimsCount;
-    const paidCount = launchMetrics?.agent7_paid_count ?? 0;
+    const filedCount = filedClaimsCount;
+    const approvedCount = approvedClaimsCount;
+    const paidCount = recoveredClaimsCount;
     const needsEvidenceCount = launchMetrics?.agent7_needs_evidence_count ?? 0;
 
     const currentStatus = (() => {
@@ -2705,6 +2814,7 @@ export function Dashboard() {
     launchMetrics,
     launchMonitor,
     needsSync,
+    recoveredClaimsCount,
     recoveredCashTotal,
     recoveredCurrency,
     syncMessage,
@@ -3541,7 +3651,7 @@ export function Dashboard() {
                           <div className="divide-y divide-white/8">
                             {visibleDetectionResults.map((result) => {
                               const isProcessed = isProcessedFindingStatus(result.status);
-                              const stateMeta = getFindingMovementMeta(result.filing_movement, result.status);
+                              const stateMeta = getFindingMovementMeta(result.filing_movement, result.status, result);
                               const StateIcon = stateMeta.Icon;
                               const fallbackIssueCopy = getIssueCopy(result.anomaly_type);
                               const issueCopy = {
@@ -3574,7 +3684,7 @@ export function Dashboard() {
                                   stateDetail: stateMeta.detail,
                                   stateTone: stateMeta.tone,
                                   movementLabel: result.filing_movement?.label,
-                                  movementDetail: result.filing_movement?.detail,
+                                  movementDetail: stateMeta.detail,
                                   movementState: result.filing_movement?.state,
                                   nextActionLabel: result.next_action_label || result.filing_movement?.next_action_label,
                                   linkedCaseId: result.filing_movement?.dispute_case_id,
@@ -3999,22 +4109,38 @@ export function Dashboard() {
                     <div className="border-t border-white/10 pt-2.5 xl:border-l xl:border-t-0 xl:pl-3 xl:pt-0">
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Current filing movement</div>
                       <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.68]">
-                        {activeDiscrepancy.movementDetail || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
+                        {activeDiscrepancyBlockContext
+                          ? 'Margin is not filing this finding yet. The hold prevents weak or unsupported submissions from being sent to Amazon.'
+                          : activeDiscrepancy.movementDetail || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
                       </p>
-                      <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
-                        {activeDiscrepancy.isProcessed
-                          ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
-                          : activeDiscrepancy.whyNotClaimReady
-                            ? activeDiscrepancy.whyNotClaimReady
-                          : activeDiscrepancy.nextActionLabel
-                            ? `Next action: ${activeDiscrepancy.nextActionLabel}.`
-                            : 'Margin keeps this finding in review until it is either ready to move into a case or held with a clear reason.'}
-                      </p>
-                      {Array.isArray(activeDiscrepancy.blockReasons) && activeDiscrepancy.blockReasons.length > 0 ? (
+                      {activeDiscrepancyBlockContext ? (
+                        <div className="mt-3 border-l border-red-500/25 bg-red-500/[0.035] px-3 py-2.5">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-red-100/55">
+                            Why it is blocked
+                          </div>
+                          <p className="mt-1 text-[11px] font-sans leading-4 tracking-tight text-red-50/80">
+                            {activeDiscrepancyBlockContext.reason}
+                          </p>
+                          <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.48]">
+                            {activeDiscrepancyBlockContext.nextStep}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+                          {activeDiscrepancy.isProcessed
+                            ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
+                            : activeDiscrepancy.whyNotClaimReady
+                              ? activeDiscrepancy.whyNotClaimReady
+                            : activeDiscrepancy.nextActionLabel
+                              ? `Next action: ${activeDiscrepancy.nextActionLabel}.`
+                              : 'Margin keeps this finding in review until it is either ready to move into a case or held with a clear reason.'}
+                        </p>
+                      )}
+                      {activeDiscrepancyBlockContext?.labels?.length ? (
                         <div className="mt-3 flex flex-wrap gap-1.5">
-                          {activeDiscrepancy.blockReasons.slice(0, 3).map((reason: string) => (
+                          {activeDiscrepancyBlockContext.labels.slice(0, 3).map((reason: string) => (
                             <span key={reason} className="border border-red-500/15 bg-red-500/[0.06] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-red-100/75">
-                              {String(reason).replace(/_/g, ' ')}
+                              {reason}
                             </span>
                           ))}
                         </div>
