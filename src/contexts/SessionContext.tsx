@@ -12,6 +12,7 @@ interface SessionContextType {
     isSessionValid: boolean;
     isAuthReady: boolean;
     authToken: string | null;
+    userId: string | null;
     userEmail: string | null;
     isPaidUser: boolean;
     showSessionTimeout: () => void;
@@ -61,6 +62,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const [isSessionValid, setIsSessionValid] = useState(true);
     const [isAuthReady, setIsAuthReady] = useState(false);
     const [authToken, setAuthToken] = useState<string | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
     const [isPaidUser, setIsPaidUser] = useState(false);
 
     const clearStoredAuthContext = useCallback(() => {
@@ -76,6 +78,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const expireSessionLocally = useCallback(() => {
         setIsSessionValid(false);
         setAuthToken(null);
+        setUserId(null);
         setUserEmail(null);
         setIsPaidUser(false);
         clearSessionRecoveryPending();
@@ -136,6 +139,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 }
                 // Store user ID for API calls
                 if (user?.id) {
+                    setUserId(user.id);
                     localStorage.setItem('user_id', user.id);
                 }
             } finally {
@@ -152,10 +156,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 setIsSessionValid(false);
                 clearSessionRecoveryPending();
                 localStorage.removeItem('user_id');
+                localStorage.removeItem('user_email');
                 localStorage.removeItem('session_token');
                 localStorage.removeItem('active_tenant_id');
                 localStorage.removeItem('active_tenant_slug');
                 setAuthToken(null);
+                setUserId(null);
+                setUserEmail(null);
+                setIsPaidUser(false);
                 setIsAuthReady(true);
             } else if (event === 'SIGNED_IN') {
                 setIsSessionValid(true);
@@ -167,6 +175,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 }
                 if (session.user?.email) {
                     setUserEmail(session.user.email);
+                    localStorage.setItem('user_email', session.user.email);
                     
                     // Re-verify payment status on re-auth
                     supabase
@@ -180,6 +189,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 }
                 // Store user_id for API calls
                 if (session.user?.id) {
+                    setUserId(session.user.id);
                     localStorage.setItem('user_id', session.user.id);
                 }
                 setIsAuthReady(true);
@@ -194,6 +204,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                     setUserEmail(session.user.email);
                 }
                 if (session?.user?.id) {
+                    setUserId(session.user.id);
                     localStorage.setItem('user_id', session.user.id);
                 }
                 setIsAuthReady(true);
@@ -214,10 +225,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 if (session?.user?.email) {
                     setUserEmail(session.user.email);
                     localStorage.setItem('user_email', session.user.email);
+                } else {
+                    setUserEmail(null);
+                    localStorage.removeItem('user_email');
                 }
 
                 if (session?.user?.id) {
+                    setUserId(session.user.id);
                     localStorage.setItem('user_id', session.user.id);
+                } else {
+                    setUserId(null);
+                    localStorage.removeItem('user_id');
                 }
 
                 setIsAuthReady(true);
@@ -243,6 +261,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                     setAuthToken(session.access_token);
                     localStorage.setItem('session_token', session.access_token);
                     if (session.user?.id) {
+                        setUserId(session.user.id);
                         localStorage.setItem('user_id', session.user.id);
                     }
                     if (session.user?.email) {
@@ -280,6 +299,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             isSessionValid,
             isAuthReady,
             authToken,
+            userId,
             userEmail,
             isPaidUser,
             showSessionTimeout,

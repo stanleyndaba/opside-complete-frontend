@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { useStatusStream } from '@/hooks/use-status-stream';
 import { usePhase3Notifications } from '@/hooks/use-phase3-notifications';
 import { api } from '@/lib/api';
@@ -31,21 +31,37 @@ const NotificationsContext = createContext<NotificationsContextType | undefined>
 export function NotificationsProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { isAuthReady, authToken, isSessionValid } = useSession();
+  const { isAuthReady, authToken, isSessionValid, userId } = useSession();
 
-  const { tenant } = useTenant();
+  const { tenant, isReady: isTenantReady } = useTenant();
   const location = useLocation();
   const routeSlugMatch = location.pathname.match(/^\/app\/([^/]+)/);
-  const activeSlug = tenant?.slug || routeSlugMatch?.[1] || '';
+  const activeSlug = routeSlugMatch?.[1] || tenant?.slug || '';
+  const notificationScope = `${userId || 'anonymous'}:${activeSlug || 'no-workspace'}:${authToken || 'no-token'}`;
+  const latestScopeRef = useRef(notificationScope);
 
   // Initialize SSE streams
-  const { close: closeStatusStream } = useStatusStream(undefined, activeSlug);
-  const { close: closePhase3Notifications, lastEvent } = usePhase3Notifications(undefined, activeSlug);
+  const streamSlug = isTenantReady && isAuthReady && isSessionValid && authToken && userId ? activeSlug : '';
+  const { close: closeStatusStream } = useStatusStream(undefined, streamSlug);
+  const { close: closePhase3Notifications, lastEvent } = usePhase3Notifications(undefined, streamSlug);
+
+  useEffect(() => {
+    latestScopeRef.current = notificationScope;
+    setNotifications([]);
+    setIsLoading(Boolean(activeSlug && isTenantReady && isAuthReady && authToken && isSessionValid && userId));
+  }, [activeSlug, authToken, isAuthReady, isSessionValid, isTenantReady, notificationScope, userId]);
 
   const fetchNotifications = useCallback(async () => {
-    if (!activeSlug || !isAuthReady || !authToken || !isSessionValid) return;
+    const requestScope = latestScopeRef.current;
+    if (!activeSlug || !isTenantReady || !isAuthReady || !authToken || !isSessionValid || !userId) {
+      setNotifications([]);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await api.getNotifications({ limit: 50 }, activeSlug);
+      if (latestScopeRef.current !== requestScope) return;
       if (response.ok && response.data) {
         const responseData = response.data as any;
         const items = responseData.data || responseData.notifications || [];
@@ -55,10 +71,15 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
       }
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
+      if (latestScopeRef.current === requestScope) {
+        setNotifications([]);
+      }
     } finally {
-      setIsLoading(false);
+      if (latestScopeRef.current === requestScope) {
+        setIsLoading(false);
+      }
     }
-  }, [activeSlug, authToken, isAuthReady, isSessionValid]);
+  }, [activeSlug, authToken, isAuthReady, isSessionValid, isTenantReady, userId]);
 
   // Initial fetch
   useEffect(() => {
@@ -81,6 +102,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   }, [closeStatusStream, closePhase3Notifications]);
 
   const markAsRead = async (id: string) => {
+    if (!activeSlug || !userId) return;
     try {
       // Optimistic update
       setNotifications(prev => prev.map(n =>
@@ -96,6 +118,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   };
 
   const markAllAsRead = async () => {
+    if (!activeSlug || !userId) return;
     try {
       const unreadIds = notifications
         .filter(n => n.status !== 'read')
