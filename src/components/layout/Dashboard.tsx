@@ -165,6 +165,29 @@ const formatLaunchSourceLabel = (value: LaunchMonitorEvent['source_table']) =>
 const formatLaunchStatusLabel = (value?: string | null) =>
   value ? toTitleCase(value.replace(/_/g, ' ')) : null;
 
+const isTechnicalQueueDetail = (value?: string | null) => {
+  const normalized = String(value || '').toLowerCase();
+  return (
+    normalized.includes('redis_quota_exceeded') ||
+    normalized.includes('max requests limit exceeded') ||
+    normalized.includes('upstash.com/docs/redis') ||
+    normalized.includes('dispatch queue cannot safely accept more work')
+  );
+};
+
+const formatOperatorFeedDetail = (value?: string | null) => {
+  const raw = String(value || '').trim();
+  if (isTechnicalQueueDetail(raw)) {
+    return 'Automatic filing is paused because Margin filing capacity is temporarily unavailable. This case is safely held and will retry when filing capacity is available.';
+  }
+
+  return raw
+    .replace(/\s*\(redis_quota_exceeded:[^)]+\)/gi, '')
+    .replace(/https?:\/\/\S+/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim() || 'Operational status updated.';
+};
+
 const normalizeIssueTypeKey = (value?: string | null) =>
   (value || '').toLowerCase().replace(/[:\-\s]+/g, '_').trim();
 
@@ -3257,9 +3280,10 @@ export function Dashboard() {
                                     ? 'Time unavailable'
                                     : formatDistanceToNow(eventTimestamp, { addSuffix: true });
                                   const formattedStatus = formatLaunchStatusLabel(event.status);
+                                  const detailText = formatOperatorFeedDetail(event.detail);
                                   const metaItems = [
                                     event.amazon_case_id ? `Amazon case ${event.amazon_case_id}` : null,
-                                    formattedStatus ? `Status ${formattedStatus}` : null,
+                                    formattedStatus ? `Current state ${formattedStatus}` : null,
                                     event.dispute_case_id ? 'Linked to dispute case' : 'Operator log only'
                                   ].filter(Boolean) as string[];
 
@@ -3292,7 +3316,7 @@ export function Dashboard() {
                                             overflow: 'hidden'
                                           }}
                                         >
-                                          {event.detail}
+                                          {detailText}
                                         </p>
 
                                         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-white/[0.42]">
