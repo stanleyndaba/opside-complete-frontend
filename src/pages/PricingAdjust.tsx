@@ -19,14 +19,14 @@ import { cn } from '@/lib/utils';
 type PricingTier = {
   name: string;
   planKey?: SelectablePlan;
-  monthlyPrice: string;
-  annualPrice: string;
-  annualCheckout: string;
-  bestFor: string;
+  price: string;
+  priceContext: string;
+  purpose: string;
   features: string[];
   ctaLabel?: string;
   salesLed?: boolean;
   featured?: boolean;
+  badgeLabel?: string;
 };
 
 type BillingView = 'monthly' | 'annual';
@@ -34,12 +34,26 @@ type SelectablePlan = 'starter' | 'pro' | 'enterprise';
 
 const pricingTiers: PricingTier[] = [
   {
+    name: 'Recovery Scan / Activation',
+    price: '$99 one-time',
+    priceContext: 'Credited toward subscription',
+    purpose: 'First payment today. Low-risk entry. Credit toward subscription.',
+    features: [
+      'Initial FBA recovery scan',
+      'Supported opportunities surfaced clearly',
+      'Recovery workspace prepared from the findings',
+      'Credit toward your first subscription if you continue',
+    ],
+    ctaLabel: 'Start Recovery Scan',
+    salesLed: true,
+    badgeLabel: 'Entry',
+  },
+  {
     name: 'Starter',
     planKey: 'starter',
-    monthlyPrice: '$49',
-    annualPrice: '$39 / month',
-    annualCheckout: '$468 billed yearly',
-    bestFor: 'New sellers with lighter volume.',
+    price: '$79/mo',
+    priceContext: 'Monthly recovery coverage',
+    purpose: 'Small sellers, limited claim volume.',
     features: [
       'Continuous discrepancy monitoring',
       'Ongoing evidence collection from connected sources',
@@ -51,10 +65,9 @@ const pricingTiers: PricingTier[] = [
   {
     name: 'Pro',
     planKey: 'pro',
-    monthlyPrice: '$99',
-    annualPrice: '$79 / month',
-    annualCheckout: '$948 billed yearly',
-    bestFor: 'Growing sellers who want automation.',
+    price: '$199/mo',
+    priceContext: 'Main plan. No commission.',
+    purpose: 'Main plan. No commission. Serious sellers.',
     features: [
       'Continuous recovery coverage',
       '7 core recovery categories live today',
@@ -67,12 +80,11 @@ const pricingTiers: PricingTier[] = [
     featured: true,
   },
   {
-    name: 'Ultra',
+    name: 'Scale / Ultra',
     planKey: 'enterprise',
-    monthlyPrice: '$199',
-    annualPrice: '$159 / month',
-    annualCheckout: '$1,908 billed yearly',
-    bestFor: 'Larger sellers with custom workflows.',
+    price: '$399/mo',
+    priceContext: 'Priority recovery workflow',
+    purpose: 'Higher volume, multi-marketplace, priority workflow.',
     features: [
       'Everything in Pro',
       'Early access to expanded detector coverage',
@@ -85,12 +97,11 @@ const pricingTiers: PricingTier[] = [
   },
   {
     name: 'Enterprise',
-    monthlyPrice: 'Custom',
-    annualPrice: 'Custom',
-    annualCheckout: 'Sales-led annual coverage',
-    bestFor: 'Teams that need managed recovery ops.',
+    price: 'Custom',
+    priceContext: 'Managed recovery operations',
+    purpose: 'Managed recovery ops, bigger sellers.',
     features: [
-      'Everything in Ultra',
+      'Everything in Scale / Ultra',
       'Dedicated recovery operations support',
       'Custom detector coverage planning',
       'Custom valuation and sourcing-cost workflows',
@@ -109,23 +120,15 @@ export default function PricingAdjust() {
   const { toast } = useToast();
   const { isAuthReady, authToken } = useSession();
   const { tenant, isReady: isTenantReady } = useTenant();
-  const [selectedBillingView, setSelectedBillingView] = useState<Record<string, BillingView>>({
-    Starter: 'monthly',
-    Pro: 'monthly',
-    Ultra: 'monthly',
-    Enterprise: 'annual',
-  });
   const [processingSelectionKey, setProcessingSelectionKey] = useState<string | null>(null);
   const [restoredSelectionKey, setRestoredSelectionKey] = useState<string | null>(null);
   const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
   const isInAppOverlay = Boolean(tenantSlug);
-  const selfServeTiers = pricingTiers.filter((tier) => !tier.salesLed);
-  const enterpriseTier = pricingTiers.find((tier) => tier.salesLed);
 
   usePageMeta({
-    title: 'Margin Pricing | Monthly Plans, No Commissions',
+    title: 'Margin Pricing | Recovery Scan, Monthly Plans, No Commissions',
     description:
-      'Start with your first 30-day recovery cycle, then continue with ongoing account monitoring. Margin keeps finding new discrepancies, collecting evidence, and tracking claims and payouts over time. No commissions ever.',
+      'Start with a $99 Recovery Scan, then continue with flat monthly recovery coverage. Margin keeps finding discrepancies, preparing evidence, and tracking recoveries with no commissions.',
     url: `${SITE_META.url}/pricing`,
   });
 
@@ -262,11 +265,10 @@ export default function PricingAdjust() {
 
   const renderPricingTier = (tier: PricingTier, index: number) => {
     const featured = Boolean(tier.featured);
-    const activeBillingView = selectedBillingView[tier.name] || 'monthly';
     const baseCard =
-      'relative flex h-full flex-col rounded-2xl p-6 transition-all duration-300 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.45)]';
+      'relative flex h-full flex-col rounded-2xl border border-white/10 p-6 transition-all duration-300 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.45)]';
     const cardClasses = featured
-      ? `${baseCard} bg-white/[0.045]`
+      ? `${baseCard} bg-white/[0.055]`
       : `${baseCard} bg-white/[0.025]`;
 
     return (
@@ -282,78 +284,31 @@ export default function PricingAdjust() {
         <div className="relative z-10 flex h-full flex-col">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div>
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Tier</div>
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                {tier.salesLed ? 'Offer' : 'Coverage'}
+              </div>
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-white">{tier.name}</h2>
             </div>
-            {featured ? (
+            {featured || tier.badgeLabel ? (
               <Badge variant="outline" className="border-0 bg-white/[0.06] text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
-                Most Popular
+                {tier.badgeLabel || 'Most Popular'}
               </Badge>
             ) : null}
           </div>
 
-          <div className="mb-6 rounded-xl bg-black/20 p-1">
-            {tier.salesLed ? (
-              <div className="rounded-lg bg-white/[0.04] px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/58">
-                Sales-led
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-1">
-                {(['monthly', 'annual'] as BillingView[]).map((view) => {
-                  const isActive = activeBillingView === view;
-                  return (
-                    <button
-                      key={view}
-                      type="button"
-                      onClick={() => setSelectedBillingView((current) => ({ ...current, [tier.name]: view }))}
-                      className={`rounded-lg px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight transition-all ${
-                        isActive
-                          ? 'bg-white text-black'
-                          : 'bg-transparent text-white/35 hover:text-white/70'
-                      }`}
-                    >
-                      {view}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
           <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-              {tier.salesLed
-                ? 'Managed Recovery Coverage'
-                : activeBillingView === 'monthly'
-                  ? 'First Recovery Cycle'
-                  : 'Annual Recovery Coverage'}
-            </div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Price</div>
             <div className="mt-3 text-4xl font-light tracking-tight text-white">
-              {tier.salesLed
-                ? tier.monthlyPrice
-                : activeBillingView === 'monthly'
-                  ? tier.monthlyPrice
-                  : tier.annualPrice}
+              {tier.price}
             </div>
             <div className="mt-2 text-[11px] text-white/45">
-              {tier.salesLed
-                ? 'Custom rollout, support, and operating terms'
-                : activeBillingView === 'monthly'
-                  ? 'Starts your first 30-day recovery cycle'
-                  : 'Locked-in monthly rate for uninterrupted annual monitoring'}
+              {tier.priceContext}
             </div>
-            {tier.salesLed || activeBillingView === 'annual' ? (
-              <div className="mt-1 text-[11px] text-white/32">
-                {tier.salesLed
-                  ? 'Contact sales for SLA, workflow, and volume pricing'
-                  : `${tier.annualCheckout} · locks today\'s rate as coverage expands`}
-              </div>
-            ) : null}
           </div>
 
           <div className="mb-6 rounded-xl bg-white/[0.03] p-4">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Best For</div>
-            <div className="mt-3 text-sm font-medium text-white/80">{tier.bestFor}</div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Purpose</div>
+            <div className="mt-3 text-sm font-medium text-white/80">{tier.purpose}</div>
           </div>
 
           <div className="mb-8 flex-grow rounded-xl bg-white/[0.03] p-5">
@@ -375,12 +330,12 @@ export default function PricingAdjust() {
                   openSalesPage();
                   return;
                 }
-                startSubscribeIntent(tier.planKey, activeBillingView);
+                startSubscribeIntent(tier.planKey, 'monthly');
               }}
               disabled={processingSelectionKey !== null}
               className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
             >
-              {tier.planKey && processingSelectionKey === `${tier.planKey}:${activeBillingView}`
+              {tier.planKey && processingSelectionKey === `${tier.planKey}:monthly`
                 ? 'Preparing Checkout'
                 : tier.ctaLabel || `Start ${tier.name} Coverage`}
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -436,29 +391,46 @@ export default function PricingAdjust() {
           >
             <div className="flex flex-col items-center gap-3">
               <Badge variant="outline" className="border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
-                Flat Subscription
+                Recovery Scan + Flat Subscription
               </Badge>
               <h1 className="text-2xl font-sans font-light tracking-tight text-white">Pricing</h1>
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl md:text-6xl font-light tracking-tight text-white/95 leading-tight">
-                Flat subscription pricing. No commissions. No surprises.
+                Start with proof. Continue with no-commission recovery coverage.
               </h2>
               <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight mx-auto">
-                Start with your first 30-day recovery cycle, then continue with ongoing account monitoring. Margin keeps watching for new discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time. Cancel anytime.
+                Start with a $99 Recovery Scan, then continue with flat monthly monitoring if the findings are useful. Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time.
               </p>
             </div>
           </motion.div>
 
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">
-            {selfServeTiers.map((tier, index) => renderPricingTier(tier, index))}
-          </div>
-
-          {enterpriseTier ? (
-            <div className="mx-auto mt-6 max-w-3xl">
-              {renderPricingTier(enterpriseTier, selfServeTiers.length)}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mb-8 max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]"
+          >
+            <div className="hidden grid-cols-[1fr_0.7fr_1.8fr] border-b border-white/10 px-4 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/42 md:grid md:px-6">
+              <div>Offer</div>
+              <div>Price</div>
+              <div>Purpose</div>
             </div>
-          ) : null}
+            {pricingTiers.map((tier) => (
+              <div
+                key={tier.name}
+                className="grid grid-cols-1 gap-2 border-b border-white/10 px-4 py-4 text-sm text-white/78 last:border-b-0 md:grid-cols-[1fr_0.7fr_1.8fr] md:items-center md:px-6"
+              >
+                <div className="font-medium text-white">{tier.name}</div>
+                <div className="font-semibold text-white/88">{tier.price}</div>
+                <div className="leading-6 text-white/52">{tier.purpose}</div>
+              </div>
+            ))}
+          </motion.div>
+
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">
+            {pricingTiers.map((tier, index) => renderPricingTier(tier, index))}
+          </div>
         </div>
 
         {!isInAppOverlay ? (
