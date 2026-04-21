@@ -32,6 +32,19 @@ type LedgerRow = {
   merchant_reference: string | null;
   status?: string | null;
   filing_status?: string | null;
+  submission_proof?: {
+    proof_present?: boolean | null;
+    proof_reference?: string | null;
+    amazon_case_id?: string | null;
+    external_reference?: string | null;
+    submitted_at?: string | null;
+    status?: string | null;
+    outcome?: string | null;
+  } | null;
+  has_submission_proof?: boolean | null;
+  has_amazon_reference?: boolean | null;
+  has_filing_truth?: boolean | null;
+  has_approval_truth?: boolean | null;
   approved_amount: number | null;
   actual_payout_amount: number | null;
   expected_payout_amount: number | null;
@@ -172,8 +185,16 @@ function isRecoveredDisputeRow(row: DisputeRow) {
     || normalizeStatus(row.payout_proof_status) === 'verified';
 }
 
+function hasFiledDisputeTruth(row: DisputeRow) {
+  const status = normalizeStatus(row.status);
+  return row.submission_proof?.proof_present === true
+    || Boolean(row.amazon_case_id || row.submission_proof?.amazon_case_id || row.submission_proof?.external_reference || row.submission_proof?.proof_reference)
+    || ACTIVE_AMAZON_REVIEW_STATUSES.has(status);
+}
+
 function isApprovedPendingDisputeRow(row: DisputeRow) {
   return row.has_real_dispute_case === true
+    && hasFiledDisputeTruth(row)
     && APPROVED_CASE_STATUSES.has(normalizeStatus(row.status))
     && !isRecoveredDisputeRow(row);
 }
@@ -186,14 +207,18 @@ function isBeingFiledDisputeRow(row: DisputeRow) {
 }
 
 function isFiledDisputeRow(row: DisputeRow) {
+  const status = normalizeStatus(row.status);
+  const filingStatus = normalizeStatus(row.filing_status);
+
   return row.has_real_dispute_case === true
     && !isBeingFiledDisputeRow(row)
     && !hasSubmissionStateDivergence(row)
     && !isApprovedPendingDisputeRow(row)
     && !isRecoveredDisputeRow(row)
+    && hasFiledDisputeTruth(row)
     && (
-      FILED_FILING_STATUSES.has(normalizeStatus(row.filing_status))
-      || ACTIVE_AMAZON_REVIEW_STATUSES.has(normalizeStatus(row.status))
+      FILED_FILING_STATUSES.has(filingStatus)
+      || ACTIVE_AMAZON_REVIEW_STATUSES.has(status)
     );
 }
 
@@ -240,6 +265,7 @@ function isAwaitingPayoutLedgerRow(row: LedgerRow) {
   const operatorState = normalizeStatus(row.operator_state);
   const payoutStatus = normalizeStatus(row.payout_status);
   const caseStatus = normalizeStatus(row.status);
+  if (row.has_approval_truth !== true || row.has_filing_truth !== true) return false;
   const hasApprovedValue = amountOrNull(row.approved_amount) !== null
     || amountOrNull(row.expected_payout_amount) !== null
     || amountOrNull(row.outstanding_amount) !== null;
@@ -312,6 +338,7 @@ function disputeAmount(row: DisputeRow) {
 }
 
 function ledgerApprovedAmount(row: LedgerRow) {
+  if (row.has_approval_truth !== true) return null;
   return amountOrNull(row.approved_amount)
     ?? amountOrNull(row.expected_payout_amount)
     ?? amountOrNull(row.actual_payout_amount);
@@ -453,6 +480,7 @@ function filedProofRows(row: DisputeRow) {
 }
 
 function pendingPayoutReason(row: LedgerRow) {
+  if (row.has_approval_truth !== true) return 'Approval not verified';
   const payout = humanize(row.payout_status);
   if (payout !== NOT_AVAILABLE) return `Awaiting payout · ${payout}`;
   return 'Approved with Amazon · awaiting payout';

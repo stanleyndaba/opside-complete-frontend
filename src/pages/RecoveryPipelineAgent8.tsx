@@ -69,6 +69,19 @@ type Row = {
   merchant_reference: string | null;
   status: string | null;
   filing_status?: string | null;
+  submission_proof?: {
+    proof_present?: boolean | null;
+    proof_reference?: string | null;
+    amazon_case_id?: string | null;
+    external_reference?: string | null;
+    submitted_at?: string | null;
+    status?: string | null;
+    outcome?: string | null;
+  } | null;
+  has_submission_proof?: boolean | null;
+  has_amazon_reference?: boolean | null;
+  has_filing_truth?: boolean | null;
+  has_approval_truth?: boolean | null;
   recovery_status: string | null;
   billing_status: string | null;
   block_reasons?: string[];
@@ -548,7 +561,7 @@ function identityBadgeTone(row: Pick<Row, 'row_type' | 'entity_type' | 'has_real
 }
 
 type LedgerProgressSnapshot = {
-  label: 'Detected' | 'Filed' | 'Approved' | 'Recovered' | 'Legacy billed';
+  label: 'Detected' | 'Prepared' | 'Filed' | 'Approved' | 'Recovered' | 'Legacy billed';
   toneClass: string;
 };
 
@@ -562,6 +575,8 @@ function ledgerProgressTone(label: LedgerProgressSnapshot['label']): string {
       return 'text-blue-300';
     case 'Filed':
       return 'text-blue-100';
+    case 'Prepared':
+      return 'text-white/62';
     default:
       return 'text-white/68';
   }
@@ -583,11 +598,14 @@ function getLedgerProgressSnapshot(row: Row, financialSummary?: FinancialTruthSu
   ) {
     return { label: 'Recovered', toneClass: ledgerProgressTone('Recovered') };
   }
-  if (hasNumericValue(row.approved_amount) || row.expected_payout_source === 'approved_pending') {
+  if (row.has_approval_truth === true && (hasNumericValue(row.approved_amount) || row.expected_payout_source === 'approved_pending')) {
     return { label: 'Approved', toneClass: ledgerProgressTone('Approved') };
   }
-  if (row.has_real_dispute_case === true || Boolean(row.linked_dispute_case_id) || Boolean(row.provider_case_id) || Boolean(row.filing_status)) {
+  if (row.has_filing_truth === true || Boolean(row.provider_case_id)) {
     return { label: 'Filed', toneClass: ledgerProgressTone('Filed') };
+  }
+  if (row.has_real_dispute_case === true || Boolean(row.linked_dispute_case_id)) {
+    return { label: 'Prepared', toneClass: ledgerProgressTone('Prepared') };
   }
   return { label: 'Detected', toneClass: ledgerProgressTone('Detected') };
 }
@@ -1537,7 +1555,7 @@ export default function RecoveryPipelineAgent8() {
                               const showBillingStatusBadge = !isUnavailableDisplay(billingStatusLabel);
                               const showInvestigationBadge = row.investigation_required && operatorStateLabel.trim().toLowerCase() !== 'investigation required';
                               const hasVisibleStateBadges = !isUnavailableDisplay(operatorStateLabel) || showReconciliationBadge || showInvestigationBadge;
-                              const approvedAmountAvailable = hasNumericValue(row.approved_amount);
+                              const approvedAmountAvailable = row.has_approval_truth === true && hasNumericValue(row.approved_amount);
                               const paidBackAvailable = hasNumericValue(financialSummary?.verified_paid_amount);
                               const outstandingAvailable = hasNumericValue(row.outstanding_amount);
                               const legacyFeeAvailable = hasNumericValue(row.billed_revenue_amount);
@@ -1611,9 +1629,9 @@ export default function RecoveryPipelineAgent8() {
                                 <td className="px-4 py-4">
                                   <div className="min-w-[220px] space-y-1 text-[12px] font-sans text-white/70">
                                     <div className="flex items-center justify-between gap-4">
-                                      <span className="text-white/35">Approved with Amazon</span>
+                                      <span className="text-white/35">Amazon approval</span>
                                       <span className={cn('font-semibold tracking-tight', approvedAmountAvailable ? 'text-white/88' : 'text-white/38')}>
-                                        {money(row.approved_amount, row.currency)}
+                                        {approvedAmountAvailable ? money(row.approved_amount, row.currency) : NOT_AVAILABLE}
                                       </span>
                                     </div>
                                     <div className="flex items-center justify-between gap-4">
@@ -1629,7 +1647,11 @@ export default function RecoveryPipelineAgent8() {
                                       </span>
                                     </div>
                                     <div className="pt-1 text-[10px] font-sans text-white/40">
-                                      {row.expected_payout_source ? `Expected source: ${payoutSourceLabel(row.expected_payout_source)}` : `Variance: ${money(row.variance_amount, row.currency)}`}
+                                      {row.has_approval_truth !== true && row.has_real_dispute_case === true
+                                        ? 'Amazon approval not verified'
+                                        : row.expected_payout_source
+                                          ? `Expected source: ${payoutSourceLabel(row.expected_payout_source)}`
+                                          : `Variance: ${money(row.variance_amount, row.currency)}`}
                                     </div>
                                   </div>
                                 </td>
@@ -1791,12 +1813,18 @@ export default function RecoveryPipelineAgent8() {
                 </DialogHeader>
 
                 <div className="max-h-[calc(88vh-150px)] overflow-y-auto px-6">
-                  {basisLoading ? (
-                    <div className="flex items-center gap-2 border-b border-white/8 py-4 text-[11px] font-sans font-medium tracking-tight text-white/[0.52]">
+                  {basisLoading && !basisDetail ? (
+                    <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 py-12 text-center">
                       <RefreshCw className="h-3.5 w-3.5 animate-spin text-white/35" />
-                      Loading backend case basis
+                      <div className="text-[11px] font-sans font-medium uppercase tracking-tight text-white/[0.52]">
+                        Loading backend case basis
+                      </div>
+                      <p className="max-w-sm text-[12px] font-sans leading-5 tracking-tight text-white/[0.4]">
+                        Margin is waiting for the backend case basis before showing this explanation.
+                      </p>
                     </div>
-                  ) : null}
+                  ) : (
+                    <>
 
                   {basisError ? (
                     <div className="border-b border-amber-400/20 py-4 text-[12px] font-sans leading-5 tracking-tight text-amber-100/78">
@@ -1891,6 +1919,8 @@ export default function RecoveryPipelineAgent8() {
                       ) : null}
                     </div>
                   </div>
+                    </>
+                  )}
                 </div>
 
                 <DialogFooter className="border-t border-white/10 px-6 py-4">
