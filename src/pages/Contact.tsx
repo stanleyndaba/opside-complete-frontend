@@ -20,6 +20,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useToast } from '@/hooks/use-toast';
+import { api } from '@/lib/api';
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
 const labelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
@@ -80,20 +81,34 @@ export default function Contact() {
         }
 
         setIsSubmitting(true);
-        await new Promise(resolve => setTimeout(resolve, 900));
+        try {
+            const response = await api.createPublicSupportContact({
+                name: form.name,
+                email: form.email,
+                company: form.company || undefined,
+                subject: form.subject || 'Support request from Margin website',
+                message: form.message,
+                source_page: 'public_contact',
+            });
 
-        const subject = encodeURIComponent(form.subject || 'Support request from Margin website');
-        const body = encodeURIComponent(
-            `MARGIN SUPPORT REQUEST\n${'='.repeat(40)}\n\nName: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company || 'N/A'}\nSubject: ${form.subject || 'General support'}\n\n${'='.repeat(40)}\nMESSAGE:\n\n${form.message}\n\n${'='.repeat(40)}\nSent via Margin Contact Form`
-        );
-        window.open(`mailto:support@margin-finance.com?subject=${subject}&body=${body}`, '_blank');
+            if (!response.ok || !response.data?.success) {
+                throw new Error(response.error || 'Failed to send support request.');
+            }
 
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-        toast({
-            title: 'Message prepared',
-            description: 'Your email client has been opened. Send the email to complete your request.',
-        });
+            setIsSubmitted(true);
+            toast({
+                title: 'Support request sent',
+                description: `Your message was routed to ${response.data.email_sent_to}.`,
+            });
+        } catch (err: any) {
+            toast({
+                title: 'Support request failed',
+                description: err?.message || 'Please email support@margin-finance.com directly.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -181,9 +196,9 @@ export default function Contact() {
                                         <div className="flex h-16 w-16 items-center justify-center rounded-full border border-sky-300/20 bg-sky-300/[0.08] text-sky-100">
                                             <CheckCircle2 className="h-8 w-8" />
                                         </div>
-                                        <h2 className="mt-7 text-[28px] font-light tracking-tight text-white">Message ready to send.</h2>
+                                        <h2 className="mt-7 text-[28px] font-light tracking-tight text-white">Message sent.</h2>
                                         <p className="mt-3 max-w-[360px] text-[14px] leading-7 text-white/52">
-                                            Your email client has the support request. Send it from there and we will route it.
+                                            Your request has been routed to support@margin-finance.com. We will reply to the email address you provided.
                                         </p>
                                         <Button
                                             type="button"

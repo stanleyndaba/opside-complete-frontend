@@ -615,6 +615,20 @@ export const api = {
       created_at: string;
     }>;
   }>(`/api/support/requests?limit=${limit}`),
+  createPublicSupportContact: (body: {
+    name: string;
+    email: string;
+    company?: string;
+    subject: string;
+    message: string;
+    source_page?: string;
+  }) => requestJson<{
+    success: boolean;
+    email_sent_to: string;
+  }>('/api/support/public-contact', {
+    method: 'POST',
+    body: JSON.stringify(body)
+  }),
 
   // Product updates / Latest Changes
   getProductUpdates: (tenantSlug?: string) => {
