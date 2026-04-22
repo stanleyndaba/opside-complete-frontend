@@ -3701,6 +3701,13 @@ export function Dashboard() {
                               const daysRemainingLabel = formatDaysRemainingLabel(result.days_remaining, result.expired);
                               const showDaysRemaining = daysRemainingLabel !== 'Not available';
                               const valueLabel = formatFindingValueLabel(result);
+                              const linkedRecoveryCaseId = result.filing_movement?.dispute_case_id || '';
+                              const linkedRecoverySearch =
+                                result.filing_movement?.case_number
+                                || result.filing_movement?.amazon_case_id
+                                || linkedRecoveryCaseId
+                                || result.id
+                                || '';
                               const openDiscrepancySurface = (surface: 'detail' | 'proof') => {
                                 setActiveDiscrepancy({
                                   id: result.id,
@@ -3751,6 +3758,19 @@ export function Dashboard() {
 
                                 setShowDiscrepancyModal(true);
                               };
+                              const openLinkedRecoveryCase = () => {
+                                if (!linkedRecoveryCaseId) {
+                                  openDiscrepancySurface('detail');
+                                  return;
+                                }
+
+                                const params = new URLSearchParams();
+                                params.set('caseId', linkedRecoveryCaseId);
+                                if (linkedRecoverySearch) {
+                                  params.set('q', linkedRecoverySearch);
+                                }
+                                navigate(tenantRoute(activeSlug, `/recoveries?${params.toString()}`));
+                              };
 
                               return (
                                 <div
@@ -3762,9 +3782,13 @@ export function Dashboard() {
                                 >
                                   <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:items-center xl:gap-5">
                                   <div className="min-w-0">
-                                    <div className="text-[12px] font-sans font-medium tracking-tight text-white/[0.92]">
+                                    <button
+                                      type="button"
+                                      onClick={openLinkedRecoveryCase}
+                                      className="block max-w-full text-left text-[12px] font-sans font-medium tracking-tight text-white/[0.92] transition-colors hover:text-white hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-1 focus-visible:outline-white/35"
+                                    >
                                       {issueCopy.title}
-                                    </div>
+                                    </button>
                                     <p className="mt-1.5 max-w-2xl text-[11px] font-sans leading-5 tracking-tight text-white/[0.54]">
                                       {issueCopy.summary}
                                     </p>
@@ -3808,9 +3832,7 @@ export function Dashboard() {
                                         variant="ghost"
                                         size="sm"
                                         className="h-7 rounded-none px-2.5 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.55] hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all"
-                                        onClick={() => {
-                                          navigate(tenantRoute(activeSlug, '/recoveries'));
-                                        }}
+                                        onClick={openLinkedRecoveryCase}
                                       >
                                         Open cases
                                       </Button>

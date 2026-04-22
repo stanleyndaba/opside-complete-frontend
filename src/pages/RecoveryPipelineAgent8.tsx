@@ -1061,6 +1061,7 @@ export default function RecoveryPipelineAgent8() {
   const activeSlug = (tenantSlug || '').trim();
   const { toast } = useToast();
   const urlQuery = (searchParams.get('q') || '').trim();
+  const focusCaseId = (searchParams.get('caseId') || searchParams.get('focusCaseId') || '').trim();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -1091,6 +1092,8 @@ export default function RecoveryPipelineAgent8() {
   const [detailsFinancialLoading, setDetailsFinancialLoading] = useState(false);
   const liveRefreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingDetailsRefreshKeyRef = useRef<string | null>(null);
+  const focusedRowRef = useRef<HTMLTableRowElement | null>(null);
+  const handledFocusKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (searchTerm !== urlQuery) {
@@ -1228,6 +1231,21 @@ export default function RecoveryPipelineAgent8() {
   const rows = ledger?.rows || [];
   const pagination = ledger?.pagination || null;
   const filteredLabel = useMemo(() => pagination ? `${pagination.total_filtered} filtered results of ${pagination.total_rows}` : '', [pagination]);
+  const matchesFocusedCase = useCallback((row: Row) => {
+    const token = focusCaseId.toLowerCase();
+    if (!token) return false;
+
+    return [
+      row.linked_dispute_case_id,
+      row.dispute_case_id,
+      row.detection_result_id,
+      row.recovery_record_id,
+      row.case_number,
+      row.provider_case_id,
+      getDetailRouteId(row),
+      getLedgerRowKey(row),
+    ].some((value) => String(value || '').trim().toLowerCase() === token);
+  }, [focusCaseId]);
 
   useEffect(() => {
     if (!activeSlug || !rows.length) {
@@ -1354,13 +1372,25 @@ export default function RecoveryPipelineAgent8() {
     }
   };
 
-  const openRecoveryDetails = async (row: Row) => {
+  const openRecoveryDetails = useCallback(async (row: Row) => {
     setDetailsRow(row);
     setDetailsOpen(true);
     setDetailsFinancialSummary(getFinancialSummaryForRow(row, financialSummaries));
     setDetailsFinancialEvents([]);
     void loadDetailsFinancialTruth(row);
-  };
+  }, [financialSummaries, loadDetailsFinancialTruth]);
+
+  useEffect(() => {
+    if (!focusCaseId || loading || !rows.length) return;
+    const focusedRow = rows.find(matchesFocusedCase);
+    if (!focusedRow) return;
+
+    const nextFocusKey = `${focusCaseId}:${getLedgerRowKey(focusedRow)}`;
+    if (handledFocusKeyRef.current === nextFocusKey) return;
+    handledFocusKeyRef.current = nextFocusKey;
+    focusedRowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    void openRecoveryDetails(focusedRow);
+  }, [focusCaseId, loading, matchesFocusedCase, openRecoveryDetails, rows]);
 
   const openEvidencePacket = (row: Row) => {
     const detailRouteId = getDetailRouteId(row);
@@ -1561,8 +1591,16 @@ export default function RecoveryPipelineAgent8() {
                               const legacyFeeAvailable = hasNumericValue(row.billed_revenue_amount);
                               const primaryActionLabel = detailRouteId ? 'Review record' : 'Review info';
                               const progressSnapshot = getLedgerProgressSnapshot(row, financialSummary);
+                              const isFocusedRow = matchesFocusedCase(row);
                               return (
-                              <tr key={getLedgerRowKey(row)} className="border-b border-white/[0.06] align-top transition-colors hover:bg-white/[0.02]">
+                              <tr
+                                key={getLedgerRowKey(row)}
+                                ref={isFocusedRow ? (node) => { focusedRowRef.current = node; } : undefined}
+                                className={cn(
+                                  "border-b border-white/[0.06] align-top transition-colors",
+                                  isFocusedRow ? "bg-emerald-500/[0.08] ring-1 ring-inset ring-emerald-300/20" : "hover:bg-white/[0.02]"
+                                )}
+                              >
                                 <td className="py-4 pr-4">
                                   <div className="min-w-[250px] space-y-3">
                                     <div className="flex flex-wrap items-center gap-2">
