@@ -398,6 +398,16 @@ const describeDashboardLiveSignal = (event: StatusEvent): string | null => {
 const isProcessedFindingStatus = (status?: string | null) =>
   ['filed', 'resolved', 'converted'].includes((status || '').toLowerCase());
 
+const isReadyToFileFinding = (result: any) => {
+  const status = String(result?.status || '').toLowerCase();
+  const movementState = String(result?.filing_movement?.state || '').toLowerCase();
+  const eligibilityStatus = String(result?.filing_movement?.eligibility_status || '').toUpperCase();
+  const filingStatus = String(result?.filing_movement?.filing_status || '').toLowerCase();
+
+  if (status === 'ready_to_file' || movementState === 'ready_to_file') return true;
+  return eligibilityStatus === 'READY' && ['pending', 'retrying', 'pending_approval'].includes(filingStatus);
+};
+
 const formatIssueStatusLabel = (status?: string | null) => {
   const normalized = (status || '').toLowerCase();
 
@@ -2271,11 +2281,11 @@ export function Dashboard() {
     return formatCurrencyWithSelection(issuesFoundRecoveryValue, findingsCurrency);
   }, [findingsCurrency, formatCurrencyWithSelection, issuesFoundRecoveryValue]);
   const readyToFileFindingsCount = useMemo(
-    () => detectionResults.filter(result => (result.status || '').toLowerCase() === 'ready_to_file').length,
+    () => detectionResults.filter(isReadyToFileFinding).length,
     [detectionResults]
   );
   const needsReviewFindingsCount = useMemo(
-    () => detectionResults.filter(result => ['detected', 'pending'].includes((result.status || '').toLowerCase())).length,
+    () => detectionResults.filter(result => !isReadyToFileFinding(result) && ['detected', 'pending'].includes((result.status || '').toLowerCase())).length,
     [detectionResults]
   );
   const issuesFoundSummaryRows = useMemo(() => ([
@@ -2299,7 +2309,7 @@ export function Dashboard() {
       label: 'Ready to file',
       value: pluralize(readyToFileFindingsCount, 'finding'),
       valueTone: readyToFileFindingsCount > 0 ? 'ready' as const : 'muted' as const,
-      detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is ready yet'
+      detail: readyToFileFindingsCount > 0 ? 'Linked cases passed support checks' : 'Nothing is ready yet'
     },
     {
       label: 'Needs review',
