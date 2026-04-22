@@ -3702,10 +3702,11 @@ export function Dashboard() {
                               const showDaysRemaining = daysRemainingLabel !== 'Not available';
                               const valueLabel = formatFindingValueLabel(result);
                               const linkedRecoveryCaseId = result.filing_movement?.dispute_case_id || '';
+                              const recoveryFocusId = linkedRecoveryCaseId || result.id || '';
                               const linkedRecoverySearch =
                                 result.filing_movement?.case_number
                                 || result.filing_movement?.amazon_case_id
-                                || linkedRecoveryCaseId
+                                || recoveryFocusId
                                 || result.id
                                 || '';
                               const openDiscrepancySurface = (surface: 'detail' | 'proof') => {
@@ -3759,13 +3760,13 @@ export function Dashboard() {
                                 setShowDiscrepancyModal(true);
                               };
                               const openLinkedRecoveryCase = () => {
-                                if (!linkedRecoveryCaseId) {
+                                if (!recoveryFocusId) {
                                   openDiscrepancySurface('detail');
                                   return;
                                 }
 
                                 const params = new URLSearchParams();
-                                params.set('caseId', linkedRecoveryCaseId);
+                                params.set('caseId', recoveryFocusId);
                                 if (linkedRecoverySearch) {
                                   params.set('q', linkedRecoverySearch);
                                 }
