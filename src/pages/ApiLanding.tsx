@@ -25,6 +25,7 @@ const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
 const labelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
 const headingClass = 'mt-4 max-w-[920px] text-[31px] font-light leading-[1.02] tracking-tight text-white sm:text-[36px] md:text-[62px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-white/62 md:mt-6 md:text-[18px] md:leading-8';
+const codeFontFamily = "'Fira Code', 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace";
 
 const revealProps = {
   initial: { opacity: 0, y: 18 },
@@ -37,51 +38,51 @@ const capabilities = [
   {
     icon: RefreshCw,
     label: 'Connect account data',
-    detail: 'Start or monitor Amazon data syncs and keep internal systems aligned with the recovery workflow.',
+    detail: 'Start Amazon data syncs and keep recovery operations aligned with connected seller activity.',
   },
   {
     icon: SearchCheck,
     label: 'Detect opportunities',
-    detail: 'Trigger claim checks and list flagged reimbursement opportunities with confidence, value, and supporting context.',
+    detail: 'List flagged reimbursement opportunities with claim type, confidence, value, and supporting context.',
   },
   {
     icon: FileCheck2,
     label: 'Create and manage cases',
-    detail: 'Create reimbursement cases programmatically, update case state, and preserve a traceable audit trail.',
+    detail: 'Create reimbursement cases, update lifecycle state, and preserve the audit trail behind each move.',
   },
   {
     icon: CloudUpload,
     label: 'Upload missing documents',
-    detail: 'Attach proof, invoices, shipping records, and exception documents to unblock supportable claims.',
+    detail: 'Attach invoices, shipment records, carrier proof, and exception documents to unblock claims.',
   },
   {
     icon: ListChecks,
     label: 'Track status and recoveries',
-    detail: 'Pull filing status, Amazon review state, payout truth, recovered amounts, and blocked reasons.',
+    detail: 'Pull filing status, review state, payout truth, recovered amounts, and blocked reasons.',
   },
   {
     icon: Webhook,
     label: 'Push events outward',
-    detail: 'Send operational events into dashboards, workflow tools, partner systems, and finance reporting.',
+    detail: 'Send recovery events into dashboards, workflow tools, partner systems, and finance reporting.',
   },
 ];
 
 const useCases = [
   {
     label: 'Internal automation',
-    detail: 'Let Margin power background checks, evidence requests, queueing, and status updates without manual dashboard work.',
+    detail: 'Power background claim checks, evidence requests, queue movement, and status updates outside the dashboard.',
   },
   {
     label: 'Partner integrations',
-    detail: 'Give agencies, aggregators, and operations partners a controlled way to plug into recovery intelligence.',
+    detail: 'Give agencies, aggregators, and operations partners controlled access to recovery workflows.',
   },
   {
     label: 'Embedded recovery products',
-    detail: 'Support white-label or embedded reimbursement workflows while Margin handles claim logic and lifecycle state.',
+    detail: 'Embed reimbursement workflows while Margin handles claim logic, evidence state, and lifecycle tracking.',
   },
   {
     label: 'Finance reporting',
-    detail: 'Move detected value, filed value, approved value, and paid-back value into the systems operators already trust.',
+    detail: 'Move detected, filed, approved, and paid-back value into the reporting stack your team already uses.',
   },
 ];
 
@@ -97,17 +98,17 @@ const principles = [
   {
     icon: ShieldCheck,
     label: 'Truth first',
-    detail: 'The API should expose what Margin can prove, what is blocked, and what still needs evidence.',
+    detail: 'Every response carries the proof state, blocker, evidence gap, and recovery status Margin can verify.',
   },
   {
     icon: LockKeyhole,
     label: 'Partner-gated',
-    detail: 'Early access stays internal and partner-facing before becoming a broad public developer platform.',
+    detail: 'Access stays private for selected operators and partners while the contract matures around real workflows.',
   },
   {
     icon: GitBranch,
     label: 'Workflow native',
-    detail: 'Endpoints map to real recovery operations: sync, detect, document, file, review, and recover.',
+    detail: 'Endpoints map to actual recovery operations: sync, detect, document, file, review, and recover.',
   },
 ];
 
@@ -131,17 +132,17 @@ function ApiCodePreview() {
   ];
 
   return (
-    <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(7,9,12,0.96)_100%)] shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
-      <div className="flex items-center justify-between border-b border-white/8 px-4 py-3">
+    <div className="relative overflow-hidden rounded-[22px] border border-slate-600/30 bg-[linear-gradient(180deg,#111827_0%,#0d1628_46%,#0b1220_100%)] shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
+      <div className="flex items-center justify-between border-b border-slate-500/20 bg-[#111827] px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-red-400/70" />
           <span className="h-2 w-2 rounded-full bg-yellow-300/70" />
           <span className="h-2 w-2 rounded-full bg-emerald-300/70" />
         </div>
-        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/34">Contract Preview</div>
+        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-slate-300/54">Margin API Preview</div>
       </div>
-      <pre className="overflow-x-auto p-5 text-[12px] leading-6 text-sky-50/72 md:p-6 md:text-[13px]">
-        <code>
+      <pre className="overflow-x-auto p-5 text-[12px] leading-6 text-sky-50/76 md:p-6 md:text-[13px]" style={{ fontFamily: codeFontFamily }}>
+        <code style={{ fontFamily: codeFontFamily }}>
           {lines.map((line, index) => (
             <span key={`${line}-${index}`} className="block whitespace-pre">
               {line}
@@ -157,9 +158,9 @@ export default function ApiLanding() {
   const navigate = useNavigate();
 
   usePageMeta({
-    title: 'Margin API | Partner Recovery Intelligence Layer',
+    title: 'Margin API | Recovery Operations Layer',
     description:
-      'Margin API is the partner-facing action layer for reimbursement cases, claim checks, evidence uploads, status tracking, and recovery intelligence.',
+      'Margin API gives selected partners a programmable layer for reimbursement cases, claim checks, evidence uploads, status tracking, and recovery intelligence.',
     url: `${SITE_META.url}/developer-api`,
     image: SITE_META.image,
   });
@@ -189,14 +190,14 @@ export default function ApiLanding() {
               >
                 <div className={labelClass}>Margin API</div>
                 <h1 className="mt-5 max-w-[900px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[76px]">
-                  The action layer for recovery intelligence.
+                  Recovery operations, programmable.
                 </h1>
                 <p className="mt-5 max-w-[740px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
-                  Margin API is being shaped as the interface behind claims, status, documents, and recovery intelligence. It is not the Amazon API. It is Margin's own partner-facing layer for turning reimbursement work into programmable operations.
+                  Margin API is the action layer behind cases, evidence, status, and recovered value. It gives selected teams a controlled way to connect account data, create claims, attach proof, and track payout truth from their own systems.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-2">
-                  {['Private partner layer', 'No public keys yet', 'Built after launch'].map((item) => (
+                  {['Private access', 'Case lifecycle', 'Evidence aware'].map((item) => (
                     <span
                       key={item}
                       className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium text-white/62"
@@ -217,10 +218,10 @@ export default function ApiLanding() {
                   </button>
 
                   <Link
-                    to="/sales"
+                    to="/contact"
                     className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[184px] md:h-12 md:px-6 md:text-sm"
                   >
-                    Talk to Sales
+                    Contact Support
                   </Link>
                 </div>
               </motion.div>
@@ -256,12 +257,12 @@ export default function ApiLanding() {
         <section className="relative border-t border-white/8 py-16 md:py-32">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <div className={labelClass}>What It Exposes</div>
+              <div className={labelClass}>What It Does</div>
               <h2 className={headingClass}>
-                The API should expose the same machine that powers the product: detect, document, file, track, and recover.
+                Create cases, attach proof, and track recovery status from the systems your team already uses.
               </h2>
               <p className={bodyClass}>
-                The first version should stay narrow and useful. It should serve internal automation and selected partners before Margin opens a broader public developer platform.
+                The first release is a focused partner API for real workflows: syncs, opportunities, cases, documents, events, and recovery reporting.
               </p>
             </motion.div>
 
@@ -288,12 +289,12 @@ export default function ApiLanding() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.78fr_1fr] lg:items-start">
               <motion.div {...revealProps}>
-                <div className={labelClass}>Endpoint Shape</div>
+                <div className={labelClass}>Preview Contract</div>
                 <h2 className={headingClass}>
-                  A small, opinionated contract is stronger than a sprawling API surface.
+                  A focused contract for reimbursement work.
                 </h2>
                 <p className={bodyClass}>
-                  These are preview endpoints for the story and product direction. The backend can ship behind partner access after launch without overpromising broad public availability today.
+                  These preview endpoints show the shape of the private API: account syncs, flagged opportunities, case creation, document uploads, and recovery summaries.
                 </p>
               </motion.div>
 
@@ -321,9 +322,9 @@ export default function ApiLanding() {
         <section className="relative border-t border-white/8 py-16 md:py-32">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <div className={labelClass}>Best Use Cases</div>
+              <div className={labelClass}>Where It Fits</div>
               <h2 className={headingClass}>
-                Useful now for automation. Powerful later for partners, embedded products, and white-label recovery.
+                Built for automation, partner workflows, embedded recovery products, and finance reporting.
               </h2>
             </motion.div>
 
@@ -357,10 +358,10 @@ export default function ApiLanding() {
               <div>
                 <div className={labelClass}>Access</div>
                 <h2 className="mt-4 max-w-[720px] text-[28px] font-light leading-[1.05] tracking-tight text-white md:text-[42px]">
-                  Start private. Prove the contract. Open the platform when the workflow is ready.
+                  Request access when your workflow needs recovery data outside the dashboard.
                 </h2>
                 <p className="mt-4 max-w-[720px] text-[14px] leading-7 text-white/56 md:text-[16px]">
-                  Early API access should be for selected operators, agencies, and partners who need claims, evidence, and recovery status in their own systems.
+                  Early access is for selected operators, agencies, and partners who need claims, evidence, and recovery status in their own systems.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
