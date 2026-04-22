@@ -1066,7 +1066,7 @@ export default function RecoveryPipelineAgent8() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ledger, setLedger] = useState<Ledger | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(() => urlQuery);
   const [dateRange, setDateRange] = useState('30');
   const [statusFilter, setStatusFilter] = useState('all');
   const [reconciliationFilter, setReconciliationFilter] = useState('all');
@@ -1102,8 +1102,11 @@ export default function RecoveryPipelineAgent8() {
     }
   }, [searchTerm, urlQuery]);
 
-  useEffect(() => {
-    const normalizedSearch = searchTerm.trim();
+  const updateSearchTerm = useCallback((value: string) => {
+    setSearchTerm(value);
+    setPage(1);
+
+    const normalizedSearch = value.trim();
     const currentQuery = (searchParams.get('q') || '').trim();
     if (normalizedSearch === currentQuery) return;
 
@@ -1114,7 +1117,7 @@ export default function RecoveryPipelineAgent8() {
       nextParams.delete('q');
     }
     setSearchParams(nextParams, { replace: true });
-  }, [searchParams, searchTerm, setSearchParams]);
+  }, [searchParams, setSearchParams]);
 
   const fetchLedger = useCallback(async (mode: 'load' | 'refresh' = 'load') => {
     if (!activeSlug) return;
@@ -1519,7 +1522,7 @@ export default function RecoveryPipelineAgent8() {
                       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                         <div className="relative w-full xl:max-w-xl">
                           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
-                          <Input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }} placeholder="Search record, Amazon reference, merchant, or status" className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20" />
+                          <Input value={searchTerm} onChange={(e) => updateSearchTerm(e.target.value)} placeholder="Search record, Amazon reference, merchant, or status" className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20" />
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {dateRanges.map(([value, text]) => (
