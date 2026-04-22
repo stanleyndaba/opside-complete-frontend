@@ -95,6 +95,9 @@ export const PublicNavbar = () => {
                         <Link to="/research" className={desktopNavLinkClass}>
                             Research
                         </Link>
+                        <Link to="/developer-api" className={desktopNavLinkClass}>
+                            API
+                        </Link>
                         <Link to="/about-margin" className={desktopNavLinkClass}>
                             About
                         </Link>
@@ -150,6 +153,12 @@ export const PublicNavbar = () => {
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={mobileMenuItemClass}>
                                     Research
+                                </Link>
+                                <Link
+                                    to="/developer-api"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={mobileMenuItemClass}>
+                                    API
                                 </Link>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="products" className="border-none">

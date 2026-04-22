@@ -72,6 +72,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 <Link to="/pricing" className="transition hover:text-white">
                   Pricing
                 </Link>
+                <Link to="/developer-api" className="transition hover:text-white">
+                  API
+                </Link>
                 <Link to="/privacy" className="transition hover:text-white">
                   Privacy Policy
                 </Link>
