@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useSession } from '@/contexts/SessionContext';
@@ -390,6 +390,52 @@ const formatEventTimestamp = (value?: string | null) => {
     hour: '2-digit', minute: '2-digit', second: '2-digit',
     hour12: false
   });
+};
+
+const asPlainObject = (value: any) => (
+  value && typeof value === 'object' && !Array.isArray(value) ? value : {}
+);
+
+const getDocumentEvidenceTitle = (doc: any, index: number) => {
+  const metadata = asPlainObject(doc?.metadata);
+  const parsedMetadata = asPlainObject(doc?.parsed_metadata);
+  const identifiers = asPlainObject(parsedMetadata?.identifiers);
+  const explicitTitle = String(metadata?.evidence_title || metadata?.title || doc?.title || '').trim();
+  if (explicitTitle) return explicitTitle;
+
+  const typeLabel = String(doc?.doc_type || metadata?.doc_type || metadata?.document_type || 'Evidence')
+    .replace(/[_-]+/g, ' ')
+    .trim();
+  const invoiceNumber = String(doc?.invoice_number || metadata?.invoice_number || identifiers?.invoiceNumber || '').trim();
+  const supplier = String(doc?.supplier_name || metadata?.supplier || metadata?.supplier_name || '').trim();
+  const filename = String(doc?.name || doc?.filename || metadata?.original_filename || '').trim();
+
+  if (invoiceNumber && supplier) return `${typeLabel} ${invoiceNumber} - ${supplier}`;
+  if (invoiceNumber) return `${typeLabel} ${invoiceNumber}`;
+  if (supplier && filename) return `${supplier} - ${filename}`;
+  return filename || `Evidence document ${index + 1}`;
+};
+
+const getDocumentEvidenceSubtitle = (doc: any) => {
+  const metadata = asPlainObject(doc?.metadata);
+  const parsedMetadata = asPlainObject(doc?.parsed_metadata);
+  const extracted = asPlainObject(doc?.extracted);
+  const parsedItems = Array.isArray(parsedMetadata?.items) ? parsedMetadata.items : [];
+  const extractedItems = Array.isArray(extracted?.items) ? extracted.items : [];
+  const firstItem = asPlainObject(parsedItems[0] || extractedItems[0]);
+  const quantity = metadata?.quantity ?? firstItem?.quantity;
+  const unitCost = metadata?.unit_cost ?? firstItem?.unit_cost ?? firstItem?.unitPrice ?? doc?.unit_manufacturing_cost;
+  const totalAmount = doc?.total_amount ?? metadata?.amount;
+  const unitCostNumber = Number(unitCost);
+  const totalAmountNumber = Number(totalAmount);
+  const parts = [
+    doc?.doc_type ? String(doc.doc_type).replace(/[_-]+/g, ' ') : null,
+    quantity ? `${quantity} units` : null,
+    Number.isFinite(unitCostNumber) ? `$${unitCostNumber.toFixed(2)}/unit` : null,
+    Number.isFinite(totalAmountNumber) ? `$${totalAmountNumber.toFixed(2)} total` : null,
+  ].filter(Boolean);
+
+  return parts.join(' | ');
 };
 
 const formatThreadStateLabel = (value?: string | null) => {
@@ -789,6 +835,9 @@ export default function CaseDetail() {
   const [caseEvents, setCaseEvents] = useState<any[]>([]);
   const [eventsResolvedForCaseId, setEventsResolvedForCaseId] = useState<string | null>(null);
   const [eventsLoading, setEventsLoading] = useState(false);
+  const activeTabRef = useRef(activeTab);
+  const eventsResolvedForCaseIdRef = useRef<string | null>(null);
+  const resolvedIdentityIdsRef = useRef<string[]>([]);
 
   const formatDateOrDash = (value?: string | null) => {
     if (!value) return NOT_AVAILABLE;
@@ -846,13 +895,14 @@ export default function CaseDetail() {
 
   const loadCaseEvents = useCallback(async (currentCaseId: string, { force = false }: { force?: boolean } = {}) => {
     if (!currentCaseId || !activeSlug || !isAuthReady || !isSessionValid) return;
-    if (!force && eventsResolvedForCaseId === currentCaseId) return;
+    if (!force && eventsResolvedForCaseIdRef.current === currentCaseId) return;
 
     setEventsLoading(true);
     try {
       const response = await api.getRecoveryEvents(currentCaseId, activeSlug);
       if (response.ok && Array.isArray(response.data)) {
         setCaseEvents(response.data);
+        eventsResolvedForCaseIdRef.current = currentCaseId;
         setEventsResolvedForCaseId(currentCaseId);
       } else {
         setCaseEvents([]);
@@ -862,7 +912,7 @@ export default function CaseDetail() {
     } finally {
       setEventsLoading(false);
     }
-  }, [activeSlug, eventsResolvedForCaseId, isAuthReady, isSessionValid]);
+  }, [activeSlug, isAuthReady, isSessionValid]);
 
   const effectiveCase = hasResolvedBackend ? caseData : seedCaseData;
 
@@ -874,6 +924,18 @@ export default function CaseDetail() {
       effectiveCase?.detection_result_id,
     ].filter(Boolean)));
   }, [caseId, effectiveCase?.detection_result_id, effectiveCase?.dispute_case_id, effectiveCase?.id]);
+
+  useEffect(() => {
+    activeTabRef.current = activeTab;
+  }, [activeTab]);
+
+  useEffect(() => {
+    eventsResolvedForCaseIdRef.current = eventsResolvedForCaseId;
+  }, [eventsResolvedForCaseId]);
+
+  useEffect(() => {
+    resolvedIdentityIdsRef.current = resolvedIdentityIds;
+  }, [resolvedIdentityIds]);
 
   const matchesRealtimeEvent = useCallback((payload: any) => {
     const ids = new Set([
@@ -895,8 +957,12 @@ export default function CaseDetail() {
       payload?.data?.claimId
     ].filter(Boolean));
 
-    return resolvedIdentityIds.some((id) => ids.has(id));
-  }, [resolvedIdentityIds]);
+    const currentIdentityIds = resolvedIdentityIdsRef.current.length
+      ? resolvedIdentityIdsRef.current
+      : [caseId].filter(Boolean);
+
+    return currentIdentityIds.some((id) => ids.has(id));
+  }, [caseId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -904,6 +970,7 @@ export default function CaseDetail() {
     setCaseData(null);
     setMatchedDocs([]);
     setCaseEvents([]);
+    eventsResolvedForCaseIdRef.current = null;
     setEventsResolvedForCaseId(null);
     setError(null);
     (async () => {
@@ -924,7 +991,7 @@ export default function CaseDetail() {
           return;
         }
         refreshCaseDetail(caseId);
-        if (activeTab === 'PROTOCOL' || eventsResolvedForCaseId === caseId) {
+        if (activeTabRef.current === 'PROTOCOL' || eventsResolvedForCaseIdRef.current === caseId) {
           loadCaseEvents(caseId, { force: true });
         }
       };
@@ -952,7 +1019,7 @@ export default function CaseDetail() {
       // Keep the existing page state when the live status stream cannot initialize.
     }
     return () => { cancelled = true; if (es) es.close(); };
-  }, [activeSlug, activeTab, caseId, eventsResolvedForCaseId, isAuthReady, isSessionValid, loadCaseEvents, matchesRealtimeEvent, refreshCaseDetail]);
+  }, [activeSlug, caseId, isAuthReady, isSessionValid, loadCaseEvents, matchesRealtimeEvent, refreshCaseDetail]);
 
   useEffect(() => {
     if (!statusFeedUnavailable || !caseId || !activeSlug || !isAuthReady || !isSessionValid) return;
@@ -2694,28 +2761,40 @@ export default function CaseDetail() {
                               : (typeof doc.confidence_score === 'number'
                                 ? Math.round((doc.confidence_score > 1 ? doc.confidence_score : doc.confidence_score * 100))
                                 : null);
+                            const evidenceTitle = getDocumentEvidenceTitle(doc, idx);
+                            const evidenceSubtitle = getDocumentEvidenceSubtitle(doc);
+                            const filename = doc.name || doc.filename || doc.original_filename || null;
                             return (
-                              <div key={doc.id || idx} className="p-4 bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-white/[0.06] transition-all group flex items-center justify-between rounded-lg">
-                                <div className="flex items-center gap-3">
-                                  <FileText className="h-3.5 w-3.5 text-white/30 group-hover:text-emerald-500" />
-                                  <div>
-                                    <p className="text-xs font-bold text-white truncate font-sans">
-                                      {doc.name || doc.filename || `Document ${idx + 1}`}
-                                    </p>
-                                    <p className="text-[10px] text-white/30">{doc.matchType || 'Attached'}</p>
+                              <div key={doc.id || idx} className="p-4 bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-white/[0.06] transition-all group rounded-lg">
+                                <div className="flex items-center justify-between gap-4">
+                                  <div className="flex min-w-0 items-center gap-3">
+                                    <FileText className="h-3.5 w-3.5 shrink-0 text-white/30 group-hover:text-emerald-500" />
+                                    <div className="min-w-0">
+                                      <p className="truncate text-xs font-bold text-white font-sans" title={evidenceTitle}>
+                                        {evidenceTitle}
+                                      </p>
+                                      <p className="mt-1 truncate text-[10px] text-white/45" title={evidenceSubtitle || undefined}>
+                                        {evidenceSubtitle || doc.matchType || 'Attached evidence'}
+                                      </p>
+                                      {filename && filename !== evidenceTitle ? (
+                                        <p className="mt-1 truncate text-[10px] text-white/25" title={filename}>
+                                          File: {filename}
+                                        </p>
+                                      ) : null}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                  <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-emerald-500/30 text-emerald-500 bg-emerald-500/10">
-                                    {confidencePct !== null ? `${confidencePct}%` : '-'}
-                                  </Badge>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-6 text-[10px] font-bold text-emerald-500 hover:text-emerald-400 p-0"
-                                    onClick={() => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
-                                    View <ArrowRight className="h-2.5 w-2.5 ml-1" />
-                                  </Button>
+                                  <div className="flex shrink-0 items-center gap-3">
+                                    <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-emerald-500/30 text-emerald-500 bg-emerald-500/10">
+                                      {confidencePct !== null ? `${confidencePct}%` : '-'}
+                                    </Badge>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-6 text-[10px] font-bold text-emerald-500 hover:text-emerald-400 p-0"
+                                      onClick={() => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
+                                      View <ArrowRight className="h-2.5 w-2.5 ml-1" />
+                                    </Button>
+                                  </div>
                                 </div>
                                 {effectiveCase.evidence?.snippets?.length > 0 && (
                                   <div className="mt-3 ml-6 pr-4 py-2 bg-emerald-500/[0.03] rounded border border-emerald-500/10 space-y-1.5">
@@ -2787,8 +2866,15 @@ export default function CaseDetail() {
                                       </span>
                                     </div>
                                   </td>
-                                  <td className="px-4 py-3 text-[10px] font-sans font-bold text-white/40">
-                                    {event.claimId || event.id || NOT_AVAILABLE}
+                                  <td className="px-4 py-3 font-sans">
+                                    <div className="text-[10px] font-bold text-white/45">
+                                      {event.claimId || event.id || NOT_AVAILABLE}
+                                    </div>
+                                    {event.message ? (
+                                      <div className="mt-1 max-w-[520px] text-[11px] font-medium normal-case leading-relaxed text-white/65">
+                                        {event.message}
+                                      </div>
+                                    ) : null}
                                   </td>
                                   <td className="px-4 py-3">
                                     <Badge variant="outline" className="text-[9px] h-4.5 px-2 border-white/10 font-sans font-bold uppercase tracking-tight bg-white/5 text-white/40">
@@ -2800,8 +2886,8 @@ export default function CaseDetail() {
                             })}
                             {!eventsLoading && evidenceEvents.length === 0 && (
                               <tr>
-                                <td colSpan={4} className="px-4 py-12 text-center text-[10px] font-sans font-bold text-white/20">
-                                  -
+                                <td colSpan={4} className="px-4 py-10 text-center text-[10px] font-sans font-bold text-white/28">
+                                  No evidence history recorded for this case yet
                                 </td>
                               </tr>
                             )}
