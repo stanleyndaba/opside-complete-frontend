@@ -1425,7 +1425,11 @@ export default function CaseDetail() {
       ];
     }
     const billingStatus = String(effectiveCase?.billing_status || '').toLowerCase();
-    const hasEvidence = backendTruthCase?.evidence_summary?.has_documents === true;
+    const backendMatchedCount = Number(backendTruthCase?.evidence_summary?.matched_document_count ?? backendTruthCase?.evidence_summary?.linked_document_count ?? 0);
+    const hasEvidence = backendTruthCase?.evidence_summary?.has_documents === true
+      || backendMatchedCount > 0
+      || (Array.isArray(backendTruthCase?.documents) && backendTruthCase.documents.length > 0)
+      || matchedDocs.length > 0;
     const hasSubmission = hasTrustedFilingTruth(backendTruthCase);
     const hasPayout = hasTrustedPayoutTruth(backendTruthCase);
     const hasApproval = hasTrustedApprovalTruth(backendTruthCase) || hasPayout;
@@ -1438,7 +1442,7 @@ export default function CaseDetail() {
       { label: 'Recovered', active: hasPayout },
       { label: 'Legacy Billed', active: hasLegacyBilling }
     ];
-  }, [backendTruthCase, billedAmount, caseId, effectiveCase?.billing_status, effectiveCase?.id, effectiveCase?.truth_unavailable, hasResolvedBackend]);
+  }, [backendTruthCase, billedAmount, caseId, effectiveCase?.billing_status, effectiveCase?.id, effectiveCase?.truth_unavailable, hasResolvedBackend, matchedDocs.length]);
 
   useEffect(() => {
     return () => {
