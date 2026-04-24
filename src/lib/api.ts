@@ -12,6 +12,34 @@ export interface BlobApiResponse {
   error?: string;
 }
 
+export interface AiExplanation {
+  summary: string;
+  why_it_matters: string;
+  what_margin_found: string;
+  current_status_explained: string;
+  what_is_missing: string[];
+  what_happens_next: string;
+  confidence_note: string;
+  source_of_truth_notice: string;
+}
+
+export interface AiExplanationEnvelope {
+  success: boolean;
+  explanation?: AiExplanation;
+  meta?: {
+    cached: boolean;
+    model: string;
+    object_type: 'case' | 'recovery' | 'finding';
+    object_id: string;
+    request_id: string;
+  };
+  error?: {
+    code?: string;
+    message?: string;
+  };
+  request_id?: string;
+}
+
 export interface AutoFileGateStatus {
   sellerIntentEnabled: boolean;
   globalFilingEnabled: boolean | null;
@@ -1212,6 +1240,27 @@ export const api = {
     if (tenantSlug) query.set('tenantSlug', tenantSlug);
     const queryString = query.toString();
     return requestJson<any[]>(`/api/recoveries/${encodeURIComponent(id)}/events${queryString ? `?${queryString}` : ''}`);
+  },
+  explainCase: (caseId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for explainCase');
+    return requestJson<AiExplanationEnvelope>(`/api/ai/explain/case?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST',
+      body: JSON.stringify({ caseId }),
+    });
+  },
+  explainRecovery: (recoveryId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for explainRecovery');
+    return requestJson<AiExplanationEnvelope>(`/api/ai/explain/recovery?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST',
+      body: JSON.stringify({ recoveryId }),
+    });
+  },
+  explainFinding: (findingId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for explainFinding');
+    return requestJson<AiExplanationEnvelope>(`/api/ai/explain/finding?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST',
+      body: JSON.stringify({ findingId }),
+    });
   },
   getRecoveriesLedger: (
     params?: {

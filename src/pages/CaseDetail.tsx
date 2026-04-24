@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { AiExplanationDialog } from '@/components/ai/AiExplanationDialog';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
@@ -30,6 +31,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
+import { useAiExplanation } from '@/hooks/useAiExplanation';
 import { formatAutonomyLabel, sellerSafeOperationalText, summarizeExplanationPayload, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import {
   formatEligibilityStatus,
@@ -808,6 +810,7 @@ export default function CaseDetail() {
   const { tenant, isReady } = useTenant();
   const { isAuthReady, isSessionValid } = useSession();
   const activeSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
+  const aiExplainEnabled = activeSlug === 'demo-workspace';
   const navigate = useNavigate();
 
   const location = useLocation() as any;
@@ -838,6 +841,11 @@ export default function CaseDetail() {
   const activeTabRef = useRef(activeTab);
   const eventsResolvedForCaseIdRef = useRef<string | null>(null);
   const resolvedIdentityIdsRef = useRef<string[]>([]);
+  const caseExplanation = useAiExplanation((id) => api.explainCase(id, activeSlug), aiExplainEnabled);
+
+  useEffect(() => {
+    caseExplanation.reset();
+  }, [activeSlug, caseId]);
 
   const formatDateOrDash = (value?: string | null) => {
     if (!value) return NOT_AVAILABLE;
@@ -1910,6 +1918,15 @@ export default function CaseDetail() {
                         <p className="mt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
                           Detection, evidence, policy basis, and current filing movement.
                         </p>
+                        {aiExplainEnabled && caseId ? (
+                          <button
+                            type="button"
+                            onClick={() => { void caseExplanation.openFor(caseId); }}
+                            className="mt-2 text-[11px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                          >
+                            Explain
+                          </button>
+                        ) : null}
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {hasResolvedBackend && findingReadinessLabel && (
@@ -3212,6 +3229,16 @@ export default function CaseDetail() {
           </div>
         </DialogContent>
       </Dialog>
+      <AiExplanationDialog
+        open={caseExplanation.open}
+        onOpenChange={caseExplanation.setOpen}
+        title="Explain this case"
+        description="Margin is translating the current backend case truth into seller-friendly language."
+        loading={caseExplanation.loading}
+        error={caseExplanation.error}
+        explanation={caseExplanation.explanation}
+        onRetry={() => { void caseExplanation.retry(); }}
+      />
     </PageLayout>
   );
 }

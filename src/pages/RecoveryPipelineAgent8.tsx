@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { AiExplanationContent } from '@/components/ai/AiExplanationContent';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
+import { useAiExplanation } from '@/hooks/useAiExplanation';
 import { useToast } from '@/hooks/use-toast';
 import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { RefreshCw, AlertTriangle, ArrowUpRight, MoreHorizontal, Search } from 'lucide-react';
@@ -1059,6 +1061,7 @@ export default function RecoveryPipelineAgent8() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isReady } = useTenant();
   const activeSlug = (tenantSlug || '').trim();
+  const aiExplainEnabled = activeSlug === 'demo-workspace';
   const { toast } = useToast();
   const urlQuery = (searchParams.get('q') || '').trim();
   const focusCaseId = (searchParams.get('caseId') || searchParams.get('focusCaseId') || '').trim();
@@ -1094,6 +1097,7 @@ export default function RecoveryPipelineAgent8() {
   const pendingDetailsRefreshKeyRef = useRef<string | null>(null);
   const focusedRowRef = useRef<HTMLTableRowElement | null>(null);
   const handledFocusKeyRef = useRef<string | null>(null);
+  const recoveryExplanation = useAiExplanation((id) => api.explainRecovery(id, activeSlug), aiExplainEnabled);
 
   useEffect(() => {
     if (searchTerm !== urlQuery) {
@@ -1327,10 +1331,12 @@ export default function RecoveryPipelineAgent8() {
     setBasisDetail(null);
     setBasisError(null);
     setBasisLoading(false);
+    recoveryExplanation.reset();
   };
 
   const openCaseBasis = async (row: Row) => {
     const detailRouteId = getDetailRouteId(row);
+    recoveryExplanation.reset();
     setBasisRow(row);
     setBasisDetail(null);
     setBasisError(null);
@@ -1837,6 +1843,21 @@ export default function RecoveryPipelineAgent8() {
                       <DialogDescription className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.52]">
                         Why this recovery record exists, what supports it, and where it is moving.
                       </DialogDescription>
+                      {aiExplainEnabled && detailRouteId ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (recoveryExplanation.open) {
+                              recoveryExplanation.setOpen(false);
+                              return;
+                            }
+                            void recoveryExplanation.openFor(detailRouteId);
+                          }}
+                          className="mt-2 text-[11px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                        >
+                          Explain
+                        </button>
+                      ) : null}
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {readinessMeta ? (
@@ -1870,6 +1891,17 @@ export default function RecoveryPipelineAgent8() {
                   {basisError ? (
                     <div className="border-b border-amber-400/20 py-4 text-[12px] font-sans leading-5 tracking-tight text-amber-100/78">
                       Unable to load backend case basis right now. Showing safe ledger fallback.
+                    </div>
+                  ) : null}
+
+                  {recoveryExplanation.open ? (
+                    <div className="border-b border-white/10 bg-white/[0.02]">
+                      <AiExplanationContent
+                        loading={recoveryExplanation.loading}
+                        error={recoveryExplanation.error}
+                        explanation={recoveryExplanation.explanation}
+                        onRetry={() => { void recoveryExplanation.retry(); }}
+                      />
                     </div>
                   ) : null}
 

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { tenantRoute } from '@/lib/routes';
 import { useTenant } from '@/contexts/TenantContext';
+import { AiExplanationContent } from '@/components/ai/AiExplanationContent';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
@@ -40,6 +41,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
+import { useAiExplanation } from '@/hooks/useAiExplanation';
 import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 
 // Icon imports for document sources
@@ -837,6 +839,7 @@ export function Dashboard() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
   const activeSlug = tenantSlug || tenant?.slug || '';
+  const aiExplainEnabled = activeSlug === 'demo-workspace';
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -1236,6 +1239,7 @@ export function Dashboard() {
   const [showDiscrepancyModal, setShowDiscrepancyModal] = useState<boolean>(false);
   const [showProofNeededModal, setShowProofNeededModal] = useState<boolean>(false);
   const [activeDiscrepancy, setActiveDiscrepancy] = useState<any>(null);
+  const findingExplanation = useAiExplanation((id) => api.explainFinding(id, activeSlug), aiExplainEnabled);
 
   const { formatCurrency: formatCurrencyWithSelection } = useCurrency();
   // Phase 3: Detection statistics
@@ -1271,6 +1275,16 @@ export function Dashboard() {
   const displayNotifications = useMemo(() => {
     return notifications;
   }, [notifications]);
+
+  useEffect(() => {
+    findingExplanation.reset();
+  }, [activeDiscrepancy?.id, activeSlug]);
+
+  useEffect(() => {
+    if (!showDiscrepancyModal) {
+      findingExplanation.reset();
+    }
+  }, [findingExplanation, showDiscrepancyModal]);
 
   // Helper to intercept and transform notification titles for high-fidelity Amazon lingo
   const enrichNotificationTitle = useCallback((title: any) => {
@@ -4097,6 +4111,21 @@ export function Dashboard() {
                     <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
                       {activeDiscrepancyCopy?.summary || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
                     </DialogDescription>
+                    {aiExplainEnabled && activeDiscrepancy?.id ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (findingExplanation.open) {
+                            findingExplanation.setOpen(false);
+                            return;
+                          }
+                          void findingExplanation.openFor(String(activeDiscrepancy.id));
+                        }}
+                        className="mt-2 text-[11px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                      >
+                        Explain
+                      </button>
+                    ) : null}
                   </div>
                   <button
                     onClick={() => setShowDiscrepancyModal(false)}
@@ -4106,6 +4135,17 @@ export function Dashboard() {
                   </button>
                 </div>
               </DialogHeader>
+
+              {findingExplanation.open ? (
+                <div className="border-b border-white/10 bg-white/[0.02]">
+                  <AiExplanationContent
+                    loading={findingExplanation.loading}
+                    error={findingExplanation.error}
+                    explanation={findingExplanation.explanation}
+                    onRetry={() => { void findingExplanation.retry(); }}
+                  />
+                </div>
+              ) : null}
 
               <div className="grid max-h-[52vh] gap-0 overflow-y-auto lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.58fr)]">
                 <div className="border-b border-white/10 px-4 py-3 lg:border-b-0 lg:border-r">
