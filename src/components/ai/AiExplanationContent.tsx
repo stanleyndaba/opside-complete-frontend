@@ -24,6 +24,21 @@ function Section({ label, children }: SectionProps) {
   );
 }
 
+function toGentleExplainMessage(error: string): string {
+  const normalized = String(error || '').toLowerCase();
+  if (
+    normalized.includes('quota')
+    || normalized.includes('billing')
+    || normalized.includes('plan')
+    || normalized.includes('temporarily unavailable')
+    || normalized.includes('rate limit')
+  ) {
+    return "Explanation is taking a moment right now. Margin's recorded case data below remains the source of truth.";
+  }
+
+  return "Explanation is not available right now. Margin's recorded case data below remains the source of truth.";
+}
+
 export function AiExplanationContent({
   loading,
   error,
@@ -45,22 +60,23 @@ export function AiExplanationContent({
   }
 
   if (error) {
+    const gentleMessage = toGentleExplainMessage(error);
     return (
       <div className="px-6 py-6">
-        <div className="flex items-start gap-3 border border-red-500/20 bg-red-500/[0.04] px-4 py-3">
-          <AlertCircle className="mt-0.5 h-4 w-4 text-red-200/70" />
+        <div className="flex items-start gap-3 border border-white/10 bg-white/[0.025] px-4 py-3">
+          <AlertCircle className="mt-0.5 h-4 w-4 text-white/38" />
           <div className="min-w-0 flex-1">
-            <div className="text-[11px] font-sans font-medium uppercase tracking-tight text-red-100/80">
-              Explanation unavailable
+            <div className="text-[11px] font-sans font-medium uppercase tracking-tight text-white/[0.66]">
+              Explanation paused
             </div>
-            <p className="mt-1 text-[12px] font-sans leading-5 tracking-tight text-red-50/78">{error}</p>
+            <p className="mt-1 text-[12px] font-sans leading-5 tracking-tight text-white/[0.54]">{gentleMessage}</p>
             {onRetry ? (
               <Button
                 variant="ghost"
                 onClick={onRetry}
                 className="mt-2 h-auto px-0 py-0 text-[11px] font-sans font-medium tracking-tight text-white underline decoration-white/25 underline-offset-4 hover:bg-transparent hover:text-white"
               >
-                Try again
+                Refresh explanation
               </Button>
             ) : null}
           </div>
