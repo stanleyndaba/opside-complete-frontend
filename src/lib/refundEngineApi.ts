@@ -1,4 +1,5 @@
 import type { ApiResponse } from '@/lib/api';
+import { getGentleRequestErrorMessage, isLikelyCorsTransportError } from '@/lib/requestMessaging';
 
 // Configuration for the Refund Engine backend
 let inMemoryAuthToken: string | null = null;
@@ -67,12 +68,32 @@ async function requestJson<T>(path: string, tenantSlug?: string, init?: RequestI
     }
 
     if (!response.ok) {
-      return { ok: false, status: response.status, error: (data && (data.error || data.message)) || response.statusText || 'Request failed' };
+      const backendError = (data && (data.error || data.message)) || response.statusText || 'Request failed';
+      const userError = response.status >= 500
+        ? getGentleRequestErrorMessage('server', init?.method)
+        : backendError;
+      return { ok: false, status: response.status, error: userError };
     }
 
     return { ok: true, status: response.status, data };
   } catch (error: any) {
-    return { ok: false, status: 0, error: error?.message || 'Network error' };
+    const url = buildRefundEngineUrl(path, { ...query, tenantSlug });
+    const errorMessage = error?.message || 'Network error';
+    const isCorsError = isLikelyCorsTransportError(errorMessage, url);
+    const isTimeoutError = error?.name === 'AbortError' || String(errorMessage).toLowerCase().includes('timeout');
+    const userError = getGentleRequestErrorMessage(
+      isCorsError ? 'cors' : isTimeoutError ? 'timeout' : 'network',
+      init?.method
+    );
+
+    console.error('[refundEngineApi] Request failed', {
+      path,
+      url,
+      error: errorMessage,
+      userError,
+    });
+
+    return { ok: false, status: 0, error: userError };
   }
 }
 

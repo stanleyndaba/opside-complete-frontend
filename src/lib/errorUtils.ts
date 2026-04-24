@@ -374,10 +374,18 @@ export function mapErrorMessage(technicalMessage: string): FriendlyError {
     }
 
     // Network/timeout errors
+    if (lowerMessage.includes('cors') || lowerMessage.includes('access-control') || lowerMessage.includes('cross-origin')) {
+        return getFriendlyError('server_error');
+    }
     if (lowerMessage.includes('timeout') || lowerMessage.includes('timed out')) {
         return getFriendlyError('request_timeout');
     }
-    if (lowerMessage.includes('network') || lowerMessage.includes('econnrefused')) {
+    if (
+        lowerMessage.includes('network') ||
+        lowerMessage.includes('econnrefused') ||
+        lowerMessage.includes('cannot connect to backend') ||
+        lowerMessage.includes('having trouble reaching live data')
+    ) {
         return getFriendlyError('network_offline');
     }
 

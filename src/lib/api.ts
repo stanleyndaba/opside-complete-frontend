@@ -126,6 +126,7 @@ export interface ManualUserBroadcastRecord extends ManualUserBroadcastInput {
 
 import { getFrontendAuthContext } from './authSession';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
+import { getGentleRequestErrorMessage, isLikelyCorsTransportError } from './requestMessaging';
 
 const SESSION_RECOVERY_ERROR_MESSAGE = "We couldn't verify your session. Sign in again to continue.";
 
@@ -361,7 +362,7 @@ async function requestJsonWithRetry<T>(
       } else if (res.status === 403) {
         userFriendlyError = `Forbidden (403): You don't have permission to access this resource.`;
       } else if (res.status >= 500) {
-        userFriendlyError = `Server error (${res.status}): ${errorMsg}`;
+        userFriendlyError = getGentleRequestErrorMessage('server', options?.method);
       }
 
       // Log 404s as warnings (not errors) since they're often expected (endpoint not implemented)
@@ -398,15 +399,7 @@ async function requestJsonWithRetry<T>(
 
     // CORS errors are network errors but retrying won't help - they need backend configuration fix
     // CORS errors typically show as "Failed to fetch" or "NetworkError" but are actually CORS preflight failures
-    const isCorsError =
-      errorMsg.includes('CORS') ||
-      errorMsg.includes('cors') ||
-      errorMsg.includes('Access-Control') ||
-      errorMsg.includes('Cross-Origin') ||
-      (errorMsg.includes('Failed to fetch') && typeof window !== 'undefined' &&
-        // Additional CORS detection: if we get "Failed to fetch" but it's likely CORS
-        // (we can't perfectly detect this, but we can check if it's a common pattern)
-        window.location.origin !== new URL(url).origin);
+    const isCorsError = isLikelyCorsTransportError(errorMsg, url);
 
     // Network errors that might benefit from retry (backend might be waking up)
     // But NOT CORS errors - those need backend configuration, not retries
@@ -430,36 +423,43 @@ async function requestJsonWithRetry<T>(
     }
 
     // Provide detailed error information
-    let details: string;
+    let technicalDetails: string;
+    let userFacingError: string;
 
     if (isCorsError) {
       // CORS is a configuration issue on the backend, not a network problem
-      details = `CORS error: The backend at ${url} is not configured to allow requests from ${typeof window !== 'undefined' ? window.location.origin : 'this origin'}. This is a backend configuration issue - the backend needs to allow your frontend domain in its CORS settings.`;
+      technicalDetails = `CORS error: The backend at ${url} is not configured to allow requests from ${typeof window !== 'undefined' ? window.location.origin : 'this origin'}. This is a backend configuration issue - the backend needs to allow your frontend domain in its CORS settings.`;
+      userFacingError = getGentleRequestErrorMessage('cors', options?.method);
     } else if (retryCount >= maxRetries) {
       // Calculate approximate total wait time
       const totalTime = timeout + (retryCount * 20000) + (1000 * (Math.pow(2, retryCount) - 1));
       if (isAbortError) {
-        details = `Request timed out after ${Math.round(timeout / 1000)}s. The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+        technicalDetails = `Request timed out after ${Math.round(timeout / 1000)}s. The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+        userFacingError = getGentleRequestErrorMessage('timeout', options?.method);
       } else if (isRetryableNetworkError) {
-        details = `Cannot connect to backend at ${url} after ${maxRetries} retries (total wait time: ~${Math.round(totalTime / 1000)}s). The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+        technicalDetails = `Cannot connect to backend at ${url} after ${maxRetries} retries (total wait time: ~${Math.round(totalTime / 1000)}s). The backend may be sleeping (Render free tier can take 30-60 seconds to wake up). Please wait 30-60 seconds and refresh the page, or try again in a moment.`;
+        userFacingError = getGentleRequestErrorMessage('network', options?.method);
       } else {
-        details = `Cannot connect to backend at ${url}. Error: ${errorMsg}. Check your internet connection and verify the backend is running.`;
+        technicalDetails = `Cannot connect to backend at ${url}. Error: ${errorMsg}. Check your internet connection and verify the backend is running.`;
+        userFacingError = getGentleRequestErrorMessage('network', options?.method);
       }
     } else {
-      details = `Cannot connect to backend at ${url}. Error: ${errorMsg}`;
+      technicalDetails = `Cannot connect to backend at ${url}. Error: ${errorMsg}`;
+      userFacingError = getGentleRequestErrorMessage('network', options?.method);
     }
 
     console.error(`[API] Request failed for ${path}:`, {
       error: errorMsg,
       url,
-      details,
+      technicalDetails,
+      userFacingError,
       retryCount
     });
 
     return {
       ok: false,
       status: 0,
-      error: details,
+      error: userFacingError,
     };
   }
 }
