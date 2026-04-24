@@ -50,14 +50,14 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                                         <AlertTriangle className="h-5 w-5 text-white/70" />
                                     </div>
                                     <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                                        System Error
+                                        Something Went Wrong
                                     </p>
                                 </div>
                                 <h1 className="text-3xl font-sans font-light tracking-tight text-white">
-                                    The application hit an unexpected state.
+                                    This page needs a quick refresh.
                                 </h1>
                                 <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/40">
-                                    This page is intentionally simple. Refresh the application to restore a clean session.
+                                    We lost the current page state for a moment. Refresh the application to get back into your workspace.
                                 </p>
                             </div>
 
@@ -65,13 +65,13 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                                 <div className="space-y-6">
                                     <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] px-5 py-5">
                                         <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
-                                            Recovery Guidance
+                                            Quick Fix
                                         </p>
                                         <p className="mt-3 text-base font-medium tracking-tight text-white">
-                                            Reload the application to retry the current workspace state.
+                                            Refresh once to reload this page cleanly.
                                         </p>
                                         <p className="mt-2 text-sm leading-relaxed text-white/40">
-                                            We removed the extra branchy actions here so the fallback stays calm and direct.
+                                            Nothing has been changed here. This just reloads your current workspace view.
                                         </p>
                                     </div>
 
@@ -89,14 +89,14 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
                                 <div className="border-t border-white/8 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
                                     <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                                        Action
+                                        Try Again
                                     </p>
                                     <div className="mt-4">
                                         <Button
                                             onClick={this.handleReload}
                                             className="h-11 w-full justify-between border border-white/10 bg-[#141414] px-4 text-white shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)] hover:bg-[#1b1b1b]"
                                         >
-                                            <span className="font-sans font-medium tracking-tight">Reload Application</span>
+                                            <span className="font-sans font-medium tracking-tight">Refresh Page</span>
                                             <RefreshCw className="h-4 w-4" />
                                         </Button>
                                     </div>
