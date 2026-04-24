@@ -9,8 +9,8 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.warn("404 route miss:", location.pathname);
-  }, [location.pathname]);
+    console.warn("404 route miss");
+  }, []);
 
   const routeContext = useMemo(() => {
     const segments = location.pathname.split("/").filter(Boolean);
@@ -59,23 +59,13 @@ const NotFound = () => {
           </p>
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="border-y border-white/8">
-              <div className="py-5">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
-                  Requested path
-                </div>
-                <div className="mt-3 break-all font-mono text-[11px] leading-6 text-white/52">
-                  {location.pathname}
-                </div>
+            <div className="border-y border-white/8 py-5">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
+                Best next step
               </div>
-              <div className="border-t border-white/8 py-5">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
-                  Best next step
-                </div>
-                <p className="mt-3 max-w-xl text-sm font-sans leading-6 text-white/46">
-                  {routeContext.recoveryHint}
-                </p>
-              </div>
+              <p className="mt-3 max-w-xl text-sm font-sans leading-6 text-white/46">
+                {routeContext.recoveryHint}
+              </p>
             </div>
 
             <div className="flex flex-col justify-start gap-3">
