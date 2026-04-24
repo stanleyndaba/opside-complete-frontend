@@ -470,7 +470,7 @@ export default function NotificationHub() {
   );
 
   return (
-    <PageLayout title="Notifications" midnight>
+    <PageLayout title="Notifications" midnight noPadding>
       <div className="relative min-h-screen bg-[#050505] text-white">
         <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
         <div className="relative mx-auto max-w-[1500px] px-8 py-8">

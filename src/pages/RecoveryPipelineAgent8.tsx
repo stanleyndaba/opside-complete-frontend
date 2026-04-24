@@ -1413,22 +1413,24 @@ export default function RecoveryPipelineAgent8() {
 
   if (isReady && !activeSlug) {
     return (
-      <PageLayout title="Recoveries In Motion" midnight>
-        <Card className="border-red-500/20 bg-[#0c0c0c]">
-          <CardContent className="flex items-start gap-4 p-8">
-            <AlertTriangle className="mt-0.5 h-5 w-5 text-red-400" />
-            <div>
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-400">Workspace Required</div>
-              <div className="mt-2 text-sm font-sans font-bold text-white">A workspace is required before Margin can show recovery activity.</div>
-            </div>
-          </CardContent>
-        </Card>
+      <PageLayout title="Recoveries In Motion" midnight noPadding>
+        <div className="px-8 py-8">
+          <Card className="border-red-500/20 bg-[#0c0c0c]">
+            <CardContent className="flex items-start gap-4 p-8">
+              <AlertTriangle className="mt-0.5 h-5 w-5 text-red-400" />
+              <div>
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-400">Workspace Required</div>
+                <div className="mt-2 text-sm font-sans font-bold text-white">A workspace is required before Margin can show recovery activity.</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </PageLayout>
     );
   }
 
   return (
-    <PageLayout title="Recoveries In Motion" midnight>
+    <PageLayout title="Recoveries In Motion" midnight noPadding>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
       <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
         <div className="relative w-full max-w-full px-8 pt-8 pb-24">

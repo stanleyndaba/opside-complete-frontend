@@ -1081,7 +1081,7 @@ export default function FilingPipeline() {
   ];
 
   return (
-    <PageLayout title="Submission Flow" midnight>
+    <PageLayout title="Submission Flow" midnight noPadding>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"

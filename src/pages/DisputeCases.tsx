@@ -1791,7 +1791,7 @@ export default function DisputeCases() {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Dispute Queue" midnight>
+      <PageLayout title="Dispute Queue" midnight noPadding>
         <div className="min-h-screen bg-[#050505]">
           <div className="container mx-auto px-8 pt-10 pb-20">
             <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
@@ -1809,7 +1809,7 @@ export default function DisputeCases() {
   }
 
   return (
-    <PageLayout title="Dispute Queue" midnight>
+    <PageLayout title="Dispute Queue" midnight noPadding>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
