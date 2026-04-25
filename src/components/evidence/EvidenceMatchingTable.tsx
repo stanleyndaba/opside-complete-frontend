@@ -25,12 +25,25 @@ interface MatchingResult {
     currency?: string;
     sku?: string;
     asin?: string;
+    case_number?: string;
+    reference?: string;
+    title?: string;
+    subtitle?: string;
   };
   document_details?: {
     filename?: string;
     supplier?: string;
     invoice_number?: string;
     amount?: number;
+    original_filename?: string;
+    title?: string;
+    subtitle?: string;
+    linked_document_count?: number;
+    linked_document_names?: string[];
+  };
+  match_details?: {
+    title?: string;
+    subtitle?: string;
   };
 }
 
@@ -313,6 +326,43 @@ export function EvidenceMatchingTable() {
     return labels[actionTaken] || actionTaken.replace(/_/g, ' ');
   };
 
+  const getClaimReference = (match: MatchingResult) =>
+    match.claim_details?.reference
+    || match.claim_details?.case_number
+    || match.claim_id.substring(0, 12).toUpperCase();
+
+  const getClaimTitle = (match: MatchingResult) =>
+    match.claim_details?.title || null;
+
+  const getClaimSubtitle = (match: MatchingResult) => {
+    if (match.claim_details?.subtitle) return match.claim_details.subtitle;
+
+    const parts = [
+      match.claim_details?.sku ? `SKU ${match.claim_details.sku}` : null,
+      match.claim_details?.asin ? `ASIN ${match.claim_details.asin}` : null,
+    ].filter(Boolean);
+
+    return parts.length ? parts.join(' · ') : null;
+  };
+
+  const getDocumentTitle = (match: MatchingResult) =>
+    match.document_details?.title
+    || match.document_details?.filename?.substring(0, 40)
+    || match.document_id.substring(0, 12).toUpperCase();
+
+  const getDocumentSubtitle = (match: MatchingResult) => {
+    if (match.document_details?.subtitle) return match.document_details.subtitle;
+
+    const parts = [
+      match.document_details?.supplier || null,
+      typeof match.document_details?.linked_document_count === 'number' && match.document_details.linked_document_count > 1
+        ? `${match.document_details.linked_document_count} linked documents`
+        : null,
+    ].filter(Boolean);
+
+    return parts.length ? parts.join(' · ') : null;
+  };
+
   const renderEmptyState = (
     eyebrow: string,
     title: string,
@@ -430,11 +480,16 @@ export function EvidenceMatchingTable() {
             <div className="grid gap-3 lg:grid-cols-[1.2fr_0.85fr_1.05fr_0.5fr_0.95fr] lg:gap-5 lg:items-start">
               <div>
                 <div className="text-[12px] font-sans font-medium tracking-tight text-white">
-                  {getMatchTypeLabel(match.match_type)}
+                  {match.match_details?.title || getMatchTypeLabel(match.match_type)}
                 </div>
                 <div className="mt-1 text-[10px] font-sans uppercase tracking-tight text-zinc-500">
                   {getActionLabel(match.action_taken)}
                 </div>
+                {match.match_details?.subtitle ? (
+                  <div className="mt-1 max-w-xl text-[10px] font-sans leading-relaxed text-zinc-400">
+                    {match.match_details.subtitle}
+                  </div>
+                ) : null}
                 {match.created_at ? (
                   <div className="mt-1 text-[10px] font-sans text-zinc-600">
                     Reviewed {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm')}
@@ -452,8 +507,18 @@ export function EvidenceMatchingTable() {
                   Claim
                 </div>
                 <Link to={`/recoveries/${match.claim_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-300 transition-colors hover:text-white">
-                  {match.claim_id.substring(0, 12).toUpperCase()}
+                  {getClaimReference(match)}
                 </Link>
+                {getClaimTitle(match) ? (
+                  <div className="mt-1 text-[11px] font-sans font-medium tracking-tight text-white">
+                    {getClaimTitle(match)}
+                  </div>
+                ) : null}
+                {getClaimSubtitle(match) ? (
+                  <div className="mt-1 text-[10px] font-sans leading-relaxed text-zinc-500">
+                    {getClaimSubtitle(match)}
+                  </div>
+                ) : null}
               </div>
 
               <div>
@@ -461,8 +526,13 @@ export function EvidenceMatchingTable() {
                   Document
                 </div>
                 <Link to={`/documents/${match.document_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-300 transition-colors hover:text-white">
-                  {match.document_details?.filename?.substring(0, 28) || match.document_id.substring(0, 12).toUpperCase()}
+                  {getDocumentTitle(match)}
                 </Link>
+                {getDocumentSubtitle(match) ? (
+                  <div className="mt-1 text-[10px] font-sans leading-relaxed text-zinc-500">
+                    {getDocumentSubtitle(match)}
+                  </div>
+                ) : null}
               </div>
 
               <div>

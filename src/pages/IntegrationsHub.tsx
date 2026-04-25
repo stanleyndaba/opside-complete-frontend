@@ -946,7 +946,7 @@ export default function IntegrationsHub() {
 
   if (isReady && !activeSlug) {
     return (
-      <PageLayout title="Integrations" midnight>
+      <PageLayout title="Integrations" midnight noPadding>
         <div className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
           <div className="max-w-xl w-full bg-white/[0.02] border border-white/10 rounded-2xl p-8 text-center">
             <h1 className="text-2xl font-sans font-bold text-white tracking-tight mb-3">Workspace context required</h1>
@@ -960,7 +960,7 @@ export default function IntegrationsHub() {
   }
 
   return (
-    <PageLayout title="Integrations" midnight>
+    <PageLayout title="Integrations" midnight noPadding>
       <div className="min-h-screen bg-[#050505] relative overflow-hidden">
         {/* Aesthetic Background Elements */}
         <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.035),transparent_70%)] pointer-events-none" />

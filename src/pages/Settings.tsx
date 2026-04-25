@@ -275,7 +275,7 @@ const Settings = () => {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Account Control Center" midnight>
+      <PageLayout title="Account Control Center" midnight noPadding>
         <div className="min-h-screen bg-[#050505]">
           <div className="container mx-auto px-8 pt-10 pb-20">
             <div className="border-t border-white/10 pt-8 space-y-3">
@@ -291,7 +291,7 @@ const Settings = () => {
   }
 
   return (
-    <PageLayout title="Account Control Center" midnight>
+    <PageLayout title="Account Control Center" midnight noPadding>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
