@@ -1182,7 +1182,7 @@ export default function FilingPipeline() {
               <div className="flex flex-col gap-3">
                 <div>
                   <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Conversion surface</div>
-                  <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Money moving through filing</h2>
+                  <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Confirmed claims moving through filing</h2>
                   <p className="mt-1 text-xs font-sans leading-5 text-white/60">
                     Each tab answers one question: what can file, what is filing, what is already with Amazon, what is approved, and what is already recovered.
                   </p>
