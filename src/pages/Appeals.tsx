@@ -492,8 +492,8 @@ export default function Appeals() {
         <div className="relative z-10 container mx-auto space-y-6 px-8 pb-20 pt-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amazon response review</div>
-              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Review verified reimbursement responses</h1>
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Appeals workspace</div>
+              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Review reimbursement appeals and Amazon responses</h1>
               <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
                 When a filed case has a recorded Amazon response, Margin shows the response, the support gaps, and whether a retry is safe.
               </p>
