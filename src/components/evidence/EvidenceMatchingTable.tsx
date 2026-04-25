@@ -304,7 +304,9 @@ export function EvidenceMatchingTable() {
 
   const getMatchTypeLabel = (matchType: string) => {
     const labels: Record<string, string> = {
+      'amazon_fba': 'Evidence linked',
       'exact_invoice': 'Exact Invoice Match',
+      'sku_asin_invoice': 'SKU, ASIN, invoice match',
       'sku_match': 'SKU Match',
       'asin_match': 'ASIN Match',
       'supplier_match': 'Supplier Match',
@@ -332,7 +334,8 @@ export function EvidenceMatchingTable() {
     || match.claim_id.substring(0, 12).toUpperCase();
 
   const getClaimTitle = (match: MatchingResult) =>
-    match.claim_details?.title || null;
+    match.claim_details?.title
+    || (match.match_type === 'amazon_fba' ? 'Evidence-backed recovery case' : null);
 
   const getClaimSubtitle = (match: MatchingResult) => {
     if (match.claim_details?.subtitle) return match.claim_details.subtitle;
@@ -709,7 +712,7 @@ export function EvidenceMatchingTable() {
               </Button>
             )
           ) : (
-            renderMatchRows(matchingResults, 'Open record')
+            renderMatchRows(matchingResults, 'Open recovery')
           )}
         </TabsContent>
       </Tabs>
