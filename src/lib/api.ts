@@ -579,6 +579,26 @@ export const api = {
     body: JSON.stringify(data)
   }),
 
+  quickJoinWaitlist: (data: {
+    email: string;
+    user_type?: string;
+    brand_count?: string;
+    annual_revenue?: string;
+    contact_handle?: string;
+    primary_goal?: string;
+    source_page?: string;
+    intent?: string;
+    reason?: string;
+  }) => requestJson<{
+    success: boolean;
+    message: string;
+    confirmation_email_status?: 'queued' | 'failed';
+    capture_mode?: 'email_only';
+  }>('/api/waitlist/quick-capture', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+
   // Get waitlist entries (admin only)
   getWaitlist: (limit = 100, offset = 0) =>
     requestJson<{ success: boolean; entries: any[]; total: number }>(`/api/waitlist?limit=${limit}&offset=${offset}`),

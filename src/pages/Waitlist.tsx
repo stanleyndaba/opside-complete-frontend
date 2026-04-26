@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -55,13 +55,16 @@ type WaitlistSubmissionResult = {
     email: string;
     message: string;
     alreadyRegistered: boolean;
-    confirmationEmailStatus: 'queued' | 'not_resent' | null;
+    confirmationEmailStatus: 'queued' | 'not_resent' | 'failed' | null;
+    captureMode?: 'database' | 'email_only';
 };
 
 const Waitlist = () => {
+    const location = useLocation();
     const { toast } = useToast();
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isQuickSubmitting, setIsQuickSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [submissionResult, setSubmissionResult] = useState<WaitlistSubmissionResult | null>(null);
     const [formData, setFormData] = useState({
@@ -96,6 +99,61 @@ const Waitlist = () => {
 
     const prevStep = () => setStep(prev => prev - 1);
 
+    const requestContext = {
+        source_page: '/waitlist',
+        intent: new URLSearchParams(location.search).get('intent') || undefined,
+        reason: new URLSearchParams(location.search).get('reason') || undefined,
+    };
+
+    const handleQuickCaptureSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!formData.email.trim()) {
+            toast({ title: "Email Required", description: "Add your work email and we will secure your place.", variant: "destructive" });
+            return;
+        }
+
+        setIsQuickSubmitting(true);
+        try {
+            const response = await api.quickJoinWaitlist({
+                email: formData.email.trim(),
+                ...requestContext,
+            });
+
+            if (response.ok) {
+                const message = response.data?.message || "Your details have been received.";
+                const confirmationEmailStatus = response.data?.confirmation_email_status || null;
+
+                setSubmissionResult({
+                    email: formData.email.trim(),
+                    message,
+                    alreadyRegistered: false,
+                    confirmationEmailStatus,
+                    captureMode: response.data?.capture_mode || 'email_only',
+                });
+                setIsSuccess(true);
+                toast({
+                    title: "Waitlist confirmed",
+                    description: message,
+                });
+            } else {
+                toast({
+                    title: "Unable to submit",
+                    description: response.error || "We could not secure your waitlist request.",
+                    variant: "destructive"
+                });
+            }
+        } catch (_error) {
+            toast({
+                title: "Network issue",
+                description: "The request took too long or the connection was interrupted.",
+                variant: "destructive"
+            });
+        } finally {
+            setIsQuickSubmitting(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.primary_goal) {
@@ -115,7 +173,8 @@ const Waitlist = () => {
                     email: formData.email.trim(),
                     message,
                     alreadyRegistered,
-                    confirmationEmailStatus
+                    confirmationEmailStatus,
+                    captureMode: 'database',
                 });
                 setIsSuccess(true);
                 toast({
@@ -147,20 +206,30 @@ const Waitlist = () => {
     };
 
     const alreadyRegistered = submissionResult?.alreadyRegistered === true;
+    const captureMode = submissionResult?.captureMode || 'database';
     const successBadge = alreadyRegistered ? 'Waitlist already active' : 'Priority queue confirmed';
     const successHeading = alreadyRegistered
         ? 'This address is already on the waitlist.'
         : "You're in the next access review queue.";
     const successBody = alreadyRegistered
         ? 'We recognized this email as an existing waitlist entry and kept your original place in line.'
-        : 'Your details are secured and added to the priority rollout list.';
-    const emailConfirmationBody = alreadyRegistered
+        : captureMode === 'email_only'
+            ? 'Your email is secured and queued for the next rollout update without needing the full onboarding form.'
+            : 'Your details are secured and added to the priority rollout list.';
+    const emailConfirmationBody = submissionResult?.confirmationEmailStatus === 'failed'
+        ? 'We secured your place, but the confirmation email is taking a little longer than expected.'
+        : alreadyRegistered
         ? 'No new confirmation email was sent because this address was already registered.'
         : `A confirmation email is being sent to ${submissionResult?.email || 'the email you provided'}.`;
     const nextSteps = alreadyRegistered
         ? [
             'Your original waitlist position remains active.',
             'When access opens, we will contact you through the details already on file.'
+        ]
+        : captureMode === 'email_only'
+        ? [
+            'Your email has been secured in the early-access queue.',
+            'If we need more rollout context, we will reach out directly through the address you provided.'
         ]
         : [
             'Your waitlist entry has been secured.',
@@ -204,6 +273,54 @@ const Waitlist = () => {
                                 </p>
                             </div>
                         </section>
+
+                        {!isSuccess && (
+                            <section className="overflow-hidden rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] px-5 py-5 shadow-[0_24px_72px_rgba(0,0,0,0.28)] md:px-6">
+                                <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                                    <div className="max-w-[520px] space-y-2">
+                                        <div className="text-[11px] font-medium tracking-tight text-white/38">
+                                            Fast lane
+                                        </div>
+                                        <h2 className="text-[24px] font-light leading-[1.04] tracking-tight text-white md:text-[30px]">
+                                            Join the waitlist in one step.
+                                        </h2>
+                                        <p className="text-[14px] leading-6 text-white/54">
+                                            Drop your work email and we will secure your place right away. You can still share richer rollout context in the longer form below.
+                                        </p>
+                                    </div>
+
+                                    <form onSubmit={handleQuickCaptureSubmit} className="w-full max-w-[420px]">
+                                        <div className="flex flex-col gap-3 sm:flex-row">
+                                            <div className="relative flex-1">
+                                                <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/24" />
+                                                <Input
+                                                    type="email"
+                                                    name="email"
+                                                    placeholder="you@company.com"
+                                                    className="h-12 rounded-[18px] border-white/10 bg-white/[0.02] pl-11 text-[14px] tracking-tight placeholder:text-white/18 focus:border-white/18"
+                                                    value={formData.email}
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <Button
+                                                type="submit"
+                                                disabled={isQuickSubmitting}
+                                                className={`h-12 rounded-[18px] border border-white/10 px-5 text-[13px] font-medium tracking-tight transition ${isQuickSubmitting ? 'bg-white/[0.06] text-white/32' : 'bg-white text-black hover:bg-white/92 hover:text-black'}`}
+                                            >
+                                                {isQuickSubmitting ? (
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/15 border-t-black/70" />
+                                                        Securing spot
+                                                    </div>
+                                                ) : (
+                                                    'Join waitlist'
+                                                )}
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </section>
+                        )}
 
                         <AnimatePresence mode="wait">
                             {!isSuccess ? (
