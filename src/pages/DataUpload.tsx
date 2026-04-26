@@ -126,6 +126,11 @@ interface CsvRunRehydrationRecord {
     detection: CsvRunDetectionSnapshot | null;
 }
 
+interface DemoCsvSimulationRecord {
+    run: CsvRunRehydrationRecord;
+    previewResults: PreviewDetectionResult[];
+}
+
 type DetectionTruthLike = {
     status?: UploadDetectionState['status'];
     processed_at?: string | null;
@@ -154,6 +159,160 @@ const ANOMALY_LABELS: Record<string, string> = {
 const formatAnomalyType = (type: string) => ANOMALY_LABELS[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 const FALLBACK_SUPPORTED_TYPES = ['orders', 'shipments', 'returns', 'settlements', 'inventory', 'financial_events', 'fees', 'transfers'];
 const formatCsvTypeLabel = (type: string) => type.replace(/_/g, ' ');
+const DEMO_CSV_SYNC_PREFIX = 'demo-csv-';
+const DEMO_PREVIEW_TEMPLATE: Array<Omit<PreviewDetectionResult, 'id' | 'seller_id' | 'sync_id' | 'discovery_date' | 'deadline_date' | 'days_remaining'>> = [
+    {
+        anomaly_type: 'inbound_shipment_shortage',
+        severity: 'medium',
+        estimated_value: 1516.72,
+        currency: 'USD',
+        confidence_score: 0.94,
+        evidence: { shipment_id: 'FBA15Q9C71' },
+        status: 'ready for filing',
+    },
+    {
+        anomaly_type: 'weight_fee_overcharge',
+        severity: 'medium',
+        estimated_value: 684.11,
+        currency: 'USD',
+        confidence_score: 0.91,
+        evidence: { fnsku: 'X001MARGIN7' },
+        status: 'evidence linked',
+    },
+    {
+        anomaly_type: 'duplicate_charge',
+        severity: 'high',
+        estimated_value: 318.44,
+        currency: 'USD',
+        confidence_score: 0.98,
+        evidence: { order_id: '114-9473512-0023411' },
+        status: 'claim candidate',
+    },
+    {
+        anomaly_type: 'refund_no_return',
+        severity: 'medium',
+        estimated_value: 247.8,
+        currency: 'USD',
+        confidence_score: 0.89,
+        evidence: { order_id: '113-2814007-4413824' },
+        status: 'needs seller review',
+    },
+    {
+        anomaly_type: 'reimbursement_reversal',
+        severity: 'medium',
+        estimated_value: 872.36,
+        currency: 'USD',
+        confidence_score: 0.93,
+        evidence: { fnsku: 'X001CLAR10' },
+        status: 'under review',
+    },
+    {
+        anomaly_type: 'lost_warehouse',
+        severity: 'high',
+        estimated_value: 1261.54,
+        currency: 'USD',
+        confidence_score: 0.9,
+        evidence: { fnsku: 'X001RECVR9' },
+        status: 'case prepared',
+    },
+];
+
+const inferDemoCsvType = (fileName: string): string => {
+    const normalized = fileName.toLowerCase();
+
+    if (/financial|event/.test(normalized)) return 'financial_events';
+    if (/settlement|statement|payment/.test(normalized)) return 'settlements';
+    if (/shipment|inbound|receiv/.test(normalized)) return 'shipments';
+    if (/return|refund/.test(normalized)) return 'returns';
+    if (/invent|ledger|stock/.test(normalized)) return 'inventory';
+    if (/fee/.test(normalized)) return 'fees';
+    if (/transfer/.test(normalized)) return 'transfers';
+    if (/order/.test(normalized)) return 'orders';
+
+    return 'settlements';
+};
+
+const getDemoCsvMetrics = (csvType: string, index: number) => {
+    const byType: Record<string, { rowsProcessed: number; rowsInserted: number; rowsSkipped: number }> = {
+        orders: { rowsProcessed: 4820, rowsInserted: 4820, rowsSkipped: 0 },
+        shipments: { rowsProcessed: 244, rowsInserted: 244, rowsSkipped: 0 },
+        returns: { rowsProcessed: 186, rowsInserted: 186, rowsSkipped: 0 },
+        settlements: { rowsProcessed: 1936, rowsInserted: 1936, rowsSkipped: 0 },
+        inventory: { rowsProcessed: 6124, rowsInserted: 6124, rowsSkipped: 0 },
+        financial_events: { rowsProcessed: 3188, rowsInserted: 3188, rowsSkipped: 0 },
+        fees: { rowsProcessed: 964, rowsInserted: 964, rowsSkipped: 0 },
+        transfers: { rowsProcessed: 126, rowsInserted: 126, rowsSkipped: 0 },
+    };
+
+    const base = byType[csvType] || { rowsProcessed: 1280, rowsInserted: 1280, rowsSkipped: 0 };
+    return {
+        rowsProcessed: base.rowsProcessed + (index * 7),
+        rowsInserted: base.rowsInserted + (index * 7),
+        rowsSkipped: base.rowsSkipped,
+    };
+};
+
+const buildDemoPreviewResults = (syncId: string, sellerId: string, csvTypes: string[]): PreviewDetectionResult[] => {
+    const preferredTemplates = [
+        ...(csvTypes.includes('shipments') ? [DEMO_PREVIEW_TEMPLATE[0]] : []),
+        ...((csvTypes.includes('fees') || csvTypes.includes('settlements')) ? [DEMO_PREVIEW_TEMPLATE[1], DEMO_PREVIEW_TEMPLATE[2]] : []),
+        ...((csvTypes.includes('returns') || csvTypes.includes('orders')) ? [DEMO_PREVIEW_TEMPLATE[3]] : []),
+        ...(csvTypes.includes('financial_events') ? [DEMO_PREVIEW_TEMPLATE[4]] : []),
+        ...((csvTypes.includes('inventory') || csvTypes.includes('transfers')) ? [DEMO_PREVIEW_TEMPLATE[5]] : []),
+    ];
+
+    const selectedTemplates = [...preferredTemplates];
+    for (const template of DEMO_PREVIEW_TEMPLATE) {
+        if (selectedTemplates.length >= 5) {
+            break;
+        }
+        if (!selectedTemplates.includes(template)) {
+            selectedTemplates.push(template);
+        }
+    }
+
+    return selectedTemplates.slice(0, 5).map((template, index) => {
+        const discoveredAt = new Date(Date.now() - ((index + 2) * 86400000));
+        const daysRemaining = 62 - (index * 7);
+        return {
+            id: `${syncId}-finding-${index + 1}`,
+            seller_id: sellerId,
+            sync_id: syncId,
+            anomaly_type: template.anomaly_type,
+            severity: template.severity,
+            estimated_value: template.estimated_value,
+            currency: template.currency,
+            confidence_score: template.confidence_score,
+            evidence: template.evidence,
+            status: template.status,
+            discovery_date: discoveredAt.toISOString(),
+            deadline_date: new Date(discoveredAt.getTime() + (daysRemaining * 86400000)).toISOString(),
+            days_remaining: daysRemaining,
+        };
+    });
+};
+
+const safelyReadDemoCsvSimulation = (storageKey: string): DemoCsvSimulationRecord | null => {
+    if (typeof window === 'undefined') {
+        return null;
+    }
+
+    try {
+        const raw = localStorage.getItem(storageKey);
+        if (!raw) {
+            return null;
+        }
+
+        const parsed = JSON.parse(raw) as DemoCsvSimulationRecord | null;
+        if (!parsed?.run?.syncId || !Array.isArray(parsed.previewResults)) {
+            return null;
+        }
+
+        return parsed;
+    } catch (_error) {
+        return null;
+    }
+};
 
 const readBackendMessage = (value: unknown): string | null => {
     if (typeof value === 'string') {
@@ -384,6 +543,7 @@ export default function DataUpload() {
     const navigate = useNavigate();
     const { tenant } = useTenant();
     const currentTenantSlug = urlTenantSlug || tenant?.slug || 'default';
+    const isDemoWorkspace = currentTenantSlug === 'demo-workspace';
     const { toast } = useToast();
 
     const [files, setFiles] = useState<UploadFile[]>([]);
@@ -412,6 +572,7 @@ export default function DataUpload() {
     const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
     const latestCsvSyncStorageKey = `data_upload:last_csv_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
     const dismissedCsvSyncStorageKey = `data_upload:dismissed_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
+    const demoCsvSimulationStorageKey = `data_upload:demo_csv_run:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
     const detectionPollingRef = useRef({ token: 0, syncId: null as string | null });
     const dashboardRedirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const detectionGateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -445,6 +606,23 @@ export default function DataUpload() {
             detectionGateTimeoutRef.current = null;
         }
     }, []);
+
+    const persistDemoCsvSimulation = useCallback((record: DemoCsvSimulationRecord | null) => {
+        if (!isDemoWorkspace || typeof window === 'undefined') {
+            return;
+        }
+
+        try {
+            if (!record) {
+                localStorage.removeItem(demoCsvSimulationStorageKey);
+                return;
+            }
+
+            localStorage.setItem(demoCsvSimulationStorageKey, JSON.stringify(record));
+        } catch (_error) {
+            // Demo persistence is best-effort only.
+        }
+    }, [demoCsvSimulationStorageKey, isDemoWorkspace]);
 
     const startDetectionRedirectTimeout = useCallback(() => {
         clearDetectionGateTimeout();
@@ -668,6 +846,42 @@ export default function DataUpload() {
                 ? sessionStorage.getItem(dismissedCsvSyncStorageKey)
                 : null;
 
+            if (isDemoWorkspace) {
+                const demoSimulation = safelyReadDemoCsvSimulation(demoCsvSimulationStorageKey);
+                if (demoSimulation?.run?.syncId && demoSimulation.run.syncId !== dismissedSyncId) {
+                    try {
+                        localStorage.setItem(latestCsvSyncStorageKey, demoSimulation.run.syncId);
+                    } catch (_error) {
+                        // Local fallback is best-effort only.
+                    }
+
+                    if (cancelled) return;
+
+                    setFiles([]);
+                    setBatchResult(demoSimulation.run.batchResult);
+                    setPreviewResults(demoSimulation.previewResults);
+                    setPreviewResultsTotal(
+                        demoSimulation.run.detection?.resultsTotal ?? demoSimulation.previewResults.length ?? null
+                    );
+                    setPreviewMessage(null);
+                    setPreviewState({
+                        syncId: demoSimulation.run.syncId,
+                        status: getDetectionStatusFromRunRecord(demoSimulation.run),
+                        processedAt: demoSimulation.run.detection?.processedAt || demoSimulation.run.completedAt || null,
+                        errorMessage: demoSimulation.run.detection?.errorMessage || demoSimulation.run.error || null,
+                        isSandbox: demoSimulation.run.detection?.isSandbox ?? demoSimulation.run.isSandbox,
+                    });
+                    setRehydratedRun(demoSimulation.run);
+                    setRehydrationNotice(null);
+                    setIsPreviewOpen(Boolean(
+                        demoSimulation.previewResults.length > 0
+                        || demoSimulation.run.detection?.status
+                        || demoSimulation.run.detectionTriggered
+                    ));
+                    return;
+                }
+            }
+
             try {
                 const latestRunRes = await api.getLatestCsvUploadRun(currentTenantSlug);
                 if (cancelled) return;
@@ -824,7 +1038,7 @@ export default function DataUpload() {
 
         rehydrateLatestCsvRun();
         return () => { cancelled = true; };
-    }, [currentTenantSlug, dismissedCsvSyncStorageKey, latestCsvSyncStorageKey]);
+    }, [currentTenantSlug, demoCsvSimulationStorageKey, dismissedCsvSyncStorageKey, isDemoWorkspace, latestCsvSyncStorageKey]);
 
     useEffect(() => () => {
         clearDashboardRedirect();
@@ -862,6 +1076,7 @@ export default function DataUpload() {
     ]);
 
     const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
+    const isDemoSimulationSyncId = Boolean(currentUploadSyncId?.startsWith(DEMO_CSV_SYNC_PREFIX));
     const isPreviewPartial = previewResults.length > 0 && isDetectionInFlight(previewState.status);
     const previewEmptyState = useMemo(
         () => getEmptyDetectionCopy(previewState.status, previewMessage || previewState.errorMessage || null),
@@ -885,6 +1100,11 @@ export default function DataUpload() {
             setPreviewResultsTotal(null);
             setPreviewMessage('Detection results unavailable because this upload has no sync ID.');
             setPreviewState(prev => ({ ...prev, syncId: null, status: null, processedAt: null, errorMessage: null, isSandbox: false }));
+            return;
+        }
+
+        if (isDemoSimulationSyncId) {
+            setIsPreviewLoading(false);
             return;
         }
 
@@ -972,7 +1192,7 @@ export default function DataUpload() {
         };
         fetchPreviewData();
         return () => { cancelled = true; };
-    }, [isPreviewOpen, currentTenantSlug, currentUploadSyncId]);
+    }, [isPreviewOpen, currentTenantSlug, currentUploadSyncId, isDemoSimulationSyncId]);
 
     // Computed preview values
     const previewTotalRecovery = useMemo(() => previewResults.reduce((s, r) => s + (r.estimated_value || 0), 0), [previewResults]);
@@ -1360,6 +1580,146 @@ export default function DataUpload() {
         setRedirectGateSyncId(null);
         setDetectionRedirectTimedOut(false);
         const { userId: resolvedUserId, tenantId: resolvedTenantId } = await resolveSessionIdentity();
+
+        if (isDemoWorkspace) {
+            invalidateDetectionPolling();
+            const startedAt = Date.now();
+            setUploadRequestStartedAt(startedAt);
+            setUploadAcceptedAt(null);
+            setIsUploading(true);
+            setBatchResult(null);
+            setIsPreviewOpen(false);
+            setPreviewResults([]);
+            setPreviewResultsTotal(null);
+            setPreviewMessage(null);
+            setRehydrationNotice(null);
+            setRehydratedRun(null);
+            setPreviewState({
+                syncId: null,
+                status: null,
+                processedAt: null,
+                errorMessage: null,
+                isSandbox: false,
+            });
+            setFiles(prev => prev.map(f => ({ ...f, status: 'uploading' as const })));
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 950));
+
+                const syncId = `${DEMO_CSV_SYNC_PREFIX}${Date.now().toString(36)}`;
+                const sellerId = resolvedUserId || 'demo-user-0001';
+                const csvTypes = files.map(({ file }) => inferDemoCsvType(file.name));
+                const ingestionResults: IngestionFileResult[] = files.map(({ file }, index) => {
+                    const csvType = csvTypes[index];
+                    const metrics = getDemoCsvMetrics(csvType, index);
+                    return {
+                        success: true,
+                        csvType,
+                        fileName: file.name,
+                        rowsProcessed: metrics.rowsProcessed,
+                        rowsInserted: metrics.rowsInserted,
+                        rowsSkipped: metrics.rowsSkipped,
+                        rowsFailed: 0,
+                        errors: [],
+                        detectionTriggered: true,
+                    };
+                });
+                const previewFindings = buildDemoPreviewResults(syncId, sellerId, csvTypes);
+                const processedAtIso = new Date(startedAt + 2800).toISOString();
+                const demoBatchResult: BatchResult = {
+                    success: true,
+                    userId: sellerId,
+                    totalFiles: files.length,
+                    results: ingestionResults,
+                    detectionTriggered: true,
+                    syncId,
+                };
+                const demoRun: CsvRunRehydrationRecord = {
+                    syncId,
+                    source: 'persisted_run',
+                    uploadSummaryAvailable: true,
+                    recoveryNotice: null,
+                    createdAt: new Date(startedAt).toISOString(),
+                    updatedAt: processedAtIso,
+                    startedAt: new Date(startedAt).toISOString(),
+                    completedAt: processedAtIso,
+                    status: 'completed',
+                    fileCount: files.length,
+                    filesSummary: ingestionResults.map((result, index) => ({
+                        fileName: result.fileName,
+                        mimeType: files[index]?.file.type || 'text/csv',
+                        status: 'ingested',
+                        csvType: result.csvType as CsvRunFileSummary['csvType'],
+                        rowsProcessed: result.rowsProcessed,
+                        rowsInserted: result.rowsInserted,
+                        rowsSkipped: result.rowsSkipped,
+                        rowsFailed: result.rowsFailed,
+                        errors: result.errors,
+                        detectionTriggered: true,
+                    })),
+                    detectionTriggered: true,
+                    error: null,
+                    isSandbox: false,
+                    batchResult: demoBatchResult,
+                    detection: {
+                        status: 'completed',
+                        processedAt: processedAtIso,
+                        errorMessage: null,
+                        resultsTotal: previewFindings.length,
+                        isSandbox: false,
+                    },
+                };
+                const demoRecord: DemoCsvSimulationRecord = {
+                    run: demoRun,
+                    previewResults: previewFindings,
+                };
+
+                setBatchResult(demoBatchResult);
+                setUploadAcceptedAt(Date.now());
+                try {
+                    localStorage.setItem(latestCsvSyncStorageKey, syncId);
+                    sessionStorage.removeItem(dismissedCsvSyncStorageKey);
+                } catch (_error) {
+                    // Local refresh fallback is best-effort only.
+                }
+                persistDemoCsvSimulation(demoRecord);
+                setPreviewState({
+                    syncId,
+                    status: 'completed',
+                    processedAt: processedAtIso,
+                    errorMessage: null,
+                    isSandbox: false,
+                });
+                setRehydratedRun(demoRun);
+                setPreviewResults(previewFindings);
+                setPreviewResultsTotal(previewFindings.length);
+                setPreviewMessage(null);
+                setIsPreviewOpen(true);
+                setFiles(prev => prev.map((entry, index) => ({
+                    ...entry,
+                    status: 'success' as const,
+                    detectedType: ingestionResults[index]?.csvType,
+                    rowsInserted: ingestionResults[index]?.rowsInserted,
+                    rowsSkipped: ingestionResults[index]?.rowsSkipped,
+                    rowsFailed: ingestionResults[index]?.rowsFailed,
+                    error: undefined,
+                })));
+
+                const totalRows = ingestionResults.reduce((sum, result) => sum + result.rowsInserted, 0);
+                toast({
+                    title: `${files.length} file${files.length > 1 ? 's' : ''} imported`,
+                    description: `${totalRows.toLocaleString()} rows prepared for review · ${previewFindings.length} findings ready for the dashboard.`,
+                });
+            } catch (error: any) {
+                const failureMessage = combineBackendMessages(error?.message, 'Demo upload could not be prepared.') || 'Demo upload could not be prepared.';
+                toast({ title: 'Upload failed', description: failureMessage, variant: 'destructive' });
+                setFiles(prev => prev.map(f => ({ ...f, status: 'error' as const, error: failureMessage })));
+            } finally {
+                setIsUploading(false);
+            }
+            return;
+        }
+
         const { token: sessionToken } = await getFrontendAuthContext();
 
         if (!resolvedUserId) {
@@ -1536,6 +1896,15 @@ export default function DataUpload() {
             }
         } catch (_error) {
             // Session dismissal is best-effort only.
+        }
+
+        if (isDemoWorkspace) {
+            persistDemoCsvSimulation(null);
+            try {
+                localStorage.removeItem(latestCsvSyncStorageKey);
+            } catch (_error) {
+                // Local fallback cleanup is best-effort only.
+            }
         }
 
         invalidateDetectionPolling();
