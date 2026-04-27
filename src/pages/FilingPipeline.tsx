@@ -1089,7 +1089,7 @@ export default function FilingPipeline() {
   ];
 
   return (
-    <PageLayout title="Submissions and Payouts" midnight noPadding>
+    <PageLayout title="Submission Flow" midnight noPadding>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
@@ -1112,7 +1112,7 @@ export default function FilingPipeline() {
             <div className="flex flex-col items-start gap-2 lg:items-end">
               {lastUpdatedLabel ? (
                 <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
-                  Submissions and payouts live
+                  Submission flow live
                   <span className="ml-2 text-white/40">{lastUpdatedLabel}</span>
                 </div>
               ) : null}
