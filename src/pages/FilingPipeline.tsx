@@ -78,7 +78,7 @@ const LEDGER_PAGE_SIZE = 100;
 const READY_FILING_STATUSES = new Set(['pending']);
 const ACTIVE_FILING_STATUSES = new Set(['submitting']);
 const FILED_FILING_STATUSES = new Set(['filed', 'submitted', 'resubmitted']);
-const ATTENTION_FILING_STATUSES = new Set(['failed', 'blocked', 'payment_required', 'pending_safety_verification']);
+const ATTENTION_FILING_STATUSES = new Set(['failed', 'blocked', 'payment_required', 'pending_safety_verification', 'pending_approval']);
 const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'under_review', 'in review', 'in_review', 'in_progress', 'processing']);
 const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
@@ -385,6 +385,7 @@ function beingFiledDetail(row: DisputeRow) {
 function attentionReason(row: DisputeRow) {
   if (hasSubmissionStateDivergence(row)) return 'Reconciliation needed';
   const normalized = normalizeStatus(row.filing_status);
+  if (normalized === 'pending_approval') return 'Approval needed';
   if (normalized === 'failed') return 'Failed';
   if (normalized === 'blocked') return 'Blocked';
   if (normalized === 'payment_required') return 'Payment required';
@@ -401,6 +402,9 @@ function attentionDetail(row: DisputeRow) {
 
   const normalized = normalizeStatus(row.filing_status);
   const blockers = summarizeFilingBlockers(row);
+  if (normalized === 'pending_approval') {
+    return 'This case is proof-complete and queued for filing approval. Margin will not submit it until approval is recorded.';
+  }
   if (normalized === 'failed') return `The last filing attempt did not complete. ${blockers ? `Current blocker: ${blockers}.` : 'Review or retry is required before filing resumes.'}`;
   if (normalized === 'blocked') return `This case is blocked before filing. ${blockers ? `Clear ${blockers} before submission.` : 'Margin will not submit it until the blocker is cleared.'}`;
   if (normalized === 'payment_required') return 'Payment is required before Margin can file this case. The case will wait instead of filing silently.';
@@ -425,6 +429,10 @@ function filingNextStep(row: DisputeRow, stage: 'ready' | 'filing' | 'filed' | '
 
   if (hasSubmissionStateDivergence(row)) {
     return 'Next: reconcile case state against recorded submission proof.';
+  }
+
+  if (normalizeStatus(row.filing_status) === 'pending_approval') {
+    return 'Next: approve the proof packet so Margin can submit the case.';
   }
 
   const blockers = summarizeFilingBlockers(row);
@@ -981,12 +989,12 @@ export default function FilingPipeline() {
       value: 'attention' as const,
       label: 'Needs attention',
       title: 'Needs Attention',
-      detail: 'Cases that cannot file until the recorded blocker is cleared.',
+      detail: 'Cases that need approval, retry, or a recorded blocker cleared before filing can continue.',
       amount: formatMoney(totalAmount(attentionRows.map(disputeAmount))),
       countLabel: `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} gated`,
       action: attentionRows.length ? (
         <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight">
-          <Link to={disputeCasesHref}>Review blockers<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+          <Link to={disputeCasesHref}>Review queue<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
       content: disputeLoading ? (
