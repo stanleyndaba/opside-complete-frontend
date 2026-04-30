@@ -15,131 +15,131 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 const proofItems = [
   {
     title: 'Inbound shipment discrepancies',
-    detail: 'Short receives, missing units, warehouse drift'
+    detail: 'Short receives, missing units, and receiving drift that may still be recoverable'
   },
   {
     title: 'Lost or damaged inventory',
-    detail: 'Claimable operational loss across FBA states'
+    detail: 'Inventory loss across FBA states that still needs reimbursement truth'
   },
   {
     title: 'Refund without return',
-    detail: 'Refund events separated from actual unit return'
+    detail: 'Refunds issued without a clean return or inventory resolution'
   },
   {
     title: 'Fee discrepancies',
-    detail: 'Charges, adjustments, and reimbursement gaps'
+    detail: 'Charges, reversals, and reimbursement gaps that stop lining up cleanly'
   }
 ];
 
 const workflowSteps = [
   {
     step: '01',
-    title: 'Connect Amazon or upload FBA data',
-    detail: 'Margin starts with a read-only view of inventory, shipments, refunds, fees, reimbursements, and payout activity.'
+    title: 'Connect Amazon and start read-only',
+    detail: 'Margin begins with a read-only view of shipments, inventory, refunds, fees, reimbursements, and payout activity.'
   },
   {
     step: '02',
-    title: 'Audit the operational trail',
-    detail: 'The system checks where identifiers, quantities, approvals, and ledger movement stop lining up cleanly.'
+    title: 'Find valid reimbursement issues',
+    detail: 'The system checks where quantities, events, reimbursements, and ledger activity stop matching cleanly.'
   },
   {
     step: '03',
-    title: 'Detect missed reimbursement opportunities',
-    detail: 'Potential recovery issues are surfaced as explicit cases instead of staying buried in Seller Central activity.'
+    title: 'Prepare the evidence',
+    detail: 'Supporting records are pulled together so each case can move with proof instead of guesswork.'
   },
   {
     step: '04',
-    title: 'Prepare evidence and filing path',
-    detail: 'Supporting records are matched, weak cases are held, and supportable cases move toward filing with clear reasoning.'
+    title: 'File only supportable cases',
+    detail: 'Weak, duplicate, or unsupported issues stay held back while valid cases move forward with clear reasoning.'
   },
   {
     step: '05',
-    title: 'Track the recovery lifecycle',
-    detail: 'Filed, approved, blocked, and recovered states stay visible until the outcome is actually resolved.'
+    title: 'Track every case through payout',
+    detail: 'Detected, filed, approved, blocked, awaiting payout, and recovered states stay visible until the money lands.'
   }
 ];
 
 const recoveryCategories = [
   {
     label: 'Inbound shipment shortages',
-    title: 'When quantities land short, the case should not disappear into receiving noise.',
-    detail: 'Margin traces shipment identifiers, received quantities, and support records before the loss gets treated as recoverable.',
-    states: ['Quantity drift', 'Shipment trail', 'Case ready']
+    title: 'Received units land short against the shipment plan.',
+    detail: 'Margin checks quantities, shipment records, and supporting documents before the loss gets written off.',
+    states: ['Quantity check', 'Evidence ready', 'Ready to file']
   },
   {
     label: 'Lost or damaged inventory',
-    title: 'Units marked lost or damaged still need clean recovery truth.',
-    detail: 'Margin keeps the discrepancy, the support, and the filing path tied together so the case stays visible from discovery to outcome.',
-    states: ['Inventory event', 'Evidence linked', 'Awaiting response']
+    title: 'Inventory marked lost or damaged can still be reimbursable.',
+    detail: 'Margin keeps the inventory event, the support, and the case state tied together from detection to resolution.',
+    states: ['Inventory event', 'Support linked', 'Case active']
   },
   {
     label: 'Refund without return',
-    title: 'A refund event is not the same thing as inventory being returned properly.',
-    detail: 'Margin separates return noise from missing-unit reality so refund-driven cases do not get written off too early.',
-    states: ['Refund event', 'No return', 'Supportable case']
+    title: 'A customer refund does not prove the unit came back.',
+    detail: 'Margin separates refund activity from actual return and inventory resolution before the case moves.',
+    states: ['Refund event', 'Return check', 'Case ready']
   },
   {
     label: 'Fee discrepancies',
-    title: 'Charges and reimbursements need the same level of operational scrutiny as inventory loss.',
-    detail: 'When fee math, reimbursements, or reversals stop matching the ledger, Margin surfaces the break with evidence attached.',
-    states: ['Ledger drift', 'Validation', 'Recovery tracked']
+    title: 'Fee math, reversals, and reimbursements can drift quietly.',
+    detail: 'When the ledger stops matching, Margin surfaces the break and keeps the supporting trail attached.',
+    states: ['Ledger break', 'Validated', 'Recovery tracked']
   }
 ];
 
 const sellerReasons = [
   {
-    title: 'Less manual audit work',
-    detail: 'Sellers do not need to keep hunting through reports, inboxes, and payout screens just to understand what broke.'
+    title: 'Less manual investigation',
+    detail: 'Sellers do not need to keep hunting through reports, inboxes, and payout screens just to see where money went missing.'
   },
   {
-    title: 'Visible recoverable value',
-    detail: 'Margin separates what looks interesting from what is actually supportable and worth moving.'
+    title: 'Fewer weak claims',
+    detail: 'Margin is built to hold weak, duplicate, or unsupported cases instead of filing everything it can find.'
   },
   {
     title: 'Evidence-backed case preparation',
-    detail: 'Cases move with matched support instead of guesswork, duplicate pressure, or weak filing logic.'
+    detail: 'Valid cases move with matched support instead of guesswork, duplicate pressure, or weak filing logic.'
   },
   {
-    title: 'Clear recovery tracking',
-    detail: 'Detected, prepared, filed, approved, blocked, and recovered states stay readable as the workflow moves.'
+    title: 'Flat subscription, no commissions',
+    detail: 'Get ongoing recovery coverage without giving up a percentage of every reimbursement that comes back.'
   }
 ];
 
 const systemShowcaseStates = [
   {
     label: 'Detected',
-    detail: 'The discrepancy becomes explicit.'
+    detail: 'A valid reimbursement issue becomes explicit.'
   },
   {
     label: 'Evidence matched',
-    detail: 'Support is attached to the case.'
+    detail: 'Supporting proof is attached to the case.'
   },
   {
     label: 'Ready to file',
-    detail: 'Weak and duplicate issues stay held.'
+    detail: 'Weak and duplicate issues stay held back.'
   },
   {
     label: 'Submitted',
-    detail: 'The operational trail stays visible.'
+    detail: 'The case stays visible after filing.'
   },
   {
     label: 'Recovered',
-    detail: 'Approval and payout are no longer confused.'
+    detail: 'Approval and payout are tracked separately.'
   }
 ];
 
 const faqs = [
   {
     question: 'What does Margin do after I connect my Amazon account?',
-    answer: 'Margin audits the seller operation for missed reimbursement opportunities across inventory, shipments, returns, reimbursements, fees, and payout activity. It then separates what is supportable from what still needs more proof or review.'
+    answer: 'Margin starts with a read-only audit across shipments, inventory, refunds, fees, reimbursements, and payout activity. It surfaces valid reimbursement issues, prepares support, and separates what is ready to move from what still needs proof or review.'
   },
   {
     question: 'Is Margin a one-time audit or ongoing coverage?',
-    answer: 'Margin is built for ongoing recovery coverage. It starts with a recovery audit, then continues monitoring new discrepancies, evidence readiness, filing movement, and payout outcomes over time.'
+    answer: 'Margin is built for ongoing recovery coverage. It starts with a read-only audit, then continues monitoring new discrepancies, evidence readiness, filing movement, and payout outcomes over time.'
   },
   {
     question: 'Does Margin file every issue it finds?',
-    answer: 'No. Margin is built to hold weak, duplicate, thread-only, or unsupported cases instead of pushing them forward carelessly. The goal is controlled recovery work, not volume filing.'
+    answer: 'No. Margin is built to hold weak, duplicate, or unsupported cases instead of pushing everything forward carelessly. The goal is valid recovery work, not volume filing.'
   },
   {
     question: 'Where does Margin get supporting evidence from?',
@@ -147,11 +147,11 @@ const faqs = [
   },
   {
     question: 'How will I know what is happening with my cases?',
-    answer: 'Margin keeps recovery status explicit across the workflow: detected, evidence matched, ready to file, filed, held, approved, awaiting payout, and recovered.'
+    answer: 'Margin keeps case status explicit across the workflow: detected, evidence matched, ready to file, filed, held, approved, awaiting payout, and recovered.'
   },
   {
     question: 'How does Margin pricing work?',
-    answer: 'Margin uses flat subscription pricing with no recovery commissions. Sellers get ongoing monitoring, evidence-backed case preparation, filing workflow support, and recovery tracking without commission-based billing.'
+    answer: 'Margin uses flat subscription pricing with no recovery commissions. Sellers can start with a read-only audit, then continue with ongoing monitoring, evidence-backed case preparation, filing workflow support, and recovery tracking without commission-based billing.'
   }
 ];
 
@@ -307,14 +307,14 @@ export default function Index() {
               className="w-full"
             >
               <div className="max-w-[780px]">
-                <div className={sectionLabelClass}>Amazon FBA Recovery Platform</div>
+                <div className={sectionLabelClass}>Amazon Reimbursement Recovery</div>
 
                 <h1 className="mt-5 max-w-[760px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[78px]">
-                  Turn hidden Amazon reimbursement loss into evidence-backed recovery cases.
+                  Recover money Amazon owes you.
                 </h1>
 
                 <p className="mt-5 max-w-[640px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
-                  Margin audits the operational trail across inventory, shipments, refunds, fees, reimbursements, and payouts to identify missed reimbursement opportunities, prepare the support, and keep the recovery workflow visible.
+                  Margin finds valid reimbursement issues, prepares the evidence, files only supportable cases, and tracks every case through payout. Flat subscription. No commissions. Start read-only.
                 </p>
 
                 <div className="mt-8 grid w-full max-w-[420px] grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:flex sm:items-center">
@@ -322,7 +322,7 @@ export default function Index() {
                     onClick={handlePrimaryCta}
                     className="h-12 w-full justify-center gap-2 rounded-[18px] border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 shadow-[0_14px_30px_rgba(10,16,24,0.24)] hover:bg-sky-300/[0.13] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                   >
-                    {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                    {isFull ? 'Join Waitlist' : 'Start read-only audit'}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
 
@@ -378,9 +378,9 @@ export default function Index() {
 
         <section className="relative py-10 md:py-12">
           <div className={containerClass}>
-            <div className="max-w-[460px] md:mx-auto md:max-w-[660px] md:text-center">
-              <div className="text-[10px] uppercase tracking-[0.16em] text-white/36">Works with the sources already inside your recovery workflow</div>
-            </div>
+              <div className="max-w-[460px] md:mx-auto md:max-w-[660px] md:text-center">
+                <div className="text-[10px] uppercase tracking-[0.16em] text-white/36">Connect Amazon plus the inboxes and files where reimbursement proof already lives</div>
+              </div>
             <div className="mt-6 md:mt-8">
               <IntegrationsCarousel isMobileLayout={isMobileLayout} />
             </div>
@@ -392,10 +392,10 @@ export default function Index() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>How Margin Works</div>
               <h2 className={sectionHeadingClass}>
-                A controlled recovery workflow for Amazon FBA operators.
+                Connect. Detect. Prove. File. Track.
               </h2>
               <p className={sectionBodyClass}>
-                Margin does not dump raw activity back on the seller. It turns operational noise into a clear sequence: audit, detect, prepare, file, and track.
+                Margin turns Amazon reimbursement work into a clear sequence instead of another manual investigation.
               </p>
             </motion.div>
 
@@ -427,10 +427,10 @@ export default function Index() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Recovery Categories</div>
               <h2 className={sectionHeadingClass}>
-                The reimbursement issues sellers usually do not see clearly enough.
+                Where Margin finds lost money.
               </h2>
               <p className={sectionBodyClass}>
-                Margin keeps recovery categories explicit so the seller can understand where the loss happened, what support exists, and whether the case should move.
+                Each category stays tied to what broke, what evidence exists, and whether the case should move.
               </p>
             </motion.div>
 
@@ -476,10 +476,10 @@ export default function Index() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Product View</div>
               <h2 className={sectionHeadingClass}>
-                The recovery workflow stays visible from first signal to final outcome.
+                See every case from first signal to final payout.
               </h2>
               <p className={sectionBodyClass}>
-                Margin is built to feel like a controlled operating system for reimbursement work, not a spreadsheet chase and not a cluttered dashboard dump.
+                Margin keeps the full recovery state visible so sellers can see what was detected, what has evidence, what is ready, what was filed, and what actually paid out.
               </p>
             </motion.div>
 
@@ -509,7 +509,7 @@ export default function Index() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Why Sellers Use Margin</div>
               <h2 className={sectionHeadingClass}>
-                Built to reduce audit drag and make recovery work readable.
+                Why sellers choose Margin.
               </h2>
             </motion.div>
 
@@ -538,10 +538,10 @@ export default function Index() {
             <motion.div {...revealProps} className="mx-auto max-w-[900px] md:text-center">
               <div className={sectionLabelClass}>Understanding Margin</div>
               <h2 className={sectionHeadingClass}>
-                What sellers usually want to understand before they start with Margin.
+                What sellers usually want to understand before they start.
               </h2>
               <p className={`${sectionBodyClass} md:mx-auto`}>
-                These answers explain what Margin looks for, how reimbursement cases move, what gets held back, and how recovery stays visible from detection through payout.
+                These answers explain what Margin looks for, what gets held back, how supporting evidence works, and how recovery stays visible from detection through payout.
               </p>
             </motion.div>
 
@@ -583,10 +583,10 @@ export default function Index() {
               <div className="max-w-[880px]">
                 <div className={sectionLabelClass}>Start With Clarity</div>
                 <h2 className="mt-4 max-w-[860px] text-[32px] font-light leading-[1.02] tracking-tight text-white sm:text-[38px] md:text-[68px]">
-                  Start with a read-only recovery audit.
+                  Start with a read-only reimbursement audit.
                 </h2>
                 <p className="mt-5 max-w-[700px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Connect Amazon, let Margin audit the operational trail, and see which reimbursement opportunities are supportable before anything gets pushed forward.
+                  Connect Amazon, let Margin find valid reimbursement issues, and see which cases have real evidence before anything gets filed.
                 </p>
               </div>
 
@@ -595,7 +595,7 @@ export default function Index() {
                   onClick={handlePrimaryCta}
                   className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                  {isFull ? 'Join Waitlist' : 'Start read-only audit'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
 

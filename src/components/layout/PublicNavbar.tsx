@@ -169,37 +169,37 @@ export const PublicNavbar = () => {
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
-                                            {/* Audit Vectors */}
+                                            {/* Recovery Coverage */}
                                             <div className="space-y-3">
-                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">Audit Vectors</h5>
+                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">Recovery Coverage</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={Search} title="Inbound Variance" description="Reconcile shipping plan/ledger" />
-                                                    <MobileNavItem icon={ShieldCheck} title="Inventory Reconciliation" description="Lost & destroyed unit recovery" />
-                                                    <MobileNavItem icon={BoxSelect} title="Dimensional Weight Audit" description="Correct Cubiscan errors" />
-                                                    <MobileNavItem icon={ArrowLeft} title="Return Logistics" description="Unreturned inventory tracking" />
-                                                    <MobileNavItem icon={Truck} title="Transfer & Operations" description="Inter-fulfillment center loss" />
-                                                    <MobileNavItem icon={BarChart3} title="Full Forensic Audit" description="Deploy all 26 agents" highlight />
+                                                    <MobileNavItem icon={Search} title="Inbound Shipments" description="Short receives and receiving drift" />
+                                                    <MobileNavItem icon={ShieldCheck} title="Lost or Damaged Inventory" description="Recovery across FBA states" />
+                                                    <MobileNavItem icon={BoxSelect} title="Fee Discrepancies" description="Overcharges, reversals, and gaps" />
+                                                    <MobileNavItem icon={ArrowLeft} title="Refund Without Return" description="Refunds not matched to real return outcome" />
+                                                    <MobileNavItem icon={Truck} title="Transfer & Operations" description="Inter-fulfillment discrepancies" />
+                                                    <MobileNavItem icon={BarChart3} title="Recovery Workflow" description="Valid cases, evidence, filing, payout" highlight />
                                                 </div>
                                             </div>
 
-                                            {/* Governance */}
+                                            {/* Evidence & Control */}
                                             <div className="space-y-3">
-                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">Governance & Scale</h5>
+                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">Evidence & Control</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={Layers} title="Inbound Fee Governance" description="Line-by-line proof" />
-                                                    <MobileNavItem icon={Briefcase} title="Agency Portfolio Manager" description="Multi-account reconciliation" />
-                                                    <MobileNavItem icon={BadgePercent} title="Commission Rate Audit" description="Detect overcharges & errors" />
-                                                    <MobileNavItem icon={FileText} title="Auto-Invoice Sync" description="Gmail integration for evidence" />
+                                                    <MobileNavItem icon={Layers} title="Evidence Matching" description="Connect support to the right case" />
+                                                    <MobileNavItem icon={Briefcase} title="Filing Readiness" description="Hold weak or duplicate issues back" />
+                                                    <MobileNavItem icon={BadgePercent} title="Recovery Tracking" description="Approval and payout visibility" />
+                                                    <MobileNavItem icon={FileText} title="Connected Sources" description="Email, storage, and uploaded proof" />
                                                 </div>
                                             </div>
 
-                                            {/* By Profile */}
+                                            {/* By Seller Type */}
                                             <div className="space-y-3">
-                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">By Profile</h5>
+                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">By Seller Type</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={Activity} title="Growth ($0 - $1M)" description="Automated recovery for emerging brands" />
-                                                    <MobileNavItem icon={TrendingUp} title="High Volume ($1M - $10M)" description="Deep-dive forensic audit for scale" />
-                                                    <MobileNavItem icon={Layers} title="Institutional ($10M+)" description="Aggregator & PE Infrastructure" />
+                                                    <MobileNavItem icon={Activity} title="Emerging Sellers" description="Read-only audit and guided recovery" />
+                                                    <MobileNavItem icon={TrendingUp} title="Growth Sellers" description="Ongoing recovery coverage at scale" />
+                                                    <MobileNavItem icon={Layers} title="Enterprise Teams" description="Multi-workspace recovery operations" />
                                                 </div>
                                             </div>
                                         </AccordionContent>
