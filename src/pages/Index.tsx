@@ -390,7 +390,7 @@ export default function Index() {
                         setActiveProofIndex(index);
                       }
                     }}
-                    className={`group relative w-full overflow-hidden px-0 py-5 text-left transition-[flex-grow,transform,opacity,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-0 md:min-h-[180px] md:px-6 md:py-7 ${
+                    className={`group relative w-full overflow-hidden px-0 py-6 text-left transition-[flex-grow,transform,opacity,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-0 md:min-h-[180px] md:px-6 md:py-7 ${
                       index > 0 ? 'md:border-l md:border-white/8' : ''
                     } ${
                       isActive
@@ -415,7 +415,7 @@ export default function Index() {
                       <div className="pointer-events-none absolute bottom-5 left-0 top-5 w-px bg-gradient-to-b from-transparent via-sky-100/55 to-transparent md:hidden" />
                     ) : null}
 
-                      <div className={`relative z-10 flex h-full flex-col ${index > 0 ? 'border-t border-white/8' : ''} md:border-t-0`}>
+                      <div className={`relative z-10 flex h-full flex-col ${index > 0 ? 'border-t border-white/8 pt-4' : ''} md:border-t-0 md:pt-0`}>
                         <div className="flex items-start justify-between gap-4">
                           <div
                             className={`text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
