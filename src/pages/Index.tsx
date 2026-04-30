@@ -14,20 +14,20 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const proofItems = [
   {
-    title: 'Inbound shipment discrepancies',
-    detail: 'Short receives, missing units, and receiving drift that may still be recoverable'
+    title: 'Broad recovery coverage',
+    detail: 'Across shipments, inventory, returns, fees, reimbursements, and payout activity.'
   },
   {
-    title: 'Lost or damaged inventory',
-    detail: 'Inventory loss across FBA states that still needs reimbursement truth'
+    title: 'Evidence-backed case preparation',
+    detail: 'Margin connects the records, documents, and support before a case moves.'
   },
   {
-    title: 'Refund without return',
-    detail: 'Refunds issued without a clean return or inventory resolution'
+    title: 'Controlled filing',
+    detail: 'Weak, duplicate, or unsupported issues stay held back instead of being pushed forward.'
   },
   {
-    title: 'Fee discrepancies',
-    detail: 'Charges, reversals, and reimbursement gaps that stop lining up cleanly'
+    title: 'Tracked through payout',
+    detail: 'See what was detected, prepared, filed, approved, blocked, and actually paid out.'
   }
 ];
 
