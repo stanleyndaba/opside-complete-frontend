@@ -35,6 +35,32 @@ const proofItems = [
   }
 ];
 
+const trustHighlights = [
+  'Read-only to start',
+  'Flat subscription',
+  'No commissions',
+  'Weak cases held back'
+];
+
+const connectOutcomes = [
+  {
+    title: 'Detected issues',
+    detail: 'Margin surfaces reimbursement signals across shipments, inventory, returns, fees, reimbursements, and payouts.'
+  },
+  {
+    title: 'Support matched',
+    detail: 'Records, documents, and proof are linked before a case moves.'
+  },
+  {
+    title: 'Held vs ready',
+    detail: 'Weak or unsupported issues stay held back while valid cases move forward.'
+  },
+  {
+    title: 'Tracked to payout',
+    detail: 'See what was prepared, filed, approved, blocked, and actually paid out.'
+  }
+];
+
 const workflowSteps = [
   {
     step: '01',
@@ -286,6 +312,7 @@ export default function Index() {
   };
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 3 : 4;
+  const primaryCtaLabel = isFull ? 'Join Waitlist' : 'Sign in to start audit';
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
@@ -327,7 +354,7 @@ export default function Index() {
                     onClick={handlePrimaryCta}
                     className="h-12 w-full justify-center gap-2 rounded-[18px] border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 shadow-[0_14px_30px_rgba(10,16,24,0.24)] hover:bg-sky-300/[0.13] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                   >
-                    {isFull ? 'Join Waitlist' : 'Start read-only audit'}
+                    {primaryCtaLabel}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
 
@@ -338,6 +365,23 @@ export default function Index() {
                   >
                     See how it works
                   </Button>
+                </div>
+
+                {!isFull ? (
+                  <div className="mt-3 max-w-[420px] text-[12px] leading-6 text-white/46">
+                    Sign in first, then connect Amazon in read-only mode.
+                  </div>
+                ) : null}
+
+                <div className="mt-5 flex max-w-[640px] flex-wrap gap-2.5">
+                  {trustHighlights.map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-white/62"
+                    >
+                      {item}
+                    </div>
+                  ))}
                 </div>
 
                 <div className="mt-6 flex w-full justify-center">
@@ -458,6 +502,38 @@ export default function Index() {
           </div>
         </section>
 
+        <section className="relative border-b border-white/8 py-14 md:py-20">
+          <div className={containerClass}>
+            <motion.div {...revealProps} className="max-w-[760px]">
+              <div className={sectionLabelClass}>What Happens After You Connect</div>
+              <h2 className="mt-4 max-w-[760px] text-[29px] font-light leading-[1.04] tracking-tight text-white sm:text-[34px] md:text-[52px]">
+                See what the read-only start actually gives you.
+              </h2>
+              <p className="mt-4 max-w-[700px] text-[15px] leading-7 text-white/62 md:mt-5 md:text-[17px] md:leading-8">
+                Margin separates valid recovery work from noise, links support before cases move, and keeps every state visible through payout.
+              </p>
+            </motion.div>
+
+            <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-12">
+              {connectOutcomes.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  {...revealProps}
+                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
+                  className={`grid gap-3 px-5 py-5 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-7 ${
+                    index > 0 ? 'border-t border-white/8' : ''
+                  }`}
+                >
+                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/54">{item.title}</div>
+                  <p className="max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                    {item.detail}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="relative py-10 md:py-12">
           <div className={containerClass}>
               <div className="max-w-[460px] md:mx-auto md:max-w-[660px] md:text-center">
@@ -507,12 +583,12 @@ export default function Index() {
         <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-32">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <div className={sectionLabelClass}>Recovery Categories</div>
+              <div className={sectionLabelClass}>Coverage Examples</div>
               <h2 className={sectionHeadingClass}>
-                Where Margin finds lost money.
+                Examples of what Margin catches.
               </h2>
               <p className={sectionBodyClass}>
-                Each category stays tied to what broke, what evidence exists, and whether the case should move.
+                These are representative recovery categories, not the limit of the system. Each one stays tied to what broke, what evidence exists, and whether the case should move.
               </p>
             </motion.div>
 
@@ -668,7 +744,7 @@ export default function Index() {
                   Start with a read-only reimbursement audit.
                 </h2>
                 <p className="mt-5 max-w-[700px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Connect Amazon, let Margin find valid reimbursement issues, and see which cases have real evidence before anything gets filed.
+                  Sign in, connect Amazon, and let Margin show which reimbursement issues have real evidence before anything gets filed.
                 </p>
               </div>
 
@@ -677,7 +753,7 @@ export default function Index() {
                   onClick={handlePrimaryCta}
                   className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Start read-only audit'}
+                  {primaryCtaLabel}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
 
