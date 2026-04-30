@@ -36,22 +36,6 @@ type SelectablePlan = 'starter' | 'pro' | 'enterprise';
 
 const pricingTiers: PricingTier[] = [
   {
-    name: 'Recovery Scan / Activation',
-    price: '$99 one-time',
-    priceContext: 'Credited toward subscription',
-    purpose: 'Low-risk entry. Credit toward subscription.',
-    features: [
-      'Initial FBA recovery scan',
-      'Supported opportunities surfaced clearly',
-      'Recovery workspace prepared from the findings',
-      'Credit toward your first subscription if you continue',
-    ],
-    checkoutUrl: 'https://pay.yoco.com/r/4GlRw8',
-    ctaLabel: 'Start Recovery Scan',
-    salesLed: true,
-    badgeLabel: 'Entry',
-  },
-  {
     name: 'Starter',
     planKey: 'starter',
     price: '$79/mo',
@@ -132,9 +116,9 @@ export default function PricingAdjust() {
   const isInAppOverlay = Boolean(tenantSlug);
 
   usePageMeta({
-    title: 'Margin Pricing | Recovery Scan, Monthly Plans, No Commissions',
+    title: 'Margin Pricing | Monthly Recovery Plans, No Commissions',
     description:
-      'Start with a $99 Recovery Scan, then continue with flat monthly recovery coverage. Margin keeps finding discrepancies, preparing evidence, and tracking recoveries with no commissions.',
+      'Choose a flat monthly recovery plan. Margin keeps finding discrepancies, preparing evidence, and tracking recoveries with no commissions.',
     url: `${SITE_META.url}/pricing`,
   });
 
@@ -418,16 +402,16 @@ export default function PricingAdjust() {
           >
             <div className="flex flex-col items-center gap-3">
               <Badge variant="outline" className="border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
-                Recovery Scan + Flat Subscription
+                Flat Monthly Recovery Coverage
               </Badge>
               <h1 className="text-2xl font-sans font-light tracking-tight text-white">Pricing</h1>
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl md:text-6xl font-light tracking-tight text-white/95 leading-tight">
-                Start with proof. Continue with no-commission recovery coverage.
+                Choose ongoing recovery coverage with no commissions.
               </h2>
               <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight mx-auto">
-                Start with a $99 Recovery Scan, then continue with flat monthly monitoring if the findings are useful. Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time.
+                Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time through flat monthly coverage.
               </p>
               <p className="mx-auto max-w-2xl text-[11px] font-sans font-medium leading-5 text-white/32">
                 Checkout is processed by Yoco and may show the local South African rand amount for the selected plan.
