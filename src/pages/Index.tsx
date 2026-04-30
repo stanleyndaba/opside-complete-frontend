@@ -366,7 +366,7 @@ export default function Index() {
         <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
           <div className={containerClass}>
             <div
-              className="flex flex-col gap-3 py-4 md:flex-row md:items-stretch md:gap-0 md:py-0"
+              className="flex flex-col md:flex-row md:items-stretch"
               onMouseLeave={() => {
                 if (!isMobileLayout) {
                   setActiveProofIndex(0);
@@ -390,11 +390,11 @@ export default function Index() {
                         setActiveProofIndex(index);
                       }
                     }}
-                    className={`group relative w-full overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.018] px-5 py-5 text-left transition-[flex-grow,transform,opacity,border-color,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky-200/40 md:min-h-[180px] md:rounded-none md:border-0 md:bg-transparent md:px-6 md:py-7 md:focus-visible:ring-0 ${
+                    className={`group relative w-full overflow-hidden px-0 py-5 text-left transition-[flex-grow,transform,opacity,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-0 md:min-h-[180px] md:px-6 md:py-7 ${
                       index > 0 ? 'md:border-l md:border-white/8' : ''
                     } ${
                       isActive
-                        ? 'translate-y-[-2px] border-white/12 bg-white/[0.03] shadow-[0_18px_48px_rgba(8,12,18,0.28)] md:-translate-y-[3px] md:border-white/12 md:bg-white/[0.025] md:shadow-none'
+                        ? 'translate-y-[-2px] bg-white/[0.025] md:-translate-y-[3px] md:border-white/12'
                         : !isMobileLayout
                           ? 'md:opacity-[0.82]'
                           : ''
@@ -412,27 +412,27 @@ export default function Index() {
                       }`}
                     />
 
-                      <div className="relative z-10 flex h-full flex-col">
+                      <div className={`relative z-10 flex h-full flex-col ${index > 0 ? 'border-t border-white/8' : ''} md:border-t-0`}>
                         <div className="flex items-start justify-between gap-4">
                           <div
                             className={`text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
-                              isActive ? 'text-white/84' : isMobileLayout ? 'text-white/54' : 'text-white/34'
+                              isActive ? 'text-white/84' : 'text-white/34'
                             }`}
                           >
                             {item.title}
                           </div>
                           <div
                             className={`shrink-0 text-[10px] uppercase tracking-[0.18em] transition-colors duration-300 ${
-                              isActive ? 'text-sky-100/52' : isMobileLayout ? 'text-white/26' : 'text-white/18'
+                              isActive ? 'text-sky-100/52' : 'text-white/18'
                             }`}
                           >
                             {String(index + 1).padStart(2, '0')}
                           </div>
                         </div>
 
-                        <p
+                      <p
                           className={`mt-3 max-w-[280px] text-[14px] leading-7 transition-colors duration-300 ${
-                            isActive ? 'text-white/78' : isMobileLayout ? 'text-white/66' : 'text-white/58'
+                            isActive ? 'text-white/78' : 'text-white/58'
                           }`}
                         >
                           {item.detail}
@@ -442,9 +442,7 @@ export default function Index() {
                           className={`mt-5 text-[10px] uppercase tracking-[0.16em] transition-all duration-300 ${
                             isActive
                               ? 'max-h-10 translate-y-0 opacity-100 text-sky-100/50'
-                              : isMobileLayout
-                                ? 'max-h-10 translate-y-0 opacity-100 text-white/24'
-                                : 'max-h-0 translate-y-1 overflow-hidden opacity-0 text-transparent'
+                              : 'max-h-0 translate-y-1 overflow-hidden opacity-0 text-transparent'
                           }`}
                         >
                           {item.footer}
