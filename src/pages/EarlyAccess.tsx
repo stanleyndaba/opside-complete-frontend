@@ -12,24 +12,23 @@ import { buildYocoCheckoutUrl } from '@/lib/yocoCheckout';
 
 const EARLY_ACCESS_CHECKOUT_URL = 'https://pay.yoco.com/r/2JPEGa';
 const EARLY_ACCESS_PRICE = '$99';
-const EARLY_ACCESS_SPOTS = 100;
 
 const offerHighlights = [
   {
     title: 'Price',
-    detail: `${EARLY_ACCESS_PRICE} before broader public launch`
+    detail: `${EARLY_ACCESS_PRICE} launch pricing during Early Access`
   },
   {
-    title: 'Limited spots',
-    detail: `First ${EARLY_ACCESS_SPOTS} buyers only`
+    title: 'Priority cohort',
+    detail: 'Opened in small priority batches during launch'
   },
   {
     title: 'Priority onboarding',
-    detail: 'Faster setup and walkthrough access'
+    detail: 'Faster setup and direct launch support'
   },
   {
-    title: 'Recovery focus',
-    detail: 'Built for missed inbound shipment losses'
+    title: 'Broad coverage',
+    detail: 'Built to surface missed reimbursement opportunities across a wide recovery range'
   }
 ];
 
@@ -59,8 +58,8 @@ const whatYouGet = [
 const fitPoints = [
   {
     step: '01',
-    title: 'Catch missed inbound losses',
-    detail: 'For Amazon FBA sellers who want to identify inbound shipment shortages before the loss stays buried in receiving noise.'
+    title: 'Catch missed reimbursement opportunities',
+    detail: 'For Amazon FBA sellers who want broader recovery coverage across the operational issues that usually stay buried.'
   },
   {
     step: '02',
@@ -90,7 +89,7 @@ export default function EarlyAccess() {
   usePageMeta({
     title: 'Margin Early Access | Skip the line before public launch',
     description:
-      'Get first access to Margin before public launch. Priority onboarding, $99 early access pricing, and first access to setup before broader rollout.',
+      'Get early access to Margin with priority onboarding, faster setup, direct launch support, and $99 launch pricing during Early Access.',
     url: `${SITE_META.url}/early-access`,
     image: SITE_META.image,
   });
@@ -134,19 +133,18 @@ export default function EarlyAccess() {
               className="max-w-[860px]"
             >
               <div className="max-w-[780px]">
-                <div className={sectionLabelClass}>Margin Early Access</div>
+                <div className={sectionLabelClass}>Priority Launch Cohort</div>
 
                 <h1 className="mt-5 max-w-[760px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[78px]">
                   Skip the line. Get Margin early.
                 </h1>
 
                 <p className="mt-5 max-w-[640px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
-                  Margin helps Amazon sellers catch inbound shipment shortages and recover valid losses faster.
+                  Get early access to Margin with priority onboarding, faster setup, and direct launch support.
                 </p>
 
                 <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-white/52 md:text-[17px] md:leading-8">
-                  We are opening a limited number of Early Access spots for sellers who want priority onboarding and first
-                  access before public launch.
+                  We&apos;re opening access in small priority batches to keep onboarding fast and the early experience high quality.
                 </p>
 
                 <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center">
@@ -170,9 +168,7 @@ export default function EarlyAccess() {
 
                 <div className="mt-5 max-w-[420px] text-[13px] leading-6 text-white/56">
                   <div>Checkout is processed securely by Yoco.</div>
-                  <div>
-                    Price is {EARLY_ACCESS_PRICE}. Limited to the first {EARLY_ACCESS_SPOTS} buyers.
-                  </div>
+                  <div>Launch pricing is {EARLY_ACCESS_PRICE} during Early Access.</div>
                 </div>
               </div>
             </motion.div>
@@ -241,7 +237,7 @@ export default function EarlyAccess() {
                 Amazon FBA sellers who want to move before the crowd does.
               </h2>
               <p className={sectionBodyClass}>
-                This offer is for operators who want to catch missed inbound losses, move faster, and get priority setup
+                This offer is for operators who want broader recovery coverage, move faster, and get priority onboarding
                 before full rollout opens wider.
               </p>
             </motion.div>
@@ -271,10 +267,10 @@ export default function EarlyAccess() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Why This Exists</div>
               <h2 className={sectionHeadingClass}>
-                Access is opening in small batches so the experience stays focused and high quality.
+                We&apos;re opening access in small priority batches so the early experience stays fast and high quality.
               </h2>
               <p className={sectionBodyClass}>
-                Early buyers get priority and a lower early access price before the broader public release.
+                Early users get priority onboarding, faster setup, and direct support while Margin opens to the wider market.
               </p>
             </motion.div>
 
@@ -283,11 +279,10 @@ export default function EarlyAccess() {
               className="mt-10 overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:mt-14 md:px-10 md:py-12"
             >
               <div className="max-w-[820px]">
-                <div className="text-[10px] uppercase tracking-[0.18em] text-white/34">Early access release</div>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-white/34">Priority launch cohort</div>
                 <p className="mt-5 text-[18px] leading-8 text-white/66 md:text-[24px] md:leading-10">
-                  We are keeping this release small on purpose so onboarding, setup, and walkthroughs stay direct and
-                  useful. Early Access is for sellers who want first entry, priority support, and the lower early access price
-                  before Margin opens more broadly.
+                  We&apos;re keeping launch access controlled on purpose so onboarding, setup, and support stay direct and useful.
+                  Early Access is for sellers who want earlier entry and a smoother first experience while Margin opens in stages.
                 </p>
               </div>
             </motion.div>
@@ -301,13 +296,12 @@ export default function EarlyAccess() {
               className="overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:px-10 md:py-12"
             >
               <div className="max-w-[900px]">
-                <div className={sectionLabelClass}>Reserve Access</div>
+                <div className={sectionLabelClass}>Join The Cohort</div>
                 <h2 className="mt-4 max-w-[860px] text-[32px] font-light leading-[1.02] tracking-tight text-white sm:text-[38px] md:text-[68px]">
-                  Reserve your Early Access spot now.
+                  Join Margin&apos;s Priority Launch Cohort.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Price is {EARLY_ACCESS_PRICE}. Spots are limited to the first {EARLY_ACCESS_SPOTS} buyers before
-                  broader public launch.
+                  Launch pricing is {EARLY_ACCESS_PRICE} during Early Access. Access opens in small priority batches so onboarding stays fast and the early experience stays high quality.
                 </p>
               </div>
 

@@ -340,10 +340,10 @@ export default function Index() {
                     to="/early-access"
                     className="group inline-flex max-w-[560px] flex-wrap items-center justify-center gap-2 rounded-full border border-amber-200/18 bg-[linear-gradient(135deg,rgba(250,204,21,0.12),rgba(56,189,248,0.08))] px-4 py-2.5 text-center shadow-[0_18px_50px_rgba(15,23,42,0.45)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-white/18 hover:bg-[linear-gradient(135deg,rgba(250,204,21,0.16),rgba(56,189,248,0.11))]"
                   >
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-amber-100">Early Access</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-100">Priority Launch Cohort</span>
                     <span className="hidden h-3 w-px bg-white/15 sm:block" />
                     <span className="text-[12px] text-white/72 transition-colors group-hover:text-white/88">
-                      Reserve one of the first 100 spots
+                      Get $99 launch pricing and priority onboarding
                     </span>
                     <ArrowRight className="h-3.5 w-3.5 text-white/78 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
                   </Link>
