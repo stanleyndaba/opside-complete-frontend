@@ -33,15 +33,38 @@ export default function PaymentSuccess() {
 
   const pending = useMemo(() => getPendingYocoCheckoutContext(), []);
   const tenantSlug = searchParams.get('tenant') || pending.tenantSlug || readLocalStorage('active_tenant_slug');
+  const checkoutKind = String(searchParams.get('kind') || pending.kind || '');
   const offer = searchParams.get('offer') || pending.offer || 'Margin checkout';
   const price = searchParams.get('price') || pending.price || null;
   const invoiceId = searchParams.get('invoice') || pending.invoiceId || null;
   const returnPath = resolveReturnPath(searchParams, tenantSlug);
-  const isScan = String(searchParams.get('kind') || pending.kind || '').includes('scan');
+  const isScan = checkoutKind.includes('scan');
+  const isEarlyAccess = checkoutKind.includes('early_access');
+
+  const pageTitle = isEarlyAccess ? 'Early Access Submitted | Margin' : 'Payment Submitted | Margin';
+  const pageDescription = isEarlyAccess
+    ? 'Your early-access checkout return page for Margin. We will confirm the payment and follow up with onboarding details.'
+    : 'Your Yoco payment return page for Margin. Continue setup while payment confirmation is verified.';
+  const badgeLabel = isEarlyAccess ? 'Early Access Checkout' : 'Yoco Return';
+  const heading = isEarlyAccess
+    ? 'Reservation submitted. We will follow up with early access details.'
+    : 'Payment submitted. Continue into Margin.';
+  const body = isEarlyAccess
+    ? `You are back from Yoco for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment and follow up with onboarding details for your early-access spot.`
+    : `You are back from Yoco for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
+  const nextStepLabel = isEarlyAccess ? 'Next step' : 'Next step';
+  const nextStepValue = isEarlyAccess ? 'Watch your inbox' : isScan ? 'Start scan setup' : 'Open workspace';
+  const referenceValue = invoiceId || (isEarlyAccess ? 'Early access reservation' : 'Yoco receipt');
+  const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
+  const secondaryHref = isEarlyAccess ? '/' : '/pricing';
+  const secondaryLabel = isEarlyAccess ? 'Back to homepage' : 'Return to Pricing';
+  const infoCopy = isEarlyAccess
+    ? 'A redirect confirms that Yoco sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete.'
+    : 'A redirect confirms that Yoco sent you back to Margin. The payment record itself is verified separately from Yoco before Margin treats it as paid.';
 
   usePageMeta({
-    title: 'Payment Submitted | Margin',
-    description: 'Your Yoco payment return page for Margin. Continue setup while payment confirmation is verified.',
+    title: pageTitle,
+    description: pageDescription,
   });
 
   return (
@@ -57,23 +80,23 @@ export default function PaymentSuccess() {
 
           <section className="relative mx-auto flex min-h-[calc(100vh-220px)] max-w-4xl flex-col items-center justify-center px-6 pb-24 text-center">
             <Badge variant="outline" className="mb-6 border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
-              Yoco Return
+              {badgeLabel}
             </Badge>
             <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/20 bg-emerald-400/10 text-emerald-200">
               <CheckCircle2 className="h-6 w-6" strokeWidth={1.8} />
             </div>
             <h1 className="max-w-3xl text-4xl font-light leading-tight tracking-tight text-white md:text-6xl">
-              Payment submitted. Continue into Margin.
+              {heading}
             </h1>
             <p className="mt-6 max-w-2xl text-sm leading-7 tracking-tight text-white/48 md:text-base">
-              You are back from Yoco for {offer}{price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.
+              {body}
             </p>
 
             <div className="mt-10 grid w-full max-w-2xl grid-cols-1 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] text-left md:grid-cols-3">
               {[
                 ['Payment path', 'Processed by Yoco'],
-                ['Next step', isScan ? 'Start scan setup' : 'Open workspace'],
-                ['Reference', invoiceId || 'Yoco receipt'],
+                [nextStepLabel, nextStepValue],
+                ['Reference', referenceValue],
               ].map(([label, value]) => (
                 <div key={label} className="border-b border-white/10 p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
                   <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{label}</div>
@@ -87,7 +110,7 @@ export default function PaymentSuccess() {
                 onClick={() => navigate(returnPath)}
                 className="h-12 rounded-xl bg-white px-6 text-sm font-sans font-semibold text-black hover:bg-white/90"
               >
-                Continue to Margin
+                {primaryButtonLabel}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
@@ -95,14 +118,14 @@ export default function PaymentSuccess() {
                 variant="outline"
                 className="h-12 rounded-xl border-white/10 bg-transparent px-6 text-sm font-sans font-semibold text-white hover:bg-white/[0.05]"
               >
-                <Link to="/pricing">Return to Pricing</Link>
+                <Link to={secondaryHref}>{secondaryLabel}</Link>
               </Button>
             </div>
 
             <div className="mt-10 flex max-w-2xl items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.025] p-5 text-left">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-white/42" strokeWidth={1.8} />
               <p className="text-xs leading-6 text-white/42">
-                A redirect confirms that Yoco sent you back to Margin. The payment record itself is verified separately from Yoco before Margin treats it as paid.
+                {infoCopy}
               </p>
             </div>
           </section>
