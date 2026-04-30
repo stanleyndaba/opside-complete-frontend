@@ -411,7 +411,7 @@ export default function Index() {
                         isActive ? 'opacity-100' : 'opacity-0'
                       }`}
                     />
-                    {isActive ? (
+                    {isActive && index > 0 ? (
                       <div className="pointer-events-none absolute bottom-5 left-0 top-5 w-px bg-gradient-to-b from-transparent via-sky-100/55 to-transparent md:hidden" />
                     ) : null}
 
