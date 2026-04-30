@@ -160,16 +160,13 @@ export default function EarlyAccess() {
                   <Button
                     asChild
                     variant="outline"
-                    className="h-11 justify-between rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="h-11 justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
                   >
                     <Link to="/waitlist">Join Public Waitlist</Link>
                   </Button>
                 </div>
 
-                <div className="mt-5 max-w-[420px] text-[13px] leading-6 text-white/56">
-                  <div>Checkout is processed securely by Yoco.</div>
-                  <div>Launch pricing is {EARLY_ACCESS_PRICE} during Early Access.</div>
-                </div>
+                <div className="mt-5 max-w-[420px] text-[13px] leading-6 text-white/56">Checkout is processed securely by Yoco.</div>
               </div>
             </motion.div>
           </div>
@@ -301,7 +298,7 @@ export default function EarlyAccess() {
                   Join Margin&apos;s Priority Launch Cohort.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Launch pricing is {EARLY_ACCESS_PRICE} during Early Access. Access opens in small priority batches so onboarding stays fast and the early experience stays high quality.
+                  Access opens in small priority batches so onboarding stays fast and the early experience stays high quality.
                 </p>
               </div>
 
@@ -318,7 +315,7 @@ export default function EarlyAccess() {
                 <Button
                   asChild
                   variant="outline"
-                  className="h-11 justify-between rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                  className="h-11 justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
                 >
                   <Link to="/waitlist">Join Public Waitlist</Link>
                 </Button>

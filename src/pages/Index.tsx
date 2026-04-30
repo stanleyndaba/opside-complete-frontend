@@ -338,10 +338,10 @@ export default function Index() {
                 <div className="mt-6 flex w-full justify-center">
                   <Link
                     to="/early-access"
-                    className="group inline-flex h-[52px] w-full max-w-[240px] items-center justify-center gap-2 rounded-[18px] border border-amber-200/22 bg-[linear-gradient(135deg,rgba(250,204,21,0.16),rgba(56,189,248,0.1))] px-6 text-center shadow-[0_22px_55px_rgba(8,18,32,0.44)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-white/18 hover:bg-[linear-gradient(135deg,rgba(250,204,21,0.19),rgba(56,189,248,0.13))] hover:shadow-[0_28px_70px_rgba(8,18,32,0.52)]"
+                    className="group inline-flex items-center justify-center gap-2 px-2 py-1 text-center transition-colors duration-200 hover:text-white"
                   >
-                    <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-amber-50 transition-colors group-hover:text-white">
-                      Early Access
+                    <span className="text-[12px] font-semibold uppercase tracking-[0.28em] text-amber-100/92 transition-colors group-hover:text-white">
+                      EARLY ACCESS
                     </span>
                     <ArrowRight className="h-4 w-4 text-white/82 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
                   </Link>
