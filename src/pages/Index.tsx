@@ -14,8 +14,8 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const proofItems = [
   {
-    title: 'Broad recovery coverage',
-    detail: 'Across shipments, inventory, returns, fees, reimbursements, and payout activity.',
+    title: 'Wide detector coverage',
+    detail: 'Margin scans a broad range of reimbursement signals across shipments, inventory, returns, fees, reimbursements, and payouts.',
     footer: 'Coverage across the workflow'
   },
   {
@@ -394,7 +394,7 @@ export default function Index() {
                       index > 0 ? 'md:border-l md:border-white/8' : ''
                     } ${
                       isActive
-                        ? 'translate-y-[-2px] bg-white/[0.025] md:-translate-y-[3px] md:border-white/12'
+                        ? 'translate-y-[-2px] md:-translate-y-[3px] md:border-white/12 md:bg-white/[0.025]'
                         : !isMobileLayout
                           ? 'md:opacity-[0.82]'
                           : ''
@@ -402,15 +402,18 @@ export default function Index() {
                     style={!isMobileLayout ? { flexGrow: isActive ? 1.18 : 0.94, flexBasis: 0 } : undefined}
                   >
                     <div
-                      className={`pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/45 to-transparent transition-opacity duration-300 ${
+                      className={`pointer-events-none absolute inset-x-0 top-0 hidden h-px bg-gradient-to-r from-transparent via-sky-300/45 to-transparent transition-opacity duration-300 md:block ${
                         isActive ? 'opacity-100' : 'opacity-0'
                       }`}
                     />
                     <div
-                      className={`pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.12),transparent_58%),linear-gradient(180deg,rgba(255,255,255,0.035)_0%,rgba(255,255,255,0)_78%)] transition-opacity duration-300 ${
+                      className={`pointer-events-none absolute inset-0 hidden bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.12),transparent_58%),linear-gradient(180deg,rgba(255,255,255,0.035)_0%,rgba(255,255,255,0)_78%)] transition-opacity duration-300 md:block ${
                         isActive ? 'opacity-100' : 'opacity-0'
                       }`}
                     />
+                    {isActive ? (
+                      <div className="pointer-events-none absolute bottom-5 left-0 top-5 w-px bg-gradient-to-b from-transparent via-sky-100/55 to-transparent md:hidden" />
+                    ) : null}
 
                       <div className={`relative z-10 flex h-full flex-col ${index > 0 ? 'border-t border-white/8' : ''} md:border-t-0`}>
                         <div className="flex items-start justify-between gap-4">
