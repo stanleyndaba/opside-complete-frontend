@@ -317,19 +317,19 @@ export default function Index() {
                   Margin audits the operational trail across inventory, shipments, refunds, fees, reimbursements, and payouts to identify missed reimbursement opportunities, prepare the support, and keep the recovery workflow visible.
                 </p>
 
-                <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-8 grid w-full max-w-[420px] grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:flex sm:items-center">
                   <Button
                     onClick={handlePrimaryCta}
-                    className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="h-12 w-full justify-center gap-2 rounded-[18px] border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 shadow-[0_14px_30px_rgba(10,16,24,0.24)] hover:bg-sky-300/[0.13] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                   >
                     {isFull ? 'Join Waitlist' : 'Connect Amazon'}
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="h-4 w-4" />
                   </Button>
 
                   <Button
                     variant="outline"
                     onClick={scrollToWorkflow}
-                    className="h-11 justify-between rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="h-12 w-full justify-center rounded-[18px] border border-white/12 bg-white/[0.015] px-5 text-[13px] text-white hover:bg-white/[0.04] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                   >
                     See how it works
                   </Button>
@@ -338,14 +338,12 @@ export default function Index() {
                 <div className="mt-6 flex w-full justify-center">
                   <Link
                     to="/early-access"
-                    className="group inline-flex max-w-[560px] flex-wrap items-center justify-center gap-2 rounded-full border border-amber-200/18 bg-[linear-gradient(135deg,rgba(250,204,21,0.12),rgba(56,189,248,0.08))] px-4 py-2.5 text-center shadow-[0_18px_50px_rgba(15,23,42,0.45)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-white/18 hover:bg-[linear-gradient(135deg,rgba(250,204,21,0.16),rgba(56,189,248,0.11))]"
+                    className="group inline-flex h-[52px] w-full max-w-[240px] items-center justify-center gap-2 rounded-[18px] border border-amber-200/22 bg-[linear-gradient(135deg,rgba(250,204,21,0.16),rgba(56,189,248,0.1))] px-6 text-center shadow-[0_22px_55px_rgba(8,18,32,0.44)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-white/18 hover:bg-[linear-gradient(135deg,rgba(250,204,21,0.19),rgba(56,189,248,0.13))] hover:shadow-[0_28px_70px_rgba(8,18,32,0.52)]"
                   >
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-100">Priority Launch Cohort</span>
-                    <span className="hidden h-3 w-px bg-white/15 sm:block" />
-                    <span className="text-[12px] text-white/72 transition-colors group-hover:text-white/88">
-                      Get $99 launch pricing and priority onboarding
+                    <span className="text-[12px] font-semibold uppercase tracking-[0.22em] text-amber-50 transition-colors group-hover:text-white">
+                      Early Access
                     </span>
-                    <ArrowRight className="h-3.5 w-3.5 text-white/78 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
+                    <ArrowRight className="h-4 w-4 text-white/82 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
                   </Link>
                 </div>
 
