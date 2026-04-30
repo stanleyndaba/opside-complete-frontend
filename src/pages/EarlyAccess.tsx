@@ -10,13 +10,13 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { buildYocoCheckoutUrl } from '@/lib/yocoCheckout';
 
-const EARLY_ACCESS_CHECKOUT_URL = 'https://pay.yoco.com/r/4GIRw8';
+const EARLY_ACCESS_CHECKOUT_URL = 'https://pay.yoco.com/r/2JPEGa';
 const EARLY_ACCESS_PRICE = '$99';
-const EARLY_ACCESS_SPOTS = 40;
+const EARLY_ACCESS_SPOTS = 100;
 
 const offerHighlights = [
   {
-    title: 'Founder price',
+    title: 'Price',
     detail: `${EARLY_ACCESS_PRICE} before broader public launch`
   },
   {
@@ -90,7 +90,7 @@ export default function EarlyAccess() {
   usePageMeta({
     title: 'Margin Early Access | Skip the line before public launch',
     description:
-      'Get first access to Margin before public launch. Priority onboarding, founder pricing, and first access to setup before broader rollout.',
+      'Get first access to Margin before public launch. Priority onboarding, $99 early access pricing, and first access to setup before broader rollout.',
     url: `${SITE_META.url}/early-access`,
     image: SITE_META.image,
   });
@@ -102,7 +102,7 @@ export default function EarlyAccess() {
       buildYocoCheckoutUrl(EARLY_ACCESS_CHECKOUT_URL, {
         kind: 'early_access',
         offer: 'Margin Early Access',
-        plan: 'Founder access',
+        plan: 'Early access',
         price: EARLY_ACCESS_PRICE,
         returnPath: '/early-access',
       }),
@@ -171,7 +171,7 @@ export default function EarlyAccess() {
                 <div className="mt-5 max-w-[420px] text-[13px] leading-6 text-white/56">
                   <div>Checkout is processed securely by Yoco.</div>
                   <div>
-                    Founder price is {EARLY_ACCESS_PRICE}. Limited to the first {EARLY_ACCESS_SPOTS} buyers.
+                    Price is {EARLY_ACCESS_PRICE}. Limited to the first {EARLY_ACCESS_SPOTS} buyers.
                   </div>
                 </div>
               </div>
@@ -274,7 +274,7 @@ export default function EarlyAccess() {
                 Access is opening in small batches so the experience stays focused and high quality.
               </h2>
               <p className={sectionBodyClass}>
-                Early buyers get priority and a lower founder price before the broader public release.
+                Early buyers get priority and a lower early access price before the broader public release.
               </p>
             </motion.div>
 
@@ -283,10 +283,10 @@ export default function EarlyAccess() {
               className="mt-10 overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:mt-14 md:px-10 md:py-12"
             >
               <div className="max-w-[820px]">
-                <div className="text-[10px] uppercase tracking-[0.18em] text-white/34">Founder access</div>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-white/34">Early access release</div>
                 <p className="mt-5 text-[18px] leading-8 text-white/66 md:text-[24px] md:leading-10">
                   We are keeping this release small on purpose so onboarding, setup, and walkthroughs stay direct and
-                  useful. Early Access is for sellers who want first entry, priority support, and the lower founder price
+                  useful. Early Access is for sellers who want first entry, priority support, and the lower early access price
                   before Margin opens more broadly.
                 </p>
               </div>
@@ -306,7 +306,7 @@ export default function EarlyAccess() {
                   Reserve your Early Access spot now.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Founder price is {EARLY_ACCESS_PRICE}. Spots are limited to the first {EARLY_ACCESS_SPOTS} buyers before
+                  Price is {EARLY_ACCESS_PRICE}. Spots are limited to the first {EARLY_ACCESS_SPOTS} buyers before
                   broader public launch.
                 </p>
               </div>

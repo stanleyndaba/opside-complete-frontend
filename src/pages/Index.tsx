@@ -304,7 +304,7 @@ export default function Index() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="max-w-[860px]"
+              className="w-full"
             >
               <div className="max-w-[780px]">
                 <div className={sectionLabelClass}>Amazon FBA Recovery Platform</div>
@@ -317,21 +317,7 @@ export default function Index() {
                   Margin audits the operational trail across inventory, shipments, refunds, fees, reimbursements, and payouts to identify missed reimbursement opportunities, prepare the support, and keep the recovery workflow visible.
                 </p>
 
-                <div className="mt-8 flex w-full justify-center">
-                  <Link
-                    to="/early-access"
-                    className="group inline-flex max-w-[560px] flex-wrap items-center justify-center gap-2 rounded-full border border-amber-200/18 bg-[linear-gradient(135deg,rgba(250,204,21,0.12),rgba(56,189,248,0.08))] px-4 py-2.5 text-center shadow-[0_18px_50px_rgba(15,23,42,0.45)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-white/18 hover:bg-[linear-gradient(135deg,rgba(250,204,21,0.16),rgba(56,189,248,0.11))]"
-                  >
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-amber-100">Early Access</span>
-                    <span className="hidden h-3 w-px bg-white/15 sm:block" />
-                    <span className="text-[12px] text-white/72 transition-colors group-hover:text-white/88">
-                      Reserve one of the first 40 spots
-                    </span>
-                    <ArrowRight className="h-3.5 w-3.5 text-white/78 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
-                  </Link>
-                </div>
-
-                <div className="mt-6 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
                   <Button
                     onClick={handlePrimaryCta}
                     className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
@@ -347,6 +333,20 @@ export default function Index() {
                   >
                     See how it works
                   </Button>
+                </div>
+
+                <div className="mt-6 flex w-full justify-center">
+                  <Link
+                    to="/early-access"
+                    className="group inline-flex max-w-[560px] flex-wrap items-center justify-center gap-2 rounded-full border border-amber-200/18 bg-[linear-gradient(135deg,rgba(250,204,21,0.12),rgba(56,189,248,0.08))] px-4 py-2.5 text-center shadow-[0_18px_50px_rgba(15,23,42,0.45)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-white/18 hover:bg-[linear-gradient(135deg,rgba(250,204,21,0.16),rgba(56,189,248,0.11))]"
+                  >
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-amber-100">Early Access</span>
+                    <span className="hidden h-3 w-px bg-white/15 sm:block" />
+                    <span className="text-[12px] text-white/72 transition-colors group-hover:text-white/88">
+                      Reserve one of the first 100 spots
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5 text-white/78 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
+                  </Link>
                 </div>
 
                 {isFull ? (
