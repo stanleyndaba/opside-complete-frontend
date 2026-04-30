@@ -15,19 +15,23 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 const proofItems = [
   {
     title: 'Broad recovery coverage',
-    detail: 'Across shipments, inventory, returns, fees, reimbursements, and payout activity.'
+    detail: 'Across shipments, inventory, returns, fees, reimbursements, and payout activity.',
+    footer: 'Coverage across the workflow'
   },
   {
     title: 'Evidence-backed case preparation',
-    detail: 'Margin connects the records, documents, and support before a case moves.'
+    detail: 'Margin connects the records, documents, and support before a case moves.',
+    footer: 'Support attached before filing'
   },
   {
     title: 'Controlled filing',
-    detail: 'Weak, duplicate, or unsupported issues stay held back instead of being pushed forward.'
+    detail: 'Weak, duplicate, or unsupported issues stay held back instead of being pushed forward.',
+    footer: 'Weak cases stay held back'
   },
   {
     title: 'Tracked through payout',
-    detail: 'See what was detected, prepared, filed, approved, blocked, and actually paid out.'
+    detail: 'See what was detected, prepared, filed, approved, blocked, and actually paid out.',
+    footer: 'Outcome verified through payout'
   }
 ];
 
@@ -247,6 +251,7 @@ export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
+  const [activeProofIndex, setActiveProofIndex] = useState(0);
   const { isFull, capacity } = useOnboardingCapacity();
 
   usePageMeta(SITE_META);
@@ -360,18 +365,86 @@ export default function Index() {
 
         <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
           <div className={containerClass}>
-            <div className="grid md:grid-cols-4">
-              {proofItems.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                  className={`px-0 py-5 md:px-6 md:py-7 ${index > 0 ? 'border-t border-white/8 md:border-l md:border-t-0' : ''}`}
-                >
-                  <div className="text-[11px] uppercase tracking-[0.16em] text-white/34">{item.title}</div>
-                  <p className="mt-2 max-w-[220px] text-[14px] leading-7 text-white/58">{item.detail}</p>
-                </motion.div>
-              ))}
+            <div
+              className="grid md:flex md:items-stretch"
+              onMouseLeave={() => {
+                if (!isMobileLayout) {
+                  setActiveProofIndex(0);
+                }
+              }}
+            >
+              {proofItems.map((item, index) => {
+                const isActive = !isMobileLayout && activeProofIndex === index;
+
+                return (
+                  <motion.div
+                    key={item.title}
+                    {...revealProps}
+                    transition={{ ...revealProps.transition, delay: index * 0.05 }}
+                    onMouseEnter={() => {
+                      if (!isMobileLayout) {
+                        setActiveProofIndex(index);
+                      }
+                    }}
+                    className={`group relative overflow-hidden px-0 py-5 transition-[flex-grow,transform,opacity,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:min-h-[180px] md:px-6 md:py-7 ${
+                      index > 0 ? 'border-t border-white/8 md:border-l md:border-t-0' : ''
+                    } ${
+                      isActive
+                        ? 'md:-translate-y-[3px] md:border-white/12 md:bg-white/[0.025]'
+                        : !isMobileLayout
+                          ? 'md:opacity-[0.82]'
+                          : ''
+                    }`}
+                    style={!isMobileLayout ? { flexGrow: isActive ? 1.18 : 0.94, flexBasis: 0 } : undefined}
+                  >
+                    <div
+                      className={`pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/45 to-transparent transition-opacity duration-300 ${
+                        isActive ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    />
+                    <div
+                      className={`pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.12),transparent_58%),linear-gradient(180deg,rgba(255,255,255,0.035)_0%,rgba(255,255,255,0)_78%)] transition-opacity duration-300 ${
+                        isActive ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    />
+
+                    <div className="relative z-10 flex h-full flex-col">
+                      <div className="flex items-start justify-between gap-4">
+                        <div
+                          className={`text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
+                            isActive ? 'text-white/84' : 'text-white/34'
+                          }`}
+                        >
+                          {item.title}
+                        </div>
+                        <div
+                          className={`shrink-0 text-[10px] uppercase tracking-[0.18em] transition-colors duration-300 ${
+                            isActive ? 'text-sky-100/52' : 'text-white/18'
+                          }`}
+                        >
+                          {String(index + 1).padStart(2, '0')}
+                        </div>
+                      </div>
+
+                      <p
+                        className={`mt-3 max-w-[280px] text-[14px] leading-7 transition-colors duration-300 ${
+                          isActive ? 'text-white/78' : 'text-white/58'
+                        }`}
+                      >
+                        {item.detail}
+                      </p>
+
+                      <div
+                        className={`mt-auto hidden pt-5 text-[10px] uppercase tracking-[0.16em] transition-all duration-300 md:block ${
+                          isActive ? 'translate-y-0 opacity-100 text-sky-100/50' : 'translate-y-1 opacity-0 text-transparent'
+                        }`}
+                      >
+                        {item.footer}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
