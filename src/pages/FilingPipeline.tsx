@@ -1412,7 +1412,6 @@ export default function FilingPipeline() {
               </div>
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {[
-                  { label: 'Ready to file', value: formatMoney(readyTotal), detail: readyRows.length ? `${readyRows.length} proof-complete case${readyRows.length === 1 ? '' : 's'} not submitted yet` : 'Nothing is filing-ready yet' },
                   { label: 'Being filed', value: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))), detail: beingFiledRows.length ? `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} actively submitting now` : 'No active Amazon submission right now' },
                   { label: 'With Amazon', value: formatMoney(totalAmount([...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)])), detail: filedRows.length + approvedRows.length ? `${filedRows.length + approvedRows.length} case${filedRows.length + approvedRows.length === 1 ? '' : 's'} filed, in review, or payout-tracked` : 'No filed or approved cases yet' },
                   { label: 'Needs attention', value: formatMoney(totalAmount(attentionRows.map(disputeAmount))), detail: attentionRows.length ? `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} blocked with recorded reasons` : 'No blockers visible right now' },
