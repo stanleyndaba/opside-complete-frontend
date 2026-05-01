@@ -82,6 +82,215 @@ const ATTENTION_FILING_STATUSES = new Set(['failed', 'blocked', 'payment_require
 const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'under_review', 'in review', 'in_review', 'in_progress', 'processing']);
 const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
+const DEMO_PIPELINE_ROW_COUNT = 10;
+
+function demoTimestamp(baseMs: number, minutesAgo: number) {
+  return new Date(baseMs - minutesAgo * 60_000).toISOString();
+}
+
+function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', index: number, baseMs: number): DisputeRow {
+  const entryNumber = index + 1;
+  const padded = String(entryNumber).padStart(2, '0');
+  const amount = 140 + entryNumber * 17;
+  const updatedAt = demoTimestamp(baseMs, index * 11 + (stage === 'ready' ? 9 : stage === 'filing' ? 21 : stage === 'filed' ? 34 : 47));
+
+  if (stage === 'filed') {
+    return {
+      dispute_case_id: `demo-filed-${padded}`,
+      linked_dispute_case_id: `demo-filed-linked-${padded}`,
+      detection_result_id: `demo-filed-detection-${padded}`,
+      case_number: `FIL-${padded}`,
+      claim_number: `CLM-FIL-${padded}`,
+      has_real_dispute_case: true,
+      filing_status: 'filed',
+      status: 'under_review',
+      can_file: false,
+      anomaly_type: 'refund_without_return',
+      case_type: 'refund_without_return',
+      store_name: 'Margin Demo Store',
+      order_id: `114-77342${padded}-5511${padded}`,
+      sku: `MARGIN-FILED-${padded}`,
+      asin: `B0MFILED${padded}`,
+      expected_payout_amount: amount,
+      requested_amount: amount,
+      approved_amount: null,
+      actual_payout_amount: null,
+      recovery_status: null,
+      payout_proof_status: null,
+      proof_status: null,
+      eligibility_status: 'ready',
+      matched_document_count: 2 + (index % 3),
+      updated_at: updatedAt,
+      currency: 'USD',
+      amazon_case_id: `784-5521${padded}`,
+      submission_state_divergence: false,
+      block_reasons: [],
+      last_error: null,
+      submission_proof: {
+        proof_present: true,
+        proof_reference: `AMZ-${padded}-FILED`,
+        amazon_case_id: `784-5521${padded}`,
+        external_reference: `SUB-${padded}`,
+        submitted_at: demoTimestamp(baseMs, index * 12 + 80),
+        submission_channel: 'seller_central',
+        attachment_count: 2 + (index % 2),
+      },
+    } as DisputeRow;
+  }
+
+  if (stage === 'filing') {
+    return {
+      dispute_case_id: `demo-filing-${padded}`,
+      linked_dispute_case_id: `demo-filing-linked-${padded}`,
+      detection_result_id: `demo-filing-detection-${padded}`,
+      case_number: `SUB-${padded}`,
+      claim_number: `CLM-SUB-${padded}`,
+      has_real_dispute_case: true,
+      filing_status: 'submitting',
+      status: 'pending',
+      can_file: false,
+      anomaly_type: 'lost_or_damaged_inventory',
+      case_type: 'lost_or_damaged_inventory',
+      store_name: 'Margin Demo Store',
+      order_id: `114-66318${padded}-4409${padded}`,
+      sku: `MARGIN-SUBMIT-${padded}`,
+      asin: `B0MSUBMT${padded}`,
+      expected_payout_amount: amount,
+      requested_amount: amount,
+      approved_amount: null,
+      actual_payout_amount: null,
+      recovery_status: null,
+      payout_proof_status: null,
+      proof_status: 'filing_ready',
+      eligibility_status: 'ready',
+      matched_document_count: 2,
+      updated_at: updatedAt,
+      currency: 'USD',
+      amazon_case_id: null,
+      submission_state_divergence: false,
+      block_reasons: [],
+      last_error: null,
+      submission_proof: null,
+    } as DisputeRow;
+  }
+
+  if (stage === 'attention') {
+    const approvalHold = index % 2 === 0;
+    return {
+      dispute_case_id: `demo-attention-${padded}`,
+      linked_dispute_case_id: `demo-attention-linked-${padded}`,
+      detection_result_id: `demo-attention-detection-${padded}`,
+      case_number: `ATT-${padded}`,
+      claim_number: `CLM-ATT-${padded}`,
+      has_real_dispute_case: true,
+      filing_status: approvalHold ? 'pending_approval' : 'blocked',
+      status: 'pending',
+      can_file: false,
+      anomaly_type: approvalHold ? 'fee_discrepancy' : 'inbound_shipment_shortage',
+      case_type: approvalHold ? 'fee_discrepancy' : 'inbound_shipment_shortage',
+      store_name: 'Margin Demo Store',
+      order_id: `114-55124${padded}-3388${padded}`,
+      sku: `MARGIN-ATTN-${padded}`,
+      asin: `B0MATTEN${padded}`,
+      expected_payout_amount: amount,
+      requested_amount: amount,
+      approved_amount: null,
+      actual_payout_amount: null,
+      recovery_status: null,
+      payout_proof_status: null,
+      proof_status: approvalHold ? 'manual_review' : null,
+      eligibility_status: approvalHold ? 'ready' : 'insufficient_data',
+      matched_document_count: approvalHold ? 3 : 1,
+      updated_at: updatedAt,
+      currency: 'USD',
+      amazon_case_id: null,
+      submission_state_divergence: false,
+      block_reasons: approvalHold ? [] : ['missing_unit_cost_proof'],
+      last_error: approvalHold ? null : 'Unit cost proof still needs to be linked.',
+      submission_proof: null,
+    } as DisputeRow;
+  }
+
+  return {
+    dispute_case_id: `demo-ready-${padded}`,
+    linked_dispute_case_id: `demo-ready-linked-${padded}`,
+    detection_result_id: `demo-ready-detection-${padded}`,
+    case_number: `RDY-${padded}`,
+    claim_number: `CLM-RDY-${padded}`,
+    has_real_dispute_case: true,
+    filing_status: 'pending',
+    status: 'pending',
+    can_file: true,
+    anomaly_type: 'inbound_shipment_shortage',
+    case_type: 'inbound_shipment_shortage',
+    store_name: 'Margin Demo Store',
+    order_id: `114-44207${padded}-2297${padded}`,
+    sku: `MARGIN-READY-${padded}`,
+    asin: `B0MREADY${padded}`,
+    expected_payout_amount: amount,
+    requested_amount: amount,
+    approved_amount: null,
+    actual_payout_amount: null,
+    recovery_status: null,
+    payout_proof_status: null,
+    proof_status: 'filing_ready',
+    eligibility_status: 'ready',
+    matched_document_count: 3 + (index % 2),
+    updated_at: updatedAt,
+    currency: 'USD',
+    amazon_case_id: null,
+    submission_state_divergence: false,
+    block_reasons: [],
+    last_error: null,
+    submission_proof: null,
+  } as DisputeRow;
+}
+
+function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs: number): LedgerRow {
+  const entryNumber = index + 1;
+  const padded = String(entryNumber).padStart(2, '0');
+  const amount = 210 + entryNumber * 23;
+  const updatedAt = demoTimestamp(baseMs, index * 13 + (stage === 'payout' ? 58 : 96));
+
+  return {
+    row_type: 'dispute_case_projection',
+    entity_type: 'dispute_case',
+    has_real_dispute_case: true,
+    has_real_recovery_record: true,
+    linked_dispute_case_id: `demo-${stage}-linked-${padded}`,
+    recovery_record_id: `demo-${stage}-recovery-${padded}`,
+    dispute_case_id: `demo-${stage}-case-${padded}`,
+    detection_result_id: `demo-${stage}-detection-${padded}`,
+    case_number: stage === 'payout' ? `PAY-${padded}` : `CMP-${padded}`,
+    provider_case_id: `784-66${padded}10`,
+    merchant_reference: `Margin Demo Merchant ${padded}`,
+    status: 'approved',
+    filing_status: 'filed',
+    submission_proof: {
+      proof_present: true,
+      proof_reference: `AMZ-${stage.toUpperCase()}-${padded}`,
+      amazon_case_id: `784-66${padded}10`,
+      external_reference: `LEDGER-${padded}`,
+      submitted_at: demoTimestamp(baseMs, index * 15 + 120),
+      status: 'submitted',
+      outcome: 'approved',
+    },
+    has_submission_proof: true,
+    has_amazon_reference: true,
+    has_filing_truth: true,
+    has_approval_truth: true,
+    approved_amount: amount,
+    actual_payout_amount: stage === 'completed' ? amount : null,
+    expected_payout_amount: amount,
+    reconciliation_status: stage === 'completed' ? 'paid' : 'pending_payout',
+    reconciliation_source: stage === 'completed' ? 'bank_reconciliation' : 'amazon_approval',
+    payout_status: stage === 'completed' ? 'paid' : 'not_paid',
+    operator_state: stage === 'completed' ? 'reconciled' : 'waiting_for_payout',
+    outstanding_amount: stage === 'completed' ? 0 : amount,
+    currency: 'USD',
+    last_updated_at: updatedAt,
+  };
+}
 
 function amountOrNull(value: number | null | undefined) {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
@@ -849,12 +1058,46 @@ export default function FilingPipeline() {
     }
   }, [loadDisputes, loadLedger]);
 
-  const readyRows = useMemo(() => (disputeRows || []).filter(isReadyDisputeRow), [disputeRows]);
-  const beingFiledRows = useMemo(() => (disputeRows || []).filter(isBeingFiledDisputeRow), [disputeRows]);
-  const filedRows = useMemo(() => (disputeRows || []).filter(isFiledDisputeRow), [disputeRows]);
-  const attentionRows = useMemo(() => (disputeRows || []).filter(isAttentionDisputeRow), [disputeRows]);
-  const approvedRows = useMemo(() => (ledgerRows || []).filter(isAwaitingPayoutLedgerRow), [ledgerRows]);
-  const completedRows = useMemo(() => (ledgerRows || []).filter(isCompletedLedgerRow), [ledgerRows]);
+  const demoSeedTimestamp = useMemo(() => Date.now(), []);
+  const liveReadyRows = useMemo(() => (disputeRows || []).filter(isReadyDisputeRow), [disputeRows]);
+  const liveBeingFiledRows = useMemo(() => (disputeRows || []).filter(isBeingFiledDisputeRow), [disputeRows]);
+  const liveFiledRows = useMemo(() => (disputeRows || []).filter(isFiledDisputeRow), [disputeRows]);
+  const liveAttentionRows = useMemo(() => (disputeRows || []).filter(isAttentionDisputeRow), [disputeRows]);
+  const liveApprovedRows = useMemo(() => (ledgerRows || []).filter(isAwaitingPayoutLedgerRow), [ledgerRows]);
+  const liveCompletedRows = useMemo(() => (ledgerRows || []).filter(isCompletedLedgerRow), [ledgerRows]);
+
+  // Temporary demo rows for recording the submission-flow states.
+  const demoReadyRows = useMemo(
+    () => Array.from({ length: DEMO_PIPELINE_ROW_COUNT }, (_, index) => buildDemoDisputeRow('ready', index, demoSeedTimestamp)),
+    [demoSeedTimestamp]
+  );
+  const demoBeingFiledRows = useMemo(
+    () => Array.from({ length: DEMO_PIPELINE_ROW_COUNT }, (_, index) => buildDemoDisputeRow('filing', index, demoSeedTimestamp)),
+    [demoSeedTimestamp]
+  );
+  const demoFiledRows = useMemo(
+    () => Array.from({ length: DEMO_PIPELINE_ROW_COUNT }, (_, index) => buildDemoDisputeRow('filed', index, demoSeedTimestamp)),
+    [demoSeedTimestamp]
+  );
+  const demoAttentionRows = useMemo(
+    () => Array.from({ length: DEMO_PIPELINE_ROW_COUNT }, (_, index) => buildDemoDisputeRow('attention', index, demoSeedTimestamp)),
+    [demoSeedTimestamp]
+  );
+  const demoApprovedRows = useMemo(
+    () => Array.from({ length: DEMO_PIPELINE_ROW_COUNT }, (_, index) => buildDemoLedgerRow('payout', index, demoSeedTimestamp)),
+    [demoSeedTimestamp]
+  );
+  const demoCompletedRows = useMemo(
+    () => Array.from({ length: DEMO_PIPELINE_ROW_COUNT }, (_, index) => buildDemoLedgerRow('completed', index, demoSeedTimestamp)),
+    [demoSeedTimestamp]
+  );
+
+  const readyRows = useMemo(() => [...demoReadyRows, ...liveReadyRows], [demoReadyRows, liveReadyRows]);
+  const beingFiledRows = useMemo(() => [...demoBeingFiledRows, ...liveBeingFiledRows], [demoBeingFiledRows, liveBeingFiledRows]);
+  const filedRows = useMemo(() => [...demoFiledRows, ...liveFiledRows], [demoFiledRows, liveFiledRows]);
+  const attentionRows = useMemo(() => [...demoAttentionRows, ...liveAttentionRows], [demoAttentionRows, liveAttentionRows]);
+  const approvedRows = useMemo(() => [...demoApprovedRows, ...liveApprovedRows], [demoApprovedRows, liveApprovedRows]);
+  const completedRows = useMemo(() => [...demoCompletedRows, ...liveCompletedRows], [demoCompletedRows, liveCompletedRows]);
 
   const readyTotal = useMemo(() => totalAmount(readyRows.map(disputeAmount)), [readyRows]);
   const inMotionTotal = useMemo(() => totalAmount([...beingFiledRows.map(disputeAmount), ...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)]), [approvedRows, beingFiledRows, filedRows]);
@@ -898,8 +1141,6 @@ export default function FilingPipeline() {
       ) : null,
       content: disputeLoading ? (
         <LoadingState label="Preparing filing-ready cases" />
-      ) : disputeError ? (
-        <ErrorState message={disputeError} />
       ) : readyRows.length ? (
         <div className="grid gap-3">
           {readyRows.map((row) => (
@@ -916,6 +1157,8 @@ export default function FilingPipeline() {
             />
           ))}
         </div>
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
       ) : (
         <EmptyState message="No filing-ready cases yet — continue scanning or review blocked items below." />
       ),
@@ -930,8 +1173,6 @@ export default function FilingPipeline() {
       action: null,
       content: disputeLoading ? (
         <LoadingState label="Checking active filing handoffs" />
-      ) : disputeError ? (
-        <ErrorState message={disputeError} />
       ) : beingFiledRows.length ? (
         <div className="grid gap-3">
           {beingFiledRows.map((row) => (
@@ -948,6 +1189,8 @@ export default function FilingPipeline() {
             />
           ))}
         </div>
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
       ) : (
         <EmptyState message="No cases are being filed right now — active submissions appear here only when the backend is actually submitting to Amazon." />
       ),
@@ -962,8 +1205,6 @@ export default function FilingPipeline() {
       action: null,
       content: disputeLoading ? (
         <LoadingState label="Checking filed cases and Amazon response truth" />
-      ) : disputeError ? (
-        <ErrorState message={disputeError} />
       ) : filedRows.length ? (
         <div className="grid gap-3">
           {filedRows.map((row) => (
@@ -981,6 +1222,8 @@ export default function FilingPipeline() {
             />
           ))}
         </div>
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
       ) : (
         <EmptyState message="No cases filed yet — once submitted, they will appear here." />
       ),
@@ -999,8 +1242,6 @@ export default function FilingPipeline() {
       ) : null,
       content: disputeLoading ? (
         <LoadingState label="Checking blocked and failed filing states" />
-      ) : disputeError ? (
-        <ErrorState message={disputeError} />
       ) : attentionRows.length ? (
         <div className="grid gap-3">
           {attentionRows.map((row) => (
@@ -1018,6 +1259,8 @@ export default function FilingPipeline() {
             />
           ))}
         </div>
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
       ) : (
         <EmptyState message="No filing blockers are visible right now." />
       ),
@@ -1032,8 +1275,6 @@ export default function FilingPipeline() {
       action: null,
       content: ledgerLoading ? (
         <LoadingState label="Loading payout truth" />
-      ) : ledgerError ? (
-        <ErrorState message={ledgerError} />
       ) : approvedRows.length ? (
         <div className="grid gap-3">
           {approvedRows.map((row) => (
@@ -1050,6 +1291,8 @@ export default function FilingPipeline() {
             />
           ))}
         </div>
+      ) : ledgerError ? (
+        <ErrorState message={ledgerError} />
       ) : (
         <EmptyState message="No approved payouts waiting right now — once Amazon approves a case, it will appear here until payout lands." />
       ),
@@ -1064,8 +1307,6 @@ export default function FilingPipeline() {
       action: null,
       content: ledgerLoading ? (
         <LoadingState label="Loading recovered payout confirmations" />
-      ) : ledgerError ? (
-        <ErrorState message={ledgerError} />
       ) : completedRows.length ? (
         <div className="grid gap-3">
           {completedRows.map((row) => (
@@ -1082,6 +1323,8 @@ export default function FilingPipeline() {
             />
           ))}
         </div>
+      ) : ledgerError ? (
+        <ErrorState message={ledgerError} />
       ) : (
         <EmptyState message="No completed recoveries yet — once payout is confirmed, completed items will appear here." />
       ),

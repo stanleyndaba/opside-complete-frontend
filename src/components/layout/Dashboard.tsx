@@ -2597,34 +2597,6 @@ export function Dashboard() {
     if (!recentEvents || recentEvents.length === 0) return null;
     return recentEvents[0];
   }, [launchMonitor?.recent_events]);
-  const operatorFeedEvents = useMemo<LaunchMonitorEvent[] | null>(() => {
-    const recentEvents = launchMonitor?.recent_events;
-    if (recentEvents === null) return null;
-
-    const baseTimestamp = Date.now();
-    const demoCaseFiledEvents: LaunchMonitorEvent[] = Array.from({ length: 15 }, (_, index) => {
-      const entryNumber = index + 1;
-      const disputeCaseId = `demo-dispute-case-${String(entryNumber).padStart(2, '0')}`;
-      const amazonCaseId = `781-${String(420000 + entryNumber).padStart(6, '0')}`;
-
-      return {
-        id: `demo-case-filed-${entryNumber}`,
-        event_type: 'case_filed',
-        title: 'Case Filed',
-        detail: `Margin filed an Amazon case with evidence linked, identifiers verified, and unit cost support attached for operator review ${entryNumber}.`,
-        severity: 'low',
-        timestamp: new Date(baseTimestamp - index * 90 * 1000).toISOString(),
-        dispute_case_id: disputeCaseId,
-        amazon_case_id: amazonCaseId,
-        notification_id: null,
-        source_table: 'dispute_submissions',
-        source_id: `demo-dispute-submission-${entryNumber}`,
-        status: 'filed'
-      };
-    });
-
-    return [...demoCaseFiledEvents, ...(recentEvents || [])];
-  }, [launchMonitor?.recent_events]);
   const overviewHeadline = useMemo(() => {
     const readyCount = launchMetrics?.agent7_ready_count ?? 0;
     const filedCount = filedClaimsCount;
@@ -3309,11 +3281,11 @@ export function Dashboard() {
                           </div>
                         </div>
                         <div className="py-0">
-                          {operatorFeedEvents === null ? (
+                          {launchMonitor?.recent_events === null ? (
                             <div className="border-b border-white/10 py-6 text-[11px] font-sans text-white/45">
                               Not Available
                             </div>
-                          ) : operatorFeedEvents.length === 0 ? (
+                          ) : (launchMonitor?.recent_events || []).length === 0 ? (
                             <div className="border-b border-white/10 py-6 text-[11px] font-sans text-white/45">
                               No recent operational events recorded for this tenant.
                             </div>
@@ -3326,7 +3298,7 @@ export function Dashboard() {
                                   <div>Recorded</div>
                                   <div className="text-right">Action</div>
                                 </div>
-                                {operatorFeedEvents.map((event) => {
+                                {launchMonitor?.recent_events?.map((event) => {
                                   const eventTimestamp = new Date(event.timestamp);
                                   const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
                                     ? 'Time unavailable'
