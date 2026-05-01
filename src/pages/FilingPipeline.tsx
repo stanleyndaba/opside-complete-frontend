@@ -251,6 +251,8 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
   const padded = String(entryNumber).padStart(2, '0');
   const amount = 210 + entryNumber * 23;
   const updatedAt = demoTimestamp(baseMs, index * 13 + (stage === 'payout' ? 58 : 96));
+  const providerReference = stage === 'payout' ? `784-66${padded}10` : `791-48${padded}24`;
+  const internalReference = stage === 'payout' ? `784-72${padded}41` : `791-55${padded}38`;
 
   return {
     row_type: 'dispute_case_projection',
@@ -261,15 +263,15 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
     recovery_record_id: `demo-${stage}-recovery-${padded}`,
     dispute_case_id: `demo-${stage}-case-${padded}`,
     detection_result_id: `demo-${stage}-detection-${padded}`,
-    case_number: stage === 'payout' ? `PAY-${padded}` : `CMP-${padded}`,
-    provider_case_id: `784-66${padded}10`,
-    merchant_reference: `Margin Demo Merchant ${padded}`,
+    case_number: internalReference,
+    provider_case_id: providerReference,
+    merchant_reference: stage === 'payout' ? 'Margin Merchant' : `Margin Merchant ${padded}`,
     status: 'approved',
     filing_status: 'filed',
     submission_proof: {
       proof_present: true,
       proof_reference: `AMZ-${stage.toUpperCase()}-${padded}`,
-      amazon_case_id: `784-66${padded}10`,
+      amazon_case_id: providerReference,
       external_reference: `LEDGER-${padded}`,
       submitted_at: demoTimestamp(baseMs, index * 15 + 120),
       status: 'submitted',
