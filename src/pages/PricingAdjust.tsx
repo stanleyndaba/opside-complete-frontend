@@ -15,7 +15,6 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { buildYocoCheckoutUrl, PendingYocoCheckoutContext } from '@/lib/yocoCheckout';
 
 type PricingTier = {
   name: string;
@@ -48,7 +47,7 @@ const pricingTiers: PricingTier[] = [
       '5 claims per month',
       'Recovery and payout tracking',
     ],
-    checkoutUrl: 'https://pay.yoco.com/r/mErEdy',
+    checkoutUrl: 'https://www.paypal.com/ncp/payment/T3BBGQ8TTSBUJ',
   },
   {
     name: 'Pro',
@@ -65,7 +64,7 @@ const pricingTiers: PricingTier[] = [
       'Real-time alerts for new filing opportunities',
       'Priority support',
     ],
-    checkoutUrl: 'https://pay.yoco.com/r/4ZDLyo',
+    checkoutUrl: 'https://www.paypal.com/ncp/payment/LE8SN5PGT6PPC',
     featured: true,
   },
   {
@@ -83,7 +82,7 @@ const pricingTiers: PricingTier[] = [
       'API access',
       'High-priority operational coverage',
     ],
-    checkoutUrl: 'https://pay.yoco.com/r/2bLVnw',
+    checkoutUrl: 'https://www.paypal.com/ncp/payment/FXJZGLPPDYWJU',
   },
   {
     name: 'Enterprise',
@@ -129,19 +128,12 @@ export default function PricingAdjust() {
     navigate('/sales');
   };
 
-  const openYocoCheckout = (checkoutUrl: string, context: PendingYocoCheckoutContext = {}) => {
+  const openPaymentCheckout = (checkoutUrl: string) => {
     if (typeof window === 'undefined') {
       return;
     }
 
-    const returnPath = activeSlug
-      ? `/app/${activeSlug}/billing`
-      : `/login?next=${encodeURIComponent('/app')}`;
-    window.location.assign(buildYocoCheckoutUrl(checkoutUrl, {
-      returnPath,
-      tenantSlug: activeSlug || null,
-      ...context,
-    }));
+    window.location.assign(checkoutUrl);
   };
 
   const startSubscribeIntent = async (plan: SelectablePlan, interval: BillingView) => {
@@ -201,24 +193,12 @@ export default function PricingAdjust() {
       toast({
         title: checkoutUrl ? 'Opening secure checkout' : 'Billing invoice ready',
         description: checkoutUrl
-          ? `Plan selection is bound to ${invoiceId}. Sending you to YOCO checkout now.`
-          : `Plan selection is bound to ${invoiceId}, but the YOCO checkout link is not available yet. Review it from Billing.`,
+          ? `Plan selection is bound to ${invoiceId}. Sending you to secure checkout now.`
+          : `Plan selection is bound to ${invoiceId}, but the checkout link is not available yet. Review it from Billing.`,
       });
 
       if (checkoutUrl) {
-        try {
-          localStorage.setItem('pending_yoco_invoice_id', invoiceId);
-          localStorage.setItem('pending_yoco_plan', plan);
-          localStorage.setItem('pending_yoco_interval', interval);
-        } catch {
-          // Checkout redirect should not depend on local storage.
-        }
-        openYocoCheckout(checkoutUrl, {
-          kind: 'subscription',
-          plan,
-          offer: plan === 'pro' ? 'Pro' : plan === 'enterprise' ? 'Scale / Ultra' : 'Starter',
-          invoiceId,
-        });
+        openPaymentCheckout(checkoutUrl);
         return;
       }
 
@@ -329,12 +309,7 @@ export default function PricingAdjust() {
             <Button
               onClick={() => {
                 if (tier.checkoutUrl) {
-                  openYocoCheckout(tier.checkoutUrl, {
-                    kind: tier.name.toLowerCase().includes('scan') ? 'recovery_scan' : 'subscription',
-                    plan: tier.planKey || null,
-                    offer: tier.name,
-                    price: tier.price,
-                  });
+                  openPaymentCheckout(tier.checkoutUrl);
                   return;
                 }
                 if (tier.salesLed || !tier.planKey) {
@@ -414,7 +389,7 @@ export default function PricingAdjust() {
                 Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time through flat monthly coverage.
               </p>
               <p className="mx-auto max-w-2xl text-[11px] font-sans font-medium leading-5 text-white/32">
-                Checkout is processed by Yoco and may show the local South African rand amount for the selected plan.
+                Checkout is processed securely by PayPal for the selected plan.
               </p>
             </div>
           </motion.div>

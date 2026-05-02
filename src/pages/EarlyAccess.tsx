@@ -157,7 +157,7 @@ export default function EarlyAccess() {
                   </Button>
                 </div>
 
-                <div className="mt-5 max-w-[420px] text-[13px] leading-6 text-white/56">Checkout is processed securely by Yoco.</div>
+                <div className="mt-5 max-w-[420px] text-[13px] leading-6 text-white/56">Checkout is processed securely by PayPal.</div>
               </div>
             </motion.div>
           </div>
