@@ -8,9 +8,8 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { buildYocoCheckoutUrl } from '@/lib/yocoCheckout';
 
-const EARLY_ACCESS_CHECKOUT_URL = 'https://pay.yoco.com/r/2JPEGa';
+const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
 
 const offerHighlights = [
@@ -97,15 +96,7 @@ export default function EarlyAccess() {
   const handleReserveAccess = () => {
     if (typeof window === 'undefined') return;
 
-    window.location.assign(
-      buildYocoCheckoutUrl(EARLY_ACCESS_CHECKOUT_URL, {
-        kind: 'early_access',
-        offer: 'Margin Early Access',
-        plan: 'Early access',
-        price: EARLY_ACCESS_PRICE,
-        returnPath: '/early-access',
-      }),
-    );
+    window.location.assign(EARLY_ACCESS_CHECKOUT_URL);
   };
 
   return (
