@@ -93,12 +93,6 @@ export default function EarlyAccess() {
     image: SITE_META.image,
   });
 
-  const handleReserveAccess = () => {
-    if (typeof window === 'undefined') return;
-
-    window.location.assign(EARLY_ACCESS_CHECKOUT_URL);
-  };
-
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
       <PublicNavbar />
@@ -140,12 +134,13 @@ export default function EarlyAccess() {
 
                 <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center">
                   <Button
-                    type="button"
-                    onClick={handleReserveAccess}
+                    asChild
                     className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[206px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                   >
-                    Reserve Early Access
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <a href={EARLY_ACCESS_CHECKOUT_URL}>
+                      Reserve Early Access
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </a>
                   </Button>
 
                   <Button
@@ -157,7 +152,6 @@ export default function EarlyAccess() {
                   </Button>
                 </div>
 
-                <div className="mt-5 max-w-[420px] text-[13px] leading-6 text-white/56">Checkout is processed securely by PayPal.</div>
               </div>
             </motion.div>
           </div>
@@ -295,12 +289,13 @@ export default function EarlyAccess() {
 
               <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
                 <Button
-                  type="button"
-                  onClick={handleReserveAccess}
+                  asChild
                   className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[206px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  Reserve Early Access
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <a href={EARLY_ACCESS_CHECKOUT_URL}>
+                    Reserve Early Access
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
                 </Button>
 
                 <Button
