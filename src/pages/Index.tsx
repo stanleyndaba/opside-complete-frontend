@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, PlayCircle } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { CookieConsent } from '@/components/landing/CookieConsent';
@@ -11,6 +11,9 @@ import { RecoveryEngineVisualization } from '@/components/landing/RecoveryEngine
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+
+const DEMO_VIDEO_URL = 'https://youtu.be/5-eks76pOeo';
+const DEMO_VIDEO_THUMBNAIL_URL = 'https://img.youtube.com/vi/5-eks76pOeo/hqdefault.jpg';
 
 const proofItems = [
   {
@@ -365,6 +368,17 @@ export default function Index() {
                   >
                     See how it works
                   </Button>
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-12 w-full justify-center gap-2 rounded-[18px] border border-white/12 bg-white/[0.015] px-5 text-[13px] text-white hover:bg-white/[0.04] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                  >
+                    <a href={DEMO_VIDEO_URL} target="_blank" rel="noreferrer">
+                      <PlayCircle className="h-4 w-4" />
+                      Watch demo
+                    </a>
+                  </Button>
                 </div>
 
                 {!isFull ? (
@@ -383,6 +397,35 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
+
+                <a
+                  href={DEMO_VIDEO_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group mt-7 block max-w-[620px] overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.025] shadow-[0_28px_80px_rgba(0,0,0,0.34)] transition-colors hover:border-white/18 hover:bg-white/[0.035]"
+                  aria-label="Watch the Margin product demo on YouTube"
+                >
+                  <div className="relative aspect-video overflow-hidden bg-[#0b0b0b]">
+                    <img
+                      src={DEMO_VIDEO_THUMBNAIL_URL}
+                      alt="Margin product demo thumbnail"
+                      className="h-full w-full object-cover opacity-78 saturate-[0.92] transition duration-500 group-hover:scale-[1.02] group-hover:opacity-88"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_42%),linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.58)_100%)]" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-black/48 text-white shadow-[0_18px_40px_rgba(0,0,0,0.36)] backdrop-blur transition group-hover:scale-105 group-hover:bg-black/58">
+                        <PlayCircle className="h-7 w-7" strokeWidth={1.7} />
+                      </div>
+                    </div>
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/62">Product walkthrough</div>
+                      <div className="mt-1 text-[15px] font-medium tracking-tight text-white md:text-[17px]">
+                        Watch how Margin finds, prepares, and tracks FBA recovery cases.
+                      </div>
+                    </div>
+                  </div>
+                </a>
 
                 <div className="mt-6 flex w-full justify-center">
                   <Link
