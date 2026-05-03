@@ -368,17 +368,6 @@ export default function Index() {
                   >
                     See how it works
                   </Button>
-
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="h-12 w-full justify-center gap-2 rounded-[18px] border border-white/12 bg-white/[0.015] px-5 text-[13px] text-white hover:bg-white/[0.04] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
-                  >
-                    <a href={DEMO_VIDEO_URL} target="_blank" rel="noreferrer">
-                      <PlayCircle className="h-4 w-4" />
-                      Watch demo
-                    </a>
-                  </Button>
                 </div>
 
                 {!isFull ? (
@@ -397,35 +386,6 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
-
-                <a
-                  href={DEMO_VIDEO_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group mt-7 block max-w-[620px] overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.025] shadow-[0_28px_80px_rgba(0,0,0,0.34)] transition-colors hover:border-white/18 hover:bg-white/[0.035]"
-                  aria-label="Watch the Margin product demo on YouTube"
-                >
-                  <div className="relative aspect-video overflow-hidden bg-[#0b0b0b]">
-                    <img
-                      src={DEMO_VIDEO_THUMBNAIL_URL}
-                      alt="Margin product demo thumbnail"
-                      className="h-full w-full object-cover opacity-78 saturate-[0.92] transition duration-500 group-hover:scale-[1.02] group-hover:opacity-88"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_42%),linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.58)_100%)]" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-black/48 text-white shadow-[0_18px_40px_rgba(0,0,0,0.36)] backdrop-blur transition group-hover:scale-105 group-hover:bg-black/58">
-                        <PlayCircle className="h-7 w-7" strokeWidth={1.7} />
-                      </div>
-                    </div>
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/62">Product walkthrough</div>
-                      <div className="mt-1 text-[15px] font-medium tracking-tight text-white md:text-[17px]">
-                        Watch how Margin finds, prepares, and tracks FBA recovery cases.
-                      </div>
-                    </div>
-                  </div>
-                </a>
 
                 <div className="mt-6 flex w-full justify-center">
                   <Link
@@ -542,6 +502,40 @@ export default function Index() {
                 );
               })}
             </div>
+          </div>
+        </section>
+
+        <section className="relative border-b border-white/8 py-12 md:py-20">
+          <div className={containerClass}>
+            <motion.a
+              href={DEMO_VIDEO_URL}
+              target="_blank"
+              rel="noreferrer"
+              {...revealProps}
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.025] shadow-[0_36px_120px_rgba(0,0,0,0.42)] transition-colors hover:border-white/18 hover:bg-white/[0.035] md:rounded-[42px]"
+              aria-label="Watch the Margin product demo on YouTube"
+            >
+              <div className="relative aspect-video overflow-hidden bg-[#0b0b0b]">
+                <img
+                  src={DEMO_VIDEO_THUMBNAIL_URL}
+                  alt="Margin product demo thumbnail"
+                  className="h-full w-full object-cover opacity-78 saturate-[0.92] transition duration-500 group-hover:scale-[1.015] group-hover:opacity-88"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.14),transparent_40%),linear-gradient(180deg,rgba(0,0,0,0.02)_0%,rgba(0,0,0,0.64)_100%)]" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/22 bg-black/50 text-white shadow-[0_22px_54px_rgba(0,0,0,0.42)] backdrop-blur transition group-hover:scale-105 group-hover:bg-black/60 md:h-20 md:w-20">
+                    <PlayCircle className="h-8 w-8 md:h-10 md:w-10" strokeWidth={1.6} />
+                  </div>
+                </div>
+                <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
+                  <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-sky-100/64 md:text-[11px]">Product walkthrough</div>
+                  <div className="mt-2 max-w-[760px] text-[20px] font-medium leading-tight tracking-tight text-white md:text-[34px]">
+                    Watch how Margin finds, prepares, and tracks FBA recovery cases.
+                  </div>
+                </div>
+              </div>
+            </motion.a>
           </div>
         </section>
 
