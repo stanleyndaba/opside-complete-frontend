@@ -13,7 +13,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/5-eks76pOeo';
-const DEMO_VIDEO_THUMBNAIL_URL = 'https://img.youtube.com/vi/5-eks76pOeo/hqdefault.jpg';
+const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
 
 const proofItems = [
   {
@@ -507,6 +507,13 @@ export default function Index() {
 
         <section className="relative border-b border-white/8 py-12 md:py-20">
           <div className={containerClass}>
+            <motion.div {...revealProps} className="mx-auto mb-7 max-w-[880px] text-center md:mb-10">
+              <div className={sectionLabelClass}>See Demo</div>
+              <h2 className="mt-4 text-[28px] font-light leading-[1.05] tracking-tight text-white sm:text-[36px] md:text-[54px]">
+                See how Margin restores lost revenue for a seller doing $200K/month.
+              </h2>
+            </motion.div>
+
             <motion.a
               href={DEMO_VIDEO_URL}
               target="_blank"
