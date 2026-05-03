@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, PlayCircle } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
@@ -11,6 +11,8 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
+const DEMO_VIDEO_URL = 'https://youtu.be/5-eks76pOeo';
+const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
 
 const offerHighlights = [
   {
@@ -172,6 +174,47 @@ export default function EarlyAccess() {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="relative py-12 md:py-20">
+          <div className={containerClass}>
+            <motion.div {...revealProps} className="mx-auto mb-7 max-w-[880px] text-center md:mb-10">
+              <div className={sectionLabelClass}>See Demo</div>
+              <h2 className="mt-4 text-[28px] font-light leading-[1.05] tracking-tight text-white sm:text-[36px] md:text-[54px]">
+                See how Margin restores lost revenue for a seller doing $200K/month.
+              </h2>
+            </motion.div>
+
+            <motion.a
+              href={DEMO_VIDEO_URL}
+              target="_blank"
+              rel="noreferrer"
+              {...revealProps}
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.025] shadow-[0_36px_120px_rgba(0,0,0,0.42)] transition-colors hover:border-white/18 hover:bg-white/[0.035] md:rounded-[42px]"
+              aria-label="Watch the Margin product demo on YouTube"
+            >
+              <div className="relative aspect-video overflow-hidden bg-[#0b0b0b]">
+                <img
+                  src={DEMO_VIDEO_THUMBNAIL_URL}
+                  alt="Margin product demo thumbnail"
+                  className="h-full w-full object-cover opacity-78 saturate-[0.92] transition duration-500 group-hover:scale-[1.015] group-hover:opacity-88"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.14),transparent_40%),linear-gradient(180deg,rgba(0,0,0,0.02)_0%,rgba(0,0,0,0.64)_100%)]" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/22 bg-black/50 text-white shadow-[0_22px_54px_rgba(0,0,0,0.42)] backdrop-blur transition group-hover:scale-105 group-hover:bg-black/60 md:h-20 md:w-20">
+                    <PlayCircle className="h-8 w-8 md:h-10 md:w-10" strokeWidth={1.6} />
+                  </div>
+                </div>
+                <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
+                  <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-sky-100/64 md:text-[11px]">Product walkthrough</div>
+                  <div className="mt-2 max-w-[760px] text-[20px] font-medium leading-tight tracking-tight text-white md:text-[34px]">
+                    Watch how Margin finds, prepares, and tracks FBA recovery cases.
+                  </div>
+                </div>
+              </div>
+            </motion.a>
           </div>
         </section>
 
