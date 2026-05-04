@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { getPendingYocoCheckoutContext, getSafeYocoReturnPath } from '@/lib/yocoCheckout';
 
+const EARLY_ACCESS_ONBOARDING_URL = 'https://calendly.com/mvelo-margin-finance/30min';
+
 function readLocalStorage(key: string): string | null {
   if (typeof window === 'undefined') return null;
   return window.localStorage.getItem(key);
@@ -55,9 +57,9 @@ export default function PaymentSuccess() {
     ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment and follow up with onboarding details for your early-access spot.`
     : `You are back from ${isPayPal ? 'PayPal' : 'Yoco'} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
   const nextStepLabel = isEarlyAccess ? 'Next step' : 'Next step';
-  const nextStepValue = isEarlyAccess ? 'Watch your inbox' : isScan ? 'Start scan setup' : 'Open workspace';
+  const nextStepValue = isEarlyAccess ? 'Book onboarding' : isScan ? 'Start scan setup' : 'Open workspace';
   const referenceValue = invoiceId || (isEarlyAccess ? 'Early access reservation' : `${isPayPal ? 'PayPal' : 'Yoco'} receipt`);
-  const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
+  const primaryButtonLabel = isEarlyAccess ? 'Book Early Access Onboarding' : 'Continue to Margin';
   const secondaryHref = isEarlyAccess ? '/' : '/pricing';
   const secondaryLabel = isEarlyAccess ? 'Back to homepage' : 'Return to Pricing';
   const infoCopy = isEarlyAccess
@@ -109,7 +111,13 @@ export default function PaymentSuccess() {
 
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
               <Button
-                onClick={() => navigate(returnPath)}
+                onClick={() => {
+                  if (isEarlyAccess) {
+                    window.location.href = EARLY_ACCESS_ONBOARDING_URL;
+                    return;
+                  }
+                  navigate(returnPath);
+                }}
                 className="h-12 rounded-xl bg-white px-6 text-sm font-sans font-semibold text-black hover:bg-white/90"
               >
                 {primaryButtonLabel}
@@ -128,6 +136,7 @@ export default function PaymentSuccess() {
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-white/42" strokeWidth={1.8} />
               <p className="text-xs leading-6 text-white/42">
                 {infoCopy}
+                {isEarlyAccess ? ' Use the same email you used for checkout when booking onboarding so we can match your reservation quickly.' : ''}
               </p>
             </div>
           </section>
