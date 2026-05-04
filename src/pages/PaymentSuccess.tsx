@@ -10,8 +10,6 @@ import { Badge } from '@/components/ui/badge';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { getPendingYocoCheckoutContext, getSafeYocoReturnPath } from '@/lib/yocoCheckout';
 
-const EARLY_ACCESS_ONBOARDING_URL = 'https://calendly.com/mvelo-margin-finance/30min';
-
 function readLocalStorage(key: string): string | null {
   if (typeof window === 'undefined') return null;
   return window.localStorage.getItem(key);
@@ -51,19 +49,19 @@ export default function PaymentSuccess() {
     : `Your ${isPayPal ? 'PayPal' : 'Yoco'} payment return page for Margin. Continue setup while payment confirmation is verified.`;
   const badgeLabel = isEarlyAccess ? 'Early Access Checkout' : isPayPal ? 'PayPal Return' : 'Yoco Return';
   const heading = isEarlyAccess
-    ? 'Reservation submitted. We will follow up with early access details.'
+    ? 'Reservation submitted. You are in the Founding 100 priority batch.'
     : 'Payment submitted. Continue into Margin.';
   const body = isEarlyAccess
-    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment and follow up with onboarding details for your early-access spot.`
+    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment and send your onboarding invitation within 3-5 business days.`
     : `You are back from ${isPayPal ? 'PayPal' : 'Yoco'} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
   const nextStepLabel = isEarlyAccess ? 'Next step' : 'Next step';
-  const nextStepValue = isEarlyAccess ? 'Book onboarding' : isScan ? 'Start scan setup' : 'Open workspace';
+  const nextStepValue = isEarlyAccess ? 'Onboarding invite' : isScan ? 'Start scan setup' : 'Open workspace';
   const referenceValue = invoiceId || (isEarlyAccess ? 'Early access reservation' : `${isPayPal ? 'PayPal' : 'Yoco'} receipt`);
-  const primaryButtonLabel = isEarlyAccess ? 'Book Early Access Onboarding' : 'Continue to Margin';
+  const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
   const secondaryHref = isEarlyAccess ? '/' : '/pricing';
   const secondaryLabel = isEarlyAccess ? 'Back to homepage' : 'Return to Pricing';
   const infoCopy = isEarlyAccess
-    ? 'A redirect confirms that PayPal sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete.'
+    ? 'A redirect confirms that PayPal sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete. We provision Early Access workspaces manually to ensure setup quality.'
     : `A redirect confirms that ${isPayPal ? 'PayPal' : 'Yoco'} sent you back to Margin. The payment record itself is verified separately before Margin treats it as paid.`;
 
   usePageMeta({
@@ -112,11 +110,7 @@ export default function PaymentSuccess() {
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
               <Button
                 onClick={() => {
-                  if (isEarlyAccess) {
-                    window.location.href = EARLY_ACCESS_ONBOARDING_URL;
-                    return;
-                  }
-                  navigate(returnPath);
+                  navigate(isEarlyAccess ? '/early-access' : returnPath);
                 }}
                 className="h-12 rounded-xl bg-white px-6 text-sm font-sans font-semibold text-black hover:bg-white/90"
               >
@@ -136,7 +130,7 @@ export default function PaymentSuccess() {
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-white/42" strokeWidth={1.8} />
               <p className="text-xs leading-6 text-white/42">
                 {infoCopy}
-                {isEarlyAccess ? ' Use the same email you used for checkout when booking onboarding so we can match your reservation quickly.' : ''}
+                {isEarlyAccess ? ' Your onboarding invitation will be sent within 3-5 business days after payment verification.' : ''}
               </p>
             </div>
           </section>

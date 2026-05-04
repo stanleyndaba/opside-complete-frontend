@@ -29,7 +29,7 @@ const offerHighlights = [
   },
   {
     title: 'Priority onboarding',
-    detail: 'Faster setup and direct launch support'
+    detail: 'Managed workspace preparation before your onboarding invitation'
   },
   {
     title: 'Broad coverage',
@@ -188,7 +188,7 @@ export default function EarlyAccess() {
                 </p>
 
                 <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-white/52 md:text-[17px] md:leading-8">
-                  We&apos;re opening access in small priority batches to keep onboarding fast and the early experience high quality.
+                  We&apos;re opening access in small priority batches. After payment verification, onboarding invitations are sent within 3-5 business days so each workspace can be prepared properly.
                 </p>
 
                 <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[540px]">
@@ -215,7 +215,7 @@ export default function EarlyAccess() {
                     </Button>
                   </div>
                   <p className="mt-3 text-[12px] leading-6 text-white/42">
-                    We capture this first so we can match your PayPal reservation to white-glove onboarding.
+                    We capture this first so we can match your PayPal reservation to your Founding 100 onboarding invitation.
                   </p>
 
                   <div className="mt-3">
@@ -401,7 +401,7 @@ export default function EarlyAccess() {
                   Join Margin&apos;s Priority Launch Cohort.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Access opens in small priority batches so onboarding stays fast and the early experience stays high quality.
+                  Access opens in small priority batches. Your onboarding invitation is sent within 3-5 business days after payment verification.
                 </p>
               </div>
 
@@ -429,6 +429,9 @@ export default function EarlyAccess() {
                   </Button>
                 </div>
                 <div className="mt-3">
+                  <p className="mb-3 text-[12px] leading-6 text-white/42">
+                    We provision Early Access workspaces manually to ensure setup quality before your onboarding invitation is sent.
+                  </p>
                   <Button
                     asChild
                     variant="outline"
