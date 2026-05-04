@@ -21,60 +21,60 @@ const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
 const offerHighlights = [
   {
     title: 'Price',
-    detail: `${EARLY_ACCESS_PRICE} launch pricing during Early Access`
+    detail: `${EARLY_ACCESS_PRICE} launch pricing during Managed Early Access`
   },
   {
     title: 'Priority cohort',
-    detail: 'Opened in small priority batches during launch'
+    detail: 'Opened in small managed batches during launch'
   },
   {
     title: 'Priority onboarding',
-    detail: 'Managed workspace preparation before your onboarding invitation'
+    detail: 'Workspace preparation before read-only setup begins'
   },
   {
     title: 'Broad coverage',
-    detail: 'Built to surface missed reimbursement opportunities across a wide recovery range'
+    detail: 'Recovery review across inventory, shipments, returns, fees, and payouts'
   }
 ];
 
 const whatYouGet = [
   {
     step: '01',
-    title: 'Early access to the product',
-    detail: 'Get into Margin before broader public launch and start using the recovery workflow ahead of the wider market.'
+    title: 'Founding 100 reservation',
+    detail: 'Secure a place in the managed launch cohort before Margin opens the workflow to a wider group of sellers.'
   },
   {
     step: '02',
-    title: 'Priority onboarding',
-    detail: 'Move through setup faster with earlier access to onboarding, walkthroughs, and first-use support.'
+    title: 'Managed read-only setup',
+    detail: 'Move through guided onboarding with a read-only setup path before recovery review begins.'
   },
   {
     step: '03',
-    title: 'First access to setup and walkthroughs',
-    detail: 'See the product early and get the operational context needed before full rollout opens wider.'
+    title: 'Evidence-backed first review',
+    detail: 'Margin reviews recovery signals, support, and case readiness before anything is treated as filing-ready.'
   },
   {
     step: '04',
-    title: 'A head start before public launch',
-    detail: 'Secure access before the broader launch cycle and avoid getting pushed into a longer public queue.'
+    title: 'Guided filing workflow',
+    detail: 'Supportable cases are reviewed with you first, then moved through the filing workflow with approval and context.'
   }
 ];
 
 const fitPoints = [
   {
     step: '01',
-    title: 'Catch missed reimbursement opportunities',
-    detail: 'For Amazon FBA sellers who want broader recovery coverage across the operational issues that usually stay buried.'
+    title: 'Serious FBA sellers with recovery leakage',
+    detail: 'For operators who want missed recovery opportunities surfaced before timing, evidence, or Amazon case state becomes a problem.'
   },
   {
     step: '02',
-    title: 'Move faster than the crowd',
-    detail: 'For operators who want a head start on recovery workflow, not a place in a larger public rollout wave.'
+    title: 'Operators who want proof before filing',
+    detail: 'For sellers who care about evidence quality, duplicate prevention, and avoiding weak reimbursement claims.'
   },
   {
     step: '03',
-    title: 'Get priority setup before full rollout',
-    detail: 'For sellers who want earlier onboarding and cleaner first-use support before Margin opens access more broadly.'
+    title: 'Founding members who want guided support',
+    detail: 'For sellers who want a founder-led first recovery cycle instead of a black-box tool or unsupported dashboard.'
   }
 ];
 
@@ -96,9 +96,9 @@ export default function EarlyAccess() {
   const [isReserving, setIsReserving] = useState(false);
 
   usePageMeta({
-    title: 'Margin Early Access | Skip the line before public launch',
+    title: 'Margin Managed Early Access | Founding 100 Recovery Cohort',
     description:
-      'Get early access to Margin with priority onboarding, faster setup, direct launch support, and $99 launch pricing during Early Access.',
+      'Reserve Managed Early Access to Margin with guided onboarding, read-only setup, evidence-backed recovery review, and $99 launch pricing.',
     url: `${SITE_META.url}/early-access`,
     image: SITE_META.image,
   });
@@ -110,7 +110,7 @@ export default function EarlyAccess() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast({
         title: 'Work email required',
-        description: 'Add the email we should use for Early Access onboarding before PayPal checkout.',
+        description: 'Add the email we should use for Early Access onboarding and setup updates.',
         variant: 'destructive',
       });
       return;
@@ -129,7 +129,7 @@ export default function EarlyAccess() {
       if (!response.ok) {
         toast({
           title: 'Could not secure details',
-          description: response.error || 'Please try again before checkout so we can match your payment to onboarding.',
+          description: response.error || 'Please try again before checkout so onboarding can stay matched to your email.',
           variant: 'destructive',
         });
         return;
@@ -137,14 +137,14 @@ export default function EarlyAccess() {
 
       toast({
         title: 'Details secured',
-        description: 'Redirecting you to PayPal to finish the Early Access reservation.',
+        description: 'Redirecting you to PayPal to finish the Managed Early Access reservation.',
       });
 
       window.location.href = EARLY_ACCESS_CHECKOUT_URL;
     } catch {
       toast({
         title: 'Network issue',
-        description: 'We could not secure your details before checkout. Please try again in a moment.',
+        description: 'We could not save your onboarding details before checkout. Please try again in a moment.',
         variant: 'destructive',
       });
     } finally {
@@ -177,18 +177,18 @@ export default function EarlyAccess() {
               className="max-w-[860px]"
             >
               <div className="max-w-[780px]">
-                <div className={sectionLabelClass}>Priority Launch Cohort</div>
+                <div className={sectionLabelClass}>Managed Early Access</div>
 
                 <h1 className="mt-5 max-w-[760px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[78px]">
-                  Skip the line. Get Margin early.
+                  Join the Founding 100 recovery cohort.
                 </h1>
 
                 <p className="mt-5 max-w-[640px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
-                  Get early access to Margin with priority onboarding, faster setup, and direct launch support.
+                  Reserve managed access to Margin&apos;s read-only recovery workflow, evidence-backed case preparation, and guided first recovery cycle.
                 </p>
 
                 <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-white/52 md:text-[17px] md:leading-8">
-                  Access opens in small managed batches so each workspace can be prepared carefully before onboarding begins.
+                  Access opens in small batches so each workspace can be prepared carefully before onboarding begins.
                 </p>
 
                 <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[540px]">
@@ -215,7 +215,7 @@ export default function EarlyAccess() {
                     </Button>
                   </div>
                   <p className="mt-3 text-[12px] leading-6 text-white/42">
-                    We use this email for your Early Access reservation, setup updates, and onboarding invitation.
+                    We use this email for setup updates, cohort communication, and your onboarding invitation.
                   </p>
 
                   <div className="mt-3">
@@ -257,7 +257,7 @@ export default function EarlyAccess() {
             <motion.div {...revealProps} className="mx-auto mb-7 max-w-[880px] text-center md:mb-10">
               <div className={sectionLabelClass}>See Demo</div>
               <h2 className="mt-4 text-[28px] font-light leading-[1.05] tracking-tight text-white sm:text-[36px] md:text-[54px]">
-                See how Margin restores lost revenue for a seller doing $200K/month.
+                See how Margin finds, prepares, and tracks recovery cases for a seller doing $200K/month.
               </h2>
             </motion.div>
 
@@ -285,7 +285,7 @@ export default function EarlyAccess() {
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
                   <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-sky-100/64 md:text-[11px]">Product walkthrough</div>
                   <div className="mt-2 max-w-[760px] text-[20px] font-medium leading-tight tracking-tight text-white md:text-[34px]">
-                    Watch how Margin finds, prepares, and tracks FBA recovery cases.
+                    Watch how Margin turns raw FBA activity into evidence-backed recovery work.
                   </div>
                 </div>
               </div>
@@ -298,11 +298,10 @@ export default function EarlyAccess() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>What You Get</div>
               <h2 className={sectionHeadingClass}>
-                Early access is built for sellers who want a head start, not a place in a long queue.
+                Early access is built for sellers who want a guided first recovery cycle.
               </h2>
               <p className={sectionBodyClass}>
-                The offer is simple: get into Margin earlier, move through onboarding sooner, and see the workflow before
-                broader public launch.
+                The offer is simple: reserve your place, move through managed setup, and review evidence-backed recovery work before broader public launch.
               </p>
             </motion.div>
 
@@ -334,11 +333,10 @@ export default function EarlyAccess() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Who It Is For</div>
               <h2 className={sectionHeadingClass}>
-                Amazon FBA sellers who want to move before the crowd does.
+                Amazon FBA sellers who want recovery work handled carefully.
               </h2>
               <p className={sectionBodyClass}>
-                This offer is for operators who want broader recovery coverage, move faster, and get priority onboarding
-                before full rollout opens wider.
+                This offer is for operators who want broader recovery coverage, seller-controlled filing, and stronger evidence before cases move.
               </p>
             </motion.div>
 
@@ -367,10 +365,10 @@ export default function EarlyAccess() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Why This Exists</div>
               <h2 className={sectionHeadingClass}>
-                We&apos;re opening access in small priority batches so the early experience stays fast and high quality.
+                Early Access is managed because recovery work depends on accurate setup.
               </h2>
               <p className={sectionBodyClass}>
-                Early users get priority onboarding, faster setup, and direct support while Margin opens to the wider market.
+                Margin opens in controlled cohorts so read-only setup, workspace preparation, and first review quality stay tight.
               </p>
             </motion.div>
 
@@ -381,8 +379,8 @@ export default function EarlyAccess() {
               <div className="max-w-[820px]">
                 <div className="text-[10px] uppercase tracking-[0.18em] text-white/34">Priority launch cohort</div>
                 <p className="mt-5 text-[18px] leading-8 text-white/66 md:text-[24px] md:leading-10">
-                  We&apos;re keeping launch access controlled on purpose so onboarding, setup, and support stay direct and useful.
-                  Early Access is for sellers who want earlier entry and a smoother first experience while Margin opens in stages.
+                  We&apos;re keeping launch access controlled on purpose so onboarding, setup, and recovery review stay direct and useful.
+                  Early Access is for sellers who want a safer first cycle while Margin opens in stages.
                 </p>
               </div>
             </motion.div>
@@ -398,10 +396,10 @@ export default function EarlyAccess() {
               <div className="max-w-[900px]">
                 <div className={sectionLabelClass}>Join The Cohort</div>
                 <h2 className="mt-4 max-w-[860px] text-[32px] font-light leading-[1.02] tracking-tight text-white sm:text-[38px] md:text-[68px]">
-                  Join Margin&apos;s Priority Launch Cohort.
+                  Join Margin&apos;s Founding 100 cohort.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Access opens in small priority batches so setup, workspace preparation, and onboarding stay focused.
+                  Access opens in small batches so setup, workspace preparation, and onboarding stay focused.
                 </p>
               </div>
 
@@ -430,7 +428,7 @@ export default function EarlyAccess() {
                 </div>
                 <div className="mt-3">
                   <p className="mb-3 text-[12px] leading-6 text-white/42">
-                    We provision Early Access workspaces manually to ensure setup quality before your onboarding invitation is sent.
+                    We prepare Early Access workspaces carefully before your onboarding invitation is sent.
                   </p>
                   <Button
                     asChild
