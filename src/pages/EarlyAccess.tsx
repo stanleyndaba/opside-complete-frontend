@@ -188,7 +188,7 @@ export default function EarlyAccess() {
                 </p>
 
                 <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-white/52 md:text-[17px] md:leading-8">
-                  We&apos;re opening access in small priority batches. After payment verification, onboarding invitations are sent within 3-5 business days so each workspace can be prepared properly.
+                  Access opens in small managed batches so each workspace can be prepared carefully before onboarding begins.
                 </p>
 
                 <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[540px]">
@@ -215,7 +215,7 @@ export default function EarlyAccess() {
                     </Button>
                   </div>
                   <p className="mt-3 text-[12px] leading-6 text-white/42">
-                    We capture this first so we can match your PayPal reservation to your Founding 100 onboarding invitation.
+                    We use this email for your Early Access reservation, setup updates, and onboarding invitation.
                   </p>
 
                   <div className="mt-3">
@@ -401,7 +401,7 @@ export default function EarlyAccess() {
                   Join Margin&apos;s Priority Launch Cohort.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
-                  Access opens in small priority batches. Your onboarding invitation is sent within 3-5 business days after payment verification.
+                  Access opens in small priority batches so setup, workspace preparation, and onboarding stay focused.
                 </p>
               </div>
 
