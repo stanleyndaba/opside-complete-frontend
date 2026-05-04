@@ -400,7 +400,7 @@ export default function Index() {
                   ))}
                 </div>
 
-                <div className="mt-6 flex w-full justify-center">
+                <div className="mt-6 flex w-full max-w-[640px] justify-center">
                   <Link
                     to="/early-access"
                     className="group inline-flex items-center justify-center gap-2 px-2 py-1 text-center transition-colors duration-200 hover:text-white"
