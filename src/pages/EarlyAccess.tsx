@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, PlayCircle } from 'lucide-react';
@@ -6,8 +6,12 @@ import { ArrowRight, PlayCircle } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/components/ui/use-toast';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { api } from '@/lib/api';
 
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
@@ -87,6 +91,10 @@ const sectionHeadingClass = 'mt-4 max-w-[900px] text-[31px] font-light leading-[
 const sectionBodyClass = 'mt-4 max-w-[720px] text-[15px] leading-7 text-white/62 md:mt-6 md:text-[18px] md:leading-8';
 
 export default function EarlyAccess() {
+  const { toast } = useToast();
+  const [earlyAccessEmail, setEarlyAccessEmail] = useState('');
+  const [isReserving, setIsReserving] = useState(false);
+
   usePageMeta({
     title: 'Margin Early Access | Skip the line before public launch',
     description:
@@ -94,6 +102,55 @@ export default function EarlyAccess() {
     url: `${SITE_META.url}/early-access`,
     image: SITE_META.image,
   });
+
+  const handleReserveEarlyAccess = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const email = earlyAccessEmail.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({
+        title: 'Work email required',
+        description: 'Add the email we should use for Early Access onboarding before PayPal checkout.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsReserving(true);
+    try {
+      const response = await api.reserveEarlyAccess({
+        email,
+        source_page: '/early-access',
+        offer: 'Margin Early Access',
+        price: EARLY_ACCESS_PRICE,
+        intent: 'reserve_early_access',
+      });
+
+      if (!response.ok) {
+        toast({
+          title: 'Could not secure details',
+          description: response.error || 'Please try again before checkout so we can match your payment to onboarding.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      toast({
+        title: 'Details secured',
+        description: 'Redirecting you to PayPal to finish the Early Access reservation.',
+      });
+
+      window.location.href = EARLY_ACCESS_CHECKOUT_URL;
+    } catch {
+      toast({
+        title: 'Network issue',
+        description: 'We could not secure your details before checkout. Please try again in a moment.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsReserving(false);
+    }
+  };
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
@@ -134,25 +191,43 @@ export default function EarlyAccess() {
                   We&apos;re opening access in small priority batches to keep onboarding fast and the early experience high quality.
                 </p>
 
-                <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center">
-                  <Button
-                    asChild
-                    className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[206px] sm:justify-center md:h-12 md:px-6 md:text-sm"
-                  >
-                    <a href={EARLY_ACCESS_CHECKOUT_URL}>
-                      Reserve Early Access
+                <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[540px]">
+                  <Label htmlFor="early-access-email" className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/40">
+                    Work email for onboarding
+                  </Label>
+                  <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                    <Input
+                      id="early-access-email"
+                      type="email"
+                      value={earlyAccessEmail}
+                      onChange={(event) => setEarlyAccessEmail(event.target.value)}
+                      placeholder="you@company.com"
+                      className="h-12 rounded-full border-white/10 bg-white/[0.035] px-5 text-sm text-white placeholder:text-white/30 focus-visible:ring-sky-200/20"
+                      autoComplete="email"
+                    />
+                    <Button
+                      type="submit"
+                      disabled={isReserving}
+                      className="h-12 shrink-0 justify-center rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
+                    >
+                      {isReserving ? 'Securing...' : 'Reserve Early Access'}
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
+                    </Button>
+                  </div>
+                  <p className="mt-3 text-[12px] leading-6 text-white/42">
+                    We capture this first so we can match your PayPal reservation to white-glove onboarding.
+                  </p>
 
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="h-11 justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
-                  >
-                    <Link to="/waitlist">Join Public Waitlist</Link>
-                  </Button>
-                </div>
+                  <div className="mt-3">
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="h-11 justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
+                    >
+                      <Link to="/waitlist">Join Public Waitlist</Link>
+                    </Button>
+                  </div>
+                </form>
 
               </div>
             </motion.div>
@@ -330,25 +405,39 @@ export default function EarlyAccess() {
                 </p>
               </div>
 
-              <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
-                <Button
-                  asChild
-                  className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[206px] sm:justify-center md:h-12 md:px-6 md:text-sm"
-                >
-                  <a href={EARLY_ACCESS_CHECKOUT_URL}>
-                    Reserve Early Access
+              <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[560px] md:mt-10">
+                <Label htmlFor="early-access-email-bottom" className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/40">
+                  Work email for onboarding
+                </Label>
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                  <Input
+                    id="early-access-email-bottom"
+                    type="email"
+                    value={earlyAccessEmail}
+                    onChange={(event) => setEarlyAccessEmail(event.target.value)}
+                    placeholder="you@company.com"
+                    className="h-12 rounded-full border-white/10 bg-white/[0.035] px-5 text-sm text-white placeholder:text-white/30 focus-visible:ring-sky-200/20"
+                    autoComplete="email"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={isReserving}
+                    className="h-12 shrink-0 justify-center rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
+                  >
+                    {isReserving ? 'Securing...' : 'Reserve Early Access'}
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-11 justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
-                >
-                  <Link to="/waitlist">Join Public Waitlist</Link>
-                </Button>
-              </div>
+                  </Button>
+                </div>
+                <div className="mt-3">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-11 justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
+                  >
+                    <Link to="/waitlist">Join Public Waitlist</Link>
+                  </Button>
+                </div>
+              </form>
             </motion.div>
           </div>
         </section>

@@ -599,6 +599,22 @@ export const api = {
     body: JSON.stringify(data)
   }),
 
+  reserveEarlyAccess: (data: {
+    email: string;
+    source_page?: string;
+    offer?: string;
+    price?: string;
+    intent?: string;
+  }) => requestJson<{
+    success: boolean;
+    message: string;
+    confirmation_email_status?: 'queued' | 'failed';
+    capture_mode?: 'email_only';
+  }>('/api/early-access/reservations', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+
   // Get waitlist entries (admin only)
   getWaitlist: (limit = 100, offset = 0) =>
     requestJson<{ success: boolean; entries: any[]; total: number }>(`/api/waitlist?limit=${limit}&offset=${offset}`),

@@ -34,33 +34,35 @@ export default function PaymentSuccess() {
   const pending = useMemo(() => getPendingYocoCheckoutContext(), []);
   const tenantSlug = searchParams.get('tenant') || pending.tenantSlug || readLocalStorage('active_tenant_slug');
   const checkoutKind = String(searchParams.get('kind') || pending.kind || '');
+  const source = String(searchParams.get('source') || '').toLowerCase();
   const offer = searchParams.get('offer') || pending.offer || 'Margin checkout';
   const price = searchParams.get('price') || pending.price || null;
   const invoiceId = searchParams.get('invoice') || pending.invoiceId || null;
   const returnPath = resolveReturnPath(searchParams, tenantSlug);
   const isScan = checkoutKind.includes('scan');
   const isEarlyAccess = checkoutKind.includes('early_access');
+  const isPayPal = source === 'paypal' || isEarlyAccess;
 
   const pageTitle = isEarlyAccess ? 'Early Access Submitted | Margin' : 'Payment Submitted | Margin';
   const pageDescription = isEarlyAccess
-    ? 'Your early-access checkout return page for Margin. We will confirm the payment and follow up with onboarding details.'
-    : 'Your Yoco payment return page for Margin. Continue setup while payment confirmation is verified.';
-  const badgeLabel = isEarlyAccess ? 'Early Access Checkout' : 'Yoco Return';
+    ? 'Your early-access checkout return page for Margin. We will confirm the PayPal payment and follow up with onboarding details.'
+    : `Your ${isPayPal ? 'PayPal' : 'Yoco'} payment return page for Margin. Continue setup while payment confirmation is verified.`;
+  const badgeLabel = isEarlyAccess ? 'Early Access Checkout' : isPayPal ? 'PayPal Return' : 'Yoco Return';
   const heading = isEarlyAccess
     ? 'Reservation submitted. We will follow up with early access details.'
     : 'Payment submitted. Continue into Margin.';
   const body = isEarlyAccess
-    ? `You are back from Yoco for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment and follow up with onboarding details for your early-access spot.`
-    : `You are back from Yoco for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
+    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment and follow up with onboarding details for your early-access spot.`
+    : `You are back from ${isPayPal ? 'PayPal' : 'Yoco'} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
   const nextStepLabel = isEarlyAccess ? 'Next step' : 'Next step';
   const nextStepValue = isEarlyAccess ? 'Watch your inbox' : isScan ? 'Start scan setup' : 'Open workspace';
-  const referenceValue = invoiceId || (isEarlyAccess ? 'Early access reservation' : 'Yoco receipt');
+  const referenceValue = invoiceId || (isEarlyAccess ? 'Early access reservation' : `${isPayPal ? 'PayPal' : 'Yoco'} receipt`);
   const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
   const secondaryHref = isEarlyAccess ? '/' : '/pricing';
   const secondaryLabel = isEarlyAccess ? 'Back to homepage' : 'Return to Pricing';
   const infoCopy = isEarlyAccess
-    ? 'A redirect confirms that Yoco sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete.'
-    : 'A redirect confirms that Yoco sent you back to Margin. The payment record itself is verified separately from Yoco before Margin treats it as paid.';
+    ? 'A redirect confirms that PayPal sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete.'
+    : `A redirect confirms that ${isPayPal ? 'PayPal' : 'Yoco'} sent you back to Margin. The payment record itself is verified separately before Margin treats it as paid.`;
 
   usePageMeta({
     title: pageTitle,
@@ -94,7 +96,7 @@ export default function PaymentSuccess() {
 
             <div className="mt-10 grid w-full max-w-2xl grid-cols-1 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] text-left md:grid-cols-3">
               {[
-                ['Payment path', 'Processed by Yoco'],
+                ['Payment path', `Processed by ${isPayPal ? 'PayPal' : 'Yoco'}`],
                 [nextStepLabel, nextStepValue],
                 ['Reference', referenceValue],
               ].map(([label, value]) => (
