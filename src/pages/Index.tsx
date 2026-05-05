@@ -608,14 +608,14 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className="mt-10 overflow-hidden rounded-[34px] border border-[#DCE8EE] bg-[#FBFCFA] shadow-[0_24px_80px_rgba(37,49,58,0.07)]">
+            <div className="mt-10">
               {coverageExamples.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className={`grid gap-4 px-5 py-6 md:grid-cols-[240px_minmax(0,1fr)] md:gap-9 md:px-8 md:py-8 ${
-                    index > 0 ? 'border-t border-[#E4EDF1]' : ''
+                  className={`grid gap-4 py-7 md:grid-cols-[240px_minmax(0,1fr)] md:gap-9 md:py-8 ${
+                    index > 0 ? 'border-t border-[#D8E3E8]' : ''
                   }`}
                 >
                   <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
@@ -644,14 +644,14 @@ export default function Index() {
                 </p>
               </motion.div>
 
-              <div className="overflow-hidden rounded-[32px] border border-[#DCE8EE] bg-white shadow-[0_24px_70px_rgba(37,49,58,0.07)]">
+              <div className="w-full">
                 {trustControls.map((item, index) => (
                   <motion.div
                     key={item.title}
                     {...revealProps}
                     transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                    className={`grid gap-4 px-6 py-7 sm:grid-cols-[54px_minmax(0,1fr)] md:px-8 md:py-8 ${
-                      index > 0 ? 'border-t border-[#E4EDF1]' : ''
+                    className={`grid gap-4 py-7 sm:grid-cols-[54px_minmax(0,1fr)] md:py-8 ${
+                      index > 0 ? 'border-t border-[#D8E3E8]' : ''
                     }`}
                   >
                     <div className="flex items-start gap-3 sm:block">
