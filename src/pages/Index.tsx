@@ -609,33 +609,35 @@ export default function Index() {
             </motion.div>
 
             <div className="relative mt-10 md:mt-12">
-              <motion.div
-                className="absolute left-8 right-8 top-1/2 z-0 hidden h-[2px] -translate-y-1/2 rounded-full bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.08)_22%,rgba(11,116,222,0.78)_50%,rgba(46,125,91,0.28)_68%,transparent_100%)] opacity-70 lg:block"
-                style={{ backgroundSize: '220% 100%' }}
-                animate={{ backgroundPosition: ['0% 50%', '220% 50%'] }}
-                transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
-              />
+              <div className="absolute left-0 right-0 top-[62px] hidden h-px bg-[#C7DCEB] lg:block" />
 
-              <div className="relative z-10 grid gap-4 md:gap-5 lg:grid-cols-5">
+              <div className="relative z-10 grid gap-3 border-y border-[#D8E3E8] bg-white/36 lg:grid-cols-5 lg:gap-0">
                 {workflowSteps.map((item, index) => (
                   <motion.div
                     key={item.step}
                     {...revealProps}
-                    whileHover={{ y: -8 }}
+                    whileHover={{ y: -3 }}
                     transition={{ ...revealProps.transition, delay: index * 0.08 }}
-                    className="group relative min-h-[290px] overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-6 shadow-[0_18px_54px_rgba(37,49,58,0.07)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:border-[#0B74DE]/55 hover:bg-white/90 hover:shadow-[0_24px_58px_rgba(11,116,222,0.12)]"
+                    tabIndex={0}
+                    className={`group relative min-h-[188px] overflow-hidden bg-white/40 px-5 py-6 outline-none transition-[background-color,box-shadow] duration-500 hover:bg-white/92 hover:shadow-[0_18px_48px_rgba(11,116,222,0.09)] focus-visible:bg-white/92 focus-visible:ring-2 focus-visible:ring-[#0B74DE]/25 md:px-6 lg:min-h-[176px] ${
+                      index > 0 ? 'border-t border-[#D8E3E8] lg:border-l lg:border-t-0' : ''
+                    }`}
                   >
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(11,116,222,0.08),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.62),transparent_42%)] opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
-                    <div className="relative">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white/72 text-[11px] font-semibold tracking-[0.12em] text-[#0B74DE] transition duration-500 group-hover:scale-110 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white">
+                    <div className="pointer-events-none absolute inset-x-5 top-[62px] hidden h-px bg-[#0B74DE]/0 transition-colors duration-500 group-hover:bg-[#0B74DE]/55 group-focus:bg-[#0B74DE]/55 lg:block" />
+                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,116,222,0.06),transparent_42%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus:opacity-100" />
+                    <div className="relative flex h-full flex-col">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white text-[11px] font-semibold tracking-[0.12em] text-[#0B74DE] shadow-[0_10px_24px_rgba(37,49,58,0.06)] transition duration-500 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white group-focus:border-[#0B74DE] group-focus:bg-[#0B74DE] group-focus:text-white">
                         {item.step}
                       </div>
-                      <h3 className="mt-7 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#182026] md:text-[20px]">
+                      <h3 className="mt-7 text-[18px] font-semibold leading-tight tracking-[-0.025em] text-[#182026] md:text-[20px]">
                         {item.title}
                       </h3>
-                      <p className="mt-4 text-[14px] leading-7 text-[#66737F] md:text-[15px] md:leading-8">
+                      <p className="mt-3 text-[14px] leading-7 text-[#66737F] transition-all duration-500 lg:max-h-0 lg:translate-y-2 lg:overflow-hidden lg:opacity-0 lg:group-hover:max-h-40 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus:max-h-40 lg:group-focus:translate-y-0 lg:group-focus:opacity-100">
                         {item.detail}
                       </p>
+                      <div className="mt-auto hidden pt-5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2] transition-colors duration-500 group-hover:text-[#0B74DE] group-focus:text-[#0B74DE] lg:block">
+                        Hover for detail
+                      </div>
                     </div>
                   </motion.div>
                 ))}
