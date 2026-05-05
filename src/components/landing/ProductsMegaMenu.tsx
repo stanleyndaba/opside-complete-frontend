@@ -33,7 +33,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
         ? 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#66737F] outline-none transition-all hover:bg-[#F3F6F8] hover:text-[#182026] data-[state=open]:!bg-[#F3F6F8] data-[state=open]:!text-[#182026]'
         : 'h-9 rounded-[6px] border border-transparent bg-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/76 outline-none transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white data-[state=open]:!border-white/8 data-[state=open]:!bg-white/[0.04] data-[state=open]:!text-white';
     const panelClassName = isLight
-        ? 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[28px] border border-[#DCE8EE] bg-white/96 shadow-[0_34px_100px_rgba(37,49,58,0.16)] backdrop-blur-2xl lg:w-[95vw] lg:max-w-[1440px] lg:flex-row'
+        ? 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[28px] border border-[#DCE8EE] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.18)] lg:w-[95vw] lg:max-w-[1440px] lg:flex-row'
         : 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#050505] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10';
     const labelClassName = isLight
         ? 'text-[9px] font-bold uppercase tracking-[0.14em] text-[#8A99A4]'
@@ -58,7 +58,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                     <span className={cn(
                                         'rounded px-2 py-0.5 text-[7px] font-bold uppercase tracking-tighter',
                                         isLight
-                                            ? 'border border-[#CBE9D9] bg-[#EAF7F0] text-[#2E7D5B]'
+                                            ? 'border border-[#BFD8EA] bg-[#EAF4FF] text-[#0B74DE]'
                                             : 'border border-emerald-500/10 bg-emerald-500/5 text-emerald-500/50'
                                     )}>
                                         Core Coverage
@@ -208,7 +208,7 @@ function NavItem({
                 'group block cursor-default rounded-xl border p-3.5 transition-colors',
                 isLight
                     ? highlight
-                        ? 'border-[#CBE9D9] bg-[#EAF7F0]'
+                        ? 'border-[#BFD8EA] bg-[#EAF4FF]'
                         : 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-white'
                     : highlight
                         ? 'bg-emerald-500/[0.03] border-emerald-500/10'
@@ -220,7 +220,7 @@ function NavItem({
                     'shrink-0 rounded-lg border p-2 transition-all',
                     isLight
                         ? highlight
-                            ? 'border-[#BCE2CC] bg-[#DDF3E8] text-[#2E7D5B]'
+                            ? 'border-[#BFD8EA] bg-white text-[#0B74DE]'
                             : 'border-[#DCE8EE] bg-[#EEF4F6] text-[#0B74DE] group-hover:bg-white'
                         : highlight
                             ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
@@ -233,7 +233,7 @@ function NavItem({
                         'block whitespace-nowrap text-[9.5px] font-bold tracking-tight',
                         isLight
                             ? highlight
-                                ? 'text-[#2E7D5B]'
+                                ? 'text-[#0B74DE]'
                                 : 'text-[#182026]'
                             : highlight
                                 ? 'text-emerald-400'

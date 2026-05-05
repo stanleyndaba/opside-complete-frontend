@@ -625,7 +625,6 @@ export default function Index() {
                       index > 0 ? 'border-t border-[#D8E3E8] lg:border-l lg:border-t-0' : ''
                     }`}
                   >
-                    <div className="pointer-events-none absolute inset-x-5 top-[62px] hidden h-px bg-[#0B74DE]/0 transition-colors duration-500 group-hover:bg-[#0B74DE]/55 group-focus:bg-[#0B74DE]/55 lg:block" />
                     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,116,222,0.06),transparent_42%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus:opacity-100" />
                     <div className="relative flex h-full flex-col">
                       <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white text-[11px] font-semibold tracking-[0.12em] text-[#0B74DE] shadow-[0_10px_24px_rgba(37,49,58,0.06)] transition duration-500 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white group-focus:border-[#0B74DE] group-focus:bg-[#0B74DE] group-focus:text-white">
