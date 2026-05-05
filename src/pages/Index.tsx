@@ -12,7 +12,7 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
-const DEMO_VIDEO_URL = 'https://youtu.be/5-eks76pOeo';
+const DEMO_VIDEO_URL = 'https://youtu.be/NFDzqcaAFHM';
 const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
 
 const proofItems = [

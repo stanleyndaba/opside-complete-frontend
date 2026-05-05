@@ -15,7 +15,7 @@ import { api } from '@/lib/api';
 
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
-const DEMO_VIDEO_URL = 'https://youtu.be/5-eks76pOeo';
+const DEMO_VIDEO_URL = 'https://youtu.be/NFDzqcaAFHM';
 const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
 
 const offerHighlights = [
