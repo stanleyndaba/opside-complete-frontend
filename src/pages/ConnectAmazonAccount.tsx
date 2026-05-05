@@ -154,71 +154,72 @@ export default function ConnectAmazonAccount() {
   };
 
   return (
-    <PageLayout title="Connect Amazon Account" hideNavbar hideSidebar midnight>
-      <div className="relative min-h-screen overflow-hidden px-4 py-12 text-white md:px-6">
-        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(133,170,255,0.1),transparent_40%),radial-gradient(circle_at_84%_0%,rgba(255,255,255,0.05),transparent_42%)]" />
+    <PageLayout title="Connect Amazon Account" hideNavbar hideSidebar hideLogo plainBackground>
+      <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] px-4 py-12 text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] md:px-6">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(46,125,91,0.1),transparent_32%)]" />
 
         <div className="relative mx-auto max-w-[860px] space-y-8 pt-20">
           <section className="space-y-5">
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+            <div className="inline-flex items-center gap-3 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
               <span>Amazon authorization</span>
-              <span className="h-1 w-1 rounded-full bg-[#8fb7ff]/80" />
-              <span className="text-white/46">Workspace step 2</span>
+              <span className="h-1 w-1 rounded-full bg-[#0B74DE]/80" />
+              <span className="text-[#66737F]">Workspace step 2</span>
             </div>
 
             <div className="space-y-4">
-              <h1 className="max-w-[620px] text-[38px] font-light leading-[0.95] tracking-tight text-white md:text-[60px]">
+              <h1 className="max-w-[620px] text-[38px] font-semibold leading-[0.95] tracking-[-0.06em] text-[#182026] md:text-[60px]">
                 Connect your Amazon seller account.
               </h1>
-              <p className="max-w-[560px] text-[16px] leading-7 text-white/58 md:text-lg md:leading-8">
+              <p className="max-w-[560px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
                 Your Margin login is already complete. This step sends you to Amazon so Seller Central can authorize the account and return you back into Margin.
               </p>
             </div>
           </section>
 
-          <section className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.018)_16%,rgba(8,8,9,0.98)_100%)] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.36)] md:p-7">
-            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#8fb7ff]/40 to-transparent" />
-            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#7aa6ff]/10 blur-3xl" />
+          <section className="relative overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
+            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
+            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#0B74DE]/10 blur-3xl" />
 
             <div className="relative">
               <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
-                  <div className="text-[11px] font-medium tracking-tight text-white/40">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
                     Seller Central handoff
                   </div>
-                  <h2 className="text-[28px] font-light leading-[1.02] tracking-tight text-white md:text-[34px]">
+                  <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
                     Choose the marketplace and continue.
                   </h2>
-                  <p className="max-w-[520px] text-[14px] leading-6 text-white/56 md:text-[15px]">
+                  <p className="max-w-[520px] text-[14px] leading-6 text-[#66737F] md:text-[15px]">
                     Margin prepares the workspace here. Amazon still handles the authorization itself. When the OAuth flow finishes, we resume from there.
                   </p>
                 </div>
 
-                <div className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+                <div className="rounded-full border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
                   OAuth step
                 </div>
               </div>
 
               {preparing ? (
-                <div className="flex h-14 w-full items-center justify-center rounded-[20px] border border-white/10 bg-white/[0.03] text-sm text-white/60">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <div className="flex h-14 w-full items-center justify-center rounded-[20px] border border-[#DCE8EE] bg-[#F8FAFC] text-sm text-[#66737F]">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin text-[#0B74DE]" />
                   Preparing workspace...
                 </div>
               ) : isFull ? (
-                <div className="space-y-5 rounded-[20px] border border-white/10 bg-white/[0.03] p-5 text-white">
+                <div className="space-y-5 rounded-[22px] border border-[#DCE8EE] bg-[#F8FAFC] p-5 text-[#182026]">
                   <div className="space-y-2">
-                    <p className="text-[12px] font-semibold tracking-tight text-white">
+                    <p className="text-[12px] font-semibold tracking-tight text-[#182026]">
                       We’re onboarding a small batch of sellers right now.
                     </p>
-                    <p className="text-[12px] text-white/60">
+                    <p className="text-[12px] text-[#66737F]">
                       Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
                     </p>
                   </div>
                   <Button
                     type="button"
                     onClick={() => navigate('/waitlist?reason=capacity')}
-                    className="h-11 w-full justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[12px] font-medium tracking-tight text-black hover:bg-white/92"
+                    className="h-11 w-full justify-between rounded-full bg-[#0B74DE] px-5 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                   >
                     Join Waitlist
                     <ArrowRight className="h-4 w-4" />
@@ -227,7 +228,7 @@ export default function ConnectAmazonAccount() {
               ) : (
                 <div className="space-y-5">
                   <div className="space-y-2">
-                    <p className="text-[11px] font-medium tracking-tight text-white/42">
+                    <p className="text-[11px] font-semibold tracking-tight text-[#66737F]">
                       Marketplace
                     </p>
                     <Select
@@ -235,15 +236,15 @@ export default function ConnectAmazonAccount() {
                       onValueChange={setSelectedMarketplace}
                       disabled={connecting}
                     >
-                      <SelectTrigger className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-left text-[14px] tracking-tight text-white focus:border-white/18 focus:ring-0">
+                      <SelectTrigger className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-left text-[14px] tracking-tight text-[#182026] focus:border-[#0B74DE]/50 focus:ring-0">
                         <SelectValue placeholder="Choose the Amazon marketplace you want to connect" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-[20px] border-white/10 bg-[#090909] text-white">
+                      <SelectContent className="rounded-[20px] border-[#CFE0EA] bg-white text-[#182026] shadow-[0_22px_70px_rgba(37,49,58,0.14)]">
                         {AMAZON_MARKETPLACES.map((marketplace) => (
                           <SelectItem
                             key={marketplace.id}
                             value={marketplace.id}
-                            className="text-sm text-white focus:bg-white/10 focus:text-white"
+                            className="text-sm text-[#182026] focus:bg-[#F3F6F8] focus:text-[#182026]"
                           >
                             {marketplace.name}
                           </SelectItem>
@@ -256,7 +257,7 @@ export default function ConnectAmazonAccount() {
                     type="button"
                     onClick={handleConnectAmazon}
                     disabled={connecting || !selectedMarketplace}
-                    className="h-12 w-full justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[13px] font-medium tracking-tight text-black hover:bg-white/92 disabled:cursor-not-allowed disabled:bg-white/25 disabled:text-white/50"
+                    className="h-12 w-full justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:bg-[#BFD8EA] disabled:text-white"
                   >
                     {connecting ? (
                       <>

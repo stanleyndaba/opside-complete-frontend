@@ -577,34 +577,37 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       <div
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]"
+        className="fixed inset-0 z-0 pointer-events-none opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]"
+      />
+      <div
+        className="fixed inset-0 z-0 pointer-events-none opacity-[0.04]"
         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
       />
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(133,170,255,0.1),transparent_40%),radial-gradient(circle_at_84%_0%,rgba(255,255,255,0.05),transparent_42%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-[720px] bg-[radial-gradient(circle_at_18%_100%,rgba(125,149,181,0.08),transparent_44%),radial-gradient(circle_at_76%_88%,rgba(255,255,255,0.04),transparent_48%)]" />
+        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(46,125,91,0.1),transparent_32%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-[720px] bg-[radial-gradient(circle_at_18%_100%,rgba(191,216,234,0.24),transparent_44%),radial-gradient(circle_at_76%_88%,rgba(255,255,255,0.7),transparent_48%)]" />
       </div>
 
-      <PublicNavbar />
+      <PublicNavbar variant="light" />
 
       <main className="relative z-10 px-4 pb-24 pt-28 md:px-6 md:pb-28 md:pt-32">
         <div className="mx-auto max-w-[860px] space-y-8">
           <section className="space-y-5">
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+            <div className="inline-flex items-center gap-3 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
               <span>Workspace access</span>
-              <span className="h-1 w-1 rounded-full bg-[#8fb7ff]/80" />
-              <span className="text-white/46">
+              <span className="h-1 w-1 rounded-full bg-[#0B74DE]/80" />
+              <span className="text-[#66737F]">
                 {mode === 'signup' ? 'Create account' : mode === 'recovery' ? 'Reset password' : 'Sign in'}
               </span>
             </div>
 
             <div className="space-y-4">
-              <h1 className="max-w-[620px] text-[38px] font-light leading-[0.95] tracking-tight text-white md:text-[60px]">
+              <h1 className="max-w-[620px] text-[38px] font-semibold leading-[0.95] tracking-[-0.06em] text-[#182026] md:text-[60px]">
                 {heading}
               </h1>
-              <p className="max-w-[560px] text-[16px] leading-7 text-white/58 md:text-lg md:leading-8">
+              <p className="max-w-[560px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
                 {intent === 'upload-csv' && mode === 'login'
                   ? 'Sign in to upload files into your workspace. Data import starts after account access, not before.'
                   : 'Your Margin account gets you into the workspace first. Amazon, Gmail, and other providers are connected after that from inside the product.'}
@@ -612,17 +615,17 @@ const Login = () => {
             </div>
           </section>
 
-          <section className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.018)_16%,rgba(8,8,9,0.98)_100%)] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.36)] md:p-7">
-            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#8fb7ff]/40 to-transparent" />
-            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#7aa6ff]/10 blur-3xl" />
+          <section className="relative overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
+            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
+            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#0B74DE]/10 blur-3xl" />
 
             <div className="relative">
               <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
-                  <div className="text-[11px] font-medium tracking-tight text-white/40">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
                     {mode === 'signup' ? 'New account' : mode === 'recovery' ? 'Password recovery' : 'Existing account'}
                   </div>
-                  <h2 className="text-[28px] font-light leading-[1.02] tracking-tight text-white md:text-[34px]">
+                  <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
                     {mode === 'signup'
                       ? 'Create your workspace access'
                       : mode === 'recovery'
@@ -631,25 +634,25 @@ const Login = () => {
                   </h2>
                 </div>
 
-                <div className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+                <div className="rounded-full border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
                   Account step
                 </div>
               </div>
 
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                <div className="mb-5 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4">
-                  <p className="text-[11px] font-medium uppercase tracking-tight text-white/38">
+                <div className="mb-5 rounded-[22px] border border-[#DCE8EE] bg-[#F8FAFC] px-4 py-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">
                     Active session found
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-white/72">
-                    You are already signed in as <span className="font-semibold text-white">{activeSessionEmail}</span>.
+                  <p className="mt-2 text-sm leading-6 text-[#4D5B66]">
+                    You are already signed in as <span className="font-semibold text-[#182026]">{activeSessionEmail}</span>.
                   </p>
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                     <Button
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-11 justify-between rounded-[16px] border border-white/10 bg-white px-4 text-[12px] font-medium tracking-tight text-black hover:bg-white/92"
+                      className="h-11 justify-between rounded-full bg-[#0B74DE] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                     >
                       Continue with this account
                       <ArrowRight className="h-4 w-4" />
@@ -659,7 +662,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void handleUseDifferentAccount()}
                       disabled={loading}
-                      className="h-11 rounded-[16px] border-white/10 bg-transparent px-4 text-[12px] font-medium tracking-tight text-white/74 hover:bg-white/[0.04] hover:text-white"
+                      className="h-11 rounded-full border-[#CFE0EA] bg-white px-4 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
                     >
                       Use different account
                     </Button>
@@ -669,11 +672,11 @@ const Login = () => {
 
               <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[11px] font-medium tracking-tight text-white/42">
+                <Label htmlFor="email" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
                   Email
                 </Label>
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/25" />
+                  <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
                   <Input
                     id="email"
                     type="email"
@@ -685,17 +688,17 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder="you@company.com"
-                    className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 text-[14px] tracking-tight text-white placeholder:text-white/18 disabled:opacity-50"
+                    className="h-14 rounded-[20px] border-[#CFE0EA] bg-white pl-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20 disabled:opacity-50"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[11px] font-medium tracking-tight text-white/42">
+                <Label htmlFor="password" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
                   {mode === 'recovery' ? 'New Password' : 'Password'}
                 </Label>
                 <div className="relative">
-                  <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/25" />
+                  <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -706,12 +709,12 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder={mode === 'recovery' ? 'Enter your new password' : 'Enter your password'}
-                    className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 pr-11 text-[14px] tracking-tight text-white placeholder:text-white/18"
+                    className="h-14 rounded-[20px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((value) => !value)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/35 transition-colors hover:text-white/70"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -721,11 +724,11 @@ const Login = () => {
 
               {mode === 'recovery' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-[11px] font-medium tracking-tight text-white/42">
+                  <Label htmlFor="confirmPassword" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
                     Confirm Password
                   </Label>
                   <div className="relative">
-                    <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/25" />
+                    <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
@@ -736,12 +739,12 @@ const Login = () => {
                         resetLocalAuthError();
                       }}
                       placeholder="Confirm your new password"
-                      className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 pr-11 text-[14px] tracking-tight text-white placeholder:text-white/18"
+                      className="h-14 rounded-[20px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword((value) => !value)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-white/35 transition-colors hover:text-white/70"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
                       aria-label={showConfirmPassword ? 'Hide confirmed password' : 'Show confirmed password'}
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -751,10 +754,10 @@ const Login = () => {
               ) : null}
 
               {error ? (
-                <div className="rounded-[18px] border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                <div className="rounded-[18px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   <p>{error}</p>
                   {loginStep ? (
-                    <p className="mt-2 text-[11px] font-medium uppercase tracking-tight text-red-100/55">
+                    <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-red-500">
                       Failed step: {loginStep === 'account' ? 'Account sign-in' : 'Workspace opening'}
                     </p>
                   ) : null}
@@ -763,7 +766,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleRetryWorkspaceRouting()}
                       disabled={loading}
-                      className="mt-3 h-9 rounded-[14px] border border-red-100/15 bg-white px-3 text-[11px] font-medium tracking-tight text-black hover:bg-white/90"
+                      className="mt-3 h-9 rounded-full bg-[#0B74DE] px-3 text-[11px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                     >
                       Retry workspace routing
                       <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -775,7 +778,7 @@ const Login = () => {
                       onClick={() => void handleClearBrowserSession()}
                       disabled={loading}
                       variant="outline"
-                      className="mt-3 h-9 rounded-[14px] border-red-100/15 bg-transparent px-3 text-[11px] font-medium tracking-tight text-red-50/80 hover:bg-red-100/10 hover:text-white"
+                      className="mt-3 h-9 rounded-full border-red-200 bg-white px-3 text-[11px] font-semibold tracking-tight text-red-700 hover:bg-red-100"
                     >
                       Clear browser session
                     </Button>
@@ -787,7 +790,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-12 flex-1 justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[13px] font-medium tracking-tight text-black hover:bg-white/92 hover:text-black"
+                  className="h-12 flex-1 justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
                 >
                   {loading ? (
                     mode === 'signup'
@@ -804,14 +807,14 @@ const Login = () => {
                   )}
                   {!loading ? <ArrowRight className="h-4 w-4" /> : null}
                 </Button>
-                <Button asChild variant="outline" className="h-12 rounded-[18px] border-white/10 bg-transparent px-5 text-[13px] font-medium tracking-tight text-white/74 hover:bg-white/[0.04] hover:text-white">
+                <Button asChild variant="outline" className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]">
                   <Link to="/">
                     Back Home
                   </Link>
                 </Button>
               </div>
 
-              <div className="flex flex-col gap-3 border-t border-white/10 pt-4 text-sm text-white/45 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 border-t border-[#D8E3E8] pt-4 text-sm text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   onClick={() => {
@@ -823,7 +826,7 @@ const Login = () => {
                       return nextMode;
                     });
                   }}
-                  className="text-left transition-colors hover:text-white"
+                  className="text-left transition-colors hover:text-[#182026]"
                 >
                   {mode === 'signup' ? 'Already have an account? Log in' : 'No account yet? Create one'}
                 </button>
@@ -832,7 +835,7 @@ const Login = () => {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={loading}
-                    className="text-left transition-colors hover:text-white disabled:opacity-50"
+                    className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
                   >
                     Forgot password?
                   </button>
@@ -845,7 +848,7 @@ const Login = () => {
                       setConfirmPassword('');
                       setError('');
                     }}
-                    className="text-left transition-colors hover:text-white"
+                    className="text-left transition-colors hover:text-[#182026]"
                   >
                     Back to login
                   </button>
@@ -856,7 +859,7 @@ const Login = () => {
             </div>
           </section>
 
-          <p className="mx-auto max-w-[720px] text-center text-[14px] leading-6 text-white/45 md:text-[15px]">
+          <p className="mx-auto max-w-[720px] text-center text-[14px] leading-6 text-[#66737F] md:text-[15px]">
             {subtitle}
           </p>
         </div>
