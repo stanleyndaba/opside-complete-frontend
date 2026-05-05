@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle2, Clock3, FileCheck2, Layers3, LockKeyhole, Menu, PlayCircle, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Menu, PlayCircle, ShieldCheck } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { SITE_META } from '@/config/site';
@@ -46,23 +46,19 @@ const whyNowItems = [
 const proofItems = [
   {
     title: 'Claim-window urgency',
-    detail: 'Key FBA claim windows can be short. Margin keeps recovery work visible while there is still time.',
-    icon: Clock3
+    detail: 'Key FBA claim windows can be short. Margin keeps recovery work visible while there is still time.'
   },
   {
     title: 'Evidence before filing',
-    detail: 'Records and support are linked before a recovery case moves forward.',
-    icon: FileCheck2
+    detail: 'Records and support are linked before a recovery case moves forward.'
   },
   {
     title: 'Read-only first',
-    detail: 'Start with visibility before any account-changing action is considered.',
-    icon: LockKeyhole
+    detail: 'Start with visibility before any account-changing action is considered.'
   },
   {
     title: 'Payout visibility',
-    detail: 'Track detected, prepared, filed, approved, blocked, and paid states.',
-    icon: Layers3
+    detail: 'Track detected, prepared, filed, approved, blocked, and paid states.'
   }
 ];
 
@@ -120,6 +116,19 @@ const coverageExamples = [
     title: 'Approval and cash movement are not the same event.',
     detail: 'Margin keeps approval, awaiting payout, recovered, and blocked states separate so outcomes stay clear.'
   }
+];
+
+const marketplaceCountries = [
+  { country: 'United States', code: 'US', flagCode: 'us', region: 'North America' },
+  { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'North America' },
+  { country: 'Mexico', code: 'MX', flagCode: 'mx', region: 'North America' },
+  { country: 'Germany', code: 'DE', flagCode: 'de', region: 'Europe' },
+  { country: 'United Kingdom', code: 'UK', flagCode: 'gb', region: 'Europe' },
+  { country: 'Italy', code: 'IT', flagCode: 'it', region: 'Europe' },
+  { country: 'France', code: 'FR', flagCode: 'fr', region: 'Europe' },
+  { country: 'South Africa', code: 'ZA', flagCode: 'za', region: 'Europe' },
+  { country: 'Japan', code: 'JP', flagCode: 'jp', region: 'Far East' },
+  { country: 'Australia', code: 'AU', flagCode: 'au', region: 'Far East' }
 ];
 
 const trustControls = [
@@ -717,6 +726,57 @@ export default function Index() {
             </div>
             <div className="mt-7 md:mt-9">
               <IntegrationsCarousel isMobileLayout={isMobileLayout} />
+            </div>
+          </div>
+        </section>
+
+        <section className="relative py-16 md:py-24">
+          <div className={containerClass}>
+            <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+              <motion.div {...revealProps} className="max-w-[560px]">
+                <div className={sectionLabelClass}>Marketplace Reach</div>
+                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
+                  Marketplace coverage for serious Amazon operators.
+                </h2>
+                <p className={sectionBodyClass}>
+                  Margin is built around the marketplaces where FBA sellers already operate, with coverage activated through managed onboarding and read-only marketplace setup.
+                </p>
+              </motion.div>
+
+              <motion.div
+                {...revealProps}
+                className="grid border-y border-[#D8E3E8] sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+              >
+                {marketplaceCountries.map((marketplace, index) => (
+                  <motion.div
+                    key={marketplace.code}
+                    {...revealProps}
+                    transition={{ ...revealProps.transition, delay: index * 0.035 }}
+                    className={`group flex items-center gap-4 py-5 sm:px-5 ${
+                      index > 0 ? 'border-t border-[#D8E3E8] sm:border-t-0' : ''
+                    } ${
+                      index % 2 === 1 ? 'sm:border-l sm:border-[#D8E3E8]' : ''
+                    } ${
+                      index >= 2 ? 'sm:border-t sm:border-[#D8E3E8]' : ''
+                    } ${
+                      index % 3 !== 0 ? 'xl:border-l xl:border-[#D8E3E8]' : 'xl:border-l-0'
+                    } ${
+                      index >= 3 ? 'xl:border-t xl:border-[#D8E3E8]' : ''
+                    }`}
+                  >
+                    <span
+                      className={`fi fi-${marketplace.flagCode} h-5 w-7 shrink-0 rounded-[4px] shadow-[0_8px_18px_rgba(37,49,58,0.12)]`}
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">{marketplace.country}</div>
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7A8994]">
+                        {marketplace.region} · {marketplace.code}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
             </div>
           </div>
         </section>
