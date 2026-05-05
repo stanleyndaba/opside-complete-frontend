@@ -46,22 +46,22 @@ const whyNowItems = [
 const proofItems = [
   {
     title: 'Claim-window urgency',
-    detail: 'Key FBA claim windows can now be as short as 60 days. Margin helps recovery issues surface while there is still time to act.',
+    detail: 'Key FBA claim windows can be short. Margin keeps recovery work visible while there is still time.',
     icon: Clock3
   },
   {
-    title: 'Evidence-backed preparation',
-    detail: 'Records, documents, and support are linked before a recovery case moves toward filing.',
+    title: 'Evidence before filing',
+    detail: 'Records and support are linked before a recovery case moves forward.',
     icon: FileCheck2
   },
   {
-    title: 'Read-only trust layer',
-    detail: 'Start with visibility into the recovery trail before any account-changing action is considered.',
+    title: 'Read-only first',
+    detail: 'Start with visibility before any account-changing action is considered.',
     icon: LockKeyhole
   },
   {
-    title: 'Tracked through payout',
-    detail: 'See what was detected, prepared, filed, approved, blocked, and actually paid out.',
+    title: 'Payout visibility',
+    detail: 'Track detected, prepared, filed, approved, blocked, and paid states.',
     icon: Layers3
   }
 ];
@@ -479,27 +479,25 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative mt-16 md:mt-24">
+        <section className="relative mt-14 md:mt-22">
           <div className={containerClass}>
-            <div className="grid overflow-hidden rounded-[34px] border border-[#DCE8EE] bg-white shadow-[0_24px_80px_rgba(37,49,58,0.08)] md:grid-cols-4">
-              {proofItems.map((item, index) => {
-                const Icon = item.icon;
-
-                return (
-                  <motion.div
-                    key={item.title}
-                    {...revealProps}
-                    transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                    className={`p-6 md:p-7 ${index > 0 ? 'border-t border-[#E4EDF1] md:border-l md:border-t-0' : ''}`}
-                  >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E9F4FF] text-[#0B74DE]">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div className="mt-5 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">{item.title}</div>
-                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">{item.detail}</p>
-                  </motion.div>
-                );
-              })}
+            <div className="grid border-y border-[#D8E3E8] md:grid-cols-4">
+              {proofItems.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  {...revealProps}
+                  transition={{ ...revealProps.transition, delay: index * 0.05 }}
+                  className={`py-7 md:px-7 md:py-9 ${
+                    index > 0 ? 'border-t border-[#D8E3E8] md:border-l md:border-t-0' : ''
+                  }`}
+                >
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2]">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
+                  <div className="mt-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.title}</div>
+                  <p className="mt-3 max-w-[250px] text-[15px] leading-7 text-[#4D5B66]">{item.detail}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
