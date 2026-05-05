@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle2, Menu, PlayCircle, ShieldCheck } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { CookieConsent } from '@/components/landing/CookieConsent';
+import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
@@ -241,6 +242,9 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
             </Link>
 
             <nav className="hidden items-center gap-1 md:flex">
+              <div className="hidden lg:block">
+                <ProductsMegaMenu variant="light" />
+              </div>
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
@@ -609,8 +613,6 @@ export default function Index() {
             </motion.div>
 
             <div className="relative mt-10 md:mt-12">
-              <div className="absolute left-0 right-0 top-[62px] hidden h-px bg-[#C7DCEB] lg:block" />
-
               <div className="relative z-10 grid gap-3 border-y border-[#D8E3E8] bg-white/36 lg:grid-cols-5 lg:gap-0">
                 {workflowSteps.map((item, index) => (
                   <motion.div
@@ -636,7 +638,7 @@ export default function Index() {
                         {item.detail}
                       </p>
                       <div className="mt-auto hidden pt-5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2] transition-colors duration-500 group-hover:text-[#0B74DE] group-focus:text-[#0B74DE] lg:block">
-                        Hover for detail
+                        View workflow note
                       </div>
                     </div>
                   </motion.div>
