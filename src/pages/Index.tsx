@@ -514,18 +514,38 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              {whyNowItems.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                  className="rounded-[28px] border border-[#DCE8EE] bg-white p-6 shadow-[0_18px_50px_rgba(37,49,58,0.06)]"
-                >
-                  <div className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">{item.title}</div>
-                  <p className="mt-4 text-[15px] leading-7 text-[#66737F]">{item.detail}</p>
-                </motion.div>
-              ))}
+            <div className="relative mt-10 md:mt-12">
+              <motion.div
+                className="absolute left-10 right-10 top-1/2 z-0 hidden h-[2px] -translate-y-1/2 rounded-full bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.1)_18%,rgba(11,116,222,0.72)_48%,rgba(46,125,91,0.24)_72%,transparent_100%)] opacity-65 md:block"
+                style={{ backgroundSize: '220% 100%' }}
+                animate={{ backgroundPosition: ['0% 50%', '220% 50%'] }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              />
+
+              <div className="relative z-10 grid gap-4 md:grid-cols-3 md:gap-5">
+                {whyNowItems.map((item, index) => (
+                  <motion.div
+                    key={item.title}
+                    {...revealProps}
+                    whileHover={{ y: -8 }}
+                    transition={{ ...revealProps.transition, delay: index * 0.08 }}
+                    className="group relative min-h-[230px] overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-6 shadow-[0_18px_54px_rgba(37,49,58,0.07)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:border-[#0B74DE]/55 hover:bg-white/90 hover:shadow-[0_24px_58px_rgba(11,116,222,0.12)]"
+                  >
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(11,116,222,0.08),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.64),transparent_44%)] opacity-75 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div className="relative">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white/72 text-[11px] font-semibold tracking-[0.12em] text-[#0B74DE] transition duration-500 group-hover:scale-110 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white">
+                        {String(index + 1).padStart(2, '0')}
+                      </div>
+                      <h3 className="mt-7 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#182026] md:text-[22px]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:leading-8">
+                        {item.detail}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -581,19 +601,38 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className="mt-10 grid gap-4 lg:grid-cols-5">
-              {workflowSteps.map((item, index) => (
-                <motion.div
-                  key={item.step}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="rounded-[28px] border border-[#DCE8EE] bg-white p-6 shadow-[0_18px_50px_rgba(37,49,58,0.05)]"
-                >
-                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.step}</div>
-                  <h3 className="mt-5 text-xl font-semibold leading-tight tracking-[-0.025em] text-[#182026]">{item.title}</h3>
-                  <p className="mt-3 text-[14px] leading-7 text-[#66737F]">{item.detail}</p>
-                </motion.div>
-              ))}
+            <div className="relative mt-10 md:mt-12">
+              <motion.div
+                className="absolute left-8 right-8 top-1/2 z-0 hidden h-[2px] -translate-y-1/2 rounded-full bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.08)_22%,rgba(11,116,222,0.78)_50%,rgba(46,125,91,0.28)_68%,transparent_100%)] opacity-70 lg:block"
+                style={{ backgroundSize: '220% 100%' }}
+                animate={{ backgroundPosition: ['0% 50%', '220% 50%'] }}
+                transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+              />
+
+              <div className="relative z-10 grid gap-4 md:gap-5 lg:grid-cols-5">
+                {workflowSteps.map((item, index) => (
+                  <motion.div
+                    key={item.step}
+                    {...revealProps}
+                    whileHover={{ y: -8 }}
+                    transition={{ ...revealProps.transition, delay: index * 0.08 }}
+                    className="group relative min-h-[290px] overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-6 shadow-[0_18px_54px_rgba(37,49,58,0.07)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:border-[#0B74DE]/55 hover:bg-white/90 hover:shadow-[0_24px_58px_rgba(11,116,222,0.12)]"
+                  >
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(11,116,222,0.08),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.62),transparent_42%)] opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div className="relative">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white/72 text-[11px] font-semibold tracking-[0.12em] text-[#0B74DE] transition duration-500 group-hover:scale-110 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white">
+                        {item.step}
+                      </div>
+                      <h3 className="mt-7 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#182026] md:text-[20px]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-4 text-[14px] leading-7 text-[#66737F] md:text-[15px] md:leading-8">
+                        {item.detail}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
