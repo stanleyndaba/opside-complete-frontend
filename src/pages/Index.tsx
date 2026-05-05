@@ -190,14 +190,6 @@ const integrationLogos = [
   { name: 'Slack', src: '/slack-icon-2019.png', className: 'h-5 w-auto md:h-6' }
 ];
 
-const statusRows = [
-  { label: 'Detected', value: 'Potential recovery signal surfaced' },
-  { label: 'Evidence', value: 'Support records attached' },
-  { label: 'Held', value: 'Weak or duplicate cases blocked' },
-  { label: 'Filed', value: 'Supportable case submitted with approval' },
-  { label: 'Payout', value: 'Outcome tracked separately from approval' }
-];
-
 const containerClass = 'mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8';
 const sectionLabelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
 const sectionHeadingClass = 'mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[64px]';
@@ -358,62 +350,6 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   );
 }
 
-function HeroPreview() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="relative"
-    >
-      <div className="absolute -inset-6 rounded-[44px] bg-[radial-gradient(circle_at_20%_15%,rgba(11,116,222,0.14),transparent_40%),radial-gradient(circle_at_80%_90%,rgba(46,125,91,0.12),transparent_36%)] blur-2xl" />
-      <div className="relative overflow-hidden rounded-[34px] border border-[#DCE8EE] bg-white shadow-[0_30px_90px_rgba(37,49,58,0.12)]">
-        <div className="border-b border-[#E4EDF1] bg-[#F8FAFC] px-5 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66737F]">Recovery control</div>
-              <div className="mt-1 text-xl font-semibold tracking-[-0.03em] text-[#182026]">$18,420 under review</div>
-            </div>
-            <div className="rounded-full border border-[#CFE0EA] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#2E7D5B]">Read-only</div>
-          </div>
-        </div>
-
-        <div className="space-y-3 p-5">
-          {statusRows.map((row, index) => (
-            <div
-              key={row.label}
-              className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-[#E4EDF1] bg-[#FBFCFA] px-4 py-3"
-            >
-              <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#E9F4FF] text-[10px] text-[#0B74DE]">
-                  {index + 1}
-                </span>
-                {row.label}
-              </div>
-              <div className="text-sm leading-6 text-[#66737F]">{row.value}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid gap-3 border-t border-[#E4EDF1] bg-[#F8FAFC] p-5 sm:grid-cols-3">
-          <div className="rounded-2xl bg-white p-4">
-            <div className="text-2xl font-semibold text-[#182026]">0%</div>
-            <div className="mt-1 text-xs font-medium text-[#66737F]">Recovery commissions</div>
-          </div>
-          <div className="rounded-2xl bg-white p-4">
-            <div className="text-2xl font-semibold text-[#182026]">60d</div>
-            <div className="mt-1 text-xs font-medium text-[#66737F]">Timing pressure visible</div>
-          </div>
-          <div className="rounded-2xl bg-white p-4">
-            <div className="text-2xl font-semibold text-[#182026]">Hold</div>
-            <div className="mt-1 text-xs font-medium text-[#66737F]">Weak cases blocked</div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -469,7 +405,7 @@ export default function Index() {
 
         <section className="relative pt-32 md:pt-44">
           <div className={containerClass}>
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.8fr)] lg:items-center">
+            <div className="max-w-[900px]">
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -539,7 +475,6 @@ export default function Index() {
                 ) : null}
               </motion.div>
 
-              <HeroPreview />
             </div>
           </div>
         </section>
@@ -709,19 +644,28 @@ export default function Index() {
                 </p>
               </motion.div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="overflow-hidden rounded-[32px] border border-[#DCE8EE] bg-white shadow-[0_24px_70px_rgba(37,49,58,0.07)]">
                 {trustControls.map((item, index) => (
                   <motion.div
                     key={item.title}
                     {...revealProps}
                     transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                    className="rounded-[28px] border border-[#DCE8EE] bg-white p-6 shadow-[0_18px_50px_rgba(37,49,58,0.05)]"
+                    className={`grid gap-4 px-6 py-7 sm:grid-cols-[54px_minmax(0,1fr)] md:px-8 md:py-8 ${
+                      index > 0 ? 'border-t border-[#E4EDF1]' : ''
+                    }`}
                   >
-                    <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#EAF6EF] text-[#2E7D5B]">
-                      <ShieldCheck className="h-5 w-5" />
+                    <div className="flex items-start gap-3 sm:block">
+                      <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2]">
+                        {String(index + 1).padStart(2, '0')}
+                      </div>
+                      <div className="mt-0 flex h-8 w-8 items-center justify-center rounded-xl bg-[#EAF6EF] text-[#2E7D5B] sm:mt-4">
+                        <ShieldCheck className="h-4 w-4" />
+                      </div>
                     </div>
-                    <h3 className="text-xl font-semibold tracking-[-0.025em] text-[#182026]">{item.title}</h3>
-                    <p className="mt-3 text-[15px] leading-7 text-[#66737F]">{item.detail}</p>
+                    <div>
+                      <h3 className="text-[19px] font-semibold tracking-[-0.025em] text-[#182026] md:text-[22px]">{item.title}</h3>
+                      <p className="mt-3 max-w-[620px] text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">{item.detail}</p>
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -781,36 +725,34 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-[#E4EDF1] bg-white py-16 md:py-28">
+        <section className="relative border-t border-[#E4EDF1] bg-white py-14 md:py-24">
           <div className={containerClass}>
-            <motion.div {...revealProps} className="mx-auto max-w-[900px] md:text-center">
-              <div className={sectionLabelClass}>Understanding Margin</div>
-              <h2 className={sectionHeadingClass}>What sellers usually want to understand before they start.</h2>
-              <p className={`${sectionBodyClass} md:mx-auto`}>
-                These answers explain what Margin looks for, what gets held back, how supporting evidence works, and how recovery stays visible from detection through payout.
-              </p>
+            <motion.div {...revealProps}>
+              <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] text-[#050607] sm:text-[42px] md:text-[46px]">
+                Frequently asked questions
+              </h2>
             </motion.div>
 
-            <div className="mx-auto mt-10 max-w-[940px] md:mt-14">
-              <Accordion type="single" collapsible className="space-y-3">
+            <div className="mt-10 md:mt-14">
+              <Accordion type="single" collapsible className="w-full border-t border-[#DADFE3]">
                 {faqs.slice(0, visibleFaqCount).map((item, index) => (
-                  <AccordionItem key={item.question} value={`faq-${index}`} className="rounded-3xl border border-[#DCE8EE] bg-[#FBFCFA] px-5">
-                    <AccordionTrigger className="py-5 text-left text-[16px] font-semibold tracking-[-0.015em] text-[#182026] hover:no-underline md:text-[18px]">
+                  <AccordionItem key={item.question} value={`faq-${index}`} className="border-b border-[#DADFE3] px-0">
+                    <AccordionTrigger className="py-6 text-left text-[19px] font-semibold tracking-[-0.035em] text-[#050607] hover:no-underline md:py-7 md:text-[24px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[#6C737A]">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="pb-6 text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">
-                      {item.answer}
+                    <AccordionContent className="max-w-[860px] pb-7 pr-10 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                      <p>{item.answer}</p>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
 
               {!showMoreFaqs ? (
-                <div className="mt-8 flex justify-center md:mt-10">
+                <div className="mt-9 flex justify-start md:mt-11">
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
+                    className="rounded-full border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#F8FAFC]"
                   >
                     Show more questions
                   </Button>
