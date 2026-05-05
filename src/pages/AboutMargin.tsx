@@ -83,9 +83,9 @@ const revealProps = {
 };
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
-const headingClass = 'mt-4 max-w-[920px] text-[31px] font-light leading-[1.02] tracking-tight text-white sm:text-[36px] md:text-[60px]';
-const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-white/62 md:mt-6 md:text-[18px] md:leading-8';
+const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
+const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
 
 export default function AboutMargin() {
   const navigate = useNavigate();
@@ -105,24 +105,23 @@ export default function AboutMargin() {
       return;
     }
 
-    navigate('/login');
+    navigate('/early-access');
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
-      <PublicNavbar />
+    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+      <PublicNavbar variant="light" />
 
       <main className="relative">
+        <div className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div
-          className="pointer-events-none fixed inset-0 opacity-[0.03]"
+          className="pointer-events-none fixed inset-0 opacity-[0.04]"
           style={{
             backgroundImage:
               'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
           }}
         />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_8%,rgba(56,189,248,0.08),transparent_34%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_88%,rgba(148,163,184,0.06),transparent_32%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#050505] to-[#040404]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
 
         <section className="relative pt-28 md:pt-40">
           <div className={containerClass}>
@@ -133,10 +132,10 @@ export default function AboutMargin() {
               className="max-w-[980px]"
             >
               <div className={labelClass}>About Margin</div>
-              <h1 className="mt-5 max-w-[980px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[76px]">
+              <h1 className="mt-5 max-w-[980px] text-[38px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[46px] md:text-[76px]">
                 Margin is being built as the operating system for Amazon FBA recovery.
               </h1>
-              <p className="mt-5 max-w-[760px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
+              <p className="mt-5 max-w-[760px] text-[16px] leading-7 text-[#4D5B66] md:mt-7 md:text-[19px] md:leading-8">
                 At the surface, Margin should feel simple: find what Amazon may owe, prepare the support, control the filing path, and keep the recovery lifecycle visible. Underneath that simple experience is a deeper system built to reason across data, documents, actions, and outcomes over time.
               </p>
 
@@ -144,15 +143,15 @@ export default function AboutMargin() {
                 <button
                   type="button"
                   onClick={handlePrimaryCta}
-                  className="inline-flex h-11 items-center justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                  {isFull ? 'Join Waitlist' : 'Reserve Early Access'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
 
                 <Link
                   to="/research"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                 >
                   Research Hub
                 </Link>
@@ -161,7 +160,7 @@ export default function AboutMargin() {
           </div>
         </section>
 
-        <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
+        <section className="relative mt-14 border-y border-[#D8E3E8] bg-white/50 md:mt-20">
           <div className={containerClass}>
             <div className="overflow-x-auto py-4">
               <div className="flex min-w-max gap-2">
@@ -169,7 +168,7 @@ export default function AboutMargin() {
                   <a
                     key={item.href}
                     href={item.href}
-                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-white/58 transition-colors hover:bg-white/[0.06] hover:text-white"
+                    className="rounded-full border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
                   >
                     {item.label}
                   </a>
@@ -179,7 +178,7 @@ export default function AboutMargin() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-28" id="system">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="system">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>System Model</div>
@@ -191,16 +190,16 @@ export default function AboutMargin() {
               </p>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {pillars.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -209,7 +208,7 @@ export default function AboutMargin() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28" id="capabilities">
+        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28" id="capabilities">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>What Margin Coordinates</div>
@@ -221,18 +220,18 @@ export default function AboutMargin() {
               </p>
             </motion.div>
 
-            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-16">
+            <div className="mt-10 overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:mt-16">
               {capabilities.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
                   className={`grid gap-3 px-5 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-8 ${
-                    index > 0 ? 'border-t border-white/8' : ''
+                    index > 0 ? 'border-t border-[#D8E3E8]' : ''
                   }`}
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -241,7 +240,7 @@ export default function AboutMargin() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-28" id="why">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="why">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>Why We Are Building</div>
@@ -254,17 +253,17 @@ export default function AboutMargin() {
             </motion.div>
 
             <motion.div {...revealProps} className="mt-10 max-w-[820px] space-y-6 md:mt-14">
-              <p className="text-[15px] leading-7 text-white/58 md:text-[17px] md:leading-8">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 The deeper reason Margin exists is that most sellers are being asked to perform reconciliation, evidence collection, filing judgment, and payout verification across too many disconnected surfaces.
               </p>
-              <p className="text-[15px] leading-7 text-white/58 md:text-[17px] md:leading-8">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 We think recovery should be continuous, explainable, and calmer than that. It should feel like a working system on the seller&apos;s side, not another dashboard asking for more attention.
               </p>
             </motion.div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28" id="promise">
+        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28" id="promise">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>Seller Promise</div>
@@ -273,16 +272,16 @@ export default function AboutMargin() {
               </h2>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {principles.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -291,18 +290,18 @@ export default function AboutMargin() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-32">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-32">
           <div className={containerClass}>
             <motion.div
               {...revealProps}
-              className="overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:px-10 md:py-12"
+              className="overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] px-6 py-8 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:px-10 md:py-12"
             >
               <div className="max-w-[860px]">
                 <div className={labelClass}>Direction</div>
-                <h2 className="mt-4 max-w-[860px] text-[32px] font-light leading-[1.02] tracking-tight text-white sm:text-[38px] md:text-[66px]">
+                <h2 className="mt-4 max-w-[860px] text-[32px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[66px]">
                   Margin is being built to help turn hidden Amazon discrepancies into recoverable outcomes with less manual friction.
                 </h2>
-                <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
+                <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
                   The goal is simple: when Amazon may owe a seller money, Margin should make the discrepancy clearer, the support stronger, the workflow more controlled, and the recovery state easier to trust.
                 </p>
               </div>
@@ -311,15 +310,15 @@ export default function AboutMargin() {
                 <button
                   type="button"
                   onClick={handlePrimaryCta}
-                  className="inline-flex h-11 items-center justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                  {isFull ? 'Join Waitlist' : 'Reserve Early Access'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
 
                 <Link
                   to="/pricing"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                 >
                   View Pricing
                 </Link>

@@ -127,7 +127,7 @@ const marketplaceCountries = [
   { country: 'United Kingdom', code: 'UK', flagCode: 'gb', region: 'Europe' },
   { country: 'Italy', code: 'IT', flagCode: 'it', region: 'Europe' },
   { country: 'France', code: 'FR', flagCode: 'fr', region: 'Europe' },
-  { country: 'South Africa', code: 'ZA', flagCode: 'za', region: 'Europe' },
+  { country: 'South Africa', code: 'ZA', flagCode: 'za', region: 'Africa' },
   { country: 'Japan', code: 'JP', flagCode: 'jp', region: 'Far East' },
   { country: 'Australia', code: 'AU', flagCode: 'au', region: 'Far East' }
 ];

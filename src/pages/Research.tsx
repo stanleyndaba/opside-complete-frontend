@@ -141,9 +141,9 @@ const revealProps = {
 };
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
-const headingClass = 'mt-4 max-w-[920px] text-[31px] font-light leading-[1.02] tracking-tight text-white sm:text-[36px] md:text-[60px]';
-const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-white/62 md:mt-6 md:text-[18px] md:leading-8';
+const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
+const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
 
 export default function Research() {
   const navigate = useNavigate();
@@ -163,24 +163,23 @@ export default function Research() {
       return;
     }
 
-    navigate('/login');
+    navigate('/early-access');
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
-      <PublicNavbar />
+    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+      <PublicNavbar variant="light" />
 
       <main className="relative">
+        <div className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div
-          className="pointer-events-none fixed inset-0 opacity-[0.03]"
+          className="pointer-events-none fixed inset-0 opacity-[0.04]"
           style={{
             backgroundImage:
               'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
           }}
         />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_9%,rgba(56,189,248,0.08),transparent_34%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_86%,rgba(148,163,184,0.06),transparent_32%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#050505] to-[#040404]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
 
         <section className="relative pt-28 md:pt-40">
           <div className={containerClass}>
@@ -191,10 +190,10 @@ export default function Research() {
               className="max-w-[980px]"
             >
               <div className={labelClass}>Research Hub</div>
-              <h1 className="mt-5 max-w-[980px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[76px]">
+              <h1 className="mt-5 max-w-[980px] text-[38px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[46px] md:text-[76px]">
                 How sellers evaluate FBA reimbursement software, audit services, and recovery workflow quality.
               </h1>
-              <p className="mt-5 max-w-[760px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
+              <p className="mt-5 max-w-[760px] text-[16px] leading-7 text-[#4D5B66] md:mt-7 md:text-[19px] md:leading-8">
                 Sellers researching reimbursement tools are usually asking the same practical questions: what these services really do, how valid claims are determined, what evidence matters, why claims get denied, and how recovery should be tracked until payout.
               </p>
 
@@ -202,15 +201,15 @@ export default function Research() {
                 <button
                   type="button"
                   onClick={handlePrimaryCta}
-                  className="inline-flex h-11 items-center justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                  {isFull ? 'Join Waitlist' : 'Reserve Early Access'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
 
                 <Link
                   to="/pricing"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                 >
                   View Pricing
                 </Link>
@@ -219,7 +218,7 @@ export default function Research() {
           </div>
         </section>
 
-        <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
+        <section className="relative mt-14 border-y border-[#D8E3E8] bg-white/50 md:mt-20">
           <div className={containerClass}>
             <div className="overflow-x-auto py-4">
               <div className="flex min-w-max gap-2">
@@ -227,7 +226,7 @@ export default function Research() {
                   <a
                     key={item.href}
                     href={item.href}
-                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-white/58 transition-colors hover:bg-white/[0.06] hover:text-white"
+                    className="rounded-full border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
                   >
                     {item.label}
                   </a>
@@ -237,7 +236,7 @@ export default function Research() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-28" id="automation">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="automation">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>01. What Sellers Are Really Buying</div>
@@ -249,16 +248,16 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {buyerNeeds.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -267,7 +266,7 @@ export default function Research() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28">
+        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>02. Software, Services, and Fit</div>
@@ -279,18 +278,18 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-16">
+            <div className="mt-10 overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:mt-16">
               {softwareTypes.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
                   className={`grid gap-3 px-5 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-8 ${
-                    index > 0 ? 'border-t border-white/8' : ''
+                    index > 0 ? 'border-t border-[#D8E3E8]' : ''
                   }`}
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -298,14 +297,14 @@ export default function Research() {
             </div>
 
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
-              <p className="text-[15px] leading-7 text-white/58 md:text-[17px] md:leading-8">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 If a seller operates in the UK or across multiple marketplaces, regional fit still matters. Before choosing any platform, they should verify marketplace coverage, evidence handling, filing model, and how clearly recovery status is tracked across the workflow.
               </p>
             </motion.div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-28" id="compare">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="compare">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>03. What To Compare</div>
@@ -317,16 +316,16 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {comparisonChecks.map((item, index) => (
                 <motion.div
                   key={item}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-5 md:grid-cols-[54px_minmax(0,1fr)] md:gap-6 md:py-7"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-5 md:grid-cols-[54px_minmax(0,1fr)] md:gap-6 md:py-7"
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-white/34">0{index + 1}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2]">0{index + 1}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item}
                   </p>
                 </motion.div>
@@ -335,7 +334,7 @@ export default function Research() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28" id="eligibility">
+        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28" id="eligibility">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>04. Eligibility and Deadlines</div>
@@ -347,16 +346,16 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {eligibilityChecks.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -364,14 +363,14 @@ export default function Research() {
             </div>
 
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
-              <p className="text-[15px] leading-7 text-white/58 md:text-[17px] md:leading-8">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 The exact policy window and reimbursement rules can change, so sellers should always verify the current Amazon policy directly. What software should do is make timing and case-state risk more visible before the seller commits to a path.
               </p>
             </motion.div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-28" id="documentation">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="documentation">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>05. Documentation and Evidence</div>
@@ -383,18 +382,18 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-16">
+            <div className="mt-10 overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:mt-16">
               {documentationGroups.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
                   className={`grid gap-3 px-5 py-6 md:grid-cols-[240px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-8 ${
-                    index > 0 ? 'border-t border-white/8' : ''
+                    index > 0 ? 'border-t border-[#D8E3E8]' : ''
                   }`}
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -403,7 +402,7 @@ export default function Research() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28" id="denials">
+        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28" id="denials">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>06. Denials and Disputes</div>
@@ -415,16 +414,16 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {denialReasons.map((item, index) => (
                 <motion.div
                   key={item}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-5 md:grid-cols-[54px_minmax(0,1fr)] md:gap-6 md:py-7"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-5 md:grid-cols-[54px_minmax(0,1fr)] md:gap-6 md:py-7"
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-white/34">0{index + 1}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2]">0{index + 1}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item}
                   </p>
                 </motion.div>
@@ -433,7 +432,7 @@ export default function Research() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-28" id="filing">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="filing">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>07. Filing Workflow</div>
@@ -445,16 +444,16 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {workflowStages.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[180px_minmax(0,1fr)] md:gap-8 md:py-8"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[180px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -463,7 +462,7 @@ export default function Research() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28" id="tracking">
+        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28" id="tracking">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>08. Tracking and Timeline</div>
@@ -475,18 +474,18 @@ export default function Research() {
               </p>
             </motion.div>
 
-            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-16">
+            <div className="mt-10 overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:mt-16">
               {trackingStates.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
                   className={`grid gap-3 px-5 py-5 md:grid-cols-[200px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-7 ${
-                    index > 0 ? 'border-t border-white/8' : ''
+                    index > 0 ? 'border-t border-[#D8E3E8]' : ''
                   }`}
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -494,25 +493,25 @@ export default function Research() {
             </div>
 
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
-              <p className="text-[15px] leading-7 text-white/58 md:text-[17px] md:leading-8">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 Exact reimbursement timelines vary by case type, evidence quality, and case-state conditions. The real requirement is not perfect speed prediction. It is being able to see where the case sits and why it is moving, waiting, or blocked.
               </p>
             </motion.div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-32">
+        <section className="relative border-t border-[#E4EDF1] py-16 md:py-32">
           <div className={containerClass}>
             <motion.div
               {...revealProps}
-              className="overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:px-10 md:py-12"
+              className="overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] px-6 py-8 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:px-10 md:py-12"
             >
               <div className="max-w-[860px]">
                 <div className={labelClass}>Margin Fit</div>
-                <h2 className="mt-4 max-w-[860px] text-[32px] font-light leading-[1.02] tracking-tight text-white sm:text-[38px] md:text-[66px]">
+                <h2 className="mt-4 max-w-[860px] text-[32px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[66px]">
                   Margin is built for sellers who want a full recovery workflow, not just another report.
                 </h2>
-                <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
+                <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
                   The core job is simple: find missed reimbursement opportunities, make the claim validity clearer, prepare support carefully, and keep the seller oriented until the recovery outcome is actually visible.
                 </p>
               </div>
@@ -521,15 +520,15 @@ export default function Research() {
                 <button
                   type="button"
                   onClick={handlePrimaryCta}
-                  className="inline-flex h-11 items-center justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                  {isFull ? 'Join Waitlist' : 'Reserve Early Access'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
 
                 <Link
                   to="/about-margin"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                 >
                   About Margin
                 </Link>
