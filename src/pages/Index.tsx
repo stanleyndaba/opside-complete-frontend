@@ -3,11 +3,9 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, PlayCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock3, FileCheck2, Layers3, LockKeyhole, Menu, PlayCircle, ShieldCheck } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
-import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { CookieConsent } from '@/components/landing/CookieConsent';
-import { RecoveryEngineVisualization } from '@/components/landing/RecoveryEngineVisualization';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
@@ -15,27 +13,12 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 const DEMO_VIDEO_URL = 'https://youtu.be/NFDzqcaAFHM';
 const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
 
-const proofItems = [
-  {
-    title: 'Claim-window urgency',
-    detail: 'Key FBA claim windows can now be as short as 60 days. Margin helps recovery issues surface while there is still time to act.',
-    footer: 'Built for the new timing pressure'
-  },
-  {
-    title: 'Evidence-backed case preparation',
-    detail: 'Margin connects records, documents, and support before a recovery case moves.',
-    footer: 'Support attached before filing'
-  },
-  {
-    title: 'Read-only trust layer',
-    detail: 'Start with visibility into the recovery trail before any account-changing action is considered.',
-    footer: 'Seller control comes first'
-  },
-  {
-    title: 'Tracked through payout',
-    detail: 'See what was detected, prepared, filed, approved, blocked, and actually paid out.',
-    footer: 'Outcome verified through payout'
-  }
+const navLinks = [
+  { label: 'Pricing', to: '/pricing' },
+  { label: 'Research', to: '/research' },
+  { label: 'API', to: '/developer-api' },
+  { label: 'About', to: '/about-margin' },
+  { label: 'Enterprise', to: '/sales' }
 ];
 
 const trustHighlights = [
@@ -45,146 +28,130 @@ const trustHighlights = [
   'Weak cases held back'
 ];
 
-const connectOutcomes = [
+const whyNowItems = [
   {
-    title: 'Detected issues',
-    detail: 'Margin surfaces recovery signals across shipments, inventory, returns, fees, reimbursements, and payouts before claim timing becomes a risk.'
+    title: 'Short claim windows',
+    detail: 'Some FBA reimbursement windows can be short, including 60-day windows for key lost or damaged inventory scenarios.'
   },
   {
-    title: 'Support matched',
-    detail: 'Records, documents, and proof are linked before a case moves, so the seller is not filing from guesswork.'
+    title: 'Granular fee noise',
+    detail: 'Removal, disposal, reversal, reimbursement, and payout activity can split into smaller events that are harder to reconcile manually.'
   },
   {
-    title: 'Held vs ready',
-    detail: 'Weak, duplicate, or unsupported issues stay held back while supportable cases move forward.'
+    title: 'Quarterly audits are late',
+    detail: 'If recovery work waits for a quarterly review, eligible issues can age out before anyone has prepared the evidence.'
+  }
+];
+
+const proofItems = [
+  {
+    title: 'Claim-window urgency',
+    detail: 'Key FBA claim windows can now be as short as 60 days. Margin helps recovery issues surface while there is still time to act.',
+    icon: Clock3
   },
   {
-    title: 'Tracked to payout',
-    detail: 'See what was prepared, filed, approved, blocked, and actually paid out.'
+    title: 'Evidence-backed preparation',
+    detail: 'Records, documents, and support are linked before a recovery case moves toward filing.',
+    icon: FileCheck2
+  },
+  {
+    title: 'Read-only trust layer',
+    detail: 'Start with visibility into the recovery trail before any account-changing action is considered.',
+    icon: LockKeyhole
+  },
+  {
+    title: 'Tracked through payout',
+    detail: 'See what was detected, prepared, filed, approved, blocked, and actually paid out.',
+    icon: Layers3
   }
 ];
 
 const workflowSteps = [
   {
     step: '01',
-    title: 'Start with read-only recovery visibility',
+    title: 'Read-only setup',
     detail: 'Margin begins with a read-only view of shipments, inventory, refunds, fees, reimbursements, and payout activity.'
   },
   {
     step: '02',
-    title: 'Find missed recovery opportunities',
-    detail: 'The system checks where quantities, events, reimbursements, and ledger activity stop matching cleanly.'
+    title: 'Detect recovery signals',
+    detail: 'The workflow checks where quantities, events, reimbursements, and ledger activity stop matching cleanly.'
   },
   {
     step: '03',
-    title: 'Prepare the evidence',
+    title: 'Match evidence',
     detail: 'Supporting records are pulled together so each case can move with proof instead of guesswork.'
   },
   {
     step: '04',
-    title: 'File only supportable cases',
-    detail: 'Weak, duplicate, or unsupported issues stay held back while supportable cases move forward with clear reasoning and seller approval.'
+    title: 'Hold weak cases',
+    detail: 'Weak, duplicate, or unsupported issues stay held back instead of being pushed forward carelessly.'
   },
   {
     step: '05',
-    title: 'Track every case through payout',
-    detail: 'Detected, filed, approved, blocked, awaiting payout, and recovered states stay visible until the money lands.'
+    title: 'Review and track',
+    detail: 'Supportable cases are reviewed with the seller, then tracked through filing, approval, payout, or block state.'
   }
 ];
 
-const recoveryCategories = [
+const coverageExamples = [
+  {
+    label: 'Lost or damaged inventory',
+    title: 'Inventory events stay tied to support and recovery state.',
+    detail: 'Margin keeps the inventory event, support trail, and case movement connected from detection through resolution.'
+  },
   {
     label: 'Inbound shipment shortages',
     title: 'Received units land short against the shipment plan.',
-    detail: 'Margin checks quantities, shipment records, and supporting documents before the loss gets buried in operations.',
-    states: ['Quantity check', 'Evidence ready', 'Ready to file']
-  },
-  {
-    label: 'Lost or damaged inventory',
-    title: 'Inventory marked lost or damaged can still be reimbursable.',
-    detail: 'Margin keeps the inventory event, the support, and the case state tied together from detection to resolution.',
-    states: ['Inventory event', 'Support linked', 'Case active']
+    detail: 'Quantity checks, shipment records, and supporting documents stay visible before the loss gets buried in operations.'
   },
   {
     label: 'Refund without return',
     title: 'A customer refund does not prove the unit came back.',
-    detail: 'Margin separates refund activity from actual return and inventory resolution before the case moves.',
-    states: ['Refund event', 'Return check', 'Case ready']
+    detail: 'Refund activity is separated from actual return and inventory resolution before a case is treated as supportable.'
   },
   {
-    label: 'Fee discrepancies',
+    label: 'Fees and removals',
     title: 'Removal fees, reversals, and reimbursements can drift quietly.',
-    detail: 'As charges become more granular, Margin helps sellers keep fee events, inventory movement, and recovery context tied together.',
-    states: ['Ledger break', 'Validated', 'Recovery tracked']
+    detail: 'As charges become more granular, Margin helps sellers keep fee events, inventory movement, and recovery context tied together.'
+  },
+  {
+    label: 'Payout reconciliation',
+    title: 'Approval and cash movement are not the same event.',
+    detail: 'Margin keeps approval, awaiting payout, recovered, and blocked states separate so outcomes stay clear.'
   }
 ];
 
-const sellerReasons = [
+const trustControls = [
   {
-    title: 'Built for the new reimbursement pressure',
-    detail: 'Short claim windows, granular removal and disposal charges, and increasingly AI-assisted shopping make clean inventory and payout visibility harder to manage manually.'
+    title: 'Official read-only connection',
+    detail: 'Margin uses Amazon connection flows with read-only permissions first, so sellers can begin with visibility and control.'
   },
   {
-    title: 'Read-only first, seller-controlled',
-    detail: 'Margin starts from visibility and evidence. Cases do not move into filing without support and seller approval.'
+    title: 'No filing without approval',
+    detail: 'Supportable cases are reviewed with the seller before moving into a filing workflow.'
   },
   {
-    title: 'Evidence-backed case preparation',
-    detail: 'Valid cases move with matched support instead of guesswork, duplicate pressure, or weak filing logic.'
+    title: 'Weak cases held back',
+    detail: 'Duplicate, thread-only, or unsupported findings are held instead of being pushed into risky volume filing.'
   },
   {
-    title: 'Flat subscription, no commissions',
-    detail: 'Get recovery coverage without giving up a percentage of every reimbursement that comes back.'
+    title: 'No outcome guarantees',
+    detail: 'Margin prepares and tracks recovery work. Amazon makes final reimbursement decisions.'
   }
 ];
 
-const systemShowcaseStates = [
-  {
-    label: 'Detected',
-    detail: 'A valid reimbursement issue becomes explicit.'
-  },
-  {
-    label: 'Evidence matched',
-    detail: 'Supporting proof is attached to the case.'
-  },
-  {
-    label: 'Ready to file',
-    detail: 'Weak and duplicate issues stay held back.'
-  },
-  {
-    label: 'Submitted',
-    detail: 'The case stays visible after filing.'
-  },
-  {
-    label: 'Recovered',
-    detail: 'Approval and payout are tracked separately.'
-  }
+const earlyAccessItems = [
+  'Founding 100 managed cohort',
+  '$99 early-access reservation',
+  'Workspace preparation before onboarding',
+  'Founder-led first recovery cycle'
 ];
 
 const faqs = [
   {
     question: 'What does Margin do after I connect my Amazon account?',
     answer: 'Margin starts with a read-only review across shipments, inventory, refunds, fees, reimbursements, and payout activity. It surfaces potential recovery issues, prepares support, and separates what is ready to move from what still needs proof or review.'
-  },
-  {
-    question: 'Is Margin a one-time audit or ongoing coverage?',
-    answer: 'Margin is built for ongoing recovery coverage. It starts with read-only recovery visibility, then continues monitoring new discrepancies, evidence readiness, filing movement, and payout outcomes over time.'
-  },
-  {
-    question: 'Does Margin file every issue it finds?',
-    answer: 'No. Margin is built to hold weak, duplicate, or unsupported cases instead of pushing everything forward carelessly. The goal is valid recovery work, not volume filing.'
-  },
-  {
-    question: 'Where does Margin get supporting evidence from?',
-    answer: 'Margin can use connected sources such as Gmail, Google Drive, Dropbox, Slack, and manual uploads. Documents are parsed and matched into the recovery workflow so sellers can see which cases have support and which still need it.'
-  },
-  {
-    question: 'How will I know what is happening with my cases?',
-    answer: 'Margin keeps case status explicit across the workflow: detected, evidence matched, ready to file, filed, held, approved, awaiting payout, and recovered.'
-  },
-  {
-    question: 'How does Margin pricing work?',
-    answer: 'Margin uses flat subscription pricing with no recovery commissions. Sellers can start with a read-only audit, then continue with ongoing monitoring, evidence-backed case preparation, filing workflow support, and recovery tracking without commission-based billing.'
   },
   {
     question: 'Does Margin guarantee reimbursements?',
@@ -197,6 +164,18 @@ const faqs = [
   {
     question: 'Why does recovery timing matter more now?',
     answer: 'Some FBA reimbursement claim windows are short, including 60-day windows for key lost or damaged inventory scenarios. If sellers only audit manually once a quarter, issues can age out before they are reviewed. Margin is built to keep recovery work visible sooner.'
+  },
+  {
+    question: 'Does Margin file every issue it finds?',
+    answer: 'No. Margin is built to hold weak, duplicate, or unsupported cases instead of pushing everything forward carelessly. The goal is valid recovery work, not volume filing.'
+  },
+  {
+    question: 'How is this different from commission-based services?',
+    answer: 'Margin is built around read-only visibility, evidence-backed case preparation, seller approval, and no recovery commissions. The seller keeps control of which supportable cases move forward.'
+  },
+  {
+    question: 'What happens after I reserve Early Access?',
+    answer: 'Your reservation joins the managed Founding 100 cohort. Margin prepares the workspace carefully, sends onboarding updates, and begins the guided first recovery cycle after setup is ready.'
   }
 ];
 
@@ -211,52 +190,165 @@ const integrationLogos = [
   { name: 'Slack', src: '/slack-icon-2019.png', className: 'h-5 w-auto md:h-6' }
 ];
 
-const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const sectionLabelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
-const sectionHeadingClass = 'mt-4 max-w-[900px] text-[31px] font-light leading-[1.02] tracking-tight text-white sm:text-[36px] md:text-[64px]';
-const sectionBodyClass = 'mt-4 max-w-[720px] text-[15px] leading-7 text-white/62 md:mt-6 md:text-[18px] md:leading-8';
+const statusRows = [
+  { label: 'Detected', value: 'Potential recovery signal surfaced' },
+  { label: 'Evidence', value: 'Support records attached' },
+  { label: 'Held', value: 'Weak or duplicate cases blocked' },
+  { label: 'Filed', value: 'Supportable case submitted with approval' },
+  { label: 'Payout', value: 'Outcome tracked separately from approval' }
+];
+
+const containerClass = 'mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8';
+const sectionLabelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const sectionHeadingClass = 'mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[64px]';
+const sectionBodyClass = 'mt-5 max-w-[740px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9';
 const revealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.2 },
+  viewport: { once: true, amount: 0.18 },
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
+
+function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => void; primaryCtaLabel: string }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <header className="fixed left-0 right-0 top-0 z-50">
+      <div className="mx-auto max-w-[1240px] px-3 py-3 md:px-6 md:py-5">
+        <div className="rounded-[22px] border border-[#DCE8EE] bg-white/86 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-2xl md:px-5">
+          <div className="flex items-center justify-between gap-4">
+            <Link to="/" className="inline-flex items-center gap-2.5 rounded-full px-1 py-1 text-[#182026]">
+              <img
+                src="/logoimagetwo.png"
+                alt="Margin"
+                width="22"
+                height="22"
+                className="h-5 w-auto object-contain"
+              />
+              <span className="brand-wordmark font-merriweather text-lg tracking-tight text-[#182026]">Margin</span>
+            </Link>
+
+            <nav className="hidden items-center gap-1 md:flex">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="hidden items-center gap-2 md:flex">
+              <Link
+                to="/login"
+                className="rounded-full px-4 py-2 text-[12px] font-semibold text-[#25313A] transition-colors hover:bg-[#F3F6F8]"
+              >
+                Login
+              </Link>
+              <Button
+                onClick={onPrimaryCta}
+                className="h-10 rounded-full bg-[#0B74DE] px-5 text-[12px] font-semibold text-white shadow-[0_14px_30px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+              >
+                {primaryCtaLabel}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+
+            <button
+              type="button"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#DCE8EE] bg-white text-[#25313A] md:hidden"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+          </div>
+
+          {mobileMenuOpen ? (
+            <div className="mt-4 grid gap-1 border-t border-[#E4EDF1] pt-4 md:hidden">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8]"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8]"
+              >
+                Login
+              </Link>
+              <Button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onPrimaryCta();
+                }}
+                className="mt-2 h-11 rounded-full bg-[#0B74DE] text-sm font-semibold text-white hover:bg-[#0869C9]"
+              >
+                {primaryCtaLabel}
+              </Button>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </header>
+  );
+}
 
 function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   return (
     <motion.div {...revealProps}>
       <div className="relative flex items-center justify-center py-1 md:py-2">
         <motion.div
-          className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-sky-400/24 to-transparent"
+          className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-[#CFE0EA] to-transparent"
           initial={{ scaleX: 0.55, opacity: 0 }}
           whileInView={{ scaleX: 1, opacity: 1 }}
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         />
-        <div className="relative z-10 mx-auto inline-flex rounded-[6px] border border-sky-400/12 bg-[#070707] px-3 py-1 text-[10px] font-medium tracking-tight text-sky-100/56 md:px-4 md:py-1.5 md:text-[11px]">
-          Integrations
+        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-[0.08em] text-[#66737F]">
+          Evidence sources Margin can organize
         </div>
       </div>
 
-      <div className="relative mt-4 overflow-hidden md:mt-6">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#070707] to-transparent md:w-28" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#070707] to-transparent md:w-28" />
+      <div className="relative mt-5 overflow-hidden md:mt-7">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-28" />
         <motion.div
           className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: isMobileLayout ? 20 : 28, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: isMobileLayout ? 22 : 30, repeat: Infinity, ease: 'linear' }}
         >
           {[...integrationLogos, ...integrationLogos].map((logo, index) => (
             <div
               key={`${logo.name}-${index}`}
-              className="flex h-9 w-[46px] shrink-0 items-center justify-center md:h-14 md:w-[92px] lg:w-[104px]"
+              className="flex h-12 w-[78px] shrink-0 items-center justify-center rounded-2xl border border-[#E4EDF1] bg-white/82 shadow-[0_12px_28px_rgba(37,49,58,0.04)] md:h-16 md:w-[116px]"
               aria-label={logo.name}
               title={logo.name}
             >
               <img
                 src={logo.src}
                 alt={logo.name}
-                className={`${logo.className} object-contain opacity-90 saturate-110`}
+                className={`${logo.className} object-contain`}
               />
             </div>
           ))}
@@ -266,25 +358,59 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   );
 }
 
-function MobileSystemPreview() {
+function HeroPreview() {
   return (
-    <div className="overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(7,9,12,0.96)_100%)]">
-      <div className="grid grid-cols-[auto_1fr] gap-3 border-b border-white/8 px-4 py-3 text-[10px] uppercase tracking-[0.16em] text-white/42">
-        <span>State</span>
-        <span>Meaning</span>
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+      className="relative"
+    >
+      <div className="absolute -inset-6 rounded-[44px] bg-[radial-gradient(circle_at_20%_15%,rgba(11,116,222,0.14),transparent_40%),radial-gradient(circle_at_80%_90%,rgba(46,125,91,0.12),transparent_36%)] blur-2xl" />
+      <div className="relative overflow-hidden rounded-[34px] border border-[#DCE8EE] bg-white shadow-[0_30px_90px_rgba(37,49,58,0.12)]">
+        <div className="border-b border-[#E4EDF1] bg-[#F8FAFC] px-5 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66737F]">Recovery control</div>
+              <div className="mt-1 text-xl font-semibold tracking-[-0.03em] text-[#182026]">$18,420 under review</div>
+            </div>
+            <div className="rounded-full border border-[#CFE0EA] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#2E7D5B]">Read-only</div>
+          </div>
+        </div>
+
+        <div className="space-y-3 p-5">
+          {statusRows.map((row, index) => (
+            <div
+              key={row.label}
+              className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-[#E4EDF1] bg-[#FBFCFA] px-4 py-3"
+            >
+              <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#E9F4FF] text-[10px] text-[#0B74DE]">
+                  {index + 1}
+                </span>
+                {row.label}
+              </div>
+              <div className="text-sm leading-6 text-[#66737F]">{row.value}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-3 border-t border-[#E4EDF1] bg-[#F8FAFC] p-5 sm:grid-cols-3">
+          <div className="rounded-2xl bg-white p-4">
+            <div className="text-2xl font-semibold text-[#182026]">0%</div>
+            <div className="mt-1 text-xs font-medium text-[#66737F]">Recovery commissions</div>
+          </div>
+          <div className="rounded-2xl bg-white p-4">
+            <div className="text-2xl font-semibold text-[#182026]">60d</div>
+            <div className="mt-1 text-xs font-medium text-[#66737F]">Timing pressure visible</div>
+          </div>
+          <div className="rounded-2xl bg-white p-4">
+            <div className="text-2xl font-semibold text-[#182026]">Hold</div>
+            <div className="mt-1 text-xs font-medium text-[#66737F]">Weak cases blocked</div>
+          </div>
+        </div>
       </div>
-      {systemShowcaseStates.map((item, index) => (
-        <motion.div
-          key={item.label}
-          {...revealProps}
-          transition={{ ...revealProps.transition, delay: index * 0.05 }}
-          className={`grid grid-cols-[auto_1fr] gap-4 px-4 py-4 ${index > 0 ? 'border-t border-white/7' : ''}`}
-        >
-          <div className="pt-0.5 text-[11px] uppercase tracking-[0.16em] text-sky-100/58">{item.label}</div>
-          <div className="text-[14px] leading-7 text-white/62">{item.detail}</div>
-        </motion.div>
-      ))}
-    </div>
+    </motion.div>
   );
 }
 
@@ -292,7 +418,6 @@ export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
-  const [activeProofIndex, setActiveProofIndex] = useState(0);
   const { isFull, capacity } = useOnboardingCapacity();
 
   usePageMeta(SITE_META);
@@ -321,213 +446,161 @@ export default function Index() {
     navigate('/early-access');
   };
 
-  const scrollToWorkflow = () => {
-    if (typeof document === 'undefined') return;
-    document.getElementById('how-margin-works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   const scrollToDemo = () => {
     if (typeof document === 'undefined') return;
     document.getElementById('margin-demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 3 : 4;
+  const scrollToWorkflow = () => {
+    if (typeof document === 'undefined') return;
+    document.getElementById('how-margin-works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
   const primaryCtaLabel = isFull ? 'Join Waitlist' : 'Reserve Early Access';
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
-      <PublicNavbar />
+    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+      <LightNavbar onPrimaryCta={handlePrimaryCta} primaryCtaLabel={primaryCtaLabel} />
 
       <main className="relative">
-        <div
-          className="pointer-events-none fixed inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
-          }}
-        />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_8%,rgba(56,189,248,0.08),transparent_36%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_90%,rgba(148,163,184,0.06),transparent_32%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#050505] to-[#040404]" />
+        <div className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.12),transparent_28%)]" />
 
-        <section className="relative pt-28 md:pt-40">
+        <section className="relative pt-32 md:pt-44">
           <div className={containerClass}>
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="w-full"
-            >
-              <div className="max-w-[780px]">
-                <div className={sectionLabelClass}>Amazon Reimbursement Recovery</div>
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.8fr)] lg:items-center">
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="max-w-[760px]"
+              >
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#DCE8EE] bg-white/76 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE] shadow-[0_12px_30px_rgba(37,49,58,0.05)]">
+                  Amazon reimbursement recovery
+                </div>
 
-                <h1 className="mt-5 max-w-[760px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[78px]">
-                  Recover FBA revenue before the claim window closes.
+                <h1 className="mt-6 max-w-[780px] text-[46px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[58px] md:text-[82px]">
+                  Recover FBA revenue before claim windows close.
                 </h1>
 
-                <p className="mt-5 max-w-[640px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
+                <p className="mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
                   Margin helps Amazon FBA sellers detect missed recovery opportunities, prepare evidence-backed cases, and track claims through payout before short claim windows and transaction noise bury the money. Start read-only. Seller approval before filing. No commissions.
                 </p>
 
-                <div className="mt-8 grid w-full max-w-[420px] grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:flex sm:items-center">
+                <div className="mt-9 grid w-full max-w-[460px] grid-cols-1 gap-3 min-[430px]:grid-cols-2">
                   <Button
                     onClick={handlePrimaryCta}
-                    className="h-12 w-full justify-center gap-2 rounded-[18px] border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 shadow-[0_14px_30px_rgba(10,16,24,0.24)] hover:bg-sky-300/[0.13] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                    className="h-12 justify-center rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.24)] hover:bg-[#0869C9]"
                   >
                     {primaryCtaLabel}
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
 
                   <Button
                     variant="outline"
                     onClick={scrollToDemo}
-                    className="h-12 w-full justify-center rounded-[18px] border border-white/12 bg-white/[0.015] px-5 text-[13px] text-white hover:bg-white/[0.04] min-[420px]:px-4 sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                    className="h-12 justify-center rounded-full border-[#CFE0EA] bg-white/72 px-6 text-sm font-semibold text-[#25313A] hover:bg-white"
                   >
-                    Watch the demo
+                    Watch Demo
                   </Button>
                 </div>
 
                 {!isFull ? (
-                  <div className="mt-3 max-w-[420px] text-[12px] leading-6 text-white/46">
-                    Early Access is managed in small batches before read-only setup begins.
+                  <div className="mt-3 max-w-[520px] text-sm leading-6 text-[#66737F]">
+                    Managed Early Access opens in careful batches before read-only setup begins.
                   </div>
                 ) : null}
 
-                <div className="mt-5 flex max-w-[640px] flex-wrap gap-2.5">
+                <div className="mt-7 flex max-w-[680px] flex-wrap gap-2.5">
                   {trustHighlights.map((item) => (
                     <div
                       key={item}
-                      className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-white/62"
+                      className="rounded-full border border-[#DCE8EE] bg-white px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#4D5B66] shadow-[0_8px_22px_rgba(37,49,58,0.04)]"
                     >
                       {item}
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-6 flex w-full max-w-[640px] justify-center">
-                  <Link
-                    to="/early-access"
-                    className="group inline-flex items-center justify-center gap-2 px-2 py-1 text-center transition-colors duration-200 hover:text-white"
-                  >
-                    <span className="text-[12px] font-semibold uppercase tracking-[0.28em] text-amber-100/92 transition-colors group-hover:text-white">
-                      EARLY ACCESS
-                    </span>
-                    <ArrowRight className="h-4 w-4 text-white/82 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
-                  </Link>
-                </div>
+                <Link
+                  to="/early-access"
+                  className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE] transition-colors hover:text-[#0869C9]"
+                >
+                  Early Access
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
 
                 {isFull ? (
-                  <div className="mt-5 max-w-[360px] text-[13px] leading-6 text-white/56">
+                  <div className="mt-5 max-w-[420px] rounded-2xl border border-[#DCE8EE] bg-white/82 p-4 text-sm leading-6 text-[#66737F]">
                     <div>We are onboarding a small batch of sellers right now.</div>
                     <div>Next batch opens in {capacity?.nextBatchHours ?? 24} hours.</div>
                   </div>
                 ) : null}
-              </div>
-            </motion.div>
+              </motion.div>
+
+              <HeroPreview />
+            </div>
           </div>
         </section>
 
-        <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
+        <section className="relative mt-16 md:mt-24">
           <div className={containerClass}>
-            <div
-              className="flex flex-col md:flex-row md:items-stretch"
-              onMouseLeave={() => {
-                if (!isMobileLayout) {
-                  setActiveProofIndex(0);
-                }
-              }}
-            >
+            <div className="grid overflow-hidden rounded-[34px] border border-[#DCE8EE] bg-white shadow-[0_24px_80px_rgba(37,49,58,0.08)] md:grid-cols-4">
               {proofItems.map((item, index) => {
-                const isActive = activeProofIndex === index;
+                const Icon = item.icon;
 
                 return (
-                  <motion.button
+                  <motion.div
                     key={item.title}
-                    type="button"
-                    aria-pressed={isActive}
                     {...revealProps}
                     transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                    whileTap={isMobileLayout ? { scale: 0.995 } : undefined}
-                    onClick={() => setActiveProofIndex(index)}
-                    onMouseEnter={() => {
-                      if (!isMobileLayout) {
-                        setActiveProofIndex(index);
-                      }
-                    }}
-                    className={`group relative w-full overflow-hidden px-0 py-6 text-left transition-[flex-grow,transform,opacity,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none focus-visible:ring-0 md:min-h-[180px] md:px-6 md:py-7 ${
-                      index > 0 ? 'md:border-l md:border-white/8' : ''
-                    } ${
-                      isActive
-                        ? 'translate-y-[-2px] md:-translate-y-[3px] md:border-white/12 md:bg-white/[0.025]'
-                        : !isMobileLayout
-                          ? 'md:opacity-[0.82]'
-                          : ''
-                    }`}
-                    style={!isMobileLayout ? { flexGrow: isActive ? 1.18 : 0.94, flexBasis: 0 } : undefined}
+                    className={`p-6 md:p-7 ${index > 0 ? 'border-t border-[#E4EDF1] md:border-l md:border-t-0' : ''}`}
                   >
-                    <div
-                      className={`pointer-events-none absolute inset-x-0 top-0 hidden h-px bg-gradient-to-r from-transparent via-sky-300/45 to-transparent transition-opacity duration-300 md:block ${
-                        isActive ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    />
-                    <div
-                      className={`pointer-events-none absolute inset-0 hidden bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.12),transparent_58%),linear-gradient(180deg,rgba(255,255,255,0.035)_0%,rgba(255,255,255,0)_78%)] transition-opacity duration-300 md:block ${
-                        isActive ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    />
-                    {isActive && index > 0 ? (
-                      <div className="pointer-events-none absolute bottom-5 left-0 top-5 w-px bg-gradient-to-b from-transparent via-sky-100/55 to-transparent md:hidden" />
-                    ) : null}
-
-                      <div className={`relative z-10 flex h-full flex-col ${index > 0 ? 'border-t border-white/8 pt-4' : ''} md:border-t-0 md:pt-0`}>
-                        <div className="flex items-start justify-between gap-4">
-                          <div
-                            className={`text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
-                              isActive ? 'text-white/84' : 'text-white/34'
-                            }`}
-                          >
-                            {item.title}
-                          </div>
-                          <div
-                            className={`shrink-0 text-[10px] uppercase tracking-[0.18em] transition-colors duration-300 ${
-                              isActive ? 'text-sky-100/52' : 'text-white/18'
-                            }`}
-                          >
-                            {String(index + 1).padStart(2, '0')}
-                          </div>
-                        </div>
-
-                      <p
-                          className={`mt-3 max-w-[280px] text-[14px] leading-7 transition-colors duration-300 ${
-                            isActive ? 'text-white/78' : 'text-white/58'
-                          }`}
-                        >
-                          {item.detail}
-                        </p>
-
-                        <div
-                          className={`mt-5 text-[10px] uppercase tracking-[0.16em] transition-all duration-300 ${
-                            isActive
-                              ? 'max-h-10 translate-y-0 opacity-100 text-sky-100/50'
-                              : 'max-h-0 translate-y-1 overflow-hidden opacity-0 text-transparent'
-                          }`}
-                        >
-                          {item.footer}
-                        </div>
-                      </div>
-                  </motion.button>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E9F4FF] text-[#0B74DE]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div className="mt-5 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">{item.title}</div>
+                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">{item.detail}</p>
+                  </motion.div>
                 );
               })}
             </div>
           </div>
         </section>
 
-        <section className="relative border-b border-white/8 py-12 md:py-20" id="margin-demo">
+        <section className="relative py-16 md:py-28">
           <div className={containerClass}>
-            <motion.div {...revealProps} className="mx-auto mb-7 max-w-[880px] text-center md:mb-10">
+            <motion.div {...revealProps} className="max-w-[820px]">
+              <div className={sectionLabelClass}>Why Now</div>
+              <h2 className={sectionHeadingClass}>Amazon recovery work is getting more time-sensitive.</h2>
+              <p className={sectionBodyClass}>
+                Short claim windows, granular removal and disposal charges, and reconciliation complexity make clean inventory and payout visibility harder to manage manually. Margin keeps recovery issues visible, evidence-backed, and seller-controlled before they disappear into operational noise.
+              </p>
+            </motion.div>
+
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {whyNowItems.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  {...revealProps}
+                  transition={{ ...revealProps.transition, delay: index * 0.05 }}
+                  className="rounded-[28px] border border-[#DCE8EE] bg-white p-6 shadow-[0_18px_50px_rgba(37,49,58,0.06)]"
+                >
+                  <div className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">{item.title}</div>
+                  <p className="mt-4 text-[15px] leading-7 text-[#66737F]">{item.detail}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24" id="margin-demo">
+          <div className={containerClass}>
+            <motion.div {...revealProps} className="mx-auto mb-8 max-w-[880px] text-center md:mb-12">
               <div className={sectionLabelClass}>See Demo</div>
-              <h2 className="mt-4 text-[28px] font-light leading-[1.05] tracking-tight text-white sm:text-[36px] md:text-[54px]">
-                See how Margin finds, prepares, and tracks recovery cases for a seller doing $200K/month.
+              <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[40px] md:text-[58px]">
+                See how Margin turns raw FBA activity into evidence-backed recovery work.
               </h2>
             </motion.div>
 
@@ -536,26 +609,26 @@ export default function Index() {
               target="_blank"
               rel="noreferrer"
               {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.025] shadow-[0_36px_120px_rgba(0,0,0,0.42)] transition-colors hover:border-white/18 hover:bg-white/[0.035] md:rounded-[42px]"
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 md:rounded-[44px]"
               aria-label="Watch the Margin product demo on YouTube"
             >
-              <div className="relative aspect-video overflow-hidden bg-[#0b0b0b]">
+              <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">
                 <img
                   src={DEMO_VIDEO_THUMBNAIL_URL}
                   alt="Margin product demo thumbnail"
-                  className="h-full w-full object-cover opacity-78 saturate-[0.92] transition duration-500 group-hover:scale-[1.015] group-hover:opacity-88"
+                  className="h-full w-full object-cover opacity-95 saturate-[0.95] transition duration-500 group-hover:scale-[1.015]"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.14),transparent_40%),linear-gradient(180deg,rgba(0,0,0,0.02)_0%,rgba(0,0,0,0.64)_100%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(24,32,38,0.54)_100%)]" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/22 bg-black/50 text-white shadow-[0_22px_54px_rgba(0,0,0,0.42)] backdrop-blur transition group-hover:scale-105 group-hover:bg-black/60 md:h-20 md:w-20">
-                    <PlayCircle className="h-8 w-8 md:h-10 md:w-10" strokeWidth={1.6} />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/60 bg-white/88 text-[#0B74DE] shadow-[0_22px_54px_rgba(37,49,58,0.18)] backdrop-blur transition group-hover:scale-105 md:h-20 md:w-20">
+                    <PlayCircle className="h-8 w-8 md:h-10 md:w-10" strokeWidth={1.7} />
                   </div>
                 </div>
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
-                  <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-sky-100/64 md:text-[11px]">Product walkthrough</div>
-                  <div className="mt-2 max-w-[760px] text-[20px] font-medium leading-tight tracking-tight text-white md:text-[34px]">
-                    Watch how Margin turns raw FBA activity into evidence-backed recovery work.
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/78 md:text-[11px]">Product walkthrough</div>
+                  <div className="mt-2 max-w-[780px] text-[22px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[36px]">
+                    Watch how Margin finds, prepares, and tracks FBA recovery cases.
                   </div>
                 </div>
               </div>
@@ -563,218 +636,169 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-b border-white/8 py-14 md:py-20">
-          <div className={containerClass}>
-            <motion.div {...revealProps} className="max-w-[760px]">
-              <div className={sectionLabelClass}>What Happens After You Connect</div>
-              <h2 className="mt-4 max-w-[760px] text-[29px] font-light leading-[1.04] tracking-tight text-white sm:text-[34px] md:text-[52px]">
-                See what read-only recovery visibility actually gives you.
-              </h2>
-              <p className="mt-4 max-w-[700px] text-[15px] leading-7 text-white/62 md:mt-5 md:text-[17px] md:leading-8">
-                Margin separates potential recovery work from noise, links support before cases move, and keeps every state visible through payout.
-              </p>
-            </motion.div>
-
-            <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-12">
-              {connectOutcomes.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className={`grid gap-3 px-5 py-5 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-7 ${
-                    index > 0 ? 'border-t border-white/8' : ''
-                  }`}
-                >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/54">{item.title}</div>
-                  <p className="max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
-                    {item.detail}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="relative py-10 md:py-12">
-          <div className={containerClass}>
-              <div className="max-w-[460px] md:mx-auto md:max-w-[660px] md:text-center">
-                <div className="text-[10px] uppercase tracking-[0.16em] text-white/36">Connect Amazon plus the inboxes and files where reimbursement proof already lives</div>
-              </div>
-            <div className="mt-6 md:mt-8">
-              <IntegrationsCarousel isMobileLayout={isMobileLayout} />
-            </div>
-          </div>
-        </section>
-
-        <section className="relative border-t border-white/8 py-16 md:py-32" id="how-margin-works">
+        <section className="relative py-16 md:py-28" id="how-margin-works">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>How Margin Works</div>
-              <h2 className={sectionHeadingClass}>
-                Connect. Detect. Prove. File. Track.
-              </h2>
+              <h2 className={sectionHeadingClass}>Read-only. Evidence. Approval. Payout visibility.</h2>
               <p className={sectionBodyClass}>
-                Margin turns Amazon reimbursement work into a controlled sequence: read-only review, evidence, seller approval, filing support, and payout tracking.
+                Margin turns Amazon reimbursement work into a controlled sequence, so sellers can see what is supportable before anything moves.
               </p>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-16">
+            <div className="mt-10 grid gap-4 lg:grid-cols-5">
               {workflowSteps.map((item, index) => (
                 <motion.div
                   key={item.step}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-4 border-b border-white/8 py-6 md:grid-cols-[88px_minmax(0,1fr)] md:gap-8 md:py-9"
+                  className="rounded-[28px] border border-[#DCE8EE] bg-white p-6 shadow-[0_18px_50px_rgba(37,49,58,0.05)]"
                 >
-                  <div className="text-[13px] uppercase tracking-[0.16em] text-sky-100/52">{item.step}</div>
-                  <div className="max-w-[800px]">
-                    <h3 className="text-[22px] font-medium leading-[1.08] tracking-tight text-white md:text-[34px]">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 max-w-[680px] text-[15px] leading-7 text-white/60 md:text-[18px] md:leading-8">
-                      {item.detail}
-                    </p>
-                  </div>
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.step}</div>
+                  <h3 className="mt-5 text-xl font-semibold leading-tight tracking-[-0.025em] text-[#182026]">{item.title}</h3>
+                  <p className="mt-3 text-[14px] leading-7 text-[#66737F]">{item.detail}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-32">
+        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Coverage Examples</div>
-              <h2 className={sectionHeadingClass}>
-                Examples of what Margin reviews.
-              </h2>
+              <h2 className={sectionHeadingClass}>Recovery categories Margin reviews.</h2>
               <p className={sectionBodyClass}>
                 These are representative recovery categories, not the limit of the system. Each one stays tied to what broke, what evidence exists, and whether the case is supportable.
               </p>
             </motion.div>
 
-            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-16">
-              {recoveryCategories.map((item, index) => (
+            <div className="mt-10 overflow-hidden rounded-[34px] border border-[#DCE8EE] bg-[#FBFCFA] shadow-[0_24px_80px_rgba(37,49,58,0.07)]">
+              {coverageExamples.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className={`grid gap-4 px-5 py-6 md:grid-cols-[220px_minmax(0,1fr)_auto] md:items-start md:gap-8 md:px-8 md:py-9 ${
-                    index > 0 ? 'border-t border-white/8' : ''
+                  className={`grid gap-4 px-5 py-6 md:grid-cols-[240px_minmax(0,1fr)] md:gap-9 md:px-8 md:py-8 ${
+                    index > 0 ? 'border-t border-[#E4EDF1]' : ''
                   }`}
                 >
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
-
-                  <div className="max-w-[680px]">
-                    <h3 className="text-[22px] font-medium leading-[1.08] tracking-tight text-white md:text-[32px]">
+                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <div className="max-w-[760px]">
+                    <h3 className="text-[24px] font-semibold leading-tight tracking-[-0.03em] text-[#182026] md:text-[32px]">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-[15px] leading-7 text-white/60 md:text-[17px] md:leading-8">
+                    <p className="mt-3 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                       {item.detail}
                     </p>
                   </div>
-
-                  <div className="flex flex-wrap gap-2 md:max-w-[220px] md:justify-end">
-                    {item.states.map((state) => (
-                      <span
-                        key={state}
-                        className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-white/56"
-                      >
-                        {state}
-                      </span>
-                    ))}
-                  </div>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-32">
+        <section className="relative py-16 md:py-28">
           <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={sectionLabelClass}>Product View</div>
-              <h2 className={sectionHeadingClass}>
-                See every case from first signal to final payout.
-              </h2>
-              <p className={sectionBodyClass}>
-                Margin keeps the full recovery state visible so sellers can see what was detected, what has evidence, what is ready, what was filed, and what actually paid out.
-              </p>
-            </motion.div>
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+              <motion.div {...revealProps}>
+                <div className={sectionLabelClass}>Trust & Control</div>
+                <h2 className={sectionHeadingClass}>Built to make sellers feel in control.</h2>
+                <p className={sectionBodyClass}>
+                  Margin does not need to feel mysterious to be powerful. The workflow is designed around read-only visibility, evidence quality, seller approval, and transparent case states.
+                </p>
+              </motion.div>
 
-            <div className="mt-10 md:hidden">
-              <MobileSystemPreview />
-            </div>
-
-            <motion.div
-              {...revealProps}
-              className="relative mx-auto mt-12 hidden max-w-[1120px] overflow-hidden rounded-none border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,8,10,0.99)_100%)] md:block"
-            >
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/30 to-transparent" />
-              <div className="grid grid-cols-5 border-b border-white/8 px-8 py-4 text-[10px] uppercase tracking-[0.16em] text-white/38">
-                {systemShowcaseStates.map((item) => (
-                  <div key={item.label}>{item.label}</div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {trustControls.map((item, index) => (
+                  <motion.div
+                    key={item.title}
+                    {...revealProps}
+                    transition={{ ...revealProps.transition, delay: index * 0.05 }}
+                    className="rounded-[28px] border border-[#DCE8EE] bg-white p-6 shadow-[0_18px_50px_rgba(37,49,58,0.05)]"
+                  >
+                    <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#EAF6EF] text-[#2E7D5B]">
+                      <ShieldCheck className="h-5 w-5" />
+                    </div>
+                    <h3 className="text-xl font-semibold tracking-[-0.025em] text-[#182026]">{item.title}</h3>
+                    <p className="mt-3 text-[15px] leading-7 text-[#66737F]">{item.detail}</p>
+                  </motion.div>
                 ))}
               </div>
-              <div className="px-5 py-6 md:px-6 md:py-7">
-                <RecoveryEngineVisualization />
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-32">
-          <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={sectionLabelClass}>Why Sellers Use Margin</div>
-              <h2 className={sectionHeadingClass}>
-                Amazon recovery work is getting more time-sensitive.
-              </h2>
-              <p className={sectionBodyClass}>
-                Short claim windows, granular removal and disposal charges, and increasingly AI-assisted shopping make clean inventory and payout visibility harder to manage manually. Margin keeps recovery issues visible, evidence-backed, and seller-controlled before they disappear into operational noise.
-              </p>
-            </motion.div>
-
-            <div className="mt-10 border-t border-white/8 md:mt-16">
-              {sellerReasons.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-10 md:py-8"
-                >
-                  <h3 className="text-[22px] font-medium leading-[1.08] tracking-tight text-white md:text-[28px]">
-                    {item.title}
-                  </h3>
-                  <p className="max-w-[660px] text-[15px] leading-7 text-white/60 md:text-[17px] md:leading-8">
-                    {item.detail}
-                  </p>
-                </motion.div>
-              ))}
             </div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-32">
+        <section className="relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-12 md:py-18">
+          <div className={containerClass}>
+            <div className="max-w-[680px] md:mx-auto md:text-center">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Connect Amazon plus the inboxes and files where reimbursement proof already lives</div>
+            </div>
+            <div className="mt-7 md:mt-9">
+              <IntegrationsCarousel isMobileLayout={isMobileLayout} />
+            </div>
+          </div>
+        </section>
+
+        <section className="relative py-16 md:py-28">
+          <div className={containerClass}>
+            <div className="grid gap-8 rounded-[38px] border border-[#CFE0EA] bg-white p-6 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:p-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+              <motion.div {...revealProps}>
+                <div className={sectionLabelClass}>Managed Early Access</div>
+                <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
+                  Join the Founding 100 recovery cohort.
+                </h2>
+                <p className={sectionBodyClass}>
+                  Reserve your place for $99, move through guided setup, and begin a founder-led first recovery cycle. Workspaces are prepared before onboarding, so Early Access stays controlled and useful.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    onClick={handlePrimaryCta}
+                    className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+                  >
+                    {primaryCtaLabel}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={scrollToDemo}
+                    className="h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
+                  >
+                    Watch Demo
+                  </Button>
+                </div>
+              </motion.div>
+
+              <motion.div {...revealProps} className="grid gap-3">
+                {earlyAccessItems.map((item) => (
+                  <div key={item} className="flex items-center gap-3 rounded-2xl border border-[#E4EDF1] bg-[#FBFCFA] px-4 py-4 text-[#25313A]">
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-[#2E7D5B]" />
+                    <span className="text-sm font-semibold">{item}</span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-[#E4EDF1] bg-white py-16 md:py-28">
           <div className={containerClass}>
             <motion.div {...revealProps} className="mx-auto max-w-[900px] md:text-center">
               <div className={sectionLabelClass}>Understanding Margin</div>
-              <h2 className={sectionHeadingClass}>
-                What sellers usually want to understand before they start.
-              </h2>
+              <h2 className={sectionHeadingClass}>What sellers usually want to understand before they start.</h2>
               <p className={`${sectionBodyClass} md:mx-auto`}>
                 These answers explain what Margin looks for, what gets held back, how supporting evidence works, and how recovery stays visible from detection through payout.
               </p>
             </motion.div>
 
             <div className="mx-auto mt-10 max-w-[940px] md:mt-14">
-              <Accordion type="single" collapsible className="space-y-2 md:space-y-4">
+              <Accordion type="single" collapsible className="space-y-3">
                 {faqs.slice(0, visibleFaqCount).map((item, index) => (
-                  <AccordionItem key={item.question} value={`faq-${index}`} className="border-t border-white/8 px-1">
-                    <AccordionTrigger className="py-4 text-left text-[15px] font-medium tracking-tight text-white hover:no-underline md:py-5 md:text-[18px]">
+                  <AccordionItem key={item.question} value={`faq-${index}`} className="rounded-3xl border border-[#DCE8EE] bg-[#FBFCFA] px-5">
+                    <AccordionTrigger className="py-5 text-left text-[16px] font-semibold tracking-[-0.015em] text-[#182026] hover:no-underline md:text-[18px]">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="pb-5 text-[14px] leading-7 text-white/58 md:text-[16px] md:leading-8">
+                    <AccordionContent className="pb-6 text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">
                       {item.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -786,7 +810,7 @@ export default function Index() {
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-full border border-white/10 bg-transparent px-6 text-sm text-white hover:bg-white/[0.04]"
+                    className="rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
                   >
                     Show more questions
                   </Button>
@@ -796,26 +820,26 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-36">
+        <section className="relative bg-[#F3F6F8] py-16 md:py-28">
           <div className={containerClass}>
             <motion.div
               {...revealProps}
-              className="overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:px-10 md:py-12"
+              className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:p-12"
             >
               <div className="max-w-[880px]">
                 <div className={sectionLabelClass}>Start With Clarity</div>
-                <h2 className="mt-4 max-w-[860px] text-[32px] font-light leading-[1.02] tracking-tight text-white sm:text-[38px] md:text-[68px]">
+                <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
                   Start with managed Early Access.
                 </h2>
-                <p className="mt-5 max-w-[700px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
+                <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
                   Reserve your spot, move through guided setup, and let Margin show which recovery issues have real evidence before anything gets filed.
                 </p>
               </div>
 
-              <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
+              <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
                 <Button
                   onClick={handlePrimaryCta}
-                  className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                  className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
                 >
                   {primaryCtaLabel}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -824,9 +848,9 @@ export default function Index() {
                 <Button
                   variant="outline"
                   onClick={scrollToWorkflow}
-                  className="h-11 justify-between rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white hover:bg-white/[0.04] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                  className="h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
                 >
-                  Review the workflow
+                  Review Workflow
                 </Button>
               </div>
             </motion.div>
