@@ -18,7 +18,7 @@ const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
 const proofItems = [
   {
     title: 'Claim-window urgency',
-    detail: 'Amazon recovery windows are tighter now, so missed FBA issues need to surface before eligible claims age out.',
+    detail: 'Key FBA claim windows can now be as short as 60 days. Margin helps recovery issues surface while there is still time to act.',
     footer: 'Built for the new timing pressure'
   },
   {
@@ -113,8 +113,8 @@ const recoveryCategories = [
   },
   {
     label: 'Fee discrepancies',
-    title: 'Fee math, reversals, and reimbursements can drift quietly.',
-    detail: 'When the ledger stops matching, Margin surfaces the break and keeps the supporting trail attached.',
+    title: 'Removal fees, reversals, and reimbursements can drift quietly.',
+    detail: 'As charges become more granular, Margin helps sellers keep fee events, inventory movement, and recovery context tied together.',
     states: ['Ledger break', 'Validated', 'Recovery tracked']
   }
 ];
@@ -122,7 +122,7 @@ const recoveryCategories = [
 const sellerReasons = [
   {
     title: 'Built for the new reimbursement pressure',
-    detail: 'Key FBA claim windows can be short, so sellers need recovery issues surfaced while there is still time to act.'
+    detail: 'Short claim windows, granular removal and disposal charges, and increasingly AI-assisted shopping make clean inventory and payout visibility harder to manage manually.'
   },
   {
     title: 'Read-only first, seller-controlled',
@@ -193,6 +193,10 @@ const faqs = [
   {
     question: 'Can Margin change my Amazon account?',
     answer: 'Margin is read-only first. The recovery workflow is designed around visibility, evidence, and seller approval before any filing action is considered.'
+  },
+  {
+    question: 'Why does recovery timing matter more now?',
+    answer: 'Some FBA reimbursement claim windows are short, including 60-day windows for key lost or damaged inventory scenarios. If sellers only audit manually once a quarter, issues can age out before they are reviewed. Margin is built to keep recovery work visible sooner.'
   }
 ];
 
@@ -362,7 +366,7 @@ export default function Index() {
                 </h1>
 
                 <p className="mt-5 max-w-[640px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
-                  Margin helps Amazon FBA sellers detect missed recovery opportunities, prepare evidence-backed cases, and track claims through payout. Start read-only. Seller approval before filing. No commissions.
+                  Margin helps Amazon FBA sellers detect missed recovery opportunities, prepare evidence-backed cases, and track claims through payout before short claim windows and transaction noise bury the money. Start read-only. Seller approval before filing. No commissions.
                 </p>
 
                 <div className="mt-8 grid w-full max-w-[420px] grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:flex sm:items-center">
@@ -724,8 +728,11 @@ export default function Index() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Why Sellers Use Margin</div>
               <h2 className={sectionHeadingClass}>
-                Why sellers choose Margin.
+                Amazon recovery work is getting more time-sensitive.
               </h2>
+              <p className={sectionBodyClass}>
+                Short claim windows, granular removal and disposal charges, and increasingly AI-assisted shopping make clean inventory and payout visibility harder to manage manually. Margin keeps recovery issues visible, evidence-backed, and seller-controlled before they disappear into operational noise.
+              </p>
             </motion.div>
 
             <div className="mt-10 border-t border-white/8 md:mt-16">
