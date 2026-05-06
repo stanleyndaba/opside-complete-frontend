@@ -466,7 +466,7 @@ export function Navbar({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="h-10 rounded-xl border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-10 text-[11px] font-sans font-bold tracking-tight text-[#111827] placeholder:text-[#9CA3AF] transition-all focus:border-[#0052FF]/30 focus:bg-white focus:ring-0"
+                  className="h-10 rounded-xl border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-10 text-[11px] font-sans font-bold tracking-tight text-[#111827] placeholder:font-normal placeholder:text-[#9CA3AF] transition-all focus:border-[#0052FF]/30 focus:bg-white focus:ring-0"
                 />
                 {/* Clear button */}
                 {searchQuery && (

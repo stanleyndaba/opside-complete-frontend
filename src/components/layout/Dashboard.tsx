@@ -3146,7 +3146,7 @@ export function Dashboard() {
                   {/* Main Content - 3 columns */}
                   <div className="space-y-5">
                     <div className="relative space-y-4">
-                      <div className="rounded-3xl border border-[#E5E7EB] bg-white p-5 shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
+                      <div className="bg-white p-5 shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                           <div>
                             <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
@@ -3161,7 +3161,7 @@ export function Dashboard() {
                           </div>
                         </div>
                         <div className="mt-5 overflow-x-auto pb-1">
-                          <div className="min-w-max rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB]">
+                          <div className="min-w-max bg-[#F9FAFB]">
                             <div className="flex items-stretch divide-x divide-[#E5E7EB]">
                               {overviewPipelineStages.map((stage) => (
                                 <button
@@ -3192,7 +3192,7 @@ export function Dashboard() {
                         </div>
                       </div>
 
-                      <div className="grid rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_4px_20px_rgba(17,24,39,0.03)] xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
+                      <div className="grid bg-white shadow-[0_4px_20px_rgba(17,24,39,0.03)] xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
                         <div className="py-5 pr-6 lg:pr-8">
                           <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                             Recovery pipeline
@@ -3202,10 +3202,10 @@ export function Dashboard() {
                               <Skeleton className="h-12 w-48 bg-[#E5E7EB]" />
                             ) : (
                               <>
-                                <div className="text-[32px] font-sans font-bold leading-none tracking-tight text-[#10B981] xl:text-[38px]">
+                                <div className="text-[32px] font-sans font-[250] leading-none tracking-tight text-[#111827] xl:text-[38px]">
                                   {overviewFoundValueLabel}
                                 </div>
-                                <div className="inline-flex items-center border-l border-[#A7F3D0] pl-3 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
+                                <div className="inline-flex items-center border-l border-[#D1D5DB] pl-3 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
                                   {pluralize(detectedOpportunitiesCount, 'issue')} found
                                 </div>
                               </>
