@@ -16,7 +16,7 @@ import { api } from '@/lib/api';
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
 const DEMO_VIDEO_URL = 'https://youtu.be/NFDzqcaAFHM';
-const DEMO_VIDEO_THUMBNAIL_URL = '/Demo2.png';
+const DEMO_VIDEO_THUMBNAIL_URL = '/DEMO34.png';
 
 const offerHighlights = [
   {
@@ -262,7 +262,7 @@ export default function EarlyAccess() {
             <motion.div {...revealProps} className="mx-auto mb-7 max-w-[880px] text-center md:mb-10">
               <div className={sectionLabelClass}>See Demo</div>
               <h2 className="mt-4 text-[28px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[54px]">
-                See how Margin finds, prepares, and tracks recovery cases for a seller doing $200K/month.
+                See how Margin turns raw FBA activity into evidence-backed recovery work.
               </h2>
             </motion.div>
 

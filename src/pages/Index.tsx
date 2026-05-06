@@ -190,7 +190,7 @@ const faqs = [
 ];
 
 const integrationLogos = [
-  { name: 'Amazon', src: '/AMZN.png', className: 'h-4 w-auto md:h-5' },
+  { name: 'Amazon', src: '/Amazon-logo.png', className: 'h-4 w-auto md:h-5' },
   { name: 'Gmail', src: '/gmailicon.png', className: 'h-5 w-auto md:h-6' },
   { name: 'Outlook', src: '/outlookicon.webp', className: 'h-5 w-auto md:h-6' },
   { name: 'Google Drive', src: '/gd.png', className: 'h-5 w-auto md:h-6' },
@@ -582,7 +582,7 @@ export default function Index() {
               target="_blank"
               rel="noreferrer"
               {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 md:rounded-[44px]"
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-sm border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1"
               aria-label="Watch the Margin product demo on YouTube"
             >
               <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">

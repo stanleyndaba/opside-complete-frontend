@@ -4125,12 +4125,6 @@ export function Dashboard() {
                       </button>
                     ) : null}
                   </div>
-                  <button
-                    onClick={() => setShowDiscrepancyModal(false)}
-                    className="rounded-md border border-[#E5E7EB] bg-white p-2 text-[#6B7280] transition-colors hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
                 </div>
               </DialogHeader>
 
@@ -4361,12 +4355,6 @@ export function Dashboard() {
                       Margin checks connected sources first. If the proof cannot be found automatically, upload it in Evidence Locker so the case can keep moving.
                     </DialogDescription>
                   </div>
-                  <button
-                    onClick={() => setShowProofNeededModal(false)}
-                    className="rounded-md border border-[#E5E7EB] bg-white p-2 text-[#6B7280] transition-colors hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
                 </div>
               </DialogHeader>
 
