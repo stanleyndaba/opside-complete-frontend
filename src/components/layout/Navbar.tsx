@@ -700,7 +700,7 @@ export function Navbar({
                   className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-[#6B7280] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   aria-label="Integrations Hub">
                   <Box className="h-5 w-5" />
-                  <span className="absolute -right-0.5 -top-0.5 flex h-[14px] min-w-[14px] items-center justify-center rounded-full border border-white bg-[#0052FF] px-0.5 text-[9px] font-bold leading-none text-white shadow-[0_8px_18px_rgba(0,82,255,0.22)]">
+                  <span className="pointer-events-none absolute right-0 top-0 z-10 flex h-4 min-w-4 translate-x-1/4 -translate-y-1/4 select-none items-center justify-center rounded-full border border-white bg-[#0052FF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-white tabular-nums shadow-[0_8px_18px_rgba(0,82,255,0.22)]">
                     {connectedPlatformsCount}
                   </span>
                 </button>

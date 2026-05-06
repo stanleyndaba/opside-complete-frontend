@@ -178,7 +178,7 @@
     max-width: 100%;
     overflow-x: hidden;
     min-height: 100vh;
-    background-color: hsl(var(--background));
+    background-color: #f9fafb;
   }
 
   /* Ensure main content uses full width */
@@ -190,19 +190,21 @@
   body {
     /* Default body font - Stack Sans Text for entire platform */
     @apply bg-background text-foreground text-[16px];
+    background-color: #f9fafb !important;
+    scrollbar-color: #cbd5e1 #f9fafb;
   }
 
   /* Theme-aware backgrounds */
   html.dark,
   html.dark body,
   html.dark #root {
-    background-color: hsl(var(--background)) !important;
+    background-color: #f9fafb !important;
   }
 
   html:not(.dark),
   html:not(.dark) body,
   html:not(.dark) #root {
-    background-color: hsl(var(--background)) !important;
+    background-color: #f9fafb !important;
   }
 
   /* All text elements use Inter - comprehensive coverage */
@@ -332,7 +334,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #f9fafb;
   }
 
   ::-webkit-scrollbar-thumb {

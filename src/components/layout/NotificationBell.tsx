@@ -354,8 +354,8 @@ export function NotificationBell({
           {shouldShowLabel && <span className="text-xs font-sans font-bold uppercase tracking-tight">{label}</span>}
           {unreadCount > 0 && (
             <span className={cn(
-              "absolute flex items-center justify-center bg-[#0052FF] text-[#FFFFFF] text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 border border-white shadow-[0_8px_18px_rgba(0,82,255,0.22)]",
-              isSidebarStyle ? "top-1 right-2" : "-top-0.5 -right-0.5"
+              "pointer-events-none absolute z-10 flex h-4 min-w-4 select-none items-center justify-center rounded-full border border-white bg-[#0052FF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-[0_8px_18px_rgba(0,82,255,0.22)]",
+              isSidebarStyle ? "right-2 top-1" : "right-0 top-0 translate-x-1/4 -translate-y-1/4"
             )}>
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
