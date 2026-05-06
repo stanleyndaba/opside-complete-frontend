@@ -449,7 +449,7 @@ export function Navbar({
       <header className={cn(
         "sticky top-0 z-30 transition-all duration-500 ease-in-out font-sans",
         sidebarCollapsed ? "ml-16" : "ml-60",
-        "bg-[#070707]/90 border-b border-white/5 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]",
+        "border-b border-[#E5E7EB] bg-white/85 text-[#111827] shadow-[0_4px_20px_rgba(17,24,39,0.04)] backdrop-blur-xl",
         className
       )}>
         <div className="flex items-center justify-between h-14 px-6">
@@ -457,7 +457,7 @@ export function Navbar({
           <div className="flex items-center gap-x-8">
             <div className="relative flex items-center gap-4" ref={searchContainerRef}>
               <div className="relative w-80 lg:w-[420px] group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20 group-focus-within:text-white/45 transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#9CA3AF] transition-colors group-focus-within:text-[#0052FF]" />
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
@@ -466,28 +466,28 @@ export function Navbar({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-white/15 focus:ring-0 transition-all placeholder:text-white/10 font-sans font-bold tracking-tight text-white/75"
+                  className="h-10 rounded-xl border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-10 text-[11px] font-sans font-bold tracking-tight text-[#111827] placeholder:text-[#9CA3AF] transition-all focus:border-[#0052FF]/30 focus:bg-white focus:ring-0"
                 />
                 {/* Clear button */}
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] transition-colors hover:text-[#111827]">
                     <X className="h-3 w-3" />
                   </button>
                 )}
 
                 {/* Search Dropdown */}
                 {isSearchFocused && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-3xl z-50 overflow-hidden backdrop-blur-2xl">
+                  <div className="absolute top-full left-0 right-0 z-50 mt-2 overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
                     {/* Recent Searches */}
                     {recentSearches.length > 0 && (
-                      <div className="p-3 border-b border-white/5">
+                      <div className="border-b border-[#E5E7EB] p-3">
                         <div className="flex items-center justify-between px-2 mb-2">
-                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Recent searches</span>
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#9CA3AF]">Recent searches</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-[10px] font-sans font-bold text-white/35 hover:text-white/65 uppercase tracking-tight transition-colors">
+                            className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280] transition-colors hover:text-[#0052FF]">
                             Clear
                           </button>
                         </div>
@@ -498,8 +498,8 @@ export function Navbar({
                               setSearchQuery(search);
                               handleSearch(search);
                             }}
-                            className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-sans font-bold uppercase tracking-tight group">
-                            <Clock className="h-3 w-3 text-white/10 group-hover:text-white/55" />
+                            className="group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:bg-[#F3F7FF] hover:text-[#0052FF]">
+                            <Clock className="h-3 w-3 text-[#9CA3AF] group-hover:text-[#0052FF]" />
                             {search}
                           </button>
                         ))}
@@ -508,7 +508,7 @@ export function Navbar({
 
                     {/* Quick Access */}
                     <div className="p-3">
-                      <span className="text-[10px] font-sans font-bold text-white/20 px-2 uppercase tracking-tight block mb-2">Quick links</span>
+                      <span className="mb-2 block px-2 text-[10px] font-sans font-bold uppercase tracking-tight text-[#9CA3AF]">Quick links</span>
                       {quickLinks.map((link) => (
                         <button
                           key={link.id}
@@ -516,23 +516,23 @@ export function Navbar({
                             setIsSearchFocused(false);
                             navigate(tenantRoute(activeTenantSlug, link.path));
                           }}
-                          className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-sans font-bold uppercase tracking-tight group">
+                          className="group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:bg-[#F3F7FF] hover:text-[#0052FF]">
                           {link.label}
                         </button>
                       ))}
                     </div>
 
                     {/* Search Tip */}
-                    <div className="px-4 py-3 bg-white/[0.01] border-t border-white/5">
-                      <p className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">
-                        Invoke system command with <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-white/70 font-sans font-bold text-[9px]">ENTER</kbd>
+                    <div className="border-t border-[#E5E7EB] bg-[#F9FAFB] px-4 py-3">
+                      <p className="text-[9px] font-sans font-bold uppercase tracking-tight text-[#9CA3AF]">
+                        Search workspace records with <kbd className="rounded border border-[#E5E7EB] bg-white px-1.5 py-0.5 text-[9px] font-sans font-bold text-[#4B5563]">ENTER</kbd>
                       </p>
                     </div>
                   </div>
                 )}
               </div>
               {/* Functional Icons Group - Compact Horizontal */}
-              <div className="flex items-center gap-x-3 border-l border-white/5 pl-4 ml-3">
+              <div className="ml-3 flex items-center gap-x-3 border-l border-[#E5E7EB] pl-4">
 
                 {/* Notes Icon - Commented out for V1 noise reduction
                 <div className="relative">
@@ -581,7 +581,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/data-upload'))}
-                      className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
+                      className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-[#6B7280] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                       aria-label="Upload CSV">
                       <Upload className="h-5 w-5" />
                     </button>
@@ -590,15 +590,15 @@ export function Navbar({
                     side="bottom"
                     align="center"
                     sideOffset={12}
-                    className="w-64 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
+                    className="w-64 overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-0 shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
                     <div className="p-5">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center border border-violet-500/20">
                           <Upload className="h-4 w-4 text-violet-500" />
                         </div>
-                        <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Data Upload</span>
+                        <span className="text-[11px] font-sans font-bold uppercase tracking-tight text-[#111827]">Data Upload</span>
                       </div>
-                      <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">
+                      <p className="font-sans text-[11px] font-bold leading-relaxed text-[#4B5563]">
                         "Upload Amazon Seller Central CSV reports to feed the detection pipeline."
                       </p>
                     </div>
@@ -609,7 +609,7 @@ export function Navbar({
                 <NotificationBell
                   label="Alert"
                   showLabel={false}
-                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-[#6B7280] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   iconClassName="h-5 w-5"
                 />
 
@@ -618,7 +618,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                      className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
+                      className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-[#6B7280] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                       aria-label="Approved reimbursements">
                       <CircleCheck className="h-5 w-5" />
                     </button>
@@ -627,56 +627,56 @@ export function Navbar({
                     side="bottom"
                     align="center"
                     sideOffset={12}
-                    className="w-[560px] p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
-                    <div className="border-b border-white/10 px-5 py-4">
-                      <h4 className="text-[13px] font-sans font-bold text-white uppercase tracking-tight">Approved Reimbursements</h4>
+                    className="w-[560px] overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-0 shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
+                    <div className="border-b border-[#E5E7EB] px-5 py-4">
+                      <h4 className="text-[13px] font-sans font-bold uppercase tracking-tight text-[#111827]">Approved Reimbursements</h4>
                     </div>
                     <div className="max-h-[360px] overflow-auto">
                       <Table>
                         <TableHeader>
-                          <TableRow className="border-white/5 hover:bg-transparent">
-                            <TableHead className="h-10 px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case</TableHead>
-                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amount</TableHead>
-                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Verification</TableHead>
-                            <TableHead className="h-10 pr-5 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Updated</TableHead>
+                          <TableRow className="border-[#E5E7EB] hover:bg-transparent">
+                            <TableHead className="h-10 px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Case</TableHead>
+                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Amount</TableHead>
+                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Verification</TableHead>
+                            <TableHead className="h-10 pr-5 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Updated</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {approvedReimbursementsLoading ? (
-                            <TableRow className="border-white/5">
-                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-white/45">
+                            <TableRow className="border-[#E5E7EB]">
+                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-[#6B7280]">
                                 Loading approved reimbursements...
                               </TableCell>
                             </TableRow>
                           ) : approvedReimbursementsError ? (
-                            <TableRow className="border-white/5">
-                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-white/45">
+                            <TableRow className="border-[#E5E7EB]">
+                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-[#6B7280]">
                                 Unable to load approved reimbursements.
                               </TableCell>
                             </TableRow>
                           ) : approvedReimbursements.length === 0 ? (
-                            <TableRow className="border-white/5">
-                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-white/45">
+                            <TableRow className="border-[#E5E7EB]">
+                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-[#6B7280]">
                                 No production-verified approved reimbursement records yet.
                               </TableCell>
                             </TableRow>
                           ) : approvedReimbursements.map((row) => (
                             <TableRow
                               key={`${row.routeId}-${row.caseReference}`}
-                              className="cursor-pointer border-white/5 text-white/70 transition-colors hover:bg-white/[0.03] hover:text-white"
+                              className="cursor-pointer border-[#E5E7EB] text-[#4B5563] transition-colors hover:bg-[#F9FAFB] hover:text-[#111827]"
                               onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
                             >
-                              <TableCell className="px-5 py-3 text-[11px] font-sans font-bold tracking-tight text-white/78">
+                              <TableCell className="px-5 py-3 text-[11px] font-sans font-bold tracking-tight text-[#111827]">
                                 {row.caseReference}
                               </TableCell>
                               <TableCell className="py-3">
-                                <div className="text-[11px] font-sans font-bold text-white/70">{formatMoney(row.amount, row.currency)}</div>
-                                <div className="mt-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/28">{row.amountNote}</div>
+                                <div className="text-[11px] font-sans font-bold text-[#111827]">{formatMoney(row.amount, row.currency)}</div>
+                                <div className="mt-1 text-[9px] font-sans font-bold uppercase tracking-tight text-[#9CA3AF]">{row.amountNote}</div>
                               </TableCell>
-                              <TableCell className="py-3 text-[11px] font-sans font-bold text-white/50">
+                              <TableCell className="py-3 text-[11px] font-sans font-bold text-[#4B5563]">
                                 {row.payoutTruth}
                               </TableCell>
-                              <TableCell className="py-3 pr-5 text-right text-[11px] font-sans font-bold text-white/40">
+                              <TableCell className="py-3 pr-5 text-right text-[11px] font-sans font-bold text-[#6B7280]">
                                 {formatStamp(row.lastUpdatedAt)}
                               </TableCell>
                             </TableRow>
@@ -691,16 +691,16 @@ export function Navbar({
           </div>
 
           {/* Right Group - Connect & Account */}
-          <div className="flex items-center gap-x-4 border-l border-white/5 pl-6 ml-6">
+          <div className="ml-6 flex items-center gap-x-4 border-l border-[#E5E7EB] pl-6">
             {/* Integrations Icon */}
             <HoverCard openDelay={100} closeDelay={200}>
               <HoverCardTrigger asChild>
                 <button
                   onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-[#6B7280] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   aria-label="Integrations Hub">
                   <Box className="h-5 w-5" />
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center bg-[#262626] text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.45)]">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-[14px] min-w-[14px] items-center justify-center rounded-full border border-white bg-[#0052FF] px-0.5 text-[9px] font-bold leading-none text-white shadow-[0_8px_18px_rgba(0,82,255,0.22)]">
                     {connectedPlatformsCount}
                   </span>
                 </button>
@@ -709,18 +709,18 @@ export function Navbar({
                 side="bottom"
                 align="center"
                 sideOffset={12}
-                className="w-72 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
+                className="w-72 overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-0 shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
                 <div className="p-5">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
                       <Box className="h-4 w-4 text-blue-500" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Integrations Hub</span>
+                      <span className="text-[11px] font-sans font-bold uppercase tracking-tight text-[#111827]">Integrations Hub</span>
                       <span className="text-[9px] font-sans font-bold text-orange-600 uppercase tracking-tight mt-0.5">{connectedPlatformsCount} Platform{connectedPlatformsCount === 1 ? '' : 's'} connected</span>
                     </div>
                   </div>
-                  <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">
+                  <p className="font-sans text-[11px] font-bold leading-relaxed text-[#4B5563]">
                     "Configure your document and data providers — connect Amazon, Gmail, and other marketplace sources."
                   </p>
                 </div>
@@ -728,40 +728,40 @@ export function Navbar({
             </HoverCard>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-sans font-bold group/account uppercase tracking-tight px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
-                  <User className="h-5 w-5 text-white/20 group-hover/account:text-white/75 transition-colors" />
+                <button className="group/account flex items-center gap-3 rounded-xl border border-transparent px-3 py-1.5 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]">
+                  <User className="h-5 w-5 text-[#9CA3AF] transition-colors group-hover/account:text-[#0052FF]" />
                   <span className="hidden sm:inline">Account</span>
-                  <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-white/75 transition-colors" />
+                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/account:text-[#0052FF]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="w-[360px] bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
-                <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
+              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[360px] overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-0 shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
+                <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-6 py-5">
                   <div className="min-w-0">
-                    <h3 className="text-[13px] font-sans font-semibold text-white tracking-tight truncate">
+                    <h3 className="truncate text-[13px] font-sans font-semibold tracking-tight text-[#111827]">
                       {accountDisplayName}
                     </h3>
-                    <p className="mt-1 text-[11px] font-sans text-white/42 truncate">
+                    <p className="mt-1 truncate font-sans text-[11px] text-[#6B7280]">
                       {accountEmail}
                     </p>
                     <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
                       <div className="min-w-0">
-                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/30">
+                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
                           Role
                         </div>
-                        <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/78 truncate">
+                        <div className="mt-1 truncate text-[12px] font-sans font-medium tracking-tight text-[#111827]">
                           {accountRoleLabel}
                         </div>
                       </div>
                       <div className="min-w-0">
-                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/30">
+                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
                           Member since
                         </div>
-                        <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/78 truncate">
+                        <div className="mt-1 truncate text-[12px] font-sans font-medium tracking-tight text-[#111827]">
                           {memberSinceLabel}
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4 border-t border-white/5 pt-3 text-[11px] font-sans tracking-tight text-white/46">
+                    <div className="mt-4 border-t border-[#E5E7EB] pt-3 font-sans text-[11px] tracking-tight text-[#6B7280]">
                       {connectedPlatformsCount > 0
                         ? `${connectedPlatformsCount} source${connectedPlatformsCount === 1 ? '' : 's'} connected`
                         : 'No sources connected yet'}
@@ -772,14 +772,14 @@ export function Navbar({
                 <div className="px-6 pt-4">
                   <DropdownMenuItem
                     onSelect={handleContactSupport}
-                    className="flex cursor-pointer items-center gap-3 rounded-[5px] border border-white/6 bg-white/[0.02] px-4 py-3 text-white/70 outline-none transition-colors hover:bg-white/[0.045] hover:text-white focus:bg-white/[0.045] focus:text-white"
+                    className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#E5E7EB] bg-white px-4 py-3 text-[#4B5563] outline-none transition-colors hover:bg-[#F9FAFB] hover:text-[#111827] focus:bg-[#F9FAFB] focus:text-[#111827]"
                   >
-                    <Mail className="h-4 w-4 text-white/35" />
+                    <Mail className="h-4 w-4 text-[#9CA3AF]" />
                     <div className="min-w-0">
-                      <div className="text-[11px] font-sans font-semibold uppercase tracking-tight text-white/80">
+                      <div className="text-[11px] font-sans font-semibold uppercase tracking-tight text-[#111827]">
                         Contact Us
                       </div>
-                      <div className="mt-0.5 text-[10px] font-sans tracking-tight text-white/42">
+                      <div className="mt-0.5 font-sans text-[10px] tracking-tight text-[#6B7280]">
                         Send a support query from this workspace.
                       </div>
                     </div>
@@ -787,20 +787,20 @@ export function Navbar({
                 </div>
 
                 <div className="px-6 py-5">
-                  <div className="rounded-[5px] border border-white/6 bg-white/[0.02] px-4 py-3.5">
+                  <div className="rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] px-4 py-3.5">
                     <div className="flex items-center justify-between gap-3">
-                      <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/36">
+                      <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                         Amazon
                       </div>
-                      <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/62">
+                      <div className="shrink-0 rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#0052FF]">
                         {amazonStatusLabel}
                       </div>
                     </div>
                     <div className="mt-3 min-w-0">
-                      <div className="text-[13px] font-sans font-semibold tracking-tight text-white">
+                      <div className="text-[13px] font-sans font-semibold tracking-tight text-[#111827]">
                         {amazonConnectionHeadline}
                       </div>
-                      <p className="mt-1.5 text-[11px] font-sans leading-[1.5] text-white/56">
+                      <p className="mt-1.5 font-sans text-[11px] leading-[1.5] text-[#4B5563]">
                         {userProfile?.amazon_connected
                           ? (userProfile?.amazon_display_name || 'Margin can keep your Amazon records up to date.')
                           : 'Connect Amazon to keep your records up to date.'}
@@ -808,7 +808,7 @@ export function Navbar({
                     </div>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                      className="mt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/60 transition-colors hover:text-white"
+                      className="mt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF] transition-colors hover:text-[#003DBF]"
                     >
                       Open integrations
                     </button>

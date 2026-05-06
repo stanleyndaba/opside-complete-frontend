@@ -2991,19 +2991,19 @@ export function Dashboard() {
     ? 'text-[#d0b673]'
     : dashboardAutoFileEnabled && dashboardAutoFileGateStatus?.primaryBlocker
       ? 'text-[#d0b673]'
-      : 'text-white/45';
+      : 'text-[#6B7280]';
 
   if (!activeSlug) {
     return (
-      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+      <div className="platform-vitality-dashboard relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#F9FAFB] text-[#111827]">
         <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
         <div className="flex-1 flex h-full overflow-hidden">
           <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
           <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
             <div className="relative pt-8 px-8">
-              <div className="rounded-2xl border border-white/10 bg-[#111111]/90 p-8 text-white">
+              <div className="rounded-2xl border border-[#E5E7EB] bg-white p-8 text-[#111827] shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
                 <h1 className="text-lg font-sans font-bold tracking-tight">Tenant context required</h1>
-                <p className="mt-3 text-sm text-white/55 font-sans">
+                <p className="mt-3 font-sans text-sm text-[#4B5563]">
                   Dashboard metrics are blocked until a real tenant workspace is selected.
                 </p>
               </div>
@@ -3016,10 +3016,8 @@ export function Dashboard() {
 
   return (
     <div
-      className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
-      {/* Background Matrix Pattern / Noise */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+      className="platform-vitality-dashboard relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#F9FAFB] text-[#111827]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,82,255,0.06),transparent_32%),linear-gradient(180deg,#F9FAFB_0%,#F3F6F8_100%)]" />
 
       <Navbar
         sidebarCollapsed={isSidebarCollapsed}
@@ -3036,26 +3034,26 @@ export function Dashboard() {
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
           <div className="relative pt-8">
-            <div className="relative w-full max-w-full mx-auto px-8 pb-8 text-slate-900">
+            <div className="relative mx-auto w-full max-w-full px-8 pb-8 text-[#111827]">
               {/* Command Center Header */}
               <div className="mb-10 flex items-start justify-between gap-6">
                 <div className="flex flex-col gap-1">
-                  <div className="border-b border-white/8">
+                  <div className="border-b border-[#E5E7EB]">
                     <div className="flex items-center gap-6">
                       <button
                         onClick={() => handleTabChange('overview')}
                         className={cn(
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'overview'
-                            ? "text-white font-semibold"
-                            : "text-[#6f6f6f] hover:text-[#8f8f8f]"
+                            ? "font-semibold text-[#0052FF]"
+                            : "text-[#6B7280] hover:text-[#111827]"
                         )}
                       >
                         Overview
                         <span
                           className={cn(
                             "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'overview' ? "bg-white opacity-100" : "bg-transparent opacity-0"
+                            activeTab === 'overview' ? "bg-[#0052FF] opacity-100" : "bg-transparent opacity-0"
                           )}
                         />
                       </button>
@@ -3064,15 +3062,15 @@ export function Dashboard() {
                         className={cn(
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'discrepancies'
-                            ? "text-white font-semibold"
-                            : "text-[#6f6f6f] hover:text-[#8f8f8f]"
+                            ? "font-semibold text-[#0052FF]"
+                            : "text-[#6B7280] hover:text-[#111827]"
                         )}
                       >
                         Issues Found
                         <span
                           className={cn(
                             "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'discrepancies' ? "bg-white opacity-100" : "bg-transparent opacity-0"
+                            activeTab === 'discrepancies' ? "bg-[#0052FF] opacity-100" : "bg-transparent opacity-0"
                           )}
                         />
                       </button>
@@ -3081,15 +3079,15 @@ export function Dashboard() {
                         className={cn(
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'evidence'
-                            ? "text-white font-semibold"
-                            : "text-[#6f6f6f] hover:text-[#8f8f8f]"
+                            ? "font-semibold text-[#0052FF]"
+                            : "text-[#6B7280] hover:text-[#111827]"
                         )}
                       >
                         Evidence
                         <span
                           className={cn(
                             "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'evidence' ? "bg-white opacity-100" : "bg-transparent opacity-0"
+                            activeTab === 'evidence' ? "bg-[#0052FF] opacity-100" : "bg-transparent opacity-0"
                           )}
                         />
                       </button>
@@ -3098,18 +3096,18 @@ export function Dashboard() {
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2">
                   <div className="flex flex-col items-end gap-2">
-                    <div className="w-[360px] max-w-[calc(100vw-4rem)] border border-white/10 bg-white/[0.035] px-3 py-2 shadow-[0_0_18px_rgba(255,255,255,0.04)]">
+                    <div className="w-[360px] max-w-[calc(100vw-4rem)] rounded-2xl border border-[#E5E7EB] bg-white px-3 py-2 shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                           <span className={cn(
                             "h-1.5 w-1.5 rounded-full",
                             dashboardAutoFileError
-                              ? "bg-[#d0b673]"
+                              ? "bg-[#F59E0B]"
                               : dashboardAutoFileEnabled
-                                ? "bg-white"
-                                : "bg-white/25"
+                                ? "bg-[#10B981]"
+                                : "bg-[#9CA3AF]"
                           )} />
-                          <span className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/80">
+                          <span className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#111827]">
                             Auto-File
                           </span>
                         </div>
@@ -3121,9 +3119,9 @@ export function Dashboard() {
                             }}
                             disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
                             aria-label="Dashboard Auto-File seller-controlled filing switch"
-                            className="data-[state=checked]:bg-white data-[state=unchecked]:bg-white/20"
+                            className="data-[state=checked]:bg-[#0052FF] data-[state=unchecked]:bg-[#D1D5DB]"
                           />
-                          <span className="min-w-9 text-right text-[9px] font-sans font-semibold uppercase tracking-tight text-white/45">
+                          <span className="min-w-9 text-right text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                             {dashboardAutoFileSaving ? 'Saving' : dashboardAutoFileEnabled ? 'On' : 'Off'}
                           </span>
                         </div>
@@ -3136,55 +3134,55 @@ export function Dashboard() {
                       </p>
                     </div>
                   </div>
-                  <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-white">
+                  <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-[#6B7280]">
                     {discrepancyHeaderLastUpdatedLabel}
                   </div>
                 </div>
               </div>
 
               {activeTab === 'overview' ? (
-                <div className="relative space-y-5 text-white">
+                <div className="relative space-y-5 text-[#111827]">
                 <div className="relative z-10 space-y-5">
                   {/* Main Content - 3 columns */}
                   <div className="space-y-5">
                     <div className="relative space-y-4">
-                      <div className="border-b border-white/10 pb-4">
+                      <div className="rounded-3xl border border-[#E5E7EB] bg-white p-5 shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                           <div>
                             <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                               One-click pipeline
                             </div>
-                            <p className="mt-2 text-[12px] font-sans leading-5 text-white/[0.44]">
+                            <p className="mt-2 text-[12px] font-sans leading-5 text-[#4B5563]">
                               Click any stage to jump straight to the work behind it.
                             </p>
                           </div>
-                          <div className="text-[10px] font-sans font-medium tracking-tight text-white/[0.55]">
+                          <div className="text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
                             {overviewNeedsFromYou.value}
                           </div>
                         </div>
                         <div className="mt-5 overflow-x-auto pb-1">
-                          <div className="min-w-max border-y border-white/10 bg-transparent">
-                            <div className="flex items-stretch divide-x divide-white/[0.08]">
+                          <div className="min-w-max rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB]">
+                            <div className="flex items-stretch divide-x divide-[#E5E7EB]">
                               {overviewPipelineStages.map((stage) => (
                                 <button
                                   key={stage.label}
                                   onClick={stage.onClick}
-                                  className="group min-w-[188px] px-5 py-3.5 text-left transition-colors hover:bg-white/[0.025]"
+                                  className="group min-w-[188px] px-5 py-3.5 text-left transition-colors hover:bg-white"
                                 >
                                   <div className="flex items-center gap-2">
                                     <span className={cn("h-2 w-2 rounded-full", stage.dotTone)} />
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">
                                       {stage.label}
                                     </div>
                                   </div>
-                                  <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
+                                  <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-[#111827]">
                                     {isOverviewLoading ? (
-                                      <Skeleton className="h-5 w-20 bg-white/10" />
+                                      <Skeleton className="h-5 w-20 bg-[#E5E7EB]" />
                                     ) : (
                                       stage.value
                                     )}
                                   </div>
-                                  <div className="mt-1.5 text-[10px] font-sans leading-5 text-white/[0.44]">
+                                  <div className="mt-1.5 text-[10px] font-sans leading-5 text-[#6B7280]">
                                     {stage.detail}
                                   </div>
                                 </button>
@@ -3194,63 +3192,63 @@ export function Dashboard() {
                         </div>
                       </div>
 
-                      <div className="grid border-b border-white/10 xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
+                      <div className="grid rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_4px_20px_rgba(17,24,39,0.03)] xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
                         <div className="py-5 pr-6 lg:pr-8">
                           <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                             Recovery pipeline
                           </div>
                           <div className="mt-3 flex flex-wrap items-end gap-3">
                             {isOverviewLoading ? (
-                              <Skeleton className="h-12 w-48 bg-white/10" />
+                              <Skeleton className="h-12 w-48 bg-[#E5E7EB]" />
                             ) : (
                               <>
-                                <div className="text-[32px] font-sans font-medium leading-none tracking-tight text-emerald-200 xl:text-[38px]">
+                                <div className="text-[32px] font-sans font-bold leading-none tracking-tight text-[#10B981] xl:text-[38px]">
                                   {overviewFoundValueLabel}
                                 </div>
-                                <div className="inline-flex items-center border-l border-emerald-300/40 pl-3 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
+                                <div className="inline-flex items-center border-l border-[#A7F3D0] pl-3 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
                                   {pluralize(detectedOpportunitiesCount, 'issue')} found
                                 </div>
                               </>
                             )}
                           </div>
-                          <h2 className="mt-4 max-w-4xl text-[24px] font-sans font-medium leading-tight tracking-tight text-white xl:text-[30px]">
+                          <h2 className="mt-4 max-w-4xl text-[24px] font-sans font-semibold leading-tight tracking-tight text-[#111827] xl:text-[30px]">
                             {overviewHeadline}
                           </h2>
-                          <p className="mt-3 max-w-3xl text-[12px] font-sans leading-5 text-white/[0.52]">
+                          <p className="mt-3 max-w-3xl text-[12px] font-sans leading-5 text-[#4B5563]">
                             {overviewNarrative}
                           </p>
                           <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
                             {readyToFileCount > 0 ? (
-                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
-                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#10B981]" />
                                 {pluralize(readyToFileCount, 'case')} ready to file
                               </div>
                             ) : null}
-                            <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.68]">
-                              <span className="h-1.5 w-1.5 rounded-full bg-white/[0.32]" />
+                            <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
+                              <span className="h-1.5 w-1.5 rounded-full bg-[#9CA3AF]" />
                               {overviewCurrentStatus.value}
                             </div>
                             {latestDashboardSignalLabel ? (
-                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.58]">
-                                <span className="h-1.5 w-1.5 rounded-full bg-white/[0.24]" />
+                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#BFD7FF]" />
                                 {latestDashboardSignalLabel}
                               </div>
                             ) : null}
                           </div>
                         </div>
                         {overviewHeroMetrics.map((item) => (
-                          <div key={item.label} className="border-t border-white/10 py-5 xl:border-l xl:border-t-0 xl:px-6">
+                          <div key={item.label} className="border-t border-[#E5E7EB] py-5 xl:border-l xl:border-t-0 xl:px-6">
                             <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                               {item.label}
                             </div>
-                            <div className="mt-2 text-[22px] font-sans font-medium tracking-tight text-white">
+                            <div className="mt-2 text-[22px] font-sans font-semibold tracking-tight text-[#111827]">
                               {isOverviewLoading ? (
-                                <Skeleton className="h-8 w-28 bg-white/10" />
+                                <Skeleton className="h-8 w-28 bg-[#E5E7EB]" />
                               ) : (
                                 item.value
                               )}
                             </div>
-                            <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.4]">
+                            <p className="mt-2 text-[11px] font-sans leading-5 text-[#6B7280]">
                               {item.detail}
                             </p>
                           </div>

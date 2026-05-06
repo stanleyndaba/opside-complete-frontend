@@ -236,16 +236,16 @@ export function Sidebar({
                   "group relative flex items-center justify-center border-l transition-all duration-200",
                   collapsedBaseClasses,
                   isActive
-                    ? "border-white/70 bg-white/[0.035] text-white"
+                    ? "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
                     : variant === 'core'
-                      ? "border-transparent text-white/72 hover:border-white/28 hover:bg-white/[0.025] hover:text-white"
-                      : "border-transparent text-white/42 hover:border-white/20 hover:bg-white/[0.02] hover:text-white/82"
+                      ? "border-transparent text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
+                      : "border-transparent text-[#6B7280] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
                   <motion.span
                     layoutId="active-indicator-collapsed"
-                    className="absolute left-0 top-2 bottom-2 w-[2px] bg-white/80"
+                    className="absolute bottom-2 left-0 top-2 w-[2px] bg-[#0052FF]"
                   />
                 )}
                 <item.icon
@@ -253,17 +253,17 @@ export function Sidebar({
                     "transition-colors duration-200",
                     variant === 'core' ? "h-[17px] w-[17px]" : "h-4 w-4",
                     isActive
-                      ? "text-white"
+                      ? "text-[#0052FF]"
                       : variant === 'core'
-                        ? "text-white/62 group-hover:text-white/88"
-                        : "text-white/34 group-hover:text-white/62"
+                        ? "text-[#4B5563] group-hover:text-[#0052FF]"
+                        : "text-[#6B7280] group-hover:text-[#0052FF]"
                   )}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-popover border border-border px-3 py-2 backdrop-blur-xl">
-              <div className="text-[10px] font-sans font-medium tracking-tight text-white/88">
+            <TooltipContent side="right" className="border border-[#E5E7EB] bg-white px-3 py-2 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.12)]">
+              <div className="text-[10px] font-sans font-medium tracking-tight text-[#111827]">
                 {item.title}
               </div>
             </TooltipContent>
@@ -284,22 +284,22 @@ export function Sidebar({
               : "gap-2.5 px-3 py-2",
           isActive
             ? variant === 'core'
-              ? "border-white/70 bg-white/[0.03] text-white"
+              ? "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
               : variant === 'utility'
-                ? "border-white/45 bg-transparent text-white"
-                : "border-white/55 bg-white/[0.025] text-white"
+                ? "border-[#0052FF] bg-transparent text-[#0052FF]"
+                : "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
             : variant === 'core'
-              ? "border-transparent text-white/82 hover:border-white/24 hover:bg-white/[0.02] hover:text-white"
+              ? "border-transparent text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
               : variant === 'utility'
-                ? "border-transparent text-white/42 hover:border-white/18 hover:text-white/72"
-                : "border-transparent text-white/62 hover:border-white/20 hover:bg-white/[0.018] hover:text-white/88"
+                ? "border-transparent text-[#6B7280] hover:border-[#D8E7FF] hover:text-[#0052FF]"
+                : "border-transparent text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
             className={cn(
-              "absolute left-0 w-[2px] bg-white/80",
+              "absolute left-0 w-[2px] bg-[#0052FF]",
               variant === 'utility' ? "top-1.5 bottom-1.5" : "top-2 bottom-2"
             )}
           />
@@ -310,12 +310,12 @@ export function Sidebar({
             "h-4 w-4 shrink-0 transition-all duration-200",
             variant === 'core' ? "h-[17px] w-[17px]" : "",
             isActive
-              ? "text-white"
+              ? "text-[#0052FF]"
               : variant === 'core'
-                ? "text-white/58 group-hover:text-white/86"
+                ? "text-[#4B5563] group-hover:text-[#0052FF]"
                 : variant === 'utility'
-                  ? "text-white/34 group-hover:text-white/58"
-                : "text-white/34 group-hover:text-white/62"
+                  ? "text-[#6B7280] group-hover:text-[#0052FF]"
+                : "text-[#6B7280] group-hover:text-[#0052FF]"
           )}
         />
         <div className="min-w-0 flex-1">
@@ -327,7 +327,7 @@ export function Sidebar({
                 : variant === 'utility'
                   ? "text-[13px] font-medium leading-5"
                   : "text-[13.5px] font-[300] leading-5",
-              isActive ? "text-white" : ""
+              isActive ? "text-[#0052FF]" : ""
             )}>
               {item.title}
             </span>
@@ -337,9 +337,9 @@ export function Sidebar({
           <ChevronRight
             className={cn(
               "h-3 w-3 shrink-0 transition-all duration-200",
-              isActive
-                ? "translate-x-0 text-white/44"
-                : "translate-x-[-2px] text-white/12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/32"
+            isActive
+                ? "translate-x-0 text-[#0052FF]/60"
+                : "translate-x-[-2px] text-[#9CA3AF] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[#0052FF]/60"
             )}
             strokeWidth={1.6}
           />
@@ -348,8 +348,8 @@ export function Sidebar({
           <span className={cn(
             "ml-auto border-l px-1.5 text-[10px] font-sans font-medium tabular-nums tracking-tight",
             isActive
-              ? "border-sky-300/24 text-sky-100"
-              : "border-white/10 text-white/62"
+              ? "border-[#BFD7FF] text-[#0052FF]"
+              : "border-[#E5E7EB] text-[#6B7280]"
           )}>
             {item.count}
           </span>
@@ -362,7 +362,7 @@ export function Sidebar({
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col font-sans transition-all duration-500 ease-in-out gpu-accelerated",
         isCollapsed ? "w-16" : "w-60",
-        "border-r border-white/10 bg-[#070707]/95 text-white/60 backdrop-blur-xl",
+        "border-r border-[#E5E7EB] bg-white/92 text-[#4B5563] shadow-[8px_0_28px_rgba(17,24,39,0.04)] backdrop-blur-xl",
         className
       )}
       style={{
@@ -372,7 +372,7 @@ export function Sidebar({
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-white/10",
+          "border-b border-[#E5E7EB]",
           isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
         )}>
         <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-2")}>
@@ -388,10 +388,10 @@ export function Sidebar({
               <img
                 src="/logoimagetwo.png"
                 alt="Margin"
-                className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
+                className="h-3.5 w-auto object-contain"
               />
               {!isCollapsed && subscriptionTierLabel ? (
-                <span className="border-l border-white/12 pl-2 text-[10px] font-medium uppercase tracking-tight text-white/36">
+                <span className="border-l border-[#E5E7EB] pl-2 text-[10px] font-medium uppercase tracking-tight text-[#6B7280]">
                   {subscriptionTierLabel}
                 </span>
               ) : null}
@@ -401,7 +401,7 @@ export function Sidebar({
             <Link
               to={pricingAdjustHref}
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
-              className="inline-flex items-center border-l border-white/12 px-2 py-0.5 text-[12px] font-sans font-medium tracking-tight text-white/54 transition-colors hover:border-white/28 hover:text-white"
+              className="inline-flex items-center border-l border-[#BFD7FF] px-2 py-0.5 text-[12px] font-sans font-medium tracking-tight text-[#0052FF] transition-colors hover:border-[#0052FF] hover:text-[#003DBF]"
             >
               Upgrade Plan
             </Link>
@@ -425,7 +425,7 @@ export function Sidebar({
 
       {/* Footer Utilities */}
       <div className={cn(
-        "mt-auto border-t border-white/10 py-3",
+        "mt-auto border-t border-[#E5E7EB] py-3",
         isCollapsed ? "px-2" : "px-3"
       )}>
         {(() => {
@@ -440,26 +440,26 @@ export function Sidebar({
               className={cn(
                 "group flex w-full items-center border-l border-transparent transition-all outline-none",
                 isCollapsed
-                  ? "justify-center p-2.5 hover:border-white/20 hover:bg-white/[0.02]"
-                  : "gap-3 px-3 py-2.5 text-left text-white/34 hover:border-white/20 hover:bg-white/[0.018] hover:text-white/62"
+                  ? "justify-center p-2.5 hover:border-[#D8E7FF] hover:bg-[#F3F7FF]"
+                  : "gap-3 px-3 py-2.5 text-left text-[#6B7280] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
               )}>
-              <Menu className={cn("h-4 w-4 transition-colors text-white/24", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-white/34">More</span>}
+              <Menu className={cn("h-4 w-4 text-[#9CA3AF] transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
+              {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-[#6B7280]">More</span>}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="mb-2 ml-2 w-64 rounded-none border border-white/10 bg-[#080808] p-1.5 text-white shadow-2xl backdrop-blur-xl">
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="mb-2 ml-2 w-64 rounded-2xl border border-[#E5E7EB] bg-white p-1.5 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
-                "text-[13px] text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
-                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
-                settingsActive && "border-white/45 bg-white/[0.04] text-white"
+                "text-[13px] text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
+                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
+                settingsActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
               )}>
               <Settings2
                 className={cn(
                   "h-4 w-4 shrink-0 transition-colors",
-                  settingsActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
+                  settingsActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
                 )}
                 strokeWidth={1.5}
               />
@@ -469,14 +469,14 @@ export function Sidebar({
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/billing'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 font-sans transition-colors",
-                "text-[13px] text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
-                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
-                billingActive && "border-white/45 bg-white/[0.04] text-white"
+                "text-[13px] text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
+                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
+                billingActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
               )}>
               <CreditCard
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  billingActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
+                  billingActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
                 )}
                 strokeWidth={1.5}
               />
@@ -486,14 +486,14 @@ export function Sidebar({
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
-                "text-[13px] text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
-                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
-                helpActive && "border-white/45 bg-white/[0.04] text-white"
+                "text-[13px] text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
+                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
+                helpActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
               )}>
               <LifeBuoy
                 className={cn(
                   "h-4 w-4 shrink-0 transition-colors",
-                  helpActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
+                  helpActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
                 )}
                 strokeWidth={1.5}
               />
@@ -503,14 +503,14 @@ export function Sidebar({
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight transition-colors",
-                "text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
-                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
-                notesActive && "border-white/45 bg-white/[0.04] text-white"
+                "text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
+                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
+                notesActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
               )}>
               <NotebookPen
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  notesActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
+                  notesActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
                 )}
                 strokeWidth={1.5}
               />
@@ -555,7 +555,7 @@ export function Sidebar({
                 </HoverCardContent>
               </HoverCard>
             </DropdownMenuItem> */}
-            <DropdownMenuSeparator className="my-1 bg-white/10" />
+            <DropdownMenuSeparator className="my-1 bg-[#E5E7EB]" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
               className="flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight text-rose-400/72 hover:border-rose-300/28 hover:bg-rose-500/[0.06] hover:text-rose-300">
