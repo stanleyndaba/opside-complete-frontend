@@ -715,7 +715,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-14 -right-2.5 z-50 flex h-8 w-5 items-center justify-center border border-white/10 bg-[#070707]/95 text-white/34 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-white/28 hover:text-white',
+          'absolute top-14 -right-2.5 z-50 flex h-8 w-5 items-center justify-center border border-[#E5E7EB] bg-white text-[#4B5563] shadow-[0_10px_24px_rgba(17,24,39,0.10)] backdrop-blur-md transition-all duration-300 hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]',
         )}>
         {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
       </button>

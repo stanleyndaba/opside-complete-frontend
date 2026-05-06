@@ -1631,8 +1631,8 @@ export default function CaseDetail() {
 
   if (!activeSlug && isReady) {
     return (
-      <PageLayout title="Workspace Required" midnight>
-        <div className="flex items-center justify-center min-h-[60vh]">
+      <PageLayout title="Workspace Required">
+        <div className="platform-vitality-page flex items-center justify-center min-h-[60vh] bg-[#F9FAFB] text-[#111827]">
           <div className="text-center">
             <h2 className="text-xl font-semibold mb-4 text-white">Workspace context required</h2>
             <p className="text-white/40 mb-6">This case detail link needs a tenant-scoped route.</p>
@@ -1651,8 +1651,8 @@ export default function CaseDetail() {
   // Guard: show loading or error if no data
   if (!effectiveCase && (loading || !hasResolvedBackend)) {
     return (
-      <PageLayout title="Opening Case..." midnight>
-        <div className="relative -m-4 lg:-m-6">
+      <PageLayout title="Opening Case...">
+        <div className="platform-vitality-page relative -m-4 bg-[#F9FAFB] text-[#111827] lg:-m-6">
           <div className="relative w-full bg-background min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
             <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
               <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
@@ -1721,8 +1721,8 @@ export default function CaseDetail() {
 
   if (!effectiveCase) {
     return (
-      <PageLayout title="Case Not Found" midnight>
-        <div className="flex items-center justify-center min-h-[60vh]">
+      <PageLayout title="Case Not Found">
+        <div className="platform-vitality-page flex items-center justify-center min-h-[60vh] bg-[#F9FAFB] text-[#111827]">
           <div className="text-center">
             <h2 className="text-xl font-semibold mb-4 text-white">Case not found</h2>
             <p className="text-white/40 mb-6 font-mono">Case ID: {caseId}</p>
@@ -1740,8 +1740,8 @@ export default function CaseDetail() {
   }
 
   return (
-    <PageLayout title={`Case ID: ${effectiveCase.id}`} midnight>
-      <div className="relative -m-4 lg:-m-6">
+    <PageLayout title={`Case ID: ${effectiveCase.id}`}>
+      <div className="platform-vitality-page relative -m-4 bg-[#F9FAFB] text-[#111827] lg:-m-6">
         <div className="relative w-full bg-background min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
             {/* Header - Case Information */}
@@ -2493,7 +2493,7 @@ export default function CaseDetail() {
                             <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] font-bold text-white/40 focus:ring-0 shadow-none tracking-tight">
                               <SelectValue placeholder="Metric View" />
                             </SelectTrigger>
-                            <SelectContent className="rounded-lg border-white/10 bg-[#1a1a1a] shadow-xl">
+                            <SelectContent className="platform-vitality-page rounded-lg border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                               <SelectItem value="payout" className="text-xs text-white/70">Expected Payout</SelectItem>
                               <SelectItem value="confidence" className="text-xs text-white/70">Confidence Score</SelectItem>
                               <SelectItem value="units" className="text-xs text-white/70">Units Affected</SelectItem>
@@ -3165,7 +3165,7 @@ export default function CaseDetail() {
       </div>
 
       <Dialog open={pdfPreviewOpen} onOpenChange={(open) => (open ? setPdfPreviewOpen(true) : closePdfPreview())}>
-        <DialogContent className="grid h-[94vh] w-[98vw] max-w-none gap-0 overflow-hidden border-0 bg-transparent p-0 text-white shadow-none sm:rounded-none [&>button:last-child]:hidden">
+        <DialogContent className="platform-vitality-page grid h-[94vh] w-[98vw] max-w-none gap-0 overflow-hidden border-0 bg-transparent p-0 text-[#111827] shadow-none sm:rounded-none [&>button:last-child]:hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>{pdfPreviewTitle}</DialogTitle>
           </DialogHeader>

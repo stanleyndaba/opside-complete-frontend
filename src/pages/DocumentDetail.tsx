@@ -256,14 +256,14 @@ export default function DocumentDetail() {
 
   if (loading || error) {
     return (
-      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
         <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
         <div className="flex-1 flex h-full overflow-hidden">
           <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-          <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-sans', mainClass)}>
+          <main className={cn('platform-vitality-page flex-1 transition-all duration-300 overflow-y-auto font-sans', mainClass)}>
             <div className="flex items-center justify-center min-h-[500px]">
               {loading ? (
                 <div className="text-center">
@@ -294,15 +294,15 @@ export default function DocumentDetail() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+    <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
       {/* Background Matrix Pattern / Noise */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-        <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
+        <main className={cn('platform-vitality-page flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
           <div className="relative pt-8">
             <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
 
