@@ -104,49 +104,49 @@ export function Timeline({
     };
   }, [activeSlug, claimId, isAuthReady, isSessionValid, liveUpdatesUnavailable, loadEvents]);
 
-  if (error) return <div className="text-xs text-red-400">{error}</div>;
-  if (!events) return <div className="text-xs text-gray-400">Loading reconstructed history...</div>;
+  if (error) return <div className="text-xs font-medium text-red-600">{error}</div>;
+  if (!events) return <div className="text-xs font-medium text-[#4B5563]">Loading reconstructed history...</div>;
 
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <div className="text-[10px] font-bold uppercase tracking-tight text-white/35">
+        <div className="text-[10px] font-bold uppercase tracking-tight text-[#111827]">
           Reconstructed history from notifications and agent events
         </div>
         {liveUpdatesUnavailable ? (
-          <div className="text-[10px] font-medium text-amber-400/80">
+          <div className="text-[10px] font-semibold text-amber-700">
             Live updates unavailable. Refreshing reconstructed history every 15 seconds.
           </div>
         ) : (
-          <div className="text-[10px] font-medium text-white/35">
+          <div className="text-[10px] font-medium text-[#374151]">
             Timeline entries are reconstructed backend history, not a canonical case ledger.
           </div>
         )}
-        <div className="text-[10px] font-medium text-white/25">
+        <div className="text-[10px] font-medium text-[#4B5563]">
           Last refreshed: {formatTimelineTimestamp(lastLoadedAt)}
         </div>
       </div>
       {events.length === 0 && (
-        <div className="text-xs text-gray-400">No reconstructed history available</div>
+        <div className="text-xs font-medium text-[#4B5563]">No reconstructed history available</div>
       )}
       {events.map((evt) => {
         const money = formatAmount(evt.amount, evt.currency);
         return (
-          <div key={evt.id} className="flex flex-col gap-1 text-[11px] border-l-2 border-[whitesmoke]/10 pl-4 py-1.5 transition-colors hover:border-[whitesmoke]/30">
+          <div key={evt.id} className="flex flex-col gap-1 text-[11px] border-l-2 border-[#BFD7FF] pl-4 py-1.5 transition-colors hover:border-[#0052FF]">
             <div className="flex items-center gap-2">
-              <div className="font-bold text-[whitesmoke] uppercase tracking-wider">
+              <div className="font-bold text-[#111827] uppercase tracking-wider">
                 {formatTimelineToken(evt.type)} • {formatTimelineToken(evt.status)}
               </div>
             </div>
-            <div className="text-[whitesmoke]/40 font-mono">{formatTimelineTimestamp(evt.at)}</div>
-            <div className="text-[whitesmoke]/80 font-medium leading-relaxed">{evt.message || NOT_AVAILABLE}</div>
+            <div className="font-mono text-[#4B5563]">{formatTimelineTimestamp(evt.at)}</div>
+            <div className="font-medium leading-relaxed text-[#1F2937]">{evt.message || NOT_AVAILABLE}</div>
             {money && <div className="text-emerald-500 font-bold font-mono">Amount: {money}</div>}
             {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (
-              <div className="text-[whitesmoke]/50 flex items-center gap-2 mt-1">
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Docs:</span>
+              <div className="mt-1 flex items-center gap-2 text-[#4B5563]">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280]">Docs:</span>
                 <div className="flex gap-2">
                   {evt.docIds.slice(0, 3).map((id) => (
-                    <Link key={id} to={`/app/${activeSlug}/documents/${encodeURIComponent(id)}`} className="text-indigo-400 underline hover:text-indigo-300 transition-colors">
+                    <Link key={id} to={`/app/${activeSlug}/documents/${encodeURIComponent(id)}`} className="text-[#0052FF] underline transition-colors hover:text-[#003DB8]">
                       {id.slice(0, 8)}...
                     </Link>
                   ))}

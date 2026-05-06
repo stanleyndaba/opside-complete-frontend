@@ -2539,26 +2539,26 @@ export default function CaseDetail() {
                 {/* Row 1: Case Progress */}
                 <div className="py-5 px-8 bg-white/[0.02]">
                   <div className="mb-6">
-                    <h3 className="text-sm font-bold text-white">Case Progress</h3>
+                    <h3 className="text-sm font-bold text-[#111827]">Case Progress</h3>
                   </div>
 
                   <div className="space-y-6">
                     {/* Horizontal Progress bar */}
                     <div className="relative pt-2 pb-2 px-4">
-                      <div className="absolute top-[18px] left-0 right-0 h-[1px] bg-white/10" />
+                      <div className="absolute top-[18px] left-0 right-0 h-[2px] rounded-full bg-[#BFD7FF]" />
                       <div className="flex justify-between relative z-10">
                         {lifecycleSteps.map((step, idx) => {
                           return (
                             <div key={step.label} className="flex flex-col items-center gap-2">
                               <div className={cn(
                                 "w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold transition-all shrink-0",
-                                step.active ? "bg-blue-600 border-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.3)]" : "bg-white border-[#E5E7EB] text-[#9CA3AF]"
+                                step.active ? "bg-[#0052FF] border-[#0052FF] text-white shadow-[0_0_12px_rgba(0,82,255,0.28)]" : "bg-white border-[#D7E2F2] text-[#6B7280]"
                               )}>
                                 {idx + 1}
                               </div>
                               <span className={cn(
                                 "text-[11px] font-bold tracking-tight uppercase",
-                                step.active ? "text-blue-500" : "text-white/20"
+                                step.active ? "text-[#0052FF]" : "text-[#111827]"
                               )}>{step.label}</span>
                             </div>
                           );

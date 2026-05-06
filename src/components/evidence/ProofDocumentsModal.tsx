@@ -75,13 +75,13 @@ export function ProofDocumentsModal({
 
     return (
         <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-            <DialogContent className="max-w-lg bg-[#0c0c0c] border border-white/10 text-white">
+            <DialogContent className="platform-vitality-page max-w-lg rounded-2xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                 {/* Header */}
-                <DialogHeader className="border-b border-white/10 pb-3">
-                    <DialogTitle className="text-sm font-bold text-white tracking-tight uppercase">
+                <DialogHeader className="border-b border-[#E5E7EB] pb-3">
+                    <DialogTitle className="text-sm font-bold text-[#111827] tracking-tight uppercase">
                         Proof Documents
                     </DialogTitle>
-                    <DialogDescription className="text-xs text-white/60 mt-1">
+                    <DialogDescription className="text-xs text-[#4B5563] mt-1">
                         Claim Reference: {claimNumber || claimId.slice(0, 12)}
                     </DialogDescription>
                 </DialogHeader>
@@ -101,34 +101,34 @@ export function ProofDocumentsModal({
                         </div>
                     ) : (
                         /* Document List */
-                        <div className="border border-white/10 rounded-lg overflow-hidden">
-                            <div className="bg-white/5 px-4 py-2 border-b border-white/10">
-                                <span className="text-xs text-white/40 font-bold tracking-tight uppercase">
+                        <div className="overflow-hidden rounded-lg border border-[#E5E7EB]">
+                            <div className="border-b border-[#E5E7EB] bg-[#F8FAFC] px-4 py-2">
+                                <span className="text-xs text-[#4B5563] font-bold tracking-tight uppercase">
                                     {documents.length} Document{documents.length !== 1 ? 's' : ''} Available
                                 </span>
                             </div>
-                            <div className="divide-y divide-white/10">
+                            <div className="divide-y divide-[#E5E7EB]">
                                 {documents.map((doc, index) => (
-                                    <div key={doc.id || index} className="px-4 py-3 bg-transparent hover:bg-white/5 transition-colors">
+                                    <div key={doc.id || index} className="bg-white px-4 py-3 transition-colors hover:bg-[#F8FAFC]">
                                         <div className="flex items-start gap-3">
                                             {/* Icon */}
-                                            <div className="mt-0.5 text-gray-400">
+                                            <div className="mt-0.5 text-[#0052FF]">
                                                 <FileText className="h-4 w-4" />
                                             </div>
 
                                             {/* Details */}
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-xs font-bold text-white truncate tracking-tight uppercase">
+                                                <div className="truncate text-xs font-bold uppercase tracking-tight text-[#111827]">
                                                     {getDocumentName(doc)}
                                                 </div>
                                                 <div className="flex items-center gap-2 mt-1">
-                                                    <span className="text-xs text-white/40">
+                                                    <span className="text-xs text-[#4B5563]">
                                                         {getDocumentType(doc)}
                                                     </span>
                                                     {getDocumentDate(doc) && (
                                                         <>
-                                                            <span className="text-white/10">•</span>
-                                                            <span className="text-xs text-white/40 font-bold tracking-tight uppercase">
+                                                            <span className="text-[#CBD5E1]">•</span>
+                                                            <span className="text-xs text-[#4B5563] font-bold tracking-tight uppercase">
                                                                 {getDocumentDate(doc)}
                                                             </span>
                                                         </>
@@ -138,17 +138,17 @@ export function ProofDocumentsModal({
                                                 {(doc.supplier || doc.invoice_number || doc.amount) && (
                                                     <div className="flex flex-wrap gap-2 mt-2">
                                                         {doc.supplier && (
-                                                            <span className="text-xs px-1.5 py-0.5 bg-white/5 text-white/60 border border-white/10 rounded">
+                                                            <span className="rounded border border-[#D7E2F2] bg-[#F3F7FF] px-1.5 py-0.5 text-xs text-[#1F2937]">
                                                                 {doc.supplier}
                                                             </span>
                                                         )}
                                                         {doc.invoice_number && (
-                                                            <span className="text-xs px-1.5 py-0.5 bg-white/5 text-white/60 border border-white/10 rounded">
+                                                            <span className="rounded border border-[#D7E2F2] bg-[#F3F7FF] px-1.5 py-0.5 text-xs text-[#1F2937]">
                                                                 #{doc.invoice_number}
                                                             </span>
                                                         )}
                                                         {doc.amount && (
-                                                            <span className="text-xs px-1.5 py-0.5 bg-white/5 text-white/60 border border-white/10 rounded">
+                                                            <span className="rounded border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-xs text-emerald-700">
                                                                 ${doc.amount.toFixed(2)}
                                                             </span>
                                                         )}
@@ -159,7 +159,7 @@ export function ProofDocumentsModal({
                                             {/* Download Button */}
                                             <button
                                                 onClick={() => handleDownload(doc)}
-                                                className="p-2 text-white/40 hover:text-white hover:bg-white/10 rounded transition-colors"
+                                                className="rounded p-2 text-[#6B7280] transition-colors hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                                                 title="Download document">
                                                 <Download className="h-4 w-4" />
                                             </button>
@@ -172,11 +172,11 @@ export function ProofDocumentsModal({
                 </div>
 
                 {/* Footer */}
-                <div className="flex justify-end pt-3 border-t border-white/10">
+                <div className="flex justify-end border-t border-[#E5E7EB] pt-3">
                     <Button
                         variant="outline"
                         onClick={onClose}
-                        className="text-xs px-4 py-2 border-white/10 text-white/60 hover:bg-white/5">
+                        className="border-[#D7E2F2] px-4 py-2 text-xs text-[#374151] hover:bg-[#F8FAFC]">
                         Close
                     </Button>
                 </div>

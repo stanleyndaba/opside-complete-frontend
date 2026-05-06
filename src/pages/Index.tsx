@@ -12,7 +12,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/NFDzqcaAFHM';
-const DEMO_VIDEO_THUMBNAIL_URL = '/DEMO34.png';
+const DEMO_VIDEO_THUMBNAIL_URL = '/Margin1.png';
 
 const navLinks = [
   { label: 'Pricing', to: '/pricing' },
@@ -582,7 +582,7 @@ export default function Index() {
               target="_blank"
               rel="noreferrer"
               {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-sm border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1"
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1"
               aria-label="Watch the Margin product demo on YouTube"
             >
               <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">

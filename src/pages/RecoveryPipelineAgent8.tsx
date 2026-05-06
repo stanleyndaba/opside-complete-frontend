@@ -1762,20 +1762,20 @@ export default function RecoveryPipelineAgent8() {
                                         </Button>
                                       </DropdownMenuTrigger>
                                       <DropdownMenuContent align="end" className="platform-vitality-page w-56 rounded-xl border border-[#E5E7EB] bg-white p-1 shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
-                                        <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record actions</div>
+                                        <div className="mb-1 border-b border-[#E5E7EB] px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Record actions</div>
                                         {detailRouteId ? (
-                                          <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+                                          <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-[#374151] hover:bg-[#F3F7FF] hover:text-[#0052FF]">
                                             <Link to={`/app/${activeSlug}/recoveries/${detailRouteId}`} state={{ claim: row }}>{detailLabel}</Link>
                                           </DropdownMenuItem>
                                         ) : (
-                                          <div className="px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
+                                          <div className="px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-[#9CA3AF]">
                                             {NOT_AVAILABLE}
                                           </div>
                                         )}
-                                        <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
+                                        <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-[#374151] hover:bg-[#F3F7FF] hover:text-[#0052FF]" onClick={() => openProofDocuments(row)}>
                                           View proof documents
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openEvidencePacket(row)}>
+                                        <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-[#374151] hover:bg-[#F3F7FF] hover:text-[#0052FF]" onClick={() => openEvidencePacket(row)}>
                                           Open evidence packet
                                         </DropdownMenuItem>
                                       </DropdownMenuContent>

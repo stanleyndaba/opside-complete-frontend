@@ -16,7 +16,7 @@ import { api } from '@/lib/api';
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
 const DEMO_VIDEO_URL = 'https://youtu.be/NFDzqcaAFHM';
-const DEMO_VIDEO_THUMBNAIL_URL = '/DEMO34.png';
+const DEMO_VIDEO_THUMBNAIL_URL = '/Margin1.png';
 
 const offerHighlights = [
   {
@@ -271,7 +271,7 @@ export default function EarlyAccess() {
               target="_blank"
               rel="noreferrer"
               {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[32px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 md:rounded-[42px]"
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1"
               aria-label="Watch the Margin product demo on YouTube"
             >
               <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">

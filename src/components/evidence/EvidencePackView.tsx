@@ -234,11 +234,11 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-white/10">
-      <div className="border-b border-white/10 bg-white/5 px-4 py-2">
-        <h4 className="text-xs font-bold uppercase tracking-tight text-white/80">{title}</h4>
+    <div className="overflow-hidden rounded-lg border border-[#E5E7EB] bg-white">
+      <div className="border-b border-[#E5E7EB] bg-[#F8FAFC] px-4 py-2">
+        <h4 className="text-xs font-bold uppercase tracking-tight text-[#111827]">{title}</h4>
       </div>
-      <div className="bg-transparent">{children}</div>
+      <div>{children}</div>
     </div>
   );
 }
@@ -246,8 +246,8 @@ function Section({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-4 px-4 py-2.5">
-      <span className="text-xs font-bold uppercase tracking-tight text-white/40">{label}</span>
-      <span className="text-right text-xs font-bold tracking-tight text-white">{value}</span>
+      <span className="text-xs font-bold uppercase tracking-tight text-[#4B5563]">{label}</span>
+      <span className="text-right text-xs font-bold tracking-tight text-[#111827]">{value}</span>
     </div>
   );
 }
@@ -432,29 +432,29 @@ export function EvidencePackView({ open, onClose, claimId, tenantSlug, claim }: 
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto border border-white/10 bg-[#0c0c0c] text-white">
-        <DialogHeader className="border-b border-white/10 pb-3">
-          <DialogTitle className="text-base font-bold uppercase tracking-tight text-white">
+      <DialogContent className="platform-vitality-page max-h-[90vh] max-w-4xl overflow-y-auto rounded-2xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
+        <DialogHeader className="border-b border-[#E5E7EB] pb-3">
+          <DialogTitle className="text-base font-bold uppercase tracking-tight text-[#111827]">
             Evidence Packet
           </DialogTitle>
-          <DialogDescription className="text-xs text-white/60">
+          <DialogDescription className="text-xs text-[#4B5563]">
             Claim Reference: {packet?.claimReference || 'Unavailable'}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           {loading ? (
-            <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-6 text-sm text-white/50">
+            <div className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-6 text-sm text-[#4B5563]">
               Loading evidence packet...
             </div>
           ) : error ? (
-            <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-6 text-sm text-red-200">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700">
               {error}
             </div>
           ) : packet ? (
             <>
               <Section title="Claim Summary">
-                <div className="divide-y divide-white/10">
+                <div className="divide-y divide-[#E5E7EB]">
                   <SummaryRow label="Claim Reference" value={packet.claimReference} />
                   <SummaryRow label="Claim Type" value={formatLabel(packet.claimType)} />
                   <SummaryRow label="Case Status" value={formatLabel(packet.status)} />
@@ -492,29 +492,29 @@ export function EvidencePackView({ open, onClose, claimId, tenantSlug, claim }: 
 
               <Section title="Order & Inventory Evidence">
                 {organizedDocs.orderDocs.length > 0 ? (
-                  <div className="divide-y divide-white/10">
+                  <div className="divide-y divide-[#E5E7EB]">
                     {organizedDocs.orderDocs.map((doc) => (
                       <div key={doc.id} className="px-4 py-3">
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0 flex-1">
-                            <div className="text-xs font-bold tracking-tight text-white">{doc.name}</div>
-                            <div className="mt-1 text-xs font-medium tracking-tight text-white/50">
+                            <div className="text-xs font-bold tracking-tight text-[#111827]">{doc.name}</div>
+                            <div className="mt-1 text-xs font-medium tracking-tight text-[#4B5563]">
                               {formatLabel(doc.type)} • {doc.ingestedFrom || 'Source unavailable'}
                             </div>
-                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-white/70">
+                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-[#374151]">
                               {doc.supplier ? <span>Supplier: {doc.supplier}</span> : null}
                               {doc.invoice ? <span>Invoice: {doc.invoice}</span> : null}
                               {doc.amount !== null && doc.amount !== undefined ? <span>{formatCurrency(doc.amount)}</span> : null}
                               {doc.orderIds.length > 0 ? <span>Order: {doc.orderIds[0]}</span> : null}
                             </div>
                           </div>
-                          <div className="text-right text-xs font-bold tracking-tight text-white/60">{formatConfidence(doc.confidence)}</div>
+                          <div className="text-right text-xs font-bold tracking-tight text-[#0052FF]">{formatConfidence(doc.confidence)}</div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="px-4 py-6 text-center text-xs font-medium tracking-tight text-white/40">
+                  <div className="px-4 py-6 text-center text-xs font-medium tracking-tight text-[#6B7280]">
                     No linked order or invoice evidence is currently available.
                   </div>
                 )}
@@ -522,27 +522,27 @@ export function EvidencePackView({ open, onClose, claimId, tenantSlug, claim }: 
 
               <Section title="Shipment & Delivery Evidence">
                 {organizedDocs.shipmentDocs.length > 0 ? (
-                  <div className="divide-y divide-white/10">
+                  <div className="divide-y divide-[#E5E7EB]">
                     {organizedDocs.shipmentDocs.map((doc) => (
                       <div key={doc.id} className="px-4 py-3">
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0 flex-1">
-                            <div className="text-xs font-bold tracking-tight text-white">{doc.name}</div>
-                            <div className="mt-1 text-xs font-medium tracking-tight text-white/50">
+                            <div className="text-xs font-bold tracking-tight text-[#111827]">{doc.name}</div>
+                            <div className="mt-1 text-xs font-medium tracking-tight text-[#4B5563]">
                               {formatLabel(doc.type)} • {doc.ingestedFrom || 'Source unavailable'}
                             </div>
-                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-white/70">
+                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-[#374151]">
                               {doc.trackingNumbers.length > 0 ? <span>Tracking: {doc.trackingNumbers[0]}</span> : null}
                               {doc.parserVersion ? <span>Parser: v{doc.parserVersion}</span> : null}
                             </div>
                           </div>
-                          <div className="text-right text-xs font-bold tracking-tight text-white/60">{formatConfidence(doc.confidence)}</div>
+                          <div className="text-right text-xs font-bold tracking-tight text-[#0052FF]">{formatConfidence(doc.confidence)}</div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="px-4 py-6 text-center text-xs font-medium tracking-tight text-white/40">
+                  <div className="px-4 py-6 text-center text-xs font-medium tracking-tight text-[#6B7280]">
                     No linked shipment or delivery evidence is currently available.
                   </div>
                 )}
@@ -550,16 +550,16 @@ export function EvidencePackView({ open, onClose, claimId, tenantSlug, claim }: 
 
               {organizedDocs.otherDocs.length > 0 ? (
                 <Section title="Additional Linked Documents">
-                  <div className="divide-y divide-white/10">
+                  <div className="divide-y divide-[#E5E7EB]">
                     {organizedDocs.otherDocs.map((doc) => (
                       <div key={doc.id} className="flex items-center justify-between gap-4 px-4 py-3">
                         <div className="min-w-0">
-                          <div className="text-xs font-bold tracking-tight text-white">{doc.name}</div>
-                          <div className="mt-1 text-xs font-medium tracking-tight text-white/50">
+                          <div className="text-xs font-bold tracking-tight text-[#111827]">{doc.name}</div>
+                          <div className="mt-1 text-xs font-medium tracking-tight text-[#4B5563]">
                             {formatLabel(doc.type)} • {doc.ingestedFrom || 'Source unavailable'}
                           </div>
                         </div>
-                        <div className="text-right text-xs font-bold tracking-tight text-white/60">{formatConfidence(doc.confidence)}</div>
+                        <div className="text-right text-xs font-bold tracking-tight text-[#0052FF]">{formatConfidence(doc.confidence)}</div>
                       </div>
                     ))}
                   </div>
@@ -570,18 +570,18 @@ export function EvidencePackView({ open, onClose, claimId, tenantSlug, claim }: 
               <EvidenceAuditTrail claimId={packet.caseId} compact={false} />
             </>
           ) : (
-            <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-6 text-sm text-white/50">
+            <div className="rounded-lg border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-6 text-sm text-[#4B5563]">
               Evidence packet data is unavailable for this case.
             </div>
           )}
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-white/10 pt-4">
+        <div className="flex justify-end gap-2 border-t border-[#E5E7EB] pt-4">
           <Button
             variant="outline"
             size="sm"
             onClick={onClose}
-            className="h-8 rounded-sm border-white/10 text-xs text-white/60 hover:bg-white/5"
+            className="h-8 rounded-sm border-[#D7E2F2] text-xs text-[#374151] hover:bg-[#F8FAFC]"
           >
             Close
           </Button>
@@ -589,7 +589,7 @@ export function EvidencePackView({ open, onClose, claimId, tenantSlug, claim }: 
             size="sm"
             onClick={exportPacket}
             disabled={!packet}
-            className="h-8 rounded-sm border border-white/10 bg-white/10 text-xs text-white hover:bg-white/20"
+            className="h-8 rounded-sm border border-[#0052FF] bg-[#0052FF] text-xs text-white hover:bg-[#003DB8]"
           >
             <Download className="mr-1.5 h-3.5 w-3.5" />
             Export PDF

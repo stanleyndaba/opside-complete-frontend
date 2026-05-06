@@ -1156,9 +1156,12 @@ export default function IntegrationsHub() {
 
                 <div className="flex flex-col gap-5 border-b border-white/10 pb-5 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-6">
-                    <div className="h-16 w-16 rounded-2xl bg-sky-900/20 flex items-center justify-center border border-sky-700/30 shadow-[0_0_20px_rgba(14,116,144,0.22)] group-hover:shadow-[0_0_32px_rgba(30,64,175,0.34)] transition-all duration-500 overflow-hidden relative">
-                      <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <img src="/Amazon-logo.png" alt="Amazon" className="h-10 w-10 object-contain brightness-0 invert relative z-10" />
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden">
+                      <img
+                        src="/amazon-logo-transparent-circle.png"
+                        alt="Amazon"
+                        className="h-full w-full object-contain"
+                      />
                     </div>
                     <div>
                       <h3 className="text-[22px] font-sans font-medium text-white tracking-tight">Amazon Connection</h3>
