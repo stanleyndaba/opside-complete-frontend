@@ -609,6 +609,17 @@ export default function Index() {
           </div>
         </section>
 
+        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-12 md:py-18">
+          <div className={containerClass}>
+            <div className="max-w-[680px] md:mx-auto md:text-center">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Connect Amazon plus the inboxes and files where reimbursement proof already lives</div>
+            </div>
+            <div className="mt-7 md:mt-9">
+              <IntegrationsCarousel isMobileLayout={isMobileLayout} />
+            </div>
+          </div>
+        </section>
+
         <section className="relative py-16 md:py-28" id="how-margin-works">
           <div className={containerClass}>
             <motion.div {...revealProps}>
@@ -725,17 +736,6 @@ export default function Index() {
                   </motion.div>
                 ))}
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-12 md:py-18">
-          <div className={containerClass}>
-            <div className="max-w-[680px] md:mx-auto md:text-center">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Connect Amazon plus the inboxes and files where reimbursement proof already lives</div>
-            </div>
-            <div className="mt-7 md:mt-9">
-              <IntegrationsCarousel isMobileLayout={isMobileLayout} />
             </div>
           </div>
         </section>
