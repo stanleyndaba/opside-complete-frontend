@@ -154,13 +154,13 @@ export default function ConnectAmazonAccount() {
   };
 
   return (
-    <PageLayout title="Connect Amazon Account" hideNavbar hideSidebar hideLogo plainBackground>
-      <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] px-4 py-12 text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026] md:px-6">
+    <PageLayout title="Connect Amazon Account" hideNavbar hideSidebar hideLogo plainBackground noPadding>
+      <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] py-12 text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(46,125,91,0.1),transparent_32%)]" />
 
-        <div className="relative mx-auto max-w-[860px] space-y-8 pt-20">
+        <div className="relative mx-auto max-w-[860px] space-y-8 px-4 pt-20 md:px-6">
           <section className="space-y-5">
             <div className="inline-flex items-center gap-3 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
               <span>Amazon authorization</span>
