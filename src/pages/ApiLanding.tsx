@@ -22,9 +22,9 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
-const headingClass = 'mt-4 max-w-[920px] text-[31px] font-light leading-[1.02] tracking-tight text-white sm:text-[36px] md:text-[62px]';
-const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-white/62 md:mt-6 md:text-[18px] md:leading-8';
+const labelClass = 'text-[10px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const headingClass = 'mt-4 max-w-[920px] text-[34px] font-semibold leading-[1.02] tracking-[-0.055em] text-[#182026] sm:text-[42px] md:text-[64px]';
+const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
 const codeFontFamily = "'Fira Code', 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace";
 
 const revealProps = {
@@ -132,16 +132,16 @@ function ApiCodePreview() {
   ];
 
   return (
-    <div className="relative overflow-hidden rounded-[22px] border border-slate-600/30 bg-[linear-gradient(180deg,#111827_0%,#0d1628_46%,#0b1220_100%)] shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
-      <div className="flex items-center justify-between border-b border-slate-500/20 bg-[#111827] px-4 py-3">
+    <div className="relative overflow-hidden rounded-[28px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.12)]">
+      <div className="flex items-center justify-between border-b border-[#E4EDF1] bg-[#F8FAFC] px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-red-400/70" />
-          <span className="h-2 w-2 rounded-full bg-yellow-300/70" />
-          <span className="h-2 w-2 rounded-full bg-emerald-300/70" />
+          <span className="h-2 w-2 rounded-full bg-[#D96B6B]/70" />
+          <span className="h-2 w-2 rounded-full bg-[#D9B45C]/70" />
+          <span className="h-2 w-2 rounded-full bg-[#2E7D5B]/70" />
         </div>
-        <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-slate-300/54">Margin API Preview</div>
+        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Margin API Preview</div>
       </div>
-      <pre className="overflow-x-auto p-5 text-[12px] leading-6 text-sky-50/76 md:p-6 md:text-[13px]" style={{ fontFamily: codeFontFamily }}>
+      <pre className="overflow-x-auto bg-[#101820] p-5 text-[12px] leading-6 text-[#DCEBFF] md:p-6 md:text-[13px]" style={{ fontFamily: codeFontFamily }}>
         <code style={{ fontFamily: codeFontFamily }}>
           {lines.map((line, index) => (
             <span key={`${line}-${index}`} className="block whitespace-pre">
@@ -166,21 +166,23 @@ export default function ApiLanding() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
-      <PublicNavbar />
+    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+      <div
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+        }}
+      />
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
+      </div>
 
-      <main className="relative">
-        <div
-          className="pointer-events-none fixed inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
-          }}
-        />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(56,189,248,0.055)_0%,transparent_26%,transparent_68%,rgba(148,163,184,0.045)_100%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#050505] to-[#040404]" />
+      <PublicNavbar variant="light" />
 
-        <section className="relative pt-28 md:pt-40">
+      <main className="relative z-10">
+        <section className="relative pt-32 md:pt-44">
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.72fr)] lg:items-center">
               <motion.div
@@ -188,11 +190,13 @@ export default function ApiLanding() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className={labelClass}>Margin API</div>
-                <h1 className="mt-5 max-w-[900px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[76px]">
+                <div className="inline-flex items-center rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
+                  Margin API
+                </div>
+                <h1 className="mt-5 max-w-[900px] text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[#182026] sm:text-[52px] md:text-[78px]">
                   Recovery operations, programmable.
                 </h1>
-                <p className="mt-5 max-w-[740px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
+                <p className="mt-5 max-w-[740px] text-[16px] leading-7 text-[#4D5B66] md:mt-7 md:text-[19px] md:leading-8">
                   Margin API is the action layer behind cases, evidence, status, and recovered value. It gives selected teams a controlled way to connect account data, create claims, attach proof, and track payout truth from their own systems.
                 </p>
 
@@ -200,18 +204,18 @@ export default function ApiLanding() {
                   {['Private access', 'Case lifecycle', 'Evidence aware'].map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium text-white/62"
+                      className="rounded-full border border-[#DCE8EE] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#66737F]"
                     >
                       {item}
                     </span>
                   ))}
                 </div>
 
-                <div className="mt-8 flex w-full max-w-[440px] flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center">
                   <button
                     type="button"
                     onClick={() => navigate('/waitlist?intent=api')}
-                    className="inline-flex h-11 items-center justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13] sm:min-w-[184px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="inline-flex h-12 items-center justify-center rounded-full bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] transition-colors hover:bg-[#0869C9] sm:min-w-[190px]"
                   >
                     Join API Waitlist
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -219,7 +223,7 @@ export default function ApiLanding() {
 
                   <Link
                     to="/contact"
-                    className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[184px] md:h-12 md:px-6 md:text-sm"
+                    className="inline-flex h-12 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-6 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[184px]"
                   >
                     Contact Support
                   </Link>
@@ -238,23 +242,25 @@ export default function ApiLanding() {
           </div>
         </section>
 
-        <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
+        <section className="relative mt-14 border-y border-[#D8E3E8] bg-white/50 md:mt-20">
           <div className={containerClass}>
             <div className="grid gap-0 md:grid-cols-3">
               {principles.map((item) => (
-                <div key={item.label} className="border-b border-white/8 py-6 md:border-b-0 md:border-r md:border-white/8 md:px-6 md:last:border-r-0">
+                <div key={item.label} className="border-b border-[#D8E3E8] py-6 md:border-b-0 md:border-r md:px-6 md:last:border-r-0">
                   <div className="flex items-center gap-3">
-                    <item.icon className="h-4 w-4 text-sky-100/54" />
-                    <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/58">{item.label}</div>
+                    <div className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-[#EAF4FF] text-[#0B74DE]">
+                      <item.icon className="h-4 w-4" />
+                    </div>
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#182026]">{item.label}</div>
                   </div>
-                  <p className="mt-3 max-w-[340px] text-[13px] leading-6 text-white/46">{item.detail}</p>
+                  <p className="mt-3 max-w-[340px] text-[13px] leading-6 text-[#66737F]">{item.detail}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-32">
+        <section className="relative border-t border-[#D8E3E8] py-16 md:py-32">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>What It Does</div>
@@ -266,26 +272,26 @@ export default function ApiLanding() {
               </p>
             </motion.div>
 
-            <div className="mt-10 grid gap-px overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-16 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-10 grid gap-4 md:mt-16 md:grid-cols-2 xl:grid-cols-3">
               {capabilities.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.03 }}
-                  className="min-h-[190px] bg-[#070707] p-5 md:p-6"
+                  className="min-h-[190px] rounded-[28px] border border-[#CFE0EA] bg-white p-5 shadow-[0_24px_80px_rgba(37,49,58,0.08)] md:p-6"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-white/10 bg-white/[0.035] text-sky-100/70">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-[14px] border border-[#CFE0EA] bg-[#F8FAFC] text-[#0B74DE]">
                     <item.icon className="h-4 w-4" />
                   </div>
-                  <h3 className="mt-5 text-[18px] font-medium tracking-tight text-white">{item.label}</h3>
-                  <p className="mt-3 text-[14px] leading-6 text-white/50">{item.detail}</p>
+                  <h3 className="mt-5 text-[18px] font-semibold tracking-[-0.025em] text-[#182026]">{item.label}</h3>
+                  <p className="mt-3 text-[14px] leading-6 text-[#66737F]">{item.detail}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-32">
+        <section className="relative border-t border-[#D8E3E8] bg-[#F6F9FC] py-16 md:py-32">
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.78fr_1fr] lg:items-start">
               <motion.div {...revealProps}>
@@ -298,8 +304,8 @@ export default function ApiLanding() {
                 </p>
               </motion.div>
 
-              <motion.div {...revealProps} className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)]">
-                <div className="grid grid-cols-[76px_minmax(0,1fr)] border-b border-white/8 px-4 py-3 text-[10px] uppercase tracking-[0.16em] text-white/34 md:grid-cols-[96px_minmax(0,1fr)_220px]">
+              <motion.div {...revealProps} className="overflow-hidden rounded-[28px] border border-[#CFE0EA] bg-white shadow-[0_24px_80px_rgba(37,49,58,0.08)]">
+                <div className="grid grid-cols-[76px_minmax(0,1fr)] border-b border-[#E4EDF1] bg-[#F8FAFC] px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F] md:grid-cols-[96px_minmax(0,1fr)_220px]">
                   <span>Method</span>
                   <span>Path</span>
                   <span className="hidden md:block">Purpose</span>
@@ -307,11 +313,11 @@ export default function ApiLanding() {
                 {contractRows.map(([method, path, purpose]) => (
                   <div
                     key={`${method}-${path}`}
-                    className="grid grid-cols-[76px_minmax(0,1fr)] gap-3 border-b border-white/8 px-4 py-4 last:border-b-0 md:grid-cols-[96px_minmax(0,1fr)_220px]"
+                    className="grid grid-cols-[76px_minmax(0,1fr)] gap-3 border-b border-[#E4EDF1] px-4 py-4 last:border-b-0 md:grid-cols-[96px_minmax(0,1fr)_220px]"
                   >
-                    <span className="text-[11px] font-semibold tracking-tight text-sky-100/72">{method}</span>
-                    <span className="min-w-0 break-all font-mono text-[12px] text-white/76">{path}</span>
-                    <span className="col-span-2 text-[12px] leading-5 text-white/44 md:col-span-1">{purpose}</span>
+                    <span className="text-[11px] font-semibold tracking-tight text-[#0B74DE]">{method}</span>
+                    <span className="min-w-0 break-all font-mono text-[12px] text-[#25313A]">{path}</span>
+                    <span className="col-span-2 text-[12px] leading-5 text-[#66737F] md:col-span-1">{purpose}</span>
                   </div>
                 ))}
               </motion.div>
@@ -319,7 +325,7 @@ export default function ApiLanding() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-32">
+        <section className="relative border-t border-[#D8E3E8] py-16 md:py-32">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={labelClass}>Where It Fits</div>
@@ -328,19 +334,19 @@ export default function ApiLanding() {
               </h2>
             </motion.div>
 
-            <div className="mt-10 border-t border-white/8 md:mt-14">
+            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
               {useCases.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[260px_minmax(0,1fr)] md:gap-8 md:py-8"
+                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[260px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="flex items-center gap-3 text-[12px] uppercase tracking-[0.16em] text-sky-100/50">
+                  <div className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
                     <CheckCircle2 className="h-4 w-4" />
                     {item.label}
                   </div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
                 </motion.div>
@@ -349,32 +355,32 @@ export default function ApiLanding() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-16 md:py-36">
+        <section className="relative border-t border-[#D8E3E8] py-16 md:py-36">
           <div className={containerClass}>
             <motion.div
               {...revealProps}
-              className="grid gap-8 overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:px-10 md:py-12"
+              className="grid gap-8 overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white px-6 py-8 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:px-10 md:py-12"
             >
               <div>
                 <div className={labelClass}>Access</div>
-                <h2 className="mt-4 max-w-[720px] text-[28px] font-light leading-[1.05] tracking-tight text-white md:text-[42px]">
+                <h2 className="mt-4 max-w-[720px] text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] md:text-[46px]">
                   Request access when your workflow needs recovery data outside the dashboard.
                 </h2>
-                <p className="mt-4 max-w-[720px] text-[14px] leading-7 text-white/56 md:text-[16px]">
+                <p className="mt-4 max-w-[720px] text-[14px] leading-7 text-[#66737F] md:text-[16px]">
                   Early access is for selected operators, agencies, and partners who need claims, evidence, and recovery status in their own systems.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
                 <Link
                   to="/waitlist?intent=api"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13]"
+                  className="inline-flex h-12 items-center justify-center rounded-full bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] transition-colors hover:bg-[#0869C9]"
                 >
                   Request API Access
                   <KeyRound className="ml-2 h-4 w-4" />
                 </Link>
                 <Link
                   to="/about-margin"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04]"
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-6 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC]"
                 >
                   How Margin Works
                   <Layers3 className="ml-2 h-4 w-4" />
