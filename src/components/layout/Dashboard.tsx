@@ -3862,18 +3862,18 @@ export function Dashboard() {
                                       </DropdownMenuTrigger>
                                       <DropdownMenuContent
                                         align="end"
-                                        className="bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-3xl p-1 min-w-[180px]"
+                                        className="platform-vitality-page min-w-[180px] rounded-lg border border-[#E5E7EB] bg-white p-1 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl"
                                       >
                                         <DropdownMenuItem
                                           onClick={() => openDiscrepancySurface('detail')}
-                                          className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                          className="cursor-pointer rounded-md py-2 text-[11px] font-sans font-medium tracking-tight text-[#4B5563] hover:bg-[#F3F7FF] hover:text-[#0052FF] focus:bg-[#F3F7FF] focus:text-[#0052FF]"
                                         >
                                           <Info className="h-3 w-3 mr-2" />
                                           View finding
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() => openDiscrepancySurface('proof')}
-                                          className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                          className="cursor-pointer rounded-md py-2 text-[11px] font-sans font-medium tracking-tight text-[#4B5563] hover:bg-[#F3F7FF] hover:text-[#0052FF] focus:bg-[#F3F7FF] focus:text-[#0052FF]"
                                         >
                                           <Files className="h-3 w-3 mr-2" />
                                           Proof needed
@@ -4094,7 +4094,7 @@ export function Dashboard() {
 
       {/* Finding detail modal */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
-        <DialogContent className="max-h-[72vh] w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
+        <DialogContent className="platform-vitality-page max-h-[72vh] w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-lg border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
           {activeDiscrepancy ? (
             <>
               <DialogHeader className="border-b border-white/10 px-4 pb-2.5 pt-3">
@@ -4127,7 +4127,7 @@ export function Dashboard() {
                   </div>
                   <button
                     onClick={() => setShowDiscrepancyModal(false)}
-                    className="rounded-md border border-white/10 bg-white/[0.02] p-2 text-white/55 transition-colors hover:text-white hover:bg-white/[0.05]"
+                    className="rounded-md border border-[#E5E7EB] bg-white p-2 text-[#6B7280] transition-colors hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -4320,7 +4320,7 @@ export function Dashboard() {
                         setShowDiscrepancyModal(false);
                         navigate(tenantRoute(activeSlug, '/recoveries'));
                       }}
-                      className="h-8 rounded-none border border-white/10 bg-white px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
+                      className="h-8 rounded-md border border-[#0052FF] bg-[#0052FF] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#003DBF]"
                     >
                       Open cases
                     </Button>
@@ -4328,7 +4328,7 @@ export function Dashboard() {
                   <Button
                     variant="outline"
                     onClick={() => setShowDiscrepancyModal(false)}
-                    className="h-8 rounded-none border-white/10 bg-transparent px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
+                    className="h-8 rounded-md border-[#E5E7EB] bg-white px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   >
                     Close
                   </Button>
@@ -4345,7 +4345,7 @@ export function Dashboard() {
 
       {/* Proof needed modal */}
       <Dialog open={showProofNeededModal} onOpenChange={setShowProofNeededModal}>
-        <DialogContent className="max-h-[70vh] w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
+        <DialogContent className="platform-vitality-page max-h-[70vh] w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-lg border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
           {activeDiscrepancy ? (
             <>
               <DialogHeader className="border-b border-white/10 px-4 pb-2.5 pt-3">
@@ -4363,7 +4363,7 @@ export function Dashboard() {
                   </div>
                   <button
                     onClick={() => setShowProofNeededModal(false)}
-                    className="rounded-md border border-white/10 bg-white/[0.02] p-2 text-white/55 transition-colors hover:bg-white/[0.05] hover:text-white"
+                    className="rounded-md border border-[#E5E7EB] bg-white p-2 text-[#6B7280] transition-colors hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -4576,14 +4576,14 @@ export function Dashboard() {
                       setShowProofNeededModal(false);
                       navigate(tenantRoute(activeSlug, '/evidence-locker'));
                     }}
-                    className="h-8 rounded-none border border-white/10 bg-white px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
+                    className="h-8 rounded-md border border-[#0052FF] bg-[#0052FF] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#003DBF]"
                   >
                     Open Evidence Locker
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setShowProofNeededModal(false)}
-                    className="h-8 rounded-none border-white/10 bg-transparent px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
+                    className="h-8 rounded-md border-[#E5E7EB] bg-white px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   >
                     Close
                   </Button>
