@@ -248,10 +248,10 @@ export default function PricingAdjust() {
   const renderPricingTier = (tier: PricingTier, index: number) => {
     const featured = Boolean(tier.featured);
     const baseCard =
-      'relative flex h-full flex-col rounded-2xl border border-white/10 p-6 transition-all duration-300 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.45)]';
+      'relative flex h-full flex-col overflow-hidden rounded-[34px] border p-6 transition-all duration-300 shadow-[0_28px_90px_rgba(37,49,58,0.1)]';
     const cardClasses = featured
-      ? `${baseCard} bg-white/[0.055]`
-      : `${baseCard} bg-white/[0.025]`;
+      ? `${baseCard} border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)]`
+      : `${baseCard} border-[#CFE0EA] bg-white`;
 
     return (
       <motion.div
@@ -261,44 +261,44 @@ export default function PricingAdjust() {
         transition={{ delay: 0.2 + index * 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         className={cardClasses}
       >
-        <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(11,116,222,0.1),_transparent_60%)]" />
 
         <div className="relative z-10 flex h-full flex-col">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div>
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
                 {tier.salesLed ? 'Offer' : 'Coverage'}
               </div>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-white">{tier.name}</h2>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[#182026]">{tier.name}</h2>
             </div>
             {featured || tier.badgeLabel ? (
-              <Badge variant="outline" className="border-0 bg-white/[0.06] text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
+              <Badge variant="outline" className="border-[#BFD8EA] bg-white text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">
                 {tier.badgeLabel || 'Most Popular'}
               </Badge>
             ) : null}
           </div>
 
-          <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Price</div>
-            <div className="mt-3 text-4xl font-light tracking-tight text-white">
+          <div className="mb-6 rounded-[24px] border border-[#E4EDF1] bg-[#F8FAFC] p-5">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Price</div>
+            <div className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-[#182026]">
               {tier.price}
             </div>
-            <div className="mt-2 text-[11px] text-white/45">
+            <div className="mt-2 text-[11px] text-[#66737F]">
               {tier.priceContext}
             </div>
           </div>
 
-          <div className="mb-6 rounded-xl bg-white/[0.03] p-4">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Purpose</div>
-            <div className="mt-3 text-sm font-medium text-white/80">{tier.purpose}</div>
+          <div className="mb-6 rounded-[22px] border border-[#E4EDF1] bg-white p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Purpose</div>
+            <div className="mt-3 text-sm font-semibold text-[#25313A]">{tier.purpose}</div>
           </div>
 
-          <div className="mb-8 flex-grow rounded-xl bg-white/[0.03] p-5">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Key Features</div>
+          <div className="mb-8 flex-grow rounded-[24px] border border-[#E4EDF1] bg-white p-5">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Key Features</div>
             <div className="mt-4 space-y-3">
               {tier.features.map((feature) => (
-                <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-white/78">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-white/45" />
+                <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-[#4D5B66]">
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-[#2E7D5B]" />
                   <span>{feature}</span>
                 </div>
               ))}
@@ -319,7 +319,12 @@ export default function PricingAdjust() {
                 startSubscribeIntent(tier.planKey, 'monthly');
               }}
               disabled={processingSelectionKey !== null}
-              className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
+              className={cn(
+                "h-12 rounded-full font-semibold",
+                featured
+                  ? "bg-[#0B74DE] text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
+                  : "border border-[#CFE0EA] bg-white text-[#25313A] hover:bg-[#F8FAFC]"
+              )}
             >
               {tier.planKey && processingSelectionKey === `${tier.planKey}:monthly`
                 ? 'Preparing Checkout'
@@ -333,37 +338,39 @@ export default function PricingAdjust() {
   };
 
   return (
-    <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo midnight>
-      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden font-sans">
+    <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo plainBackground>
+      <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         {isInAppOverlay ? (
           <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-5 md:px-8">
             <Link
               to="/"
-              className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/68 transition-colors hover:bg-white/[0.05] hover:text-white"
+              className="inline-flex items-center rounded-full border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
             >
               Landing Page
             </Link>
             <button
               type="button"
               onClick={closeOverlay}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/68 transition-colors hover:bg-white/[0.05] hover:text-white"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#DCE8EE] bg-white text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
               aria-label="Close pricing"
             >
               <X className="h-4 w-4" strokeWidth={1.8} />
             </button>
           </div>
         ) : (
-          <PublicNavbar />
+          <PublicNavbar variant="light" />
         )}
         <div
-          className="fixed inset-0 pointer-events-none opacity-[0.03]"
+          className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]"
+        />
+        <div
+          className="fixed inset-0 pointer-events-none opacity-[0.04]"
           style={{
             backgroundImage:
               'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
           }}
         />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
 
         <div className={cn(
           "relative z-10 w-full mx-auto px-6 lg:px-10 pb-24",
@@ -376,19 +383,19 @@ export default function PricingAdjust() {
             className="mb-12 flex flex-col items-center text-center"
           >
             <div className="flex flex-col items-center gap-3">
-              <Badge variant="outline" className="border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+              <Badge variant="outline" className="border-[#DCE8EE] bg-white text-[10px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">
                 Flat Monthly Recovery Coverage
               </Badge>
-              <h1 className="text-2xl font-sans font-light tracking-tight text-white">Pricing</h1>
+              <h1 className="text-2xl font-semibold tracking-[-0.035em] text-[#182026]">Pricing</h1>
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
-              <h2 className="text-4xl md:text-6xl font-light tracking-tight text-white/95 leading-tight">
+              <h2 className="text-4xl font-semibold leading-tight tracking-[-0.055em] text-[#182026] md:text-6xl">
                 Choose ongoing recovery coverage with no commissions.
               </h2>
-              <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight mx-auto">
+              <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
                 Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time through flat monthly coverage.
               </p>
-              <p className="mx-auto max-w-2xl text-[11px] font-sans font-medium leading-5 text-white/32">
+              <p className="mx-auto max-w-2xl text-[11px] font-medium leading-5 text-[#7A8994]">
                 Checkout is processed securely by PayPal for the selected plan.
               </p>
             </div>
