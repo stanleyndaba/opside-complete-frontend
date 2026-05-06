@@ -225,6 +225,13 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.add('public-light-scrollbar');
+    return () => {
+      document.documentElement.classList.remove('public-light-scrollbar');
+    };
+  }, []);
+
   return (
     <header className="fixed left-0 right-0 top-0 z-50">
       <div className="mx-auto max-w-[1240px] px-3 py-3 md:px-6 md:py-5">

@@ -68,6 +68,15 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
         }
     }, [mobileMenuOpen]);
 
+    useEffect(() => {
+        if (!isLight) return;
+
+        document.documentElement.classList.add('public-light-scrollbar');
+        return () => {
+            document.documentElement.classList.remove('public-light-scrollbar');
+        };
+    }, [isLight]);
+
     return (
         <header className="fixed top-0 left-0 right-0 z-50 border-transparent bg-transparent">
             <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">

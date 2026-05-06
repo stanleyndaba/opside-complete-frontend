@@ -343,6 +343,31 @@
     @apply bg-muted-foreground/50;
   }
 
+  html.public-light-scrollbar {
+    scrollbar-color: #bfd8ea #fafaf7;
+    color-scheme: light;
+  }
+
+  html.public-light-scrollbar::-webkit-scrollbar-track,
+  html.public-light-scrollbar body::-webkit-scrollbar-track,
+  html.public-light-scrollbar *::-webkit-scrollbar-track {
+    background: #fafaf7;
+  }
+
+  html.public-light-scrollbar::-webkit-scrollbar-thumb,
+  html.public-light-scrollbar body::-webkit-scrollbar-thumb,
+  html.public-light-scrollbar *::-webkit-scrollbar-thumb {
+    background: #bfd8ea;
+    border: 2px solid #fafaf7;
+    border-radius: 999px;
+  }
+
+  html.public-light-scrollbar::-webkit-scrollbar-thumb:hover,
+  html.public-light-scrollbar body::-webkit-scrollbar-thumb:hover,
+  html.public-light-scrollbar *::-webkit-scrollbar-thumb:hover {
+    background: #0b74de;
+  }
+
   /* Smooth horizontal scrolling for recoveries table */
   .recoveries-table-scroll {
     scroll-behavior: smooth;

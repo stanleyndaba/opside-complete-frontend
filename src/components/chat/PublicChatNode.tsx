@@ -11,10 +11,11 @@ export function PublicChatNode() {
     const location = useLocation();
 
     // We might want to hide it on specific auth pages if they feel too crowded
+    const isAppRoute = location.pathname.startsWith('/app');
     const isAuthSandbox = location.pathname.includes('sandbox');
     const isAuthSuccess = location.pathname === '/auth/success';
 
-    if (isAuthSandbox || isAuthSuccess) {
+    if (isAppRoute || isAuthSandbox || isAuthSuccess) {
         return null;
     }
 
