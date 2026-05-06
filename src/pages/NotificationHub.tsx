@@ -216,7 +216,7 @@ const renderNotificationMessage = (message: string) => {
   const parts = message.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={index} className="font-bold text-white">{part.slice(2, -2)}</strong>;
+      return <strong key={index} className="font-bold text-[#111827]">{part.slice(2, -2)}</strong>;
     }
     return <span key={index}>{part}</span>;
   });
@@ -470,8 +470,8 @@ export default function NotificationHub() {
   );
 
   return (
-    <PageLayout title="Notifications" midnight noPadding>
-      <div className="relative min-h-screen bg-[#050505] text-white">
+    <PageLayout title="Notifications" noPadding>
+      <div className="platform-vitality-page relative min-h-screen bg-[#F9FAFB] text-[#111827]">
         <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
         <div className="relative mx-auto max-w-[1500px] px-8 py-8">
           {/* Analysis Header */}
@@ -564,7 +564,7 @@ export default function NotificationHub() {
                     <SelectTrigger className="h-10 w-[130px] rounded-none border-white/10 bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-white focus:border-white/24">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">All Types</SelectItem>
                       <SelectItem value="financial" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Financial</SelectItem>
                       <SelectItem value="document" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Documents</SelectItem>
@@ -577,7 +577,7 @@ export default function NotificationHub() {
                     <SelectTrigger className="h-10 w-[120px] rounded-none border-white/10 bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-white focus:border-white/24">
                       <SelectValue placeholder="Date" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">All Time</SelectItem>
                       <SelectItem value="today" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Today</SelectItem>
                       <SelectItem value="week" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Week</SelectItem>
@@ -590,7 +590,7 @@ export default function NotificationHub() {
                     <SelectTrigger className="h-10 w-[110px] rounded-none border-white/10 bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-white focus:border-white/24">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">All</SelectItem>
                       <SelectItem value="unread" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Unread</SelectItem>
                       <SelectItem value="read" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Read</SelectItem>
@@ -716,7 +716,7 @@ export default function NotificationHub() {
 
         <SheetContent
           side="right"
-          className="w-full border-l border-white/10 bg-[#070707] p-0 text-white shadow-[0_0_40px_rgba(0,0,0,0.5)] sm:max-w-[46vw]"
+          className="platform-vitality-page w-full border-l border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] sm:max-w-[46vw]"
         >
           <SheetHeader className="border-b border-white/10 px-8 py-6 text-left">
             <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Settings</div>
@@ -790,7 +790,7 @@ export default function NotificationHub() {
                                   onCheckedChange={(checked) =>
                                     updatePreference(pref.id, 'email', checked)
                                   }
-                                  className="scale-90 data-[state=checked]:bg-white"
+                                  className="scale-90 data-[state=checked]:bg-[#0052FF]"
                                 />
                                 <span className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/40">Email</span>
                               </div>
@@ -802,7 +802,7 @@ export default function NotificationHub() {
                                   onCheckedChange={(checked) =>
                                     updatePreference(pref.id, 'inApp', checked)
                                   }
-                                  className="scale-90 data-[state=checked]:bg-white"
+                                  className="scale-90 data-[state=checked]:bg-[#0052FF]"
                                 />
                                 <span className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/40">In-App</span>
                               </div>

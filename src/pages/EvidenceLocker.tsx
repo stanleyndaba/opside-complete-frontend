@@ -88,14 +88,14 @@ const getAuditEventColor = (eventType: string) => {
   switch (eventType) {
     case 'parsed':
     case 'verified':
-      return 'text-white';
+      return 'text-[#111827]';
     case 'linked':
     case 'filed':
-      return 'text-white/80';
+      return 'text-emerald-700';
     case 'error':
       return 'text-rose-500';
     default:
-      return 'text-white/60';
+      return 'text-[#4B5563]';
   }
 };
 
@@ -145,7 +145,7 @@ const getEvidenceStateLabel = (doc: LockerDocumentRow) => {
 
 const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
   if (doc.usable_as_evidence) {
-    return 'bg-white/10 text-white/80 border-white/15';
+    return 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20';
   }
 
   switch (doc.evidence_state) {
@@ -158,7 +158,7 @@ const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
     case 'Unmatched':
     case 'Not Parsed':
     default:
-      return 'bg-white/5 text-white/55 border-white/10';
+      return 'bg-[#F9FAFB] text-[#4B5563] border-[#E5E7EB]';
   }
 };
 
@@ -693,9 +693,9 @@ export default function EvidenceLocker() {
 
   if (!activeSlug) {
     return (
-      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+      <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
         <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
         <div className="flex-1 flex h-full overflow-hidden">
           <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
@@ -718,10 +718,10 @@ export default function EvidenceLocker() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+    <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
       {/* Background Matrix Pattern / Noise */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
@@ -857,12 +857,12 @@ export default function EvidenceLocker() {
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button
-                      className="group relative px-6 py-2.5 bg-white hover:bg-white/90 transition-all rounded-lg overflow-hidden"
+                      className="group relative px-6 py-2.5 bg-[#0052FF] hover:bg-[#0047DD] transition-all rounded-lg overflow-hidden shadow-[0_14px_30px_rgba(0,82,255,0.18)]"
                       onClick={() => document.getElementById('doc-file-input')?.click()}
                     >
                       <div className="relative flex items-center gap-2">
-                        <Upload className="w-3.5 h-3.5 text-black" />
-                        <span className="text-[11px] font-sans font-bold text-black uppercase tracking-tight">Upload Files</span>
+                        <Upload className="w-3.5 h-3.5 text-[#FFFFFF]" />
+                        <span className="text-[11px] font-sans font-bold text-[#FFFFFF] uppercase tracking-tight">Upload Files</span>
                       </div>
                     </button>
                     <input id="doc-file-input" type="file" multiple className="hidden" onChange={(e) => {
@@ -994,7 +994,7 @@ export default function EvidenceLocker() {
                                       return next;
                                     });
                                   }}
-                                  className="h-3.5 w-3.5 border-white/20 rounded-sm data-[state=checked]:bg-white data-[state=checked]:border-none transition-colors"
+                                  className="h-3.5 w-3.5 border-white/20 rounded-sm data-[state=checked]:bg-[#0052FF] data-[state=checked]:border-none transition-colors"
                                 />
                                 <Hexagon className="h-3.5 w-3.5 text-white/5 group-hover:text-white/40 transition-colors" />
                               </div>
@@ -1043,7 +1043,7 @@ export default function EvidenceLocker() {
                                         <>
                                     <div className={cn(
                                       "h-1.5 w-1.5 rounded-full shadow-[0_0_8px]",
-                                      parsingStatus === 'completed' ? 'bg-white/70 shadow-white/20' :
+                                      parsingStatus === 'completed' ? 'bg-emerald-500 shadow-emerald-500/30' :
                                         parsingStatus === 'partial' ? 'bg-amber-400 shadow-amber-400/50' :
                                           parsingStatus === 'processing' ? 'bg-amber-500 shadow-amber-500/50 animate-pulse' :
                                             parsingStatus === 'failed' ? 'bg-rose-500 shadow-rose-500/50' : 'bg-white/10'
@@ -1109,7 +1109,7 @@ export default function EvidenceLocker() {
                                     <MoreHorizontal className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-3xl backdrop-blur-3xl p-2 animate-in fade-in slide-in-from-top-1">
+                                <DropdownMenuContent align="end" className="platform-vitality-page w-56 bg-white border border-[#E5E7EB] rounded-xl shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl p-2 animate-in fade-in slide-in-from-top-1">
                                   <DropdownMenuItem asChild className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-tight">
                                     <Link to={`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
                                       <Eye className="w-3.5 h-3.5" />

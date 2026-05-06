@@ -680,6 +680,23 @@ footer .brand-wordmark,
   color: #111827;
 }
 
+.platform-vitality-page[class*="bg-[#070707]"],
+.platform-vitality-page[class*="bg-[#050505]"],
+.platform-vitality-page[class*="bg-[#0a0a0a]"],
+.platform-vitality-page[class*="bg-[#0c0c0c]"],
+.platform-vitality-page[class*="bg-[#111111]"],
+.platform-vitality-page[class*="bg-black"] {
+  background-color: #f9fafb !important;
+}
+
+.platform-vitality-page[class*="border-white"] {
+  border-color: #e5e7eb !important;
+}
+
+.platform-vitality-page[class*="text-white"] {
+  color: #111827 !important;
+}
+
 .platform-vitality-page [class*="bg-[#070707]"],
 .platform-vitality-page [class*="bg-[#050505]"],
 .platform-vitality-page [class*="bg-[#0a0a0a]"],
@@ -693,10 +710,13 @@ footer .brand-wordmark,
 .platform-vitality-page [class~="bg-white/10"],
 .platform-vitality-page [class~="bg-white/[0.01]"],
 .platform-vitality-page [class~="bg-white/[0.015]"],
+.platform-vitality-page [class~="bg-white/[0.018]"],
 .platform-vitality-page [class~="bg-white/[0.02]"],
+.platform-vitality-page [class~="bg-white/[0.025]"],
 .platform-vitality-page [class~="bg-white/[0.03]"],
 .platform-vitality-page [class~="bg-white/[0.04]"],
-.platform-vitality-page [class~="bg-white/[0.05]"] {
+.platform-vitality-page [class~="bg-white/[0.05]"],
+.platform-vitality-page [class~="bg-white/[0.06]"] {
   background-color: #ffffff !important;
 }
 
@@ -727,7 +747,10 @@ footer .brand-wordmark,
 .platform-vitality-page [class*="text-[#7b7b7b]"],
 .platform-vitality-page [class*="text-[#7f7f7f]"],
 .platform-vitality-page [class*="text-[#8a8a8a]"],
-.platform-vitality-page [class*="text-[#9a9a9a]"] {
+.platform-vitality-page [class*="text-[#9a9a9a]"],
+.platform-vitality-page [class*="text-zinc-300"],
+.platform-vitality-page [class*="text-zinc-400"],
+.platform-vitality-page [class*="text-zinc-600"] {
   color: #6b7280 !important;
 }
 

@@ -354,7 +354,7 @@ export function NotificationBell({
           {shouldShowLabel && <span className="text-xs font-sans font-bold uppercase tracking-tight">{label}</span>}
           {unreadCount > 0 && (
             <span className={cn(
-              "absolute flex items-center justify-center bg-[#262626] text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.45)]",
+              "absolute flex items-center justify-center bg-[#0052FF] text-[#FFFFFF] text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 border border-white shadow-[0_8px_18px_rgba(0,82,255,0.22)]",
               isSidebarStyle ? "top-1 right-2" : "-top-0.5 -right-0.5"
             )}>
               {unreadCount > 9 ? '9+' : unreadCount}
@@ -367,8 +367,8 @@ export function NotificationBell({
       <HoverCardContent
         align="end"
         sideOffset={12}
-        className="z-50 flex max-h-[520px] w-[428px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] p-0 shadow-3xl backdrop-blur-3xl">
-        <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex-shrink-0">
+        className="platform-vitality-page z-50 flex max-h-[520px] w-[428px] flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-0 shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
+        <div className="bg-[#F9FAFB] px-6 py-4 border-b border-[#E5E7EB] flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1 pr-4">
               <h3 className="text-[11px] font-sans font-bold uppercase tracking-tight text-white">
@@ -382,11 +382,11 @@ export function NotificationBell({
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34 transition-colors hover:text-white/72">
+                  className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] transition-colors hover:text-[#0052FF]">
                   Mark all read
                 </button>
               )}
-              <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/72">
+              <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF]">
                 {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
               </div>
             </div>
@@ -409,13 +409,13 @@ export function NotificationBell({
                 <div
                   className={cn(
                     'group relative cursor-pointer px-6 py-4 transition-colors duration-200 hover:bg-white/[0.025]',
-                    !notification.read ? 'bg-white/[0.018]' : 'bg-transparent'
+                    !notification.read ? 'bg-[#F3F7FF]' : 'bg-transparent'
                   )}
                   onClick={() => handleNotificationClick(notification.id)}>
                   <div
                     className={cn(
                       'absolute left-0 top-3 bottom-3 w-[2px] rounded-full transition-opacity',
-                      !notification.read ? 'bg-white/45 opacity-100' : 'bg-white/18 opacity-0 group-hover:opacity-100'
+                      !notification.read ? 'bg-[#0052FF] opacity-100' : 'bg-[#0052FF]/20 opacity-0 group-hover:opacity-100'
                     )}
                   />
 
@@ -426,12 +426,12 @@ export function NotificationBell({
                           className={cn(
                             'rounded-full border px-2 py-0.5 text-[9px] font-sans font-semibold uppercase tracking-tight',
                             notification.tone === 'success'
-                              ? 'border-white/12 bg-white/[0.06] text-white/78'
+                              ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700'
                               : notification.tone === 'warning'
-                                ? 'border-white/12 bg-white/[0.04] text-white/64'
+                                ? 'border-amber-500/20 bg-amber-500/10 text-amber-700'
                                 : notification.tone === 'progress'
-                                  ? 'border-white/10 bg-white/[0.03] text-white/58'
-                                  : 'border-white/8 bg-transparent text-white/46'
+                                  ? 'border-[#D8E7FF] bg-[#F3F7FF] text-[#0052FF]'
+                                  : 'border-[#E5E7EB] bg-white text-[#4B5563]'
                           )}
                         >
                           {notification.eyebrow}
@@ -494,9 +494,9 @@ export function NotificationBell({
           )}
         </div>
 
-        <div className="bg-white/[0.01] px-6 py-4 border-t border-white/5 flex-shrink-0">
+        <div className="bg-[#F9FAFB] px-6 py-4 border-t border-[#E5E7EB] flex-shrink-0">
           <Link to={tenantRoute(activeSlug, '/notifications')} onClick={() => setIsOpen(false)}>
-            <button className="w-full rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-center text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white">
+            <button className="w-full rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-4 py-2 text-center text-[10px] font-sans font-medium uppercase tracking-tight text-[#0052FF] transition-colors hover:border-[#0052FF]/30 hover:bg-white">
               View all updates
             </button>
           </Link>
