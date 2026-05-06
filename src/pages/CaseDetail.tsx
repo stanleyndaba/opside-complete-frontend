@@ -1653,7 +1653,7 @@ export default function CaseDetail() {
     return (
       <PageLayout title="Opening Case...">
         <div className="platform-vitality-page relative -m-4 bg-[#F9FAFB] text-[#111827] lg:-m-6">
-          <div className="relative w-full bg-background min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
+          <div className="relative w-full bg-[#F9FAFB] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
             <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
               <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
                 <div className="flex items-start gap-6">
@@ -1695,7 +1695,7 @@ export default function CaseDetail() {
                   <Skeleton className="h-4 w-[92%] bg-white/[0.05]" />
                   <Skeleton className="h-4 w-[76%] bg-white/[0.05]" />
                 </div>
-                <div className="bg-[#0a0a0a] p-8">
+                <div className="bg-white p-8">
                   <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                     <div className="space-y-4">
                       <Skeleton className="h-4 w-28 bg-white/[0.06]" />
@@ -1742,7 +1742,7 @@ export default function CaseDetail() {
   return (
     <PageLayout title={`Case ID: ${effectiveCase.id}`}>
       <div className="platform-vitality-page relative -m-4 bg-[#F9FAFB] text-[#111827] lg:-m-6">
-        <div className="relative w-full bg-background min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
+        <div className="relative w-full bg-[#F9FAFB] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
             {/* Header - Case Information */}
             <div className="mb-3 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
@@ -2118,7 +2118,7 @@ export default function CaseDetail() {
                 </div>
 
                 {/* Tile 2: Transaction Details */}
-                <div className="p-8 bg-[#0a0a0a]">
+                <div className="p-8 bg-white">
                   <div className="mb-6">
                     <h3 className="text-sm font-bold text-white">Transaction Details</h3>
                   </div>
@@ -2552,7 +2552,7 @@ export default function CaseDetail() {
                             <div key={step.label} className="flex flex-col items-center gap-2">
                               <div className={cn(
                                 "w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold transition-all shrink-0",
-                                step.active ? "bg-blue-600 border-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.3)]" : "bg-[#0a0a0a] border-white/10 text-white/30"
+                                step.active ? "bg-blue-600 border-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.3)]" : "bg-white border-[#E5E7EB] text-[#9CA3AF]"
                               )}>
                                 {idx + 1}
                               </div>
@@ -2575,7 +2575,7 @@ export default function CaseDetail() {
                     </div>
 
                     {/* Timeline View */}
-                    <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-lg">
+                    <div className="bg-white border border-[#E5E7EB] p-6 rounded-lg">
                       <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} liveUpdatesUnavailable={statusFeedUnavailable} />
                     </div>
 
@@ -2762,7 +2762,7 @@ export default function CaseDetail() {
                 </div>
 
                 {/* Row 2: Evidence & Verification */}
-                <div className="p-8 bg-[#0a0a0a]">
+                <div className="p-8 bg-white">
                   <div className="mb-8">
                     <h3 className="text-sm font-bold text-white">Evidence & Verification</h3>
                   </div>

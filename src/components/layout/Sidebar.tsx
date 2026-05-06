@@ -558,7 +558,7 @@ export function Sidebar({
             <DropdownMenuSeparator className="my-1 bg-[#E5E7EB]" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight text-rose-400/72 hover:border-rose-300/28 hover:bg-rose-500/[0.06] hover:text-rose-300">
+              className="flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF] data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
@@ -572,22 +572,22 @@ export function Sidebar({
         <DialogContent className="platform-vitality-page sm:max-w-[420px] border border-[#E5E7EB] bg-white p-0 gap-0 overflow-hidden shadow-[0_18px_45px_rgba(17,24,39,0.10)] rounded-2xl">
           <DialogHeader className="px-8 pt-8 pb-6 border-b border-[#E5E7EB]">
             <div className="flex items-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
-                <LogOut className="h-5 w-5 text-rose-500" />
+              <div className="h-10 w-10 rounded-xl border border-[#D8E7FF] bg-[#F3F7FF] flex items-center justify-center">
+                <LogOut className="h-5 w-5 text-[#0052FF]" />
               </div>
               <div>
-                <DialogTitle className="text-xl font-sans font-bold text-white tracking-tight">
-                  Sign Out?
+                <DialogTitle className="text-xl font-sans font-bold text-[#111827] tracking-tight">
+                  Sign out
                 </DialogTitle>
-                <DialogDescription className="text-gray-500 font-sans font-bold text-[11px] uppercase tracking-tight mt-1">
-                  SIGN OUT SESSION // READY
+                <DialogDescription className="text-[#6B7280] font-sans font-bold text-[11px] uppercase tracking-tight mt-1">
+                  Secure session control
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
           <div className="px-8 py-6">
-            <p className="text-[14px] text-white/40 leading-relaxed font-sans font-light tracking-tight italic">
-              "Opside continues to monitor your store and recover funds for you automatically. You don't need to be logged in for the system to work."
+            <p className="text-[14px] text-[#4B5563] leading-relaxed font-sans font-normal tracking-tight">
+              You can safely sign out. Margin will continue monitoring your store, tracking recoveries, and preserving workflow activity in the background.
             </p>
           </div>
           <DialogFooter className="px-8 py-6 bg-[#F9FAFB] flex gap-3 sm:justify-end border-t border-[#E5E7EB]">
@@ -600,9 +600,9 @@ export function Sidebar({
             </Button>
             <Button
               onClick={handleSignOut}
-              className="bg-[#E11D48] text-[#FFFFFF] hover:bg-[#BE123C] rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6"
+              className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6 shadow-[0_12px_28px_rgba(0,82,255,0.14)]"
             >
-              Confirm Sign Out
+              Sign Out
             </Button>
           </DialogFooter>
         </DialogContent>
