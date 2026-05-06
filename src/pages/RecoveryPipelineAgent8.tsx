@@ -1413,14 +1413,14 @@ export default function RecoveryPipelineAgent8() {
 
   if (isReady && !activeSlug) {
     return (
-      <PageLayout title="Recoveries In Motion" midnight noPadding>
-        <div className="px-8 py-8">
-          <Card className="border-red-500/20 bg-[#0c0c0c]">
+      <PageLayout title="Recoveries In Motion" noPadding>
+        <div className="platform-vitality-page px-8 py-8">
+          <Card className="border-red-500/20 bg-white shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
             <CardContent className="flex items-start gap-4 p-8">
               <AlertTriangle className="mt-0.5 h-5 w-5 text-red-400" />
               <div>
                 <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-400">Workspace Required</div>
-                <div className="mt-2 text-sm font-sans font-bold text-white">A workspace is required before Margin can show recovery activity.</div>
+                <div className="mt-2 text-sm font-sans font-bold text-[#111827]">A workspace is required before Margin can show recovery activity.</div>
               </div>
             </CardContent>
           </Card>
@@ -1430,9 +1430,9 @@ export default function RecoveryPipelineAgent8() {
   }
 
   return (
-    <PageLayout title="Recoveries In Motion" midnight noPadding>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-      <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
+    <PageLayout title="Recoveries In Motion" noPadding>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
+      <div className="platform-vitality-page relative w-full flex-1 overflow-x-hidden bg-[#F9FAFB] text-[#111827]">
         <div className="relative w-full max-w-full px-8 pt-8 pb-24">
           <div className="mb-8 border-b border-white/10 pb-8">
             <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Account-wide recovery ledger</div>
@@ -1544,20 +1544,20 @@ export default function RecoveryPipelineAgent8() {
                       <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
                         <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
                           <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Recovery state" /></SelectTrigger>
-                          <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{statusOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
+                          <SelectContent className="platform-vitality-page rounded-xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">{statusOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
                         </Select>
                         <Select value={reconciliationFilter} onValueChange={(v) => { setReconciliationFilter(v); setPage(1); }}>
                           <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Reconciliation" /></SelectTrigger>
-                          <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{reconciliationOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
+                          <SelectContent className="platform-vitality-page rounded-xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">{reconciliationOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
                         </Select>
                         <Select value={billingFilter} onValueChange={(v) => { setBillingFilter(v); setPage(1); }}>
                           <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Billing" /></SelectTrigger>
-                          <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{billingOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
+                          <SelectContent className="platform-vitality-page rounded-xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">{billingOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
                         </Select>
                         <div className="flex gap-3">
                           <Select value={sortBy} onValueChange={(v) => { setSortBy(v); setPage(1); }}>
                             <SelectTrigger className="h-11 flex-1 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Sort by" /></SelectTrigger>
-                            <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{sortOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
+                            <SelectContent className="platform-vitality-page rounded-xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">{sortOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
                           </Select>
                           <Button type="button" variant="outline" className="h-11 rounded-xl border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white" onClick={() => { setSortDir((current) => current === 'asc' ? 'desc' : 'asc'); setPage(1); }}>
                             {sortDir === 'asc' ? 'Asc' : 'Desc'}
@@ -1761,7 +1761,7 @@ export default function RecoveryPipelineAgent8() {
                                           <MoreHorizontal className="h-4 w-4" />
                                         </Button>
                                       </DropdownMenuTrigger>
-                                      <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
+                                      <DropdownMenuContent align="end" className="platform-vitality-page w-56 rounded-xl border border-[#E5E7EB] bg-white p-1 shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                                         <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record actions</div>
                                         {detailRouteId ? (
                                           <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
@@ -1818,7 +1818,7 @@ export default function RecoveryPipelineAgent8() {
         />
       ) : null}
       <Dialog open={basisOpen} onOpenChange={(open) => { if (!open) closeCaseBasis(); else setBasisOpen(true); }}>
-        <DialogContent className="max-h-[88vh] w-[calc(100vw-32px)] max-w-6xl overflow-hidden rounded-2xl border-white/10 bg-[#050505] p-0 text-white shadow-2xl">
+        <DialogContent className="platform-vitality-page max-h-[88vh] w-[calc(100vw-32px)] max-w-6xl overflow-hidden rounded-2xl border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
           {basisRow ? (() => {
             const detailRouteId = getDetailRouteId(basisRow);
             const financialSummary = getFinancialSummaryForRow(basisRow, financialSummaries);
@@ -2024,7 +2024,7 @@ export default function RecoveryPipelineAgent8() {
         </DialogContent>
       </Dialog>
       <Sheet open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <SheetContent side="right" className="w-full border-white/10 bg-[#0c0c0c] p-0 text-white shadow-2xl sm:max-w-none md:w-[700px] xl:w-[48vw]">
+        <SheetContent side="right" className="platform-vitality-page w-full border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] sm:max-w-none md:w-[700px] xl:w-[48vw]">
           <div className="flex h-full flex-col">
             <SheetHeader className="border-b border-white/8 px-6 pb-5 pt-6 pr-14">
               <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Extra info</div>

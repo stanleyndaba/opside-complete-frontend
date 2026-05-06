@@ -1791,13 +1791,13 @@ export default function DisputeCases() {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Dispute Queue" midnight noPadding>
-        <div className="min-h-screen bg-[#050505]">
+      <PageLayout title="Dispute Queue" noPadding>
+        <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
           <div className="container mx-auto px-8 pt-10 pb-20">
-            <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
+            <Card className="rounded-2xl border-[#E5E7EB] bg-white text-[#111827] shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
               <CardContent className="p-8 space-y-3">
-                <h1 className="text-xl font-sans font-bold text-white tracking-tight">Queue unavailable</h1>
-                <p className="text-sm text-white/50 font-sans">
+                <h1 className="text-xl font-sans font-bold text-[#111827] tracking-tight">Queue unavailable</h1>
+                <p className="text-sm text-[#4B5563] font-sans">
                   A tenant workspace is required before dispute queue records can be loaded.
                 </p>
               </CardContent>
@@ -1809,8 +1809,8 @@ export default function DisputeCases() {
   }
 
   return (
-    <PageLayout title="Dispute Queue" midnight noPadding>
-      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
+    <PageLayout title="Dispute Queue" noPadding>
+      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -1818,8 +1818,7 @@ export default function DisputeCases() {
               `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
           }}
         />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
         <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div className="space-y-2">
@@ -1868,7 +1867,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[160px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all">All status</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="approved">Approved</SelectItem>
@@ -1880,7 +1879,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[200px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Gate" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all">All gate states</SelectItem>
                       <SelectItem value="ready">Ready</SelectItem>
                       <SelectItem value="blocked">Blocked</SelectItem>
@@ -1896,7 +1895,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Filing" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all">All filing</SelectItem>
                       <SelectItem value="blocked">Blocked</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
@@ -1912,7 +1911,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Evidence" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all">All evidence</SelectItem>
                       <SelectItem value="Missing Evidence">Missing Evidence</SelectItem>
                       <SelectItem value="Weak Evidence">Weak Evidence</SelectItem>
@@ -1926,7 +1925,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[180px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Recovery" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all">All recovery</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="reconciled">Reconciled</SelectItem>
@@ -1937,7 +1936,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[180px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Billing" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all">All billing</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="paid">Paid</SelectItem>
@@ -1951,7 +1950,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[200px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Rejection" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="all">All rejection types</SelectItem>
                       <SelectItem value="policy">Policy</SelectItem>
                       <SelectItem value="missing_invoice">Missing invoice</SelectItem>
@@ -1967,7 +1966,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="updated_at">Updated</SelectItem>
                       <SelectItem value="created_at">Created</SelectItem>
                       <SelectItem value="requested_amount">Requested Amount</SelectItem>
@@ -1981,7 +1980,7 @@ export default function DisputeCases() {
                     <SelectTrigger className="w-[120px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Order" />
                     </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                       <SelectItem value="desc">Desc</SelectItem>
                       <SelectItem value="asc">Asc</SelectItem>
                     </SelectContent>
@@ -2258,7 +2257,7 @@ export default function DisputeCases() {
                                       <MoreHorizontal className="w-4 h-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
+                                  <DropdownMenuContent align="end" className="platform-vitality-page w-56 rounded-xl border border-[#E5E7EB] bg-white p-1 shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                                     <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record Actions</div>
                                     {canOpenCaseDetail ? (
                                       <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
@@ -2344,7 +2343,7 @@ export default function DisputeCases() {
       </div>
 
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
+        <DialogContent className="platform-vitality-page max-w-4xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
           <DialogHeader className="border-b border-white/5 pb-5">
             <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Record Details</div>
             <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">

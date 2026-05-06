@@ -673,6 +673,119 @@ footer .brand-wordmark,
   box-shadow: 0 4px 20px rgba(17, 24, 39, 0.03) !important;
 }
 
+/* Vitality Light Theme: dense platform pages without changing their layouts */
+.platform-vitality-page {
+  color-scheme: light;
+  background: #f9fafb;
+  color: #111827;
+}
+
+.platform-vitality-page [class*="bg-[#070707]"],
+.platform-vitality-page [class*="bg-[#050505]"],
+.platform-vitality-page [class*="bg-[#0a0a0a]"],
+.platform-vitality-page [class*="bg-[#0c0c0c]"],
+.platform-vitality-page [class*="bg-[#111111]"],
+.platform-vitality-page [class*="bg-black"] {
+  background-color: #ffffff !important;
+}
+
+.platform-vitality-page [class~="bg-white/5"],
+.platform-vitality-page [class~="bg-white/10"],
+.platform-vitality-page [class~="bg-white/[0.01]"],
+.platform-vitality-page [class~="bg-white/[0.015]"],
+.platform-vitality-page [class~="bg-white/[0.02]"],
+.platform-vitality-page [class~="bg-white/[0.03]"],
+.platform-vitality-page [class~="bg-white/[0.04]"],
+.platform-vitality-page [class~="bg-white/[0.05]"] {
+  background-color: #ffffff !important;
+}
+
+.platform-vitality-page [class*="border-white"] {
+  border-color: #e5e7eb !important;
+}
+
+.platform-vitality-page [class*="divide-white"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e5e7eb !important;
+}
+
+.platform-vitality-page [class*="text-white"] {
+  color: #4b5563 !important;
+}
+
+.platform-vitality-page h1[class*="text-white"],
+.platform-vitality-page h2[class*="text-white"],
+.platform-vitality-page h3[class*="text-white"],
+.platform-vitality-page h4[class*="text-white"],
+.platform-vitality-page [class*="text-white"].font-semibold,
+.platform-vitality-page [class*="text-white"].font-bold,
+.platform-vitality-page [class*="text-white"].font-medium {
+  color: #111827 !important;
+}
+
+.platform-vitality-page [class*="text-zinc-500"],
+.platform-vitality-page [class*="text-[#6f6f6f]"],
+.platform-vitality-page [class*="text-[#7b7b7b]"],
+.platform-vitality-page [class*="text-[#7f7f7f]"],
+.platform-vitality-page [class*="text-[#8a8a8a]"],
+.platform-vitality-page [class*="text-[#9a9a9a]"] {
+  color: #6b7280 !important;
+}
+
+.platform-vitality-page [class*="placeholder:text-white"]::placeholder {
+  color: #9ca3af !important;
+}
+
+.platform-vitality-page input,
+.platform-vitality-page [role="combobox"],
+.platform-vitality-page textarea {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+  color: #111827 !important;
+}
+
+.platform-vitality-page thead {
+  background-color: #f9fafb !important;
+}
+
+.platform-vitality-page tr:hover {
+  background-color: rgba(0, 82, 255, 0.035) !important;
+}
+
+.platform-vitality-page [class*="bg-emerald"] {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+.platform-vitality-page [class*="text-emerald"] {
+  color: #047857 !important;
+}
+
+.platform-vitality-page [class*="border-emerald"] {
+  border-color: rgba(16, 185, 129, 0.28) !important;
+}
+
+.platform-vitality-page [class*="bg-sky"],
+.platform-vitality-page [class*="bg-blue"],
+.platform-vitality-page [class*="bg-violet"] {
+  background-color: rgba(0, 82, 255, 0.08) !important;
+}
+
+.platform-vitality-page [class*="text-sky"],
+.platform-vitality-page [class*="text-blue"],
+.platform-vitality-page [class*="text-violet"] {
+  color: #0052ff !important;
+}
+
+.platform-vitality-page [class*="border-sky"],
+.platform-vitality-page [class*="border-blue"],
+.platform-vitality-page [class*="border-violet"] {
+  border-color: rgba(0, 82, 255, 0.24) !important;
+}
+
+.platform-vitality-page .shadow-2xl,
+.platform-vitality-page .shadow-3xl {
+  box-shadow: 0 4px 20px rgba(17, 24, 39, 0.03) !important;
+}
+
 /* Lenis Smooth Scroll */
 html.lenis,
 html.lenis body {
