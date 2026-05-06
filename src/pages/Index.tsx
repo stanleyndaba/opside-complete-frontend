@@ -12,7 +12,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/NFDzqcaAFHM';
-const DEMO_VIDEO_THUMBNAIL_URL = '/Margin1.png';
+const DEMO_VIDEO_THUMBNAIL_URL = '/DEMO34.png';
 
 const navLinks = [
   { label: 'Pricing', to: '/pricing' },
