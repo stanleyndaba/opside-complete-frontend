@@ -3165,7 +3165,7 @@ export function Dashboard() {
                           <button
                             type="button"
                             onClick={() => handleTabChange('evidence')}
-                            className="inline-flex h-8 items-center justify-center self-start rounded-full bg-[#111827] px-3 text-[10px] font-sans font-medium tracking-tight text-white shadow-[0_10px_24px_rgba(17,24,39,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#0052FF] lg:self-auto"
+                            className="inline-flex h-8 items-center justify-center self-start rounded-full border border-[#0052FF]/15 bg-[#F3F7FF] px-3 text-[10px] font-sans font-semibold tracking-tight text-[#0052FF] shadow-[0_10px_24px_rgba(0,82,255,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0052FF]/25 hover:bg-white hover:shadow-[0_14px_30px_rgba(0,82,255,0.12)] lg:self-auto"
                           >
                             {overviewNeedsFromYou.value}
                           </button>
