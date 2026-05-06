@@ -1608,7 +1608,7 @@ export default function FilingPipeline() {
       amount: formatMoney(readyTotal),
       countLabel: `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} ready`,
       action: readyRows.length ? (
-        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight">
+        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
           <Link to={disputeCasesHref}>Start Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
@@ -1626,7 +1626,7 @@ export default function FilingPipeline() {
               detail={readyDetail(row)}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
               nextStep={filingNextStep(row, 'ready')}
-              action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
+              action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
             />
           ))}
         </div>
@@ -1709,7 +1709,7 @@ export default function FilingPipeline() {
       amount: formatMoney(totalAmount(attentionRows.map(disputeAmount))),
       countLabel: `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} gated`,
       action: attentionRows.length ? (
-        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight">
+        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
           <Link to={disputeCasesHref}>Review queue<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
@@ -1805,8 +1805,8 @@ export default function FilingPipeline() {
   ];
 
   return (
-    <PageLayout title="Submission Flow" midnight noPadding>
-      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
+    <PageLayout title="Submission Flow" noPadding>
+      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -1815,7 +1815,7 @@ export default function FilingPipeline() {
           }}
         />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
         <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -1837,7 +1837,7 @@ export default function FilingPipeline() {
               </div>
               <Button
                 onClick={() => void refreshAll()}
-                className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"
+                className="h-10 px-4 font-sans font-bold text-[10px] bg-white text-[#4B5563] border border-[#E5E7EB] hover:bg-[#F3F4F6] hover:text-[#111827] rounded-lg uppercase tracking-tight"
               >
                 <RefreshCw className={cn('w-3 h-3 mr-2', refreshing ? 'animate-spin' : '')} />
                 Refresh
@@ -1921,7 +1921,7 @@ export default function FilingPipeline() {
                       <TabsTrigger
                         key={tab.value}
                         value={tab.value}
-                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[15px] font-sans font-semibold tracking-tight text-white/38 shadow-none ring-0 transition-colors hover:text-white/70 data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:shadow-none"
+                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[15px] font-sans font-semibold tracking-tight text-white/38 shadow-none ring-0 transition-colors hover:text-[#0052FF] data-[state=active]:border-[#0052FF] data-[state=active]:bg-transparent data-[state=active]:text-[#0052FF] data-[state=active]:shadow-none"
                       >
                         {tab.label}
                       </TabsTrigger>

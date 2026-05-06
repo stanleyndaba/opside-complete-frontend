@@ -115,8 +115,8 @@ export default function ApprovedReimbursements() {
   }, [forcePageTop, loading, rows.length]);
 
   return (
-    <PageLayout title="Approved Reimbursements" midnight>
-      <div className="min-h-screen bg-[#070707] text-white">
+    <PageLayout title="Approved Reimbursements">
+      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
         <div className="container mx-auto px-6 pb-20 pt-6 lg:px-8 lg:pt-8">
           <div ref={topAnchorRef} />
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c]">
@@ -148,7 +148,7 @@ export default function ApprovedReimbursements() {
                       <Button
                         onClick={() => fetchApprovedReimbursements('refresh')}
                         disabled={refreshing}
-                        className="h-10 shrink-0 rounded-lg border border-white/12 bg-white/[0.04] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 hover:bg-white/10 hover:text-white"
+                        className="h-10 shrink-0 rounded-lg border border-[#E5E7EB] bg-white px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#111827]"
                       >
                         <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
                         Refresh

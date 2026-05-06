@@ -341,8 +341,8 @@ const tableMetaClass = 'text-[11px] font-sans leading-5 text-white/46';
 const tableSupportClass = 'text-[10px] font-sans font-medium uppercase tracking-tight text-white/36';
 const tablePrimaryValueClass = 'text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84';
 const tableSecondaryValueClass = 'text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/72';
-const detailCardClass = 'rounded-2xl border border-white/8 bg-[#101010]';
-const detailInsetCardClass = 'rounded-xl border border-white/[0.06] bg-black/30';
+const detailCardClass = 'rounded-2xl border border-white/8 bg-white/[0.02]';
+const detailInsetCardClass = 'rounded-xl border border-white/[0.06] bg-white/[0.02]';
 
 export default function Appeals() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
@@ -470,8 +470,8 @@ export default function Appeals() {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Appeals" midnight>
-        <div className="min-h-screen bg-[#050505]">
+      <PageLayout title="Appeals">
+        <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
           <div className="container mx-auto px-8 pb-20 pt-10">
             <Card className="rounded-2xl border-white/5 bg-[#0c0c0c] text-white">
               <CardContent className="space-y-3 p-8">
@@ -486,9 +486,9 @@ export default function Appeals() {
   }
 
   return (
-    <PageLayout title="Appeals" midnight>
-      <div className="relative min-h-screen overflow-hidden bg-[#070707] text-white">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+    <PageLayout title="Appeals">
+      <div className="platform-vitality-page relative min-h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
         <div className="relative z-10 container mx-auto space-y-6 px-8 pb-20 pt-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
@@ -510,7 +510,7 @@ export default function Appeals() {
               ) : null}
               <Button
                 onClick={() => setRefreshKey((current) => current + 1)}
-                className="h-10 shrink-0 rounded-lg border border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/56 hover:bg-white/10 hover:text-white"
+                className="h-10 shrink-0 rounded-lg border border-[#E5E7EB] bg-white px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#111827]"
               >
                 <RefreshCw className="mr-2 h-3 w-3" />
                 Refresh
@@ -546,7 +546,7 @@ export default function Appeals() {
                         <SelectTrigger className="h-10 w-full rounded-lg border-white/10 bg-white/5 text-white md:w-[180px]">
                           <SelectValue placeholder="Response state" />
                         </SelectTrigger>
-                        <SelectContent className="border-white/10 bg-black text-white">
+                        <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                           <SelectItem value="all">All response cases</SelectItem>
                           <SelectItem value="denied">Denied responses</SelectItem>
                           <SelectItem value="underpaid">Approved-value gaps</SelectItem>
@@ -559,7 +559,7 @@ export default function Appeals() {
                         <SelectTrigger className="h-10 w-full rounded-lg border-white/10 bg-white/5 text-white md:w-[190px]">
                           <SelectValue placeholder="Reason bucket" />
                         </SelectTrigger>
-                        <SelectContent className="border-white/10 bg-black text-white">
+                        <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                           <SelectItem value="all">All reason buckets</SelectItem>
                           {rejectionCategories.map((category) => (
                             <SelectItem key={category} value={category}>{label(category)}</SelectItem>
@@ -762,7 +762,7 @@ export default function Appeals() {
           </Card>
 
           <Sheet open={Boolean(selectedRow)} onOpenChange={(open) => { if (!open) setSelectedCaseId(null); }}>
-            <SheetContent side="right" className="w-full border-white/10 bg-[#0c0c0c] p-0 text-white sm:max-w-2xl">
+            <SheetContent side="right" className="platform-vitality-page w-full border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] sm:max-w-2xl">
               {selectedRow ? (
                 <div className="flex h-full flex-col">
                   <SheetHeader className="border-b border-white/8 px-6 py-6 pr-14">

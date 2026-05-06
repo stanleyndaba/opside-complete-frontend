@@ -604,6 +604,7 @@ footer .brand-wordmark,
 .platform-vitality-dashboard main [class*="bg-[#080808]"],
 .platform-vitality-dashboard main [class*="bg-[#0a0a0a]"],
 .platform-vitality-dashboard main [class*="bg-[#0c0c0c]"],
+.platform-vitality-dashboard main [class*="bg-[#101010]"],
 .platform-vitality-dashboard main [class*="bg-[#111111]"],
 .platform-vitality-dashboard main [class*="bg-[#141414]"] {
   background-color: #ffffff !important;
@@ -688,6 +689,7 @@ footer .brand-wordmark,
 .platform-vitality-page[class*="bg-[#080808]"],
 .platform-vitality-page[class*="bg-[#0a0a0a]"],
 .platform-vitality-page[class*="bg-[#0c0c0c]"],
+.platform-vitality-page[class*="bg-[#101010]"],
 .platform-vitality-page[class*="bg-[#111111]"],
 .platform-vitality-page[class*="bg-[#141414]"],
 .platform-vitality-page[class*="bg-black"] {
@@ -707,6 +709,7 @@ footer .brand-wordmark,
 .platform-vitality-page [class*="bg-[#080808]"],
 .platform-vitality-page [class*="bg-[#0a0a0a]"],
 .platform-vitality-page [class*="bg-[#0c0c0c]"],
+.platform-vitality-page [class*="bg-[#101010]"],
 .platform-vitality-page [class*="bg-[#111111]"],
 .platform-vitality-page [class*="bg-[#141414]"],
 .platform-vitality-page [class*="bg-black"] {
@@ -756,6 +759,7 @@ footer .brand-wordmark,
 .platform-vitality-page [class*="text-[#7f7f7f]"],
 .platform-vitality-page [class*="text-[#8a8a8a]"],
 .platform-vitality-page [class*="text-[#9a9a9a]"],
+.platform-vitality-page [class*="text-[#c4c4c4]"],
 .platform-vitality-page [class*="text-gray-300"],
 .platform-vitality-page [class*="text-gray-400"],
 .platform-vitality-page [class*="text-gray-500"],
@@ -796,6 +800,36 @@ footer .brand-wordmark,
 
 .platform-vitality-page [class*="border-emerald"] {
   border-color: rgba(16, 185, 129, 0.28) !important;
+}
+
+.platform-vitality-page [class*="bg-amber"],
+.platform-vitality-page [class*="bg-orange"] {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+}
+
+.platform-vitality-page [class*="text-amber"],
+.platform-vitality-page [class*="text-orange"] {
+  color: #b45309 !important;
+}
+
+.platform-vitality-page [class*="border-amber"],
+.platform-vitality-page [class*="border-orange"] {
+  border-color: rgba(245, 158, 11, 0.28) !important;
+}
+
+.platform-vitality-page [class*="bg-red"],
+.platform-vitality-page [class*="bg-rose"] {
+  background-color: rgba(244, 63, 94, 0.1) !important;
+}
+
+.platform-vitality-page [class*="text-red"],
+.platform-vitality-page [class*="text-rose"] {
+  color: #be123c !important;
+}
+
+.platform-vitality-page [class*="border-red"],
+.platform-vitality-page [class*="border-rose"] {
+  border-color: rgba(244, 63, 94, 0.28) !important;
 }
 
 .platform-vitality-page [class*="bg-sky"],
