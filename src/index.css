@@ -601,9 +601,11 @@ footer .brand-wordmark,
 
 .platform-vitality-dashboard main [class*="bg-[#070707]"],
 .platform-vitality-dashboard main [class*="bg-[#050505]"],
+.platform-vitality-dashboard main [class*="bg-[#080808]"],
 .platform-vitality-dashboard main [class*="bg-[#0a0a0a]"],
 .platform-vitality-dashboard main [class*="bg-[#0c0c0c]"],
-.platform-vitality-dashboard main [class*="bg-[#111111]"] {
+.platform-vitality-dashboard main [class*="bg-[#111111]"],
+.platform-vitality-dashboard main [class*="bg-[#141414]"] {
   background-color: #ffffff !important;
 }
 
@@ -614,7 +616,8 @@ footer .brand-wordmark,
 .platform-vitality-dashboard main [class~="bg-white/[0.03]"],
 .platform-vitality-dashboard main [class~="bg-white/[0.035]"],
 .platform-vitality-dashboard main [class~="bg-white/[0.04]"],
-.platform-vitality-dashboard main [class~="bg-white/[0.05]"] {
+.platform-vitality-dashboard main [class~="bg-white/[0.05]"],
+.platform-vitality-dashboard main [class~="bg-white/[0.08]"] {
   background-color: #ffffff !important;
 }
 
@@ -682,9 +685,11 @@ footer .brand-wordmark,
 
 .platform-vitality-page[class*="bg-[#070707]"],
 .platform-vitality-page[class*="bg-[#050505]"],
+.platform-vitality-page[class*="bg-[#080808]"],
 .platform-vitality-page[class*="bg-[#0a0a0a]"],
 .platform-vitality-page[class*="bg-[#0c0c0c]"],
 .platform-vitality-page[class*="bg-[#111111]"],
+.platform-vitality-page[class*="bg-[#141414]"],
 .platform-vitality-page[class*="bg-black"] {
   background-color: #f9fafb !important;
 }
@@ -699,9 +704,11 @@ footer .brand-wordmark,
 
 .platform-vitality-page [class*="bg-[#070707]"],
 .platform-vitality-page [class*="bg-[#050505]"],
+.platform-vitality-page [class*="bg-[#080808]"],
 .platform-vitality-page [class*="bg-[#0a0a0a]"],
 .platform-vitality-page [class*="bg-[#0c0c0c]"],
 .platform-vitality-page [class*="bg-[#111111]"],
+.platform-vitality-page [class*="bg-[#141414]"],
 .platform-vitality-page [class*="bg-black"] {
   background-color: #ffffff !important;
 }
@@ -716,7 +723,8 @@ footer .brand-wordmark,
 .platform-vitality-page [class~="bg-white/[0.03]"],
 .platform-vitality-page [class~="bg-white/[0.04]"],
 .platform-vitality-page [class~="bg-white/[0.05]"],
-.platform-vitality-page [class~="bg-white/[0.06]"] {
+.platform-vitality-page [class~="bg-white/[0.06]"],
+.platform-vitality-page [class~="bg-white/[0.08]"] {
   background-color: #ffffff !important;
 }
 
@@ -748,6 +756,10 @@ footer .brand-wordmark,
 .platform-vitality-page [class*="text-[#7f7f7f]"],
 .platform-vitality-page [class*="text-[#8a8a8a]"],
 .platform-vitality-page [class*="text-[#9a9a9a]"],
+.platform-vitality-page [class*="text-gray-300"],
+.platform-vitality-page [class*="text-gray-400"],
+.platform-vitality-page [class*="text-gray-500"],
+.platform-vitality-page [class*="text-gray-600"],
 .platform-vitality-page [class*="text-zinc-300"],
 .platform-vitality-page [class*="text-zinc-400"],
 .platform-vitality-page [class*="text-zinc-600"] {

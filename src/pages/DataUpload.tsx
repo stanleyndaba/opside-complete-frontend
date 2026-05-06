@@ -1950,14 +1950,14 @@ export default function DataUpload() {
         && (!isWaitingForDetectionGate || detectionRedirectTimedOut);
 
     return (
-        <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
-            <div className="min-h-screen bg-[#070707] text-white relative">
+        <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} plainBackground>
+            <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative">
                 {/* Noise Texture */}
                 <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
                 {/* Aesthetic Background Elements */}
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
                 <div className="relative z-10 w-full mx-auto px-6 lg:px-10 py-10">
                     {/* Header */}
@@ -1968,11 +1968,11 @@ export default function DataUpload() {
                     >
                         <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 rounded-xl bg-[#111111] border border-white/10">
-                                    <Upload className="h-5 w-5 text-white/80" />
+                                <div className="p-2 rounded-xl bg-[#F3F7FF] border border-[#D8E7FF]">
+                                    <Upload className="h-5 w-5 text-[#0052FF]" />
                                 </div>
                                 <h1 className="text-2xl font-sans font-light tracking-tight">Data Upload</h1>
-                                <Badge variant="outline" className="text-[10px] font-sans font-bold tracking-tight uppercase border-white/10 text-white/60 bg-white/[0.02] ml-2">
+                                <Badge variant="outline" className="text-[10px] font-sans font-bold tracking-tight uppercase border-[#D8E7FF] text-[#0052FF] bg-[#F3F7FF] ml-2">
                                     CSV Ingestion
                                 </Badge>
                             </div>
@@ -2019,7 +2019,7 @@ export default function DataUpload() {
                                     </div>
                                     <div className="text-center">
                                         <p className="text-sm font-medium text-white/60 mb-1">
-                                            Drop CSV files here or <span className="text-white hover:text-white/80">browse</span>
+                                            Drop CSV files here or <span className="text-[#0052FF] hover:text-[#0047DD]">browse</span>
                                         </p>
                                         <p className="text-xs text-white/25">
                                             We auto-detect each Amazon report by its headers and ingest it for this workspace.
@@ -2163,7 +2163,7 @@ export default function DataUpload() {
                                                 </Button>
                                                 <Button
                                                     onClick={goToDashboard}
-                                                    className="h-9 px-4 bg-white text-black hover:bg-white/90"
+                                                    className="h-9 px-4 bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD]"
                                                 >
                                                     Continue to Dashboard <ArrowRight className="h-4 w-4 ml-2" />
                                                 </Button>
@@ -2186,7 +2186,7 @@ export default function DataUpload() {
                             <Button
                                 onClick={handleUpload}
                                 disabled={files.length === 0 || isUploading}
-                                className="bg-[#141414] hover:bg-[#1b1b1b] border border-white/10 text-white font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)] disabled:opacity-30 disabled:shadow-none"
+                                className="bg-[#0052FF] hover:bg-[#0047DD] border border-[#0052FF] text-[#FFFFFF] font-medium px-6 h-10 shadow-[0_14px_30px_rgba(0,82,255,0.18)] disabled:opacity-30 disabled:shadow-none"
                             >
                                 {isUploading ? (
                                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
@@ -2200,7 +2200,7 @@ export default function DataUpload() {
                             <Button
                                 onClick={handleReset}
                                 variant="outline"
-                                className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
+                                className="bg-white border-[#E5E7EB] text-[#4B5563] hover:bg-[#F3F4F6] h-10 px-6"
                             >
                                 <X className="h-4 w-4 mr-2" />Clear & Restart
                             </Button>
@@ -2209,7 +2209,7 @@ export default function DataUpload() {
                         {canGoToDashboard && (
                             <Button
                                 onClick={goToDashboard}
-                                className="bg-white text-black hover:bg-white/90 h-10 px-6"
+                                className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] h-10 px-6"
                             >
                                 Go to Dashboard <ArrowRight className="h-4 w-4 ml-2" />
                             </Button>
@@ -2372,7 +2372,7 @@ export default function DataUpload() {
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onClick={() => setIsPreviewOpen(false)}
-                                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+                                className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[100]"
                             />
 
                             {/* Drawer */}
@@ -2381,7 +2381,7 @@ export default function DataUpload() {
                                 animate={{ y: '15%' }} // Occupies most of the page but not all
                                 exit={{ y: '100%' }}
                                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                                className="fixed inset-x-0 bottom-0 top-0 z-[101] overflow-hidden border-t border-white/10 bg-[#050505] text-white shadow-[0_-24px_80px_rgba(0,0,0,0.65)] flex flex-col"
+                                className="platform-vitality-page fixed inset-x-0 bottom-0 top-0 z-[101] overflow-hidden border-t border-[#E5E7EB] bg-white text-[#111827] shadow-[0_-24px_80px_rgba(17,24,39,0.12)] flex flex-col"
                             >
                                 {/* Drawer Header */}
                                 <div className="border-b border-white/10 bg-[#050505]/95 px-6 py-4">

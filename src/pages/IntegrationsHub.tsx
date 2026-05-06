@@ -946,8 +946,8 @@ export default function IntegrationsHub() {
 
   if (isReady && !activeSlug) {
     return (
-      <PageLayout title="Integrations" midnight noPadding>
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
+      <PageLayout title="Integrations" noPadding>
+        <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] flex items-center justify-center px-6">
           <div className="max-w-xl w-full bg-white/[0.02] border border-white/10 rounded-2xl p-8 text-center">
             <h1 className="text-2xl font-sans font-bold text-white tracking-tight mb-3">Workspace context required</h1>
             <p className="text-sm text-gray-400 font-sans leading-relaxed">
@@ -960,15 +960,15 @@ export default function IntegrationsHub() {
   }
 
   return (
-    <PageLayout title="Integrations" midnight noPadding>
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
+    <PageLayout title="Integrations" noPadding>
+      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
         {/* Aesthetic Background Elements */}
-        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.035),transparent_70%)] pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(0,82,255,0.06),transparent_70%)] pointer-events-none" />
         <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
         {/* SHOCK AND AWE: Recovery Reveal Modal */}
         <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
-          <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+          <DialogContent className="platform-vitality-page max-w-2xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
             <DialogHeader>
               <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-white font-sans font-bold tracking-tight">
                 <Zap className="h-8 w-8 animate-pulse" />
@@ -1017,7 +1017,7 @@ export default function IntegrationsHub() {
               )}
             </div>
             <DialogFooter>
-              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-xs hover:bg-white/90 transition-colors">
+              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-[#0052FF] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-xs hover:bg-[#0047DD] transition-colors">
                 Continue to Dashboard
               </Button>
             </DialogFooter>
@@ -1026,7 +1026,7 @@ export default function IntegrationsHub() {
 
         {/* SECOND WOW: Evidence Connect Modal */}
         <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
-          <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+          <DialogContent className="platform-vitality-page max-w-2xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
             <DialogHeader>
               <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-white font-sans font-bold tracking-tight">
                 <Shield className="h-8 w-8 text-white/70" />
@@ -1047,7 +1047,7 @@ export default function IntegrationsHub() {
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
+                    className="w-full h-10 border-[#D8E7FF] text-[#0052FF] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                       handleConnectDocSource('gmail');
@@ -1065,7 +1065,7 @@ export default function IntegrationsHub() {
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
+                    className="w-full h-10 border-[#D8E7FF] text-[#0052FF] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                       handleConnectDocSource('gdrive');
@@ -1176,7 +1176,7 @@ export default function IntegrationsHub() {
                           <Plus className="w-4 h-4" /> Add Store Record
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+                      <DialogContent className="platform-vitality-page border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
                         <DialogHeader>
                           <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Add Store Record</DialogTitle>
                           <DialogDescription className="text-gray-400 font-sans font-light tracking-tight">
@@ -1228,7 +1228,7 @@ export default function IntegrationsHub() {
                           <Button
                             onClick={handleAddStore}
                             disabled={addingStore}
-                            className="bg-white hover:bg-white/90 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
+                            className="bg-[#0052FF] hover:bg-[#0047DD] text-[#FFFFFF] font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
                           >
                             {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Store Record"}
                           </Button>
@@ -1246,7 +1246,7 @@ export default function IntegrationsHub() {
                           </div>
                         <Button
                           onClick={() => navigate('/waitlist?reason=capacity')}
-                          className="h-9 rounded-none bg-white px-6 text-black font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-white/90 hover:text-black"
+                          className="h-9 rounded-none bg-[#0052FF] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#0047DD] hover:text-[#FFFFFF]"
                         >
                           Join Waitlist
                         </Button>
@@ -1272,7 +1272,7 @@ export default function IntegrationsHub() {
                             toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
                           }
                         }}
-                        className="h-9 rounded-none bg-white px-6 text-black font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-white/90 hover:text-black"
+                        className="h-9 rounded-none bg-[#0052FF] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#0047DD] hover:text-[#FFFFFF]"
                       >
                         Connect Amazon
                       </Button>
@@ -1379,7 +1379,7 @@ export default function IntegrationsHub() {
 
             {/* Waitlist / Request Dialog */}
             <Dialog open={showRequestForm} onOpenChange={setShowRequestForm}>
-              <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+              <DialogContent className="platform-vitality-page border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Request Integration Protocol</DialogTitle>
                   <DialogDescription className="text-gray-400 font-sans font-light tracking-tight">
@@ -1424,7 +1424,7 @@ export default function IntegrationsHub() {
                   </Button>
                   <Button
                     disabled
-                    className="bg-white hover:bg-white/90 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
+                    className="bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#6B7280] font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
                   >
                     Unavailable
                   </Button>
@@ -1771,7 +1771,7 @@ export default function IntegrationsHub() {
                       setSavingFilters(false);
                     }}
                     disabled={savingFilters}
-                    className="h-12 bg-white hover:bg-white/90 text-black font-sans font-bold uppercase tracking-tight text-[10px] px-10"
+                    className="h-12 bg-[#0052FF] hover:bg-[#0047DD] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-[10px] px-10"
                   >
                     {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Changes"}
                   </Button>
