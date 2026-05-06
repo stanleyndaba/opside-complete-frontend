@@ -96,10 +96,10 @@ export default function WhatsNew() {
   const orderedMonths = Object.keys(groups);
 
   return (
-    <PageLayout title="What's New" midnight>
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
+    <PageLayout title="What's New">
+      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
         <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
         <div className="relative z-10 container max-w-4xl mx-auto px-6 py-12">
           {/* Professional Header */}
@@ -123,7 +123,7 @@ export default function WhatsNew() {
           {/* Timeline Feed */}
           <div className="relative">
             {/* The vertical connector line */}
-            <div className="absolute left-[11px] top-4 bottom-4 w-px bg-gradient-to-b from-white/20 via-white/5 to-transparent hidden md:block" />
+            <div className="absolute left-[11px] top-4 bottom-4 w-px bg-gradient-to-b from-[#C7DAFF] via-[#E5E7EB] to-transparent hidden md:block" />
 
             {loading && (
               <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8 text-sm font-sans font-bold tracking-tight text-white/50">
@@ -172,8 +172,8 @@ export default function WhatsNew() {
                       className="relative md:pl-[64px]"
                     >
                       {/* Timeline Marker */}
-                      <div className="absolute left-[6px] top-6 w-2.5 h-2.5 rounded-full bg-[#050505] border border-white/20 hidden md:flex items-center justify-center">
-                        <div className="w-1 h-1 rounded-full bg-white/70" />
+                      <div className="absolute left-[6px] top-6 w-2.5 h-2.5 rounded-full bg-white border border-[#D8E7FF] hidden md:flex items-center justify-center">
+                        <div className="w-1 h-1 rounded-full bg-[#0052FF]" />
                       </div>
 
                       <div className="group relative bg-[#0c0c0c] border border-white/5 rounded-2xl p-8 hover:border-white/20 transition-all duration-500">
@@ -221,7 +221,7 @@ export default function WhatsNew() {
                           {update.cta_text && ctaHref && (
                             <a
                               href={ctaHref}
-                              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-all duration-300 hover:border-white/20 hover:bg-white hover:text-black"
+                              className="inline-flex items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all duration-300 hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                             >
                               {update.cta_text}
                               {/^https?:\/\//i.test(ctaHref) ? <ExternalLink className="h-3 w-3" /> : <ArrowRight className="h-3 w-3" />}
@@ -247,7 +247,7 @@ export default function WhatsNew() {
             <div className="flex flex-col items-center gap-3 mb-10">
               <a
                 href="mailto:support@margin-finance.com"
-                className="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-white/10 border border-white/15 hover:bg-white hover:text-black hover:border-white transition-all duration-300 text-sm font-sans font-bold text-white uppercase tracking-tight"
+                className="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-[#0052FF] border border-[#0052FF] hover:bg-[#0047DD] hover:border-[#0047DD] transition-all duration-300 text-sm font-sans font-bold text-[#FFFFFF] uppercase tracking-tight shadow-[0_12px_28px_rgba(0,82,255,0.14)]"
               >
                 Support
               </a>
@@ -264,7 +264,7 @@ export default function WhatsNew() {
                   placeholder="Changelogs and user feature request"
                   className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-300 pr-12 font-sans font-bold tracking-tight"
                 />
-                <button className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/10 text-white hover:bg-white hover:text-black transition-all duration-300">
+                <button className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] transition-all duration-300">
                   <Send className="h-4 w-4" />
                 </button>
               </div>

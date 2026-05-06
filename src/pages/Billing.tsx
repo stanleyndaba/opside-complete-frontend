@@ -407,8 +407,8 @@ export default function Billing() {
   }
 
   return (
-    <PageLayout title="Billing" midnight>
-      <div className="min-h-screen bg-[#070707] text-white">
+    <PageLayout title="Billing">
+      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
         <div className="relative container mx-auto space-y-10 px-8 pb-20 pt-10">
           <div className="border-b border-white/10 pb-10">
             <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Subscription Billing // Backend Truth</div>
@@ -494,7 +494,7 @@ export default function Billing() {
                   <SelectTrigger className="h-10 min-w-[180px] rounded-none border-white/10 bg-white/5 text-white font-sans">
                     <SelectValue placeholder="All statuses" />
                   </SelectTrigger>
-                  <SelectContent className="border-white/10 bg-black text-white">
+                  <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                     <SelectItem value="all">All statuses</SelectItem>
                     {Object.entries(statusLabels).map(([value, label]) => (
                       <SelectItem key={value} value={value}>{label}</SelectItem>

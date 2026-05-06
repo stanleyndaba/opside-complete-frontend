@@ -569,8 +569,8 @@ export function Sidebar({
 
       {/* Sign Out Confirmation Dialog */}
       <Dialog open={signOutOpen} onOpenChange={setSignOutOpen}>
-        <DialogContent className="sm:max-w-[420px] bg-[#0c0c0c] border border-white/10 p-0 gap-0 overflow-hidden shadow-2xl rounded-2xl">
-          <DialogHeader className="px-8 pt-8 pb-6 border-b border-white/5">
+        <DialogContent className="platform-vitality-page sm:max-w-[420px] border border-[#E5E7EB] bg-white p-0 gap-0 overflow-hidden shadow-[0_18px_45px_rgba(17,24,39,0.10)] rounded-2xl">
+          <DialogHeader className="px-8 pt-8 pb-6 border-b border-[#E5E7EB]">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-10 w-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
                 <LogOut className="h-5 w-5 text-rose-500" />
@@ -590,17 +590,17 @@ export function Sidebar({
               "Opside continues to monitor your store and recover funds for you automatically. You don't need to be logged in for the system to work."
             </p>
           </div>
-          <DialogFooter className="px-8 py-6 bg-white/[0.02] flex gap-3 sm:justify-end border-t border-white/5">
+          <DialogFooter className="px-8 py-6 bg-[#F9FAFB] flex gap-3 sm:justify-end border-t border-[#E5E7EB]">
             <Button
               variant="outline"
               onClick={() => setSignOutOpen(false)}
-              className="bg-transparent border-white/10 text-white hover:bg-white/5 rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6"
+              className="bg-white border-[#E5E7EB] text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#111827] rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSignOut}
-              className="bg-white text-black hover:bg-white/90 rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6"
+              className="bg-[#E11D48] text-[#FFFFFF] hover:bg-[#BE123C] rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6"
             >
               Confirm Sign Out
             </Button>

@@ -224,10 +224,10 @@ export default function Help() {
   };
 
   return (
-    <PageLayout title="Help" midnight>
-      <div className="relative min-h-screen overflow-hidden bg-[#050505]">
+    <PageLayout title="Help">
+      <div className="platform-vitality-page relative min-h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
         <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
         <div className="relative mx-auto w-full max-w-full px-8 py-8">
           <div className="border-b border-white/10 pb-5">
@@ -320,7 +320,7 @@ export default function Help() {
                       <SelectTrigger className="h-11 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans text-white focus:ring-0 focus:border-white/30">
                         <SelectValue placeholder="Select a topic" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-none border-white/10 bg-[#0c0c0c] text-white">
+                      <SelectContent className="platform-vitality-page rounded-none border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
                         <SelectItem value="billing">Billing and invoices</SelectItem>
                         <SelectItem value="technical">App support</SelectItem>
                         <SelectItem value="account">Account management</SelectItem>
@@ -362,7 +362,7 @@ export default function Help() {
                   <Button
                     type="submit"
                     disabled={submitting || !isReady || !tenant}
-                    className="h-9 w-full rounded-none border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-medium text-[10px] uppercase tracking-tight md:w-auto md:min-w-[220px]"
+                    className="h-9 w-full rounded-none border border-[#0052FF] bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] font-sans font-medium text-[10px] uppercase tracking-tight shadow-[0_12px_28px_rgba(0,82,255,0.14)] md:w-auto md:min-w-[220px]"
                   >
                     {submitting ? 'Submitting Request' : 'Submit Support Request'}
                   </Button>

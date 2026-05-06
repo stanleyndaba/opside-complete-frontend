@@ -275,8 +275,8 @@ const Settings = () => {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Account Control Center" midnight noPadding>
-        <div className="min-h-screen bg-[#050505]">
+      <PageLayout title="Account Control Center" noPadding>
+        <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
           <div className="container mx-auto px-8 pt-10 pb-20">
             <div className="border-t border-white/10 pt-8 space-y-3">
               <h1 className="text-xl font-sans font-bold text-white tracking-tight">Settings unavailable</h1>
@@ -291,8 +291,8 @@ const Settings = () => {
   }
 
   return (
-    <PageLayout title="Account Control Center" midnight noPadding>
-      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
+    <PageLayout title="Account Control Center" noPadding>
+      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -301,7 +301,7 @@ const Settings = () => {
           }}
         />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
         <div className="relative z-10 container mx-auto px-8 pt-8 pb-14">
           <div className="border-b border-white/10 pb-6">
@@ -381,7 +381,7 @@ const Settings = () => {
 
                       <div className="flex flex-col gap-3">
                         <Button
-                          className="bg-white text-black hover:bg-white/90 transition-all active:scale-[0.98] rounded-none h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                          className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] transition-all active:scale-[0.98] rounded-none h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_12px_28px_rgba(0,82,255,0.16)]"
                           onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/integrations-hub'))}
                           disabled={!activeTenantSlug}
                         >
@@ -507,7 +507,7 @@ const Settings = () => {
                             }}
                             disabled={loadingAutoFile || savingAutoFile}
                             aria-label="Auto-File seller-controlled filing switch"
-                            className="data-[state=checked]:bg-white data-[state=unchecked]:bg-white/20"
+                            className="data-[state=checked]:bg-[#0052FF] data-[state=unchecked]:bg-[#E5E7EB]"
                           />
                           <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
                             {savingAutoFile ? 'Saving' : autoFileEnabled ? 'On' : 'Off'}
@@ -535,7 +535,7 @@ const Settings = () => {
 
                       <Button
                         variant="outline"
-                        className="w-full h-10 rounded-none border-white/10 hover:border-white/20 text-white bg-white/[0.03] font-sans font-bold text-[10px] uppercase tracking-tight"
+                        className="w-full h-10 rounded-none border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF] font-sans font-bold text-[10px] uppercase tracking-tight"
                         onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
                         disabled={!activeTenantSlug}
                       >
