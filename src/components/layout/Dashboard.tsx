@@ -2924,6 +2924,7 @@ export function Dashboard() {
         detail: detectedOpportunitiesCount > 0 ? `${overviewFoundValueLabel} detected in view` : 'No issues in view',
         tone: detectedOpportunitiesCount > 0 ? 'border-sky-500/20 bg-sky-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
         dotTone: detectedOpportunitiesCount > 0 ? 'bg-sky-300' : 'bg-white/18',
+        active: detectedOpportunitiesCount > 0,
         onClick: () => handleTabChange('discrepancies')
       },
       {
@@ -2932,6 +2933,7 @@ export function Dashboard() {
         detail: blockedDetail,
         tone: blockedPipelineCount > 0 ? 'border-amber-500/20 bg-amber-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
         dotTone: blockedPipelineCount > 0 ? 'bg-amber-300' : 'bg-white/18',
+        active: blockedPipelineCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
       },
       {
@@ -2940,6 +2942,7 @@ export function Dashboard() {
         detail: filedClaimsCount > 0 ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in review` : 'No filed cases in review',
         tone: filedClaimsCount > 0 ? 'border-sky-500/20 bg-sky-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
         dotTone: filedClaimsCount > 0 ? 'bg-sky-300' : 'bg-white/18',
+        active: filedClaimsCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
       },
       {
@@ -2948,6 +2951,7 @@ export function Dashboard() {
         detail: approvedClaimsCount > 0 ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} approved` : 'No approved cases awaiting payout',
         tone: approvedClaimsCount > 0 ? 'border-violet-500/20 bg-violet-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
         dotTone: approvedClaimsCount > 0 ? 'bg-violet-300' : 'bg-white/18',
+        active: approvedClaimsCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
       },
       {
@@ -2956,6 +2960,7 @@ export function Dashboard() {
         detail: recoveredCashTotal > 0 ? `${pluralize(recoveredClaimsCount, 'case')} confirmed` : 'Nothing confirmed yet',
         tone: recoveredCashTotal > 0 ? 'border-emerald-500/20 bg-emerald-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
         dotTone: recoveredCashTotal > 0 ? 'bg-emerald-300' : 'bg-white/18',
+        active: recoveredCashTotal > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
       }
     ];
@@ -3145,112 +3150,140 @@ export function Dashboard() {
                 <div className="relative z-10 space-y-5">
                   {/* Main Content - 3 columns */}
                   <div className="space-y-5">
-                    <div className="relative space-y-4">
-                      <div className="bg-white p-5 shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
+                    <div className="relative group/pipeline-grid space-y-4">
+                      <div className="pointer-events-none absolute -inset-x-4 -top-6 h-64 rounded-[36px] bg-[radial-gradient(circle_at_20%_0%,rgba(0,82,255,0.10),transparent_36%),radial-gradient(circle_at_80%_20%,rgba(17,24,39,0.08),transparent_34%)] blur-2xl" />
+                      <div className="relative overflow-hidden rounded-[24px] border border-white/70 bg-white/75 p-5 shadow-[0_18px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#0052FF]/25 hover:shadow-[0_24px_70px_rgba(0,82,255,0.12)] group-hover/pipeline-grid:opacity-85 hover:opacity-100">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                           <div>
-                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                            <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
                               One-click pipeline
                             </div>
                             <p className="mt-2 text-[12px] font-sans leading-5 text-[#4B5563]">
                               Click any stage to jump straight to the work behind it.
                             </p>
                           </div>
-                          <div className="text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
+                          <button
+                            type="button"
+                            onClick={() => handleTabChange('evidence')}
+                            className="inline-flex h-8 items-center justify-center self-start rounded-full bg-[#111827] px-3 text-[10px] font-sans font-medium tracking-tight text-white shadow-[0_10px_24px_rgba(17,24,39,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#0052FF] lg:self-auto"
+                          >
                             {overviewNeedsFromYou.value}
-                          </div>
+                          </button>
                         </div>
-                        <div className="mt-5 overflow-x-auto pb-1">
-                          <div className="min-w-max bg-[#F9FAFB]">
-                            <div className="flex items-stretch divide-x divide-[#E5E7EB]">
-                              {overviewPipelineStages.map((stage) => (
-                                <button
-                                  key={stage.label}
-                                  onClick={stage.onClick}
-                                  className="group min-w-[188px] px-5 py-3.5 text-left transition-colors hover:bg-white"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <span className={cn("h-2 w-2 rounded-full", stage.dotTone)} />
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">
-                                      {stage.label}
-                                    </div>
-                                  </div>
-                                  <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-[#111827]">
-                                    {isOverviewLoading ? (
-                                      <Skeleton className="h-5 w-20 bg-[#E5E7EB]" />
-                                    ) : (
-                                      stage.value
-                                    )}
-                                  </div>
-                                  <div className="mt-1.5 text-[10px] font-sans leading-5 text-[#6B7280]">
-                                    {stage.detail}
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
+                        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                          {overviewPipelineStages.map((stage) => (
+                            <button
+                              key={stage.label}
+                              onClick={stage.onClick}
+                              className="group/stage relative min-h-[116px] overflow-hidden rounded-[18px] border border-white/70 bg-white/70 px-4 py-4 text-left shadow-[0_10px_28px_rgba(17,24,39,0.05)] backdrop-blur-md transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#0052FF]/30 hover:bg-white hover:shadow-[0_20px_46px_rgba(0,82,255,0.12)]"
+                            >
+                              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0052FF]/20 to-transparent opacity-0 transition-opacity duration-500 group-hover/stage:opacity-100" />
+                              <div className="flex items-center gap-2">
+                                <span className="relative flex h-2.5 w-2.5 items-center justify-center">
+                                  {stage.active ? (
+                                    <span className="absolute h-2.5 w-2.5 animate-ping rounded-full bg-[#0052FF]/30" />
+                                  ) : null}
+                                  <span className={cn("relative h-2 w-2 rounded-full", stage.active ? "bg-[#0052FF]" : "bg-[#D7E2F2]")} />
+                                </span>
+                                <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
+                                  {stage.label}
+                                </div>
+                              </div>
+                              <div className="mt-3 text-[15px] font-sans font-semibold tracking-tight text-[#111827]">
+                                {isOverviewLoading ? (
+                                  <Skeleton className="h-5 w-20 bg-[#E5E7EB]" />
+                                ) : (
+                                  stage.value
+                                )}
+                              </div>
+                              <div className="mt-2 text-[10px] font-sans leading-5 text-[#6B7280]">
+                                {stage.detail}
+                              </div>
+                            </button>
+                          ))}
                         </div>
                       </div>
 
-                      <div className="grid bg-white shadow-[0_4px_20px_rgba(17,24,39,0.03)] xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
-                        <div className="py-5 pr-6 lg:pr-8">
-                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                            Recovery pipeline
-                          </div>
-                          <div className="mt-3 flex flex-wrap items-end gap-3">
-                            {isOverviewLoading ? (
-                              <Skeleton className="h-12 w-48 bg-[#E5E7EB]" />
-                            ) : (
-                              <>
-                                <div className="text-[32px] font-sans font-[250] leading-none tracking-tight text-[#111827] xl:text-[38px]">
-                                  {overviewFoundValueLabel}
-                                </div>
-                                <div className="inline-flex items-center border-l border-[#D1D5DB] pl-3 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
-                                  {pluralize(detectedOpportunitiesCount, 'issue')} found
-                                </div>
-                              </>
-                            )}
-                          </div>
-                          <h2 className="mt-4 max-w-4xl text-[24px] font-sans font-semibold leading-tight tracking-tight text-[#111827] xl:text-[30px]">
-                            {overviewHeadline}
-                          </h2>
-                          <p className="mt-3 max-w-3xl text-[12px] font-sans leading-5 text-[#4B5563]">
-                            {overviewNarrative}
-                          </p>
-                          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
-                            {readyToFileCount > 0 ? (
-                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#10B981]" />
-                                {pluralize(readyToFileCount, 'case')} ready to file
+                      <div className="relative grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_repeat(2,minmax(220px,0.55fr))]">
+                        <div className="relative overflow-hidden rounded-[28px] border border-white/80 bg-white/80 p-6 shadow-[0_24px_80px_rgba(17,24,39,0.10)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.005] hover:border-[#0052FF]/30 hover:shadow-[0_32px_88px_rgba(0,82,255,0.14)] group-hover/pipeline-grid:opacity-85 hover:opacity-100">
+                          <div className="pointer-events-none absolute right-0 top-0 h-40 w-48 rounded-bl-full bg-[#0052FF]/[0.055] blur-xl" />
+                          <div className="relative">
+                            <div className="flex flex-wrap items-center justify-between gap-3">
+                              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
+                                Recovery pipeline
                               </div>
-                            ) : null}
-                            <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
-                              <span className="h-1.5 w-1.5 rounded-full bg-[#9CA3AF]" />
-                              {overviewCurrentStatus.value}
-                            </div>
-                            {latestDashboardSignalLabel ? (
-                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#BFD7FF]" />
-                                {latestDashboardSignalLabel}
+                              <div className="inline-flex items-center gap-2 rounded-full bg-[#F3F6FB] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
+                                <span className="relative flex h-2 w-2">
+                                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0052FF]/30" />
+                                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#0052FF]" />
+                                </span>
+                                {overviewCurrentStatus.value}
                               </div>
-                            ) : null}
-                          </div>
-                        </div>
-                        {overviewHeroMetrics.map((item) => (
-                          <div key={item.label} className="border-t border-[#E5E7EB] py-5 xl:border-l xl:border-t-0 xl:px-6">
-                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                              {item.label}
                             </div>
-                            <div className="mt-2 text-[22px] font-sans font-semibold tracking-tight text-[#111827]">
+                            <div className="mt-4 flex flex-wrap items-end gap-3">
                               {isOverviewLoading ? (
-                                <Skeleton className="h-8 w-28 bg-[#E5E7EB]" />
+                                <Skeleton className="h-12 w-48 bg-[#E5E7EB]" />
                               ) : (
-                                item.value
+                                <>
+                                  <div className="text-[40px] font-sans font-[250] leading-none tracking-tight text-[#111827] xl:text-[52px]">
+                                    {overviewFoundValueLabel}
+                                  </div>
+                                  <div className="mb-1 inline-flex items-center border-l border-[#D1D5DB] pl-3 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
+                                    {pluralize(detectedOpportunitiesCount, 'issue')} found
+                                  </div>
+                                </>
                               )}
                             </div>
-                            <p className="mt-2 text-[11px] font-sans leading-5 text-[#6B7280]">
-                              {item.detail}
+                            <h2 className="mt-5 max-w-4xl text-[26px] font-sans font-semibold leading-[1.08] tracking-tight text-[#111827] xl:text-[34px]">
+                              {overviewHeadline}
+                            </h2>
+                            <p className="mt-4 max-w-3xl text-[12px] font-sans leading-6 text-[#4B5563]">
+                              {overviewNarrative}
                             </p>
+                            <div className="mt-5 flex flex-wrap gap-2">
+                              {readyToFileCount > 0 ? (
+                                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
+                                  <span className="h-1.5 w-1.5 rounded-full bg-[#10B981]" />
+                                  {pluralize(readyToFileCount, 'case')} ready to file
+                                </div>
+                              ) : null}
+                              <div className="inline-flex items-center gap-2 rounded-full bg-[#F3F6FB] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#9CA3AF]" />
+                                {overviewNeedsFromYou.detail}
+                              </div>
+                              {latestDashboardSignalLabel ? (
+                                <div className="inline-flex items-center gap-2 rounded-full bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
+                                  <span className="h-1.5 w-1.5 rounded-full bg-[#BFD7FF]" />
+                                  {latestDashboardSignalLabel}
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+                        {overviewHeroMetrics.map((item, index) => (
+                          <div
+                            key={item.label}
+                            className="relative min-h-[220px] overflow-hidden rounded-[24px] border border-white/75 bg-white/72 p-6 shadow-[0_16px_52px_rgba(17,24,39,0.07)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#0052FF]/25 hover:shadow-[0_26px_64px_rgba(0,82,255,0.12)] group-hover/pipeline-grid:opacity-85 hover:opacity-100"
+                          >
+                            <div className={cn(
+                              "pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl",
+                              index === 0 ? "bg-[#0052FF]/[0.06]" : "bg-emerald-500/[0.07]"
+                            )} />
+                            <div className="relative">
+                              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
+                                {item.label}
+                              </div>
+                              <div className="mt-4 text-[28px] font-sans font-semibold leading-none tracking-tight text-[#111827]">
+                                {isOverviewLoading ? (
+                                  <Skeleton className="h-8 w-28 bg-[#E5E7EB]" />
+                                ) : (
+                                  item.value
+                                )}
+                              </div>
+                              <p className="mt-4 text-[12px] font-sans leading-6 text-[#6B7280]">
+                                {item.detail}
+                              </p>
+                            </div>
                           </div>
                         ))}
                       </div>
