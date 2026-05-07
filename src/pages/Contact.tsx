@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import {
-    ArrowRight,
-    CheckCircle2,
-    Clock,
-    FileText,
-    LifeBuoy,
-    Mail,
-    PlugZap,
-    Send,
-    ShieldCheck,
-} from 'lucide-react';
+import { ArrowRight, CheckCircle2, Mail, Send } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { Button } from '@/components/ui/button';
@@ -22,346 +11,253 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 
-const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
-
-const supportRoutes = [
-    {
-        icon: PlugZap,
-        label: 'Connection Help',
-        detail: 'Amazon account setup, reconnects, sync status, and onboarding access.',
-    },
-    {
-        icon: FileText,
-        label: 'Evidence & Cases',
-        detail: 'Documents, missing proof, claim readiness, case state, and recovery tracking.',
-    },
-    {
-        icon: ShieldCheck,
-        label: 'Billing & Access',
-        detail: 'Subscription questions, workspace access, API interest, and account changes.',
-    },
-];
-
-const responseNotes = [
-    'Support requests are routed to the right team path.',
-    'Workspace and case context help us respond cleanly.',
-    'Urgent onboarding issues are prioritized during launch.',
-];
+const fieldLabelClass = 'text-[11px] font-semibold tracking-tight text-[#66737F]';
+const inputClass = 'h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20';
 
 export default function Contact() {
-    usePageMeta({
-        title: 'Contact Support | Margin',
-        description: 'Contact Margin for support, onboarding, billing, API access, or recovery workflow questions.',
-        url: `${SITE_META.url}/contact`,
-        image: SITE_META.image,
-    });
+  usePageMeta({
+    title: 'Contact Support | Margin',
+    description: 'Contact Margin for support, onboarding, billing, API access, or recovery workflow questions.',
+    url: `${SITE_META.url}/contact`,
+    image: SITE_META.image,
+  });
 
-    const { toast } = useToast();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [form, setForm] = useState({
-        name: '',
-        email: '',
-        company: '',
-        subject: '',
-        message: '',
-    });
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    company: '',
+    subject: '',
+    message: '',
+  });
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-        if (!form.name || !form.email || !form.message) {
-            toast({
-                title: 'Required fields missing',
-                description: 'Please fill in your name, email, and message.',
-                variant: 'destructive',
-            });
-            return;
-        }
+    if (!form.name || !form.email || !form.message) {
+      toast({
+        title: 'Required fields missing',
+        description: 'Please fill in your name, email, and message.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
-        setIsSubmitting(true);
-        try {
-            const response = await api.createPublicSupportContact({
-                name: form.name,
-                email: form.email,
-                company: form.company || undefined,
-                subject: form.subject || 'Support request from Margin website',
-                message: form.message,
-                source_page: 'public_contact',
-            });
+    setIsSubmitting(true);
+    try {
+      const response = await api.createPublicSupportContact({
+        name: form.name,
+        email: form.email,
+        company: form.company || undefined,
+        subject: form.subject || 'Support request from Margin website',
+        message: form.message,
+        source_page: 'public_contact',
+      });
 
-            if (!response.ok || !response.data?.success) {
-                throw new Error(response.error || 'Failed to send support request.');
-            }
+      if (!response.ok || !response.data?.success) {
+        throw new Error(response.error || 'Failed to send support request.');
+      }
 
-            setIsSubmitted(true);
-            toast({
-                title: 'Support request sent',
-                description: `Your message was routed to ${response.data.email_sent_to}.`,
-            });
-        } catch (err: any) {
-            toast({
-                title: 'Support request failed',
-                description: err?.message || 'Please email support@margin-finance.com directly.',
-                variant: 'destructive',
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+      setIsSubmitted(true);
+      toast({
+        title: 'Support request sent',
+        description: `Your message was routed to ${response.data.email_sent_to}.`,
+      });
+    } catch (err: any) {
+      toast({
+        title: 'Support request failed',
+        description: err?.message || 'Please email support@margin-finance.com directly.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    return (
-        <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
-            <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/8 bg-[#050505]/78 backdrop-blur-xl">
-                <div className={`${containerClass} flex h-20 items-center justify-between`}>
-                    <Link to="/" className="flex items-center gap-3">
-                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto invert brightness-0" />
-                        <span className="brand-wordmark font-merriweather text-lg tracking-tight text-white">Margin</span>
-                    </Link>
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+      <div
+        className="fixed inset-0 z-0 pointer-events-none opacity-[0.04]"
+        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
+      />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(46,125,91,0.1),transparent_32%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-[720px] bg-[radial-gradient(circle_at_18%_100%,rgba(191,216,234,0.24),transparent_44%),radial-gradient(circle_at_76%_88%,rgba(255,255,255,0.7),transparent_48%)]" />
+      </div>
 
-                    <nav className="hidden items-center gap-6 text-[13px] text-white/56 md:flex">
-                        <Link to="/" className="transition hover:text-white">Home</Link>
-                        <Link to="/pricing" className="transition hover:text-white">Pricing</Link>
-                        <Link to="/developer-api" className="transition hover:text-white">API</Link>
-                    </nav>
-
-                    <Link
-                        to="/login"
-                        className="inline-flex h-10 items-center justify-center rounded-full border border-white/12 bg-transparent px-4 text-[13px] text-white transition-colors hover:bg-white/[0.04]"
-                    >
-                        Sign In
-                    </Link>
-                </div>
-            </header>
-
-            <main className="relative">
-                <div
-                    className="pointer-events-none fixed inset-0 opacity-[0.03]"
-                    style={{
-                        backgroundImage:
-                            'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
-                    }}
-                />
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(56,189,248,0.055)_0%,transparent_28%,transparent_70%,rgba(148,163,184,0.04)_100%)]" />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#050505] to-[#040404]" />
-
-                <section className="relative pt-28 md:pt-40">
-                    <div className={containerClass}>
-                        <div className="grid gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
-                            <motion.div
-                                initial={{ opacity: 0, y: 18 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6 }}
-                            >
-                                <div className={labelClass}>Margin Support</div>
-                                <h1 className="mt-5 max-w-[780px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[76px]">
-                                    Tell us where the workflow is stuck.
-                                </h1>
-                                <p className="mt-5 max-w-[680px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
-                                    Reach Margin for onboarding, Amazon connection issues, evidence questions, billing, API access, or anything blocking recovery work.
-                                </p>
-
-                                <div className="mt-9 space-y-3">
-                                    {supportRoutes.map((item) => (
-                                        <div key={item.label} className="grid grid-cols-[40px_minmax(0,1fr)] gap-4 border-t border-white/8 py-5 last:border-b">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-white/10 bg-white/[0.035] text-sky-100/70">
-                                                <item.icon className="h-4 w-4" />
-                                            </div>
-                                            <div>
-                                                <h2 className="text-[15px] font-medium tracking-tight text-white">{item.label}</h2>
-                                                <p className="mt-1 max-w-[520px] text-[13px] leading-6 text-white/48">{item.detail}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <a
-                                    href="mailto:support@margin-finance.com"
-                                    className="mt-8 inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] md:h-12 md:px-6 md:text-sm"
-                                >
-                                    support@margin-finance.com
-                                    <Mail className="ml-2 h-4 w-4" />
-                                </a>
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 22 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.65, delay: 0.08 }}
-                                className="overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-5 py-6 shadow-[0_28px_80px_rgba(0,0,0,0.34)] sm:px-7 sm:py-8 md:px-8"
-                            >
-                                {isSubmitted ? (
-                                    <div className="flex min-h-[520px] flex-col items-center justify-center text-center">
-                                        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-sky-300/20 bg-sky-300/[0.08] text-sky-100">
-                                            <CheckCircle2 className="h-8 w-8" />
-                                        </div>
-                                        <h2 className="mt-7 text-[28px] font-light tracking-tight text-white">Message sent.</h2>
-                                        <p className="mt-3 max-w-[360px] text-[14px] leading-7 text-white/52">
-                                            Your request has been routed to support@margin-finance.com. We will reply to the email address you provided.
-                                        </p>
-                                        <Button
-                                            type="button"
-                                            onClick={() => setIsSubmitted(false)}
-                                            className="mt-8 h-11 rounded-full border border-white/12 bg-transparent px-5 text-[13px] font-medium text-white hover:bg-white/[0.04]"
-                                        >
-                                            Start Another Request
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    <form onSubmit={handleSubmit} className="space-y-7">
-                                        <div>
-                                            <div className={labelClass}>Routed Intake</div>
-                                            <h2 className="mt-3 text-[28px] font-light leading-tight tracking-tight text-white md:text-[36px]">
-                                                Send a support request.
-                                            </h2>
-                                            <p className="mt-3 max-w-[620px] text-[14px] leading-7 text-white/52">
-                                                Add the workspace, case, integration, or billing context that matters.
-                                            </p>
-                                        </div>
-
-                                        <div className="grid gap-5 md:grid-cols-2">
-                                            <div className="space-y-2">
-                                                <label className="block text-[11px] font-medium uppercase tracking-[0.16em] text-white/42">
-                                                    Name
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    value={form.name}
-                                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                                    placeholder="Your name"
-                                                    className="h-12 rounded-[14px] border-white/10 bg-white/[0.025] px-4 text-[14px] text-white placeholder:text-white/24 focus:border-white/20"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="block text-[11px] font-medium uppercase tracking-[0.16em] text-white/42">
-                                                    Email
-                                                </label>
-                                                <Input
-                                                    type="email"
-                                                    value={form.email}
-                                                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                                    placeholder="you@company.com"
-                                                    className="h-12 rounded-[14px] border-white/10 bg-white/[0.025] px-4 text-[14px] text-white placeholder:text-white/24 focus:border-white/20"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid gap-5 md:grid-cols-2">
-                                            <div className="space-y-2">
-                                                <label className="block text-[11px] font-medium uppercase tracking-[0.16em] text-white/42">
-                                                    Company
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    value={form.company}
-                                                    onChange={(e) => setForm({ ...form, company: e.target.value })}
-                                                    placeholder="Company or store"
-                                                    className="h-12 rounded-[14px] border-white/10 bg-white/[0.025] px-4 text-[14px] text-white placeholder:text-white/24 focus:border-white/20"
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="block text-[11px] font-medium uppercase tracking-[0.16em] text-white/42">
-                                                    Topic
-                                                </label>
-                                                <Input
-                                                    type="text"
-                                                    value={form.subject}
-                                                    onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                                                    placeholder="Onboarding, API, billing, case help"
-                                                    className="h-12 rounded-[14px] border-white/10 bg-white/[0.025] px-4 text-[14px] text-white placeholder:text-white/24 focus:border-white/20"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <label className="block text-[11px] font-medium uppercase tracking-[0.16em] text-white/42">
-                                                Message
-                                            </label>
-                                            <Textarea
-                                                value={form.message}
-                                                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                                                placeholder="Tell us what you need help with."
-                                                className="min-h-[156px] resize-none rounded-[16px] border-white/10 bg-white/[0.025] px-4 py-4 text-[14px] leading-6 text-white placeholder:text-white/24 focus:border-white/20"
-                                                required
-                                            />
-                                        </div>
-
-                                        <Button
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                            className="h-12 w-full rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13]"
-                                        >
-                                            {isSubmitting ? 'Preparing Message...' : 'Send Support Request'}
-                                            {!isSubmitting && <Send className="ml-2 h-4 w-4" />}
-                                        </Button>
-                                    </form>
-                                )}
-                            </motion.div>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
-                    <div className={containerClass}>
-                        <div className="grid gap-0 md:grid-cols-3">
-                            <div className="border-b border-white/8 py-6 md:border-b-0 md:border-r md:border-white/8 md:px-6">
-                                <div className="flex items-center gap-3">
-                                    <Clock className="h-4 w-4 text-sky-100/54" />
-                                    <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/58">Response Window</div>
-                                </div>
-                                <p className="mt-3 max-w-[340px] text-[13px] leading-6 text-white/46">Most launch support requests are reviewed within one business day.</p>
-                            </div>
-                            <div className="border-b border-white/8 py-6 md:border-b-0 md:border-r md:border-white/8 md:px-6">
-                                <div className="flex items-center gap-3">
-                                    <LifeBuoy className="h-4 w-4 text-sky-100/54" />
-                                    <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/58">Support Routing</div>
-                                </div>
-                                <p className="mt-3 max-w-[340px] text-[13px] leading-6 text-white/46">Requests are routed across onboarding, product support, API access, billing, and recovery workflow help.</p>
-                            </div>
-                            <div className="py-6 md:px-6">
-                                <div className="flex items-center gap-3">
-                                    <ArrowRight className="h-4 w-4 text-sky-100/54" />
-                                    <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/58">Need API Access?</div>
-                                </div>
-                                <p className="mt-3 max-w-[340px] text-[13px] leading-6 text-white/46">Use this same route for API access questions while partner access stays private.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="relative border-t border-white/8 py-16 md:py-28">
-                    <div className={containerClass}>
-                        <div className="grid gap-8 md:grid-cols-[0.7fr_1fr] md:items-start">
-                            <div>
-                                <div className={labelClass}>What Helps</div>
-                                <h2 className="mt-4 max-w-[600px] text-[31px] font-light leading-[1.02] tracking-tight text-white sm:text-[36px] md:text-[54px]">
-                                    A little context gets you a cleaner answer.
-                                </h2>
-                            </div>
-                            <div className="border-t border-white/8">
-                                {responseNotes.map((note) => (
-                                    <div key={note} className="flex items-start gap-4 border-b border-white/8 py-5">
-                                        <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-sky-100/54" />
-                                        <p className="text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">{note}</p>
-                                    </div>
-                                ))}
-                                <Link
-                                    to="/developer-api"
-                                    className="mt-8 inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] md:h-12 md:px-6 md:text-sm"
-                                >
-                                    View Margin API
-                                    <ArrowRight className="ml-2 h-4 w-4" />
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
-
-            <BrandFooter />
+      <header className="fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent">
+        <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
+          <div className="relative flex items-center justify-between rounded-[22px] border border-[#DCE8EE] bg-white/94 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-2xl md:px-6">
+            <Link to="/" className="inline-flex items-center gap-2 rounded-full px-1 py-1 transition-colors hover:bg-[#F3F6F8] md:gap-2.5 md:px-2 md:py-1.5">
+              <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-4 w-auto object-contain md:h-5" />
+              <span className="brand-wordmark font-merriweather text-base tracking-tight text-[#182026] md:text-lg">Margin</span>
+            </Link>
+          </div>
         </div>
-    );
+      </header>
+
+      <main className="relative z-10 px-4 pb-24 pt-28 md:px-6 md:pb-28 md:pt-32">
+        <div className="mx-auto max-w-[860px] space-y-8">
+          <section className="space-y-5">
+            <div className="inline-flex items-center gap-3 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
+              <span>Margin support</span>
+              <span className="h-1 w-1 rounded-full bg-[#0B74DE]/80" />
+              <span className="text-[#66737F]">Contact us</span>
+            </div>
+
+            <div className="space-y-4">
+              <h1 className="max-w-[680px] text-[38px] font-semibold leading-[0.95] tracking-[-0.06em] text-[#182026] md:text-[60px]">
+                Tell us where the workflow is stuck.
+              </h1>
+              <p className="max-w-[580px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
+                Reach Margin for onboarding, Amazon connection issues, evidence questions, billing, API access, or anything blocking recovery work.
+              </p>
+            </div>
+          </section>
+
+          <section className="relative overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
+            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
+            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#0B74DE]/10 blur-3xl" />
+
+            <div className="relative">
+              <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                    Routed intake
+                  </div>
+                  <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
+                    Send a support request.
+                  </h2>
+                  <p className="max-w-[560px] text-[14px] leading-6 text-[#66737F] md:text-[15px]">
+                    Add the workspace, case, integration, or billing context that matters.
+                  </p>
+                </div>
+
+                <a href="mailto:support@margin-finance.com" className="rounded-full border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F] transition-colors hover:bg-white hover:text-[#182026]">
+                  support@margin-finance.com
+                </a>
+              </div>
+
+              {isSubmitted ? (
+                <div className="flex min-h-[420px] flex-col items-center justify-center rounded-[22px] border border-[#DCE8EE] bg-[#F8FAFC] px-5 py-10 text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-600">
+                    <CheckCircle2 className="h-8 w-8" />
+                  </div>
+                  <h2 className="mt-7 text-[28px] font-semibold tracking-tight text-[#182026]">Message sent.</h2>
+                  <p className="mt-3 max-w-[380px] text-[14px] leading-7 text-[#66737F]">
+                    Your request has been routed to support@margin-finance.com. We will reply to the email address you provided.
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={() => setIsSubmitted(false)}
+                    className="mt-8 h-11 rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
+                  >
+                    Start Another Request
+                  </Button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className={fieldLabelClass}>Name</label>
+                      <Input
+                        type="text"
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        placeholder="Your name"
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className={fieldLabelClass}>Email</label>
+                      <Input
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        placeholder="you@company.com"
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className={fieldLabelClass}>Company</label>
+                      <Input
+                        type="text"
+                        value={form.company}
+                        onChange={(e) => setForm({ ...form, company: e.target.value })}
+                        placeholder="Company or store"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className={fieldLabelClass}>Topic</label>
+                      <Input
+                        type="text"
+                        value={form.subject}
+                        onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                        placeholder="Onboarding, API, billing, case help"
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className={fieldLabelClass}>Message</label>
+                    <Textarea
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      placeholder="Tell us what you need help with."
+                      className="min-h-[156px] resize-none rounded-[20px] border-[#CFE0EA] bg-white px-4 py-4 text-[14px] leading-6 tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="h-12 flex-1 justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
+                    >
+                      {isSubmitting ? 'Preparing message...' : 'Send Support Request'}
+                      {!isSubmitting ? <Send className="h-4 w-4" /> : null}
+                    </Button>
+                    <Button asChild variant="outline" className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]">
+                      <Link to="/">
+                        Back Home
+                      </Link>
+                    </Button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </section>
+
+          <section className="grid gap-3 text-[14px] leading-6 text-[#66737F] md:grid-cols-3">
+            <div className="rounded-[22px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
+              Most launch support requests are reviewed within one business day.
+            </div>
+            <div className="rounded-[22px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
+              Workspace, case, or integration IDs help us route the request cleanly.
+            </div>
+            <div className="rounded-[22px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
+              API access questions can use this same support route.
+            </div>
+          </section>
+
+          <p className="mx-auto max-w-[720px] text-center text-[14px] leading-6 text-[#66737F] md:text-[15px]">
+            You can also email us directly at <a href="mailto:support@margin-finance.com" className="font-semibold text-[#0B74DE] transition-colors hover:text-[#0869C9]">support@margin-finance.com</a>.
+          </p>
+        </div>
+      </main>
+
+      <BrandFooter />
+    </div>
+  );
 }

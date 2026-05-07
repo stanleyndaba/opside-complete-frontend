@@ -3332,7 +3332,7 @@ export function Dashboard() {
                                 Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
                               </p>
                             </div>
-                            <div className="rounded-full border border-[#D7E2F2] bg-[#F3F7FF] px-3 py-1.5 text-right">
+                            <div className="px-3 py-1.5 text-right">
                               <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                                 Reading mode
                               </div>

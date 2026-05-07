@@ -89,6 +89,12 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 </Link>
               </div>
 
+              <Button asChild variant="outline" className="col-span-2 h-10 w-fit rounded-full border-[#2C4657] bg-white/[0.04] px-4 text-[11px] font-semibold uppercase tracking-tight text-[#EAF1F5] hover:border-[#8BC7FF]/50 hover:bg-white/[0.06] md:col-span-1">
+                <Link to="/contact">
+                  Contact Us
+                </Link>
+              </Button>
+
 
               {/* Institutional Validation Badge & Copyright */}
               <div className="col-span-2 md:col-span-1 flex flex-col items-center md:items-end gap-4 pt-8 md:pt-0 border-t border-white/[0.08] md:border-none">
