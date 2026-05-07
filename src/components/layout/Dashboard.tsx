@@ -18,7 +18,7 @@ import {
   FileText, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
   ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw,
   Download, Bell, TrendingDown, TrendingUp, Loader2, X,
-  ChevronDown, Clock, MoreVertical, Files
+  ChevronDown, Clock, MoreVertical, Files, ShieldCheck, AlertTriangle
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl, type AutoFileGateStatus } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
@@ -822,6 +822,133 @@ const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
   if (severity === 'high') return 'text-red-200 border-red-500/25 bg-red-500/[0.08]';
   if (severity === 'medium') return 'text-amber-200 border-amber-500/25 bg-amber-500/[0.08]';
   return 'text-sky-200 border-sky-500/25 bg-sky-500/[0.08]';
+};
+
+const getOperatorFeedSignalMeta = (event: LaunchMonitorEvent) => {
+  const type = String(event.event_type || '').toLowerCase();
+  const title = String(event.title || '').toLowerCase();
+  const status = String(event.status || '').toLowerCase();
+  const textBlob = `${type} ${title} ${status}`;
+
+  if (textBlob.includes('blocked') || textBlob.includes('hold') || textBlob.includes('safety')) {
+    return {
+      agent: 'Guardian',
+      signal: 'Safety review',
+      Icon: ShieldCheck,
+      accent: 'border-amber-300 bg-amber-50 text-amber-700',
+      iconWrap: 'border-amber-200 bg-amber-50 text-amber-600',
+      rail: 'bg-amber-300',
+      pulse: 'bg-amber-400/30',
+      progress: 'from-amber-400 via-amber-300 to-transparent',
+      actionLabel: 'Open Case',
+    };
+  }
+
+  if (textBlob.includes('unmatched') || textBlob.includes('email')) {
+    return {
+      agent: 'Sentinel',
+      signal: 'Email intelligence',
+      Icon: Mail,
+      accent: 'border-sky-300 bg-sky-50 text-sky-700',
+      iconWrap: 'border-sky-200 bg-sky-50 text-sky-600',
+      rail: 'bg-sky-300',
+      pulse: 'bg-sky-400/30',
+      progress: 'from-sky-400 via-sky-300 to-transparent',
+      actionLabel: event.dispute_case_id ? 'Open Case' : 'Review Signal',
+    };
+  }
+
+  if (textBlob.includes('filed') || textBlob.includes('filing')) {
+    return {
+      agent: 'Filing',
+      signal: 'Amazon filing',
+      Icon: Send,
+      accent: 'border-blue-300 bg-blue-50 text-blue-700',
+      iconWrap: 'border-blue-200 bg-blue-50 text-blue-600',
+      rail: 'bg-blue-300',
+      pulse: 'bg-blue-400/30',
+      progress: 'from-blue-400 via-blue-300 to-transparent',
+      actionLabel: 'Open Case',
+    };
+  }
+
+  if (textBlob.includes('thread')) {
+    return {
+      agent: 'Threadwatch',
+      signal: 'Amazon thread',
+      Icon: Link2,
+      accent: 'border-violet-300 bg-violet-50 text-violet-700',
+      iconWrap: 'border-violet-200 bg-violet-50 text-violet-600',
+      rail: 'bg-violet-300',
+      pulse: 'bg-violet-400/30',
+      progress: 'from-violet-400 via-violet-300 to-transparent',
+      actionLabel: 'Open Case',
+    };
+  }
+
+  if (textBlob.includes('notification')) {
+    return {
+      agent: 'Relay',
+      signal: 'Notification delivery',
+      Icon: Bell,
+      accent: 'border-rose-300 bg-rose-50 text-rose-700',
+      iconWrap: 'border-rose-200 bg-rose-50 text-rose-600',
+      rail: 'bg-rose-300',
+      pulse: 'bg-rose-400/30',
+      progress: 'from-rose-400 via-rose-300 to-transparent',
+      actionLabel: 'Review Signal',
+    };
+  }
+
+  return {
+    agent: event.severity === 'high' ? 'Guardian' : 'Sentinel',
+    signal: formatLaunchEventTypeLabel(event.event_type),
+    Icon: event.severity === 'high' ? AlertTriangle : Search,
+    accent: event.severity === 'high'
+      ? 'border-red-300 bg-red-50 text-red-700'
+      : 'border-[#D7E2F2] bg-[#F3F7FF] text-[#0052FF]',
+    iconWrap: event.severity === 'high'
+      ? 'border-red-200 bg-red-50 text-red-600'
+      : 'border-[#D7E2F2] bg-[#F3F7FF] text-[#0052FF]',
+    rail: event.severity === 'high' ? 'bg-red-300' : 'bg-[#BFD7FF]',
+    pulse: event.severity === 'high' ? 'bg-red-400/30' : 'bg-[#0052FF]/20',
+    progress: event.severity === 'high'
+      ? 'from-red-400 via-red-300 to-transparent'
+      : 'from-[#0052FF] via-[#BFD7FF] to-transparent',
+    actionLabel: event.dispute_case_id ? 'Open Case' : 'Review Signal',
+  };
+};
+
+const formatOperatorFeedSummary = (event: LaunchMonitorEvent, agent: string) => {
+  const type = String(event.event_type || '').toLowerCase();
+  const title = String(event.title || '').trim();
+  const caseRef = event.amazon_case_id
+    ? `Amazon case ${event.amazon_case_id}`
+    : event.dispute_case_id
+      ? `case ${event.dispute_case_id}`
+      : 'an operational signal';
+
+  if (type.includes('blocked') || type.includes('hold')) {
+    return `Agent ${agent} placed ${caseRef} under safety review.`;
+  }
+
+  if (type.includes('unmatched') || type.includes('email')) {
+    return `Agent ${agent} detected an unmatched Amazon email${event.amazon_case_id ? ` for ${event.amazon_case_id}` : ''}.`;
+  }
+
+  if (type.includes('filed')) {
+    return `Agent ${agent} filed ${caseRef} into Amazon review.`;
+  }
+
+  if (type.includes('thread')) {
+    return `Agent ${agent} captured an Amazon thread change for ${caseRef}.`;
+  }
+
+  if (title) {
+    return `Agent ${agent}: ${title}.`;
+  }
+
+  return `Agent ${agent} updated ${caseRef}.`;
 };
 
 type DashboardTab = 'overview' | 'discrepancies' | 'disputes' | 'evidence';
@@ -3291,44 +3418,39 @@ export function Dashboard() {
 
                     <div className="space-y-3">
                       <div className="relative">
-                        <div className="border-b border-white/10 pb-3">
+                        <div className="rounded-[24px] border border-white/75 bg-white/78 p-5 shadow-[0_18px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl">
                           <div className="flex items-start justify-between gap-4">
                             <div>
-                              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                                Recent operator feed
+                              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
+                                Living intelligence feed
                               </div>
-                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.52]">
-                                Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
+                              <p className="mt-2 max-w-2xl text-[12px] font-sans leading-6 text-[#6B7280]">
+                                Agent signals across blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery.
                               </p>
                             </div>
-                            <div className="text-right">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
+                            <div className="rounded-full border border-[#D7E2F2] bg-[#F3F7FF] px-3 py-1.5 text-right">
+                              <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                                 Reading mode
                               </div>
-                              <div className="mt-1 text-[10px] font-sans leading-5 text-white/[0.62]">
+                              <div className="mt-0.5 text-[10px] font-sans font-semibold leading-5 text-[#0052FF]">
                                 Most recent first
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="py-0">
+
+                          <div className="mt-5">
                           {launchMonitor?.recent_events === null ? (
-                            <div className="border-b border-white/10 py-6 text-[11px] font-sans text-white/45">
+                            <div className="rounded-[18px] border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
                               Not Available
                             </div>
                           ) : (launchMonitor?.recent_events || []).length === 0 ? (
-                            <div className="border-b border-white/10 py-6 text-[11px] font-sans text-white/45">
+                            <div className="rounded-[18px] border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
                               No recent operational events recorded for this tenant.
                             </div>
                           ) : (
                             <ScrollArea className="h-[560px] w-full">
-                              <div className="border-b border-white/10 pr-4">
-                                <div className="hidden grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(120px,0.55fr)_minmax(96px,0.45fr)] gap-4 border-b border-white/10 px-4 py-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28] lg:grid">
-                                  <div>Signal</div>
-                                  <div>Detail</div>
-                                  <div>Recorded</div>
-                                  <div className="text-right">Action</div>
-                                </div>
+                              <div className="relative space-y-3 pr-4">
+                                <div className="absolute bottom-3 left-[22px] top-3 w-px bg-gradient-to-b from-[#BFD7FF] via-[#D7E2F2] to-transparent" />
                                 {launchMonitor?.recent_events?.map((event) => {
                                   const eventTimestamp = new Date(event.timestamp);
                                   const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
@@ -3336,70 +3458,89 @@ export function Dashboard() {
                                     : formatDistanceToNow(eventTimestamp, { addSuffix: true });
                                   const formattedStatus = formatLaunchStatusLabel(event.status);
                                   const detailText = formatOperatorFeedDetail(event.detail);
+                                  const signalMeta = getOperatorFeedSignalMeta(event);
+                                  const SignalIcon = signalMeta.Icon;
+                                  const summaryText = formatOperatorFeedSummary(event, signalMeta.agent);
                                   const metaItems = [
                                     event.amazon_case_id ? `Amazon case ${event.amazon_case_id}` : null,
                                     formattedStatus ? `Current state ${formattedStatus}` : null,
-                                    event.dispute_case_id ? 'Linked to dispute case' : 'Operator log only'
+                                    event.dispute_case_id ? 'Linked to dispute case' : 'Operator log only',
+                                    formatLaunchSourceLabel(event.source_table)
                                   ].filter(Boolean) as string[];
 
                                   return (
                                     <div
                                       key={event.id}
-                                      className="grid w-full grid-cols-1 gap-3 border-b border-white/[0.06] px-4 py-3.5 transition-colors last:border-b-0 hover:bg-white/[0.025] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(120px,0.55fr)_minmax(96px,0.45fr)] lg:gap-4"
+                                      className="group/feed relative grid grid-cols-[44px_minmax(0,1fr)] gap-3 rounded-[20px] border border-[#E5E7EB] bg-white/82 p-3 shadow-[0_10px_30px_rgba(17,24,39,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0052FF]/25 hover:bg-white hover:shadow-[0_18px_44px_rgba(0,82,255,0.10)]"
                                     >
-                                      <div className="min-w-0">
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <span className={cn('border px-2 py-0.5 text-[9px] font-sans font-medium uppercase tracking-tight', launchEventTone(event.severity))}>
-                                              {formatLaunchEventTypeLabel(event.event_type)}
-                                            </span>
-                                            <span className="border border-white/[0.08] bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.62]">
-                                              {formatLaunchSourceLabel(event.source_table)}
-                                            </span>
-                                        </div>
-                                        <div className="mt-2 text-[12px] font-sans font-medium leading-snug tracking-tight text-white/[0.78]">
-                                          {event.title}
+                                      <div className="relative z-10 flex justify-center">
+                                        <div className={cn("relative flex h-9 w-9 items-center justify-center rounded-full border", signalMeta.iconWrap)}>
+                                          <span className={cn("absolute h-9 w-9 animate-ping rounded-full", signalMeta.pulse)} />
+                                          <SignalIcon className="relative h-4 w-4" />
                                         </div>
                                       </div>
 
                                       <div className="min-w-0">
-                                        <p
-                                          className="max-w-4xl text-[11px] font-sans leading-5 text-white/[0.68] whitespace-normal"
-                                          style={{
-                                            display: '-webkit-box',
-                                            WebkitBoxOrient: 'vertical',
-                                            WebkitLineClamp: 2,
-                                            overflow: 'hidden'
-                                          }}
-                                        >
-                                          {detailText}
-                                        </p>
+                                        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                                          <div className="min-w-0">
+                                            <div className="flex flex-wrap items-center gap-2">
+                                              <span className={cn("rounded-full border px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight", signalMeta.accent)}>
+                                                Agent {signalMeta.agent}
+                                              </span>
+                                              <span className="rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
+                                                {signalMeta.signal}
+                                              </span>
+                                              <span className="text-[10px] font-sans font-medium text-[#6B7280]">
+                                                {eventTimeLabel}
+                                              </span>
+                                            </div>
+                                            <div className="mt-2 text-[13px] font-sans font-semibold leading-5 tracking-tight text-[#111827]">
+                                              {summaryText}
+                                            </div>
+                                          </div>
 
-                                        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-white/[0.42]">
-                                          {metaItems.map((item) => (
-                                            <span key={item}>{item}</span>
-                                          ))}
-                                        </div>
-                                      </div>
-
-                                      <div className="text-[10px] font-sans text-white/[0.62] lg:pt-1">
-                                        {eventTimeLabel}
-                                      </div>
-
-                                      <div className="flex justify-start lg:justify-end">
+                                          <div className="flex shrink-0 items-center gap-2">
                                             {event.dispute_case_id ? (
                                               <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                className="h-8 rounded-none border border-white/10 bg-transparent px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.72] hover:bg-white/[0.05] hover:text-white"
+                                                className="h-8 rounded-full border border-[#D7E2F2] bg-[#F3F7FF] px-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF] transition-all hover:border-[#0052FF]/25 hover:bg-white hover:text-[#003DB8]"
                                                 onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`), { state: { claim: event } })}
                                               >
-                                                Open Case
+                                                {signalMeta.actionLabel}
+                                                <ArrowRight className="ml-1.5 h-3 w-3" />
                                               </Button>
                                             ) : (
-                                              <div className="pt-2 text-[10px] font-sans text-white/[0.42]">
+                                              <span className="rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                                                 Logged only
-                                              </div>
+                                              </span>
                                             )}
+                                          </div>
+                                        </div>
+
+                                        <div className="mt-3 overflow-hidden rounded-[14px] border border-[#E5E7EB] bg-[#F8FAFC]">
+                                          <div className={cn("h-1 bg-gradient-to-r", signalMeta.progress)} />
+                                          <div className="px-3 py-2.5">
+                                            <p
+                                              className="text-[11px] font-sans leading-5 text-[#4B5563]"
+                                              style={{
+                                                display: '-webkit-box',
+                                                WebkitBoxOrient: 'vertical',
+                                                WebkitLineClamp: 2,
+                                                overflow: 'hidden'
+                                              }}
+                                            >
+                                              {detailText}
+                                            </p>
+                                            <div className="mt-2 flex flex-wrap gap-1.5">
+                                              {metaItems.map((item) => (
+                                                <span key={item} className="rounded-full bg-white px-2 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280] ring-1 ring-[#E5E7EB]">
+                                                  {item}
+                                                </span>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   );
@@ -3407,6 +3548,7 @@ export function Dashboard() {
                               </div>
                             </ScrollArea>
                           )}
+                          </div>
                         </div>
                       </div>
                     </div>
