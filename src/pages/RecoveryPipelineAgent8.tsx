@@ -864,10 +864,10 @@ function mergeLedgerRows(nextRows: Row[], previousRows: Row[] = []): Row[] {
 
 const severityTone = (severity: Blocker['severity']) =>
   severity === 'high'
-    ? 'border-red-500/25 bg-red-500/10 text-red-200'
+    ? 'border-rose-300 bg-rose-50 text-rose-700'
     : severity === 'medium'
-      ? 'border-amber-500/25 bg-amber-500/10 text-amber-100'
-      : 'border-blue-500/25 bg-blue-500/10 text-blue-100';
+      ? 'border-amber-300 bg-amber-50 text-amber-700'
+      : 'border-[#0052FF]/20 bg-[#F3F7FF] text-[#0052FF]';
 
 const badgeTone = (value: string | null | undefined) => {
   const normalized = String(value || '').toLowerCase();
@@ -882,10 +882,11 @@ const badgeTone = (value: string | null | undefined) => {
 
 function Metric({ labelText, value, sublabel }: { labelText: string; value: string; sublabel: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.015] p-5">
-      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{labelText}</div>
-      <div className="mt-3 text-[22px] font-sans font-semibold tracking-tight text-white">{value}</div>
-      <div className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">{sublabel}</div>
+    <div className="group/metric relative min-h-[116px] overflow-hidden rounded-[18px] border border-white/70 bg-white/70 px-5 py-5 shadow-[0_10px_28px_rgba(17,24,39,0.05)] backdrop-blur-md transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#0052FF]/30 hover:bg-white hover:shadow-[0_20px_46px_rgba(0,82,255,0.12)]">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0052FF]/20 to-transparent opacity-0 transition-opacity duration-500 group-hover/metric:opacity-100" />
+      <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">{labelText}</div>
+      <div className="mt-4 text-[23px] font-sans font-semibold tracking-tight text-[#111827]">{value}</div>
+      <div className="mt-3 text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">{sublabel}</div>
     </div>
   );
 }
@@ -1473,55 +1474,58 @@ export default function RecoveryPipelineAgent8() {
             </Card>
           ) : pagination ? (
             <div className="space-y-6">
-              <div className="grid gap-4 xl:grid-cols-4">
-                <Metric
-                  labelText="Paid back so far"
-                  value={summaryMoney(summary?.verified_paid_total, summary?.summary_currency)}
-                  sublabel={
-                    summary?.verified_paid_count != null && summary?.partial_paid_count != null
-                      ? `${summary.verified_paid_count} paid back, ${summary.partial_paid_count} partial`
-                      : NOT_AVAILABLE
-                  }
-                />
-                <Metric
-                  labelText="Awaiting payout"
-                  value={summaryMoney(summary?.awaiting_payout_total, summary?.summary_currency)}
-                  sublabel={
-                    summary?.awaiting_payout_queue_count != null
-                      ? `${summary.awaiting_payout_queue_count} awaiting payout`
-                      : NOT_AVAILABLE
-                  }
-                />
-                <Metric
-                  labelText="Approved with Amazon"
-                  value={summaryMoney(summary?.approved_total, summary?.summary_currency)}
-                  sublabel={summary?.approved_count != null ? `${summary.approved_count} approved cases` : NOT_AVAILABLE}
-                />
-                <Metric
-                  labelText="Outstanding total"
-                  value={summaryMoney(summary?.outstanding_total, summary?.summary_currency)}
-                  sublabel={summary?.summary_currency ? 'Queue-wide backend financial truth' : NOT_AVAILABLE}
-                />
-              </div>
+              <div className="relative group/recovery-pipeline-section space-y-4">
+                <div className="pointer-events-none absolute -inset-x-4 -top-6 h-64 rounded-[36px] bg-[radial-gradient(circle_at_20%_0%,rgba(0,82,255,0.10),transparent_36%),radial-gradient(circle_at_80%_20%,rgba(17,24,39,0.08),transparent_34%)] blur-2xl" />
+                <div className="relative grid gap-4 xl:grid-cols-4">
+                  <Metric
+                    labelText="Paid back so far"
+                    value={summaryMoney(summary?.verified_paid_total, summary?.summary_currency)}
+                    sublabel={
+                      summary?.verified_paid_count != null && summary?.partial_paid_count != null
+                        ? `${summary.verified_paid_count} paid back, ${summary.partial_paid_count} partial`
+                        : NOT_AVAILABLE
+                    }
+                  />
+                  <Metric
+                    labelText="Awaiting payout"
+                    value={summaryMoney(summary?.awaiting_payout_total, summary?.summary_currency)}
+                    sublabel={
+                      summary?.awaiting_payout_queue_count != null
+                        ? `${summary.awaiting_payout_queue_count} awaiting payout`
+                        : NOT_AVAILABLE
+                    }
+                  />
+                  <Metric
+                    labelText="Approved with Amazon"
+                    value={summaryMoney(summary?.approved_total, summary?.summary_currency)}
+                    sublabel={summary?.approved_count != null ? `${summary.approved_count} approved cases` : NOT_AVAILABLE}
+                  />
+                  <Metric
+                    labelText="Outstanding total"
+                    value={summaryMoney(summary?.outstanding_total, summary?.summary_currency)}
+                    sublabel={summary?.summary_currency ? 'Queue-wide backend financial truth' : NOT_AVAILABLE}
+                  />
+                </div>
 
-              <Card className="border-white/10 bg-[#0c0c0c]">
-                <CardContent className="space-y-5 p-6">
-                  <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                    <div>
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Account-wide status</div>
-                      <div className="mt-2 text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">{filteredLabel}</div>
+                <Card className="relative overflow-hidden rounded-[24px] border border-white/70 bg-white/75 shadow-[0_18px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#0052FF]/25 hover:shadow-[0_24px_70px_rgba(0,82,255,0.12)]">
+                  <CardContent className="space-y-5 p-6">
+                    <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                      <div>
+                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">Account-wide status</div>
+                        <div className="mt-2 text-[11px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">{filteredLabel}</div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {[['Paid back', summary?.reconciled_count ?? NOT_AVAILABLE], ['Partial payout', summary?.partial_recovery_count ?? NOT_AVAILABLE], ['Awaiting payout', summary?.awaiting_payout_queue_count ?? NOT_AVAILABLE], ['Needs review', summary?.investigation_required_count ?? NOT_AVAILABLE]].map(([text, value]) => (
+                          <div key={String(text)} className="rounded-full border border-[#DCE5F2] bg-white/70 px-4 py-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563] shadow-[0_8px_20px_rgba(17,24,39,0.04)]">
+                            {text}: <span className="text-[#111827]">{value}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {[['Paid back', summary?.reconciled_count ?? NOT_AVAILABLE], ['Partial payout', summary?.partial_recovery_count ?? NOT_AVAILABLE], ['Awaiting payout', summary?.awaiting_payout_queue_count ?? NOT_AVAILABLE], ['Needs review', summary?.investigation_required_count ?? NOT_AVAILABLE]].map(([text, value]) => (
-                        <div key={String(text)} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
-                          {text}: <span className="text-white">{value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {summary?.blockers?.length ? <div className="flex flex-wrap gap-3 border-t border-white/10 pt-5">{summary.blockers.map((blocker) => <div key={blocker.key} className={`rounded-full border px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight ${severityTone(blocker.severity)}`}>{blocker.label}: {blocker.count}</div>)}</div> : null}
-                </CardContent>
-              </Card>
+                    {summary?.blockers?.length ? <div className="flex flex-wrap gap-3 border-t border-[#E5E7EB] pt-5">{summary.blockers.map((blocker) => <div key={blocker.key} className={`rounded-full border px-4 py-2 text-[10px] font-sans font-semibold uppercase tracking-tight ${severityTone(blocker.severity)}`}>{blocker.label}: {blocker.count}</div>)}</div> : null}
+                  </CardContent>
+                </Card>
+              </div>
 
               <Card className="border-white/10 bg-[#0c0c0c]">
                 <CardContent className="space-y-6 p-8">
