@@ -2554,7 +2554,7 @@ export default function CaseDetail() {
                                 "w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold transition-all shrink-0",
                                 step.active ? "bg-[#0052FF] border-[#0052FF] shadow-[0_0_12px_rgba(0,82,255,0.28)]" : "bg-white border-[#D7E2F2]"
                               )}>
-                                <span className={step.active ? "text-white" : "text-[#6B7280]"}>
+                                <span className={step.active ? "text-[#FFFFFF]" : "text-[#6B7280]"}>
                                   {idx + 1}
                                 </span>
                               </div>
