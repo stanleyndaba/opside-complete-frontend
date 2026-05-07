@@ -4050,24 +4050,24 @@ export function Dashboard() {
 
       {/* Contact Support Modal */}
       <Dialog open={quickNoticeOpen} onOpenChange={setQuickNoticeOpen}>
-        <DialogContent className="w-[min(94vw,920px)] max-w-4xl overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
-          <DialogHeader className="border-b border-white/10 px-5 pb-4 pt-5">
-            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+        <DialogContent className="platform-vitality-page w-[min(94vw,920px)] max-w-4xl overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
+          <DialogHeader className="border-b border-[#E5E7EB] bg-[#FAFAF7] px-5 pb-4 pt-5">
+            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#66737F]">
               Support channel
             </div>
-            <DialogTitle className="mt-2 text-[18px] font-sans font-medium tracking-tight text-white">
+            <DialogTitle className="mt-2 text-[18px] font-sans font-semibold tracking-tight text-[#111827]">
               Contact Us
             </DialogTitle>
-            <DialogDescription className="mt-1 text-[11px] font-sans leading-5 text-white/[0.48]">
+            <DialogDescription className="mt-1 text-[11px] font-sans leading-5 text-[#66737F]">
               Routed to the Margin support inbox.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-5 px-5 py-5">
-            <p className="max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.56]">
+            <p className="max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-[#4B5563]">
               Send a tracked message to support@margin-finance.com. Include anything we should know about your workspace, filing, evidence, or billing question.
             </p>
-            <div className="grid gap-3 border-t border-white/10 pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
-              <label htmlFor="contact-email" className="pt-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.35]">
+            <div className="grid gap-3 border-t border-[#E5E7EB] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
+              <label htmlFor="contact-email" className="pt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#66737F]">
                 Reply email
               </label>
               <Input
@@ -4076,11 +4076,11 @@ export function Dashboard() {
                 value={contactEmail}
                 onChange={(event) => setContactEmail(event.target.value)}
                 placeholder="Uses your account email if left blank"
-                className="h-11 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans text-white placeholder:text-white/20 focus-visible:border-white/30 focus-visible:ring-0"
+                className="h-11 rounded-none border-0 border-b border-[#CFE0EA] bg-transparent px-0 text-[12px] font-sans text-[#111827] placeholder:text-[#9CA3AF] focus-visible:border-[#0B74DE] focus-visible:ring-0"
               />
             </div>
-            <div className="grid gap-3 border-t border-white/[0.08] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
-              <label htmlFor="contact-subject" className="pt-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.35]">
+            <div className="grid gap-3 border-t border-[#E5E7EB] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
+              <label htmlFor="contact-subject" className="pt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#66737F]">
                 Subject
               </label>
               <Input
@@ -4088,15 +4088,15 @@ export function Dashboard() {
                 value={contactSubject}
                 onChange={(event) => setContactSubject(event.target.value)}
                 placeholder="What should we help with?"
-                className="h-11 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans text-white placeholder:text-white/20 focus-visible:border-white/30 focus-visible:ring-0"
+                className="h-11 rounded-none border-0 border-b border-[#CFE0EA] bg-transparent px-0 text-[12px] font-sans text-[#111827] placeholder:text-[#9CA3AF] focus-visible:border-[#0B74DE] focus-visible:ring-0"
               />
             </div>
-            <div className="grid gap-3 border-t border-white/[0.08] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
+            <div className="grid gap-3 border-t border-[#E5E7EB] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
               <div>
-                <label htmlFor="contact-query" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.35]">
+                <label htmlFor="contact-query" className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#66737F]">
                   Your query
                 </label>
-                <p className="mt-1.5 text-[10px] font-sans leading-4 tracking-tight text-white/[0.42]">
+                <p className="mt-1.5 text-[10px] font-sans leading-4 tracking-tight text-[#8A97A3]">
                   This is saved as a support request and emailed to Margin.
                 </p>
               </div>
@@ -4105,18 +4105,18 @@ export function Dashboard() {
                 value={contactQuery}
                 onChange={(event) => setContactQuery(event.target.value)}
                 placeholder="Tell us what is happening..."
-                className="min-h-[118px] resize-none rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans leading-5 text-white placeholder:text-white/20 focus-visible:border-white/30 focus-visible:ring-0"
+                className="min-h-[118px] resize-none rounded-none border-0 border-b border-[#CFE0EA] bg-transparent px-0 text-[12px] font-sans leading-5 text-[#111827] placeholder:text-[#9CA3AF] focus-visible:border-[#0B74DE] focus-visible:ring-0"
               />
             </div>
           </div>
-          <div className="flex items-center justify-between gap-4 border-t border-white/10 px-5 py-4">
-            <div className="hidden text-[10px] font-sans leading-4 text-white/[0.36] sm:block">
+          <div className="flex items-center justify-between gap-4 border-t border-[#E5E7EB] bg-[#F8FAFC] px-5 py-4">
+            <div className="hidden text-[10px] font-sans leading-4 text-[#66737F] sm:block">
               Routed to support@margin-finance.com.
             </div>
             <button
               onClick={handleContactSupportSubmit}
               disabled={contactSubmitting}
-              className="h-9 min-w-[154px] border border-white/10 bg-white px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-black transition-colors hover:bg-white/90 disabled:opacity-50"
+              className="h-9 min-w-[154px] rounded-full border border-[#0B74DE] bg-[#0B74DE] px-4 text-[10px] font-sans font-semibold uppercase tracking-tight text-white transition-colors hover:bg-[#005FBA] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {contactSubmitting ? 'Sending...' : 'Send Query Now'}
             </button>
