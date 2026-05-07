@@ -18,7 +18,7 @@ import {
   FileText, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
   ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw,
   Download, Bell, TrendingDown, TrendingUp, Loader2, X,
-  ChevronDown, Clock, MoreVertical, Files, ShieldCheck, AlertTriangle
+  ChevronDown, Clock, MoreVertical, Files
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl, type AutoFileGateStatus } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
@@ -818,137 +818,40 @@ const getRequiredDocumentationItems = (policy: any) => {
   return getRequiredEvidenceItems(policy).map((label) => ({ label, detail: '' }));
 };
 
-const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
-  if (severity === 'high') return 'text-red-200 border-red-500/25 bg-red-500/[0.08]';
-  if (severity === 'medium') return 'text-amber-200 border-amber-500/25 bg-amber-500/[0.08]';
-  return 'text-sky-200 border-sky-500/25 bg-sky-500/[0.08]';
-};
-
-const getOperatorFeedSignalMeta = (event: LaunchMonitorEvent) => {
-  const type = String(event.event_type || '').toLowerCase();
-  const title = String(event.title || '').toLowerCase();
-  const status = String(event.status || '').toLowerCase();
-  const textBlob = `${type} ${title} ${status}`;
-
-  if (textBlob.includes('blocked') || textBlob.includes('hold') || textBlob.includes('safety')) {
-    return {
-      agent: 'Guardian',
-      signal: 'Safety review',
-      Icon: ShieldCheck,
-      accent: 'border-amber-300 bg-amber-50 text-amber-700',
-      iconWrap: 'border-amber-200 bg-amber-50 text-amber-600',
-      rail: 'bg-amber-300',
-      pulse: 'bg-amber-400/30',
-      progress: 'from-amber-400 via-amber-300 to-transparent',
-      actionLabel: 'Open Case',
-    };
-  }
-
-  if (textBlob.includes('unmatched') || textBlob.includes('email')) {
-    return {
-      agent: 'Sentinel',
-      signal: 'Email intelligence',
-      Icon: Mail,
-      accent: 'border-sky-300 bg-sky-50 text-sky-700',
-      iconWrap: 'border-sky-200 bg-sky-50 text-sky-600',
-      rail: 'bg-sky-300',
-      pulse: 'bg-sky-400/30',
-      progress: 'from-sky-400 via-sky-300 to-transparent',
-      actionLabel: event.dispute_case_id ? 'Open Case' : 'Review Signal',
-    };
-  }
-
-  if (textBlob.includes('filed') || textBlob.includes('filing')) {
-    return {
-      agent: 'Filing',
-      signal: 'Amazon filing',
-      Icon: Send,
-      accent: 'border-blue-300 bg-blue-50 text-blue-700',
-      iconWrap: 'border-blue-200 bg-blue-50 text-blue-600',
-      rail: 'bg-blue-300',
-      pulse: 'bg-blue-400/30',
-      progress: 'from-blue-400 via-blue-300 to-transparent',
-      actionLabel: 'Open Case',
-    };
-  }
-
-  if (textBlob.includes('thread')) {
-    return {
-      agent: 'Threadwatch',
-      signal: 'Amazon thread',
-      Icon: Link2,
-      accent: 'border-violet-300 bg-violet-50 text-violet-700',
-      iconWrap: 'border-violet-200 bg-violet-50 text-violet-600',
-      rail: 'bg-violet-300',
-      pulse: 'bg-violet-400/30',
-      progress: 'from-violet-400 via-violet-300 to-transparent',
-      actionLabel: 'Open Case',
-    };
-  }
-
-  if (textBlob.includes('notification')) {
-    return {
-      agent: 'Relay',
-      signal: 'Notification delivery',
-      Icon: Bell,
-      accent: 'border-rose-300 bg-rose-50 text-rose-700',
-      iconWrap: 'border-rose-200 bg-rose-50 text-rose-600',
-      rail: 'bg-rose-300',
-      pulse: 'bg-rose-400/30',
-      progress: 'from-rose-400 via-rose-300 to-transparent',
-      actionLabel: 'Review Signal',
-    };
-  }
-
-  return {
-    agent: event.severity === 'high' ? 'Guardian' : 'Sentinel',
-    signal: formatLaunchEventTypeLabel(event.event_type),
-    Icon: event.severity === 'high' ? AlertTriangle : Search,
-    accent: event.severity === 'high'
-      ? 'border-red-300 bg-red-50 text-red-700'
-      : 'border-[#D7E2F2] bg-[#F3F7FF] text-[#0052FF]',
-    iconWrap: event.severity === 'high'
-      ? 'border-red-200 bg-red-50 text-red-600'
-      : 'border-[#D7E2F2] bg-[#F3F7FF] text-[#0052FF]',
-    rail: event.severity === 'high' ? 'bg-red-300' : 'bg-[#BFD7FF]',
-    pulse: event.severity === 'high' ? 'bg-red-400/30' : 'bg-[#0052FF]/20',
-    progress: event.severity === 'high'
-      ? 'from-red-400 via-red-300 to-transparent'
-      : 'from-[#0052FF] via-[#BFD7FF] to-transparent',
-    actionLabel: event.dispute_case_id ? 'Open Case' : 'Review Signal',
-  };
-};
-
-const formatOperatorFeedSummary = (event: LaunchMonitorEvent, agent: string) => {
+const formatOperatorFeedSummary = (event: LaunchMonitorEvent) => {
   const type = String(event.event_type || '').toLowerCase();
   const title = String(event.title || '').trim();
   const caseRef = event.amazon_case_id
-    ? `Amazon case ${event.amazon_case_id}`
+    ? event.amazon_case_id
     : event.dispute_case_id
-      ? `case ${event.dispute_case_id}`
-      : 'an operational signal';
+      ? event.dispute_case_id
+      : null;
 
   if (type.includes('blocked') || type.includes('hold')) {
-    return `Agent ${agent} placed ${caseRef} under safety review.`;
+    return caseRef ? `Case ${caseRef} placed under safety review.` : 'Case placed under safety review.';
   }
 
   if (type.includes('unmatched') || type.includes('email')) {
-    return `Agent ${agent} detected an unmatched Amazon email${event.amazon_case_id ? ` for ${event.amazon_case_id}` : ''}.`;
+    return caseRef ? `Unmatched email detected for ${caseRef}.` : 'Unmatched Amazon email detected.';
   }
 
   if (type.includes('filed')) {
-    return `Agent ${agent} filed ${caseRef} into Amazon review.`;
+    return caseRef ? `Case ${caseRef} filed into Amazon review.` : 'Case filed into Amazon review.';
   }
 
   if (type.includes('thread')) {
-    return `Agent ${agent} captured an Amazon thread change for ${caseRef}.`;
+    return caseRef ? `Amazon thread changed for ${caseRef}.` : 'Amazon thread change recorded.';
+  }
+
+  if (type.includes('notification')) {
+    return caseRef ? `Notification issue recorded for ${caseRef}.` : 'Notification delivery issue recorded.';
   }
 
   if (title) {
-    return `Agent ${agent}: ${title}.`;
+    return title.endsWith('.') ? title : `${title}.`;
   }
 
-  return `Agent ${agent} updated ${caseRef}.`;
+  return caseRef ? `Operational update recorded for ${caseRef}.` : 'Operational update recorded.';
 };
 
 type DashboardTab = 'overview' | 'discrepancies' | 'disputes' | 'evidence';
@@ -981,6 +884,7 @@ export function Dashboard() {
     [explicitTab, uploadSyncId]
   );
   const [activeTab, setActiveTab] = useState<DashboardTab>(resolvedDashboardTab);
+  const [expandedOperatorEventId, setExpandedOperatorEventId] = useState<string | null>(null);
   const isSyncScopedDetections = Boolean(uploadSyncId);
 
   const toggleSidebar = useCallback(() => {
@@ -3422,10 +3326,10 @@ export function Dashboard() {
                           <div className="flex items-start justify-between gap-4">
                             <div>
                               <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
-                                Living intelligence feed
+                                Compact intelligence feed
                               </div>
                               <p className="mt-2 max-w-2xl text-[12px] font-sans leading-6 text-[#6B7280]">
-                                Agent signals across blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery.
+                                Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
                               </p>
                             </div>
                             <div className="rounded-full border border-[#D7E2F2] bg-[#F3F7FF] px-3 py-1.5 text-right">
@@ -3449,8 +3353,7 @@ export function Dashboard() {
                             </div>
                           ) : (
                             <ScrollArea className="h-[560px] w-full">
-                              <div className="relative space-y-3 pr-4">
-                                <div className="absolute bottom-3 left-[22px] top-3 w-px bg-gradient-to-b from-[#BFD7FF] via-[#D7E2F2] to-transparent" />
+                              <div className="overflow-hidden rounded-[16px] border border-[#E5E7EB] bg-white">
                                 {launchMonitor?.recent_events?.map((event) => {
                                   const eventTimestamp = new Date(event.timestamp);
                                   const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
@@ -3458,9 +3361,8 @@ export function Dashboard() {
                                     : formatDistanceToNow(eventTimestamp, { addSuffix: true });
                                   const formattedStatus = formatLaunchStatusLabel(event.status);
                                   const detailText = formatOperatorFeedDetail(event.detail);
-                                  const signalMeta = getOperatorFeedSignalMeta(event);
-                                  const SignalIcon = signalMeta.Icon;
-                                  const summaryText = formatOperatorFeedSummary(event, signalMeta.agent);
+                                  const summaryText = formatOperatorFeedSummary(event);
+                                  const isExpanded = expandedOperatorEventId === event.id;
                                   const metaItems = [
                                     event.amazon_case_id ? `Amazon case ${event.amazon_case_id}` : null,
                                     formattedStatus ? `Current state ${formattedStatus}` : null,
@@ -3471,72 +3373,59 @@ export function Dashboard() {
                                   return (
                                     <div
                                       key={event.id}
-                                      className="group/feed relative grid grid-cols-[44px_minmax(0,1fr)] gap-3 rounded-[20px] border border-[#E5E7EB] bg-white/82 p-3 shadow-[0_10px_30px_rgba(17,24,39,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0052FF]/25 hover:bg-white hover:shadow-[0_18px_44px_rgba(0,82,255,0.10)]"
+                                      className="border-b border-[#E5E7EB] last:border-b-0"
                                     >
-                                      <div className="relative z-10 flex justify-center">
-                                        <div className={cn("relative flex h-9 w-9 items-center justify-center rounded-full border", signalMeta.iconWrap)}>
-                                          <span className={cn("absolute h-9 w-9 animate-ping rounded-full", signalMeta.pulse)} />
-                                          <SignalIcon className="relative h-4 w-4" />
+                                      <div
+                                        role="button"
+                                        tabIndex={0}
+                                        className="group/feed grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-2.5 text-left transition-colors hover:bg-[#F8FAFC]"
+                                        onClick={() => setExpandedOperatorEventId(current => current === event.id ? null : event.id)}
+                                        onKeyDown={(keyEvent) => {
+                                          if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
+                                            keyEvent.preventDefault();
+                                            setExpandedOperatorEventId(current => current === event.id ? null : event.id);
+                                          }
+                                        }}
+                                      >
+                                        <div className="min-w-0 truncate text-[13px] font-sans font-normal leading-5 text-[#1F2937]">
+                                          {summaryText}
+                                        </div>
+
+                                        <div className="flex shrink-0 items-center gap-3">
+                                          <span className="text-[11px] font-sans text-[#6B7280]">
+                                            {eventTimeLabel}
+                                          </span>
+                                          {event.dispute_case_id ? (
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              className="h-7 rounded-full border border-[#D7E2F2] bg-white px-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF] transition-all hover:border-[#0052FF]/25 hover:bg-[#F3F7FF] hover:text-[#003DB8]"
+                                              onClick={(clickEvent) => {
+                                                clickEvent.stopPropagation();
+                                                navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`), { state: { claim: event } });
+                                              }}
+                                            >
+                                              Open Case
+                                            </Button>
+                                          ) : null}
+                                          <span className="w-3 text-center text-[12px] font-sans text-[#9CA3AF] opacity-0 transition-opacity group-hover/feed:opacity-100">
+                                            {isExpanded ? '−' : '>'}
+                                          </span>
                                         </div>
                                       </div>
 
-                                      <div className="min-w-0">
-                                        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-                                          <div className="min-w-0">
-                                            <div className="flex flex-wrap items-center gap-2">
-                                              <span className={cn("rounded-full border px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight", signalMeta.accent)}>
-                                                Agent {signalMeta.agent}
-                                              </span>
-                                              <span className="rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
-                                                {signalMeta.signal}
-                                              </span>
-                                              <span className="text-[10px] font-sans font-medium text-[#6B7280]">
-                                                {eventTimeLabel}
-                                              </span>
-                                            </div>
-                                            <div className="mt-2 text-[13px] font-sans font-semibold leading-5 tracking-tight text-[#111827]">
-                                              {summaryText}
-                                            </div>
-                                          </div>
-
-                                          <div className="flex shrink-0 items-center gap-2">
-                                            {event.dispute_case_id ? (
-                                              <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-8 rounded-full border border-[#D7E2F2] bg-[#F3F7FF] px-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF] transition-all hover:border-[#0052FF]/25 hover:bg-white hover:text-[#003DB8]"
-                                                onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`), { state: { claim: event } })}
-                                              >
-                                                {signalMeta.actionLabel}
-                                                <ArrowRight className="ml-1.5 h-3 w-3" />
-                                              </Button>
-                                            ) : (
-                                              <span className="rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
-                                                Logged only
-                                              </span>
-                                            )}
-                                          </div>
-                                        </div>
-
-                                        <div className="mt-3 overflow-hidden rounded-[14px] border border-[#E5E7EB] bg-[#F8FAFC]">
-                                          <div className={cn("h-1 bg-gradient-to-r", signalMeta.progress)} />
-                                          <div className="px-3 py-2.5">
-                                            <p
-                                              className="text-[11px] font-sans leading-5 text-[#4B5563]"
-                                              style={{
-                                                display: '-webkit-box',
-                                                WebkitBoxOrient: 'vertical',
-                                                WebkitLineClamp: 2,
-                                                overflow: 'hidden'
-                                              }}
-                                            >
+                                      <div className={cn(
+                                        "grid transition-all duration-200 ease-out",
+                                        isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                                      )}>
+                                        <div className="overflow-hidden">
+                                          <div className="border-t border-[#E5E7EB] bg-[#F8FAFC] px-4 py-3">
+                                            <p className="text-[12px] font-sans leading-5 text-[#4B5563]">
                                               {detailText}
                                             </p>
-                                            <div className="mt-2 flex flex-wrap gap-1.5">
+                                            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-[#6B7280]">
                                               {metaItems.map((item) => (
-                                                <span key={item} className="rounded-full bg-white px-2 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280] ring-1 ring-[#E5E7EB]">
-                                                  {item}
-                                                </span>
+                                                <span key={item}>{item}</span>
                                               ))}
                                             </div>
                                           </div>
