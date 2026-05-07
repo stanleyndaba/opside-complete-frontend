@@ -768,40 +768,37 @@ export default function EvidenceLocker() {
               </div>
 
               {/* Forensic Ingestion Terminal */}
-              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl mb-8 relative">
+              <div className="bg-white border border-[#E5E7EB] rounded-xl overflow-hidden mb-8 relative">
                 {/* Terminal Header */}
-                <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+                <div className="px-6 py-4 border-b border-[#E5E7EB] bg-white flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Terminal className="h-3 w-3 text-white/40" />
-                    <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Document History</h2>
+                    <Terminal className="h-3 w-3 text-[#4B5563]" />
+                    <h2 className="text-[10px] font-sans font-bold text-[#111827] uppercase tracking-tight">Document History</h2>
                   </div>
-                  <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">{filteredDocLogs.length} entries</span>
+                  <span className="text-[9px] font-sans font-bold text-[#111827] uppercase tracking-tight">{filteredDocLogs.length} entries</span>
                 </div>
 
                 <div className="p-8">
                   {/* Terminal Search */}
                   <div className="relative mb-6">
                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                      <span className="text-white/40 text-[10px] font-sans font-bold">$</span>
+                      <span className="text-[#6B7280] text-[10px] font-sans font-bold">$</span>
                     </div>
                     <Input
                       type="text"
                       placeholder="Search document history..."
                       value={docLogSearch}
                       onChange={(e) => setDocLogSearch(e.target.value)}
-                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-white/20 rounded-lg tracking-tight"
+                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white border-[#DCE5F2] text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#0052FF]/30 rounded-lg tracking-tight shadow-none"
                     />
                   </div>
 
                   {/* Terminal Logs */}
                   <div
                     ref={docLogContainerRef}
-                    className="bg-black/40 border border-white/5 rounded-lg p-6 font-sans font-bold text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative tracking-tight">
-                    {/* Shadow overlay for depth */}
-                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/20" />
-
+                    className="bg-white border border-[#E5E7EB] rounded-lg p-6 font-sans font-bold text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative tracking-tight shadow-none">
                     {filteredDocLogs.length === 0 ? (
-                      <div className="text-white/10 flex items-center justify-center h-full gap-3">
+                      <div className="text-[#9CA3AF] flex items-center justify-center h-full gap-3">
                         <Clock className="h-3 w-3 opacity-20" />
                         <span className="uppercase tracking-tight">No audit events for the current inventory view.</span>
                       </div>
@@ -809,17 +806,17 @@ export default function EvidenceLocker() {
                       <div className="relative space-y-1.5">
                         {filteredDocLogs.map((log) => (
                           <div key={log.id} className="flex flex-col group/log">
-                            <div className="flex items-start gap-4 hover:bg-white/[0.02] -mx-2 px-2 py-1 rounded transition-colors">
-                              <span className="text-white/10 shrink-0 select-none tabular-nums group-hover/log:text-white/20 transition-colors">
+                            <div className="flex items-start gap-4 hover:bg-[#F9FAFB] -mx-2 px-2 py-1 rounded transition-colors">
+                              <span className="text-[#4B5563] shrink-0 select-none tabular-nums transition-colors">
                                 [{new Date(log.timestamp).toLocaleTimeString()}]
                               </span>
                               <div className="flex items-center gap-2 shrink-0">
-                                <span className="text-white/60 font-bold uppercase tracking-tight">{log.eventType}</span>
+                                <span className="text-[#111827] font-bold uppercase tracking-tight">{log.eventType}</span>
                               </div>
                               <span className={cn("flex-1 break-words leading-relaxed", getAuditEventColor(log.eventType))}>
                                 <span className="mr-2 opacity-50">{">>"}</span>
                                 {log.narrative}
-                                <span className="ml-2 text-white/30 border-l border-white/10 pl-2">
+                                <span className="ml-2 text-[#4B5563] border-l border-[#E5E7EB] pl-2">
                                   {log.filename}
                                 </span>
                               </span>
