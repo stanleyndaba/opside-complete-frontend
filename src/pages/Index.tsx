@@ -3,7 +3,24 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle2, Menu, PlayCircle } from 'lucide-react';
+import {
+  Activity,
+  ArrowLeft,
+  ArrowRight,
+  BadgePercent,
+  BarChart3,
+  BoxSelect,
+  Briefcase,
+  CheckCircle2,
+  FileText,
+  Layers,
+  Menu,
+  PlayCircle,
+  Search,
+  ShieldCheck,
+  TrendingUp,
+  Truck
+} from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
@@ -21,18 +38,34 @@ const navLinks = [
   { label: 'Enterprise', to: '/sales' }
 ];
 
-const mobileProductGroups = [
+const mobileProductSections = [
   {
     label: 'Recovery Coverage',
-    items: ['Inbound shipments', 'Lost or damaged inventory', 'Fee discrepancies', 'Refund without return']
+    items: [
+      { icon: Search, title: 'Inbound Shipments', description: 'Short receives and receiving drift' },
+      { icon: ShieldCheck, title: 'Lost or Damaged Inventory', description: 'Recovery across FBA states' },
+      { icon: BoxSelect, title: 'Fee Discrepancies', description: 'Overcharges, reversals, and gaps' },
+      { icon: ArrowLeft, title: 'Refund Without Return', description: 'Refunds not matched to real return outcome' },
+      { icon: Truck, title: 'Transfer & Operations', description: 'Inter-fulfillment discrepancies' },
+      { icon: BarChart3, title: 'Recovery Workflow', description: 'Valid cases, evidence, filing, payout', highlight: true }
+    ]
   },
   {
     label: 'Evidence & Control',
-    items: ['Evidence matching', 'Filing readiness', 'Recovery tracking', 'Connected sources']
+    items: [
+      { icon: Layers, title: 'Evidence Matching', description: 'Connect support to the right case' },
+      { icon: Briefcase, title: 'Filing Readiness', description: 'Hold weak or duplicate issues back' },
+      { icon: BadgePercent, title: 'Recovery Tracking', description: 'Approval and payout visibility' },
+      { icon: FileText, title: 'Connected Sources', description: 'Email, storage, and uploaded proof' }
+    ]
   },
   {
-    label: 'Seller Types',
-    items: ['Emerging sellers', 'Growth sellers', 'Enterprise teams']
+    label: 'By Seller Type',
+    items: [
+      { icon: Activity, title: 'Emerging Sellers', description: 'Read-only audit and guided recovery' },
+      { icon: TrendingUp, title: 'Growth Sellers', description: 'Ongoing recovery coverage at scale' },
+      { icon: Layers, title: 'Enterprise Teams', description: 'Multi-workspace recovery operations' }
+    ]
   }
 ];
 
@@ -336,17 +369,43 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
                   <AccordionTrigger className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8] hover:no-underline [&>svg]:h-4 [&>svg]:w-4">
                     Products
                   </AccordionTrigger>
-                  <AccordionContent className="px-1 pb-3 pt-1">
-                    <div className="grid gap-3">
-                      {mobileProductGroups.map((group) => (
-                        <div key={group.label} className="rounded-2xl border border-[#E4EDF1] bg-[#FBFCFA] p-3">
-                          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7A8994]">{group.label}</div>
-                          <div className="mt-2 grid gap-1">
-                            {group.items.map((item) => (
-                              <div key={item} className="text-sm font-medium text-[#25313A]">
-                                {item}
-                              </div>
-                            ))}
+                  <AccordionContent className="px-1 pb-4 pt-2">
+                    <div className="grid gap-5">
+                      {mobileProductSections.map((section) => (
+                        <div key={section.label} className="grid gap-2">
+                          <div className="px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7A8994]">{section.label}</div>
+                          <div className="grid gap-1">
+                            {section.items.map((item) => {
+                              const Icon = item.icon;
+                              return (
+                                <div
+                                  key={item.title}
+                                  className={`flex items-center gap-3 rounded-2xl border p-3 ${
+                                    item.highlight
+                                      ? 'border-[#BFD8EA] bg-[#EAF4FF]'
+                                      : 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-[#F8FAFC]'
+                                  }`}
+                                >
+                                  <div
+                                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
+                                      item.highlight
+                                        ? 'border-[#BFD8EA] bg-white text-[#0B74DE]'
+                                        : 'border-[#DCE8EE] bg-[#EEF4F6] text-[#0B74DE]'
+                                    }`}
+                                  >
+                                    <Icon className="h-4 w-4" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <div className={`truncate text-[13px] font-semibold ${item.highlight ? 'text-[#0B74DE]' : 'text-[#182026]'}`}>
+                                      {item.title}
+                                    </div>
+                                    <div className="mt-1 truncate text-[11px] leading-none text-[#66737F]">
+                                      {item.description}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       ))}
