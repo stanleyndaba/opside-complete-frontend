@@ -704,32 +704,33 @@ export default function Index() {
               </Button>
             </motion.div>
 
-            <div className="relative mt-10 md:mt-12">
+            <div className="relative mt-10 md:mt-14">
               <motion.div
-                className="absolute left-10 right-10 top-1/2 z-0 hidden h-[2px] -translate-y-1/2 rounded-full bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.1)_18%,rgba(11,116,222,0.72)_48%,rgba(46,125,91,0.24)_72%,transparent_100%)] opacity-65 md:block"
-                style={{ backgroundSize: '220% 100%' }}
-                animate={{ backgroundPosition: ['0% 50%', '220% 50%'] }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                className="pointer-events-none absolute left-0 right-0 top-10 z-0 hidden h-px bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.08)_16%,rgba(11,116,222,0.42)_48%,rgba(46,125,91,0.16)_76%,transparent_100%)] opacity-70 md:block"
+                style={{ backgroundSize: '240% 100%' }}
+                animate={{ backgroundPosition: ['0% 50%', '240% 50%'] }}
+                transition={{ duration: 9, repeat: Infinity, ease: 'linear' }}
               />
 
-              <div className="relative z-10 grid gap-4 md:grid-cols-3 md:gap-5">
+              <div className="relative z-10 grid gap-9 md:grid-cols-3 md:gap-10">
                 {whyNowItems.map((item, index) => (
                   <motion.div
                     key={item.title}
                     {...revealProps}
-                    whileHover={{ y: -8 }}
+                    whileHover={{ x: 5 }}
                     transition={{ ...revealProps.transition, delay: index * 0.08 }}
-                    className="group relative min-h-[230px] overflow-hidden rounded-[28px] border border-white/70 bg-white/70 p-6 shadow-[0_18px_54px_rgba(37,49,58,0.07)] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:border-[#0B74DE]/55 hover:bg-white/90 hover:shadow-[0_24px_58px_rgba(11,116,222,0.12)]"
+                    className="group relative min-h-[210px] py-4 outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]"
+                    tabIndex={0}
                   >
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(11,116,222,0.08),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.64),transparent_44%)] opacity-75 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div className="pointer-events-none absolute -left-6 top-7 h-16 w-16 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
                     <div className="relative">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white/72 text-[11px] font-semibold tracking-[0.12em] text-[#0B74DE] transition duration-500 group-hover:scale-110 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white">
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9AA8B2] transition duration-500 group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.28)] group-focus-visible:text-[#0B74DE]">
                         {String(index + 1).padStart(2, '0')}
                       </div>
-                      <h3 className="mt-7 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#182026] md:text-[22px]">
+                      <h3 className="mt-6 text-[22px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_24px_rgba(11,116,222,0.18)] group-focus-visible:text-[#0B74DE] md:text-[28px]">
                         {item.title}
                       </h3>
-                      <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:leading-8">
+                      <p className="mt-4 text-[15px] leading-7 text-[#66737F]/70 transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#4D5B66] group-hover:opacity-100 group-focus-visible:text-[#4D5B66] md:text-[16px] md:leading-8">
                         {item.detail}
                       </p>
                     </div>
@@ -849,7 +850,13 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
+        <section className="relative overflow-hidden bg-white py-16 md:py-28">
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.07),transparent_68%)] blur-3xl md:block"
+            animate={{ opacity: [0.35, 0.65, 0.35], scale: [0.96, 1.04, 0.96] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Coverage Examples</div>
@@ -859,22 +866,27 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className="mt-10">
+            <div className="relative mt-11 grid gap-x-14 gap-y-10 md:mt-14 md:grid-cols-2 lg:gap-y-14">
               {coverageExamples.map((item, index) => (
                 <motion.div
                   key={item.label}
                   {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className={`grid gap-4 py-7 md:grid-cols-[240px_minmax(0,1fr)] md:gap-9 md:py-8 ${
-                    index > 0 ? 'border-t border-[#D8E3E8]' : ''
+                  whileHover={{ x: 5 }}
+                  transition={{ ...revealProps.transition, delay: index * 0.07 }}
+                  tabIndex={0}
+                  className={`group relative grid gap-4 py-3 outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] ${
+                    index === 0 ? 'md:col-span-2 md:grid-cols-[270px_minmax(0,1fr)] md:gap-12' : ''
                   }`}
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
-                  <div className="max-w-[760px]">
-                    <h3 className="text-[24px] font-semibold leading-tight tracking-[-0.03em] text-[#182026] md:text-[32px]">
+                  <div className="pointer-events-none absolute -left-8 top-0 h-20 w-20 rounded-full bg-[radial-gradient(circle,rgba(46,125,91,0.12),transparent_68%)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
+                  <div className="relative text-[12px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE] transition duration-500 group-hover:translate-x-[5px] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.24)]">
+                    {item.label}
+                  </div>
+                  <div className="relative max-w-[760px]">
+                    <h3 className="text-[25px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#0B74DE] group-focus-visible:text-[#0B74DE] md:text-[34px]">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                    <p className="mt-3 text-[15px] leading-7 text-[#66737F]/70 transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#4D5B66] group-hover:opacity-100 group-focus-visible:text-[#4D5B66] md:text-[17px] md:leading-8">
                       {item.detail}
                     </p>
                   </div>
@@ -972,9 +984,16 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative py-16 md:py-28">
+        <section className="relative overflow-hidden py-16 md:py-28">
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-24 hidden h-px w-full bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.1)_20%,rgba(46,125,91,0.26)_50%,rgba(11,116,222,0.1)_80%,transparent_100%)] md:block"
+            style={{ backgroundSize: '220% 100%' }}
+            animate={{ backgroundPosition: ['0% 50%', '220% 50%'] }}
+            transition={{ duration: 11, repeat: Infinity, ease: 'linear' }}
+          />
           <div className={containerClass}>
-            <div className="grid gap-8 rounded-[38px] border border-[#CFE0EA] bg-white p-6 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:p-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+            <div className="grid gap-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
               <motion.div {...revealProps}>
                 <div className={sectionLabelClass}>Managed Early Access</div>
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
@@ -1001,11 +1020,21 @@ export default function Index() {
                 </div>
               </motion.div>
 
-              <motion.div {...revealProps} className="grid gap-3">
-                {earlyAccessItems.map((item) => (
-                  <div key={item} className="flex items-center gap-3 rounded-2xl border border-[#E4EDF1] bg-[#FBFCFA] px-4 py-4 text-[#25313A]">
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-[#2E7D5B]" />
-                    <span className="text-sm font-semibold">{item}</span>
+              <motion.div {...revealProps} className="grid gap-1">
+                {earlyAccessItems.map((item, index) => (
+                  <div
+                    key={item}
+                    className="group relative flex items-center gap-4 py-4 text-[#25313A] outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:translate-x-[5px]"
+                    tabIndex={0}
+                  >
+                    <span className="absolute -left-5 h-12 w-12 rounded-full bg-[radial-gradient(circle,rgba(46,125,91,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
+                    <CheckCircle2 className="relative h-5 w-5 shrink-0 text-[#2E7D5B] transition duration-500 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_rgba(46,125,91,0.28))]" />
+                    <span className="relative text-[15px] font-semibold leading-6 tracking-[-0.015em] transition duration-500 group-hover:text-[#182026] group-focus-visible:text-[#182026]">
+                      {item}
+                    </span>
+                    <span className="ml-auto hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9AA8B2]/70 transition duration-500 group-hover:text-[#0B74DE] sm:inline">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
                   </div>
                 ))}
               </motion.div>
