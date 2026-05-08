@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
@@ -74,29 +74,6 @@ const trustHighlights = [
   'Seller approval before filing',
   'No commissions',
   'Weak cases held back'
-];
-
-const heroRecoveryStates = [
-  {
-    title: 'Amazon event detected',
-    detail: 'Fulfillment center loss signal found'
-  },
-  {
-    title: 'Claim clock started',
-    detail: '42 days left'
-  },
-  {
-    title: 'Evidence matched',
-    detail: '5 / 6 records linked'
-  },
-  {
-    title: 'Claim-ready',
-    detail: 'Ready for seller approval'
-  },
-  {
-    title: 'Payout tracking',
-    detail: 'Filed / Approved / Awaiting payout'
-  }
 ];
 
 const whyNowItems = [
@@ -386,7 +363,7 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
           </div>
 
           {mobileMenuOpen ? (
-            <div className="mt-4 grid max-h-[calc(100vh-96px)] gap-1 overflow-y-auto overscroll-contain border-t border-[#E4EDF1] pt-4 pr-1 md:hidden">
+            <div className="mt-4 grid gap-1 border-t border-[#E4EDF1] pt-4 md:hidden">
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="products" className="border-none">
                   <AccordionTrigger className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8] hover:no-underline [&>svg]:h-4 [&>svg]:w-4">
@@ -467,113 +444,6 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
         </div>
       </div>
     </header>
-  );
-}
-
-function HeroRecoveryProofPanel({ onWatchDemo }: { onWatchDemo: () => void }) {
-  const shouldReduceMotion = useReducedMotion();
-  const activeIndex = shouldReduceMotion ? 3 : undefined;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 22, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.72, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-      className="relative"
-      aria-label="Animated event-to-recovery walkthrough showing Amazon event detection, claim clock, evidence matching, claim readiness, seller approval, and payout tracking."
-    >
-      <div className="pointer-events-none absolute -inset-8 rounded-[48px] bg-[radial-gradient(circle_at_35%_25%,rgba(11,116,222,0.22),transparent_42%),radial-gradient(circle_at_82%_72%,rgba(46,125,91,0.16),transparent_36%)] blur-2xl" />
-      <div className="relative overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-[#101820] p-3 shadow-[0_40px_120px_rgba(37,49,58,0.24)]">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0.025)_44%,rgba(11,116,222,0.1)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent" />
-
-        <div className="relative rounded-[26px] border border-white/10 bg-[#0B1218]/92 p-4 text-white backdrop-blur md:p-5">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8BC7FF]">Live recovery flow</div>
-              <div className="mt-1 text-[13px] font-semibold text-white/86">Event-to-recovery walkthrough</div>
-            </div>
-            <button
-              type="button"
-              onClick={onWatchDemo}
-              className="shrink-0 rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-[11px] font-semibold text-white/78 transition hover:border-[#8BC7FF]/40 hover:bg-white/[0.08] hover:text-white"
-            >
-              Watch full demo
-            </button>
-          </div>
-
-          <div className="mt-5 grid gap-3">
-            {heroRecoveryStates.map((item, index) => {
-              const isStaticActive = activeIndex === index;
-              const activeWindow = shouldReduceMotion
-                ? {}
-                : {
-                    opacity: [0.56, 1, 0.56],
-                    scale: [1, 1.015, 1],
-                    borderColor: [
-                      'rgba(255,255,255,0.1)',
-                      'rgba(139,199,255,0.5)',
-                      'rgba(255,255,255,0.1)'
-                    ]
-                  };
-
-              return (
-                <motion.div
-                  key={item.title}
-                  animate={activeWindow}
-                  transition={
-                    shouldReduceMotion
-                      ? undefined
-                      : { duration: 5.6, delay: index * 1.08, repeat: Infinity, ease: [0.22, 1, 0.36, 1] }
-                  }
-                  className={`relative overflow-hidden rounded-2xl border p-3 ${
-                    isStaticActive
-                      ? 'border-[#8BC7FF]/50 bg-[#0B74DE]/16'
-                      : 'border-white/10 bg-white/[0.035]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-[10px] font-semibold text-[#8BC7FF]">
-                      {String(index + 1).padStart(2, '0')}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="truncate text-[14px] font-semibold tracking-[-0.02em] text-white">{item.title}</div>
-                      <div className="mt-1 truncate text-[12px] text-white/52">{item.detail}</div>
-                    </div>
-                    {item.title === 'Claim-ready' ? (
-                      <div className="ml-auto hidden rounded-full border border-[#6FD0A2]/30 bg-[#6FD0A2]/10 px-2.5 py-1 text-[10px] font-semibold text-[#B9F3D4] sm:block">
-                        Approval needed
-                      </div>
-                    ) : null}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/42">Expected value</div>
-                <div className="mt-1 text-[26px] font-semibold tracking-[-0.06em] text-white">$4,820</div>
-              </div>
-              <div className="text-right">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/42">Deadline</div>
-                <div className="mt-1 text-[18px] font-semibold tracking-[-0.03em] text-[#8BC7FF]">42 days</div>
-              </div>
-            </div>
-            <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
-              <motion.div
-                className="h-full rounded-full bg-[linear-gradient(90deg,#8BC7FF,#6FD0A2)]"
-                initial={{ width: shouldReduceMotion ? '72%' : '28%' }}
-                animate={shouldReduceMotion ? { width: '72%' } : { width: ['28%', '72%', '42%', '88%'] }}
-                transition={shouldReduceMotion ? undefined : { duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
   );
 }
 
@@ -676,19 +546,18 @@ export default function Index() {
 
         <section className="relative pt-32 md:pt-44">
           <div className={containerClass}>
-            <div className="relative grid gap-10 lg:grid-cols-[minmax(0,0.94fr)_minmax(420px,0.86fr)] lg:items-center lg:gap-12">
-              <div className="pointer-events-none absolute left-[46%] top-1/2 z-0 hidden h-[560px] w-[360px] -translate-y-1/2 rounded-full bg-[linear-gradient(90deg,rgba(250,250,247,0),rgba(11,116,222,0.12),rgba(46,125,91,0.08),rgba(250,250,247,0))] blur-3xl lg:block" />
+            <div className="max-w-[900px]">
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="relative z-10 max-w-[760px]"
+                className="max-w-[760px]"
               >
                 <div className="inline-flex items-center gap-2 rounded-full border border-[#DCE8EE] bg-white/76 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE] shadow-[0_12px_30px_rgba(37,49,58,0.05)]">
                   Deadline-aware recovery automation for Amazon sellers
                 </div>
 
-                <h1 className="mt-6 max-w-[780px] text-[46px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[58px] md:text-[76px] xl:text-[82px]">
+                <h1 className="mt-6 max-w-[780px] text-[46px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[58px] md:text-[82px]">
                   Turn Amazon loss events into claim-ready recoveries before time runs out.
                 </h1>
 
@@ -747,10 +616,6 @@ export default function Index() {
                 ) : null}
               </motion.div>
 
-              <div className="relative z-10 lg:pl-2">
-                <div className="pointer-events-none absolute inset-y-8 -left-16 hidden w-28 bg-gradient-to-r from-[#FAFAF7] via-[#FAFAF7]/76 to-transparent lg:block" />
-                <HeroRecoveryProofPanel onWatchDemo={scrollToDemo} />
-              </div>
             </div>
           </div>
         </section>
