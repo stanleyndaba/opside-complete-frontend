@@ -63,6 +63,28 @@ const proofItems = [
   }
 ];
 
+const velocityMetrics = [
+  {
+    label: 'Audit-to-Evidence Speed',
+    value: '3min',
+    detail: 'From ledger signal to supporting document trail.',
+    gauge: 250
+  },
+  {
+    label: 'Zero-Friction Filing',
+    value: '1min',
+    detail: 'A prepared case moves from review to filing action.',
+    gauge: 292
+  },
+  {
+    label: 'Time-to-Discovery',
+    value: '16s',
+    detail: 'Recovery signals surface before manual review begins.',
+    gauge: 326,
+    featured: true
+  }
+];
+
 const workflowSteps = [
   {
     step: '01',
@@ -496,6 +518,78 @@ export default function Index() {
               </motion.div>
 
             </div>
+          </div>
+        </section>
+
+        <section className="relative mt-12 md:mt-16">
+          <div className={containerClass}>
+            <motion.div
+              {...revealProps}
+              className="relative overflow-hidden rounded-[34px] border border-[#DCE8EE] bg-white/72 p-4 shadow-[0_24px_80px_rgba(37,49,58,0.08)] backdrop-blur-2xl md:p-5"
+            >
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_10%,rgba(11,116,222,0.10),transparent_28%),radial-gradient(circle_at_84%_18%,rgba(46,125,91,0.10),transparent_26%)]" />
+              <div className="relative grid gap-3 md:grid-cols-3 md:gap-4">
+                <div className="pointer-events-none absolute left-[14%] right-[14%] top-[53px] z-0 hidden h-px overflow-hidden rounded-full bg-[#CFE0EA] md:block">
+                  <motion.div
+                    className="absolute inset-y-0 left-0 w-1/3 rounded-full bg-[linear-gradient(90deg,transparent,rgba(11,116,222,0.88),transparent)]"
+                    animate={{ x: ['-120%', '320%'] }}
+                    transition={{ duration: 3.4, repeat: Infinity, ease: [0.34, 1.56, 0.64, 1] }}
+                  />
+                </div>
+
+                {velocityMetrics.map((metric, index) => (
+                  <motion.div
+                    key={metric.label}
+                    initial={{ opacity: 0, y: 22 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.35 }}
+                    transition={{ duration: 0.58, delay: index * 0.1, ease: [0.34, 1.56, 0.64, 1] }}
+                    whileHover={{ y: -6 }}
+                    className={`group relative min-h-[210px] overflow-hidden rounded-[28px] border bg-white/82 p-6 backdrop-blur-xl transition-all duration-500 ${
+                      metric.featured
+                        ? 'border-[#0B74DE]/35 shadow-[0_24px_64px_rgba(11,116,222,0.14)]'
+                        : 'border-white/80 shadow-[0_18px_46px_rgba(37,49,58,0.07)]'
+                    }`}
+                  >
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div
+                      className="pointer-events-none absolute -right-8 -top-10 h-36 w-36 rounded-full opacity-60 transition-transform duration-700 group-hover:scale-110"
+                      style={{
+                        background: `conic-gradient(from 214deg, rgba(11,116,222,0.62) 0deg, rgba(11,116,222,0.62) ${metric.gauge}deg, rgba(207,224,234,0.58) ${metric.gauge}deg, rgba(207,224,234,0.58) 360deg)`
+                      }}
+                    />
+                    <div className="pointer-events-none absolute -right-1 top-2 h-20 w-20 rounded-full bg-white/88" />
+                    <div className="relative flex items-center justify-between gap-4">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]">
+                        Velocity Pulse
+                      </div>
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#DCE8EE] bg-white text-[10px] font-semibold text-[#4D5B66]">
+                        {String(index + 1).padStart(2, '0')}
+                      </div>
+                    </div>
+                    <div className="relative mt-8">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.86 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true, amount: 0.45 }}
+                        transition={{ duration: 0.52, delay: 0.16 + index * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
+                        className={`font-semibold leading-none tracking-[-0.07em] ${
+                          metric.featured ? 'text-[58px] text-[#0B74DE] md:text-[70px]' : 'text-[50px] text-[#182026] md:text-[62px]'
+                        }`}
+                      >
+                        {metric.value}
+                      </motion.div>
+                      <div className="mt-5 text-[13px] font-semibold uppercase tracking-[0.13em] text-[#25313A]">
+                        {metric.label}
+                      </div>
+                      <p className="mt-3 max-w-[270px] text-[14px] leading-6 text-[#66737F]">
+                        {metric.detail}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </section>
 
