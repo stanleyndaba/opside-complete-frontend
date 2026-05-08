@@ -29,7 +29,7 @@ export function useTenantNavigation() {
     const navigateTo = useCallback(
         (path: string, options?: { replace?: boolean; state?: any }) => {
             // Handle paths that should not be tenant-scoped (public routes, auth routes)
-            const publicPaths = ['/', '/about', '/careers', '/docs', '/privacy', '/terms', '/contact', '/sales', '/developer-api'];
+            const publicPaths = ['/', '/about', '/careers', '/docs', '/privacy', '/terms', '/contact', '/sales'];
             const isPublicPath = publicPaths.includes(path) || path.startsWith('/auth/');
 
             if (isPublicPath) {
@@ -50,7 +50,7 @@ export function useTenantNavigation() {
      */
     const getTenantPath = useCallback(
         (path: string): string => {
-            const publicPaths = ['/', '/about', '/careers', '/docs', '/privacy', '/terms', '/contact', '/sales', '/developer-api'];
+            const publicPaths = ['/', '/about', '/careers', '/docs', '/privacy', '/terms', '/contact', '/sales'];
             if (publicPaths.includes(path) || path.startsWith('/auth/')) {
                 return path;
             }

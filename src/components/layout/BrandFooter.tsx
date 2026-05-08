@@ -72,9 +72,6 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 <Link to="/pricing" className="transition hover:text-[#EAF1F5]">
                   Pricing
                 </Link>
-                <Link to="/developer-api" className="transition hover:text-[#EAF1F5]">
-                  API
-                </Link>
                 <Link to="/privacy" className="transition hover:text-[#EAF1F5]">
                   Privacy Policy
                 </Link>

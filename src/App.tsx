@@ -39,7 +39,6 @@ const TeamManagement = lazy(() => import("./pages/TeamManagement"));
 const ExportCenter = lazy(() => import("./pages/ExportCenter"));
 const NotificationHub = lazy(() => import("./pages/NotificationHub"));
 const ApiAccess = lazy(() => import("./pages/ApiAccess"));
-const ApiLanding = lazy(() => import("./pages/ApiLanding"));
 const Help = lazy(() => import("./pages/Help"));
 const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const ReconnectProvider = lazy(() => import('./pages/ReconnectProvider'));
@@ -167,7 +166,6 @@ const App = () => (
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
-                        <Route path="/developer-api" element={<ApiLanding />} />
                         <Route path="/branding" element={<Branding />} />
                         {/* AUTH & OAUTH ROUTES - No tenant required */}
                         <Route path="/auth/callback" element={<OAuthCallback />} />

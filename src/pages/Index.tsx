@@ -17,9 +17,23 @@ const DEMO_VIDEO_THUMBNAIL_URL = '/DEMO34.png';
 const navLinks = [
   { label: 'Pricing', to: '/pricing' },
   { label: 'Research', to: '/research' },
-  { label: 'API', to: '/developer-api' },
   { label: 'About', to: '/about-margin' },
   { label: 'Enterprise', to: '/sales' }
+];
+
+const mobileProductGroups = [
+  {
+    label: 'Recovery Coverage',
+    items: ['Inbound shipments', 'Lost or damaged inventory', 'Fee discrepancies', 'Refund without return']
+  },
+  {
+    label: 'Evidence & Control',
+    items: ['Evidence matching', 'Filing readiness', 'Recovery tracking', 'Connected sources']
+  },
+  {
+    label: 'Seller Types',
+    items: ['Emerging sellers', 'Growth sellers', 'Enterprise teams']
+  }
 ];
 
 const trustHighlights = [
@@ -317,6 +331,29 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
 
           {mobileMenuOpen ? (
             <div className="mt-4 grid gap-1 border-t border-[#E4EDF1] pt-4 md:hidden">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="products" className="border-none">
+                  <AccordionTrigger className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8] hover:no-underline [&>svg]:h-4 [&>svg]:w-4">
+                    Products
+                  </AccordionTrigger>
+                  <AccordionContent className="px-1 pb-3 pt-1">
+                    <div className="grid gap-3">
+                      {mobileProductGroups.map((group) => (
+                        <div key={group.label} className="rounded-2xl border border-[#E4EDF1] bg-[#FBFCFA] p-3">
+                          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7A8994]">{group.label}</div>
+                          <div className="mt-2 grid gap-1">
+                            {group.items.map((item) => (
+                              <div key={item} className="text-sm font-medium text-[#25313A]">
+                                {item}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
               {navLinks.map((link) => (
                 <Link
                   key={link.to}

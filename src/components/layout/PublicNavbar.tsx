@@ -117,9 +117,6 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         <Link to="/research" className={desktopNavLinkClass}>
                             Research
                         </Link>
-                        <Link to="/developer-api" className={desktopNavLinkClass}>
-                            API
-                        </Link>
                         <Link to="/about-margin" className={desktopNavLinkClass}>
                             About
                         </Link>
@@ -168,30 +165,6 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     ? "rounded-[22px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.14)]"
                                     : "rounded-[8px] border border-white/10 bg-[#080808]/96 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
                             )}>
-                                <Link
-                                    to="/pricing"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
-                                    Pricing
-                                </Link>
-                                <Link
-                                    to="/about-margin"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
-                                    About
-                                </Link>
-                                <Link
-                                    to="/research"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
-                                    Research
-                                </Link>
-                                <Link
-                                    to="/developer-api"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
-                                    API
-                                </Link>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="products" className="border-none">
                                         <AccordionTrigger className={cn(
@@ -239,6 +212,24 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                         </AccordionContent>
                                     </AccordionItem>
                                 </Accordion>
+                                <Link
+                                    to="/pricing"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={mobileMenuItemClass}>
+                                    Pricing
+                                </Link>
+                                <Link
+                                    to="/about-margin"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={mobileMenuItemClass}>
+                                    About
+                                </Link>
+                                <Link
+                                    to="/research"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={mobileMenuItemClass}>
+                                    Research
+                                </Link>
 
                                 <Link
                                     to="/login"
