@@ -640,11 +640,18 @@ const formatDemoCurrency = (amount: number, currency = 'USD') => (
   })
 );
 
+const resolveDemoCaseReference = (caseData: any, caseId?: string | null) => fallbackIfMissing(
+  caseData.claim_number || caseData.evidence?.claim_number || caseId,
+  'ACME-CASE-2005'
+);
+
+const isRejectedDemoCaseReference = (value?: string | null) => {
+  const normalized = String(value || '').trim().toUpperCase();
+  return normalized === 'ACME-2007' || normalized === 'ACME-CASE-2007' || normalized.endsWith('2007');
+};
+
 const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) => {
-  const caseReference = fallbackIfMissing(
-    caseData.claim_number || caseData.evidence?.claim_number || caseId,
-    'ACME-CASE-2005'
-  );
+  const caseReference = resolveDemoCaseReference(caseData, caseId);
   const shipmentReference = fallbackIfMissing(caseData.order_id || caseData.evidence?.shipment_id, 'FBA17XJ4K2');
   const currency = fallbackIfMissing(caseData.currency, 'USD');
   const reimbursementAmount = fallbackIfMissing(
@@ -652,8 +659,11 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
     1284.66
   );
   const normalizedState = String(caseData.case_state || caseData.recovery_status || '').toLowerCase();
-  const isPaid = normalizedState.includes('paid') || normalizedState.includes('payout') || caseReference === 'ACME-CASE-2005';
-  const responseBody = isPaid
+  const isRejected = normalizedState.includes('reject') || isRejectedDemoCaseReference(caseReference);
+  const isPaid = !isRejected && (normalizedState.includes('paid') || normalizedState.includes('payout') || caseReference === 'ACME-CASE-2005');
+  const responseBody = isRejected
+    ? `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. At this time, we are unable to approve reimbursement for the affected units because the available shipment and inventory records do not confirm an eligible discrepancy under the current FBA reimbursement criteria.\n\nNo reimbursement has been issued for this case. If you have additional documentation, such as carrier confirmation, shipment reconciliation records, or supplier invoice detail that was not included in the original request, you may reply to this case for further review.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy not confirmed\n\nThank you,\nAmazon Selling Partner Support`
+    : isPaid
     ? `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. Based on the shipment and inventory records available, we have approved reimbursement for the affected units.\n\nA reimbursement of ${formatDemoCurrency(Number(reimbursementAmount), currency)} has been issued to your seller account and will appear in your payments reporting once processing completes. Please allow the normal settlement cycle for the amount to be reflected in your account.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\n\nThank you,\nAmazon Selling Partner Support`
     : `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. Based on the shipment and inventory records available, we have approved reimbursement for the affected units.\n\nThe approved reimbursement amount is ${formatDemoCurrency(Number(reimbursementAmount), currency)} and is pending payment processing. Please allow the normal settlement cycle for the amount to be reflected in your account.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\n\nThank you,\nAmazon Selling Partner Support`;
 
@@ -662,12 +672,14 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
       id: `demo-amazon-response-${caseId || 'case'}`,
       direction: 'inbound',
       sender: 'Amazon Selling Partner Support',
-      subject: isPaid
+      subject: isRejected
+        ? 'Reimbursement request not approved for FBA inventory discrepancy'
+        : isPaid
         ? 'Reimbursement issued for FBA inventory discrepancy'
         : 'Reimbursement approved for FBA inventory discrepancy',
       body_text: responseBody,
       received_at: '2026-05-08T14:37:00Z',
-      state_signal: isPaid ? 'paid' : 'approved',
+      state_signal: isRejected ? 'rejected' : isPaid ? 'paid' : 'approved',
       attachments: [],
     },
   ];
@@ -677,6 +689,8 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
   if (!caseData) return caseData;
 
   const caseId = caseData.id || fallbackId || 'demo-case';
+  const demoCaseReference = resolveDemoCaseReference(caseData, caseId);
+  const isRejectedDemoCase = isRejectedDemoCaseReference(demoCaseReference);
   const documents = isMissingDemoValue(caseData.documents) ? buildDemoCaseDocuments(caseId) : caseData.documents;
   const events = isMissingDemoValue(caseData.events) ? buildDemoCaseEvents(caseId) : caseData.events;
   const caseMessages = isMissingDemoValue(caseData.case_messages)
@@ -688,7 +702,7 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
     asin: fallbackIfMissing(caseData.evidence?.asin, 'B0DMRGN184'),
     fulfillment_center: fallbackIfMissing(caseData.evidence?.fulfillment_center, 'ABE8'),
     quantity: fallbackIfMissing(caseData.evidence?.quantity, 18),
-    claim_number: fallbackIfMissing(caseData.evidence?.claim_number, 'ACME-CASE-2005'),
+    claim_number: fallbackIfMissing(caseData.evidence?.claim_number, demoCaseReference),
     total_receipts: fallbackIfMissing(caseData.evidence?.total_receipts, 240),
     total_returns: fallbackIfMissing(caseData.evidence?.total_returns, 6),
     total_adjustments: fallbackIfMissing(caseData.evidence?.total_adjustments, 0),
@@ -720,7 +734,7 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
     filing_status: fallbackIfMissing(caseData.filing_status, 'filing_ready'),
     filing_strategy: fallbackIfMissing(caseData.filing_strategy, 'seller_approval_before_filing'),
     operational_state: fallbackIfMissing(caseData.operational_state, 'awaiting_seller_approval'),
-    recovery_status: fallbackIfMissing(caseData.recovery_status, 'awaiting_payout'),
+    recovery_status: fallbackIfMissing(caseData.recovery_status, isRejectedDemoCase ? 'rejected' : 'awaiting_payout'),
     billing_status: fallbackIfMissing(caseData.billing_status, 'no_commission_due'),
     eligibility_status: fallbackIfMissing(caseData.eligibility_status, 'ready'),
     proof_status: fallbackIfMissing(caseData.proof_status, 'filing_ready'),
@@ -736,11 +750,11 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
     has_submission_proof: fallbackIfMissing(caseData.has_submission_proof, true),
     has_amazon_reference: fallbackIfMissing(caseData.has_amazon_reference, true),
     has_filing_truth: fallbackIfMissing(caseData.has_filing_truth, true),
-    has_approval_truth: fallbackIfMissing(caseData.has_approval_truth, true),
-    has_payout: fallbackIfMissing(caseData.has_payout, true),
+    has_approval_truth: fallbackIfMissing(caseData.has_approval_truth, !isRejectedDemoCase),
+    has_payout: fallbackIfMissing(caseData.has_payout, !isRejectedDemoCase),
     amazonCaseId: fallbackIfMissing(caseData.amazonCaseId || caseData.amazon_case_id, '173-8849921-4524317'),
     prior_case_id: fallbackIfMissing(caseData.prior_case_id, 'None detected'),
-    case_state: fallbackIfMissing(caseData.case_state, 'paid'),
+    case_state: fallbackIfMissing(caseData.case_state, isRejectedDemoCase ? 'rejected' : 'paid'),
     amazon_thread_linked: fallbackIfMissing(caseData.amazon_thread_linked, true),
     can_reply_to_thread: fallbackIfMissing(caseData.can_reply_to_thread, true),
     case_origin: fallbackIfMissing(caseData.case_origin, 'demo_recovery_audit'),
@@ -794,20 +808,20 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
     value_label: fallbackIfMissing(caseData.value_label, 'recoverable_value'),
     why_not_claim_ready: fallbackIfMissing(caseData.why_not_claim_ready, ''),
     coverage_family: fallbackIfMissing(caseData.coverage_family, 'inbound_shortage'),
-    claim_number: fallbackIfMissing(caseData.claim_number, 'AMZ-CLAIM-774219'),
+    claim_number: fallbackIfMissing(caseData.claim_number, demoCaseReference),
     guaranteedAmount: fallbackIfMissing(caseData.guaranteedAmount, 1284.66),
     estimated_claim_value: fallbackIfMissing(caseData.estimated_claim_value, 1284.66),
     requested_amount: fallbackIfMissing(caseData.requested_amount, 1284.66),
-    approved_amount: fallbackIfMissing(caseData.approved_amount, 1284.66),
-    recovered_amount: fallbackIfMissing(caseData.recovered_amount, 1284.66),
-    actual_payout_amount: fallbackIfMissing(caseData.actual_payout_amount, 1284.66),
+    approved_amount: fallbackIfMissing(caseData.approved_amount, isRejectedDemoCase ? 0 : 1284.66),
+    recovered_amount: fallbackIfMissing(caseData.recovered_amount, isRejectedDemoCase ? 0 : 1284.66),
+    actual_payout_amount: fallbackIfMissing(caseData.actual_payout_amount, isRejectedDemoCase ? 0 : 1284.66),
     billed_amount: fallbackIfMissing(caseData.billed_amount, 0),
     value_per_unit: fallbackIfMissing(caseData.value_per_unit, 71.37),
     unitCost: fallbackIfMissing(caseData.unitCost, 71.37),
     unit_cost: fallbackIfMissing(caseData.unit_cost, 71.37),
     confidence: fallbackIfMissing(caseData.confidence, 0.93),
     confidence_score: fallbackIfMissing(caseData.confidence_score, 0.93),
-    evidenceStatus: fallbackIfMissing(caseData.evidenceStatus, 'Matched evidence packet'),
+    evidenceStatus: fallbackIfMissing(caseData.evidenceStatus, isRejectedDemoCase ? 'Rejected by Amazon' : 'Matched evidence packet'),
     expectedPayoutDate: fallbackIfMissing(caseData.expectedPayoutDate, '2026-05-23T00:00:00Z'),
     createdDate: fallbackIfMissing(caseData.createdDate, '2026-05-06T09:18:00Z'),
     created_at: fallbackIfMissing(caseData.created_at, '2026-05-06T09:18:00Z'),
