@@ -559,6 +559,248 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   currency: 'USD'
 });
 
+const isDemoWorkspaceSlug = (slug?: string | null) => normalizeTenantSlug(slug) === 'demo-workspace';
+
+const isMissingDemoValue = (value: unknown) => {
+  if (value === null || value === undefined) return true;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    return !normalized || normalized === '-' || normalized === 'n/a' || normalized === 'not available' || normalized.includes('unknown');
+  }
+  if (Array.isArray(value)) return value.length === 0;
+  return false;
+};
+
+const fallbackIfMissing = <T,>(value: T, fallback: T): T => (
+  isMissingDemoValue(value) ? fallback : value
+);
+
+const buildDemoCaseDocuments = (caseId?: string | null) => [
+  {
+    id: `demo-invoice-${caseId || 'case'}`,
+    name: 'Supplier invoice INV-2026-1842.pdf',
+    doc_type: 'supplier_invoice',
+    status: 'matched',
+    quantity: 18,
+    unit_cost: 71.37,
+    total_amount: 1284.66,
+    confidence: 0.94,
+  },
+  {
+    id: `demo-shipment-${caseId || 'case'}`,
+    name: 'FBA shipment reconciliation FBA17XJ4K2.pdf',
+    doc_type: 'shipment_report',
+    status: 'matched',
+    quantity: 18,
+    confidence: 0.91,
+  },
+  {
+    id: `demo-ledger-${caseId || 'case'}`,
+    name: 'Amazon inventory ledger excerpt.csv',
+    doc_type: 'inventory_report',
+    status: 'matched',
+    quantity: 18,
+    confidence: 0.89,
+  },
+];
+
+const buildDemoCaseEvents = (caseId?: string | null) => [
+  {
+    id: `demo-event-detected-${caseId || 'case'}`,
+    timestamp: '2026-05-06T09:18:00Z',
+    title: 'Amazon loss event detected',
+    description: 'Inbound shortage signal found during FBA reconciliation.',
+    type: 'detection',
+    status: 'detected',
+  },
+  {
+    id: `demo-event-evidence-${caseId || 'case'}`,
+    timestamp: '2026-05-06T09:22:00Z',
+    title: 'Evidence matched',
+    description: 'Supplier invoice, shipment report, and inventory ledger were linked to the case.',
+    type: 'analysis',
+    status: 'matched',
+  },
+  {
+    id: `demo-event-ready-${caseId || 'case'}`,
+    timestamp: '2026-05-06T09:31:00Z',
+    title: 'Case moved to filing review',
+    description: 'Claim-ready packet prepared for seller approval before filing.',
+    type: 'generation',
+    status: 'filing_ready',
+  },
+];
+
+const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
+  if (!caseData) return caseData;
+
+  const caseId = caseData.id || fallbackId || 'demo-case';
+  const documents = isMissingDemoValue(caseData.documents) ? buildDemoCaseDocuments(caseId) : caseData.documents;
+  const events = isMissingDemoValue(caseData.events) ? buildDemoCaseEvents(caseId) : caseData.events;
+  const evidence = {
+    ...(caseData.evidence || {}),
+    sku: fallbackIfMissing(caseData.evidence?.sku, 'MGRN-BTL-18'),
+    asin: fallbackIfMissing(caseData.evidence?.asin, 'B0DMRGN184'),
+    fulfillment_center: fallbackIfMissing(caseData.evidence?.fulfillment_center, 'ABE8'),
+    quantity: fallbackIfMissing(caseData.evidence?.quantity, 18),
+    claim_number: fallbackIfMissing(caseData.evidence?.claim_number, 'AMZ-CLAIM-774219'),
+    total_receipts: fallbackIfMissing(caseData.evidence?.total_receipts, 240),
+    total_returns: fallbackIfMissing(caseData.evidence?.total_returns, 6),
+    total_adjustments: fallbackIfMissing(caseData.evidence?.total_adjustments, 0),
+    total_shipments: fallbackIfMissing(caseData.evidence?.total_shipments, 211),
+    total_removals: fallbackIfMissing(caseData.evidence?.total_removals, 17),
+    total_input: fallbackIfMissing(caseData.evidence?.total_input, 246),
+    total_output: fallbackIfMissing(caseData.evidence?.total_output, 228),
+    calculated_stock: fallbackIfMissing(caseData.evidence?.calculated_stock, 18),
+    ending_warehouse_balance: fallbackIfMissing(caseData.evidence?.ending_warehouse_balance, 0),
+    discrepancy: fallbackIfMissing(caseData.evidence?.discrepancy, 18),
+  };
+  const evidenceSummary = {
+    ...(caseData.evidence_summary || {}),
+    has_documents: fallbackIfMissing(caseData.evidence_summary?.has_documents, true),
+    matched_document_count: fallbackIfMissing(caseData.evidence_summary?.matched_document_count, documents.length),
+    linked_document_count: fallbackIfMissing(caseData.evidence_summary?.linked_document_count, documents.length),
+    match_type: fallbackIfMissing(caseData.evidence_summary?.match_type, 'invoice_shipment_inventory_match'),
+  };
+
+  return {
+    ...caseData,
+    truth_unavailable: false,
+    id: caseId,
+    entity_type: fallbackIfMissing(caseData.entity_type, 'recovery_case'),
+    title: fallbackIfMissing(caseData.title, 'Inbound shipment shortage recovery'),
+    details: fallbackIfMissing(caseData.details, 'Inbound shipment shortage recovery'),
+    anomaly_type: fallbackIfMissing(caseData.anomaly_type, 'inbound_shipment_shortage'),
+    status: fallbackIfMissing(caseData.status, 'Claim Ready'),
+    filing_status: fallbackIfMissing(caseData.filing_status, 'filing_ready'),
+    filing_strategy: fallbackIfMissing(caseData.filing_strategy, 'seller_approval_before_filing'),
+    operational_state: fallbackIfMissing(caseData.operational_state, 'awaiting_seller_approval'),
+    recovery_status: fallbackIfMissing(caseData.recovery_status, 'awaiting_payout'),
+    billing_status: fallbackIfMissing(caseData.billing_status, 'no_commission_due'),
+    eligibility_status: fallbackIfMissing(caseData.eligibility_status, 'ready'),
+    proof_status: fallbackIfMissing(caseData.proof_status, 'filing_ready'),
+    payout_proof_status: fallbackIfMissing(caseData.payout_proof_status, 'tracked'),
+    missing_requirements: Array.isArray(caseData.missing_requirements) ? caseData.missing_requirements : ['Seller approval before filing'],
+    manual_review_reason: fallbackIfMissing(caseData.manual_review_reason, 'seller_approval_required'),
+    quarantine_reason: fallbackIfMissing(caseData.quarantine_reason, 'none'),
+    block_reasons: Array.isArray(caseData.block_reasons) && caseData.block_reasons.length ? caseData.block_reasons : ['seller_approval_required'],
+    has_linked_dispute_case: fallbackIfMissing(caseData.has_linked_dispute_case, true),
+    dispute_case_id: fallbackIfMissing(caseData.dispute_case_id, `demo-dispute-${String(caseId).slice(-6)}`),
+    linked_dispute_case_id: fallbackIfMissing(caseData.linked_dispute_case_id, `demo-dispute-${String(caseId).slice(-6)}`),
+    has_submission: fallbackIfMissing(caseData.has_submission, true),
+    has_submission_proof: fallbackIfMissing(caseData.has_submission_proof, true),
+    has_amazon_reference: fallbackIfMissing(caseData.has_amazon_reference, true),
+    has_filing_truth: fallbackIfMissing(caseData.has_filing_truth, true),
+    has_approval_truth: fallbackIfMissing(caseData.has_approval_truth, true),
+    has_payout: fallbackIfMissing(caseData.has_payout, true),
+    amazonCaseId: fallbackIfMissing(caseData.amazonCaseId || caseData.amazon_case_id, '173-8849921-4524317'),
+    prior_case_id: fallbackIfMissing(caseData.prior_case_id, 'None detected'),
+    case_state: fallbackIfMissing(caseData.case_state, 'approved'),
+    amazon_thread_linked: fallbackIfMissing(caseData.amazon_thread_linked, true),
+    can_reply_to_thread: fallbackIfMissing(caseData.can_reply_to_thread, true),
+    case_origin: fallbackIfMissing(caseData.case_origin, 'demo_recovery_audit'),
+    origin_metadata: {
+      ...(caseData.origin_metadata || {}),
+      demo_fallback: true,
+      claim_clock_days_remaining: fallbackIfMissing(caseData.origin_metadata?.claim_clock_days_remaining, 42),
+    },
+    generated_context: caseData.generated_context || {
+      summaryLabel: 'Claim-ready recovery case',
+      strategyLabel: 'Seller approval before filing',
+      trustLabel: 'Read-only evidence review complete',
+      generated: true,
+    },
+    next_step_context: caseData.next_step_context || {
+      key: 'seller_approval',
+      title: 'Seller approval before filing',
+      description: 'Review the matched evidence packet and approve the prepared filing workflow.',
+      generated: true,
+    },
+    finding_truth: caseData.finding_truth || {
+      review_tier: 'claim_candidate',
+      claim_readiness: 'claim_ready',
+      value_label: 'recoverable_value',
+      seller_summary: {
+        summary: 'Margin found an inbound shortage where Amazon received fewer units than the shipment plan and matched the invoice, shipment report, and inventory ledger needed for review.',
+      },
+      policy_basis: {
+        required_evidence: ['Supplier invoice', 'FBA shipment report', 'Inventory ledger'],
+      },
+      filing_movement: {
+        label: 'Ready for seller approval',
+        detail: 'The evidence packet is prepared. Filing should move forward only after seller approval.',
+        next_action_label: 'Review and approve',
+      },
+    },
+    seller_summary: caseData.seller_summary || {
+      summary: 'Margin found an inbound shortage where Amazon received fewer units than the shipment plan and matched the invoice, shipment report, and inventory ledger needed for review.',
+    },
+    policy_basis: caseData.policy_basis || {
+      required_evidence: ['Supplier invoice', 'FBA shipment report', 'Inventory ledger'],
+    },
+    filing_movement: caseData.filing_movement || {
+      label: 'Ready for seller approval',
+      detail: 'The evidence packet is prepared. Filing should move forward only after seller approval.',
+      next_action_label: 'Review and approve',
+    },
+    review_tier: fallbackIfMissing(caseData.review_tier, 'claim_candidate'),
+    claim_readiness: fallbackIfMissing(caseData.claim_readiness, 'claim_ready'),
+    recommended_action: fallbackIfMissing(caseData.recommended_action, 'Review matched evidence and approve filing'),
+    value_label: fallbackIfMissing(caseData.value_label, 'recoverable_value'),
+    why_not_claim_ready: fallbackIfMissing(caseData.why_not_claim_ready, ''),
+    coverage_family: fallbackIfMissing(caseData.coverage_family, 'inbound_shortage'),
+    claim_number: fallbackIfMissing(caseData.claim_number, 'AMZ-CLAIM-774219'),
+    guaranteedAmount: fallbackIfMissing(caseData.guaranteedAmount, 1284.66),
+    estimated_claim_value: fallbackIfMissing(caseData.estimated_claim_value, 1284.66),
+    requested_amount: fallbackIfMissing(caseData.requested_amount, 1284.66),
+    approved_amount: fallbackIfMissing(caseData.approved_amount, 1284.66),
+    recovered_amount: fallbackIfMissing(caseData.recovered_amount, 1284.66),
+    actual_payout_amount: fallbackIfMissing(caseData.actual_payout_amount, 1284.66),
+    billed_amount: fallbackIfMissing(caseData.billed_amount, 0),
+    value_per_unit: fallbackIfMissing(caseData.value_per_unit, 71.37),
+    unitCost: fallbackIfMissing(caseData.unitCost, 71.37),
+    unit_cost: fallbackIfMissing(caseData.unit_cost, 71.37),
+    confidence: fallbackIfMissing(caseData.confidence, 0.93),
+    confidence_score: fallbackIfMissing(caseData.confidence_score, 0.93),
+    evidenceStatus: fallbackIfMissing(caseData.evidenceStatus, 'Matched evidence packet'),
+    expectedPayoutDate: fallbackIfMissing(caseData.expectedPayoutDate, '2026-05-23T00:00:00Z'),
+    createdDate: fallbackIfMissing(caseData.createdDate, '2026-05-06T09:18:00Z'),
+    created_at: fallbackIfMissing(caseData.created_at, '2026-05-06T09:18:00Z'),
+    discovery_date: fallbackIfMissing(caseData.discovery_date, '2026-05-06T09:18:00Z'),
+    updated_at: fallbackIfMissing(caseData.updated_at, '2026-05-08T15:42:00Z'),
+    sku: fallbackIfMissing(caseData.sku, 'MGRN-BTL-18'),
+    asin: fallbackIfMissing(caseData.asin, 'B0DMRGN184'),
+    productName: fallbackIfMissing(caseData.productName, 'Stainless Steel Water Bottle - 18 oz'),
+    facility: fallbackIfMissing(caseData.facility, 'ABE8'),
+    warehouse: fallbackIfMissing(caseData.warehouse, 'ABE8'),
+    unitsLost: fallbackIfMissing(caseData.unitsLost, 18),
+    units_lost: fallbackIfMissing(caseData.units_lost, 18),
+    units_is_verified: fallbackIfMissing(caseData.units_is_verified, true),
+    order_id: fallbackIfMissing(caseData.order_id, 'FBA17XJ4K2'),
+    seller_id: fallbackIfMissing(caseData.seller_id, 'A2DEMOSELLER9'),
+    user_id: fallbackIfMissing(caseData.user_id, 'demo-operator'),
+    store_name: fallbackIfMissing(caseData.store_name, 'Demo Workspace Store'),
+    documents,
+    events,
+    evidence,
+    evidence_summary: evidenceSummary,
+    evidence_attachments: caseData.evidence_attachments || {
+      match_type: 'invoice_shipment_inventory_match',
+      decision_intelligence: {
+        filing_strategy: 'seller_approval_before_filing',
+        operational_state: 'awaiting_seller_approval',
+        eligibility_status: 'ready',
+      },
+    },
+    warehouse_history: caseData.warehouse_history || {
+      occurrence_count: 3,
+      total_value_lost: 3748.92,
+      source: 'Demo FBA reconciliation history',
+    },
+    currency: fallbackIfMissing(caseData.currency, 'USD'),
+  };
+};
+
 const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
   const caseOrigin = apiData.case_origin || null;
   const originMetadata = apiData.origin_metadata && typeof apiData.origin_metadata === 'object'
@@ -815,9 +1057,11 @@ export default function CaseDetail() {
 
   const location = useLocation() as any;
   const passedClaim = (location && location.state && (location.state as any).claim) || null;
-  const seedCaseData = useMemo(() => (
-    passedClaim ? normalizeCaseDetailData(passedClaim, caseId) : null
-  ), [caseId, passedClaim]);
+  const seedCaseData = useMemo(() => {
+    if (!passedClaim) return null;
+    const normalized = normalizeCaseDetailData(passedClaim, caseId);
+    return isDemoWorkspaceSlug(activeSlug) ? hydrateDemoCaseDetail(normalized, caseId) : normalized;
+  }, [activeSlug, caseId, passedClaim]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasResolvedBackend, setHasResolvedBackend] = useState(false);
@@ -876,9 +1120,12 @@ export default function CaseDetail() {
       if (res.ok && res.data) {
         const apiData = res.data as any;
         const normalized = normalizeCaseDetailData(apiData, currentCaseId);
-        setCaseData(normalized);
-        if (Array.isArray((res.data as any)?.documents)) {
-          setMatchedDocs((res.data as any).documents);
+        const displayCase = isDemoWorkspaceSlug(activeSlug)
+          ? hydrateDemoCaseDetail(normalized, currentCaseId)
+          : normalized;
+        setCaseData(displayCase);
+        if (Array.isArray(displayCase?.documents)) {
+          setMatchedDocs(displayCase.documents);
         } else {
           setMatchedDocs([]);
         }
@@ -886,14 +1133,22 @@ export default function CaseDetail() {
         setError(null);
       } else {
         const failureReason = res.error || 'Case details unavailable';
-        setCaseData(buildUnavailableCaseDetail(currentCaseId, failureReason));
-        setMatchedDocs([]);
+        const fallbackCase = buildUnavailableCaseDetail(currentCaseId, failureReason);
+        const displayCase = isDemoWorkspaceSlug(activeSlug)
+          ? hydrateDemoCaseDetail(fallbackCase, currentCaseId)
+          : fallbackCase;
+        setCaseData(displayCase);
+        setMatchedDocs(Array.isArray(displayCase?.documents) ? displayCase.documents : []);
         setError(failureReason);
       }
     } catch (err: any) {
       const failureReason = err?.message || 'Case details unavailable';
-      setCaseData(buildUnavailableCaseDetail(currentCaseId, failureReason));
-      setMatchedDocs([]);
+      const fallbackCase = buildUnavailableCaseDetail(currentCaseId, failureReason);
+      const displayCase = isDemoWorkspaceSlug(activeSlug)
+        ? hydrateDemoCaseDetail(fallbackCase, currentCaseId)
+        : fallbackCase;
+      setCaseData(displayCase);
+      setMatchedDocs(Array.isArray(displayCase?.documents) ? displayCase.documents : []);
       setError(failureReason);
     } finally {
       setHasResolvedBackend(true);
@@ -909,14 +1164,16 @@ export default function CaseDetail() {
     try {
       const response = await api.getRecoveryEvents(currentCaseId, activeSlug);
       if (response.ok && Array.isArray(response.data)) {
-        setCaseEvents(response.data);
+        setCaseEvents(response.data.length || !isDemoWorkspaceSlug(activeSlug)
+          ? response.data
+          : buildDemoCaseEvents(currentCaseId));
         eventsResolvedForCaseIdRef.current = currentCaseId;
         setEventsResolvedForCaseId(currentCaseId);
       } else {
-        setCaseEvents([]);
+        setCaseEvents(isDemoWorkspaceSlug(activeSlug) ? buildDemoCaseEvents(currentCaseId) : []);
       }
     } catch {
-      setCaseEvents([]);
+      setCaseEvents(isDemoWorkspaceSlug(activeSlug) ? buildDemoCaseEvents(currentCaseId) : []);
     } finally {
       setEventsLoading(false);
     }
