@@ -144,7 +144,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                     {/* TERMINAL (Full Width) */}
                     <div className="flex-1 bg-[#0D0D0D] rounded-lg border border-neutral-900 overflow-hidden relative shadow-sm flex flex-col">
                         <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] border-b border-neutral-900 rounded-t-lg flex items-center px-5 z-10">
-                            <span className="text-[10px] text-neutral-600 uppercase tracking-[0.2em] font-normal">Activity Feed</span>
+                            <span className="text-[10px] text-neutral-600 uppercase tracking-tight font-normal">Activity Feed</span>
                         </div>
                         <div className="pt-12 pb-4 px-5 text-[13px] flex-1 overflow-y-scroll text-neutral-400 leading-relaxed font-normal tracking-tight">
                             {logs.length === 0 ? (
@@ -153,7 +153,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                         <Search className="w-10 h-10" />
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-[10px] uppercase font-bold tracking-[0.3em] font-sans">Awaiting Command</p>
+                                        <p className="text-[10px] uppercase font-bold tracking-tight font-sans">Awaiting Command</p>
                                         <p className="text-[9px] mt-2 opacity-50">SYSTEM_READY :: VERSION_4.2.0</p>
                                     </div>
                                 </div>
@@ -343,7 +343,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                         <h3 className="text-2xl font-bold text-white tracking-tight leading-tight">
                                             {status === 'results' ? '14 Potential Claims Detected' : 'Evidence Verified'}
                                         </h3>
-                                        <p className="text-[11px] text-white/30 uppercase tracking-[0.3em] font-bold mt-1">
+                                        <p className="text-[11px] text-white/30 uppercase tracking-tight font-bold mt-1">
                                             {status === 'results' ? 'Awaiting Evidence Matching' : '14 Claims Matched with Documentation'}
                                         </p>
                                     </div>
@@ -364,12 +364,12 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                             {/* Batch Header */}
                             <div className="flex items-center px-6 py-3 bg-white/[0.02] border-b border-white/5">
                                 <div className="w-3.5 h-3.5 border border-white/10 rounded-sm mr-4" />
-                                <span className="text-[10px] font-semibold text-white/30 uppercase tracking-[0.15em]">Batch Operation Queue</span>
+                                <span className="text-[10px] font-semibold text-white/30 uppercase tracking-tight">Batch Operation Queue</span>
                             </div>
 
                             {/* Month Group Header */}
                             <div className="sticky top-0 z-10 bg-[#0a0a0a]/80 backdrop-blur-sm px-6 py-2.5 border-y border-white/5 flex items-center justify-between">
-                                <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">January 2026</span>
+                                <span className="text-[11px] font-bold text-white uppercase tracking-tight">January 2026</span>
                                 <span className="text-[9px] font-medium text-white/20 uppercase tracking-tight">14 AUDIT ENTRIES</span>
                             </div>
 
@@ -409,7 +409,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                                     <span className="font-mono text-[10px] text-white/20">SKU: N/A</span>
                                                 </div>
                                                 {/* Status Row */}
-                                                <div className="flex items-center gap-2 mt-2 text-[10px] font-medium tracking-wider uppercase">
+                                                <div className="flex items-center gap-2 mt-2 text-[10px] font-medium tracking-tight uppercase">
                                                     <span className={cn(
                                                         "px-2 py-0.5 border font-semibold",
                                                         claim.status === 'PENDING' ? "bg-white/5 text-white/70 border-white/10" : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
@@ -427,7 +427,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                             {/* Right Actions */}
                                             <div className="flex items-center gap-4 ml-4">
                                                 <span className="text-white/20 hover:text-white cursor-pointer">•••</span>
-                                                <span className="flex items-center gap-1 text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-[0.15em] cursor-pointer group/link">
+                                                <span className="flex items-center gap-1 text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-tight cursor-pointer group/link">
                                                     AUDIT
                                                     <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
                                                 </span>
@@ -474,7 +474,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                                 )}>
                                                     {i <= 2 ? <CheckCheck className="w-5 h-5" /> : (i === 3 ? <DollarSign className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />)}
                                                 </div>
-                                                <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", i <= 2 ? "text-emerald-500" : "text-white/20")}>{step}</span>
+                                                <span className={cn("text-[10px] font-black uppercase tracking-tight", i <= 2 ? "text-emerald-500" : "text-white/20")}>{step}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -512,7 +512,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                 <h3 className="text-2xl font-bold text-white flex items-center gap-4 tracking-tight">
                                     <Bell className="w-7 h-7 text-emerald-500" /> Account Activity History
                                 </h3>
-                                <Button variant="outline" size="sm" className="h-10 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 border-white/10 text-white/60 hover:bg-white/10 shadow-sm">
+                                <Button variant="outline" size="sm" className="h-10 text-[10px] font-black uppercase tracking-tight bg-white/5 border-white/10 text-white/60 hover:bg-white/10 shadow-sm">
                                     <CheckCheck className="w-4 h-4 mr-3" /> Mark All Read
                                 </Button>
                             </div>

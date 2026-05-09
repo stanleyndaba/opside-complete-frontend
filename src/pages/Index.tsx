@@ -273,7 +273,7 @@ const integrationLogos = [
 ];
 
 const containerClass = 'mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8';
-const sectionLabelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const sectionLabelClass = 'text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]';
 const sectionHeadingClass = 'mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[64px]';
 const sectionBodyClass = 'mt-5 max-w-[740px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9';
 const revealProps = {
@@ -328,7 +328,7 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
+                  className="rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
                 >
                   {link.label}
                 </Link>
@@ -373,7 +373,7 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
                     <div className="grid gap-5">
                       {mobileProductSections.map((section) => (
                         <div key={section.label} className="grid gap-2">
-                          <div className="px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7A8994]">{section.label}</div>
+                          <div className="px-2 text-[10px] font-semibold uppercase tracking-tight text-[#7A8994]">{section.label}</div>
                           <div className="grid gap-1">
                             {section.items.map((item) => {
                               const Icon = item.icon;
@@ -458,7 +458,7 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         />
-        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-[0.08em] text-[#66737F]">
+        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
           Recovery proof sources Margin can organize
         </div>
       </div>
@@ -553,7 +553,7 @@ export default function Index() {
                 transition={{ duration: 0.6 }}
                 className="max-w-[760px]"
               >
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#DCE8EE] bg-white/76 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE] shadow-[0_12px_30px_rgba(37,49,58,0.05)]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#DCE8EE] bg-white/76 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE] shadow-[0_12px_30px_rgba(37,49,58,0.05)]">
                   Deadline-aware recovery automation for Amazon sellers
                 </div>
 
@@ -593,7 +593,7 @@ export default function Index() {
                   {trustHighlights.map((item) => (
                     <div
                       key={item}
-                      className="rounded-full border border-[#DCE8EE] bg-white px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#4D5B66] shadow-[0_8px_22px_rgba(37,49,58,0.04)]"
+                      className="rounded-full border border-[#DCE8EE] bg-white px-3.5 py-2 text-[11px] font-semibold uppercase tracking-tight text-[#4D5B66] shadow-[0_8px_22px_rgba(37,49,58,0.04)]"
                     >
                       {item}
                     </div>
@@ -602,7 +602,7 @@ export default function Index() {
 
                 <Link
                   to="/early-access"
-                  className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE] transition-colors hover:text-[#0869C9]"
+                  className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE] transition-colors hover:text-[#0869C9]"
                 >
                   Early Access
                   <ArrowRight className="h-4 w-4" />
@@ -644,7 +644,7 @@ export default function Index() {
                     transition={{ duration: 0.72, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
                     className={`relative md:px-10 ${index > 0 ? 'md:border-l md:border-[#D8E3E8]' : ''}`}
                   >
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]">
+                    <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                       {metric.label}
                     </div>
                     <div
@@ -676,10 +676,10 @@ export default function Index() {
                     index > 0 ? 'border-t border-[#D8E3E8] md:border-l md:border-t-0' : ''
                   }`}
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2]">
+                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#9AA8B2]">
                     {String(index + 1).padStart(2, '0')}
                   </div>
-                  <div className="mt-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.title}</div>
+                  <div className="mt-4 text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.title}</div>
                   <p className="mt-3 max-w-[250px] text-[15px] leading-7 text-[#4D5B66]">{item.detail}</p>
                 </motion.div>
               ))}
@@ -724,7 +724,7 @@ export default function Index() {
                   >
                     <div className="pointer-events-none absolute -left-6 top-7 h-16 w-16 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
                     <div className="relative">
-                      <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9AA8B2] transition duration-500 group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.28)] group-focus-visible:text-[#0B74DE]">
+                      <div className="text-[11px] font-semibold uppercase tracking-tight text-[#9AA8B2] transition duration-500 group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.28)] group-focus-visible:text-[#0B74DE]">
                         {String(index + 1).padStart(2, '0')}
                       </div>
                       <h3 className="mt-6 text-[22px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_24px_rgba(11,116,222,0.18)] group-focus-visible:text-[#0B74DE] md:text-[28px]">
@@ -775,7 +775,7 @@ export default function Index() {
                   </div>
                 </div>
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/78 md:text-[11px]">Event-to-recovery walkthrough</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-tight text-white/78 md:text-[11px]">Event-to-recovery walkthrough</div>
                   <div className="mt-2 max-w-[780px] text-[22px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[36px]">
                     See how Margin finds, prepares, and tracks deadline-aware FBA recovery cases.
                   </div>
@@ -830,7 +830,7 @@ export default function Index() {
                   >
                     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,116,222,0.06),transparent_42%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus:opacity-100" />
                     <div className="relative flex h-full flex-col">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white text-[11px] font-semibold tracking-[0.12em] text-[#0B74DE] shadow-[0_10px_24px_rgba(37,49,58,0.06)] transition duration-500 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white group-focus:border-[#0B74DE] group-focus:bg-[#0B74DE] group-focus:text-white">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_10px_24px_rgba(37,49,58,0.06)] transition duration-500 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white group-focus:border-[#0B74DE] group-focus:bg-[#0B74DE] group-focus:text-white">
                         {item.step}
                       </div>
                       <h3 className="mt-7 text-[18px] font-semibold leading-tight tracking-[-0.025em] text-[#182026] md:text-[20px]">
@@ -839,7 +839,7 @@ export default function Index() {
                       <p className="mt-3 text-[14px] leading-7 text-[#66737F] transition-all duration-500 lg:max-h-0 lg:translate-y-2 lg:overflow-hidden lg:opacity-0 lg:group-hover:max-h-40 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus:max-h-40 lg:group-focus:translate-y-0 lg:group-focus:opacity-100">
                         {item.detail}
                       </p>
-                      <div className="mt-auto hidden pt-5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2] transition-colors duration-500 group-hover:text-[#0B74DE] group-focus:text-[#0B74DE] lg:block">
+                      <div className="mt-auto hidden pt-5 text-[10px] font-semibold uppercase tracking-tight text-[#9AA8B2] transition-colors duration-500 group-hover:text-[#0B74DE] group-focus:text-[#0B74DE] lg:block">
                         View workflow note
                       </div>
                     </div>
@@ -879,7 +879,7 @@ export default function Index() {
                   }`}
                 >
                   <div className="pointer-events-none absolute -left-8 top-0 h-20 w-20 rounded-full bg-[radial-gradient(circle,rgba(46,125,91,0.12),transparent_68%)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
-                  <div className="relative text-[12px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE] transition duration-500 group-hover:translate-x-[5px] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.24)]">
+                  <div className="relative text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE] transition duration-500 group-hover:translate-x-[5px] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.24)]">
                     {item.label}
                   </div>
                   <div className="relative max-w-[760px]">
@@ -918,7 +918,7 @@ export default function Index() {
                     }`}
                   >
                     <div>
-                      <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#9AA8B2]">
+                      <div className="text-[12px] font-semibold uppercase tracking-tight text-[#9AA8B2]">
                         {String(index + 1).padStart(2, '0')}
                       </div>
                     </div>
@@ -973,7 +973,7 @@ export default function Index() {
                     />
                     <div>
                       <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">{marketplace.country}</div>
-                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7A8994]">
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
                         {marketplace.region} · {marketplace.code}
                       </div>
                     </div>
@@ -1032,7 +1032,7 @@ export default function Index() {
                     <span className="relative text-[15px] font-semibold leading-6 tracking-[-0.015em] transition duration-500 group-hover:text-[#182026] group-focus-visible:text-[#182026]">
                       {item}
                     </span>
-                    <span className="ml-auto hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9AA8B2]/70 transition duration-500 group-hover:text-[#0B74DE] sm:inline">
+                    <span className="ml-auto hidden text-[11px] font-semibold uppercase tracking-tight text-[#9AA8B2]/70 transition duration-500 group-hover:text-[#0B74DE] sm:inline">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
