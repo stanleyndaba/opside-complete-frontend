@@ -21,15 +21,19 @@ const DEMO_VIDEO_THUMBNAIL_URL = '/DEMO34.png';
 const offerHighlights = [
   {
     title: 'Price',
-    detail: `${EARLY_ACCESS_PRICE} launch pricing during Managed Early Access`
+    detail: `${EARLY_ACCESS_PRICE} once-off audit activation during Founding 100 Early Access`
   },
   {
     title: 'Priority cohort',
     detail: 'Opened in small managed batches during launch'
   },
   {
-    title: 'Priority onboarding',
-    detail: 'Workspace preparation before read-only setup begins'
+    title: 'Founder-led first cycle',
+    detail: 'Guided recovery review before broader public access'
+  },
+  {
+    title: 'Read-only setup',
+    detail: 'Workspace preparation before any filing workflow begins'
   },
   {
     title: 'Broad coverage',
@@ -37,26 +41,29 @@ const offerHighlights = [
   }
 ];
 
+const primaryOfferHighlights = offerHighlights.slice(0, 4);
+const secondaryOfferHighlight = offerHighlights[4];
+
 const whatYouGet = [
   {
     step: '01',
-    title: 'Founding 100 reservation',
-    detail: 'Secure a place in the managed launch cohort before Margin opens the workflow to a wider group of sellers.'
+    title: 'Founding 100 audit activation',
+    detail: 'Secure a place in the managed launch cohort and begin a first claim-clock recovery review powered by Margin.'
   },
   {
     step: '02',
     title: 'Managed read-only setup',
-    detail: 'Move through guided onboarding with a read-only setup path before recovery review begins.'
+    detail: 'Move through guided onboarding with a visibility-first setup path before recovery review or filing action begins.'
   },
   {
     step: '03',
-    title: 'Evidence-backed first review',
-    detail: 'Margin reviews recovery signals, support, and case readiness before anything is treated as filing-ready.'
+    title: 'Claim-clock scan',
+    detail: 'Margin reviews FBA activity for recovery issues already tied to deadlines, including inventory, shipments, returns, fees, and payout events.'
   },
   {
     step: '04',
-    title: 'Guided filing workflow',
-    detail: 'Supportable cases are reviewed with you first, then moved through the filing workflow with approval and context.'
+    title: 'Evidence readiness and filing review',
+    detail: 'Margin checks which records are matched, which proof is missing, and whether each case is claim-ready, blocked, or requires seller approval before filing.'
   }
 ];
 
@@ -64,17 +71,17 @@ const fitPoints = [
   {
     step: '01',
     title: 'Serious FBA sellers with recovery leakage',
-    detail: 'For operators who want missed recovery opportunities surfaced before timing, evidence, or Amazon case state becomes a problem.'
+    detail: 'For operators who want Amazon loss events surfaced before claim windows, missing evidence, or payout confusion become the reason recovery work fails.'
   },
   {
     step: '02',
     title: 'Operators who want proof before filing',
-    detail: 'For sellers who care about evidence quality, duplicate prevention, and avoiding weak reimbursement claims.'
+    detail: 'For sellers who care about evidence quality, duplicate prevention, claim readiness, and avoiding weak reimbursement claims.'
   },
   {
     step: '03',
     title: 'Founding members who want guided support',
-    detail: 'For sellers who want a founder-led first recovery cycle instead of a black-box tool or unsupported dashboard.'
+    detail: 'For sellers who want a founder-led first recovery cycle instead of a black-box service, unsupported dashboard, or commission-heavy recovery model.'
   }
 ];
 
@@ -109,9 +116,9 @@ export default function EarlyAccess() {
   const [isReserving, setIsReserving] = useState(false);
 
   usePageMeta({
-    title: 'Margin Managed Early Access | Founding 100 Recovery Cohort',
+    title: 'Margin Founding 100 Recovery Audit',
     description:
-      'Reserve Managed Early Access to Margin with guided onboarding, read-only setup, evidence-backed recovery review, and $99 launch pricing.',
+      'Start a founder-led claim-clock recovery review with managed onboarding, read-only setup, evidence readiness, and $99 Founding 100 audit activation.',
     url: `${SITE_META.url}/early-access`,
     image: SITE_META.image,
   });
@@ -123,7 +130,7 @@ export default function EarlyAccess() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast({
         title: 'Work email required',
-        description: 'Add the email we should use for Early Access onboarding and setup updates.',
+        description: 'Add the email we should use for Founding 100 onboarding and setup updates.',
         variant: 'destructive',
       });
       return;
@@ -134,9 +141,9 @@ export default function EarlyAccess() {
       const response = await api.reserveEarlyAccess({
         email,
         source_page: '/early-access',
-        offer: 'Margin Early Access',
+        offer: 'Founding 100 Recovery Audit',
         price: EARLY_ACCESS_PRICE,
-        intent: 'reserve_early_access',
+        intent: 'start_founding_recovery_audit',
       });
 
       if (!response.ok) {
@@ -150,7 +157,7 @@ export default function EarlyAccess() {
 
       toast({
         title: 'Details secured',
-        description: 'Redirecting you to PayPal to finish the Managed Early Access reservation.',
+        description: 'Redirecting you to PayPal to activate your Founding 100 recovery audit.',
       });
 
       window.location.href = EARLY_ACCESS_CHECKOUT_URL;
@@ -182,14 +189,18 @@ export default function EarlyAccess() {
               className="max-w-[860px]"
             >
               <div className="max-w-[780px]">
-                <div className={sectionLabelClass}>Managed Early Access</div>
+                <div className={sectionLabelClass}>Founding 100</div>
 
                 <h1 className="mt-5 max-w-[760px] text-[38px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[46px] md:text-[78px]">
-                  Join the Founding 100 recovery cohort.
+                  Founding 100 Recovery Audit
                 </h1>
 
-                <p className="mt-5 max-w-[640px] text-[16px] leading-7 text-[#4D5B66] md:mt-7 md:text-[19px] md:leading-8">
-                  Reserve managed access to Margin&apos;s read-only recovery workflow, evidence-backed case preparation, and guided first recovery cycle.
+                <p className="mt-5 max-w-[640px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:mt-7 md:text-[28px] md:leading-9">
+                  Start your first claim-clock recovery review.
+                </p>
+
+                <p className="mt-5 max-w-[680px] text-[16px] leading-7 text-[#4D5B66] md:text-[19px] md:leading-8">
+                  Margin&apos;s Founding 100 is a managed first recovery cycle for Amazon FBA sellers. We start read-only, review your FBA activity for recovery issues already on the clock, check evidence readiness, and show which cases are claim-ready, blocked, or missing proof before anything gets filed.
                 </p>
 
                 <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
@@ -215,12 +226,15 @@ export default function EarlyAccess() {
                       disabled={isReserving}
                       className="h-12 shrink-0 justify-center rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
                     >
-                      {isReserving ? 'Securing...' : 'Reserve Early Access'}
+                      {isReserving ? 'Securing...' : 'Start Founding Recovery Audit'}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                   <p className="mt-3 text-[12px] leading-6 text-[#66737F]">
                     We use this email for setup updates, cohort communication, and your onboarding invitation.
+                  </p>
+                  <p className="mt-2 max-w-[520px] text-[12px] leading-6 text-[#66737F]">
+                    Margin does not guarantee reimbursement outcomes. Amazon makes final reimbursement decisions. No filing happens without seller approval.
                   </p>
 
                   <div className="mt-3">
@@ -242,7 +256,7 @@ export default function EarlyAccess() {
         <section className="relative mt-14 border-y border-[#D8E3E8] bg-white/50 md:mt-20">
           <div className={containerClass}>
             <div className="grid md:grid-cols-4">
-              {offerHighlights.map((item, index) => (
+              {primaryOfferHighlights.map((item, index) => (
                 <motion.div
                   key={item.title}
                   {...revealProps}
@@ -254,6 +268,15 @@ export default function EarlyAccess() {
                 </motion.div>
               ))}
             </div>
+            {secondaryOfferHighlight ? (
+              <motion.div
+                {...revealProps}
+                className="border-t border-[#D8E3E8] py-5 md:px-6 md:py-7"
+              >
+                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{secondaryOfferHighlight.title}</div>
+                <p className="mt-2 max-w-[520px] text-[14px] leading-7 text-[#4D5B66]">{secondaryOfferHighlight.detail}</p>
+              </motion.div>
+            ) : null}
           </div>
         </section>
 
@@ -262,8 +285,11 @@ export default function EarlyAccess() {
             <motion.div {...revealProps} className="mx-auto mb-7 max-w-[880px] text-center md:mb-10">
               <div className={sectionLabelClass}>See Demo</div>
               <h2 className="mt-4 text-[28px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[54px]">
-                See how Margin turns raw FBA activity into evidence-backed recovery work.
+                See how Margin turns Amazon loss events into claim-ready recovery work.
               </h2>
+              <p className="mx-auto mt-5 max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
+                Watch how Margin detects Amazon loss events, starts the claim clock, matches evidence, prepares cases for review, and tracks recovery states through payout.
+              </p>
             </motion.div>
 
             <motion.a
@@ -288,9 +314,9 @@ export default function EarlyAccess() {
                   </div>
                 </div>
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/78 md:text-[11px]">Product walkthrough</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/78 md:text-[11px]">Full recovery walkthrough</div>
                   <div className="mt-2 max-w-[760px] text-[20px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[34px]">
-                    Watch how Margin turns raw FBA activity into evidence-backed recovery work.
+                    Watch how Margin detects Amazon loss events, starts the claim clock, matches evidence, prepares cases for review, and tracks recovery states through payout.
                   </div>
                 </div>
               </div>
@@ -307,7 +333,7 @@ export default function EarlyAccess() {
                   Marketplace coverage for Founding 100 operators.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Margin is built around the marketplaces where FBA sellers already operate, with coverage activated through managed onboarding and read-only marketplace setup.
+                  Margin is built around the marketplaces where FBA sellers already operate. Coverage is activated through managed onboarding, read-only setup, and claim-type-aware recovery review.
                 </p>
               </motion.div>
 
@@ -354,10 +380,10 @@ export default function EarlyAccess() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>What You Get</div>
               <h2 className={sectionHeadingClass}>
-                Early access is built for sellers who want a guided first recovery cycle.
+                A founder-led first recovery cycle, not vague software access.
               </h2>
               <p className={sectionBodyClass}>
-                The offer is simple: reserve your place, move through managed setup, and review evidence-backed recovery work before broader public launch.
+                The offer is simple: activate your Founding 100 audit, move through managed read-only setup, and review which Amazon loss events are claim-ready, blocked, or still missing evidence before broader public launch.
               </p>
             </motion.div>
 
@@ -392,7 +418,7 @@ export default function EarlyAccess() {
                 Amazon FBA sellers who want recovery work handled carefully.
               </h2>
               <p className={sectionBodyClass}>
-                This offer is for operators who want broader recovery coverage, seller-controlled filing, and stronger evidence before cases move.
+                This offer is for operators who want deadline-aware recovery visibility, seller-controlled filing, and stronger evidence before cases move.
               </p>
             </motion.div>
 
@@ -421,10 +447,10 @@ export default function EarlyAccess() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>Why This Exists</div>
               <h2 className={sectionHeadingClass}>
-                Early Access is managed because recovery work depends on accurate setup.
+                Founding 100 is managed because recovery work depends on accurate setup.
               </h2>
               <p className={sectionBodyClass}>
-                Margin opens in controlled cohorts so read-only setup, workspace preparation, and first review quality stay tight.
+                Margin opens in controlled cohorts so read-only setup, workspace preparation, evidence review, and first-cycle quality stay tight.
               </p>
             </motion.div>
 
@@ -435,8 +461,7 @@ export default function EarlyAccess() {
               <div className="max-w-[820px]">
                 <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]">Priority launch cohort</div>
                 <p className="mt-5 text-[18px] leading-8 text-[#4D5B66] md:text-[24px] md:leading-10">
-                  We&apos;re keeping launch access controlled on purpose so onboarding, setup, and recovery review stay direct and useful.
-                  Early Access is for sellers who want a safer first cycle while Margin opens in stages.
+                  We are keeping launch access controlled on purpose. Each seller needs clean setup, correct marketplace coverage, evidence-source review, and a clear first recovery cycle. Founding 100 is for sellers who want a safer, guided start before Margin opens broadly.
                 </p>
               </div>
             </motion.div>
@@ -452,10 +477,13 @@ export default function EarlyAccess() {
               <div className="max-w-[900px]">
                 <div className={sectionLabelClass}>Join The Cohort</div>
                 <h2 className="mt-4 max-w-[860px] text-[32px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[68px]">
-                  Join Margin&apos;s Founding 100 cohort.
+                  Start Your Founding Recovery Audit
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
-                  Access opens in small batches so setup, workspace preparation, and onboarding stay focused.
+                  Join Margin&apos;s Founding 100 cohort.
+                </p>
+                <p className="mt-4 max-w-[780px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
+                  Start with a managed first recovery cycle. Margin prepares your workspace, begins with read-only setup, reviews Amazon loss events already on the clock, and shows which cases are claim-ready, blocked, or missing proof before anything gets filed.
                 </p>
               </div>
 
@@ -478,13 +506,16 @@ export default function EarlyAccess() {
                     disabled={isReserving}
                     className="h-12 shrink-0 justify-center rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
                   >
-                    {isReserving ? 'Securing...' : 'Reserve Early Access'}
+                    {isReserving ? 'Securing...' : 'Start Founding Recovery Audit'}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
                 <div className="mt-3">
                     <p className="mb-3 text-[12px] leading-6 text-[#66737F]">
-                      We prepare Early Access workspaces carefully before your onboarding invitation is sent.
+                      We prepare Founding 100 workspaces carefully before your onboarding invitation is sent.
+                    </p>
+                    <p className="mb-3 max-w-[540px] text-[12px] leading-6 text-[#66737F]">
+                      Margin does not guarantee reimbursement outcomes. Amazon makes final reimbursement decisions. No filing happens without seller approval.
                     </p>
                   <Button
                     asChild
