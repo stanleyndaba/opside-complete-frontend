@@ -300,7 +300,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                             </div>
                             <div className="w-full max-w-sm bg-neutral-950 rounded-2xl p-8 font-mono text-[12px] text-neutral-400 space-y-3 border border-neutral-900 shadow-2xl relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
-                                <div className="text-neutral-700 flex justify-between border-b border-neutral-900 pb-3 mb-4 text-[10px] tracking-widest uppercase">
+                                <div className="text-neutral-700 flex justify-between border-b border-neutral-900 pb-3 mb-4 text-[10px] tracking-tight uppercase">
                                     <span>V-CORE_v4.2</span>
                                     <span>AUTH_OK</span>
                                 </div>
@@ -370,7 +370,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                             {/* Month Group Header */}
                             <div className="sticky top-0 z-10 bg-[#0a0a0a]/80 backdrop-blur-sm px-6 py-2.5 border-y border-white/5 flex items-center justify-between">
                                 <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">January 2026</span>
-                                <span className="text-[9px] font-medium text-white/20 uppercase tracking-widest">14 AUDIT ENTRIES</span>
+                                <span className="text-[9px] font-medium text-white/20 uppercase tracking-tight">14 AUDIT ENTRIES</span>
                             </div>
 
                             {/* Claims List */}
@@ -452,14 +452,14 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                 <div className="p-10 border-b border-white/5 flex justify-between items-start bg-gradient-to-r from-white/[0.02] via-transparent to-white/[0.02]">
                                     <div>
                                         <div className="flex items-center gap-4 mb-3">
-                                            <span className="text-[11px] font-bold text-white/40 font-mono tracking-widest uppercase bg-white/5 px-3 py-1 rounded-lg">AMZ_CASE_114-552311</span>
+                                            <span className="text-[11px] font-bold text-white/40 font-mono tracking-tight uppercase bg-white/5 px-3 py-1 rounded-lg">AMZ_CASE_114-552311</span>
                                             <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-xs font-black tracking-tight">SUBMITTED</Badge>
                                         </div>
                                         <h4 className="text-xl font-bold text-white tracking-tight">Lost Inbound Shipment - Transaction FBA15X</h4>
                                     </div>
                                     <div className="text-right">
                                         <div className="text-3xl font-mono font-bold text-white tracking-tighter">$850.00</div>
-                                        <p className="text-[11px] text-white/30 font-bold uppercase tracking-widest mt-2">Recovery Estimate</p>
+                                        <p className="text-[11px] text-white/30 font-bold uppercase tracking-tight mt-2">Recovery Estimate</p>
                                     </div>
                                 </div>
                                 <div className="p-16 bg-[#0a0a0a] relative">
@@ -489,7 +489,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                             <span className="text-base font-bold text-white tracking-tight">Warehouse Damage</span>
                                         </div>
                                     </div>
-                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10 text-white/40">Processing</Badge>
+                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-tight bg-white/5 border-white/10 text-white/40">Processing</Badge>
                                 </div>
                                 <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-2xl flex items-center justify-between opacity-50">
                                     <div className="flex items-center gap-5">
@@ -499,7 +499,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                             <span className="text-base font-bold text-white tracking-tight">Unpaid Refund</span>
                                         </div>
                                     </div>
-                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10 text-white/40">Processing</Badge>
+                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-tight bg-white/5 border-white/10 text-white/40">Processing</Badge>
                                 </div>
                             </div>
                         </div>
@@ -533,7 +533,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                             </div>
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-4 mb-2">
-                                                    <span className="text-[10px] font-black font-mono uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">{n.type === 'alert' ? 'Audit Alert' : 'Fund Deposit'}</span>
+                                                    <span className="text-[10px] font-black font-mono uppercase tracking-tight text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">{n.type === 'alert' ? 'Audit Alert' : 'Fund Deposit'}</span>
                                                     <span className="text-[10px] text-white/20 font-bold font-mono uppercase tracking-tight opacity-50">{n.time}</span>
                                                 </div>
                                                 <p className="text-[15px] text-white/70 font-medium leading-[1.6] group-hover:text-white transition-colors">{n.message}</p>

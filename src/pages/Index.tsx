@@ -11,7 +11,7 @@ import {
   BarChart3,
   BoxSelect,
   Briefcase,
-  CheckCircle2,
+  Check,
   FileText,
   Layers,
   Menu,
@@ -1028,7 +1028,7 @@ export default function Index() {
                     tabIndex={0}
                   >
                     <span className="absolute -left-5 h-12 w-12 rounded-full bg-[radial-gradient(circle,rgba(46,125,91,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
-                    <CheckCircle2 className="relative h-5 w-5 shrink-0 text-[#2E7D5B] transition duration-500 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_rgba(46,125,91,0.28))]" />
+                    <Check className="relative mt-0.5 h-4 w-4 shrink-0 text-[#2E7D5B]" />
                     <span className="relative text-[15px] font-semibold leading-6 tracking-[-0.015em] transition duration-500 group-hover:text-[#182026] group-focus-visible:text-[#182026]">
                       {item}
                     </span>
