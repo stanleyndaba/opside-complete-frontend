@@ -631,19 +631,64 @@ const buildDemoCaseEvents = (caseId?: string | null) => [
   },
 ];
 
+const formatDemoCurrency = (amount: number, currency = 'USD') => (
+  Number(amount || 0).toLocaleString('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+);
+
+const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) => {
+  const caseReference = fallbackIfMissing(
+    caseData.claim_number || caseData.evidence?.claim_number || caseId,
+    'ACME-CASE-2005'
+  );
+  const shipmentReference = fallbackIfMissing(caseData.order_id || caseData.evidence?.shipment_id, 'FBA17XJ4K2');
+  const currency = fallbackIfMissing(caseData.currency, 'USD');
+  const reimbursementAmount = fallbackIfMissing(
+    caseData.actual_payout_amount ?? caseData.recovered_amount ?? caseData.approved_amount ?? caseData.requested_amount,
+    1284.66
+  );
+  const normalizedState = String(caseData.case_state || caseData.recovery_status || '').toLowerCase();
+  const isPaid = normalizedState.includes('paid') || normalizedState.includes('payout') || caseReference === 'ACME-CASE-2005';
+  const responseBody = isPaid
+    ? `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. Based on the shipment and inventory records available, we have approved reimbursement for the affected units.\n\nA reimbursement of ${formatDemoCurrency(Number(reimbursementAmount), currency)} has been issued to your seller account and will appear in your payments reporting once processing completes. Please allow the normal settlement cycle for the amount to be reflected in your account.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\n\nThank you,\nAmazon Selling Partner Support`
+    : `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. Based on the shipment and inventory records available, we have approved reimbursement for the affected units.\n\nThe approved reimbursement amount is ${formatDemoCurrency(Number(reimbursementAmount), currency)} and is pending payment processing. Please allow the normal settlement cycle for the amount to be reflected in your account.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\n\nThank you,\nAmazon Selling Partner Support`;
+
+  return [
+    {
+      id: `demo-amazon-response-${caseId || 'case'}`,
+      direction: 'inbound',
+      sender: 'Amazon Selling Partner Support',
+      subject: isPaid
+        ? 'Reimbursement issued for FBA inventory discrepancy'
+        : 'Reimbursement approved for FBA inventory discrepancy',
+      body_text: responseBody,
+      received_at: '2026-05-08T14:37:00Z',
+      state_signal: isPaid ? 'paid' : 'approved',
+      attachments: [],
+    },
+  ];
+};
+
 const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
   if (!caseData) return caseData;
 
   const caseId = caseData.id || fallbackId || 'demo-case';
   const documents = isMissingDemoValue(caseData.documents) ? buildDemoCaseDocuments(caseId) : caseData.documents;
   const events = isMissingDemoValue(caseData.events) ? buildDemoCaseEvents(caseId) : caseData.events;
+  const caseMessages = isMissingDemoValue(caseData.case_messages)
+    ? buildDemoAmazonThreadMessages(caseData, caseId)
+    : caseData.case_messages;
   const evidence = {
     ...(caseData.evidence || {}),
     sku: fallbackIfMissing(caseData.evidence?.sku, 'MGRN-BTL-18'),
     asin: fallbackIfMissing(caseData.evidence?.asin, 'B0DMRGN184'),
     fulfillment_center: fallbackIfMissing(caseData.evidence?.fulfillment_center, 'ABE8'),
     quantity: fallbackIfMissing(caseData.evidence?.quantity, 18),
-    claim_number: fallbackIfMissing(caseData.evidence?.claim_number, 'AMZ-CLAIM-774219'),
+    claim_number: fallbackIfMissing(caseData.evidence?.claim_number, 'ACME-CASE-2005'),
     total_receipts: fallbackIfMissing(caseData.evidence?.total_receipts, 240),
     total_returns: fallbackIfMissing(caseData.evidence?.total_returns, 6),
     total_adjustments: fallbackIfMissing(caseData.evidence?.total_adjustments, 0),
@@ -695,7 +740,7 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
     has_payout: fallbackIfMissing(caseData.has_payout, true),
     amazonCaseId: fallbackIfMissing(caseData.amazonCaseId || caseData.amazon_case_id, '173-8849921-4524317'),
     prior_case_id: fallbackIfMissing(caseData.prior_case_id, 'None detected'),
-    case_state: fallbackIfMissing(caseData.case_state, 'approved'),
+    case_state: fallbackIfMissing(caseData.case_state, 'paid'),
     amazon_thread_linked: fallbackIfMissing(caseData.amazon_thread_linked, true),
     can_reply_to_thread: fallbackIfMissing(caseData.can_reply_to_thread, true),
     case_origin: fallbackIfMissing(caseData.case_origin, 'demo_recovery_audit'),
@@ -782,6 +827,7 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
     store_name: fallbackIfMissing(caseData.store_name, 'Demo Workspace Store'),
     documents,
     events,
+    case_messages: caseMessages,
     evidence,
     evidence_summary: evidenceSummary,
     evidence_attachments: caseData.evidence_attachments || {
