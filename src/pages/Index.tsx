@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
@@ -74,6 +74,30 @@ const trustHighlights = [
   'Seller approval before filing',
   'No recovery commissions',
   'Weak cases held back'
+];
+
+const heroHeadlineWords = 'Turn Amazon loss events into claim-ready recoveries before time runs out.'.split(' ');
+
+const auditPulses = [
+  { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
+  { x: 18, y: 54, size: 7, color: 'bg-emerald-400', delay: 1.4, duration: 4.2 },
+  { x: 27, y: 30, size: 6, color: 'bg-blue-300', delay: 2.2, duration: 3.8 },
+  { x: 39, y: 68, size: 8, color: 'bg-emerald-300', delay: 0.8, duration: 4.5 },
+  { x: 48, y: 22, size: 7, color: 'bg-blue-400', delay: 3.0, duration: 4.1 },
+  { x: 59, y: 47, size: 10, color: 'bg-emerald-400', delay: 1.1, duration: 3.9 },
+  { x: 68, y: 74, size: 6, color: 'bg-blue-300', delay: 2.8, duration: 4.6 },
+  { x: 76, y: 28, size: 8, color: 'bg-emerald-300', delay: 0.4, duration: 3.7 },
+  { x: 84, y: 58, size: 7, color: 'bg-blue-400', delay: 2.0, duration: 4.3 },
+  { x: 92, y: 36, size: 6, color: 'bg-emerald-400', delay: 3.4, duration: 4.0 },
+  { x: 33, y: 84, size: 7, color: 'bg-blue-300', delay: 1.8, duration: 3.9 }
+];
+
+const auditLines = [
+  { left: 10, top: 22, width: 28, rotate: 18, delay: 0.4 },
+  { left: 25, top: 54, width: 36, rotate: -10, delay: 1.6 },
+  { left: 48, top: 32, width: 31, rotate: 14, delay: 2.7 },
+  { left: 59, top: 66, width: 29, rotate: -20, delay: 3.4 },
+  { left: 15, top: 76, width: 48, rotate: 7, delay: 4.3 }
 ];
 
 const whyNowItems = [
@@ -307,7 +331,7 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
   return (
     <header className="fixed left-0 right-0 top-0 z-50">
       <div className="mx-auto max-w-[1240px] px-3 py-3 md:px-6 md:py-5">
-        <div className="rounded-[22px] border border-[#DCE8EE] bg-white/86 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-2xl md:px-5">
+        <div className="rounded-[22px] bg-white/86 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-2xl md:px-5">
           <div className="flex items-center justify-between gap-4">
             <Link to="/" className="inline-flex items-center gap-2.5 rounded-full px-1 py-1 text-[#182026]">
               <img
@@ -491,6 +515,194 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   );
 }
 
+function KineticHeroSection({
+  onPrimaryCta,
+  onDemoCta,
+  primaryCtaLabel,
+  isFull,
+  nextBatchHours
+}: {
+  onPrimaryCta: () => void;
+  onDemoCta: () => void;
+  primaryCtaLabel: string;
+  isFull: boolean;
+  nextBatchHours?: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0.82]);
+  const networkY = useTransform(scrollYProgress, [0, 0.25], [0, reduceMotion ? 0 : 34]);
+
+  return (
+    <motion.section
+      style={{ scale: heroScale, opacity: heroOpacity }}
+      className="relative isolate flex min-h-[calc(100svh-24px)] overflow-hidden bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.20),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.18),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-5 pb-16 pt-32 text-white sm:px-6 md:min-h-screen md:px-8 md:pb-24 md:pt-44"
+      aria-labelledby="margin-hero-title"
+    >
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E\")",
+        }}
+      />
+      <motion.div
+        style={{ y: networkY }}
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div className="absolute inset-0 opacity-[0.12] [background-image:linear-gradient(rgba(96,165,250,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.12)_1px,transparent_1px)] [background-size:92px_92px]" />
+        <motion.div
+          className="absolute inset-y-0 left-0 w-[18%] bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.14),transparent)] blur-sm"
+          animate={reduceMotion ? undefined : { x: ['-30vw', '115vw'] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+        />
+        {auditLines.map((line) => (
+          <motion.div
+            key={`${line.left}-${line.top}`}
+            className="absolute h-px origin-left bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.42),rgba(52,211,153,0.24),transparent)]"
+            style={{
+              left: `${line.left}%`,
+              top: `${line.top}%`,
+              width: `${line.width}%`,
+              rotate: `${line.rotate}deg`
+            }}
+            animate={reduceMotion ? { opacity: 0.14 } : { opacity: [0, 0.26, 0] }}
+            transition={{ duration: 4.8, delay: line.delay, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
+          />
+        ))}
+        {auditPulses.map((pulse, index) => (
+          <motion.div
+            key={`${pulse.x}-${pulse.y}`}
+            className={`absolute rounded-full ${pulse.color} shadow-[0_0_30px_currentColor]`}
+            style={{
+              left: `${pulse.x}%`,
+              top: `${pulse.y}%`,
+              width: pulse.size,
+              height: pulse.size,
+              color: pulse.color.includes('emerald') ? 'rgba(52,211,153,0.9)' : 'rgba(96,165,250,0.9)'
+            }}
+            animate={reduceMotion ? { opacity: 0.14, scale: 1 } : { opacity: [0, 0.22, 0], scale: [0.2, 1.22, 1.6] }}
+            transition={{ duration: pulse.duration, delay: pulse.delay + index * 0.05, repeat: Infinity, repeatDelay: 1.2, ease: 'easeOut' }}
+          />
+        ))}
+      </motion.div>
+
+      <div className="relative z-10 mx-auto flex w-full max-w-[1180px] items-center">
+        <div className="max-w-[960px]">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"
+          >
+            Deadline-aware recovery automation for Amazon sellers
+          </motion.div>
+
+          <h1
+            id="margin-hero-title"
+            className="mt-6 max-w-[980px] text-[48px] font-bold leading-[0.96] tracking-[-0.06em] text-white sm:text-[64px] md:text-[88px] lg:text-[104px]"
+          >
+            {heroHeadlineWords.map((word, index) => (
+              <motion.span
+                key={`${word}-${index}`}
+                className="mr-[0.18em] inline-block"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.58, delay: 0.08 + index * 0.035, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-7 max-w-[760px] text-[17px] leading-8 text-slate-300 md:text-xl md:leading-9"
+          >
+            Margin detects reimbursement-worthy FBA events, starts the claim clock, matches the required evidence, and prepares recovery cases before Amazon&apos;s reimbursement windows close. Start read-only. Approve before filing. No recovery commissions.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-9 grid w-full max-w-[470px] grid-cols-1 gap-3 min-[430px]:grid-cols-2"
+          >
+            <Button
+              onClick={onPrimaryCta}
+              aria-label="Start Recovery Audit"
+              className="h-12 justify-center rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.36)] transition-transform hover:scale-[1.02] hover:bg-[#1683F1]"
+            >
+              {primaryCtaLabel}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              onClick={onDemoCta}
+              aria-label="Watch 60-Second Demo"
+              className="h-12 justify-center rounded-full border-white/12 bg-white/[0.06] px-6 text-sm font-semibold text-white backdrop-blur-xl transition-transform hover:scale-[1.02] hover:bg-white/[0.12]"
+            >
+              Watch 60-Second Demo
+            </Button>
+          </motion.div>
+
+          {!isFull ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.55, delay: 0.95 }}
+              className="mt-3 max-w-[560px] text-sm leading-6 text-slate-400"
+            >
+              Managed Early Access opens in careful batches before read-only setup begins.
+            </motion.div>
+          ) : null}
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 1.02 }}
+            className="mt-7 flex max-w-[720px] flex-wrap gap-2.5"
+          >
+            {trustHighlights.map((item) => (
+              <div
+                key={item}
+                className="rounded-full bg-white/[0.06] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-tight text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.09)] backdrop-blur-xl"
+              >
+                {item}
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 1.1 }}
+          >
+            <Link
+              to="/early-access"
+              className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-tight text-blue-300 transition-colors hover:text-blue-100"
+            >
+              Early Access
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
+
+          {isFull ? (
+            <div className="mt-5 max-w-[430px] rounded-2xl bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
+              <div>We are onboarding a small batch of sellers right now.</div>
+              <div>Next batch opens in {nextBatchHours ?? 24} hours.</div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </motion.section>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -541,84 +753,13 @@ export default function Index() {
       <LightNavbar onPrimaryCta={handlePrimaryCta} primaryCtaLabel={primaryCtaLabel} />
 
       <main className="relative">
-        <div className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.12),transparent_28%)]" />
-
-        <section className="relative pt-32 md:pt-44">
-          <div className={containerClass}>
-            <div className="max-w-[900px]">
-              <motion.div
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="max-w-[760px]"
-              >
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#DCE8EE] bg-white/76 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE] shadow-[0_12px_30px_rgba(37,49,58,0.05)]">
-                  Deadline-aware recovery automation for Amazon sellers
-                </div>
-
-                <h1 className="mt-6 max-w-[780px] text-[46px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[58px] md:text-[82px]">
-                  Turn Amazon loss events into claim-ready recoveries before time runs out.
-                </h1>
-
-                <p className="mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
-                  Margin detects reimbursement-worthy FBA events, starts the claim clock, matches the required evidence, and prepares recovery cases before Amazon's reimbursement windows close. Start read-only. Approve before filing. No recovery commissions.
-                </p>
-
-                <div className="mt-9 grid w-full max-w-[460px] grid-cols-1 gap-3 min-[430px]:grid-cols-2">
-                  <Button
-                    onClick={handlePrimaryCta}
-                    className="h-12 justify-center rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.24)] hover:bg-[#0869C9]"
-                  >
-                    {primaryCtaLabel}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    onClick={scrollToDemo}
-                    className="h-12 justify-center rounded-full border-[#CFE0EA] bg-white/72 px-6 text-sm font-semibold text-[#25313A] hover:bg-white"
-                  >
-                    Watch 60-Second Demo
-                  </Button>
-                </div>
-
-                {!isFull ? (
-                  <div className="mt-3 max-w-[520px] text-sm leading-6 text-[#66737F]">
-                    Managed Early Access opens in careful batches before read-only setup begins.
-                  </div>
-                ) : null}
-
-                <div className="mt-7 flex max-w-[680px] flex-wrap gap-2.5">
-                  {trustHighlights.map((item) => (
-                    <div
-                      key={item}
-                      className="rounded-full border border-[#DCE8EE] bg-white px-3.5 py-2 text-[11px] font-semibold uppercase tracking-tight text-[#4D5B66] shadow-[0_8px_22px_rgba(37,49,58,0.04)]"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  to="/early-access"
-                  className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE] transition-colors hover:text-[#0869C9]"
-                >
-                  Early Access
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-
-                {isFull ? (
-                  <div className="mt-5 max-w-[420px] rounded-2xl border border-[#DCE8EE] bg-white/82 p-4 text-sm leading-6 text-[#66737F]">
-                    <div>We are onboarding a small batch of sellers right now.</div>
-                    <div>Next batch opens in {capacity?.nextBatchHours ?? 24} hours.</div>
-                  </div>
-                ) : null}
-              </motion.div>
-
-            </div>
-          </div>
-        </section>
+        <KineticHeroSection
+          onPrimaryCta={handlePrimaryCta}
+          onDemoCta={scrollToDemo}
+          primaryCtaLabel={primaryCtaLabel}
+          isFull={isFull}
+          nextBatchHours={capacity?.nextBatchHours}
+        />
 
         <section className="relative mt-12 md:mt-16">
           <div className={containerClass}>
