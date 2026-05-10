@@ -28,7 +28,6 @@ const resourceLinks: FooterLink[] = [
 
 const companyLinks: FooterLink[] = [
   { label: 'About Us', href: '/about-margin' },
-  { label: 'Careers', href: '/careers' },
   { label: 'Contact', href: '/contact' },
   { label: 'Sales', href: '/sales' }
 ];
@@ -46,15 +45,6 @@ const socialLinks = [
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4">
         <path d="M20.45 20.45h-3.56v-5.58c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.67H9.34V8.98h3.41v1.57h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.29zM5.32 7.41a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.04H3.54V8.98H7.1v11.47zM22.23 0H1.76C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.76 24h20.47c.97 0 1.77-.77 1.77-1.73V1.73C24 .77 23.2 0 22.23 0z" />
-      </svg>
-    )
-  },
-  {
-    label: 'X',
-    href: 'https://x.com/marginfinance',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4">
-        <path d="M18.9 2h3.68l-8.04 9.19L24 22h-7.4l-5.8-7.58L4.17 22H.49l8.6-9.83L0 2h7.58l5.24 6.93L18.9 2zm-1.29 18.1h2.04L6.47 3.8H4.28L17.61 20.1z" />
       </svg>
     )
   }
