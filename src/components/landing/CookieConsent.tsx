@@ -68,7 +68,7 @@ export function CookieConsent() {
                         <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
                             <div className="flex-1 space-y-2 md:space-y-3">
                                 <h3 className="font-sans text-xl font-light tracking-tight text-white md:text-3xl">Cookie Preferences</h3>
-                                <p className="max-w-2xl font-sans text-[12px] font-light leading-6 tracking-tight text-white/42 md:text-sm md:leading-relaxed">
+                                <p className="max-w-2xl font-sans text-[12px] font-light leading-6 tracking-tight !text-[#A3AAB5] md:text-sm md:leading-relaxed">
                                     This website uses cookies that provide necessary site functionality and improve your online experience. By continuing to use this website, you agree to the use of cookies. Our Privacy Policy provides more information about what cookies we use and how you can change them.
                                 </p>
                             </div>
@@ -76,7 +76,7 @@ export function CookieConsent() {
                                 <Button
                                     onClick={() => setView('settings')}
                                     variant="outline"
-                                    className="h-11 rounded-[6px] border-white/10 bg-transparent px-6 text-[10px] font-bold uppercase tracking-tight text-white/60 hover:bg-white/5 md:h-10">
+                                    className="h-11 rounded-[6px] border-white/10 bg-transparent px-6 text-[10px] font-bold uppercase tracking-tight !text-[#A3AAB5] hover:bg-white/5 hover:!text-white md:h-10">
                                     Manage Settings
                                 </Button>
                                 <Button
@@ -110,7 +110,7 @@ export function CookieConsent() {
                                         <span className="font-bold text-white text-[11px] uppercase tracking-tight font-sans">Necessary cookies</span>
                                         <Badge variant="secondary" className="bg-white/10 text-white/60 hover:bg-white/10 text-[9px] uppercase font-bold tracking-tight px-2 py-0">Always on</Badge>
                                     </div>
-                                    <p className="text-[11px] text-white/30 font-light font-sans leading-relaxed max-w-lg tracking-tight">
+                                    <p className="text-[11px] !text-[#8F98A3] font-light font-sans leading-relaxed max-w-lg tracking-tight">
                                         These keep things running smoothly (like helping you stay logged in). You can't turn these off.
                                     </p>
                                 </div>
@@ -120,7 +120,7 @@ export function CookieConsent() {
                             <div className="flex items-center justify-between gap-4 rounded-[8px] border border-white/5 p-4 transition-colors hover:border-white/10">
                                 <div className="space-y-1">
                                     <span className="font-bold text-white text-[11px] uppercase tracking-tight font-sans">Analytics cookies</span>
-                                    <p className="text-[11px] text-white/30 font-light font-sans leading-relaxed max-w-lg tracking-tight">
+                                    <p className="text-[11px] !text-[#8F98A3] font-light font-sans leading-relaxed max-w-lg tracking-tight">
                                         These help us understand how people use the site so we can make improvements. You can turn these off if you'd rather not share that info.
                                     </p>
                                 </div>
@@ -134,7 +134,7 @@ export function CookieConsent() {
                             <div className="flex items-center justify-between gap-4 rounded-[8px] border border-white/5 p-4 transition-colors hover:border-white/10">
                                 <div className="space-y-1">
                                     <span className="font-bold text-white text-[11px] uppercase tracking-tight font-sans">Marketing cookies</span>
-                                    <p className="text-[11px] text-white/30 font-light font-sans leading-relaxed max-w-lg tracking-tight">
+                                    <p className="text-[11px] !text-[#8F98A3] font-light font-sans leading-relaxed max-w-lg tracking-tight">
                                         These help us (and our trusted partners) show you more relevant content and ads based on how you use the site.
                                     </p>
                                 </div>
@@ -149,7 +149,7 @@ export function CookieConsent() {
                                 <Button
                                     onClick={handleTurnOnOptional}
                                     variant="outline"
-                                    className="h-11 w-full rounded-[6px] border-white/10 bg-transparent px-6 text-[10px] font-bold uppercase tracking-tight text-white/60 hover:bg-white/5 sm:w-auto md:h-10">
+                                    className="h-11 w-full rounded-[6px] border-white/10 bg-transparent px-6 text-[10px] font-bold uppercase tracking-tight !text-[#A3AAB5] hover:bg-white/5 hover:!text-white sm:w-auto md:h-10">
                                     Turn on optional cookies
                                 </Button>
                                 <div className="flex-1" />

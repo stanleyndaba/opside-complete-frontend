@@ -24,8 +24,8 @@ const offerHighlights = [
     detail: `${EARLY_ACCESS_PRICE} once-off audit activation during Founding 100 Early Access`
   },
   {
-    title: 'Priority cohort',
-    detail: 'Opened in small managed batches during launch'
+    title: 'Managed cohort',
+    detail: 'Opened in controlled batches so each workspace can be prepared carefully.'
   },
   {
     title: 'Founder-led first cycle',
@@ -62,8 +62,13 @@ const whatYouGet = [
   },
   {
     step: '04',
-    title: 'Evidence readiness and filing review',
-    detail: 'Margin checks which records are matched, which proof is missing, and whether each case is claim-ready, blocked, or requires seller approval before filing.'
+    title: 'Evidence readiness review',
+    detail: 'Margin checks which records are already matched, which proof is missing, and whether each case is claim-ready, blocked, or still preparing.'
+  },
+  {
+    step: '05',
+    title: 'Guided filing workflow',
+    detail: 'Evidence-supported cases are reviewed with you first, then moved through the filing workflow only with approval and context.'
   }
 ];
 
@@ -156,8 +161,8 @@ export default function EarlyAccess() {
       }
 
       toast({
-        title: 'Details secured',
-        description: 'Redirecting you to PayPal to activate your Founding 100 recovery audit.',
+        title: 'Audit request secured',
+        description: 'Your audit request is secured. Redirecting you to checkout.',
       });
 
       window.location.href = EARLY_ACCESS_CHECKOUT_URL;
@@ -204,7 +209,7 @@ export default function EarlyAccess() {
                 </p>
 
                 <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                  Access opens in small batches so each workspace can be prepared carefully before onboarding begins.
+                  Founding 100 is onboarded in controlled batches. After your audit activation is confirmed, you&apos;ll receive intake and setup instructions so your workspace can be prepared before read-only setup begins.
                 </p>
 
                 <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[540px]">
@@ -243,7 +248,7 @@ export default function EarlyAccess() {
                       variant="outline"
                       className="h-11 justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] hover:bg-[#F8FAFC] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
                     >
-                      <Link to="/waitlist">Join Public Waitlist</Link>
+                      <Link to="/waitlist">Join Priority Waitlist</Link>
                     </Button>
                   </div>
                 </form>
@@ -522,7 +527,7 @@ export default function EarlyAccess() {
                     variant="outline"
                     className="h-11 justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] hover:bg-[#F8FAFC] sm:min-w-[206px] md:h-12 md:px-6 md:text-sm"
                   >
-                    <Link to="/waitlist">Join Public Waitlist</Link>
+                    <Link to="/waitlist">Join Priority Waitlist</Link>
                   </Button>
                 </div>
               </form>
