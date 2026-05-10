@@ -1447,13 +1447,13 @@ export default function IntegrationsHub() {
 
               {SECONDARY_PROVIDERS.map((p) => {
                 const providerMeta = {
-                  gmail: { name: 'Gmail', icon: '/gmailicon.png', color: 'bg-red-500/10', border: 'border-red-500/20' },
-                  outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
-                  gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-white/5', border: 'border-white/10' },
-                  dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
-                  slack: { name: 'Slack', icon: '/slack-icon-2019.png', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
-                  adobe_sign: { name: 'Adobe Sign', icon: '/dobe.png', color: 'bg-red-600/10', border: 'border-red-600/20' },
-                  onedrive: { name: 'OneDrive', icon: '/onedriive.png', color: 'bg-sky-500/10', border: 'border-sky-500/20' },
+                  gmail: { name: 'Gmail', icon: '/gmailicon.png' },
+                  outlook: { name: 'Outlook', icon: '/outlookicon.webp' },
+                  gdrive: { name: 'Google Drive', icon: '/gd.png' },
+                  dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png' },
+                  slack: { name: 'Slack', icon: '/slack-icon-2019.png' },
+                  adobe_sign: { name: 'Adobe Sign', icon: '/dobe.png' },
+                  onedrive: { name: 'OneDrive', icon: '/onedriive.png' },
                 } as const;
 
                 const providerState = getProviderDisplayState(p);
@@ -1466,8 +1466,8 @@ export default function IntegrationsHub() {
                   <motion.div key={p} variants={itemVariants} className="flex-shrink-0 w-[300px]">
                     <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-white/15' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 ${isParked ? 'grayscale opacity-55' : 'hover:bg-white/[0.04]'}`}>
                       <div className="flex items-start justify-between mb-6">
-                        <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm ${isParked ? '' : 'group-hover:scale-110'} transition-transform duration-500`}>
-                          <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
+                        <div className={`flex h-12 w-12 items-center justify-center ${isParked ? '' : 'group-hover:scale-110'} transition-transform duration-500`}>
+                          <img src={meta.icon} alt={meta.name} className="h-9 w-9 object-contain" />
                         </div>
                         <div className={`h-2 w-2 rounded-full ${connected ? 'bg-white/70 animate-pulse' : 'bg-gray-700'}`} />
                       </div>
@@ -1526,13 +1526,12 @@ export default function IntegrationsHub() {
                               )}
                             </div>
                             <Button
-                              variant="ghost"
                               size="sm"
                               disabled={disconnectingProvider === p}
-                              className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-sans font-bold uppercase tracking-tight"
+                              className="w-full h-9 border border-[#FF0000] bg-[#FF0000] text-white hover:border-[#E00000] hover:bg-[#E00000] hover:text-white disabled:bg-[#FF0000]/60 disabled:text-white text-[10px] font-sans font-bold uppercase tracking-tight"
                               onClick={() => handleDisconnectDocSource(p)}
                             >
-                              {disconnectingProvider === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin mx-auto" /> : "Disconnect Account"}
+                              {disconnectingProvider === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin mx-auto" /> : "Disconnect"}
                             </Button>
                           </div>
                         ) : (
