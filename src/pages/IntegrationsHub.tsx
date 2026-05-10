@@ -1528,7 +1528,7 @@ export default function IntegrationsHub() {
                             <Button
                               size="sm"
                               disabled={disconnectingProvider === p}
-                              className="w-full h-9 border border-[#FF0000] bg-[#FF0000] text-white hover:border-[#E00000] hover:bg-[#E00000] hover:text-white disabled:bg-[#FF0000]/60 disabled:text-white text-[10px] font-sans font-bold uppercase tracking-tight"
+                              className="w-full h-9 border border-red-600 bg-red-600 !text-white hover:border-red-700 hover:bg-red-700 hover:!text-white disabled:bg-red-600/60 disabled:!text-white text-[10px] font-sans font-bold uppercase tracking-tight"
                               onClick={() => handleDisconnectDocSource(p)}
                             >
                               {disconnectingProvider === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin mx-auto" /> : "Disconnect"}
