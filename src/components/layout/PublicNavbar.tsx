@@ -83,8 +83,8 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                 <div className={cn(
                     "relative flex items-center justify-between gap-3 transition-colors md:gap-5 md:px-4 md:py-3 lg:px-6",
                     isLight
-                        ? "rounded-[22px] border border-[#DCE8EE] bg-white/94 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-2xl"
-                        : "rounded-[8px] border border-white/10 bg-[#080808]/92 px-3 py-2.5 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
+                        ? "rounded-[22px] bg-white/88 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] [backdrop-filter:blur(32px)_saturate(180%)]"
+                        : "rounded-[8px] bg-[#080808]/88 px-3 py-2.5 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
                 )}>
                     <div className="flex items-center gap-3">
                         <Link

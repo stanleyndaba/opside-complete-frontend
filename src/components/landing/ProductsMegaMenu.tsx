@@ -33,8 +33,8 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
         ? 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] outline-none transition-all hover:bg-[#F3F6F8] hover:text-[#182026] data-[state=open]:!bg-[#F3F6F8] data-[state=open]:!text-[#182026]'
         : 'h-9 rounded-[6px] border border-transparent bg-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/76 outline-none transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white data-[state=open]:!border-white/8 data-[state=open]:!bg-white/[0.04] data-[state=open]:!text-white';
     const panelClassName = isLight
-        ? 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[28px] border border-[#DCE8EE] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.18)] lg:w-[95vw] lg:max-w-[1440px] lg:flex-row'
-        : 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#050505] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10';
+        ? 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[28px] bg-white/86 shadow-[0_34px_100px_rgba(37,49,58,0.16)] [backdrop-filter:blur(32px)_saturate(180%)] lg:w-[95vw] lg:max-w-[1440px] lg:flex-row'
+        : 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#080808]/88 rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.86)] [backdrop-filter:blur(32px)_saturate(180%)]';
     const labelClassName = isLight
         ? 'text-[9px] font-bold uppercase tracking-tight text-[#8A99A4]'
         : 'text-[9px] font-bold text-white/30 uppercase tracking-tight';
@@ -50,7 +50,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         <div className={cn(panelClassName, 'relative z-[100]')}>
 
                             {/* Column 1: Recovery Coverage */}
-                            <div className={cn('flex-[1.6] p-6 lg:p-7', isLight ? 'border-b border-[#E4EDF1] lg:border-b-0 lg:border-r' : 'border-r border-white/5')}>
+                            <div className={cn('flex-[1.6] p-6 lg:p-7', isLight ? 'border-b border-white/55 lg:border-b-0 lg:border-r' : 'border-r border-white/5')}>
                                 <div className="mb-5 flex items-center justify-between">
                                     <h4 className={labelClassName}>
                                         Recovery Coverage
@@ -58,7 +58,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                     <span className={cn(
                                         'rounded px-2 py-0.5 text-[7px] font-bold uppercase tracking-tighter',
                                         isLight
-                                            ? 'border border-[#BFD8EA] bg-[#EAF4FF] text-[#0B74DE]'
+                                            ? 'bg-white/70 text-[#0B74DE] shadow-[inset_0_0_0_1px_rgba(191,216,234,0.65)]'
                                             : 'border border-emerald-500/10 bg-emerald-500/5 text-emerald-500/50'
                                     )}>
                                         Core Coverage
@@ -106,7 +106,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                             </div>
 
                             {/* Column 2: Evidence & Control */}
-                            <div className={cn('flex-1 p-6 lg:p-7', isLight ? 'border-b border-[#E4EDF1] bg-[#F8FAFC]/74 lg:border-b-0 lg:border-r' : 'border-r border-white/5 bg-white/[0.01]')}>
+                            <div className={cn('flex-1 p-6 lg:p-7', isLight ? 'border-b border-white/55 bg-white/28 lg:border-b-0 lg:border-r' : 'border-r border-white/5 bg-white/[0.01]')}>
                                 <h4 className={cn(labelClassName, 'mb-5')}>
                                     Evidence & Control
                                 </h4>
@@ -139,7 +139,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                             </div>
 
                             {/* Column 3: By Seller Type */}
-                            <div className={cn('flex-[0.8] p-6 lg:p-7', isLight ? 'bg-[#F3F6F8]/64' : 'bg-white/[0.02]')}>
+                            <div className={cn('flex-[0.8] p-6 lg:p-7', isLight ? 'bg-white/22' : 'bg-white/[0.02]')}>
                                 <h4 className={cn(labelClassName, 'mb-5')}>
                                     By Seller Type
                                 </h4>
@@ -167,7 +167,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                 <div className={cn(
                                     'relative mt-6 overflow-hidden rounded-xl border p-5',
                                     isLight
-                                        ? 'border-[#DCE8EE] bg-white/74 shadow-[0_18px_42px_rgba(37,49,58,0.06)]'
+                                        ? 'border-white/60 bg-white/54 shadow-[0_18px_42px_rgba(37,49,58,0.06)] backdrop-blur-xl'
                                         : 'border-transparent bg-emerald-500/[0.02]'
                                 )}>
                                     <h5 className={cn('mb-1 text-[9px] font-bold', isLight ? 'text-[#182026]' : 'text-white')}>Enterprise Support</h5>
@@ -208,8 +208,8 @@ function NavItem({
                 'group block cursor-default rounded-xl border p-3.5 transition-colors',
                 isLight
                     ? highlight
-                        ? 'border-[#BFD8EA] bg-[#EAF4FF]'
-                        : 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-white'
+                        ? 'border-white/70 bg-white/58 shadow-[0_14px_36px_rgba(11,116,222,0.08)]'
+                        : 'border-transparent bg-transparent hover:border-white/70 hover:bg-white/48 hover:shadow-[0_14px_36px_rgba(37,49,58,0.08)]'
                     : highlight
                         ? 'bg-emerald-500/[0.03] border-emerald-500/10'
                         : 'border-transparent bg-transparent'
@@ -220,8 +220,8 @@ function NavItem({
                     'shrink-0 rounded-lg border p-2 transition-all',
                     isLight
                         ? highlight
-                            ? 'border-[#BFD8EA] bg-white text-[#0B74DE]'
-                            : 'border-[#DCE8EE] bg-[#EEF4F6] text-[#0B74DE] group-hover:bg-white'
+                            ? 'border-white/70 bg-white/76 text-[#0B74DE]'
+                            : 'border-white/60 bg-white/40 text-[#0B74DE] group-hover:bg-white/76'
                         : highlight
                             ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
                             : 'border-transparent bg-white/5 text-white/40'
