@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { CookieConsent } from '@/components/landing/CookieConsent';
+import { InhaleSection } from '@/components/landing/InhaleSection';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -846,13 +847,13 @@ function CoverageExamplesSection() {
         transition={{ duration: 11, repeat: Infinity, ease: 'linear' }}
       />
       <div className={containerClass}>
-        <motion.div {...revealProps} className="max-w-[760px]">
+        <InhaleSection className="max-w-[760px]">
           <div className={sectionLabelClass}>Coverage Examples</div>
           <h2 className={sectionHeadingClass}>Recovery categories Margin reviews.</h2>
           <p className={sectionBodyClass}>
             These are representative recovery categories, not the limit of the system. Each case stays tied to what happened, what deadline applies, what evidence exists, and whether the recovery is evidence-supported.
           </p>
-        </motion.div>
+        </InhaleSection>
 
         <div className="relative mt-12 md:mt-20">
           {coverageExamples.map((item, index) => (
