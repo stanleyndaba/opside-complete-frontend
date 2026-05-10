@@ -82,7 +82,7 @@ export default function StandardAgreement() {
                       <div className="space-y-1">
                         <p className="text-sm font-bold text-white tracking-tight">Flat Subscription Pricing</p>
                         <p className="text-[11px] text-white/30 uppercase tracking-wider font-light">
-                          Starter, Pro, or Enterprise billed monthly or annually with no commissions
+                          No recovery commissions. Margin is monthly recovery management.
                         </p>
                       </div>
                     </div>

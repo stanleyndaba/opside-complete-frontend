@@ -53,8 +53,8 @@ const pricingTiers: PricingTier[] = [
     name: 'Pro',
     planKey: 'pro',
     price: '$199/mo',
-    priceContext: 'Main plan. No commission.',
-    purpose: 'Main plan for serious sellers. No commission.',
+    priceContext: 'Main plan. No recovery commissions.',
+    purpose: 'Main plan for serious sellers. Monthly recovery management.',
     features: [
       'Continuous recovery coverage',
       '7 core recovery categories live today',
@@ -115,9 +115,9 @@ export default function PricingAdjust() {
   const isInAppOverlay = Boolean(tenantSlug);
 
   usePageMeta({
-    title: 'Margin Pricing | Monthly Recovery Plans, No Commissions',
+    title: 'Margin Pricing | Monthly Recovery Management, No Recovery Commissions',
     description:
-      'Choose a flat monthly recovery plan. Margin keeps finding discrepancies, preparing evidence, and tracking recoveries with no commissions.',
+      'Keep approved recoveries. Pay for the system, not a percentage of every reimbursement.',
     url: `${SITE_META.url}/pricing`,
   });
 
@@ -390,7 +390,7 @@ export default function PricingAdjust() {
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl font-semibold leading-tight tracking-[-0.055em] text-[#182026] md:text-6xl">
-                Choose ongoing recovery coverage with no commissions.
+                Keep approved recoveries. Pay for the system, not a percentage of every reimbursement.
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
                 Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time through flat monthly coverage.

@@ -151,7 +151,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 Margin turns Amazon loss events into claim-ready recoveries before reimbursement windows close.
               </p>
               <p className="mt-5 text-sm leading-6 tracking-tight text-[#7D8790]">
-                Read-only first. Seller approval before filing. No commissions during Early Access.
+                Read-only first. Seller approval before filing. No recovery commissions. Margin is monthly recovery management.
               </p>
             </div>
 

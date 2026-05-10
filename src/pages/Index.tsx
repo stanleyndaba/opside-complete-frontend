@@ -72,7 +72,7 @@ const mobileProductSections = [
 const trustHighlights = [
   'Read-only first',
   'Seller approval before filing',
-  'No commissions',
+  'No recovery commissions',
   'Weak cases held back'
 ];
 
@@ -223,7 +223,7 @@ const earlyAccessItems = [
   'Workspace prepared before onboarding',
   'Founder-led first recovery cycle',
   'Read-only setup before filing',
-  'No commissions during Early Access'
+  'No recovery commissions'
 ];
 
 const faqs = [
@@ -249,11 +249,11 @@ const faqs = [
   },
   {
     question: 'How is this different from commission-based services?',
-    answer: 'Margin is built around claim-clock visibility, evidence-backed case preparation, seller approval before filing, and no recovery commissions. The seller keeps control of which evidence-supported cases move forward.'
+    answer: 'Margin is monthly recovery management, not a percentage-based reimbursement service. It is built around claim-clock visibility, evidence-backed case preparation, seller approval before filing, and no recovery commissions.'
   },
   {
-    question: 'Why no commissions?',
-    answer: 'Margin Early Access is designed so sellers can validate the recovery workflow without giving up a percentage of every approved reimbursement. The goal is clear recovery visibility, evidence-backed action, and seller control from the first cycle.'
+    question: 'Why no recovery commissions?',
+    answer: 'Margin does not take a percentage of approved recoveries. Founding 100 starts with a $99 audit activation, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
     question: 'What happens after I reserve Early Access?',
@@ -562,7 +562,7 @@ export default function Index() {
                 </h1>
 
                 <p className="mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
-                  Margin detects reimbursement-worthy FBA events, starts the claim clock, matches the required evidence, and prepares recovery cases before Amazon's reimbursement windows close. Start read-only. Approve before filing. Keep recoveries without commissions.
+                  Margin detects reimbursement-worthy FBA events, starts the claim clock, matches the required evidence, and prepares recovery cases before Amazon's reimbursement windows close. Start read-only. Approve before filing. No recovery commissions.
                 </p>
 
                 <div className="mt-9 grid w-full max-w-[460px] grid-cols-1 gap-3 min-[430px]:grid-cols-2">

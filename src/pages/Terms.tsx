@@ -104,7 +104,7 @@ const Terms = () => {
                   <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays reimbursements directly to your Amazon Seller account. Margin does not receive, hold, or route reimbursement funds on your behalf.
                 </p>
                 <p>
-                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method on file for subscription invoices. Margin does not charge commissions or recovery-based fees.
+                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method on file for subscription invoices. Margin charges no recovery commissions. Sellers pay for ongoing recovery management, and approved recoveries stay with the seller.
                 </p>
               </div>
             </section>
