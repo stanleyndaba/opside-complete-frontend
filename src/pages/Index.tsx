@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
@@ -136,20 +136,22 @@ const proofItems = [
 
 const velocityMetrics = [
   {
-    label: 'Event-to-Evidence Speed',
-    value: '3min',
-    detail: 'From Amazon loss signal to matched support trail.'
+    label: 'Audit-to-Evidence Speed',
+    value: 3,
+    suffix: 'min',
+    detail: 'From loss signal to matched support trail.'
   },
   {
-    label: 'Review-to-Filing Speed',
-    value: '1min',
-    detail: 'Prepared cases move from seller review to filing action.'
+    label: 'Zero-Friction Filing',
+    value: 1,
+    suffix: 'min',
+    detail: 'Prepared cases move to filing action.'
   },
   {
-    label: 'Signal Discovery',
-    value: '16s',
-    detail: 'Recoverable events surface before manual review begins.',
-    featured: true
+    label: 'Time-to-Discovery',
+    value: 16,
+    suffix: 's',
+    detail: 'Recoverable events surface before manual review.'
   }
 ];
 
@@ -703,6 +705,73 @@ function KineticHeroSection({
   );
 }
 
+function MinimalMetric({
+  label,
+  value,
+  suffix,
+  detail,
+  index
+}: {
+  label: string;
+  value: number;
+  suffix: string;
+  detail: string;
+  index: number;
+}) {
+  const metricRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const isInView = useInView(metricRef, { once: true, amount: 0.55 });
+  const count = useMotionValue(reduceMotion ? value : 0);
+  const spring = useSpring(count, { stiffness: 120, damping: 26, mass: 0.45 });
+  const [displayValue, setDisplayValue] = useState(reduceMotion ? value : 0);
+
+  useEffect(() => {
+    const unsubscribe = spring.on('change', (latest) => {
+      setDisplayValue(Math.round(latest));
+    });
+
+    return unsubscribe;
+  }, [spring]);
+
+  useEffect(() => {
+    if (isInView || reduceMotion) {
+      count.set(value);
+    }
+  }, [count, isInView, reduceMotion, value]);
+
+  return (
+    <motion.div
+      ref={metricRef}
+      aria-label={`${label}: ${value}${suffix}. ${detail}`}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.45 }}
+      transition={{ duration: 0.8, delay: index * 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+      className="min-w-0"
+    >
+      <motion.div
+        aria-hidden="true"
+        animate={reduceMotion ? { opacity: 0.78 } : { opacity: [0.58, 1, 0.58] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: index * 0.35 }}
+        className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#0B74DE] md:text-xs"
+      >
+        {label}
+      </motion.div>
+      <div aria-hidden="true" className="mt-4 flex items-end font-black leading-none tracking-[-0.08em] text-[#182026]">
+        <span className="text-[82px] sm:text-[96px] md:text-[112px] lg:text-[132px]">
+          {displayValue}
+        </span>
+        <span className="mb-3 ml-2 text-[38px] font-medium tracking-[-0.05em] text-[#8A98A3] sm:text-[44px] md:mb-4 md:text-[54px]">
+          {suffix}
+        </span>
+      </div>
+      <p className="mt-5 max-w-[320px] text-[15px] leading-6 text-[#66737F] md:text-base">
+        {detail}
+      </p>
+    </motion.div>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -761,47 +830,20 @@ export default function Index() {
           nextBatchHours={capacity?.nextBatchHours}
         />
 
-        <section className="relative mt-12 md:mt-16">
+        <section className="relative py-28 md:py-40" aria-label="Margin recovery speed metrics">
           <div className={containerClass}>
-            <motion.div
-              {...revealProps}
-              className="relative py-8 md:py-12"
-            >
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px -translate-y-1/2 overflow-hidden bg-[#D8E3E8] md:block">
-                <motion.div
-                  className="absolute inset-y-0 left-0 w-1/4 bg-[linear-gradient(90deg,transparent,rgba(11,116,222,0.48),transparent)]"
-                  animate={{ x: ['-120%', '460%'] }}
-                  transition={{ duration: 5.2, repeat: Infinity, ease: 'linear' }}
+            <div className="grid gap-20 md:grid-cols-3 md:items-start md:gap-12">
+              {velocityMetrics.map((metric, index) => (
+                <MinimalMetric
+                  key={metric.label}
+                  label={metric.label}
+                  value={metric.value}
+                  suffix={metric.suffix}
+                  detail={metric.detail}
+                  index={index}
                 />
-              </div>
-
-              <div className="grid gap-12 md:grid-cols-3 md:gap-0">
-                {velocityMetrics.map((metric, index) => (
-                  <motion.div
-                    key={metric.label}
-                    initial={{ opacity: 0, scale: 0.95, y: 12 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.35 }}
-                    transition={{ duration: 0.72, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                    className={`relative md:px-10 ${index > 0 ? 'md:border-l md:border-[#D8E3E8]' : ''}`}
-                  >
-                    <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
-                      {metric.label}
-                    </div>
-                    <div
-                      className={`mt-4 font-semibold leading-none tracking-[-0.075em] ${
-                        metric.featured ? 'text-[78px] text-[#0B74DE] md:text-[104px]' : 'text-[70px] text-[#182026] md:text-[94px]'
-                      }`}
-                    >
-                      {metric.value}
-                    </div>
-                    <p className="mt-5 max-w-[300px] text-[14px] leading-6 text-[#66737F]">
-                      {metric.detail}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
