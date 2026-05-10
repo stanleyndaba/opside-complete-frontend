@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Globe } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 type Props = {
   selectedLanguageLabel?: string;
@@ -14,8 +13,8 @@ type FooterLink = {
 };
 
 const productLinks: FooterLink[] = [
-  { label: 'Recovery Workflow', href: '/#how-margin-works' },
-  { label: 'Event-to-Recovery Demo', href: '/#margin-demo' },
+  { label: 'Audit-to-Evidence', href: '/#how-margin-works' },
+  { label: 'Zero-Friction Filing', href: '/#margin-demo' },
   { label: 'Managed Access', href: '/early-access' },
   { label: 'Pricing', href: '/pricing' }
 ];
@@ -23,13 +22,18 @@ const productLinks: FooterLink[] = [
 const resourceLinks: FooterLink[] = [
   { label: 'FBA Reimbursement Research', href: '/fba-reimbursement-research' },
   { label: 'Docs', href: '/docs' },
-  { label: 'Contact Support', href: '/contact' },
-  { label: 'Sales', href: '/sales' }
+  { label: 'Help Center', href: '/contact' },
+  { label: 'Contact Support', href: '/contact' }
 ];
 
 const companyLinks: FooterLink[] = [
-  { label: 'About', href: '/about' },
+  { label: 'About Us', href: '/about-margin' },
   { label: 'Careers', href: '/careers' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Sales', href: '/sales' }
+];
+
+const legalLinks: FooterLink[] = [
   { label: 'Privacy Policy', href: '/privacy' },
   { label: 'Terms of Service', href: '/terms' },
   { label: 'Refund Policy', href: '/refund-policy' }
@@ -58,7 +62,7 @@ const socialLinks = [
 
 const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
   const className =
-    'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight text-[#A7B0B8] transition-colors duration-200 hover:text-[#F4F7F9]';
+    'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight text-gray-400 transition-colors duration-200 hover:text-blue-400 focus-visible:text-blue-400 focus-visible:outline-none';
 
   if (item.external) {
     return (
@@ -91,7 +95,7 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
 
 const FooterColumn: React.FC<{ title: string; links: FooterLink[] }> = ({ title, links }) => (
   <div>
-    <h3 className="text-sm font-medium tracking-tight text-[#F4F7F9]">{title}</h3>
+    <h3 className="text-lg font-medium tracking-tight text-white">{title}</h3>
     <nav className="mt-5 flex flex-col gap-3" aria-label={title}>
       {links.map((item) => (
         <FooterLinkItem key={item.label} item={item} />
@@ -101,69 +105,87 @@ const FooterColumn: React.FC<{ title: string; links: FooterLink[] }> = ({ title,
 );
 
 const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitted'>('idle');
+
   const handleNewsletterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.info('Margin newsletter signup', { email: newsletterEmail });
+    setNewsletterStatus('submitted');
   };
 
   return (
     <div className="relative z-10 w-full bg-[#1A1A1A]">
       <footer
         id="core-footer"
-        className="relative w-full overflow-hidden border-t border-white/[0.08] bg-[#1A1A1A] text-[#E7EAED]"
+        className="relative w-full overflow-hidden bg-[#1A1A1A] text-[#E0E0E0]"
         style={{ width: '100%', maxWidth: '100%' }}
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(139,199,255,0.34),transparent)]" />
-        <div className="pointer-events-none absolute -top-36 right-[-10%] h-80 w-80 rounded-full bg-[#0B74DE]/10 blur-3xl" />
+        <div className="container mx-auto px-4 py-16">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <h2 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+              Join for product updates, insights, and event invites.
+            </h2>
 
-        <div className="container mx-auto px-6 pb-10 pt-14 md:pb-12 md:pt-18">
-          <div className="grid gap-8 border-b border-white/[0.08] pb-10 md:grid-cols-[1fr_0.9fr] md:items-end md:pb-12">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-tight text-[#8BC7FF]">Margin updates</p>
-              <h2 className="mt-3 max-w-[640px] text-[30px] font-medium leading-tight tracking-tight text-[#F4F7F9] md:text-[42px]">
-                Join for product updates, insights, and event invites.
-              </h2>
-            </div>
-
-            <form onSubmit={handleNewsletterSubmit} className="flex w-full flex-col gap-3 sm:flex-row md:justify-end" aria-label="Join Margin updates">
+            <form onSubmit={handleNewsletterSubmit} className="mt-6 flex w-full flex-col justify-center gap-3 sm:flex-row" aria-label="Join Margin updates">
+              <label htmlFor="footer-newsletter-email" className="sr-only">
+                Email address
+              </label>
               <input
+                id="footer-newsletter-email"
                 type="email"
                 required
+                value={newsletterEmail}
+                onChange={(event) => {
+                  setNewsletterEmail(event.target.value);
+                  setNewsletterStatus('idle');
+                }}
                 placeholder="Your email address"
-                className="h-12 min-w-0 flex-1 rounded-full border border-white/[0.12] bg-white/[0.04] px-5 text-sm tracking-tight text-[#F4F7F9] outline-none transition placeholder:text-[#7D8790] hover:border-white/[0.22] focus:border-[#8BC7FF]/60 focus:bg-white/[0.06] md:max-w-[340px]"
+                aria-describedby="footer-newsletter-status"
+                className="h-12 w-full max-w-md rounded-md border border-gray-700 bg-gray-800 px-4 py-3 text-sm text-white outline-none transition placeholder:text-gray-500 hover:border-gray-600 focus:ring-2 focus:ring-blue-500"
               />
-              <Button
+              <button
                 type="submit"
-                className="h-12 rounded-full bg-[#F4F7F9] px-6 text-sm font-semibold tracking-tight text-[#151515] shadow-none transition hover:bg-[#DCE8EE]"
+                className="h-12 rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#1A1A1A]"
               >
-                Join
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+                Subscribe
+              </button>
             </form>
+            <p id="footer-newsletter-status" className="mt-3 text-sm text-gray-500" aria-live="polite">
+              {newsletterStatus === 'submitted'
+                ? 'Thanks. We will keep you posted.'
+                : 'Occasional updates on recovery workflows, product releases, and operator insights.'}
+            </p>
           </div>
 
-          <div className="grid gap-10 py-10 md:grid-cols-[1.15fr_0.85fr_0.85fr_0.9fr] md:gap-8 md:py-14">
+          <div className="grid gap-10 border-t border-gray-700 pt-12 md:grid-cols-4 md:gap-8">
             <div className="max-w-[360px]">
               <Link to="/" className="inline-flex items-center gap-3 transition-opacity hover:opacity-85">
-                <img src="/logoimagetwo.png" alt="Margin" width="28" height="28" className="h-7 w-auto object-contain invert brightness-0" />
-                <span className="brand-wordmark font-merriweather text-2xl tracking-tight text-[#F4F7F9]">Margin</span>
+                <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain invert brightness-0" />
+                <span className="brand-wordmark font-merriweather text-2xl tracking-tight text-white">Margin</span>
               </Link>
-              <p className="mt-5 text-[15px] leading-7 tracking-tight text-[#A7B0B8]">
-                Margin turns Amazon loss events into claim-ready recoveries before reimbursement windows close.
+              <p className="mt-5 text-sm leading-6 tracking-tight text-gray-400">
+                Margin: The Recovery OS for Amazon Sellers.
               </p>
-              <p className="mt-5 text-sm leading-6 tracking-tight text-[#7D8790]">
+              <p className="mt-4 text-sm leading-6 tracking-tight text-gray-500">
                 Read-only first. Seller approval before filing. No recovery commissions. Margin is monthly recovery management.
               </p>
             </div>
 
-            <FooterColumn title="Product" links={productLinks} />
+            <FooterColumn title="Products" links={productLinks} />
             <FooterColumn title="Resources" links={resourceLinks} />
-            <FooterColumn title="Company" links={companyLinks} />
+            <div>
+              <FooterColumn title="Company" links={companyLinks} />
+              <div className="mt-8">
+                <FooterColumn title="Legal" links={legalLinks} />
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-6 border-t border-white/[0.08] pt-7 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-col gap-2 text-sm tracking-tight text-[#7D8790] md:flex-row md:items-center md:gap-5">
-              <span>© {new Date().getFullYear()} Margin. Built for Amazon operators.</span>
-              <a href="mailto:support@margin-finance.com" className="w-fit transition-colors hover:text-[#F4F7F9]">
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-700 pt-8 md:flex-row">
+            <div className="flex flex-col gap-2 text-sm tracking-tight text-gray-500 md:flex-row md:items-center md:gap-5">
+              <span>© {new Date().getFullYear()} Margin. All rights reserved.</span>
+              <a href="mailto:support@margin-finance.com" className="w-fit transition-colors duration-200 hover:text-blue-400 focus-visible:text-blue-400 focus-visible:outline-none">
                 support@margin-finance.com
               </a>
               {selectedLanguageLabel && (
@@ -182,7 +204,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={social.label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.1] text-[#A7B0B8] transition hover:border-[#8BC7FF]/40 hover:bg-white/[0.04] hover:text-[#F4F7F9]"
+                  className="inline-flex items-center justify-center text-gray-400 transition-colors duration-200 hover:text-blue-400 focus-visible:text-blue-400 focus-visible:outline-none"
                 >
                   {social.icon}
                 </a>
@@ -190,7 +212,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
             </div>
           </div>
 
-          <p className="mt-8 max-w-5xl text-[10px] leading-5 tracking-tight text-[#69737C]">
+          <p className="mt-8 max-w-5xl text-[10px] leading-5 tracking-tight text-gray-600">
             Recovery estimates are projections based on available Amazon activity and supporting records, not guarantees of reimbursement. Amazon makes the final reimbursement decision.
           </p>
         </div>
