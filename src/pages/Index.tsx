@@ -772,6 +772,98 @@ function MinimalMetric({
   );
 }
 
+function CoverageItem({
+  item,
+  index
+}: {
+  item: (typeof coverageExamples)[number];
+  index: number;
+}) {
+  const isFeature = index === 0;
+  const offsetClass = index % 2 === 1 ? 'md:ml-[12%]' : index % 3 === 2 ? 'md:ml-[6%]' : '';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24, x: index % 2 === 0 ? -10 : 10 }}
+      whileInView={{ opacity: 1, y: 0, x: 0 }}
+      viewport={{ once: true, amount: 0.38 }}
+      transition={{ duration: 0.78, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ x: 5, scale: 1.005 }}
+      whileFocus={{ x: 5, scale: 1.005 }}
+      tabIndex={0}
+      className={`group relative max-w-[940px] py-7 outline-none md:py-10 ${isFeature ? 'md:max-w-[1040px]' : offsetClass}`}
+      aria-label={`${item.label}. ${item.title} ${item.detail}`}
+    >
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-x-6 inset-y-0 rounded-[40px] bg-[radial-gradient(circle_at_18%_50%,rgba(11,116,222,0.10),transparent_58%)] opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+      />
+      <div className="relative grid gap-4 md:grid-cols-[minmax(180px,240px)_minmax(0,1fr)] md:gap-10">
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+          className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]/70 transition duration-200 group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.20)] group-focus-visible:text-[#0B74DE]"
+        >
+          {item.label}
+        </motion.div>
+        <div className="max-w-[760px]">
+          <motion.h3
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.62, delay: 0.08 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className={`${isFeature ? 'text-[34px] md:text-[48px]' : 'text-[29px] md:text-[40px]'} font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026]/90 transition duration-200 group-hover:text-[#182026] group-focus-visible:text-[#182026]`}
+          >
+            {item.title}
+          </motion.h3>
+          <motion.p
+            initial={{ opacity: 0, y: 5 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.62, delay: 0.16 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4 max-w-[690px] text-[15px] leading-7 text-[#66737F]/68 transition duration-200 group-hover:text-[#4D5B66] group-focus-visible:text-[#4D5B66] md:text-[17px] md:leading-8"
+          >
+            {item.detail}
+          </motion.p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function CoverageExamplesSection() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section className="relative overflow-hidden py-20 md:py-32">
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-24 hidden h-px bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.08)_18%,rgba(11,116,222,0.30)_48%,rgba(46,125,91,0.10)_78%,transparent_100%)] md:block"
+        style={{ backgroundSize: '220% 100%' }}
+        animate={reduceMotion ? undefined : { backgroundPosition: ['0% 50%', '220% 50%'] }}
+        transition={{ duration: 11, repeat: Infinity, ease: 'linear' }}
+      />
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[760px]">
+          <div className={sectionLabelClass}>Coverage Examples</div>
+          <h2 className={sectionHeadingClass}>Recovery categories Margin reviews.</h2>
+          <p className={sectionBodyClass}>
+            These are representative recovery categories, not the limit of the system. Each case stays tied to what happened, what deadline applies, what evidence exists, and whether the recovery is evidence-supported.
+          </p>
+        </motion.div>
+
+        <div className="relative mt-12 md:mt-20">
+          {coverageExamples.map((item, index) => (
+            <CoverageItem key={item.label} item={item} index={index} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -1033,51 +1125,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative overflow-hidden bg-white py-16 md:py-28">
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.07),transparent_68%)] blur-3xl md:block"
-            animate={{ opacity: [0.35, 0.65, 0.35], scale: [0.96, 1.04, 0.96] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={sectionLabelClass}>Coverage Examples</div>
-              <h2 className={sectionHeadingClass}>Recovery categories Margin reviews.</h2>
-              <p className={sectionBodyClass}>
-                These are representative recovery categories, not the limit of the system. Each case stays tied to what happened, what deadline applies, what evidence exists, and whether the recovery is evidence-supported.
-              </p>
-            </motion.div>
-
-            <div className="relative mt-11 grid gap-x-14 gap-y-10 md:mt-14 md:grid-cols-2 lg:gap-y-14">
-              {coverageExamples.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  {...revealProps}
-                  whileHover={{ x: 5 }}
-                  transition={{ ...revealProps.transition, delay: index * 0.07 }}
-                  tabIndex={0}
-                  className={`group relative grid gap-4 py-3 outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] ${
-                    index === 0 ? 'md:col-span-2 md:grid-cols-[270px_minmax(0,1fr)] md:gap-12' : ''
-                  }`}
-                >
-                  <div className="pointer-events-none absolute -left-8 top-0 h-20 w-20 rounded-full bg-[radial-gradient(circle,rgba(46,125,91,0.12),transparent_68%)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
-                  <div className="relative text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE] transition duration-500 group-hover:translate-x-[5px] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.24)]">
-                    {item.label}
-                  </div>
-                  <div className="relative max-w-[760px]">
-                    <h3 className="text-[25px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#0B74DE] group-focus-visible:text-[#0B74DE] md:text-[34px]">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-[15px] leading-7 text-[#66737F]/70 transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#4D5B66] group-hover:opacity-100 group-focus-visible:text-[#4D5B66] md:text-[17px] md:leading-8">
-                      {item.detail}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <CoverageExamplesSection />
 
         <section className="relative py-16 md:py-28">
           <div className={containerClass}>
