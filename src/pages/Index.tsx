@@ -212,6 +212,61 @@ const coverageExamples = [
   }
 ];
 
+const bentoDashboardCards = [
+  {
+    title: 'Recovery Pipeline',
+    eyebrow: 'Live claim-clock view',
+    value: '$5,156.61',
+    label: 'expected value across 10 active issues',
+    detail: 'Deadline-aware recovery work moving from detection to evidence review, approval, and payout tracking.',
+    cta: 'Review Pipeline',
+    size: 'lg',
+    accent: 'blue',
+    rows: [
+      ['Detected', '10'],
+      ['Claim-ready', '4'],
+      ['Needs proof', '3'],
+      ['Awaiting payout', '2']
+    ]
+  },
+  {
+    title: 'Evidence Match',
+    eyebrow: 'In motion',
+    value: '86%',
+    label: 'records linked',
+    detail: 'Invoices, shipment IDs, Amazon reports, and support files are matched before filing.',
+    cta: 'Open Evidence',
+    accent: 'emerald'
+  },
+  {
+    title: 'Approval Gate',
+    eyebrow: 'Seller control',
+    value: '4',
+    label: 'cases ready for review',
+    detail: 'Evidence-supported cases wait for seller approval before filing action.',
+    cta: 'Open Cases',
+    accent: 'blue'
+  },
+  {
+    title: 'Needs Proof',
+    eyebrow: 'Blocked safely',
+    value: '3',
+    label: 'weak findings held back',
+    detail: 'Unsupported, duplicate, or risky cases stay out of filing volume.',
+    cta: 'Send Evidence',
+    accent: 'amber'
+  },
+  {
+    title: 'Payout Trail',
+    eyebrow: 'Tracked states',
+    value: '2',
+    label: 'awaiting payout',
+    detail: 'Approved, blocked, paid, and re-evaluation states stay separate.',
+    cta: 'View Trail',
+    accent: 'emerald'
+  }
+];
+
 const marketplaceCountries = [
   { country: 'United States', code: 'US', flagCode: 'us', region: 'North America' },
   { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'North America' },
@@ -865,6 +920,135 @@ function CoverageExamplesSection() {
   );
 }
 
+function AgenticPulse({ accent = 'blue' }: { accent?: string }) {
+  const colorClass = accent === 'emerald' ? 'bg-emerald-300' : accent === 'amber' ? 'bg-amber-300' : 'bg-blue-300';
+
+  return (
+    <span className="relative inline-flex h-2.5 w-2.5" aria-hidden="true">
+      <motion.span
+        className={`absolute inline-flex h-full w-full rounded-full ${colorClass} opacity-50`}
+        animate={{ scale: [1, 2.4, 1], opacity: [0.45, 0, 0.45] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut' }}
+      />
+      <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${colorClass} shadow-[0_0_18px_currentColor]`} />
+    </span>
+  );
+}
+
+function BentoDashboardCard({
+  card,
+  index
+}: {
+  card: (typeof bentoDashboardCards)[number];
+  index: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-0.5, 0.5], reduceMotion ? [0, 0] : [7, -7]);
+  const rotateY = useTransform(x, [-0.5, 0.5], reduceMotion ? [0, 0] : [-7, 7]);
+  const springRotateX = useSpring(rotateX, { stiffness: 180, damping: 22 });
+  const springRotateY = useSpring(rotateY, { stiffness: 180, damping: 22 });
+  const isLarge = card.size === 'lg';
+  const accentText = card.accent === 'emerald' ? 'text-emerald-300' : card.accent === 'amber' ? 'text-amber-300' : 'text-blue-300';
+  const accentGlow =
+    card.accent === 'emerald'
+      ? 'from-emerald-400/18'
+      : card.accent === 'amber'
+        ? 'from-amber-400/18'
+        : 'from-blue-400/18';
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (reduceMotion) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set((event.clientX - rect.left) / rect.width - 0.5);
+    y.set((event.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const resetTilt = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 22 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={{ duration: 0.72, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+      style={{ rotateX: springRotateX, rotateY: springRotateY, transformStyle: 'preserve-3d' }}
+      whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+      whileFocus={reduceMotion ? undefined : { scale: 1.02 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetTilt}
+      onBlur={resetTilt}
+      tabIndex={0}
+      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.055] p-6 text-white shadow-[0_10px_30px_rgba(0,0,0,0.18),0_4px_10px_rgba(0,0,0,0.10)] outline-none backdrop-blur-xl transition-shadow duration-300 hover:shadow-[0_20px_60px_rgba(0,0,0,0.28),0_8px_20px_rgba(0,0,0,0.16)] focus-visible:ring-2 focus-visible:ring-blue-400/45 md:p-7 ${
+        isLarge ? 'lg:col-span-2 lg:row-span-2' : ''
+      }`}
+    >
+      <div className={`pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-gradient-to-br ${accentGlow} to-transparent blur-3xl transition-opacity duration-300 group-hover:opacity-90`} />
+      <div className="relative flex h-full flex-col" style={{ transform: 'translateZ(24px)' }}>
+        <div className="flex items-center justify-between gap-4">
+          <div className={`text-[11px] font-semibold uppercase tracking-tight ${accentText}`}>{card.eyebrow}</div>
+          <AgenticPulse accent={card.accent} />
+        </div>
+
+        <h3 className="mt-5 text-[20px] font-semibold tracking-[-0.035em] text-white md:text-[24px]">{card.title}</h3>
+        <div className={`${isLarge ? 'mt-7 text-[56px] md:text-[72px]' : 'mt-6 text-[42px] md:text-[48px]'} font-bold leading-none tracking-[-0.06em] text-white`}>
+          {card.value}
+        </div>
+        <div className="mt-3 text-sm leading-6 text-gray-400">{card.label}</div>
+        <p className="mt-5 max-w-[560px] text-sm leading-7 text-gray-300/82 md:text-[15px]">{card.detail}</p>
+
+        {card.rows ? (
+          <div className="mt-7 grid gap-3 sm:grid-cols-4">
+            {card.rows.map(([label, value]) => (
+              <div key={label} className="min-w-0">
+                <div className="text-[24px] font-semibold leading-none tracking-[-0.04em] text-white">{value}</div>
+                <div className="mt-2 text-[11px] font-semibold uppercase tracking-tight text-gray-500">{label}</div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        <button
+          type="button"
+          className="mt-auto w-fit pt-7 text-[12px] font-semibold uppercase tracking-tight text-gray-400 transition-colors duration-200 hover:text-white focus:outline-none focus-visible:text-white"
+        >
+          {card.cta}
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+function BentoDashboardSection() {
+  return (
+    <section className="relative overflow-hidden bg-[#080D14] py-20 md:py-28" aria-labelledby="recovery-command-center-title">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(11,116,222,0.18),transparent_28%),radial-gradient(circle_at_84%_28%,rgba(46,125,91,0.16),transparent_30%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:linear-gradient(rgba(96,165,250,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.10)_1px,transparent_1px)] [background-size:92px_92px]" />
+      <div className={containerClass}>
+        <InhaleSection className="relative z-10 max-w-[820px]">
+          <div className="text-[11px] font-semibold uppercase tracking-tight text-blue-300">Recovery Command Center</div>
+          <h2 id="recovery-command-center-title" className="mt-4 max-w-[850px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-white sm:text-[42px] md:text-[64px]">
+            A live view of claim-clock recovery work in motion.
+          </h2>
+          <p className="mt-5 max-w-[730px] text-[16px] leading-8 text-gray-300 md:text-[18px] md:leading-9">
+            Margin turns the recovery pipeline into operational states: detected, evidence-matched, claim-ready, waiting for approval, filed, and tracked through payout.
+          </p>
+        </InhaleSection>
+
+        <div className="relative z-10 mt-10 grid gap-4 [perspective:1200px] md:mt-14 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
+          {bentoDashboardCards.map((card, index) => (
+            <BentoDashboardCard key={card.title} card={card} index={index} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -1125,6 +1309,8 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        <BentoDashboardSection />
 
         <CoverageExamplesSection />
 
