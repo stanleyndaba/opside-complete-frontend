@@ -22,6 +22,7 @@ import {
   Truck
 } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { DemoVideoModal } from '@/components/demo/DemoVideoModal';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { InhaleSection } from '@/components/landing/InhaleSection';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
@@ -913,6 +914,7 @@ export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
   const { isFull, capacity } = useOnboardingCapacity();
 
   usePageMeta(SITE_META);
@@ -941,9 +943,8 @@ export default function Index() {
     navigate('/early-access');
   };
 
-  const scrollToDemo = () => {
-    if (typeof document === 'undefined') return;
-    document.getElementById('margin-demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const openDemo = () => {
+    setIsDemoOpen(true);
   };
 
   const scrollToWorkflow = () => {
@@ -961,7 +962,7 @@ export default function Index() {
       <main className="relative">
         <KineticHeroSection
           onPrimaryCta={handlePrimaryCta}
-          onDemoCta={scrollToDemo}
+          onDemoCta={openDemo}
           primaryCtaLabel={primaryCtaLabel}
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
@@ -1073,13 +1074,12 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <motion.a
-              href={DEMO_VIDEO_URL}
-              target="_blank"
-              rel="noreferrer"
+            <motion.button
+              type="button"
+              onClick={openDemo}
               {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1"
-              aria-label="Watch the Margin product demo on YouTube"
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#F3F6F8]"
+              aria-label="Watch the Margin product demo"
             >
               <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">
                 <img
@@ -1101,7 +1101,7 @@ export default function Index() {
                   </div>
                 </div>
               </div>
-            </motion.a>
+            </motion.button>
           </div>
         </section>
 
@@ -1288,7 +1288,7 @@ export default function Index() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={scrollToDemo}
+                    onClick={openDemo}
                     className="h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
                   >
                     Watch 60-Second Demo
@@ -1393,6 +1393,13 @@ export default function Index() {
         </section>
       </main>
 
+      <DemoVideoModal
+        open={isDemoOpen}
+        onOpenChange={setIsDemoOpen}
+        videoUrl={DEMO_VIDEO_URL}
+        title="Margin recovery walkthrough"
+        description="Watch how Margin detects Amazon loss events, starts the claim clock, matches evidence, prepares cases for review, and tracks recovery states through payout."
+      />
       <BrandFooter />
       <CookieConsent />
     </div>

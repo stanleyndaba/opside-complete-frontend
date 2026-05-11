@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, PlayCircle } from 'lucide-react';
 
+import { DemoVideoModal } from '@/components/demo/DemoVideoModal';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
@@ -119,6 +120,7 @@ export default function EarlyAccess() {
   const { toast } = useToast();
   const [earlyAccessEmail, setEarlyAccessEmail] = useState('');
   const [isReserving, setIsReserving] = useState(false);
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   usePageMeta({
     title: 'Margin Founding 100 Recovery Audit',
@@ -297,13 +299,12 @@ export default function EarlyAccess() {
               </p>
             </motion.div>
 
-            <motion.a
-              href={DEMO_VIDEO_URL}
-              target="_blank"
-              rel="noreferrer"
+            <motion.button
+              type="button"
+              onClick={() => setIsDemoOpen(true)}
               {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1"
-              aria-label="Watch the Margin product demo on YouTube"
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#FAFAF7]"
+              aria-label="Watch the Margin product demo"
             >
               <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">
                 <img
@@ -325,7 +326,7 @@ export default function EarlyAccess() {
                   </div>
                 </div>
               </div>
-            </motion.a>
+            </motion.button>
           </div>
         </section>
 
@@ -536,6 +537,13 @@ export default function EarlyAccess() {
         </section>
       </main>
 
+      <DemoVideoModal
+        open={isDemoOpen}
+        onOpenChange={setIsDemoOpen}
+        videoUrl={DEMO_VIDEO_URL}
+        title="Margin recovery walkthrough"
+        description="Watch how Margin detects Amazon loss events, starts the claim clock, matches evidence, prepares cases for review, and tracks recovery states through payout."
+      />
       <BrandFooter />
     </div>
   );
