@@ -392,7 +392,7 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
                   to={link.to}
                   className={`rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-tight transition-colors ${
                     isOverDarkSurface
-                      ? 'text-white/82 hover:bg-white/10 hover:text-white'
+                      ? 'text-white/90 hover:bg-white/10 hover:text-white'
                       : 'text-[#66737F] hover:bg-[#F3F6F8] hover:text-[#182026]'
                   }`}
                 >
@@ -405,7 +405,7 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
               <Link
                 to="/login"
                 className={`rounded-full px-4 py-2 text-[12px] font-semibold transition-colors ${
-                  isOverDarkSurface ? 'text-white/82 hover:bg-white/10 hover:text-white' : 'text-[#25313A] hover:bg-[#F3F6F8]'
+                  isOverDarkSurface ? 'text-white/90 hover:bg-white/10 hover:text-white' : 'text-[#25313A] hover:bg-[#F3F6F8]'
                 }`}
               >
                 Login
