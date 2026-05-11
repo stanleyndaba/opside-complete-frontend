@@ -34,7 +34,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
         : 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-white/90 outline-none transition-all hover:bg-white/10 hover:text-white data-[state=open]:!bg-white/10 data-[state=open]:!text-white';
     const panelClassName = isLight
         ? 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[28px] bg-white/86 shadow-[0_34px_100px_rgba(37,49,58,0.16)] [backdrop-filter:blur(32px)_saturate(180%)] lg:w-[95vw] lg:max-w-[1440px] lg:flex-row'
-        : 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#07101A]/94 rounded-[22px] overflow-hidden shadow-[0_28px_90px_rgba(0,0,0,0.62)] ring-1 ring-white/8 [backdrop-filter:blur(22px)_saturate(145%)]';
+        : 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#07101A] rounded-[22px] overflow-hidden shadow-[0_28px_90px_rgba(0,0,0,0.62)] ring-1 ring-white/8 [backdrop-filter:blur(22px)_saturate(145%)]';
     const labelClassName = isLight
         ? 'text-[9px] font-bold uppercase tracking-tight text-[#8A99A4]'
         : 'text-[9px] font-bold text-white/30 uppercase tracking-tight';
