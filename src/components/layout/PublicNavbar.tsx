@@ -37,7 +37,9 @@ type PublicNavbarProps = {
 
 export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const isLight = variant === 'light';
+    const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
+    const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
+    const isLight = effectiveVariant === 'light';
     const mobileMenuItemClass = isLight
         ? "flex items-center rounded-[14px] px-3 py-3 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
@@ -77,6 +79,31 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
         };
     }, [isLight]);
 
+    useEffect(() => {
+        if (variant !== 'light') return;
+
+        const updateNavbarTheme = () => {
+            const themeProbeY = window.innerWidth >= 768 ? 76 : 56;
+            const darkSections = Array.from(document.querySelectorAll<HTMLElement>('[data-navbar-theme="dark"]'));
+
+            setIsOverDarkSurface(
+                darkSections.some((section) => {
+                    const rect = section.getBoundingClientRect();
+                    return rect.top <= themeProbeY && rect.bottom >= themeProbeY;
+                })
+            );
+        };
+
+        updateNavbarTheme();
+        window.addEventListener('scroll', updateNavbarTheme, { passive: true });
+        window.addEventListener('resize', updateNavbarTheme);
+
+        return () => {
+            window.removeEventListener('scroll', updateNavbarTheme);
+            window.removeEventListener('resize', updateNavbarTheme);
+        };
+    }, [variant]);
+
     return (
         <header className="fixed top-0 left-0 right-0 z-50 border-transparent bg-transparent">
             <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
@@ -108,7 +135,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             </span>
                         </Link>
                         <div className="hidden lg:block">
-                            <ProductsMegaMenu variant={variant} />
+                            <ProductsMegaMenu variant={effectiveVariant} />
                         </div>
 
                         <Link to="/pricing" className={desktopNavLinkClass}>
@@ -128,12 +155,12 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
 
                     <nav className="hidden md:flex items-center gap-2">
                         <Link to="/login" className={desktopActionClass}>
-                            Login
+                            LOGIN
                         </Link>
                         <Link
                             to="/waitlist"
                             className={`${desktopActionClass} gap-2 px-6`}>
-                            Join Waitlist <ArrowRight className="h-3 w-3" />
+                            JOIN WAITLIST <ArrowRight className="h-3 w-3" />
                         </Link>
                     </nav>
 
@@ -180,12 +207,12 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             <div className="space-y-3">
                                                 <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Recovery Coverage</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem variant={variant} icon={Search} title="Inbound Shipments" description="Short receives and receiving drift" />
-                                                    <MobileNavItem variant={variant} icon={ShieldCheck} title="Lost or Damaged Inventory" description="Recovery across FBA states" />
-                                                    <MobileNavItem variant={variant} icon={BoxSelect} title="Fee Discrepancies" description="Overcharges, reversals, and gaps" />
-                                                    <MobileNavItem variant={variant} icon={ArrowLeft} title="Refund Without Return" description="Refunds not matched to real return outcome" />
-                                                    <MobileNavItem variant={variant} icon={Truck} title="Transfer & Operations" description="Inter-fulfillment discrepancies" />
-                                                    <MobileNavItem variant={variant} icon={BarChart3} title="Recovery Workflow" description="Valid cases, evidence, filing, payout" highlight />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Search} title="Inbound Shipments" description="Short receives and receiving drift" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={ShieldCheck} title="Lost or Damaged Inventory" description="Recovery across FBA states" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={BoxSelect} title="Fee Discrepancies" description="Overcharges, reversals, and gaps" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={ArrowLeft} title="Refund Without Return" description="Refunds not matched to real return outcome" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Truck} title="Transfer & Operations" description="Inter-fulfillment discrepancies" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={BarChart3} title="Recovery Workflow" description="Valid cases, evidence, filing, payout" highlight />
                                                 </div>
                                             </div>
 
@@ -193,10 +220,10 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             <div className="space-y-3">
                                                 <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Evidence & Control</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem variant={variant} icon={Layers} title="Evidence Matching" description="Connect support to the right case" />
-                                                    <MobileNavItem variant={variant} icon={Briefcase} title="Filing Readiness" description="Hold weak or duplicate issues back" />
-                                                    <MobileNavItem variant={variant} icon={BadgePercent} title="Recovery Tracking" description="Approval and payout visibility" />
-                                                    <MobileNavItem variant={variant} icon={FileText} title="Connected Sources" description="Email, storage, and uploaded proof" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Layers} title="Evidence Matching" description="Connect support to the right case" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Briefcase} title="Filing Readiness" description="Hold weak or duplicate issues back" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={BadgePercent} title="Recovery Tracking" description="Approval and payout visibility" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={FileText} title="Connected Sources" description="Email, storage, and uploaded proof" />
                                                 </div>
                                             </div>
 
@@ -204,9 +231,9 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             <div className="space-y-3">
                                                 <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>By Seller Type</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem variant={variant} icon={Activity} title="Emerging Sellers" description="Read-only audit and guided recovery" />
-                                                    <MobileNavItem variant={variant} icon={TrendingUp} title="Growth Sellers" description="Ongoing recovery coverage at scale" />
-                                                    <MobileNavItem variant={variant} icon={Layers} title="Enterprise Teams" description="Multi-workspace recovery operations" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Activity} title="Emerging Sellers" description="Read-only audit and guided recovery" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={TrendingUp} title="Growth Sellers" description="Ongoing recovery coverage at scale" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Layers} title="Enterprise Teams" description="Multi-workspace recovery operations" />
                                                 </div>
                                             </div>
                                         </AccordionContent>
@@ -235,7 +262,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     to="/login"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={mobileMenuItemClass}>
-                                    Login
+                                    LOGIN
                                 </Link>
                                 <Link
                                     to="/sales"
@@ -252,7 +279,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             ? "rounded-full bg-[#0B74DE] text-white"
                                             : "rounded-[6px] bg-white text-black"
                                     )}>
-                                    Join Waitlist
+                                    JOIN WAITLIST
                                 </Link>
                             </div>
                         </motion.div>

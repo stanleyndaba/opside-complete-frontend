@@ -405,15 +405,15 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
             <div className="hidden items-center gap-2 md:flex">
               <Link
                 to="/login"
-                className={`rounded-full px-4 py-2 text-[12px] font-semibold transition-colors ${
+                className={`rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-tight transition-colors ${
                   isOverDarkSurface ? 'text-white/90 hover:bg-white/10 hover:text-white' : 'text-[#25313A] hover:bg-[#F3F6F8]'
                 }`}
               >
-                Login
+                LOGIN
               </Link>
               <Button
                 onClick={onPrimaryCta}
-                className="h-10 rounded-full bg-[#0B74DE] px-5 text-[12px] font-semibold text-white shadow-[0_14px_30px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+                className="h-10 rounded-full bg-[#0B74DE] px-5 text-[12px] font-semibold uppercase tracking-tight text-white shadow-[0_14px_30px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
               >
                 {primaryCtaLabel}
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -497,16 +497,16 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8]"
+                className="rounded-2xl px-3 py-3 text-sm font-semibold uppercase tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
               >
-                Login
+                LOGIN
               </Link>
               <Button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onPrimaryCta();
                 }}
-                className="mt-2 h-11 rounded-full bg-[#0B74DE] text-sm font-semibold text-white hover:bg-[#0869C9]"
+                className="mt-2 h-11 rounded-full bg-[#0B74DE] text-sm font-semibold uppercase tracking-tight text-white hover:bg-[#0869C9]"
               >
                 {primaryCtaLabel}
               </Button>

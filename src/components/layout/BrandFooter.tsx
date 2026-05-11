@@ -108,6 +108,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
     <div className="relative z-10 w-full bg-[#1A1A1A]">
       <footer
         id="core-footer"
+        data-navbar-theme="dark"
         className="relative w-full overflow-hidden bg-[#1A1A1A] text-[#E0E0E0]"
         style={{ width: '100%', maxWidth: '100%' }}
       >
