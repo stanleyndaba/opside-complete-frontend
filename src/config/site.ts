@@ -45,10 +45,10 @@ export const AGENT_HIGHLIGHTS = [
 ];
 
 export const SITE_META = {
-  title: 'Margin | Recover FBA reimbursements without weak claims',
-  description: 'Margin finds missed FBA reimbursements, verifies the claim truth, files only supportable cases, and tracks Amazon until payout.',
+  title: 'Margin | Claim-Ready Amazon FBA Recovery Automation',
+  description: 'Margin turns Amazon loss events into claim-ready recoveries with claim-clock tracking, evidence matching, seller approval before filing, and no recovery commissions.',
   url: 'https://margin-finance.com',
-  image: '/og-image.png',
-  preloadImages: ['/gmailicon.png', '/outlookicon.webp', '/gd.png']
+  image: 'https://margin-finance.com/og-image.png',
+  preloadImages: []
 };
 

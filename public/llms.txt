@@ -1,0 +1,32 @@
+# Margin
+
+Margin is deadline-aware recovery automation for Amazon FBA sellers.
+
+## Core Positioning
+
+Margin turns Amazon loss events into claim-ready recoveries before time runs out. It detects reimbursement-worthy FBA activity, starts the claim clock, identifies the claim type, matches evidence, prepares recovery cases for seller review, and tracks recovery states from detection through payout.
+
+## Trust Model
+
+- Read-only first
+- Seller approval before filing
+- Weak, duplicate, unsupported, expired, or low-confidence cases held back
+- No recovery commissions
+- Amazon makes final reimbursement decisions
+
+## Important Pages
+
+- [Homepage](https://margin-finance.com/)
+- [Founding 100 Recovery Audit](https://margin-finance.com/early-access)
+- [Pricing](https://margin-finance.com/pricing)
+- [Research](https://margin-finance.com/research)
+- [About Margin](https://margin-finance.com/about-margin)
+- [Contact](https://margin-finance.com/contact)
+
+## Commercial Model
+
+Founding 100 starts with a $99 audit activation. Margin runs as a monthly recovery management system rather than a percentage-based reimbursement service. Sellers keep approved recoveries.
+
+## Contact
+
+Support: support@margin-finance.com
