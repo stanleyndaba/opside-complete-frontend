@@ -311,7 +311,7 @@ const revealProps = {
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
 
-function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => void; primaryCtaLabel: string }) {
+function LightNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
 
@@ -411,13 +411,17 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
               >
                 LOGIN
               </Link>
-              <Button
-                onClick={onPrimaryCta}
-                className="h-10 rounded-full bg-[#0B74DE] px-5 text-[12px] font-semibold uppercase tracking-tight text-white shadow-[0_14px_30px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+              <a
+                href="#how-margin-works"
+                className={`inline-flex h-10 items-center rounded-full px-5 text-[12px] font-semibold uppercase tracking-tight transition-colors ${
+                  isOverDarkSurface
+                    ? 'bg-white/[0.08] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] hover:bg-white/[0.14]'
+                    : 'bg-[#F3F6F8] text-[#25313A] shadow-[inset_0_0_0_1px_rgba(207,224,234,0.9)] hover:bg-[#EAF1F5]'
+                }`}
               >
-                {primaryCtaLabel}
+                See Workflow
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              </a>
             </div>
 
             <button
@@ -501,15 +505,14 @@ function LightNavbar({ onPrimaryCta, primaryCtaLabel }: { onPrimaryCta: () => vo
               >
                 LOGIN
               </Link>
-              <Button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onPrimaryCta();
-                }}
-                className="mt-2 h-11 rounded-full bg-[#0B74DE] text-sm font-semibold uppercase tracking-tight text-white hover:bg-[#0869C9]"
+              <a
+                href="#how-margin-works"
+                onClick={() => setMobileMenuOpen(false)}
+                className="mt-2 inline-flex h-11 items-center justify-center rounded-full bg-[#F3F6F8] px-4 text-sm font-semibold uppercase tracking-tight text-[#25313A] shadow-[inset_0_0_0_1px_rgba(207,224,234,0.9)] hover:bg-[#EAF1F5]"
               >
-                {primaryCtaLabel}
-              </Button>
+                See Workflow
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
             </div>
           ) : null}
         </div>
@@ -957,7 +960,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
-      <LightNavbar onPrimaryCta={handlePrimaryCta} primaryCtaLabel={primaryCtaLabel} />
+      <LightNavbar />
 
       <main className="relative">
         <KineticHeroSection
