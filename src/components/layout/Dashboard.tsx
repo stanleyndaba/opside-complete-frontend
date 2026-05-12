@@ -712,6 +712,7 @@ const formatConfidenceLabel = (value?: number | null) => {
 
 const formatSourceTypeLabel = (value?: string | null) => {
   const normalized = (value || '').replace(/_/g, ' ').trim();
+  if (normalized.toLowerCase() === 'sp api') return 'SP API';
   return normalized ? toTitleCase(normalized) : 'Not available';
 };
 
