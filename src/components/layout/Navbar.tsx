@@ -105,7 +105,6 @@ export function Navbar({
     location.pathname.startsWith('/smart-inventory-sync') ||
     location.pathname.startsWith('/sync');
   const isTransparent = !!forceTransparent || pathTransparent;
-  const isEvidenceLockerPage = location.pathname.startsWith('/evidence-locker') || location.pathname.includes('/evidence-locker');
 
   // Check if we're on the Dashboard (Command Center) page
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
@@ -698,20 +697,10 @@ export function Navbar({
               <HoverCardTrigger asChild>
                 <button
                   onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                  className={cn(
-                    "relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent transition-all",
-                    isEvidenceLockerPage
-                      ? "text-[#6B7280] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
-                      : isTransparent
-                        ? "text-white hover:border-white/10 hover:bg-white/[0.04] hover:text-white"
-                      : "text-[#6B7280] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
-                  )}
+                  className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-[#6B7280] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
                   aria-label="Integrations Hub">
-                  <Box
-                    className={cn("h-5 w-5", isEvidenceLockerPage ? "drop-shadow-[0_1px_2px_rgba(17,24,39,0.55)]" : "")}
-                    stroke={isEvidenceLockerPage ? '#FFFFFF' : 'currentColor'}
-                  />
-                  <span className="pointer-events-none absolute right-0 top-0 z-10 flex h-4 min-w-4 translate-x-1/4 -translate-y-1/4 select-none items-center justify-center rounded-full border border-white bg-[#0052FF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-white tabular-nums shadow-[0_8px_18px_rgba(0,82,255,0.22)]">
+                  <Box className="h-5 w-5" />
+                  <span className="pointer-events-none absolute right-0 top-0 z-10 flex h-4 min-w-4 translate-x-1/4 -translate-y-1/4 select-none items-center justify-center rounded-full border border-white bg-[#0052FF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-[0_8px_18px_rgba(0,82,255,0.22)]">
                     {connectedPlatformsCount}
                   </span>
                 </button>
