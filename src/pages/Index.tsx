@@ -78,7 +78,7 @@ const trustHighlights = [
   'No black box'
 ];
 
-const heroHeadlineWords = 'Manage Amazon recovery work before missing units, weak evidence, and claim windows turn into lost money.'.split(' ');
+const heroHeadlineWords = 'Amazon received fewer units than you shipped. Margin shows what happens next.'.split(' ');
 
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
@@ -247,7 +247,7 @@ const trustControls = [
 
 const earlyAccessItems = [
   'Founding 100 Recovery Audit',
-  '$99 once-off audit activation',
+  'Managed onboarding before filing',
   'Read-only setup first',
   'Claim-clock scan and evidence readiness review',
   'Seller approval before filing',
@@ -281,7 +281,7 @@ const faqs = [
   },
   {
     question: 'Why no recovery commissions?',
-    answer: 'Margin does not take a percentage of approved recoveries. Founding 100 starts with a $99 audit activation, then sellers can keep Margin running as a monthly recovery management system.'
+    answer: 'Margin does not take a percentage of approved recoveries. Founding 100 starts with a managed recovery audit, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
     question: 'What happens after I start the Founding 100 Recovery Audit?',
@@ -671,10 +671,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[760px] text-[17px] leading-8 text-slate-300 md:text-xl md:leading-9"
           >
-            Amazon handles some reimbursements automatically - but not everything. Margin is built for the recovery work that still needs visibility: inbound discrepancies, missing units, refund gaps, fee issues, rejected claims, unclear payouts, and underpaid reimbursements.
-            <span className="mt-4 block">
-              Margin starts the claim clock, checks evidence readiness, prepares claim-ready cases, holds weak findings back, keeps seller approval before filing, and tracks every recovery state through payout, rejection, or follow-up.
-            </span>
+            Margin keeps the recovery work visible: claim clocks, evidence readiness, seller approval, case tracking, and payout clarity.
           </motion.p>
 
           <motion.div
@@ -708,7 +705,7 @@ function KineticHeroSection({
               transition={{ duration: 0.55, delay: 0.95 }}
               className="mt-3 max-w-[560px] text-sm leading-6 text-slate-400"
             >
-              Founding 100 Recovery Audit: $99 once-off audit activation. Read-only setup first. Claim-clock scan, evidence readiness review, seller approval before filing, and no recovery commissions.
+              Founding 100 Recovery Audit starts with controlled onboarding, read-only setup, claim-clock scanning, evidence readiness review, and seller approval before filing. No recovery commissions.
             </motion.div>
           ) : null}
 
@@ -1299,7 +1296,7 @@ export default function Index() {
                   Join the Founding 100 before your next recovery window closes.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Founding 100 Recovery Audit: $99 once-off audit activation. Read-only setup first. Claim-clock scan, evidence readiness review, seller approval before filing, and no recovery commissions.
+                  Founding 100 Recovery Audit starts with controlled onboarding, read-only setup, claim-clock scanning, evidence readiness review, and seller approval before filing. No recovery commissions.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
