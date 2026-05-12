@@ -75,10 +75,10 @@ const trustHighlights = [
   'Read-only first',
   'Seller approval before filing',
   'No recovery commissions',
-  'Weak cases held back'
+  'No black box'
 ];
 
-const heroHeadlineWords = 'Turn Amazon loss events into claim-ready recoveries before time runs out.'.split(' ');
+const heroHeadlineWords = 'Manage Amazon recovery work before missing units, weak evidence, and claim windows turn into lost money.'.split(' ');
 
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
@@ -109,7 +109,7 @@ const whyNowItems = [
   },
   {
     title: 'Granular transaction noise',
-    detail: 'Removal fees, disposal charges, reversals, reimbursements, refunds, and payouts can split into smaller events that are hard to reconcile manually.'
+    detail: 'Removal fees, disposal charges, reversals, refunds, unclear payouts, and underpaid reimbursements can split into smaller events that are hard to reconcile manually.'
   },
   {
     title: 'Quarterly audits are too late',
@@ -166,7 +166,7 @@ const workflowSteps = [
   {
     step: '02',
     title: 'Detect signals and start the clock',
-    detail: 'Margin identifies reimbursement-worthy FBA events, assigns the claim type, and keeps the deadline visible before the window closes.'
+    detail: 'Margin detects recovery-relevant activity, identifies the claim type, starts the claim clock, checks required evidence, prepares the case for seller review, and tracks the outcome through payout, rejection, or follow-up.'
   },
   {
     step: '03',
@@ -246,18 +246,18 @@ const trustControls = [
 ];
 
 const earlyAccessItems = [
-  'Founding 100 managed cohort',
-  '$99 early-access reservation',
-  'Workspace prepared before onboarding',
-  'Founder-led first recovery cycle',
-  'Read-only setup before filing',
+  'Founding 100 Recovery Audit',
+  '$99 once-off audit activation',
+  'Read-only setup first',
+  'Claim-clock scan and evidence readiness review',
+  'Seller approval before filing',
   'No recovery commissions'
 ];
 
 const faqs = [
   {
     question: 'What does Margin do after I connect my Amazon account?',
-    answer: 'Margin starts in read-only mode. It reviews FBA activity for reimbursement-worthy events, identifies the claim type, tracks the claim window, matches supporting evidence, and prepares recovery cases for seller review.'
+    answer: 'Margin starts in read-only mode. It reviews FBA activity for recovery-relevant events, identifies the claim type, tracks the claim window, matches supporting evidence, and prepares recovery cases for seller review.'
   },
   {
     question: 'Does Margin guarantee reimbursements?',
@@ -284,8 +284,8 @@ const faqs = [
     answer: 'Margin does not take a percentage of approved recoveries. Founding 100 starts with a $99 audit activation, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
-    question: 'What happens after I reserve Early Access?',
-    answer: 'Your reservation joins the managed Founding 100 cohort. Margin prepares the workspace carefully, sends onboarding updates, and begins the guided first recovery cycle after setup is ready.'
+    question: 'What happens after I start the Founding 100 Recovery Audit?',
+    answer: 'Your activation joins the managed Founding 100 cohort. Margin prepares the workspace carefully, starts with read-only setup, scans claim clocks, reviews evidence readiness, and keeps seller approval before filing.'
   }
 ];
 
@@ -645,7 +645,7 @@ function KineticHeroSection({
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"
           >
-            Deadline-aware recovery automation for Amazon sellers
+            Always-on recovery management for Amazon sellers
           </motion.div>
 
           <h1
@@ -671,18 +671,21 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[760px] text-[17px] leading-8 text-slate-300 md:text-xl md:leading-9"
           >
-            Margin detects reimbursement-worthy FBA events, starts the claim clock, matches the required evidence, and prepares recovery cases before Amazon&apos;s reimbursement windows close. Start read-only. Approve before filing. No recovery commissions.
+            Amazon handles some reimbursements automatically - but not everything. Margin is built for the recovery work that still needs visibility: inbound discrepancies, missing units, refund gaps, fee issues, rejected claims, unclear payouts, and underpaid reimbursements.
+            <span className="mt-4 block">
+              Margin starts the claim clock, checks evidence readiness, prepares claim-ready cases, holds weak findings back, keeps seller approval before filing, and tracks every recovery state through payout, rejection, or follow-up.
+            </span>
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-9 grid w-full max-w-[470px] grid-cols-1 gap-3 min-[430px]:grid-cols-2"
+            className="mt-9 grid w-full max-w-[700px] grid-cols-1 gap-3 min-[680px]:grid-cols-[1.25fr_1fr]"
           >
             <Button
               onClick={onPrimaryCta}
-              aria-label="Start Recovery Audit"
+              aria-label="Start Founding Recovery Audit"
               className="h-12 justify-center rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.36)] transition-transform hover:scale-[1.02] hover:bg-[#1683F1]"
             >
               {primaryCtaLabel}
@@ -705,7 +708,7 @@ function KineticHeroSection({
               transition={{ duration: 0.55, delay: 0.95 }}
               className="mt-3 max-w-[560px] text-sm leading-6 text-slate-400"
             >
-              Managed Early Access opens in careful batches before read-only setup begins.
+              Founding 100 Recovery Audit: $99 once-off audit activation. Read-only setup first. Claim-clock scan, evidence readiness review, seller approval before filing, and no recovery commissions.
             </motion.div>
           ) : null}
 
@@ -734,7 +737,7 @@ function KineticHeroSection({
               to="/early-access"
               className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-tight text-blue-300 transition-colors hover:text-blue-100"
             >
-              Early Access
+              Founding Audit
               <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
@@ -953,7 +956,7 @@ export default function Index() {
   };
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = 'Start Recovery Audit';
+  const primaryCtaLabel = 'Start Founding Recovery Audit';
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
@@ -967,6 +970,14 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />
+
+        <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 md:py-10">
+          <div className={containerClass}>
+            <p className="max-w-[900px] text-[17px] font-medium leading-8 tracking-[-0.02em] text-[#25313A] md:text-[20px] md:leading-9">
+              Amazon does handle some reimbursements automatically. Margin is built for the recovery work that still needs visibility: missing proof, claim windows, case readiness, seller approval, underpaid reimbursements, rejections, and payout tracking.
+            </p>
+          </div>
+        </section>
 
         <section className="relative py-28 md:py-40" aria-label="Margin recovery speed metrics">
           <div className={containerClass}>
@@ -1012,9 +1023,15 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...revealProps} className="max-w-[820px]">
               <div className={sectionLabelClass}>Why Now</div>
-              <h2 className={sectionHeadingClass}>Amazon does not just create reimbursement issues. It starts a clock.</h2>
+              <h2 className={sectionHeadingClass}>Why timing matters</h2>
               <p className={sectionBodyClass}>
-                Lost inventory, damaged units, inbound shortages, return gaps, fee events, and reimbursement reversals can expire before sellers have proof ready. Margin keeps deadline-aware recovery work visible, evidence-backed, and seller-controlled before claim windows close.
+                Manual and quarterly audits can surface recovery issues too late. Missing inventory, inbound shortages, damaged units, refund-without-return activity, fee drift, reimbursement reversals, and payout mismatches can expire before evidence is ready.
+              </p>
+              <p className={sectionBodyClass}>
+                Missing inventory is not only a reimbursement issue. It can create stockout risk, listing momentum loss, underpaid reimbursement, and follow-up work that gets buried if it is not tracked early.
+              </p>
+              <p className={sectionBodyClass}>
+                Margin keeps each recovery issue tied to its claim clock, required evidence, expected value, approval state, and payout trail.
               </p>
               <Button
                 variant="outline"
@@ -1125,13 +1142,16 @@ export default function Index() {
         <section className="relative py-16 md:py-28" id="how-margin-works">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <div className={sectionLabelClass}>How Margin Works</div>
-              <h2 className={sectionHeadingClass}>From Amazon event to claim-ready recovery.</h2>
+              <div className={sectionLabelClass}>What Margin Does</div>
+              <h2 className={sectionHeadingClass}>What Margin does</h2>
               <p className="mt-5 max-w-[760px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:text-[26px] md:leading-9">
-                Every recovery gets a deadline, an evidence checklist, a readiness state, and a payout trail.
+                When Amazon receives fewer units than you shipped, refunds an old order, closes a shipment with missing units, or pays a reimbursement that does not match the loss, the work is not finished.
               </p>
               <p className={sectionBodyClass}>
-                Margin turns reimbursement work into a controlled sequence, so sellers can see what is evidence-supported before anything moves forward.
+                Margin turns the issue into a managed recovery workflow: claim clock, claim type, evidence checklist, case readiness, seller approval, Amazon response, payout status, and next step.
+              </p>
+              <p className={sectionBodyClass}>
+                Cases move through clear states such as detected, preparing, claim-ready, blocked, filed, approved, awaiting payout, paid, or re-evaluation. Weak, duplicate, expired, unsupported, or low-confidence findings are held back instead of being pushed into reckless filing volume.
               </p>
             </motion.div>
 
@@ -1177,9 +1197,12 @@ export default function Index() {
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <motion.div {...revealProps}>
                 <div className={sectionLabelClass}>Trust & Control</div>
-                <h2 className={sectionHeadingClass}>Autonomous where it saves time. Controlled where it protects your account.</h2>
+                <h2 className={sectionHeadingClass}>Why sellers trust the workflow.</h2>
                 <p className={sectionBodyClass}>
                   Margin does not need to feel mysterious to be powerful. The workflow is built around read-only visibility, evidence quality, seller approval, weak-case blocking, and transparent recovery states.
+                </p>
+                <p className={sectionBodyClass}>
+                  Margin does not ask for Seller Central passwords, does not use unofficial support channels, and does not file every possible issue blindly.
                 </p>
               </motion.div>
 
@@ -1271,19 +1294,19 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
               <motion.div {...revealProps}>
-                <div className={sectionLabelClass}>Managed Early Access</div>
+                <div className={sectionLabelClass}>Founding 100 Recovery Audit</div>
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
                   Join the Founding 100 before your next recovery window closes.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Reserve your place for $99, move through guided setup, and begin a founder-led first recovery cycle. Margin prepares your workspace, connects read-only data, and shows which Amazon loss events are claim-ready, blocked, or still missing evidence.
+                  Founding 100 Recovery Audit: $99 once-off audit activation. Read-only setup first. Claim-clock scan, evidence readiness review, seller approval before filing, and no recovery commissions.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
                     onClick={handlePrimaryCta}
                     className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
                   >
-                    Reserve Founding Access
+                    {primaryCtaLabel}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                   <Button
@@ -1367,7 +1390,7 @@ export default function Index() {
                   Find the recoveries already on the clock.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Start with managed Early Access. Margin will help you identify Amazon loss events, match the required evidence, and see which recovery cases are ready, blocked, or waiting before anything gets filed.
+                  Start with the Founding 100 Recovery Audit. Margin helps identify Amazon loss events, match the required evidence, and show which recovery cases are ready, blocked, or waiting before anything gets filed.
                 </p>
               </div>
 
@@ -1376,7 +1399,7 @@ export default function Index() {
                   onClick={handlePrimaryCta}
                   className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
                 >
-                  Reserve Founding Access
+                  {primaryCtaLabel}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
 
