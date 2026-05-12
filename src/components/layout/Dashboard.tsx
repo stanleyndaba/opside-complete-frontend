@@ -3630,13 +3630,9 @@ export function Dashboard() {
                             <div
                               className={cn(
                                 "mt-1 text-[13px] font-sans font-medium leading-none tracking-tight",
-                                item.valueTone === 'ready'
-                                  ? 'text-emerald-200'
-                                  : item.valueTone === 'review'
-                                    ? 'text-amber-200'
-                                    : item.valueTone === 'muted'
-                                      ? 'text-white/[0.55]'
-                                      : 'text-white/[0.9]'
+                                item.valueTone === 'muted'
+                                  ? 'text-white/[0.55]'
+                                  : 'text-white/[0.9]'
                               )}
                             >
                               {item.value}
