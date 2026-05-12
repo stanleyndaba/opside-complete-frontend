@@ -127,6 +127,7 @@ export default function IntegrationsHub() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady, tenant } = useTenant();
   const activeSlug = tenantSlug || tenant?.slug || null;
+  const isDemoWorkspace = activeSlug?.toLowerCase() === 'demo-workspace';
   const { toast } = useToast();
   const { isFull, capacity } = useOnboardingCapacity();
   const [status, setStatus] = useState<IntegrationStatusDTO | null>(null);
@@ -1575,7 +1576,7 @@ export default function IntegrationsHub() {
                     { label: 'Ingestable Sources', value: evidenceSourcesState.ingestableCount, note: `${evidenceSourcesState.connectedCount} connected` },
                     { label: 'Sources Resolved', value: ingestionResult?.sourcesResolved ?? evidenceStatus?.sourcesResolved ?? 0, note: 'Resolved for ingest' },
                     { label: 'Docs Stored', value: evidenceStatus?.documentsCount ?? 0, note: 'Stored with file bytes available' },
-                    { label: 'Parsing', value: evidenceStatus?.processingCount ?? 0, note: 'Parser still running' },
+                    { label: 'Parsing', value: isDemoWorkspace ? 9 : evidenceStatus?.processingCount ?? 0, note: 'Parser still running' },
                     { label: 'Parsed', value: evidenceStatus?.parsedCount ?? 0, note: 'Parser completed successfully' },
                     { label: 'Ready to Match', value: evidenceStatus?.matchReadyCount ?? 0, note: 'Parsed, not case-linked' }
                   ].map((item, index) => (
