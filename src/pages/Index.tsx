@@ -672,9 +672,9 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-7 max-w-[760px] text-[17px] leading-8 text-slate-300 md:text-xl md:leading-9"
+            className="mt-7 max-w-[840px] text-[16px] leading-8 text-slate-300 md:text-lg md:leading-9"
           >
-            Margin keeps the recovery work visible: claim clocks, evidence readiness, seller approval, case tracking, and payout clarity.
+            Margin helps serious Amazon FBA sellers manage the messy recovery workflow after something goes wrong — missing units, inbound discrepancies, refund gaps, fee issues, rejected claims, and unclear payouts. It starts the claim clock, checks evidence readiness, prepares claim-ready cases, holds weak findings back, keeps seller approval before filing, and tracks every recovery state through payout.
           </motion.p>
 
           <motion.div
@@ -685,7 +685,7 @@ function KineticHeroSection({
           >
             <Button
               onClick={onPrimaryCta}
-              aria-label="Start Founding Recovery Audit"
+              aria-label="Start Recovery Audit"
               className="h-12 justify-center rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.36)] transition-transform hover:scale-[1.02] hover:bg-[#1683F1]"
             >
               {primaryCtaLabel}
@@ -956,7 +956,7 @@ export default function Index() {
   };
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = 'Start Founding Recovery Audit';
+  const primaryCtaLabel = 'Start Recovery Audit';
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">

@@ -134,10 +134,12 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 Margin
                             </span>
                         </Link>
+                    </div>
+
+                    <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
                         <div className="hidden lg:block">
                             <ProductsMegaMenu variant={effectiveVariant} />
                         </div>
-
                         <Link to="/pricing" className={desktopNavLinkClass}>
                             Pricing
                         </Link>
@@ -150,8 +152,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         <Link to="/sales" className={desktopNavLinkClass}>
                             Enterprise
                         </Link>
-
-                    </div>
+                    </nav>
 
                     <nav className="hidden md:flex items-center gap-2">
                         <Link to="/login" className={desktopActionClass}>
