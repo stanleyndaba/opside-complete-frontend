@@ -75,10 +75,15 @@ const DEMO_SUBMITTED_DOCUMENT_TITLES = [
 
 const DEMO_SUBMITTED_MATCH_TYPES = [
   { type: 'Inbound shipment shortage', matchType: 'sku_asin_invoice', supplier: 'Amazon FBA', amount: 184.72 },
-  { type: 'Warehouse transfer loss', matchType: 'amazon_fba', supplier: 'Warehouse Ops', amount: 312.18 },
+  { type: 'FBA fee overcharge', matchType: 'exact_invoice', supplier: 'Amazon Settlement', amount: 128.36 },
+  { type: 'Lost inventory reimbursement', matchType: 'amazon_fba', supplier: 'Warehouse Ops', amount: 312.18 },
   { type: 'Damaged inventory reimbursement', matchType: 'supplier_match', supplier: 'Shenzhen Optics Co.', amount: 96.44 },
-  { type: 'Refund without return audit', matchType: 'amount_match', supplier: 'Amazon Settlement', amount: 57.9 },
+  { type: 'Refund without return', matchType: 'amount_match', supplier: 'Amazon Settlement', amount: 57.9 },
+  { type: 'Carrier delivery exception', matchType: 'date_match', supplier: 'DHL Freight', amount: 267.11 },
+  { type: 'Warehouse transfer loss', matchType: 'amazon_fba', supplier: 'Warehouse Ops', amount: 219.47 },
   { type: 'Settlement reimbursement gap', matchType: 'exact_invoice', supplier: 'Amazon Marketplace', amount: 128.36 },
+  { type: 'Removal order damage', matchType: 'sku_match', supplier: 'Amazon FBA', amount: 173.62 },
+  { type: 'Inventory reconciliation gap', matchType: 'asin_match', supplier: 'Amazon Marketplace', amount: 421.65 },
 ];
 
 const DEMO_SUBMITTED_MATCHES: MatchingResult[] = DEMO_SUBMITTED_DOCUMENT_TITLES.map((documentTitle, index) => {
@@ -108,7 +113,7 @@ const DEMO_SUBMITTED_MATCHES: MatchingResult[] = DEMO_SUBMITTED_DOCUMENT_TITLES.
       case_number: caseNumber,
       reference: caseNumber,
       title: profile.type,
-      subtitle: `Submitted to Amazon · SKU ${sku} · ASIN ${asin}`,
+      subtitle: `Matched case evidence · SKU ${sku} · ASIN ${asin}`,
     },
     document_details: {
       filename: documentTitle,
@@ -122,8 +127,8 @@ const DEMO_SUBMITTED_MATCHES: MatchingResult[] = DEMO_SUBMITTED_DOCUMENT_TITLES.
       linked_document_names: [documentTitle],
     },
     match_details: {
-      title: 'Matched evidence submitted',
-      subtitle: `Matched and submitted with ${caseNumber}; Amazon review is now tracking the evidence packet.`,
+      title: profile.type,
+      subtitle: `Matched with ${caseNumber}; Amazon review is tracking the evidence packet.`,
     },
   };
 });
@@ -402,7 +407,9 @@ export function EvidenceMatchingTable() {
     return labels[matchType] || matchType.replace(/_/g, ' ');
   };
 
-  const getActionLabel = (actionTaken: MatchingResult['action_taken']) => {
+  const getActionLabel = (match: MatchingResult) => {
+    if (match.id.startsWith('demo-submitted-match-')) return 'Matched';
+
     const labels: Record<MatchingResult['action_taken'], string> = {
       auto_submit: 'Auto-submitted',
       smart_prompt: 'Pending review',
@@ -410,7 +417,7 @@ export function EvidenceMatchingTable() {
       approved: 'Approved',
       rejected: 'Rejected'
     };
-    return labels[actionTaken] || actionTaken.replace(/_/g, ' ');
+    return labels[match.action_taken] || match.action_taken.replace(/_/g, ' ');
   };
 
   const getClaimReference = (match: MatchingResult) =>
@@ -571,7 +578,7 @@ export function EvidenceMatchingTable() {
                   {match.match_details?.title || getMatchTypeLabel(match.match_type)}
                 </div>
                 <div className="mt-1 text-[10px] font-sans uppercase tracking-tight text-zinc-500">
-                  {getActionLabel(match.action_taken)}
+                  {getActionLabel(match)}
                 </div>
                 {match.match_details?.subtitle ? (
                   <div className="mt-1 max-w-xl text-[10px] font-sans leading-relaxed text-zinc-400">
