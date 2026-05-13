@@ -77,6 +77,96 @@ interface LockerAuditEvent {
   narrative: string;
 }
 
+const DEMO_DOCUMENT_TITLES = [
+  'Amazon Inbound Shipment Summary – March 2026.xlsx',
+  'Supplier Invoice – Shenzhen Optics Co. – INV-2841.pdf',
+  'Warehouse Dispatch Confirmation – Batch 22.pdf',
+  'Refund Without Return Audit – April 2026.csv',
+  'Bill of Lading – FBA Shipment FBA15KD82.pdf',
+  'Amazon Case Log Export – Reimbursement Claims.csv',
+  'Inventory Reconciliation Statement – US Marketplace.xlsx',
+  'Carrier Delivery Exception Notice – DHL Freight.pdf',
+  'Proof of Delivery – UPS Freight – Tracking 1Z84X.pdf',
+  'Settlement Transaction Report – Q2 2026.xlsx',
+  'Supplier Packing List – SKU Group A.pdf',
+  'Commercial Invoice – Inventory Batch 14.pdf',
+  'FBA Inventory Adjustment Detail – May 2026.csv',
+  'Receiving Discrepancy Report – FBA Shipment 4821.csv',
+  'Shipment Manifest – Carton IDs + SKU Counts.pdf',
+  'Amazon Reimbursement Notification – Case 16894380251.pdf',
+  'Financial Ledger – Reimbursement Verification.xlsx',
+  'Removal Order Damage Photos – Batch 19.pdf',
+  'Lost Inventory Reconciliation Export – FNSKU Review.xlsx',
+  'Carrier Weight Audit – Pallet Transfer 07.csv',
+];
+
+const buildDemoDocumentRows = (): LockerDocumentRow[] => {
+  const baseDate = new Date('2026-05-10T14:00:00.000Z').getTime();
+
+  return DEMO_DOCUMENT_TITLES.map((title, index) => {
+    const ext = title.split('.').pop()?.toLowerCase();
+    const contentType =
+      ext === 'pdf' ? 'application/pdf' :
+        ext === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' :
+          ext === 'csv' ? 'text/csv' :
+            'application/octet-stream';
+    const createdAt = new Date(baseDate - index * 3_600_000).toISOString();
+    const linked = index % 4 !== 3;
+
+    return {
+      id: `demo-evidence-document-${index + 1}`,
+      name: title,
+      filename: title,
+      original_filename: title,
+      created_at: createdAt,
+      updated_at: createdAt,
+      uploadDate: createdAt,
+      status: 'processed',
+      processing_status: 'completed',
+      parser_status: 'completed',
+      parser_confidence: 0.88 + ((index % 5) * 0.02),
+      parser_error: null,
+      parsing_strategy: 'FULL',
+      parsing_explanation: {
+        reason: 'Demo evidence parsed with complete identifiers, dates, and amount signals.',
+        completed_steps: ['metadata', 'amounts', 'identifiers'],
+        failed_steps: [],
+        preserved_outputs: ['filename', 'supplier', 'invoice', 'amount'],
+      },
+      ingestion_strategy: 'FULL',
+      ingestion_explanation: {
+        reason: 'Demo source record is complete enough for evidence matching.',
+        preserved_fields: ['filename', 'content_type', 'source', 'amount'],
+        missing_fields: [],
+      },
+      extraction_signal_count: 6 + (index % 5),
+      source: index % 3 === 0 ? 'amazon' : index % 3 === 1 ? 'gmail' : 'upload',
+      provider: index % 3 === 0 ? 'amazon' : index % 3 === 1 ? 'gmail' : 'manual_upload',
+      source_display: index % 3 === 0 ? 'Amazon Seller Central' : index % 3 === 1 ? 'Gmail Evidence Sync' : 'Manual Upload',
+      content_type: contentType,
+      size_bytes: 180_000 + index * 41_250,
+      supplier: index % 5 === 0 ? 'Shenzhen Optics Co.' : index % 5 === 1 ? 'UPS Freight' : index % 5 === 2 ? 'Amazon FBA' : index % 5 === 3 ? 'DHL Freight' : 'Warehouse Ops',
+      invoice: `DEMO-${2841 + index}`,
+      amount: 84.35 + index * 37.9,
+      parsedVia: 'demo-fixture',
+      parsed_metadata: {},
+      extracted: {},
+      linked_case_count: linked ? 1 : 0,
+      linked_case_ids: linked ? [`demo-case-${16874 + index}`] : [],
+      linked_case_refs: linked ? [`RFD-${16874 + index}`] : [],
+      strongest_match_confidence: linked ? 0.84 + ((index % 4) * 0.03) : null,
+      strongest_match_type: linked ? 'demo_evidence_match' : null,
+      linkage_strength: linked ? 'strong' : 'none',
+      evidence_state: linked ? 'Linked Strongly' : 'Usable',
+      usable_as_evidence: true,
+      usability_reason: linked ? 'Ready for reimbursement support' : 'Parsed and ready for matching',
+      needs_review: false,
+    };
+  });
+};
+
+const DEMO_DOCUMENT_ROWS = buildDemoDocumentRows();
+
 type LiveLockerEvent = {
   eventType: string;
   timestamp: string;
@@ -458,6 +548,35 @@ export default function EvidenceLocker() {
   const latestInventoryTimestamp = useMemo(() => {
     return recentEvents[0]?.timestamp || documents[0]?.updated_at || documents[0]?.created_at || null;
   }, [documents, recentEvents]);
+
+  const demoDocuments = useMemo(() => {
+    if (activeSlug !== 'demo-workspace') return [];
+    const term = q.trim().toLowerCase();
+    if (!term) return DEMO_DOCUMENT_ROWS;
+
+    return DEMO_DOCUMENT_ROWS.filter((doc) => {
+      return [
+        doc.name,
+        doc.filename,
+        doc.source_display,
+        doc.content_type,
+        doc.supplier,
+        doc.invoice,
+        ...doc.linked_case_refs,
+      ].some((value) => String(value || '').toLowerCase().includes(term));
+    });
+  }, [activeSlug, q]);
+
+  const displayDocuments = useMemo(
+    () => (demoDocuments.length > 0 ? [...demoDocuments, ...documents] : documents),
+    [demoDocuments, documents]
+  );
+
+  const displayMetrics = useMemo(() => ({
+    ...metrics,
+    totalDocuments: metrics.totalDocuments + (activeSlug === 'demo-workspace' ? DEMO_DOCUMENT_ROWS.length : 0),
+    filteredResults: metrics.filteredResults + demoDocuments.length,
+  }), [activeSlug, demoDocuments.length, metrics]);
 
   useStatusStream((event) => {
     if (!activeSlug) return;
@@ -888,9 +1007,9 @@ export default function EvidenceLocker() {
                   <div>
                     <h2 className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Document Library</h2>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-[15px] font-sans font-medium text-white tracking-tight">{metrics.filteredResults} results</span>
+                      <span className="text-[15px] font-sans font-medium text-white tracking-tight">{displayMetrics.filteredResults} results</span>
                       <div className="h-1.5 w-[1px] bg-white/10" />
-                      <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Total archive: {metrics.totalDocuments}</span>
+                      <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Total archive: {displayMetrics.totalDocuments}</span>
                     </div>
                   </div>
 
@@ -956,11 +1075,11 @@ export default function EvidenceLocker() {
                     </div>
                   ) : (
                     <>
-                      {documents.length === 0 ? (
+                      {displayDocuments.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-24">
                           <CircleDashed className="h-6 w-6 text-white/15 mb-4" />
                           <span className="text-[11px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                            {metrics.totalDocuments === 0 ? 'No documents in this workspace' : 'No documents match the current search'}
+                            {displayMetrics.totalDocuments === 0 ? 'No documents in this workspace' : 'No documents match the current search'}
                           </span>
                         </div>
                       ) : (
@@ -973,7 +1092,7 @@ export default function EvidenceLocker() {
                           ))}
                         </div>
                       <div className="divide-y divide-white/8">
-                        {documents.map((doc) => (
+                        {displayDocuments.map((doc) => (
                           <div
                             key={doc.id}
                             className="group relative px-5 py-3.5 transition-colors hover:bg-white/[0.025]"
@@ -1143,9 +1262,9 @@ export default function EvidenceLocker() {
                         <div className="flex flex-wrap items-center gap-5">
                           <div className="flex items-center gap-3">
                               <Checkbox
-                              checked={selectedIds.size > 0 && selectedIds.size === documents.length}
+                              checked={selectedIds.size > 0 && selectedIds.size === displayDocuments.length}
                               onCheckedChange={(c) => {
-                                if (c) setSelectedIds(new Set(documents.map(d => d.id)));
+                                if (c) setSelectedIds(new Set(displayDocuments.map(d => d.id)));
                                 else setSelectedIds(new Set());
                               }}
                               className="h-3 w-3 border-white/10 rounded-sm"
