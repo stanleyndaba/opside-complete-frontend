@@ -730,144 +730,6 @@ const EVIDENCE_PREVIEW_KEYS: Array<[string, string]> = [
   ['amount', 'Amount'],
 ];
 
-const DEMO_SUBMITTED_DOCUMENT_TITLES = [
-  'Amazon Inbound Shipment Summary – March 2026.xlsx',
-  'Supplier Invoice – Shenzhen Optics Co. – INV-2841.pdf',
-  'Warehouse Dispatch Confirmation – Batch 22.pdf',
-  'Refund Without Return Audit – April 2026.csv',
-  'Bill of Lading – FBA Shipment FBA15KD82.pdf',
-  'Amazon Case Log Export – Reimbursement Claims.csv',
-  'Inventory Reconciliation Statement – US Marketplace.xlsx',
-  'Carrier Delivery Exception Notice – DHL Freight.pdf',
-  'Proof of Delivery – UPS Freight – Tracking 1Z84X.pdf',
-  'Settlement Transaction Report – Q2 2026.xlsx',
-  'Supplier Packing List – SKU Group A.pdf',
-  'Commercial Invoice – Inventory Batch 14.pdf',
-  'FBA Inventory Adjustment Detail – May 2026.csv',
-  'Receiving Discrepancy Report – FBA Shipment 4821.csv',
-  'Shipment Manifest – Carton IDs + SKU Counts.pdf',
-  'Amazon Reimbursement Notification – Case 16894380251.pdf',
-  'Financial Ledger – Reimbursement Verification.xlsx',
-  'Removal Order Damage Photos – Batch 19.pdf',
-  'Lost Inventory Reconciliation Export – FNSKU Review.xlsx',
-  'Carrier Weight Audit – Pallet Transfer 07.csv',
-];
-
-const DEMO_SUBMITTED_FINDING_TYPES = [
-  {
-    anomalyType: 'inbound_shipment_shortage',
-    title: 'Inbound shipment shortage submitted',
-    eventLabel: 'Inbound shipment discrepancy',
-    policy: 'FBA inventory reimbursement for units missing from a received shipment',
-  },
-  {
-    anomalyType: 'warehouse_transfer_loss',
-    title: 'Warehouse transfer loss submitted',
-    eventLabel: 'Warehouse loss discrepancy',
-    policy: 'FBA reimbursement for inventory lost during Amazon-controlled movement',
-  },
-  {
-    anomalyType: 'damaged_inventory',
-    title: 'Damaged inventory reimbursement submitted',
-    eventLabel: 'Warehouse damage discrepancy',
-    policy: 'FBA reimbursement for inventory damaged while in Amazon custody',
-  },
-  {
-    anomalyType: 'refund_without_return',
-    title: 'Refund without return claim submitted',
-    eventLabel: 'Return discrepancy',
-    policy: 'Reimbursement for customer refund where return receipt is not supported',
-  },
-  {
-    anomalyType: 'settlement_reimbursement_gap',
-    title: 'Settlement reimbursement gap submitted',
-    eventLabel: 'Settlement discrepancy',
-    policy: 'Reconciliation of reimbursement owed versus settlement amount posted',
-  },
-];
-
-const buildDemoSubmittedFindings = () => {
-  const baseDate = new Date('2026-05-12T16:30:00.000Z').getTime();
-
-  return DEMO_SUBMITTED_DOCUMENT_TITLES.map((documentTitle, index) => {
-    const type = DEMO_SUBMITTED_FINDING_TYPES[index % DEMO_SUBMITTED_FINDING_TYPES.length];
-    const amount = Number((118.42 + index * 27.65 + (index % 4) * 16.9).toFixed(2));
-    const detectedAt = new Date(baseDate - index * 2_700_000).toISOString();
-    const caseNumber = `RFD-${17240 + index}-${String(type.anomalyType).slice(0, 3).toUpperCase()}`;
-    const amazonCaseId = `${16943082000 + index * 137}`;
-    const asin = `B0${['C7N2Q9KM', '9V4N6R2T', 'B2K8MTQ1', '8YQ3M6JH', 'C2JWV7P4'][index % 5]}`;
-    const sku = ['NS-HOME-ORGANIZER-2PK', 'BRS-KITCHEN-MAT-GR', 'ATL-PET-BOWL-XL', 'CPB-TRAVEL-BAG-BLK', 'SWL-CREAM-SET-03'][index % 5];
-    const shipmentId = `FBA${15 + (index % 5)}${['KD82', 'M4H7', 'T9Z3', 'P7R8', 'N8C5'][index % 5]}`;
-
-    return {
-      id: `demo-submitted-finding-${index + 1}`,
-      anomaly_type: type.anomalyType,
-      status: 'submitted',
-      estimated_value: amount,
-      currency: 'USD',
-      detected_at: detectedAt,
-      discovery_date: detectedAt,
-      created_at: detectedAt,
-      source_type: index % 3 === 0 ? 'amazon_settlement' : index % 3 === 1 ? 'fba_inventory' : 'carrier_document',
-      sync_id: `demo-sync-${String(9410 + index)}`,
-      severity: index % 4 === 0 ? 'high' : 'medium',
-      confidence_score: 0.89 + ((index % 5) * 0.018),
-      deadline_date: new Date(baseDate + (24 + index) * 86_400_000).toISOString(),
-      days_remaining: 24 + index,
-      expired: false,
-      review_tier: 'claim_candidate',
-      claim_readiness: 'claim_ready',
-      recommended_action: 'Monitor Amazon review response',
-      value_label: 'estimated_recovery',
-      coverage_family: 'FBA recovery',
-      next_action_label: 'Track Amazon review',
-      seller_summary: {
-        title: type.title,
-        summary: `${documentTitle} matched the Amazon ledger, shipment identifiers, and reimbursement trail. Margin submitted this as ${caseNumber} and is waiting for Amazon review.`,
-        event_label: type.eventLabel,
-        recoverability_reason: `The matched document supports the shortage, loss, or settlement gap with identifiers Amazon can reconcile against ${shipmentId}, ${sku}, and ${asin}.`,
-        evidence_summary: `Matched document: ${documentTitle}. Confidence ${(89 + (index % 5) * 2)}% with shipment, SKU, ASIN, case, and settlement fields aligned.`,
-      },
-      filing_movement: {
-        state: 'filed',
-        label: 'Submitted to Amazon',
-        detail: `Submitted as ${caseNumber}; matched evidence from ${documentTitle} is attached for Amazon review.`,
-        next_action_label: 'Open cases',
-        dispute_case_id: `demo-dispute-case-${index + 1}`,
-        case_number: caseNumber,
-        amazon_case_id: amazonCaseId,
-        eligibility_status: 'READY',
-        filing_status: 'submitted',
-        block_reasons: [],
-      },
-      evidence: {
-        matched_document: documentTitle,
-        document_title: documentTitle,
-        case_number: caseNumber,
-        amazon_case_id: amazonCaseId,
-        shipment_id: shipmentId,
-        sku,
-        asin,
-        amount: `$${amount.toFixed(2)}`,
-        match_status: 'Matched',
-      },
-      policy_basis: {
-        title: type.policy,
-        verification_status: 'official_reference_configured',
-        source_name: 'Amazon Seller Central Help',
-        last_verified_at: detectedAt,
-        required_documentation: [
-          { label: documentTitle, detail: 'Matched from Evidence Locker and attached to the submitted case.' },
-          { label: 'Amazon case and shipment identifiers', detail: `${caseNumber}, ${amazonCaseId}, ${shipmentId}` },
-        ],
-        summary: `Amazon review can verify this submission using the matched Evidence Locker document and the linked Seller Central identifiers.`,
-      },
-    };
-  });
-};
-
-const DEMO_SUBMITTED_FINDINGS = buildDemoSubmittedFindings();
-
 const formatEvidenceValue = (value: unknown) => {
   if (value === null || value === undefined || value === '') return null;
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
@@ -2426,17 +2288,11 @@ export function Dashboard() {
   const issuesFoundDescription = isSyncScopedDetections
     ? 'Showing detections from your latest CSV upload. The upload total above reflects everything this sync found, while the table below reflects only the findings currently visible in this view.'
     : 'Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.';
-  const dashboardDetectionResults = useMemo(
-    () => activeSlug === 'demo-workspace' && !isSyncScopedDetections
-      ? [...DEMO_SUBMITTED_FINDINGS, ...detectionResults]
-      : detectionResults,
-    [activeSlug, detectionResults, isSyncScopedDetections]
-  );
   const visibleDetectionResults = useMemo(
-    () => dashboardDetectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
-    [dashboardDetectionResults, showProcessed]
+    () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
+    [detectionResults, showProcessed]
   );
-  const findingsCurrency = dashboardDetectionResults.find((result) => typeof result?.currency === 'string' && result.currency.trim())?.currency || 'USD';
+  const findingsCurrency = detectionResults.find((result) => typeof result?.currency === 'string' && result.currency.trim())?.currency || 'USD';
   const visibleFindingsValueTotal = useMemo(
     () => visibleDetectionResults.reduce((sum, result) => sum + (Number(result.estimated_value) || 0), 0),
     [visibleDetectionResults]
@@ -2472,12 +2328,12 @@ export function Dashboard() {
     return formatCurrencyWithSelection(issuesFoundRecoveryValue, findingsCurrency);
   }, [findingsCurrency, formatCurrencyWithSelection, issuesFoundRecoveryValue]);
   const readyToFileFindingsCount = useMemo(
-    () => dashboardDetectionResults.filter(isReadyToFileFinding).length,
-    [dashboardDetectionResults]
+    () => detectionResults.filter(isReadyToFileFinding).length,
+    [detectionResults]
   );
   const needsReviewFindingsCount = useMemo(
-    () => dashboardDetectionResults.filter(result => !isReadyToFileFinding(result) && ['detected', 'pending'].includes((result.status || '').toLowerCase())).length,
-    [dashboardDetectionResults]
+    () => detectionResults.filter(result => !isReadyToFileFinding(result) && ['detected', 'pending'].includes((result.status || '').toLowerCase())).length,
+    [detectionResults]
   );
   const issuesFoundSummaryRows = useMemo(() => ([
     {

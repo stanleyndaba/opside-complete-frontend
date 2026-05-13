@@ -50,6 +50,84 @@ interface MatchingResult {
 const pluralize = (count: number, singular: string, plural = `${singular}s`) =>
   `${count} ${count === 1 ? singular : plural}`;
 
+const DEMO_SUBMITTED_DOCUMENT_TITLES = [
+  'Amazon Inbound Shipment Summary – March 2026.xlsx',
+  'Supplier Invoice – Shenzhen Optics Co. – INV-2841.pdf',
+  'Warehouse Dispatch Confirmation – Batch 22.pdf',
+  'Refund Without Return Audit – April 2026.csv',
+  'Bill of Lading – FBA Shipment FBA15KD82.pdf',
+  'Amazon Case Log Export – Reimbursement Claims.csv',
+  'Inventory Reconciliation Statement – US Marketplace.xlsx',
+  'Carrier Delivery Exception Notice – DHL Freight.pdf',
+  'Proof of Delivery – UPS Freight – Tracking 1Z84X.pdf',
+  'Settlement Transaction Report – Q2 2026.xlsx',
+  'Supplier Packing List – SKU Group A.pdf',
+  'Commercial Invoice – Inventory Batch 14.pdf',
+  'FBA Inventory Adjustment Detail – May 2026.csv',
+  'Receiving Discrepancy Report – FBA Shipment 4821.csv',
+  'Shipment Manifest – Carton IDs + SKU Counts.pdf',
+  'Amazon Reimbursement Notification – Case 16894380251.pdf',
+  'Financial Ledger – Reimbursement Verification.xlsx',
+  'Removal Order Damage Photos – Batch 19.pdf',
+  'Lost Inventory Reconciliation Export – FNSKU Review.xlsx',
+  'Carrier Weight Audit – Pallet Transfer 07.csv',
+];
+
+const DEMO_SUBMITTED_MATCH_TYPES = [
+  { type: 'Inbound shipment shortage', matchType: 'sku_asin_invoice', supplier: 'Amazon FBA', amount: 184.72 },
+  { type: 'Warehouse transfer loss', matchType: 'amazon_fba', supplier: 'Warehouse Ops', amount: 312.18 },
+  { type: 'Damaged inventory reimbursement', matchType: 'supplier_match', supplier: 'Shenzhen Optics Co.', amount: 96.44 },
+  { type: 'Refund without return audit', matchType: 'amount_match', supplier: 'Amazon Settlement', amount: 57.9 },
+  { type: 'Settlement reimbursement gap', matchType: 'exact_invoice', supplier: 'Amazon Marketplace', amount: 128.36 },
+];
+
+const DEMO_SUBMITTED_MATCHES: MatchingResult[] = DEMO_SUBMITTED_DOCUMENT_TITLES.map((documentTitle, index) => {
+  const profile = DEMO_SUBMITTED_MATCH_TYPES[index % DEMO_SUBMITTED_MATCH_TYPES.length];
+  const createdAt = new Date(new Date('2026-05-12T16:30:00.000Z').getTime() - index * 2_700_000).toISOString();
+  const caseNumber = `RFD-${17240 + index}-${String(profile.type).slice(0, 3).toUpperCase()}`;
+  const sku = ['NS-HOME-ORGANIZER-2PK', 'BRS-KITCHEN-MAT-GR', 'ATL-PET-BOWL-XL', 'CPB-TRAVEL-BAG-BLK', 'SWL-CREAM-SET-03'][index % 5];
+  const asin = `B0${['C7N2Q9KM', '9V4N6R2T', 'B2K8MTQ1', '8YQ3M6JH', 'C2JWV7P4'][index % 5]}`;
+  const amount = Number((profile.amount + index * 19.35).toFixed(2));
+
+  return {
+    id: `demo-submitted-match-${index + 1}`,
+    claim_id: `demo-submitted-claim-${index + 1}`,
+    document_id: `demo-evidence-document-${index + 1}`,
+    confidence_score: 0.9 + ((index % 5) * 0.017),
+    match_type: profile.matchType,
+    action_taken: index % 3 === 0 ? 'approved' : 'auto_submit',
+    matched_fields: ['SKU', 'ASIN', 'Amount', 'Shipment ID', 'Case reference'],
+    reasoning: `${documentTitle} matched the submitted claim packet with SKU, ASIN, amount, and Amazon reference fields aligned.`,
+    created_at: createdAt,
+    claim_details: {
+      type: profile.type,
+      amount,
+      currency: 'USD',
+      sku,
+      asin,
+      case_number: caseNumber,
+      reference: caseNumber,
+      title: profile.type,
+      subtitle: `Submitted to Amazon · SKU ${sku} · ASIN ${asin}`,
+    },
+    document_details: {
+      filename: documentTitle,
+      supplier: profile.supplier,
+      invoice_number: `DEMO-${2841 + index}`,
+      amount,
+      original_filename: documentTitle,
+      title: documentTitle,
+      subtitle: `Matched document · ${profile.supplier} · $${amount.toFixed(2)}`,
+      linked_document_count: 1,
+      linked_document_names: [documentTitle],
+    },
+    match_details: {
+      title: 'Matched evidence submitted',
+      subtitle: `Matched and submitted with ${caseNumber}; Amazon review is now tracking the evidence packet.`,
+    },
+  };
+});
+
 export function EvidenceMatchingTable() {
   const [matchingResults, setMatchingResults] = useState<MatchingResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -286,20 +364,27 @@ export function EvidenceMatchingTable() {
     fetchMatchingResults();
   }, [activeTenantSlug]);
 
+  const displayMatchingResults = useMemo(
+    () => activeTenantSlug === 'demo-workspace'
+      ? [...DEMO_SUBMITTED_MATCHES, ...matchingResults]
+      : matchingResults,
+    [activeTenantSlug, matchingResults]
+  );
+
   // Filter results by action type
   const smartPrompts = useMemo(() =>
-    matchingResults.filter(r => r.action_taken === 'smart_prompt'),
-    [matchingResults]
+    displayMatchingResults.filter(r => r.action_taken === 'smart_prompt'),
+    [displayMatchingResults]
   );
 
   const autoSubmitted = useMemo(() =>
-    matchingResults.filter(r => r.action_taken === 'auto_submit' || r.action_taken === 'approved'),
-    [matchingResults]
+    displayMatchingResults.filter(r => r.action_taken === 'auto_submit' || r.action_taken === 'approved'),
+    [displayMatchingResults]
   );
 
   const heldForReview = useMemo(() =>
-    matchingResults.filter(r => r.action_taken === 'no_action' || r.action_taken === 'rejected'),
-    [matchingResults]
+    displayMatchingResults.filter(r => r.action_taken === 'no_action' || r.action_taken === 'rejected'),
+    [displayMatchingResults]
   );
 
   const getMatchTypeLabel = (matchType: string) => {
@@ -571,7 +656,7 @@ export function EvidenceMatchingTable() {
     );
   }
 
-  if (error && matchingResults.length === 0) {
+  if (error && displayMatchingResults.length === 0) {
     return (
       <div className="border-y border-red-500/20 px-6 py-10 text-center">
         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-red-400/80">Evidence queue</div>
@@ -597,8 +682,8 @@ export function EvidenceMatchingTable() {
             <p className="mt-2 text-[11px] font-sans leading-relaxed text-zinc-400">
               {refreshing
                 ? 'Refreshing the current evidence queue.'
-                : matchingResults.length > 0
-                  ? `${pluralize(matchingResults.length, 'match')} available · ${smartPrompts.length} pending · ${autoSubmitted.length} submitted · ${heldForReview.length} held`
+                : displayMatchingResults.length > 0
+                  ? `${pluralize(displayMatchingResults.length, 'match')} available · ${smartPrompts.length} pending · ${autoSubmitted.length} submitted · ${heldForReview.length} held`
                   : 'No evidence matches are currently waiting in the queue.'}
             </p>
           </div>
@@ -653,7 +738,7 @@ export function EvidenceMatchingTable() {
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>All matches</span>
-              <span className="text-[9px] text-zinc-400">{matchingResults.length}</span>
+              <span className="text-[9px] text-zinc-400">{displayMatchingResults.length}</span>
             </div>
           </TabsTrigger>
         </TabsList>
@@ -699,7 +784,7 @@ export function EvidenceMatchingTable() {
 
         {/* All Matches Tab */}
         <TabsContent value="all" className="mt-0 outline-none">
-          {matchingResults.length === 0 ? (
+          {displayMatchingResults.length === 0 ? (
             renderEmptyState(
               'All matches',
               'No claim-to-document matches are available yet.',
@@ -712,7 +797,7 @@ export function EvidenceMatchingTable() {
               </Button>
             )
           ) : (
-            renderMatchRows(matchingResults, 'Open recovery')
+            renderMatchRows(displayMatchingResults, 'Open recovery')
           )}
         </TabsContent>
       </Tabs>
