@@ -4,7 +4,14 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { NotificationBell } from './NotificationBell';
@@ -44,6 +51,10 @@ const toTitleCase = (value?: string | null) => {
 };
 
 const NOT_AVAILABLE = 'Not Available';
+
+const marketplaces = [
+  { code: 'US', label: 'United States' },
+];
 
 const formatMoney = (value: number | null | undefined, currency = 'USD') =>
   typeof value === 'number' && !Number.isNaN(value)
@@ -119,6 +130,8 @@ export function Navbar({
     location.pathname.startsWith('/approved-reimbursements');
 
   const { selectedCurrency, setSelectedCurrency } = useCurrency();
+  const [selectedMarketplace, setSelectedMarketplace] = useState('US');
+  const activeMarketplace = marketplaces.find((marketplace) => marketplace.code === selectedMarketplace) || marketplaces[0];
 
   // User profile state
   const [userProfile, setUserProfile] = useState<{
@@ -461,7 +474,7 @@ export function Navbar({
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
-                  placeholder="Search documents or claims..."
+                  placeholder="Search cases, ASINs, case IDs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
@@ -726,6 +739,50 @@ export function Navbar({
                 </div>
               </HoverCardContent>
             </HoverCard>
+
+            {/* Marketplace Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="group/marketplace flex items-center gap-2 rounded-xl border border-transparent px-2.5 py-1.5 text-[11px] font-sans font-semibold tracking-tight text-[#4B5563] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
+                  aria-label="Select marketplace"
+                >
+                  <span className="hidden sm:inline">Marketplace</span>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F3F6FB] text-[10px] font-bold leading-none text-[#0052FF] shadow-sm border border-[#E5E7EB]">
+                    {activeMarketplace.code.toLowerCase()}
+                  </span>
+                  <span className="font-semibold uppercase">{activeMarketplace.code}</span>
+                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/marketplace:text-[#0052FF]" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[220px] overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-2 shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
+                <DropdownMenuLabel className="px-3 py-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
+                  Select Marketplace
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-[#E5E7EB]" />
+                {marketplaces.map((mp) => (
+                  <DropdownMenuItem
+                    key={mp.code}
+                    onSelect={() => setSelectedMarketplace(mp.code)}
+                    className={cn(
+                      "flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-[11px] font-sans font-medium tracking-tight outline-none transition-colors",
+                      selectedMarketplace === mp.code
+                        ? "bg-[#F3F7FF] text-[#0052FF] font-semibold"
+                        : "text-[#4B5563] hover:bg-[#F9FAFB] hover:text-[#111827]"
+                    )}
+                  >
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md border border-[#E5E7EB] bg-[#F3F6FB] text-[10px] font-bold uppercase leading-none text-[#0052FF]">
+                      {mp.code.toLowerCase()}
+                    </span>
+                    <span>{mp.label}</span>
+                    {selectedMarketplace === mp.code && (
+                      <Check className="ml-auto h-3.5 w-3.5 text-[#0052FF]" />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="group/account flex items-center gap-3 rounded-xl border border-transparent px-3 py-1.5 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]">

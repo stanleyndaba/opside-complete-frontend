@@ -886,6 +886,7 @@ export function Dashboard() {
   );
   const [activeTab, setActiveTab] = useState<DashboardTab>(resolvedDashboardTab);
   const [expandedOperatorEventId, setExpandedOperatorEventId] = useState<string | null>(null);
+  const [pipelineWindow, setPipelineWindow] = useState('90d');
   const isSyncScopedDetections = Boolean(uploadSyncId);
 
   const toggleSidebar = useCallback(() => {
@@ -2972,6 +2973,7 @@ export function Dashboard() {
         label: 'In Amazon review',
         value: pluralize(filedClaimsCount, 'case'),
         detail: filedClaimsCount > 0 ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in review` : 'No filed cases in review',
+        footerDetail: 'Oldest waiting 5 days',
         tone: filedClaimsCount > 0 ? 'border-sky-500/20 bg-sky-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
         dotTone: filedClaimsCount > 0 ? 'bg-sky-300' : 'bg-white/18',
         active: filedClaimsCount > 0,
@@ -3194,13 +3196,17 @@ export function Dashboard() {
                               Click any stage to jump straight to the work behind it.
                             </p>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => handleTabChange('evidence')}
-                            className="inline-flex h-8 items-center justify-center self-start rounded-full border border-[#0052FF]/15 bg-[#F3F7FF] px-3 text-[10px] font-sans font-semibold tracking-tight text-[#0052FF] shadow-[0_10px_24px_rgba(0,82,255,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0052FF]/25 hover:bg-white hover:shadow-[0_14px_30px_rgba(0,82,255,0.12)] lg:self-auto"
-                          >
-                            {overviewNeedsFromYou.value}
-                          </button>
+                          <Select value={pipelineWindow} onValueChange={setPipelineWindow}>
+                            <SelectTrigger className="h-8 w-[150px] self-start rounded-full border-[#0052FF]/15 bg-[#F3F7FF] px-3 text-[10px] font-sans font-semibold tracking-tight text-[#0052FF] shadow-[0_10px_24px_rgba(0,82,255,0.08)] focus:ring-0 focus:ring-offset-0 lg:self-auto">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent align="end" className="rounded-xl border-[#E5E7EB] bg-white text-[11px] font-sans">
+                              <SelectItem value="90d">Last 90 days</SelectItem>
+                              <SelectItem value="30d">Last 30 days</SelectItem>
+                              <SelectItem value="12m">Last 12 months</SelectItem>
+                              <SelectItem value="all">All time</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                           {overviewPipelineStages.map((stage) => (
@@ -3231,6 +3237,14 @@ export function Dashboard() {
                               <div className="mt-2 text-[10px] font-sans leading-5 text-[#6B7280]">
                                 {stage.detail}
                               </div>
+                              {'footerDetail' in stage && stage.footerDetail ? (
+                                <>
+                                  <div className="mt-3 h-px w-full bg-[#E5E7EB]" />
+                                  <div className="mt-2 text-[10px] font-sans font-medium leading-5 text-[#6B7280]">
+                                    {stage.footerDetail}
+                                  </div>
+                                </>
+                              ) : null}
                             </button>
                           ))}
                         </div>
@@ -3272,6 +3286,10 @@ export function Dashboard() {
                             <p className="mt-4 max-w-3xl text-[12px] font-sans leading-6 text-[#4B5563]">
                               {overviewNarrative}
                             </p>
+                            <div className="mt-4 h-px w-full max-w-3xl bg-[#E5E7EB]" />
+                            <div className="mt-3 text-[13px] font-sans font-[300] tracking-tight text-[#0052FF]">
+                              +$3,210 this week
+                            </div>
                             <div className="mt-5 flex flex-wrap gap-2">
                               {readyToFileCount > 0 ? (
                                 <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#047857]">

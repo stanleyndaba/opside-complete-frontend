@@ -1609,7 +1609,7 @@ export default function FilingPipeline() {
       countLabel: `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} ready`,
       action: readyRows.length ? (
         <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
-          <Link to={disputeCasesHref}>Start Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+          <Link to={disputeCasesHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
       content: disputeLoading ? (
