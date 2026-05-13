@@ -1096,7 +1096,7 @@ function attentionDetail(row: DisputeRow) {
 
 function filingNextStep(row: DisputeRow, stage: 'ready' | 'filing' | 'filed' | 'attention') {
   if (stage === 'ready') {
-    return 'Next: start filing manually or let Auto-File submit when enabled.';
+    return 'Next: approve filing manually or let Auto-File submit when enabled.';
   }
 
   if (stage === 'filing') {
@@ -1626,7 +1626,7 @@ export default function FilingPipeline() {
               detail={readyDetail(row)}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
               nextStep={filingNextStep(row, 'ready')}
-              action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
+              action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
             />
           ))}
         </div>
