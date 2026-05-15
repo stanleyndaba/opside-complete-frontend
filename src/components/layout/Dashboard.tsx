@@ -3912,7 +3912,7 @@ export function Dashboard() {
                                       <span>Found {foundOnLabel}</span>
                                       <span>{readinessLabel}</span>
                                       {showDaysRemaining ? (
-                                        <span className="inline-flex items-center rounded-[3px] bg-[#2F6FED] px-1.5 py-0.5 text-[9px] font-medium leading-none text-white">
+                                        <span className="inline-flex items-center rounded-[3px] bg-[#0B74DE] px-1.5 py-0.5 text-[9px] font-medium leading-none text-[#FFFFFF]">
                                           {daysRemainingLabel}
                                         </span>
                                       ) : null}
