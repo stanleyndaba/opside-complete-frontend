@@ -326,17 +326,25 @@ const getIssueCopy = (value?: string | null) => {
   };
 };
 
+const ISSUE_LIFECYCLE_STATES = {
+  detected: 'Detected',
+  flagged: 'Flagged',
+  identified: 'Identified',
+  logged: 'Logged',
+} as const;
+
 const getIssueLifecycleStateLabel = (result: any) => {
+  // FE-only display copy for the Issues Found table. Backend wiring can replace this later.
   const normalizedType = normalizeIssueTypeKey(result?.anomaly_type);
   const title = String(result?.seller_summary?.title || '').toLowerCase();
   const haystack = `${normalizedType} ${title}`;
 
-  if (haystack.includes('refund')) return 'Identified';
-  if (haystack.includes('fee') || haystack.includes('charge')) return 'Logged';
-  if (haystack.includes('inbound') || haystack.includes('shortage') || haystack.includes('discrepancy')) return 'Flagged';
-  if (haystack.includes('lost') || haystack.includes('missing_unit') || haystack.includes('warehouse')) return 'Detected';
+  if (haystack.includes('refund')) return ISSUE_LIFECYCLE_STATES.identified;
+  if (haystack.includes('fee') || haystack.includes('charge')) return ISSUE_LIFECYCLE_STATES.logged;
+  if (haystack.includes('inbound') || haystack.includes('shortage') || haystack.includes('discrepancy')) return ISSUE_LIFECYCLE_STATES.flagged;
+  if (haystack.includes('lost') || haystack.includes('missing_unit') || haystack.includes('warehouse')) return ISSUE_LIFECYCLE_STATES.detected;
 
-  return 'Detected';
+  return ISSUE_LIFECYCLE_STATES.detected;
 };
 
 const buildDashboardDetectionMeta = (
