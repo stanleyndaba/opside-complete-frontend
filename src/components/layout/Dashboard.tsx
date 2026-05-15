@@ -326,6 +326,19 @@ const getIssueCopy = (value?: string | null) => {
   };
 };
 
+const getIssueLifecycleStateLabel = (result: any) => {
+  const normalizedType = normalizeIssueTypeKey(result?.anomaly_type);
+  const title = String(result?.seller_summary?.title || '').toLowerCase();
+  const haystack = `${normalizedType} ${title}`;
+
+  if (haystack.includes('refund')) return 'Identified';
+  if (haystack.includes('fee') || haystack.includes('charge')) return 'Logged';
+  if (haystack.includes('inbound') || haystack.includes('shortage') || haystack.includes('discrepancy')) return 'Flagged';
+  if (haystack.includes('lost') || haystack.includes('missing_unit') || haystack.includes('warehouse')) return 'Detected';
+
+  return 'Detected';
+};
+
 const buildDashboardDetectionMeta = (
   uploadSyncId: string | null,
   resultsMeta?: {
@@ -3786,6 +3799,7 @@ export function Dashboard() {
                                 recoverabilityReason: result.seller_summary?.recoverability_reason,
                                 evidenceSummary: result.seller_summary?.evidence_summary,
                               };
+                              const issueLifecycleStateLabel = getIssueLifecycleStateLabel(result);
                               const detectedAt = result.detected_at || result.discovery_date || result.created_at;
                               const foundOnLabel = formatFindingDateTimeLabel(detectedAt);
                               const readinessLabel = formatFindingReadinessLabel(result);
@@ -3880,6 +3894,7 @@ export function Dashboard() {
                                       className="block max-w-full text-left text-[12px] font-sans font-medium tracking-tight text-white/[0.92] transition-colors hover:text-white hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-1 focus-visible:outline-white/35"
                                     >
                                       {issueCopy.title}
+                                      <span className="text-white/[0.48]"> — {issueLifecycleStateLabel}</span>
                                     </button>
                                     <p className="mt-1.5 max-w-2xl text-[11px] font-sans leading-5 tracking-tight text-white/[0.54]">
                                       {issueCopy.summary}
