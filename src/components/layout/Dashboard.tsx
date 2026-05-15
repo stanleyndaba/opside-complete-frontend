@@ -3910,8 +3910,12 @@ export function Dashboard() {
                                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
                                       <span>Ref {result.id?.substring(0, 8) || 'N/A'}</span>
                                       <span>Found {foundOnLabel}</span>
-                                      {showDaysRemaining ? <span>{daysRemainingLabel}</span> : null}
                                       <span>{readinessLabel}</span>
+                                      {showDaysRemaining ? (
+                                        <span className="inline-flex items-center rounded-[3px] bg-[#2F6FED] px-1.5 py-0.5 text-[9px] font-medium leading-none text-white">
+                                          {daysRemainingLabel}
+                                        </span>
+                                      ) : null}
                                     </div>
                                   </div>
 
