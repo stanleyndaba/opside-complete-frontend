@@ -120,6 +120,17 @@ const ACTIVE_SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['gmail', 'slack', 'd
 const PARKED_SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['outlook', 'adobe_sign', 'onedrive'];
 const SECONDARY_PROVIDERS: SecondaryProviderKey[] = [...ACTIVE_SECONDARY_PROVIDERS, ...PARKED_SECONDARY_PROVIDERS];
 const PARKED_PROVIDER_AVAILABLE_DATE = 'May 20th, 2026';
+const DEMO_WORKSPACE_SLUGS = new Set(['demo-workspace', 'demo-worspace']);
+const DEMO_PROVIDER_ACCOUNTS: Record<SecondaryProviderKey, string> = {
+  gmail: 'claims@acme-operations.test',
+  slack: 'ops-alerts@acme-operations.test',
+  dropbox: 'warehouse@acme-operations.test',
+  gdrive: 'evidence@acme-operations.test',
+  outlook: 'finance@acme-operations.test',
+  adobe_sign: 'contracts@acme-operations.test',
+  onedrive: 'records@acme-operations.test',
+};
+const DEMO_PROVIDER_LAST_INGEST = '2026-04-21T08:54:21.000Z';
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
@@ -127,7 +138,7 @@ export default function IntegrationsHub() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady, tenant } = useTenant();
   const activeSlug = tenantSlug || tenant?.slug || null;
-  const isDemoWorkspace = activeSlug?.toLowerCase() === 'demo-workspace';
+  const isDemoWorkspace = activeSlug ? DEMO_WORKSPACE_SLUGS.has(activeSlug.toLowerCase()) : false;
   const { toast } = useToast();
   const { isFull, capacity } = useOnboardingCapacity();
   const [status, setStatus] = useState<IntegrationStatusDTO | null>(null);
@@ -406,6 +417,14 @@ export default function IntegrationsHub() {
       const providerState = status?.providers?.[provider];
       const evidenceSource = evidenceSourcesState.sources.find((source) => source.provider === provider);
       const sourceId = providerState?.source_id || evidenceSource?.id;
+      if (isDemoWorkspace && !sourceId) {
+        toast({
+          title: `${providerName} Disconnected`,
+          description: `Demo ${providerName} connection state is display-only and remains ready for walkthroughs.`,
+        });
+        return;
+      }
+
       const supportsDirectProviderDisconnect = provider === 'gmail' || provider === 'outlook' || provider === 'gdrive' || provider === 'dropbox';
       const res = sourceId
         ? await api.disconnectEvidenceSource(sourceId)
@@ -805,13 +824,50 @@ export default function IntegrationsHub() {
     return evidenceSourcesState.sources.find((source) => source.provider === provider) || null;
   };
 
+  const getDemoEvidenceSource = (provider: SecondaryProviderKey, source?: EvidenceSourceDTO | null): EvidenceSourceDTO => ({
+    id: source?.id || `demo-${provider}`,
+    provider,
+    account_email: source?.account_email || DEMO_PROVIDER_ACCOUNTS[provider],
+    status: 'connected',
+    connected: true,
+    ingestable: true,
+    ingestable_reason: null,
+    last_ingested_at: source?.last_ingested_at || DEMO_PROVIDER_LAST_INGEST,
+    created_at: source?.created_at || null,
+    documents_count: source?.documents_count || 3,
+    parsed_count: source?.parsed_count || 2,
+    match_ready_count: source?.match_ready_count || 3,
+    metadata: source?.metadata || {},
+  });
+
   const getProviderDisplayState = (provider: ProviderKey): IntegrationProviderStatus => {
     const providerStatus = getProviderState(provider);
-    if (provider === 'amazon' || providerStatus.connected) {
+    if (provider === 'amazon') {
       return providerStatus;
     }
 
     const evidenceSource = getEvidenceSourceTruth(provider as SecondaryProviderKey);
+    if (isDemoWorkspace && SECONDARY_PROVIDERS.includes(provider as SecondaryProviderKey)) {
+      const demoSource = getDemoEvidenceSource(provider as SecondaryProviderKey, evidenceSource);
+      return {
+        ...providerStatus,
+        source_id: demoSource.id,
+        connected: true,
+        auth_valid: true,
+        needs_reconnect: false,
+        ingestion_state: 'current',
+        has_data: true,
+        last_ingest_at: demoSource.last_ingested_at || undefined,
+        account_email: demoSource.account_email,
+        error_state: undefined,
+        error_message: undefined,
+      };
+    }
+
+    if (providerStatus.connected) {
+      return providerStatus;
+    }
+
     if (!evidenceSource?.connected) {
       return providerStatus;
     }
@@ -1458,8 +1514,9 @@ export default function IntegrationsHub() {
                 } as const;
 
                 const providerState = getProviderDisplayState(p);
-                const evidenceSource = getEvidenceSourceTruth(p);
-                const isParked = PARKED_SECONDARY_PROVIDERS.includes(p);
+                const sourceTruth = getEvidenceSourceTruth(p);
+                const evidenceSource = isDemoWorkspace ? getDemoEvidenceSource(p, sourceTruth) : sourceTruth;
+                const isParked = !isDemoWorkspace && PARKED_SECONDARY_PROVIDERS.includes(p);
                 const connected = !isParked && (providerState.connected || evidenceSource?.connected === true);
                 const meta = providerMeta[p];
 
@@ -1470,7 +1527,6 @@ export default function IntegrationsHub() {
                         <div className={`flex h-12 w-12 items-center justify-center ${isParked ? '' : 'group-hover:scale-110'} transition-transform duration-500`}>
                           <img src={meta.icon} alt={meta.name} className="h-9 w-9 object-contain" />
                         </div>
-                        <div className={`h-2 w-2 rounded-full ${connected ? 'bg-white/70 animate-pulse' : 'bg-gray-700'}`} />
                       </div>
 
                       <h4 className="text-lg font-sans font-bold text-white tracking-tight mb-1">{meta.name}</h4>
