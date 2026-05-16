@@ -332,6 +332,84 @@ const ISSUE_LIFECYCLE_STATES = {
   identified: 'Identified',
   logged: 'Logged',
 } as const;
+const DEMO_WORKSPACE_SLUGS = new Set(['demo-workspace', 'demo-worspace']);
+const DEMO_FINDINGS_TARGET_COUNT = 25;
+const DEMO_FINDING_TIMESTAMPS = [
+  '2026-04-17T06:24:00.000Z',
+  '2026-04-16T11:42:00.000Z',
+  '2026-03-28T15:18:00.000Z',
+  '2026-03-21T09:07:00.000Z',
+  '2026-03-18T13:36:00.000Z',
+  '2026-03-14T07:51:00.000Z',
+  '2026-03-11T16:09:00.000Z',
+  '2026-03-07T10:28:00.000Z',
+  '2026-03-02T14:55:00.000Z',
+  '2026-02-26T08:19:00.000Z',
+  '2026-02-22T12:47:00.000Z',
+  '2026-02-18T17:12:00.000Z',
+  '2026-02-13T09:33:00.000Z',
+  '2026-02-09T15:44:00.000Z',
+  '2026-02-04T07:58:00.000Z',
+  '2026-01-30T13:21:00.000Z',
+  '2026-01-26T10:06:00.000Z',
+  '2026-01-21T16:37:00.000Z',
+  '2026-01-17T08:48:00.000Z',
+  '2026-01-12T14:16:00.000Z',
+  '2026-01-08T11:04:00.000Z',
+  '2026-01-03T15:52:00.000Z',
+  '2025-12-29T09:41:00.000Z',
+  '2025-12-22T13:29:00.000Z',
+  '2025-12-18T07:35:00.000Z',
+];
+const DEMO_FINDING_REF_PREFIXES = ['ACM-LI', 'ACM-FD', 'ACM-DC', 'ACM-IR', 'ACM-RR', 'ACM-ST', 'ACM-IN', 'ACM-RT'];
+const DEMO_FINDING_ANOMALIES = [
+  'inbound_shipment_shortage',
+  'incorrect_fee',
+  'duplicate_charge',
+  'missing_unit',
+  'refund_no_return',
+  'reimbursement_reversal',
+  'lost_warehouse',
+  'weight_fee_overcharge',
+  'storage_overcharge',
+  'return_not_restocked',
+  'partial_reimbursement',
+  'fulfillment_fee_error',
+];
+const DEMO_FINDING_STATUSES = ['detected', 'pending', 'ready_to_file', 'filed', 'reviewed'];
+const DEMO_FINDING_MOVEMENTS = [
+  {
+    state: 'preview_finding',
+    label: 'Preview finding',
+    detail: 'Margin found this discrepancy. It has not been converted into a filing case yet.',
+    next_action_label: 'View finding',
+  },
+  {
+    state: 'preparing_case',
+    label: 'Preparing case',
+    detail: 'Identifiers and evidence are being reconciled before this moves into Amazon filing.',
+    next_action_label: 'Review proof',
+  },
+  {
+    state: 'ready_to_file',
+    label: 'Ready to file',
+    detail: 'Evidence and policy checks are aligned for seller review.',
+    next_action_label: 'Open filing review',
+  },
+  {
+    state: 'filed',
+    label: 'Filed',
+    detail: 'Amazon review is open and Margin is watching response and payout movement.',
+    next_action_label: 'Open case',
+  },
+  {
+    state: 'blocked',
+    label: 'Blocked',
+    detail: 'Blocked: Margin is holding the case while duplicate or reimbursement proof is checked.',
+    next_action_label: 'Review blocker',
+    block_reasons: ['possible_duplicate'],
+  },
+];
 
 const getIssueLifecycleStateLabel = (result: any) => {
   // FE-only display copy for the Issues Found table. Backend wiring can replace this later.
@@ -345,6 +423,95 @@ const getIssueLifecycleStateLabel = (result: any) => {
   if (haystack.includes('lost') || haystack.includes('missing_unit') || haystack.includes('warehouse')) return ISSUE_LIFECYCLE_STATES.detected;
 
   return ISSUE_LIFECYCLE_STATES.detected;
+};
+
+const isDemoWorkspaceSlug = (slug?: string | null) => DEMO_WORKSPACE_SLUGS.has(String(slug || '').toLowerCase());
+
+const buildDemoFindingRef = (index: number) =>
+  `${DEMO_FINDING_REF_PREFIXES[index % DEMO_FINDING_REF_PREFIXES.length]}-2604-${String(index + 1).padStart(4, '0')}`;
+
+const formatFindingReference = (result: any, index: number) => {
+  const directRef = String(result?.claim_number || result?.reference_id || result?.external_reference || '').trim();
+  if (directRef && directRef !== '00000000') return directRef;
+
+  const evidenceRef = String(
+    result?.evidence?.shipment_id ||
+    result?.evidence?.order_id ||
+    result?.evidence?.amazon_order_id ||
+    result?.filing_movement?.case_number ||
+    ''
+  ).trim();
+  if (evidenceRef) return evidenceRef;
+
+  return buildDemoFindingRef(index);
+};
+
+const withDemoFindingPresentation = (result: any, index: number) => {
+  const timestamp = DEMO_FINDING_TIMESTAMPS[index % DEMO_FINDING_TIMESTAMPS.length];
+  const daysRemaining = Math.max(7, 62 - (index * 3));
+  return {
+    ...result,
+    claim_number: formatFindingReference(result, index),
+    detected_at: timestamp,
+    discovery_date: timestamp,
+    created_at: timestamp,
+    deadline_date: new Date(new Date(timestamp).getTime() + (daysRemaining * 86400000)).toISOString(),
+    days_remaining: typeof result?.days_remaining === 'number' ? result.days_remaining : daysRemaining,
+  };
+};
+
+const expandDemoFindings = (results: any[]) => {
+  const source = results.length ? results : [{}];
+  const expanded = source.map(withDemoFindingPresentation);
+
+  for (let index = expanded.length; index < DEMO_FINDINGS_TARGET_COUNT; index += 1) {
+    const base = source[index % source.length] || {};
+    const timestamp = DEMO_FINDING_TIMESTAMPS[index % DEMO_FINDING_TIMESTAMPS.length];
+    const daysRemaining = Math.max(7, 62 - (index * 2));
+    const anomalyType = DEMO_FINDING_ANOMALIES[index % DEMO_FINDING_ANOMALIES.length];
+    const orderNumber = 42000 + index;
+    const quantityGap = 2 + (index % 11);
+    const status = DEMO_FINDING_STATUSES[index % DEMO_FINDING_STATUSES.length];
+    const movement = DEMO_FINDING_MOVEMENTS[index % DEMO_FINDING_MOVEMENTS.length];
+
+    expanded.push({
+      ...base,
+      id: `demo-finding-${String(index + 1).padStart(2, '0')}`,
+      claim_number: buildDemoFindingRef(index),
+      anomaly_type: anomalyType,
+      severity: index % 4 === 0 ? 'high' : index % 3 === 0 ? 'low' : 'medium',
+      estimated_value: Number((96 + ((index * 47.35) % 1280)).toFixed(2)),
+      currency: base.currency || 'USD',
+      confidence_score: Number((0.74 + ((index % 9) * 0.025)).toFixed(2)),
+      status,
+      detected_at: timestamp,
+      discovery_date: timestamp,
+      created_at: timestamp,
+      deadline_date: new Date(new Date(timestamp).getTime() + (daysRemaining * 86400000)).toISOString(),
+      days_remaining: daysRemaining,
+      source_type: base.source_type || 'sp_api',
+      review_tier: status === 'reviewed' ? 'review_only' : 'claim_candidate',
+      claim_readiness: status === 'reviewed' ? 'not_claim_ready' : 'claim_ready',
+      recommended_action: status === 'filed' ? 'monitor' : 'review',
+      value_label: 'estimated_recovery',
+      filing_movement: movement,
+      evidence: {
+        ...(base.evidence || {}),
+        order_id: `113-${orderNumber}-${String(1000000 + index * 7919).slice(0, 7)}`,
+        shipment_id: `FBA17ACME${String(index + 1).padStart(3, '0')}`,
+        sku: `ACME-DEMO-SKU-${String(index + 1).padStart(2, '0')}`,
+        asin: `B0ACME${String(index + 1).padStart(4, '0')}`,
+        issue: `Demo discrepancy ${index + 1} queued for seller review`,
+        quantity_shipped: 32 + (index * 3),
+        quantity_received: 32 + (index * 3) - quantityGap,
+        quantity_gap: quantityGap,
+        missing_quantity: quantityGap,
+        fulfillment_center: ['ONT8', 'LHR3', 'ABE8', 'FTW1', 'SBD1'][index % 5],
+      },
+    });
+  }
+
+  return expanded;
 };
 
 const buildDashboardDetectionMeta = (
@@ -891,7 +1058,8 @@ export function Dashboard() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
   const activeSlug = tenantSlug || tenant?.slug || '';
-  const aiExplainEnabled = activeSlug === 'demo-workspace';
+  const isDemoWorkspace = isDemoWorkspaceSlug(activeSlug);
+  const aiExplainEnabled = isDemoWorkspace;
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -2147,13 +2315,14 @@ export function Dashboard() {
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
   const syncScopedDetectionCount = useMemo(() => {
+    if (isDemoWorkspace) return Math.max(DEMO_FINDINGS_TARGET_COUNT, detectionResults.length);
     if (!isSyncScopedDetections) return detectionTotal;
     if (typeof detectionResultsMeta?.claimsFound === 'number' && detectionResultsMeta.claimsFound >= 0) {
       return detectionResultsMeta.claimsFound;
     }
     if (typeof detectionTotal === 'number' && detectionTotal > 0) return detectionTotal;
     return detectionResults.length;
-  }, [detectionResults.length, detectionResultsMeta?.claimsFound, detectionTotal, isSyncScopedDetections]);
+  }, [detectionResults.length, detectionResultsMeta?.claimsFound, detectionTotal, isDemoWorkspace, isSyncScopedDetections]);
   const syncScopedResultCapDisclosure = useMemo(() => {
     if (!isSyncScopedDetections) return null;
     if (detectionResults.length < SYNC_SCOPED_DETECTION_RESULTS_LIMIT) return null;
@@ -2162,7 +2331,9 @@ export function Dashboard() {
   }, [detectionResults.length, isSyncScopedDetections, syncScopedDetectionCount]);
   const detectedOpportunitiesCount = isSyncScopedDetections
     ? syncScopedDetectionCount
-    : dashboardSummary?.detections_count ?? detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
+    : isDemoWorkspace
+      ? Math.max(DEMO_FINDINGS_TARGET_COUNT, detectionResults.length)
+      : dashboardSummary?.detections_count ?? detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
   const filedClaimsCount = dashboardSummary?.filed_count ?? 0;
   const approvedClaimsCount = dashboardSummary?.approved_count ?? 0;
   const recoveredClaimsCount = dashboardSummary?.recovered_count ?? 0;
@@ -2251,22 +2422,23 @@ export function Dashboard() {
   }, [syncScopedDetectionStatus]);
   const syncScopedEstimatedRecoveryLabel = useMemo(() => {
     if (!isSyncScopedDetections) return 'Not Available';
-    const fallbackLoadedValue = detectionResults.reduce((sum, result) => sum + (Number(result?.estimated_value) || 0), 0);
+    const scopedResults = isDemoWorkspace ? expandDemoFindings(detectionResults) : detectionResults;
+    const fallbackLoadedValue = scopedResults.reduce((sum, result) => sum + (Number(result?.estimated_value) || 0), 0);
 
     if (typeof detectionResultsMeta?.estimatedRecovery === 'number') {
-      return formatCurrencyWithSelection(detectionResultsMeta.estimatedRecovery, detectionResults.find((result) => result?.currency)?.currency || 'USD');
+      return formatCurrencyWithSelection(detectionResultsMeta.estimatedRecovery, scopedResults.find((result) => result?.currency)?.currency || 'USD');
     }
 
     if (fallbackLoadedValue > 0) {
-      return formatCurrencyWithSelection(fallbackLoadedValue, detectionResults.find((result) => result?.currency)?.currency || 'USD');
+      return formatCurrencyWithSelection(fallbackLoadedValue, scopedResults.find((result) => result?.currency)?.currency || 'USD');
     }
 
     if (syncScopedDetectionStatus === 'completed') {
-      return formatCurrencyWithSelection(0, detectionResults.find((result) => result?.currency)?.currency || 'USD');
+      return formatCurrencyWithSelection(0, scopedResults.find((result) => result?.currency)?.currency || 'USD');
     }
 
     return 'Not Available';
-  }, [detectionResults, detectionResultsMeta?.estimatedRecovery, formatCurrencyWithSelection, isSyncScopedDetections, syncScopedDetectionStatus]);
+  }, [detectionResults, detectionResultsMeta?.estimatedRecovery, formatCurrencyWithSelection, isDemoWorkspace, isSyncScopedDetections, syncScopedDetectionStatus]);
   const syncScopedDetectionMetaRows = useMemo(() => {
     if (!isSyncScopedDetections || !uploadSyncId) return [];
     const rows = [
@@ -2309,11 +2481,15 @@ export function Dashboard() {
   const issuesFoundDescription = isSyncScopedDetections
     ? 'Showing detections from your latest CSV upload. The upload total above reflects everything this sync found, while the table below reflects only the findings currently visible in this view.'
     : 'Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.';
-  const visibleDetectionResults = useMemo(
-    () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
-    [detectionResults, showProcessed]
+  const dashboardDetectionResults = useMemo(
+    () => isDemoWorkspace ? expandDemoFindings(detectionResults) : detectionResults,
+    [detectionResults, isDemoWorkspace]
   );
-  const findingsCurrency = detectionResults.find((result) => typeof result?.currency === 'string' && result.currency.trim())?.currency || 'USD';
+  const visibleDetectionResults = useMemo(
+    () => dashboardDetectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
+    [dashboardDetectionResults, showProcessed]
+  );
+  const findingsCurrency = dashboardDetectionResults.find((result) => typeof result?.currency === 'string' && result.currency.trim())?.currency || 'USD';
   const visibleFindingsValueTotal = useMemo(
     () => visibleDetectionResults.reduce((sum, result) => sum + (Number(result.estimated_value) || 0), 0),
     [visibleDetectionResults]
@@ -2349,12 +2525,12 @@ export function Dashboard() {
     return formatCurrencyWithSelection(issuesFoundRecoveryValue, findingsCurrency);
   }, [findingsCurrency, formatCurrencyWithSelection, issuesFoundRecoveryValue]);
   const readyToFileFindingsCount = useMemo(
-    () => detectionResults.filter(isReadyToFileFinding).length,
-    [detectionResults]
+    () => dashboardDetectionResults.filter(isReadyToFileFinding).length,
+    [dashboardDetectionResults]
   );
   const needsReviewFindingsCount = useMemo(
-    () => detectionResults.filter(result => !isReadyToFileFinding(result) && ['detected', 'pending'].includes((result.status || '').toLowerCase())).length,
-    [detectionResults]
+    () => dashboardDetectionResults.filter(result => !isReadyToFileFinding(result) && ['detected', 'pending'].includes((result.status || '').toLowerCase())).length,
+    [dashboardDetectionResults]
   );
   const issuesFoundSummaryRows = useMemo(() => ([
     {
@@ -3795,7 +3971,7 @@ export function Dashboard() {
                             ))}
                           </div>
                           <div className="divide-y divide-white/8">
-                            {visibleDetectionResults.map((result) => {
+                            {visibleDetectionResults.map((result, index) => {
                               const isProcessed = isProcessedFindingStatus(result.status);
                               const stateMeta = getFindingMovementMeta(result.filing_movement, result.status, result);
                               const StateIcon = stateMeta.Icon;
@@ -3810,6 +3986,7 @@ export function Dashboard() {
                               const issueLifecycleStateLabel = getIssueLifecycleStateLabel(result);
                               const detectedAt = result.detected_at || result.discovery_date || result.created_at;
                               const foundOnLabel = formatFindingDateTimeLabel(detectedAt);
+                              const findingReference = formatFindingReference(result, index);
                               const readinessLabel = formatFindingReadinessLabel(result);
                               const daysRemainingLabel = formatDaysRemainingLabel(result.days_remaining, result.expired);
                               const showDaysRemaining = daysRemainingLabel !== 'Not available';
@@ -3908,7 +4085,7 @@ export function Dashboard() {
                                       {issueCopy.summary}
                                     </p>
                                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
-                                      <span>Ref {result.id?.substring(0, 8) || 'N/A'}</span>
+                                      <span>Ref {findingReference}</span>
                                       <span>Found {foundOnLabel}</span>
                                       <span>{readinessLabel}</span>
                                       {showDaysRemaining ? (
