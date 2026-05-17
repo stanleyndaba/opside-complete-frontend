@@ -1424,6 +1424,14 @@ export default function Index() {
         description="Watch how Margin detects Amazon loss events, starts the claim clock, matches evidence, prepares cases for review, and tracks recovery states through payout."
       />
       <BrandFooter />
+      <div className="relative z-10 border-t border-white/10 bg-[#1A1A1A] px-6 py-10 md:py-14" aria-label="Margin animated logo">
+        <img
+          src="/Gen-4 Turbo - Minimal cinematic logo reveal, modern SaaS motion, soft glow, structured lines forming.gif"
+          alt="Margin animated logo"
+          className="mx-auto block h-auto w-full max-w-[520px] object-contain"
+          decoding="async"
+        />
+      </div>
       <CookieConsent />
     </div>
   );
