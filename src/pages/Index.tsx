@@ -104,35 +104,35 @@ const auditLines = [
 
 const whyNowItems = [
   {
-    title: 'Short claim windows',
-    detail: 'Some FBA reimbursement windows can be short, including 60-day windows for key lost or damaged inventory scenarios. Margin keeps deadline-sensitive issues visible before they age out.'
+    title: 'Time-bound recovery data',
+    detail: 'Amazon recovery data is time-bound and distributed across systems that update independently. When claim windows expire, the associated loss becomes structurally unrecoverable regardless of later detection.'
   },
   {
-    title: 'Granular transaction noise',
-    detail: 'Removal fees, disposal charges, reversals, refunds, unclear payouts, and underpaid reimbursements can split into smaller events that are hard to reconcile manually.'
+    title: 'Fragmented evidence',
+    detail: 'Required evidence is fragmented across invoices, shipment logs, and support records, which degrade in accessibility over time and reduce successful claim rates in delayed workflows.'
   },
   {
-    title: 'Quarterly audits are too late',
-    detail: 'If recovery work waits for a quarterly review, eligible issues can expire before anyone has prepared the evidence.'
+    title: 'Compounding backlog',
+    detail: 'Continuous transaction-level noise causes delays to compound, turning recovery into backlog rather than resolution.'
   }
 ];
 
 const proofItems = [
   {
-    title: 'Claim clock visibility',
-    detail: 'Every recovery issue stays tied to the deadline that matters, so eligible cases do not disappear quietly.'
+    title: 'Claim Clock Visibility',
+    detail: 'Every event is assigned a deadline state that governs eligibility until resolution or expiry.'
   },
   {
-    title: 'Evidence before action',
-    detail: 'Margin links records, reports, invoices, and support files before a recovery case moves forward.'
+    title: 'Evidence Binding',
+    detail: 'Reports, invoices, and shipment data are linked before any case can advance.'
   },
   {
-    title: 'Read-only first',
-    detail: 'Start with visibility and audit confidence before any account-changing action is considered.'
+    title: 'Read-only First Mode',
+    detail: 'All recovery signals are structured without enabling actions until approval is granted.'
   },
   {
-    title: 'Payout trail',
-    detail: 'Track detected, prepared, filed, approved, blocked, and paid states without mixing them together.'
+    title: 'Payout Trail Tracking',
+    detail: 'Each case is tracked across detected → filed → approved → paid or blocked states without merging outcomes.'
   }
 ];
 
@@ -141,75 +141,75 @@ const velocityMetrics = [
     label: 'Audit-to-Evidence Speed',
     value: 3,
     suffix: 'min',
-    detail: 'From loss signal to matched support trail.'
+    detail: 'Event is classified, matched to supporting records, and validated for claim readiness.'
   },
   {
-    label: 'Zero-Friction Filing',
+    label: 'Filing Preparation Cycle',
     value: 1,
     suffix: 'min',
-    detail: 'Prepared cases move to filing action.'
+    detail: 'Evidence-complete cases pass approval and move directly into submission queue.'
   },
   {
-    label: 'Time-to-Discovery',
+    label: 'Detection Latency',
     value: 16,
     suffix: 's',
-    detail: 'Recoverable events surface before manual review.'
+    detail: 'Incoming Amazon activity is parsed and mapped to potential recovery cases in real time.'
   }
 ];
 
 const workflowSteps = [
   {
     step: '01',
-    title: 'Read-only setup',
-    detail: 'Connect Amazon and evidence sources in visibility-first mode, so Margin can begin identifying recovery signals without changing your account.'
+    title: 'Detect',
+    detail: 'Amazon events are captured and converted into structured signals.'
   },
   {
     step: '02',
-    title: 'Detect signals and start the clock',
-    detail: 'Margin detects recovery-relevant activity, identifies the claim type, starts the claim clock, checks required evidence, prepares the case for seller review, and tracks the outcome through payout, rejection, or follow-up.'
+    title: 'Classify',
+    detail: 'Signals are mapped to recovery types and claim rules.'
   },
   {
     step: '03',
-    title: 'Match required evidence',
-    detail: 'Margin links invoices, shipment records, sourcing costs, Amazon reports, support files, and reference IDs into a recovery-ready trail.'
+    title: 'Bind Evidence',
+    detail: 'Supporting records are attached and validated.'
   },
   {
     step: '04',
-    title: 'Hold weak cases',
-    detail: 'Unsupported, duplicate, thread-only, or risky findings are held back instead of being pushed into reckless filing.'
+    title: 'Approve',
+    detail: 'Seller review gates progression into filing.'
   },
   {
     step: '05',
-    title: 'Review, file, and track',
-    detail: 'Seller-approved cases move into filing action, while approved, blocked, awaiting payout, paid, or re-evaluation states remain visible.'
+    title: 'Track Outcome',
+    detail: 'Filed cases move through Amazon response to payout or rejection.'
   }
 ];
 
 const coverageExamples = [
   {
-    label: 'Lost or damaged inventory',
-    title: 'Inventory events stay tied to claim windows and support trails.',
-    detail: 'Margin connects the inventory event, claim type, evidence checklist, and recovery state from detection through resolution.'
+    label: 'Lost units detected',
+    title: 'Shipment mismatch → claim clock activated',
+    detail: 'Lost units are converted from inventory variance into a timed recovery case.'
   },
   {
-    label: 'Inbound shipment shortages',
-    title: 'Received units fall short against the shipment plan.',
-    detail: 'Shipment records, received quantities, reference IDs, and supporting documents stay visible before the issue gets buried in operations.'
+    label: 'Inbound shortage',
+    title: 'Received quantity variance → evidence required before eligibility',
+    detail: 'Inbound discrepancies are held until shipment data and supporting records validate eligibility.'
   },
   {
     label: 'Refund without return',
-    title: 'A customer refund does not prove the unit came back.',
-    detail: 'Margin separates refund activity from actual return, inventory, and reimbursement resolution before a case is treated as evidence-supported.'
+    title: 'Refund event unmatched to return scan → held for validation',
+    detail: 'Refund activity is separated from return proof before a case advances.'
   },
   {
-    label: 'Fees and removals',
-    title: 'Small operational charges can drift quietly.',
-    detail: 'Removal fees, disposal charges, reversals, reimbursements, and related inventory movement stay tied to recovery context.'
+    label: 'Fee drift',
+    title: 'Measurement or fee adjustment detected → recalculation required',
+    detail: 'Fee changes are mapped to the records required before recovery execution.'
   },
   {
-    label: 'Payout reconciliation',
-    title: 'Approval and cash movement are not the same event.',
-    detail: 'Margin keeps approved, awaiting payout, recovered, blocked, and re-evaluation states separate so outcomes stay clear.'
+    label: 'Payout mismatch',
+    title: 'Approved value differs from received payout → reconciliation state triggered',
+    detail: 'Approval and cash movement stay separated until payout state is resolved.'
   }
 ];
 
@@ -228,20 +228,20 @@ const marketplaceCountries = [
 
 const trustControls = [
   {
-    title: 'Read-only first',
-    detail: 'Margin begins with visibility-first Amazon connection flows, so sellers can review recovery opportunities before any account-changing action is considered.'
+    title: 'Read-only mode enforced',
+    detail: 'Read-only mode is enforced until explicit approval.'
   },
   {
-    title: 'No filing without approval',
-    detail: 'Evidence-supported cases are reviewed with the seller before moving into a filing workflow, unless the seller later chooses a trusted filing mode.'
+    title: 'No filing without validation',
+    detail: 'No filing occurs without evidence validation and seller approval.'
   },
   {
-    title: 'Weak cases held back',
-    detail: 'Duplicate, unsupported, thread-only, expired, or low-confidence findings are blocked instead of being pushed into risky filing volume.'
+    title: 'Low-confidence cases filtered',
+    detail: 'Low-confidence cases are filtered out of the execution queue.'
   },
   {
-    title: 'No outcome guarantees',
-    detail: 'Margin prepares, organizes, and tracks recovery work. Amazon makes the final reimbursement decision.'
+    title: 'No reimbursement guarantee',
+    detail: 'No guarantee of reimbursement outcomes; the system only structures recovery execution.'
   }
 ];
 
@@ -674,7 +674,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[840px] text-[16px] leading-8 text-slate-300 md:text-lg md:leading-9"
           >
-            Margin helps serious Amazon FBA sellers manage the messy recovery workflow after something goes wrong — missing units, inbound discrepancies, refund gaps, fee issues, rejected claims, and unclear payouts. It starts the claim clock, checks evidence readiness, prepares claim-ready cases, holds weak findings back, keeps seller approval before filing, and tracks every recovery state through payout.
+            Margin turns Amazon loss events into structured recovery cases by binding evidence, enforcing claim readiness, tracking approval, and maintaining payout state from detection through resolution.
           </motion.p>
 
           <motion.div
@@ -1025,13 +1025,13 @@ export default function Index() {
               <div className={sectionLabelClass}>Why Now</div>
               <h2 className={sectionHeadingClass}>Why timing matters</h2>
               <p className={sectionBodyClass}>
-                Manual and quarterly audits can surface recovery issues too late. Missing inventory, inbound shortages, damaged units, refund-without-return activity, fee drift, reimbursement reversals, and payout mismatches can expire before evidence is ready.
+                Amazon recovery data is time-bound and distributed across systems that update independently. When claim windows expire, the associated loss becomes structurally unrecoverable regardless of later detection.
               </p>
               <p className={sectionBodyClass}>
-                Missing inventory is not only a reimbursement issue. It can create stockout risk, listing momentum loss, underpaid reimbursement, and follow-up work that gets buried if it is not tracked early.
+                Required evidence is fragmented across invoices, shipment logs, and support records, which degrade in accessibility over time and reduce successful claim rates in delayed workflows.
               </p>
               <p className={sectionBodyClass}>
-                Margin keeps each recovery issue tied to its claim clock, required evidence, expected value, approval state, and payout trail.
+                Continuous transaction-level noise causes delays to compound, turning recovery into backlog rather than resolution.
               </p>
               <Button
                 variant="outline"
@@ -1087,7 +1087,7 @@ export default function Index() {
                 See how Margin turns raw FBA activity into claim-ready recovery work.
               </h2>
               <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
-                Watch the flow from Amazon event detection to claim clock, evidence matching, seller approval, filing action, and payout tracking.
+                Amazon activity is converted into structured recovery workflows through event detection, claim clock assignment, evidence matching, approval gating, and payout tracking across the full lifecycle.
               </p>
             </motion.div>
 
@@ -1114,7 +1114,7 @@ export default function Index() {
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
                   <div className="text-[10px] font-semibold uppercase tracking-tight text-white/78 md:text-[11px]">Event-to-recovery walkthrough</div>
                   <div className="mt-2 max-w-[780px] text-[22px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[36px]">
-                    See how Margin finds, prepares, and tracks deadline-aware FBA recovery cases.
+                    Amazon activity becomes structured recovery workflows from detection through payout state.
                   </div>
                 </div>
               </div>
@@ -1145,13 +1145,13 @@ export default function Index() {
               <div className={sectionLabelClass}>What Margin Does</div>
               <h2 className={sectionHeadingClass}>What Margin does</h2>
               <p className="mt-5 max-w-[760px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:text-[26px] md:leading-9">
-                When Amazon receives fewer units than you shipped, refunds an old order, closes a shipment with missing units, or pays a reimbursement that does not match the loss, the work is not finished.
+                Margin is a workflow engine that converts Amazon operational data into structured recovery cases, enforces evidence requirements, applies claim timing logic, and tracks outcomes through final payout state.
               </p>
               <p className={sectionBodyClass}>
-                Margin turns the issue into a managed recovery workflow: claim clock, claim type, evidence checklist, case readiness, seller approval, Amazon response, payout status, and next step.
+                States: detected → classified → evidence-linked → approved → filed → in-review → paid / blocked / expired.
               </p>
               <p className={sectionBodyClass}>
-                Cases move through clear states such as detected, preparing, claim-ready, blocked, filed, approved, awaiting payout, paid, or re-evaluation. Weak, duplicate, expired, unsupported, or low-confidence findings are held back instead of being pushed into reckless filing volume.
+                Each state keeps the recovery case tied to its evidence, deadline, approval, filing, and payout context.
               </p>
             </motion.div>
 
@@ -1199,10 +1199,10 @@ export default function Index() {
                 <div className={sectionLabelClass}>Trust & Control</div>
                 <h2 className={sectionHeadingClass}>Why sellers trust the workflow.</h2>
                 <p className={sectionBodyClass}>
-                  Margin does not need to feel mysterious to be powerful. The workflow is built around read-only visibility, evidence quality, seller approval, weak-case blocking, and transparent recovery states.
+                  Read-only mode is enforced until explicit approval. No filing can advance without evidence validation and seller approval.
                 </p>
                 <p className={sectionBodyClass}>
-                  Margin does not ask for Seller Central passwords, does not use unofficial support channels, and does not file every possible issue blindly.
+                  Low-confidence cases are filtered out of the execution queue. Margin does not guarantee reimbursement outcomes; it structures recovery execution.
                 </p>
               </motion.div>
 
@@ -1236,12 +1236,12 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
               <motion.div {...revealProps} className="max-w-[560px]">
-                <div className={sectionLabelClass}>Marketplace Reach</div>
+                <div className={sectionLabelClass}>Marketplace Scope</div>
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
-                  Marketplace coverage for serious Amazon operators.
+                  Supported regions for Amazon FBA recovery workflows.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Margin is built around the marketplaces where FBA sellers already operate. Coverage is activated through managed onboarding, read-only setup, and claim-type-aware recovery workflows.
+                  US · CA · MX · UK · DE · FR · IT · JP · AU · ZA
                 </p>
               </motion.div>
 
