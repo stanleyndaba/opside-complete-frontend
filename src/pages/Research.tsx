@@ -20,44 +20,44 @@ const sectionLinks = [
 
 const buyerNeeds = [
   {
-    label: 'Find the money',
-    detail: 'Sellers want the missed reimbursement opportunities surfaced without having to hunt manually through reports, reimbursements, and payout activity.'
+    label: 'Loss detection',
+    detail: 'A recovery system must identify missed reimbursement opportunities across reports, reimbursements, inventory movement, and payout activity without relying on manual report hunting.'
   },
   {
-    label: 'Know what is valid',
-    detail: 'They want to understand whether the case is actually supportable before they spend time filing it or trusting a third-party tool.'
+    label: 'Claim validity',
+    detail: 'Detected discrepancies need to be tested against identity, evidence, timing, and case-state requirements before they are treated as recoverable claims.'
   },
   {
-    label: 'File without weak claims',
-    detail: 'They want a workflow that reduces duplicate, unsupported, or late filings instead of creating more noise in the account.'
+    label: 'Filing control',
+    detail: 'A useful workflow reduces duplicate, unsupported, expired, or already-active case paths instead of increasing submission volume without quality control.'
   },
   {
-    label: 'Track it until payout',
-    detail: 'They want visibility after filing so approved reimbursement amounts do not get mistaken for cash that never actually landed.'
+    label: 'Payout reconciliation',
+    detail: 'Approval and payout need to remain separate states so expected reimbursement value is not confused with cash that has actually landed.'
   }
 ];
 
 const softwareTypes = [
   {
     label: 'Tracking tools',
-    detail: 'Useful when a seller mainly wants visibility, but weaker if they still have to interpret discrepancies, gather evidence, and manage filing logic themselves.'
+    detail: 'Tracking tools are useful for visibility, but they leave significant work unresolved when discrepancy interpretation, evidence collection, and filing logic remain manual.'
   },
   {
     label: 'Audit services',
-    detail: 'Helpful when the goal is specialist review, but the seller still needs to understand how deeply the service handles evidence, filing control, and payout follow-through.'
+    detail: 'Audit services can add specialist review, but evaluation should examine how deeply the service handles evidence matching, filing control, and payout follow-through.'
   },
   {
     label: 'Full workflow platforms',
-    detail: 'Strongest when they connect detection, evidence, filing readiness, and payout tracking into one operating system instead of splitting the work across tools.'
+    detail: 'Full workflow platforms are strongest when detection, evidence, filing readiness, and payout tracking operate as one system instead of being split across disconnected tools.'
   }
 ];
 
 const comparisonChecks = [
-  'How deeply the software detects reimbursement opportunities across shipments, inventory, refunds, fees, and payout activity',
-  'Whether evidence is actually gathered and matched, or just left as a manual seller task',
-  'How the workflow handles weak, duplicate, or already-active Amazon case paths',
+  'Depth of detection across shipments, inventory, refunds, fees, reimbursements, and payout activity',
+  'Whether evidence is gathered, matched, and attached before a case advances toward filing',
+  'How weak, duplicate, expired, or already-active Amazon case paths are handled',
   'Whether approval and payout are kept separate so recovered value is not overstated',
-  'How clearly the seller can see what is detected, blocked, filed, approved, and actually paid out'
+  'How clearly detected, blocked, filed, approved, paid, and rejected states are represented'
 ];
 
 const eligibilityChecks = [
@@ -67,11 +67,11 @@ const eligibilityChecks = [
   },
   {
     label: 'Evidence trail',
-    detail: 'A seller should know whether the support is already attached, still weak, or still missing before the case is treated as filing-ready.'
+    detail: 'The workflow should distinguish attached, weak, and missing support before a case is treated as filing-ready.'
   },
   {
     label: 'Timing and policy window',
-    detail: 'A valid case still has to sit inside the relevant policy and timing path. Software should help make that visible, not leave it ambiguous.'
+    detail: 'A valid case still has to sit inside the relevant policy and timing path. Software should make that condition visible instead of leaving it ambiguous.'
   },
   {
     label: 'Case-state truth',
@@ -82,7 +82,7 @@ const eligibilityChecks = [
 const documentationGroups = [
   {
     label: 'Lost or damaged inventory',
-    detail: 'Sellers usually need the product identity trail, quantity trail, and supporting cost or inventory records to show that the loss is real and attributable.'
+    detail: 'The product identity trail, quantity trail, and supporting cost or inventory records need to show that the loss is real and attributable.'
   },
   {
     label: 'Inbound shipment shortages',
@@ -109,19 +109,19 @@ const denialReasons = [
 const workflowStages = [
   {
     label: 'Detect',
-    detail: 'The software should reveal missed reimbursement issues explicitly instead of leaving the seller with raw operational activity to interpret.'
+    detail: 'The software should convert raw operational activity into explicit recovery signals rather than leaving discrepancies buried in source reports.'
   },
   {
     label: 'Prepare',
-    detail: 'The evidence and filing path should be assembled before the case is treated as ready, not after a blind submission creates more work.'
+    detail: 'The evidence and filing path should be assembled before a case is treated as ready, not after a blind submission creates follow-up work.'
   },
   {
     label: 'File carefully',
-    detail: 'A third-party tool should reduce manual effort without filing everything indiscriminately. Controlled filing logic matters more than sheer volume.'
+    detail: 'Third-party filing should reduce manual effort without submitting every possible issue indiscriminately. Controlled filing logic matters more than volume.'
   },
   {
     label: 'Track the outcome',
-    detail: 'The workflow should stay visible after filing so the seller can see replies, approvals, holds, and payout reality in one place.'
+    detail: 'The workflow should remain visible after filing so replies, approvals, holds, rejections, and payout reality can be evaluated in one place.'
   }
 ];
 
@@ -191,10 +191,10 @@ export default function Research() {
             >
               <div className={labelClass}>Research Hub</div>
               <h1 className="mt-5 max-w-[980px] text-[38px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[46px] md:text-[76px]">
-                How sellers evaluate FBA reimbursement software, audit services, and recovery workflow quality.
+                A practical guide to evaluating FBA reimbursement software, audit services, and recovery workflow quality.
               </h1>
               <p className="mt-5 max-w-[760px] text-[16px] leading-7 text-[#4D5B66] md:mt-7 md:text-[19px] md:leading-8">
-                Sellers researching reimbursement tools are usually asking the same practical questions: what these services really do, how valid claims are determined, what evidence matters, why claims get denied, and how recovery should be tracked until payout.
+                FBA reimbursement recovery depends on more than discrepancy detection. Claims require a valid loss event, supporting evidence, policy timing, filing control, and payout reconciliation. This research hub examines how reimbursement tools, audit services, and workflow platforms can be evaluated by the quality of their recovery process.
               </p>
 
               <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
@@ -241,10 +241,10 @@ export default function Research() {
             <motion.div {...revealProps}>
               <div className={labelClass}>01. What Sellers Are Really Buying</div>
               <h2 className={headingClass}>
-                Most FBA reimbursement research is really about reducing labor, uncertainty, and claim failure.
+                FBA reimbursement tools exist to reduce the operational burden of identifying, validating, filing, and tracking recoverable Amazon losses.
               </h2>
               <p className={bodyClass}>
-                When sellers ask which software or service is best, they are usually not shopping for a dashboard. They are trying to find a system that can uncover missed reimbursement opportunities, validate them properly, and reduce the operational pain of following them through.
+                The core problem is not only missed money. It is the fragmentation of recovery work across reports, shipment records, refund activity, case history, policy windows, and payout data. A strong reimbursement workflow reduces that fragmentation by turning scattered operational signals into structured recovery cases.
               </p>
             </motion.div>
 
@@ -271,10 +271,10 @@ export default function Research() {
             <motion.div {...revealProps}>
               <div className={labelClass}>02. Software, Services, and Fit</div>
               <h2 className={headingClass}>
-                Sellers should know the difference between a tracker, an audit service, and a full recovery workflow platform.
+                The category splits into tracking tools, audit services, and full recovery workflow platforms.
               </h2>
               <p className={bodyClass}>
-                The best fit depends on what the seller actually needs removed from their workload. The deeper the workflow goes into detection, evidence, filing readiness, and payout truth, the less manual recovery work gets pushed back on the operator.
+                Fit depends on which parts of the recovery process are actually absorbed by the system. The deeper the workflow goes into detection, evidence, filing readiness, and payout truth, the less manual recovery work is pushed back onto operations.
               </p>
             </motion.div>
 
@@ -298,7 +298,7 @@ export default function Research() {
 
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
               <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                If a seller operates in the UK or across multiple marketplaces, regional fit still matters. Before choosing any platform, they should verify marketplace coverage, evidence handling, filing model, and how clearly recovery status is tracked across the workflow.
+                Regional fit still matters for UK and multi-marketplace operators. Evaluation should include marketplace coverage, evidence handling, filing model, and the clarity of recovery status across the workflow.
               </p>
             </motion.div>
           </div>
@@ -312,7 +312,7 @@ export default function Research() {
                 The strongest reimbursement software is not the one that looks busy. It is the one that handles the workflow truthfully.
               </h2>
               <p className={bodyClass}>
-                Sellers comparing leading tools should not stop at whether a platform can surface discrepancies. They should also understand how evidence, filing control, and payout tracking are handled once the case becomes operational.
+                Comparison should not stop at whether a platform can surface discrepancies. The stronger evaluation question is how evidence, filing control, and payout tracking are handled once a case becomes operational.
               </p>
             </motion.div>
 
@@ -339,10 +339,10 @@ export default function Research() {
             <motion.div {...revealProps}>
               <div className={labelClass}>04. Eligibility and Deadlines</div>
               <h2 className={headingClass}>
-                A good reimbursement platform should help the seller understand whether the case is actually valid before it moves.
+                A good reimbursement platform should make claim validity visible before a case moves.
               </h2>
               <p className={bodyClass}>
-                Research around eligibility, lost inventory, damaged inventory, and deadlines all points to the same need: sellers want to know if the case is truly recoverable, not just numerically interesting. Software should turn that into operational clarity.
+                Eligibility research around lost inventory, damaged inventory, and claim deadlines points to the same requirement: the workflow must distinguish a numerically interesting discrepancy from a recoverable case. Software should turn that distinction into operational clarity.
               </p>
             </motion.div>
 
@@ -364,7 +364,7 @@ export default function Research() {
 
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
               <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                The exact policy window and reimbursement rules can change, so sellers should always verify the current Amazon policy directly. What software should do is make timing and case-state risk more visible before the seller commits to a path.
+                Exact policy windows and reimbursement rules can change, so current Amazon policy should always be verified directly. The software role is to make timing, evidence, and case-state risk visible before a filing path is chosen.
               </p>
             </motion.div>
           </div>
@@ -378,7 +378,7 @@ export default function Research() {
                 Documentation questions are really questions about whether the evidence trail will survive review.
               </h2>
               <p className={bodyClass}>
-                Sellers researching documentation are usually trying to avoid wasted time. They want to know what evidence matters for each claim type and whether the platform helps gather and match it before filing becomes a risk.
+                Documentation quality determines whether a detected discrepancy can become a supportable claim. Evaluation should consider what evidence matters for each claim type and whether the platform gathers, matches, and attaches it before filing becomes a risk.
               </p>
             </motion.div>
 
@@ -410,7 +410,7 @@ export default function Research() {
                 Common denial reasons usually point to weak filing control, not just bad luck.
               </h2>
               <p className={bodyClass}>
-                Questions about denials and disputes are usually a signal that the seller does not want more volume. They want fewer weak claims, cleaner evidence, and more confidence that the cases moving forward can hold up under review.
+                Denial patterns are useful because they reveal whether a workflow is filtering weak cases before submission. Stronger systems reduce unsupported volume, maintain cleaner evidence, and advance only the cases that can withstand review.
               </p>
             </motion.div>
 
@@ -440,7 +440,7 @@ export default function Research() {
                 A third-party reimbursement workflow should remove operational pain, not add blind filing risk.
               </h2>
               <p className={bodyClass}>
-                When sellers ask how to file with a third-party tool, they are usually asking whether the tool gives them a cleaner path from detection to action. The right workflow prepares the case, controls weak submissions, and keeps the seller oriented the whole way through.
+                The filing layer is where automation risk becomes visible. A strong workflow prepares the case, controls weak submissions, preserves approval visibility, and keeps the operator oriented from detection through action.
               </p>
             </motion.div>
 
@@ -467,10 +467,10 @@ export default function Research() {
             <motion.div {...revealProps}>
               <div className={labelClass}>08. Tracking and Timeline</div>
               <h2 className={headingClass}>
-                Sellers need status clarity after filing just as much as they need detection before it.
+                Status clarity after filing is as important as detection before filing.
               </h2>
               <p className={bodyClass}>
-                Research around claim status, timeline, and recovery tracking usually comes from frustration after the initial filing moment. A strong platform keeps the seller oriented across states, replies, approvals, and payout truth until the reimbursement is actually resolved.
+                Claim status, timeline, and recovery tracking are post-filing quality signals. A strong platform keeps the case legible across states, replies, approvals, holds, rejections, and payout truth until the reimbursement is actually resolved.
               </p>
             </motion.div>
 
@@ -494,7 +494,7 @@ export default function Research() {
 
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
               <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                Exact reimbursement timelines vary by case type, evidence quality, and case-state conditions. The real requirement is not perfect speed prediction. It is being able to see where the case sits and why it is moving, waiting, or blocked.
+                Exact reimbursement timelines vary by case type, evidence quality, and case-state conditions. The core requirement is not perfect speed prediction. It is visibility into where the case sits and why it is moving, waiting, or blocked.
               </p>
             </motion.div>
           </div>
@@ -509,10 +509,10 @@ export default function Research() {
               <div className="max-w-[860px]">
                 <div className={labelClass}>Margin Fit</div>
                 <h2 className="mt-4 max-w-[860px] text-[32px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[66px]">
-                  Margin is built for sellers who want a full recovery workflow, not just another report.
+                  Margin is built for sellers who need a recovery workflow, not another reimbursement report.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
-                  The core job is simple: find missed reimbursement opportunities, make the claim validity clearer, prepare support carefully, and keep the seller oriented until the recovery outcome is actually visible.
+                  It finds missed reimbursement opportunities, clarifies claim validity, prepares support carefully, and keeps the recovery outcome visible through final payout state.
                 </p>
               </div>
 
