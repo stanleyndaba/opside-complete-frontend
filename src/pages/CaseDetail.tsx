@@ -650,6 +650,21 @@ const isRejectedDemoCaseReference = (value?: string | null) => {
   return normalized === 'ACME-2007' || normalized === 'ACME-CASE-2007' || normalized.endsWith('2007');
 };
 
+const isDemoFilingReceiptCaseReference = (value?: string | null) => {
+  const normalized = String(value || '').trim().toUpperCase();
+  return normalized === 'ACME-2003' || normalized === 'ACME-CASE-2003' || normalized.endsWith('2003');
+};
+
+const hasDemoFilingReceiptThread = (caseData: any, caseReference?: string | null) => {
+  if (isDemoFilingReceiptCaseReference(caseReference)) return true;
+
+  const messages = Array.isArray(caseData?.case_messages) ? caseData.case_messages : [];
+  return messages.some((message: any) => {
+    const threadText = `${message?.subject || ''} ${message?.body_text || ''}`;
+    return isDemoFilingReceiptCaseReference(threadText);
+  });
+};
+
 const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) => {
   const caseReference = resolveDemoCaseReference(caseData, caseId);
   const shipmentReference = fallbackIfMissing(caseData.order_id || caseData.evidence?.shipment_id, 'FBA17XJ4K2');
@@ -660,9 +675,12 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
   );
   const normalizedState = String(caseData.case_state || caseData.recovery_status || '').toLowerCase();
   const isRejected = normalizedState.includes('reject') || isRejectedDemoCaseReference(caseReference);
+  const isFilingReceipt = hasDemoFilingReceiptThread(caseData, caseReference);
   const isPaid = !isRejected && (normalizedState.includes('paid') || normalizedState.includes('payout') || caseReference === 'ACME-CASE-2005');
   const responseBody = isRejected
     ? `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. At this time, we are unable to approve reimbursement for the affected units because the available shipment and inventory records do not confirm an eligible discrepancy under the current FBA reimbursement criteria.\n\nNo reimbursement has been issued for this case. If you have additional documentation, such as carrier confirmation, shipment reconciliation records, or supplier invoice detail that was not included in the original request, you may reply to this case for further review.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy not confirmed\n\nThank you,\nAmazon Selling Partner Support`
+    : isFilingReceipt
+    ? `Hello,\n\nWe received the reimbursement filing submitted on your behalf for this FBA inventory discrepancy. The request is now open with Amazon Selling Partner Support and is pending review.\n\nOur team will review the shipment and inventory records attached to the filing. If additional information is required, we will reply on this case thread with the next steps.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\n\nThank you,\nAmazon Selling Partner Support`
     : isPaid
     ? `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. Based on the shipment and inventory records available, we have approved reimbursement for the affected units.\n\nA reimbursement of ${formatDemoCurrency(Number(reimbursementAmount), currency)} has been issued to your seller account and will appear in your payments reporting once processing completes. Please allow the normal settlement cycle for the amount to be reflected in your account.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\n\nThank you,\nAmazon Selling Partner Support`
     : `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. Based on the shipment and inventory records available, we have approved reimbursement for the affected units.\n\nThe approved reimbursement amount is ${formatDemoCurrency(Number(reimbursementAmount), currency)} and is pending payment processing. Please allow the normal settlement cycle for the amount to be reflected in your account.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\n\nThank you,\nAmazon Selling Partner Support`;
@@ -674,12 +692,14 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
       sender: 'Amazon Selling Partner Support',
       subject: isRejected
         ? 'Reimbursement request not approved for FBA inventory discrepancy'
+        : isFilingReceipt
+        ? 'Reimbursement filing received for FBA inventory discrepancy'
         : isPaid
         ? 'Reimbursement issued for FBA inventory discrepancy'
         : 'Reimbursement approved for FBA inventory discrepancy',
       body_text: responseBody,
       received_at: '2026-05-08T14:37:00Z',
-      state_signal: isRejected ? 'rejected' : isPaid ? 'paid' : 'approved',
+      state_signal: isRejected ? 'rejected' : isFilingReceipt ? 'pending' : isPaid ? 'paid' : 'approved',
       attachments: [],
     },
   ];
@@ -693,7 +713,8 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
   const isRejectedDemoCase = isRejectedDemoCaseReference(demoCaseReference);
   const documents = isMissingDemoValue(caseData.documents) ? buildDemoCaseDocuments(caseId) : caseData.documents;
   const events = isMissingDemoValue(caseData.events) ? buildDemoCaseEvents(caseId) : caseData.events;
-  const caseMessages = isMissingDemoValue(caseData.case_messages)
+  const shouldUseDemoFilingReceipt = hasDemoFilingReceiptThread(caseData, demoCaseReference);
+  const caseMessages = shouldUseDemoFilingReceipt || isMissingDemoValue(caseData.case_messages)
     ? buildDemoAmazonThreadMessages(caseData, caseId)
     : caseData.case_messages;
   const evidence = {
