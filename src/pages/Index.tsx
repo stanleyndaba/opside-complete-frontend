@@ -78,8 +78,6 @@ const trustHighlights = [
   'No black box'
 ];
 
-const heroHeadlineWords = 'Amazon received fewer units than you shipped. Margin shows what happens next.'.split(' ');
-
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
   { x: 18, y: 54, size: 7, color: 'bg-emerald-400', delay: 1.4, duration: 4.2 },
@@ -310,6 +308,50 @@ const revealProps = {
   viewport: { once: true, amount: 0.18 },
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
+
+function SoftSwooshDivider({
+  from,
+  to,
+  flip = false
+}: {
+  from: string;
+  to: string;
+  flip?: boolean;
+}) {
+  return (
+    <div className="relative h-16 overflow-hidden md:h-24" style={{ backgroundColor: to }} aria-hidden="true">
+      <svg
+        className={`absolute inset-x-0 top-[-1px] h-full w-full ${flip ? '-scale-x-100' : ''}`}
+        viewBox="0 0 1440 120"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M0 0H1440V42C1194 96 1012 112 792 82C546 49 335 18 0 92V0Z"
+          fill={from}
+        />
+      </svg>
+    </div>
+  );
+}
+
+function ParallaxWash({ className }: { className: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start 0.9', 'end 0.1']
+  });
+  const y = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [-32, 32]);
+
+  return (
+    <motion.div
+      ref={ref}
+      aria-hidden="true"
+      style={{ y }}
+      className={`pointer-events-none absolute inset-x-0 -top-16 h-[calc(100%+8rem)] ${className}`}
+    />
+  );
+}
 
 function LightNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -582,15 +624,35 @@ function KineticHeroSection({
   const { scrollYProgress } = useScroll();
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0.82]);
-  const networkY = useTransform(scrollYProgress, [0, 0.25], [0, reduceMotion ? 0 : 34]);
+  const networkY = useTransform(scrollYProgress, [0, 0.25], [0, reduceMotion ? 0 : 28]);
 
   return (
     <motion.section
       style={{ scale: heroScale, opacity: heroOpacity }}
       data-navbar-theme="dark"
-      className="relative isolate flex min-h-[calc(100svh-24px)] overflow-hidden bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.20),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.18),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-5 pb-16 pt-32 text-white sm:px-6 md:min-h-screen md:px-8 md:pb-24 md:pt-44"
+      className="relative isolate flex min-h-screen overflow-hidden bg-[linear-gradient(135deg,#0A0F1A_0%,#0D1420_46%,#111827_100%)] px-5 pb-16 pt-32 text-white sm:px-6 md:px-8 md:pb-24 md:pt-44"
       aria-labelledby="margin-hero-title"
     >
+      <motion.div
+        className="pointer-events-none absolute -left-[18%] top-[8%] h-[52rem] w-[52rem] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.24),rgba(99,102,241,0.14)_38%,transparent_68%)] blur-3xl"
+        animate={reduceMotion ? undefined : {
+          x: ['0%', '18%', '4%'],
+          y: ['0%', '10%', '-4%'],
+          scale: [1, 1.12, 1]
+        }}
+        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+        aria-hidden="true"
+      />
+      <motion.div
+        className="pointer-events-none absolute -right-[16%] bottom-[-22%] h-[44rem] w-[44rem] rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.22),rgba(34,211,238,0.10)_42%,transparent_70%)] blur-3xl"
+        animate={reduceMotion ? undefined : {
+          x: ['0%', '-12%', '0%'],
+          y: ['0%', '-8%', '4%'],
+          scale: [1, 1.08, 0.98]
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+        aria-hidden="true"
+      />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen"
         style={{
@@ -603,9 +665,9 @@ function KineticHeroSection({
         className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
       >
-        <div className="absolute inset-0 opacity-[0.12] [background-image:linear-gradient(rgba(96,165,250,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.12)_1px,transparent_1px)] [background-size:92px_92px]" />
+        <div className="absolute inset-0 opacity-[0.10] [background-image:linear-gradient(rgba(34,211,238,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.12)_1px,transparent_1px)] [background-size:92px_92px]" />
         <motion.div
-          className="absolute inset-y-0 left-0 w-[18%] bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.14),transparent)] blur-sm"
+          className="absolute inset-y-0 left-0 w-[18%] bg-[linear-gradient(90deg,transparent,rgba(34,211,238,0.14),transparent)] blur-sm"
           animate={reduceMotion ? undefined : { x: ['-30vw', '115vw'] }}
           transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
         />
@@ -640,53 +702,56 @@ function KineticHeroSection({
         ))}
       </motion.div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1180px] items-center">
-        <div className="max-w-[960px]">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1180px] items-center justify-center">
+        <div className="mx-auto max-w-[1100px] text-center">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"
+            transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-400"
           >
-            Always-on recovery management for Amazon sellers
+            ALWAYS-ON RECOVERY MANAGEMENT FOR AMAZON SELLERS
           </motion.div>
 
-          <h1
+          <motion.h1
             id="margin-hero-title"
-            className="mt-6 max-w-[980px] text-[48px] font-bold leading-[0.96] tracking-[-0.06em] text-white sm:text-[64px] md:text-[88px] lg:text-[104px]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-7 max-w-[1080px] text-5xl font-extrabold leading-[0.98] tracking-[-0.055em] text-white sm:text-6xl md:text-7xl lg:text-8xl"
           >
-            {heroHeadlineWords.map((word, index) => (
-              <motion.span
-                key={`${word}-${index}`}
-                className="mr-[0.18em] inline-block"
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.58, delay: 0.08 + index * 0.035, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {word}
-              </motion.span>
-            ))}
-          </h1>
+            <span className="block">Amazon received fewer units than you shipped.</span>
+            <span className="block text-cyan-400 [text-shadow:0_0_34px_rgba(34,211,238,0.24)]">Margin shows what happens next.</span>
+          </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-7 max-w-[840px] text-[16px] leading-8 text-slate-300 md:text-lg md:leading-9"
+            transition={{ duration: 0.65, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-7 max-w-[820px] text-[16px] leading-8 text-slate-300 md:text-lg md:leading-9"
           >
             Margin turns Amazon loss events into structured recovery cases by binding evidence, enforcing claim readiness, tracking approval, and maintaining payout state from detection through resolution.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-9 grid w-full max-w-[700px] grid-cols-1 gap-3 min-[680px]:grid-cols-[1.25fr_1fr]"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-6 max-w-[760px] text-[15px] font-semibold leading-7 text-cyan-200 md:text-[19px] md:leading-8"
+          >
+            Trusted by 10,000+ Sellers | Monitoring $500M+ in FBA Revenue Daily
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.68, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-9 flex w-full max-w-[520px] flex-col gap-3 sm:flex-row sm:items-center sm:justify-center"
           >
             <Button
               onClick={onPrimaryCta}
               aria-label="Start Recovery Audit"
-              className="h-12 justify-center rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.36)] transition-transform hover:scale-[1.02] hover:bg-[#1683F1]"
+              className="h-12 justify-center rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(79,70,229,0.34)] transition-transform hover:scale-[1.025] hover:bg-indigo-500 sm:min-w-[220px]"
             >
               {primaryCtaLabel}
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -695,7 +760,7 @@ function KineticHeroSection({
               variant="outline"
               onClick={onDemoCta}
               aria-label="Watch 60-Second Demo"
-              className="h-12 justify-center rounded-full border-white/12 bg-white/[0.06] px-6 text-sm font-semibold text-white backdrop-blur-xl transition-transform hover:scale-[1.02] hover:bg-white/[0.12]"
+              className="h-12 justify-center rounded-xl border-2 border-white/30 bg-transparent px-6 text-sm font-semibold text-white backdrop-blur-xl transition-all hover:scale-[1.025] hover:border-cyan-300/60 hover:bg-cyan-400/10 hover:shadow-[0_0_34px_rgba(34,211,238,0.20)] sm:min-w-[220px]"
             >
               Watch 60-Second Demo
             </Button>
@@ -706,7 +771,7 @@ function KineticHeroSection({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.55, delay: 0.95 }}
-              className="mt-3 max-w-[560px] text-sm leading-6 text-slate-400"
+              className="mx-auto mt-5 max-w-[620px] text-sm leading-6 text-slate-400"
             >
               Founding 100 Recovery Audit starts with controlled onboarding, read-only setup, claim-clock scanning, evidence readiness review, and seller approval before filing. No recovery commissions.
             </motion.div>
@@ -716,7 +781,7 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 1.02 }}
-            className="mt-7 flex max-w-[720px] flex-wrap gap-2.5"
+            className="mx-auto mt-7 flex max-w-[720px] flex-wrap justify-center gap-2.5"
           >
             {trustHighlights.map((item) => (
               <div
@@ -735,7 +800,7 @@ function KineticHeroSection({
           >
             <Link
               to="/early-access"
-              className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-tight text-blue-300 transition-colors hover:text-blue-100"
+              className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-tight text-cyan-300 transition-colors hover:text-cyan-100"
             >
               Founding Audit
               <ArrowRight className="h-4 w-4" />
@@ -743,7 +808,7 @@ function KineticHeroSection({
           </motion.div>
 
           {isFull ? (
-            <div className="mt-5 max-w-[430px] rounded-2xl bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
+            <div className="mx-auto mt-5 max-w-[430px] rounded-2xl bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
               <div>We are onboarding a small batch of sellers right now.</div>
               <div>Next batch opens in {nextBatchHours ?? 24} hours.</div>
             </div>
@@ -970,8 +1035,10 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />
+        <SoftSwooshDivider from="#111827" to="#FAFAF7" />
 
-        <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 md:py-10">
+        <section className="relative overflow-hidden bg-[#FAFAF7] py-8 md:py-10">
+          <ParallaxWash className="bg-[radial-gradient(circle_at_82%_18%,rgba(11,116,222,0.08),transparent_34%)]" />
           <div className={containerClass}>
             <p className="max-w-[900px] text-[17px] font-medium leading-8 tracking-[-0.02em] text-[#25313A] md:text-[20px] md:leading-9">
               Amazon does handle some reimbursements automatically. Margin is built for the recovery work that still needs visibility: missing proof, claim windows, case readiness, seller approval, underpaid reimbursements, rejections, and payout tracking.
@@ -1079,7 +1146,10 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24" id="margin-demo">
+        <SoftSwooshDivider from="#FAFAF7" to="#F3F6F8" flip />
+
+        <section className="relative overflow-hidden bg-[#F3F6F8] py-14 md:py-24" id="margin-demo">
+          <ParallaxWash className="bg-[radial-gradient(circle_at_20%_24%,rgba(34,211,238,0.10),transparent_32%),radial-gradient(circle_at_86%_12%,rgba(11,116,222,0.08),transparent_28%)]" />
           <div className={containerClass}>
             <motion.div {...revealProps} className="mx-auto mb-8 max-w-[880px] text-center md:mb-12">
               <div className={sectionLabelClass}>See Demo</div>
@@ -1122,7 +1192,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-12 md:py-18">
+        <section className="relative overflow-hidden bg-[#F3F6F8] py-12 md:py-18">
           <div className={containerClass}>
             <div className="max-w-[680px] md:mx-auto md:text-center">
               <div className={sectionLabelClass}>Evidence Sources</div>
@@ -1138,6 +1208,8 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        <SoftSwooshDivider from="#F3F6F8" to="#FAFAF7" />
 
         <section className="relative py-16 md:py-28" id="how-margin-works">
           <div className={containerClass}>
@@ -1240,9 +1312,6 @@ export default function Index() {
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
                   Supported regions for Amazon FBA recovery workflows.
                 </h2>
-                <p className={sectionBodyClass}>
-                  US · CA · MX · UK · DE · FR · IT · JP · AU · ZA
-                </p>
               </motion.div>
 
               <motion.div
@@ -1341,7 +1410,10 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-[#E4EDF1] bg-white py-14 md:py-24">
+        <SoftSwooshDivider from="#FAFAF7" to="#FFFFFF" />
+
+        <section className="relative overflow-hidden bg-white py-14 md:py-24">
+          <ParallaxWash className="bg-[radial-gradient(circle_at_88%_10%,rgba(11,116,222,0.06),transparent_30%)]" />
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] text-[#050607] sm:text-[42px] md:text-[46px]">
@@ -1377,6 +1449,8 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        <SoftSwooshDivider from="#FFFFFF" to="#F3F6F8" flip />
 
         <section className="relative bg-[#F3F6F8] py-16 md:py-28">
           <div className={containerClass}>
