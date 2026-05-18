@@ -31,8 +31,8 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
     const triggerClassName = variant === 'light'
         ? 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[#F3F6F8] hover:text-[#182026] focus:border-transparent focus:bg-transparent focus:text-[#66737F] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-[#F3F6F8] data-[state=open]:!text-[#182026]'
         : 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-white/90 outline-none ring-0 transition-colors hover:border-transparent hover:bg-white/10 hover:text-white focus:border-transparent focus:bg-transparent focus:text-white/90 focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-white/10 data-[state=open]:!text-white';
-    const panelClassName = 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[linear-gradient(135deg,#FFFFFF_0%,#FAFAF7_48%,#F3F6F8_100%)] rounded-[22px] overflow-hidden shadow-[0_34px_110px_rgba(24,32,38,0.22)] ring-1 ring-[#CFE0EA]';
-    const labelClassName = 'text-[9px] font-bold text-[#4D5B66] uppercase tracking-tight';
+    const panelClassName = 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#FAFAF7] rounded-[22px] overflow-hidden shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8]';
+    const labelClassName = 'text-[9px] font-bold text-[#66737F] uppercase tracking-tight';
 
     return (
         <NavigationMenu>
@@ -45,14 +45,14 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         <div className={cn(panelClassName, 'relative z-[100]')}>
 
                             {/* Column 1: Recovery Coverage */}
-                            <div className="flex-[1.6] border-r border-[#D8E3E8] p-6 lg:p-7">
+                            <div className="flex-[1.6] border-r border-[#E4EDF1] p-6 lg:p-7">
                                 <div className="mb-5 flex items-center justify-between">
                                     <h4 className={labelClassName}>
                                         Recovery Coverage
                                     </h4>
                                     <span className={cn(
                                         'rounded px-2 py-0.5 text-[7px] font-bold uppercase tracking-tighter',
-                                        'border border-[#CFE0EA] bg-[#F8FAFC] text-[#4D5B66] shadow-[0_10px_24px_rgba(37,49,58,0.06)]'
+                                        'border border-[#D8E3E8] bg-white text-[#66737F]'
                                     )}>
                                         Core Coverage
                                     </span>
@@ -99,7 +99,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                             </div>
 
                             {/* Column 2: Evidence & Control */}
-                            <div className="flex-1 border-r border-[#D8E3E8] bg-white/58 p-6 lg:p-7">
+                            <div className="flex-1 border-r border-[#E4EDF1] bg-white/45 p-6 lg:p-7">
                                 <h4 className={cn(labelClassName, 'mb-5')}>
                                     Evidence & Control
                                 </h4>
@@ -132,7 +132,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                             </div>
 
                             {/* Column 3: By Seller Type */}
-                            <div className="flex-[0.8] bg-[#F8FAFC]/76 p-6 lg:p-7">
+                            <div className="flex-[0.8] bg-white/70 p-6 lg:p-7">
                                 <h4 className={cn(labelClassName, 'mb-5')}>
                                     By Seller Type
                                 </h4>
@@ -159,13 +159,13 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
 
                                 <div className={cn(
                                     'relative mt-6 overflow-hidden rounded-xl border p-5',
-                                    'border-[#CFE0EA] bg-white shadow-[0_22px_56px_rgba(37,49,58,0.1)]'
+                                    'border-[#D8E3E8] bg-white'
                                 )}>
                                     <h5 className="mb-1 text-[9px] font-bold text-[#182026]">Enterprise Support</h5>
                                     <p className="mb-3 line-clamp-1 text-[8px] leading-relaxed text-[#66737F]">
                                         Recovery coverage for larger and more complex operations.
                                     </p>
-                                    <div className="flex cursor-default items-center gap-1.5 text-[8px] font-bold uppercase tracking-tight text-[#0B74DE]">
+                                    <div className="flex cursor-default items-center gap-1.5 text-[8px] font-bold uppercase tracking-tight text-[#182026]">
                                         Recovery Coverage <ArrowRight className="h-2.5 w-2.5" />
                                     </div>
                                 </div>
@@ -199,8 +199,8 @@ function NavItem({
                 'group block cursor-default rounded-xl border p-3.5 transition-colors',
                 isLight
                     ? highlight
-                        ? 'border-[#CFE0EA] bg-white shadow-[0_24px_58px_rgba(37,49,58,0.13)]'
-                        : 'border-transparent bg-transparent hover:border-[#D8E3E8] hover:bg-white hover:shadow-[0_18px_42px_rgba(37,49,58,0.1)]'
+                        ? 'border-white/70 bg-white/58 shadow-[0_14px_36px_rgba(37,49,58,0.08)]'
+                        : 'border-transparent bg-transparent hover:border-white/70 hover:bg-white/48 hover:shadow-[0_14px_36px_rgba(37,49,58,0.08)]'
                     : highlight
                         ? 'border-white/10 bg-white/[0.06]'
                         : 'border-transparent bg-transparent'
@@ -211,8 +211,8 @@ function NavItem({
                     'shrink-0 rounded-lg border p-2 transition-all',
                     isLight
                         ? highlight
-                            ? 'border-[#CFE0EA] bg-[#F3F6F8] text-[#182026] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.72)]'
-                            : 'border-[#E4EDF1] bg-white text-[#25313A] shadow-[0_10px_24px_rgba(37,49,58,0.06)] group-hover:border-[#CFE0EA] group-hover:bg-[#F8FAFC]'
+                            ? 'border-white/70 bg-white/76 text-[#25313A]'
+                            : 'border-white/60 bg-white/40 text-[#25313A] group-hover:bg-white/76'
                         : highlight
                             ? 'border-white/15 bg-white/10 text-white/75'
                             : 'border-transparent bg-white/5 text-white/40'
@@ -224,15 +224,15 @@ function NavItem({
                         'block whitespace-nowrap text-[9.5px] font-bold tracking-tight',
                         isLight
                             ? highlight
-                                ? 'text-[#182026]'
-                                : 'text-[#25313A]'
+                                ? 'text-[#25313A]'
+                                : 'text-[#182026]'
                             : highlight
                                 ? 'text-white'
                                 : 'text-white/90'
                     )}>
                         {title}
                     </span>
-                    <p className={cn('mt-1 text-[8px] leading-none', isLight ? 'text-[#5A6873]' : 'text-white/20')}>
+                    <p className={cn('mt-1 text-[8px] leading-none', isLight ? 'text-[#66737F]' : 'text-white/20')}>
                         {description}
                     </p>
                 </div>
