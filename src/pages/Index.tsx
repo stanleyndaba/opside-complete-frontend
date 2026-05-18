@@ -31,7 +31,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
-const DEMO_VIDEO_THUMBNAIL_URL = '/DEMO34.png';
+const DEMO_VIDEO_THUMBNAIL_URL = '/Gen-4 Turbo - Minimal cinematic logo reveal, modern SaaS motion, soft glow, structured lines forming.gif';
 
 const navLinks = [
   { label: 'Pricing', to: '/pricing' },
