@@ -5,8 +5,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/components/ui/button';
 import {
   ArrowRight,
-  ChevronLeft,
-  ChevronRight,
   Check,
   PlayCircle,
 } from 'lucide-react';
@@ -176,37 +174,7 @@ const marketplaceCountries = [
   { country: 'India', code: 'IN', flagCode: 'in', region: 'Asia Pacific' }
 ];
 
-type MobileMarketplaceStatus = 'Active' | 'Beta' | 'Coming Soon';
-
-const mobileMarketplaces: Array<{
-  iso: string;
-  country: string;
-  flag: string;
-  marketplace: string;
-  domain: string;
-  claimTypes: string[];
-  status: MobileMarketplaceStatus;
-  stripColor: string;
-}> = [
-  { iso: 'US', country: 'United States', flag: '🇺🇸', marketplace: 'Amazon.com', domain: 'amazon.com', claimTypes: ['FBA', 'FBM', 'Shipment', 'Return'], status: 'Active', stripColor: '#B22234' },
-  { iso: 'UK', country: 'United Kingdom', flag: '🇬🇧', marketplace: 'Amazon.co.uk', domain: 'amazon.co.uk', claimTypes: ['FBA', 'FBM', 'Shipment'], status: 'Active', stripColor: '#012169' },
-  { iso: 'DE', country: 'Germany', flag: '🇩🇪', marketplace: 'Amazon.de', domain: 'amazon.de', claimTypes: ['FBA', 'FBM', 'Return'], status: 'Active', stripColor: '#000000' },
-  { iso: 'FR', country: 'France', flag: '🇫🇷', marketplace: 'Amazon.fr', domain: 'amazon.fr', claimTypes: ['FBA', 'FBM'], status: 'Active', stripColor: '#002395' },
-  { iso: 'IT', country: 'Italy', flag: '🇮🇹', marketplace: 'Amazon.it', domain: 'amazon.it', claimTypes: ['FBA', 'FBM'], status: 'Active', stripColor: '#009246' },
-  { iso: 'ES', country: 'Spain', flag: '🇪🇸', marketplace: 'Amazon.es', domain: 'amazon.es', claimTypes: ['FBA', 'FBM'], status: 'Active', stripColor: '#AA151B' },
-  { iso: 'CA', country: 'Canada', flag: '🇨🇦', marketplace: 'Amazon.ca', domain: 'amazon.ca', claimTypes: ['FBA', 'FBM', 'Shipment'], status: 'Active', stripColor: '#FF0000' },
-  { iso: 'MX', country: 'Mexico', flag: '🇲🇽', marketplace: 'Amazon.com.mx', domain: 'amazon.com.mx', claimTypes: ['FBA', 'FBM'], status: 'Active', stripColor: '#006847' },
-  { iso: 'JP', country: 'Japan', flag: '🇯🇵', marketplace: 'Amazon.co.jp', domain: 'amazon.co.jp', claimTypes: ['FBA', 'FBM'], status: 'Active', stripColor: '#BC002D' },
-  { iso: 'AU', country: 'Australia', flag: '🇦🇺', marketplace: 'Amazon.com.au', domain: 'amazon.com.au', claimTypes: ['FBA', 'FBM'], status: 'Active', stripColor: '#00008B' },
-  { iso: 'IN', country: 'India', flag: '🇮🇳', marketplace: 'Amazon.in', domain: 'amazon.in', claimTypes: ['FBA', 'FBM'], status: 'Active', stripColor: '#FF9933' },
-  { iso: 'NL', country: 'Netherlands', flag: '🇳🇱', marketplace: 'Amazon.nl', domain: 'amazon.nl', claimTypes: ['FBA', 'FBM'], status: 'Beta', stripColor: '#AE1C28' },
-  { iso: 'SE', country: 'Sweden', flag: '🇸🇪', marketplace: 'Amazon.se', domain: 'amazon.se', claimTypes: ['FBA'], status: 'Beta', stripColor: '#006AA7' },
-  { iso: 'PL', country: 'Poland', flag: '🇵🇱', marketplace: 'Amazon.pl', domain: 'amazon.pl', claimTypes: ['FBA'], status: 'Beta', stripColor: '#DC143C' },
-  { iso: 'SG', country: 'Singapore', flag: '🇸🇬', marketplace: 'Amazon.sg', domain: 'amazon.sg', claimTypes: ['FBA'], status: 'Beta', stripColor: '#EF3340' },
-  { iso: 'AE', country: 'UAE', flag: '🇦🇪', marketplace: 'Amazon.ae', domain: 'amazon.ae', claimTypes: ['FBA'], status: 'Beta', stripColor: '#00732F' },
-  { iso: 'SA', country: 'Saudi Arabia', flag: '🇸🇦', marketplace: 'Amazon.sa', domain: 'amazon.sa', claimTypes: ['FBA'], status: 'Coming Soon', stripColor: '#006C35' },
-  { iso: 'BR', country: 'Brazil', flag: '🇧🇷', marketplace: 'Amazon.com.br', domain: 'amazon.com.br', claimTypes: ['FBA'], status: 'Coming Soon', stripColor: '#009C3B' }
-];
+const mobileMarketplaceCodes = ['US', 'UK', 'DE', 'FR', 'IT', 'ES', 'CA', 'MX', 'JP', 'AU', 'IN', 'NL', 'SE', 'PL', 'SG', 'AE', 'SA', 'BR'];
 
 const trustControls = [
   {
@@ -506,225 +474,42 @@ function KineticHeroSection({
 
 function MobileMarketplaceHub() {
   const reduceMotion = useReducedMotion();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const activeMarketplace = mobileMarketplaces[activeIndex];
-  const marketplaceCount = mobileMarketplaces.length;
-
-  const goToMarketplace = (nextIndex: number) => {
-    const normalizedIndex = (nextIndex + marketplaceCount) % marketplaceCount;
-    setDirection(normalizedIndex > activeIndex || (activeIndex === marketplaceCount - 1 && normalizedIndex === 0) ? 1 : -1);
-    setActiveIndex(normalizedIndex);
-  };
-
-  const visibleDotIndexes = Array.from({ length: 5 }, (_, index) => {
-    const offset = index - 2;
-    return (activeIndex + offset + marketplaceCount) % marketplaceCount;
-  });
-
-  const statusClass = {
-    Active: 'text-emerald-700',
-    Beta: 'text-amber-700',
-    'Coming Soon': 'text-slate-600'
-  } satisfies Record<MobileMarketplaceStatus, string>;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="relative mx-auto max-w-[390px] bg-[#F7F5F0] px-1 text-[#1A1A1A] sm:hidden"
-      tabIndex={0}
-      aria-label="Mobile marketplace support selector"
-      onKeyDown={(event) => {
-        if (event.key === 'ArrowRight') goToMarketplace(activeIndex + 1);
-        if (event.key === 'ArrowLeft') goToMarketplace(activeIndex - 1);
-      }}
+      className="relative mx-auto max-w-[390px] sm:hidden"
+      aria-label="Mobile marketplace support"
     >
-      <div className="[font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-center text-[10px] font-semibold uppercase tracking-[0.36em] text-[#6F7782]">
-        Global Marketplace Support
-      </div>
-      <h2 className="mx-auto mt-2 max-w-[280px] text-center [font-family:'Playfair_Display',Georgia,serif] text-[24px] font-bold leading-[1.05] tracking-[-0.02em] text-[#1A1A1A]">
-        18 Marketplaces. One Recovery System.
+      <div className={sectionLabelClass}>Marketplace Scope</div>
+      <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026]">
+        Supported regions for Amazon FBA recoveries.
       </h2>
-
-      <div className="relative mx-auto mt-8 h-[314px] max-w-[336px]">
-        {[2, 1].map((depth) => (
-          <motion.div
-            key={depth}
-            aria-hidden="true"
-            initial={reduceMotion ? false : { opacity: 0, y: depth === 2 ? 20 : 14 }}
-            whileInView={reduceMotion ? undefined : { opacity: 1, y: depth === 2 ? 28 : 14 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: depth === 2 ? 0.3 : 0.18, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute inset-x-4 top-0 h-[280px] rounded-[10px] border border-[#E2E8F0] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
-            style={{
-              scale: depth === 2 ? 0.93 : 0.965,
-              transformOrigin: 'center top'
-            }}
-          >
-            <div className="h-[6px] rounded-t-[10px]" style={{ backgroundColor: mobileMarketplaces[(activeIndex + depth) % marketplaceCount].stripColor }} />
-          </motion.div>
-        ))}
-
-        <motion.div
-          key={activeMarketplace.iso}
-          drag={reduceMotion ? false : 'x'}
-          dragElastic={0.16}
-          dragConstraints={{ left: 0, right: 0 }}
-          onDragEnd={(_, info) => {
-            if (info.offset.x < -50) goToMarketplace(activeIndex + 1);
-            if (info.offset.x > 50) goToMarketplace(activeIndex - 1);
-          }}
-          initial={reduceMotion ? false : { opacity: 0, x: direction * 28, scale: 0.96 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={reduceMotion ? undefined : { opacity: 0, x: direction * -32, scale: 0.96 }}
-          transition={{ type: 'spring', stiffness: 320, damping: 30 }}
-          className="absolute inset-x-0 top-0 z-10 h-[280px] touch-pan-y overflow-hidden rounded-[10px] border border-[#E2E8F0] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
-        >
-          <div className="h-[6px]" style={{ backgroundColor: activeMarketplace.stripColor }} />
-          <div className="flex h-[274px] flex-col px-6 pb-4 pt-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-4">
-                <div className="text-[58px] leading-none" aria-hidden="true">{activeMarketplace.flag}</div>
-                <div>
-                  <div className="[font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[12px] font-semibold uppercase tracking-[0.18em] text-[#808080]">
-                    {activeMarketplace.iso}
-                  </div>
-                  <h3 className="mt-1 [font-family:'Playfair_Display',Georgia,serif] text-[20px] font-bold leading-tight text-[#1A1A1A]">
-                    {activeMarketplace.country}
-                  </h3>
-                </div>
-              </div>
-              <div className="flex flex-col items-end gap-1">
-                <div className={`inline-flex items-center gap-1.5 rounded-[6px] border border-[#E2E8F0] bg-[#F7F5F0] px-2 py-1 [font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[10px] font-semibold uppercase ${statusClass[activeMarketplace.status]}`}>
-                  {activeMarketplace.status === 'Active' ? (
-                    <motion.span
-                      className="h-1.5 w-1.5 rounded-full bg-emerald-500"
-                      animate={reduceMotion ? undefined : { opacity: [1, 0.6, 1], scale: [1, 1.4, 1] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-                  ) : null}
-                  {activeMarketplace.status}
-                </div>
-                <div className="[font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[10px] font-semibold text-[#808080]">
-                  {activeIndex + 1} / {marketplaceCount}
-                </div>
-              </div>
-            </div>
-
-            <div className="my-4 border-t border-[#E2E8F0]" />
-
-            <div>
-              <div className="[font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[10px] font-semibold uppercase tracking-[0.2em] text-[#808080]">
-                Marketplace
-              </div>
-              <div className="mt-1 [font-family:'IBM_Plex_Sans',Inter,sans-serif] text-[16px] font-bold leading-tight text-[#1A1A1A]">
-                {activeMarketplace.marketplace}
-              </div>
-              <div className="mt-1 [font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[11px] text-[#808080]">
-                {activeMarketplace.domain}
-              </div>
-            </div>
-
-            <div className="my-4 border-t border-[#E2E8F0]" />
-
-            <div>
-              <div className="[font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[10px] font-semibold uppercase tracking-[0.2em] text-[#808080]">
-                Claim Types
-              </div>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {activeMarketplace.claimTypes.map((claimType) => (
-                  <span
-                    key={claimType}
-                    className="rounded-[6px] border border-[#E2E8F0] bg-[#F0F0F0] px-2 py-1 [font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[10px] font-semibold text-[#1A1A1A]"
-                  >
-                    {claimType}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-auto text-center [font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[10px] font-semibold uppercase tracking-[0.24em] text-[#808080]">
-              Swipe to explore
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-        whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.4, delay: 0.4, ease: [0.23, 1, 0.32, 1] }}
-        className="mt-6 flex items-center justify-center gap-6"
-      >
-        <button
-          type="button"
-          aria-label="Previous marketplace"
-          onClick={() => goToMarketplace(activeIndex - 1)}
-          className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-[#E2E8F0] bg-white text-[#1A1A1A] shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition hover:border-[#1A1A1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A1A1A]/20"
-        >
-          <ChevronLeft className="h-[18px] w-[18px]" />
-        </button>
-
-        <div className="flex min-w-[64px] items-center justify-center gap-1.5" aria-label="Marketplace position">
-          {visibleDotIndexes.map((dotIndex) => {
-            const distance = Math.min(Math.abs(dotIndex - activeIndex), marketplaceCount - Math.abs(dotIndex - activeIndex));
-            const isActive = dotIndex === activeIndex;
-            return (
-              <button
-                key={dotIndex}
-                type="button"
-                aria-label={`Show ${mobileMarketplaces[dotIndex].country}`}
-                onClick={() => goToMarketplace(dotIndex)}
-                className={`h-1.5 rounded-full bg-[#1A1A1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A1A1A]/20 ${
-                  isActive ? 'w-5 opacity-100' : distance === 1 ? 'w-1.5 opacity-50' : 'w-1.5 opacity-20'
-                }`}
-              />
-            );
-          })}
-        </div>
-
-        <button
-          type="button"
-          aria-label="Next marketplace"
-          onClick={() => goToMarketplace(activeIndex + 1)}
-          className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-[#E2E8F0] bg-white text-[#1A1A1A] shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition hover:border-[#1A1A1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A1A1A]/20"
-        >
-          <ChevronRight className="h-[18px] w-[18px]" />
-        </button>
-      </motion.div>
-
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0 }}
-        whileInView={reduceMotion ? undefined : { opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-        className="mt-6"
-      >
-        <div className="[font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-center text-[10px] font-semibold uppercase tracking-[0.24em] text-[#808080]">
+      <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#66737F]">
+        Marketplace coverage follows the approved Amazon Appstore regions Margin supports for FBA recovery operations.
+      </p>
+      <div className="mt-8 border-y border-[#D8E3E8] py-6">
+        <div className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
           All Supported Regions
         </div>
-        <div className="mx-auto mt-3 flex max-w-[330px] flex-wrap justify-center gap-1.5">
-          {mobileMarketplaces.map((marketplace, index) => (
-            <button
-              key={marketplace.iso}
-              type="button"
-              aria-label={`Show ${marketplace.country}`}
-              onClick={() => goToMarketplace(index)}
-              className={`rounded-[6px] px-2 py-1.5 [font-family:'IBM_Plex_Mono','Fira_Code',monospace] text-[10px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A1A1A]/20 ${
-                index === activeIndex
-                  ? 'border border-[#1A1A1A] bg-[#1A1A1A] text-[#F7F5F0]'
-                  : 'border border-[#E2E8F0] bg-[#F7F5F0] text-[#6F7782] hover:border-[#1A1A1A] hover:text-[#1A1A1A]'
-              }`}
+        <div className="mt-4 flex max-w-[340px] flex-wrap gap-1.5">
+          {mobileMarketplaceCodes.map((code, index) => (
+            <motion.span
+              key={code}
+              initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+              whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.28, delay: index * 0.018, ease: [0.22, 1, 0.36, 1] }}
+              className="inline-flex h-8 min-w-10 items-center justify-center rounded-[6px] border border-[#D8E3E8] bg-[#FAFAF7] px-2.5 text-[11px] font-semibold uppercase tracking-tight text-[#25313A]"
             >
-              {marketplace.iso}
-            </button>
+              {code}
+            </motion.span>
           ))}
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
