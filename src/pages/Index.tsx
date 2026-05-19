@@ -174,8 +174,6 @@ const marketplaceCountries = [
   { country: 'India', code: 'IN', flagCode: 'in', region: 'Asia Pacific' }
 ];
 
-const mobileMarketplaceCodes = ['US', 'UK', 'DE', 'FR', 'IT', 'ES', 'CA', 'MX', 'JP', 'AU', 'IN', 'NL', 'SE', 'PL', 'SG', 'AE', 'SA', 'BR'];
-
 const trustControls = [
   {
     title: 'Read-only mode enforced',
@@ -495,17 +493,30 @@ function MobileMarketplaceHub() {
         <div className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
           All Supported Regions
         </div>
-        <div className="mt-4 flex max-w-[340px] flex-wrap gap-1.5">
-          {mobileMarketplaceCodes.map((code, index) => (
+        <div className="mt-4 grid max-w-[340px] grid-cols-1">
+          {marketplaceCountries.map((marketplace, index) => (
             <motion.span
-              key={code}
+              key={marketplace.code}
               initial={reduceMotion ? false : { opacity: 0, y: 6 }}
               whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.28, delay: index * 0.018, ease: [0.22, 1, 0.36, 1] }}
-              className="inline-flex h-8 min-w-10 items-center justify-center rounded-[6px] border border-[#D8E3E8] bg-[#FAFAF7] px-2.5 text-[11px] font-semibold uppercase tracking-tight text-[#25313A]"
+              className={`flex items-center gap-3 py-3 ${
+                index > 0 ? 'border-t border-[#D8E3E8]' : ''
+              }`}
             >
-              {code}
+              <span
+                className={`fi fi-${marketplace.flagCode} h-5 w-7 shrink-0 rounded-[4px] shadow-[0_8px_18px_rgba(37,49,58,0.12)]`}
+                aria-hidden="true"
+              />
+              <span className="min-w-0">
+                <span className="block truncate text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">
+                  {marketplace.country}
+                </span>
+                <span className="mt-1 block text-[10px] font-semibold uppercase tracking-tight text-[#7A8994]">
+                  {marketplace.region} · {marketplace.code}
+                </span>
+              </span>
             </motion.span>
           ))}
         </div>
