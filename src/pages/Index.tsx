@@ -214,16 +214,24 @@ const coverageExamples = [
 ];
 
 const marketplaceCountries = [
-  { country: 'United States', code: 'US', flagCode: 'us', region: 'North America' },
-  { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'North America' },
-  { country: 'Mexico', code: 'MX', flagCode: 'mx', region: 'North America' },
+  { country: 'United States', code: 'US', flagCode: 'us', region: 'Americas' },
+  { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'Americas' },
+  { country: 'Mexico', code: 'MX', flagCode: 'mx', region: 'Americas' },
   { country: 'Germany', code: 'DE', flagCode: 'de', region: 'Europe' },
+  { country: 'Netherlands', code: 'NL', flagCode: 'nl', region: 'Europe' },
   { country: 'United Kingdom', code: 'UK', flagCode: 'gb', region: 'Europe' },
-  { country: 'Italy', code: 'IT', flagCode: 'it', region: 'Europe' },
+  { country: 'South Africa', code: 'ZA', flagCode: 'za', region: 'Europe' },
   { country: 'France', code: 'FR', flagCode: 'fr', region: 'Europe' },
-  { country: 'South Africa', code: 'ZA', flagCode: 'za', region: 'Africa' },
-  { country: 'Japan', code: 'JP', flagCode: 'jp', region: 'Far East' },
-  { country: 'Australia', code: 'AU', flagCode: 'au', region: 'Far East' }
+  { country: 'Spain', code: 'ES', flagCode: 'es', region: 'Europe' },
+  { country: 'Poland', code: 'PL', flagCode: 'pl', region: 'Europe' },
+  { country: 'Italy', code: 'IT', flagCode: 'it', region: 'Europe' },
+  { country: 'Saudi Arabia', code: 'SA', flagCode: 'sa', region: 'Middle East' },
+  { country: 'Egypt', code: 'EG', flagCode: 'eg', region: 'Middle East' },
+  { country: 'Japan', code: 'JP', flagCode: 'jp', region: 'Asia Pacific' },
+  { country: 'China', code: 'CN', flagCode: 'cn', region: 'Asia Pacific' },
+  { country: 'Singapore', code: 'SG', flagCode: 'sg', region: 'Asia Pacific' },
+  { country: 'Australia', code: 'AU', flagCode: 'au', region: 'Asia Pacific' },
+  { country: 'India', code: 'IN', flagCode: 'in', region: 'Asia Pacific' }
 ];
 
 const trustControls = [
@@ -1241,7 +1249,7 @@ export default function Index() {
                   Supported regions for Amazon FBA recovery workflows.
                 </h2>
                 <p className={sectionBodyClass}>
-                  US · CA · MX · UK · DE · FR · IT · JP · AU · ZA
+                  Marketplace coverage follows the approved Amazon Appstore regions Margin supports for FBA recovery workflows.
                 </p>
               </motion.div>
 
