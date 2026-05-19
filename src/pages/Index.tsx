@@ -730,7 +730,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
-      <PublicNavbar variant="dark" ctaLabel="SEE WORKFLOW" ctaTo="#how-margin-works" />
+      <PublicNavbar variant="light" ctaLabel="SEE WORKFLOW" ctaTo="#how-margin-works" />
 
       <main className="relative">
         <KineticHeroSection

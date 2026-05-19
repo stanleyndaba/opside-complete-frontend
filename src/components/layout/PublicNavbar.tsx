@@ -33,13 +33,13 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
     const isLight = effectiveVariant === 'light';
     const mobileMenuItemClass = isLight
-        ? "flex items-center rounded-[14px] px-3 py-3 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
+        ? "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
     const desktopNavLinkClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-full border border-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] transition-all hover:bg-[#F3F6F8] hover:text-[#182026]"
+        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8] hover:text-[#182026]"
         : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
     const desktopActionClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-full border border-[#DCE8EE] bg-white px-5 text-[11px] font-semibold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8]"
+        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-[#DCE8EE] bg-white px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8]"
         : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-white/10 bg-white/[0.03] px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-all hover:bg-white/[0.07]";
 
     // Close mobile menu on resize
@@ -106,7 +106,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                 <div className={cn(
                     "relative flex items-center justify-between gap-3 transition-colors md:gap-5 md:px-4 md:py-3 lg:px-6",
                     isLight
-                        ? "rounded-[22px] bg-white/88 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] [backdrop-filter:blur(32px)_saturate(180%)]"
+                        ? "rounded-[8px] bg-white/88 px-3 py-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] [backdrop-filter:blur(32px)_saturate(180%)]"
                         : "rounded-[8px] bg-[#080808]/88 px-3 py-2.5 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
                 )}>
                     <div className="flex items-center gap-3">
@@ -114,7 +114,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                             to="/"
                             className={cn(
                                 "inline-flex items-center gap-2 px-1 py-1 transition-colors md:gap-2.5 md:px-2 md:py-1.5",
-                                isLight ? "rounded-full hover:bg-[#F3F6F8]" : "rounded-[6px] hover:bg-white/5"
+                                isLight ? "rounded-[6px] hover:bg-[#F3F6F8]" : "rounded-[6px] hover:bg-white/5"
                             )}
                         >
                             <img
@@ -172,7 +172,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                         className={cn(
                             "absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 flex-col items-center justify-center gap-1.5 px-2 transition-colors focus-visible:outline-none md:hidden",
                             isLight
-                                ? "rounded-full border border-[#DCE8EE] bg-white text-[#25313A] hover:bg-[#F3F6F8]"
+                                ? "rounded-[6px] border border-[#DCE8EE] bg-white text-[#25313A] hover:bg-[#F3F6F8]"
                                 : "rounded-[6px] border border-white/10 bg-white/[0.025] hover:bg-white/5"
                         )}
                         aria-label="Toggle menu"
@@ -192,7 +192,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                             <div className={cn(
                                 "flex max-h-[calc(100vh-92px)] flex-col gap-1 overflow-y-auto p-3",
                                 isLight
-                                    ? "rounded-[22px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.14)]"
+                                    ? "rounded-[8px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.14)]"
                                     : "rounded-[8px] border border-white/10 bg-[#080808]/96 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
                             )}>
                                 <Accordion type="single" collapsible className="w-full">
@@ -280,7 +280,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                         className={cn(
                                             "px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight",
                                             isLight
-                                                ? "rounded-full bg-[#0B74DE] text-white"
+                                                ? "rounded-[6px] bg-[#0B74DE] text-white"
                                                 : "rounded-[6px] bg-white text-black"
                                         )}>
                                         {ctaLabel}
@@ -292,7 +292,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                         className={cn(
                                             "px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight",
                                             isLight
-                                                ? "rounded-full bg-[#0B74DE] text-white"
+                                                ? "rounded-[6px] bg-[#0B74DE] text-white"
                                                 : "rounded-[6px] bg-white text-black"
                                         )}>
                                         {ctaLabel}
