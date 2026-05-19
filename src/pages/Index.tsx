@@ -225,6 +225,27 @@ const marketplaceCountries = [
   { country: 'India', code: 'IN', flagCode: 'in', region: 'Asia Pacific' }
 ];
 
+const marketplaceNodePositions: Record<string, { x: number; y: number }> = {
+  US: { x: 16, y: 24 },
+  CA: { x: 35, y: 12 },
+  MX: { x: 60, y: 16 },
+  DE: { x: 82, y: 26 },
+  NL: { x: 87, y: 48 },
+  UK: { x: 70, y: 62 },
+  ZA: { x: 48, y: 82 },
+  FR: { x: 26, y: 74 },
+  ES: { x: 12, y: 55 },
+  PL: { x: 25, y: 42 },
+  IT: { x: 39, y: 28 },
+  SA: { x: 59, y: 36 },
+  EG: { x: 72, y: 44 },
+  JP: { x: 78, y: 78 },
+  CN: { x: 55, y: 68 },
+  SG: { x: 39, y: 58 },
+  AU: { x: 18, y: 86 },
+  IN: { x: 88, y: 68 }
+};
+
 const trustControls = [
   {
     title: 'Read-only mode enforced',
@@ -731,6 +752,133 @@ function KineticHeroSection({
   );
 }
 
+function MobileMarketplaceHub() {
+  const [activeCode, setActiveCode] = useState<string | null>(null);
+  const reduceMotion = useReducedMotion();
+  const activeMarketplace = marketplaceCountries.find((marketplace) => marketplace.code === activeCode);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      className="relative sm:hidden"
+    >
+      <div className="mb-5 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-[#7A8994]">
+        Global Marketplace Support
+      </div>
+
+      <div className="relative mx-auto h-[380px] max-w-[360px] overflow-hidden rounded-[28px] border border-slate-900/10 bg-[#070B12] shadow-[0_28px_90px_rgba(24,32,38,0.22)]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(0,122,255,0.26),transparent_34%),radial-gradient(circle_at_50%_50%,rgba(46,125,91,0.14),transparent_52%)]" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(148,163,184,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.1)_1px,transparent_1px)] [background-size:42px_42px]" />
+
+        <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <filter id="marketplace-line-glow">
+              <feGaussianBlur stdDeviation="0.75" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          {marketplaceCountries.map((marketplace, index) => {
+            const position = marketplaceNodePositions[marketplace.code];
+            if (!position) return null;
+
+            return (
+              <motion.line
+                key={`line-${marketplace.code}`}
+                x1="50"
+                y1="50"
+                x2={position.x}
+                y2={position.y}
+                stroke="rgba(148,163,184,0.24)"
+                strokeWidth="0.45"
+                filter="url(#marketplace-line-glow)"
+                initial={{ pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 0.7 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.18 + index * 0.025 }}
+              />
+            );
+          })}
+        </svg>
+
+        <motion.div
+          className="absolute z-10 flex h-[88px] w-[88px] items-center justify-center rounded-full border border-white/12 bg-white/[0.08] text-[38px] font-semibold tracking-[-0.08em] text-white shadow-[0_0_72px_rgba(0,122,255,0.35)] backdrop-blur-xl"
+          style={{ left: 'calc(50% - 44px)', top: 'calc(50% - 44px)' }}
+          initial={{ opacity: 0, scale: 0.7 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.58,
+            ease: [0.22, 1, 0.36, 1],
+            boxShadow: { duration: 4.2, repeat: Infinity, ease: 'easeInOut' }
+          }}
+          animate={reduceMotion ? undefined : { boxShadow: ['0 0 54px rgba(0,122,255,0.26)', '0 0 86px rgba(0,122,255,0.42)', '0 0 54px rgba(0,122,255,0.26)'] }}
+        >
+          M
+        </motion.div>
+
+        {marketplaceCountries.map((marketplace, index) => {
+          const position = marketplaceNodePositions[marketplace.code];
+          if (!position) return null;
+          const isActive = activeCode === marketplace.code;
+
+          return (
+            <motion.button
+              key={marketplace.code}
+              type="button"
+              aria-label={`${marketplace.country} marketplace`}
+              onClick={() => setActiveCode(isActive ? null : marketplace.code)}
+              className="absolute z-20 flex h-10 w-10 items-center justify-center rounded-full border border-slate-800 bg-white/[0.09] shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-md transition"
+              style={{ left: `calc(${position.x}% - 20px)`, top: `calc(${position.y}% - 20px)` }}
+              initial={{ opacity: 0, scale: 0.35 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.42,
+                delay: 0.24 + index * 0.035,
+                ease: [0.22, 1, 0.36, 1],
+                y: { duration: 3.2 + (index % 4) * 0.28, repeat: Infinity, ease: 'easeInOut' },
+                boxShadow: { duration: 3.4, repeat: Infinity, ease: 'easeInOut' }
+              }}
+              animate={reduceMotion ? undefined : {
+                y: [0, -4, 0],
+                boxShadow: isActive
+                  ? '0 0 32px rgba(0,122,255,0.72)'
+                  : ['0 12px 28px rgba(0,0,0,0.22)', '0 14px 34px rgba(0,122,255,0.18)', '0 12px 28px rgba(0,0,0,0.22)']
+              }}
+            >
+              <span className={`fi fi-${marketplace.flagCode} h-4 w-6 rounded-[3px]`} aria-hidden="true" />
+            </motion.button>
+          );
+        })}
+
+        {activeMarketplace ? (
+          <motion.div
+            key={activeMarketplace.code}
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="absolute bottom-5 left-6 right-6 z-30 rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-3 text-center backdrop-blur-xl"
+          >
+            <div className="text-[13px] font-semibold text-white">{activeMarketplace.country}</div>
+            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+              {activeMarketplace.region} / {activeMarketplace.code}
+            </div>
+          </motion.div>
+        ) : (
+          <div className="absolute bottom-6 left-7 right-7 z-30 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+            Tap a node
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 function MinimalMetric({
   label,
   value,
@@ -1212,7 +1360,7 @@ export default function Index() {
         <section className="relative py-16 md:py-24">
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
-              <motion.div {...revealProps} className="max-w-[560px]">
+              <motion.div {...revealProps} className="hidden max-w-[560px] sm:block">
                 <div className={sectionLabelClass}>Marketplace Scope</div>
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
                   Supported regions for Amazon FBA recovery workflows.
@@ -1222,9 +1370,11 @@ export default function Index() {
                 </p>
               </motion.div>
 
+              <MobileMarketplaceHub />
+
               <motion.div
                 {...revealProps}
-                className="grid border-y border-[#D8E3E8] sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+                className="hidden border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
               >
                 {marketplaceCountries.map((marketplace, index) => (
                   <motion.div
