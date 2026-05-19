@@ -37,7 +37,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
     const desktopNavLinkClass = isLight
         ? "hidden md:inline-flex h-9 items-center rounded-full border border-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] transition-all hover:bg-[#F3F6F8] hover:text-[#182026]"
-        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/76 transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
+        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
     const desktopActionClass = isLight
         ? "hidden md:inline-flex h-9 items-center rounded-full border border-[#DCE8EE] bg-white px-5 text-[11px] font-semibold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8]"
         : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-white/10 bg-white/[0.03] px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-all hover:bg-white/[0.07]";
