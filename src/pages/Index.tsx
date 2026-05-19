@@ -71,15 +71,6 @@ const mobileProductSections = [
   }
 ];
 
-const trustHighlights = [
-  'Read-only first',
-  'Seller approval before filing',
-  'No recovery commissions',
-  'No black box'
-];
-
-const heroHeadlineWords = 'Amazon received fewer units than you shipped. Margin shows what happens next.'.split(' ');
-
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
   { x: 18, y: 54, size: 7, color: 'bg-emerald-400', delay: 1.4, duration: 4.2 },
@@ -596,7 +587,7 @@ function KineticHeroSection({
     <motion.section
       style={{ scale: heroScale, opacity: heroOpacity }}
       data-navbar-theme="dark"
-      className="relative isolate flex min-h-[calc(100svh-24px)] overflow-hidden bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.20),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.18),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-5 pb-16 pt-32 text-white sm:px-6 md:min-h-screen md:px-8 md:pb-24 md:pt-44"
+      className="relative isolate flex min-h-[calc(100svh-24px)] overflow-hidden bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.18),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.12),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-5 pb-32 pt-52 text-white sm:px-6 md:min-h-screen md:px-8 md:pb-44 md:pt-64"
       aria-labelledby="margin-hero-title"
     >
       <div
@@ -611,7 +602,12 @@ function KineticHeroSection({
         className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
       >
-        <div className="absolute inset-0 opacity-[0.12] [background-image:linear-gradient(rgba(96,165,250,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.12)_1px,transparent_1px)] [background-size:92px_92px]" />
+        <motion.div
+          className="absolute left-[-10%] top-[12%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(0,122,255,0.28)_0%,rgba(0,122,255,0.12)_34%,transparent_70%)] blur-3xl"
+          animate={reduceMotion ? undefined : { x: [0, 26, 0], y: [0, -18, 0], opacity: [0.54, 0.82, 0.54] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(96,165,250,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.10)_1px,transparent_1px)] [background-size:92px_92px]" />
         <motion.div
           className="absolute inset-y-0 left-0 w-[18%] bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.14),transparent)] blur-sm"
           animate={reduceMotion ? undefined : { x: ['-30vw', '115vw'] }}
@@ -649,7 +645,7 @@ function KineticHeroSection({
       </motion.div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1180px] items-center">
-        <div className="max-w-[960px]">
+        <div className="max-w-[980px]">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -661,40 +657,45 @@ function KineticHeroSection({
 
           <h1
             id="margin-hero-title"
-            className="mt-6 max-w-[980px] text-[48px] font-bold leading-[0.96] tracking-[-0.06em] text-white sm:text-[64px] md:text-[88px] lg:text-[104px]"
+            className="mt-7 max-w-[1040px] text-[48px] font-bold leading-[0.96] tracking-[-0.055em] sm:text-[64px] md:text-[88px] lg:text-[104px]"
           >
-            {heroHeadlineWords.map((word, index) => (
-              <motion.span
-                key={`${word}-${index}`}
-                className="mr-[0.18em] inline-block"
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.58, delay: 0.08 + index * 0.035, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {word}
-              </motion.span>
-            ))}
+            <motion.span
+              className="block text-white"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Margin turns Amazon loss events
+            </motion.span>
+            <motion.span
+              className="block text-slate-400"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            >
+              into structured recovery cases.
+            </motion.span>
           </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-7 max-w-[840px] text-[16px] leading-8 text-slate-300 md:text-lg md:leading-9"
+            className="mt-7 max-w-[680px] text-[16px] leading-7 text-slate-300 md:text-lg md:leading-8"
           >
-            Margin turns Amazon loss events into structured recovery cases by binding evidence, enforcing claim readiness, tracking approval, and maintaining payout state from detection through resolution.
+            Bind evidence, enforce claim readiness, and track payouts from detection to resolution.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-9 grid w-full max-w-[700px] grid-cols-1 gap-3 min-[680px]:grid-cols-[1.25fr_1fr]"
+            className="mt-10 grid w-full max-w-[700px] grid-cols-1 gap-3 min-[680px]:grid-cols-[1.18fr_1fr]"
           >
             <Button
               onClick={onPrimaryCta}
               aria-label="Start Recovery Audit"
-              className="h-12 justify-center rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.36)] transition-transform hover:scale-[1.02] hover:bg-[#1683F1]"
+              className="h-[52px] justify-center rounded-full bg-[#007AFF] px-7 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(0,122,255,0.34)] transition hover:scale-[1.02] hover:bg-[#168BFF] hover:shadow-[0_22px_70px_rgba(0,122,255,0.48)]"
             >
               {primaryCtaLabel}
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -703,51 +704,19 @@ function KineticHeroSection({
               variant="outline"
               onClick={onDemoCta}
               aria-label="Watch 60-Second Demo"
-              className="h-12 justify-center rounded-full border-white/12 bg-white/[0.06] px-6 text-sm font-semibold text-white backdrop-blur-xl transition-transform hover:scale-[1.02] hover:bg-white/[0.12]"
+              className="h-[52px] justify-center rounded-full border border-slate-800 bg-white/[0.04] px-7 text-sm font-semibold text-white backdrop-blur-md transition hover:scale-[1.02] hover:border-slate-700 hover:bg-white/[0.08]"
             >
               Watch 60-Second Demo
             </Button>
           </motion.div>
 
-          {!isFull ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.55, delay: 0.95 }}
-              className="mt-3 max-w-[560px] text-sm leading-6 text-slate-400"
-            >
-              Founding 100 Recovery Audit starts with controlled onboarding, read-only setup, claim-clock scanning, evidence readiness review, and seller approval before filing. No recovery commissions.
-            </motion.div>
-          ) : null}
-
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 1.02 }}
-            className="mt-7 flex max-w-[720px] flex-wrap gap-2.5"
+            className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
           >
-            {trustHighlights.map((item) => (
-              <div
-                key={item}
-                className="rounded-full bg-white/[0.06] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-tight text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.09)] backdrop-blur-xl"
-              >
-                {item}
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 1.1 }}
-          >
-            <Link
-              to="/early-access"
-              className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-tight text-blue-300 transition-colors hover:text-blue-100"
-            >
-              Founding Audit
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            100% Read-Only • No Commissions • Full Seller Approval
           </motion.div>
 
           {isFull ? (
