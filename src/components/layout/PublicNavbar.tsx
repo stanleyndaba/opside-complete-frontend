@@ -2,15 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import {
     ArrowRight,
-    Gift,
     Search,
     Briefcase,
     BadgePercent,
-    CircleDollarSign,
-    ShieldAlert,
     FileText,
     BoxSelect,
     ArrowLeft,
@@ -22,20 +18,16 @@ import {
     AccordionItem,
     AccordionTrigger
 } from '@/components/ui/accordion';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
-import { ChevronDown, Truck, TrendingUp, ShieldCheck, BarChart3, Activity, Layers } from 'lucide-react';
+import { Truck, TrendingUp, ShieldCheck, BarChart3, Activity, Layers } from 'lucide-react';
 
 type PublicNavbarProps = {
     variant?: 'dark' | 'light';
+    ctaLabel?: string;
+    ctaTo?: string;
 };
 
-export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
+export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', ctaTo = '/waitlist' }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
@@ -68,6 +60,10 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
         } else {
             document.body.style.overflow = '';
         }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
     }, [mobileMenuOpen]);
 
     useEffect(() => {
@@ -158,11 +154,17 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         <Link to="/login" className={desktopActionClass}>
                             LOGIN
                         </Link>
-                        <Link
-                            to="/waitlist"
-                            className={`${desktopActionClass} gap-2 px-6`}>
-                            JOIN WAITLIST <ArrowRight className="h-3 w-3" />
-                        </Link>
+                        {ctaTo.startsWith('#') ? (
+                            <a href={ctaTo} className={`${desktopActionClass} gap-2 px-6`}>
+                                {ctaLabel} <ArrowRight className="h-3 w-3" />
+                            </a>
+                        ) : (
+                            <Link
+                                to={ctaTo}
+                                className={`${desktopActionClass} gap-2 px-6`}>
+                                {ctaLabel} <ArrowRight className="h-3 w-3" />
+                            </Link>
+                        )}
                     </nav>
 
                     <button
@@ -271,17 +273,31 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     className={mobileMenuItemClass}>
                                     Enterprise
                                 </Link>
-                                <Link
-                                    to="/waitlist"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={cn(
-                                        "px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight",
-                                        isLight
-                                            ? "rounded-full bg-[#0B74DE] text-white"
-                                            : "rounded-[6px] bg-white text-black"
-                                    )}>
-                                    JOIN WAITLIST
-                                </Link>
+                                {ctaTo.startsWith('#') ? (
+                                    <a
+                                        href={ctaTo}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className={cn(
+                                            "px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight",
+                                            isLight
+                                                ? "rounded-full bg-[#0B74DE] text-white"
+                                                : "rounded-[6px] bg-white text-black"
+                                        )}>
+                                        {ctaLabel}
+                                    </a>
+                                ) : (
+                                    <Link
+                                        to={ctaTo}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className={cn(
+                                            "px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight",
+                                            isLight
+                                                ? "rounded-full bg-[#0B74DE] text-white"
+                                                : "rounded-[6px] bg-white text-black"
+                                        )}>
+                                        {ctaLabel}
+                                    </Link>
+                                )}
                             </div>
                         </motion.div>
                     )}

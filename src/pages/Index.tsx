@@ -1,75 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
-  Activity,
-  ArrowLeft,
   ArrowRight,
-  BadgePercent,
-  BarChart3,
-  BoxSelect,
-  Briefcase,
   Check,
-  FileText,
-  Layers,
-  Menu,
   PlayCircle,
-  Search,
-  ShieldCheck,
-  TrendingUp,
-  Truck
 } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { DemoVideoModal } from '@/components/demo/DemoVideoModal';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { InhaleSection } from '@/components/landing/InhaleSection';
-import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/Gen-4 Turbo - Minimal cinematic logo reveal, modern SaaS motion, soft glow, structured lines forming.gif';
-
-const navLinks = [
-  { label: 'Pricing', to: '/pricing' },
-  { label: 'Research', to: '/research' },
-  { label: 'About', to: '/about-margin' },
-  { label: 'Enterprise', to: '/sales' }
-];
-
-const mobileProductSections = [
-  {
-    label: 'Recovery Coverage',
-    items: [
-      { icon: Search, title: 'Inbound Shipments', description: 'Short receives and receiving drift' },
-      { icon: ShieldCheck, title: 'Lost or Damaged Inventory', description: 'Recovery across FBA states' },
-      { icon: BoxSelect, title: 'Fee Discrepancies', description: 'Overcharges, reversals, and gaps' },
-      { icon: ArrowLeft, title: 'Refund Without Return', description: 'Refunds not matched to real return outcome' },
-      { icon: Truck, title: 'Transfer & Operations', description: 'Inter-fulfillment discrepancies' },
-      { icon: BarChart3, title: 'Recovery Workflow', description: 'Valid cases, evidence, filing, payout', highlight: true }
-    ]
-  },
-  {
-    label: 'Evidence & Control',
-    items: [
-      { icon: Layers, title: 'Evidence Matching', description: 'Connect support to the right case' },
-      { icon: Briefcase, title: 'Filing Readiness', description: 'Hold weak or duplicate issues back' },
-      { icon: BadgePercent, title: 'Recovery Tracking', description: 'Approval and payout visibility' },
-      { icon: FileText, title: 'Connected Sources', description: 'Email, storage, and uploaded proof' }
-    ]
-  },
-  {
-    label: 'By Seller Type',
-    items: [
-      { icon: Activity, title: 'Emerging Sellers', description: 'Read-only audit and guided recovery' },
-      { icon: TrendingUp, title: 'Growth Sellers', description: 'Ongoing recovery coverage at scale' },
-      { icon: Layers, title: 'Enterprise Teams', description: 'Multi-workspace recovery operations' }
-    ]
-  }
-];
 
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
@@ -330,216 +279,6 @@ const revealProps = {
   viewport: { once: true, amount: 0.18 },
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
-
-function LightNavbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setMobileMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.add('public-light-scrollbar');
-    return () => {
-      document.documentElement.classList.remove('public-light-scrollbar');
-    };
-  }, []);
-
-  useEffect(() => {
-    const updateNavbarTheme = () => {
-      const themeProbeY = window.innerWidth >= 768 ? 76 : 56;
-      const darkSections = Array.from(document.querySelectorAll<HTMLElement>('[data-navbar-theme="dark"]'));
-
-      setIsOverDarkSurface(
-        darkSections.some((section) => {
-          const rect = section.getBoundingClientRect();
-          return rect.top <= themeProbeY && rect.bottom >= themeProbeY;
-        })
-      );
-    };
-
-    updateNavbarTheme();
-    window.addEventListener('scroll', updateNavbarTheme, { passive: true });
-    window.addEventListener('resize', updateNavbarTheme);
-
-    return () => {
-      window.removeEventListener('scroll', updateNavbarTheme);
-      window.removeEventListener('resize', updateNavbarTheme);
-    };
-  }, []);
-
-  return (
-    <header className="fixed left-0 right-0 top-0 z-50">
-      <div className="mx-auto max-w-[1240px] px-3 py-3 md:px-6 md:py-5">
-        <div
-          className={`rounded-[22px] px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-2xl transition-colors duration-300 md:px-5 ${
-            isOverDarkSurface ? 'bg-[#07101A]/72 shadow-[0_18px_60px_rgba(0,0,0,0.22)]' : 'bg-white/86'
-          }`}
-        >
-          <div className="flex items-center justify-between gap-4">
-            <Link
-              to="/"
-              className={`inline-flex items-center gap-2.5 rounded-full px-1 py-1 transition-colors duration-300 ${
-                isOverDarkSurface ? 'text-white' : 'text-[#182026]'
-              }`}
-            >
-              <img
-                src="/logoimagetwo.png"
-                alt="Margin"
-                width="22"
-                height="22"
-                className={`h-5 w-auto object-contain transition duration-300 ${isOverDarkSurface ? 'invert brightness-0' : ''}`}
-              />
-              <span className={`brand-wordmark font-merriweather text-lg tracking-tight transition-colors duration-300 ${isOverDarkSurface ? 'text-white' : 'text-[#182026]'}`}>
-                Margin
-              </span>
-            </Link>
-
-            <nav className="hidden items-center gap-1 md:flex">
-              <div className="hidden lg:block">
-                <ProductsMegaMenu variant={isOverDarkSurface ? 'dark' : 'light'} />
-              </div>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-tight transition-colors ${
-                    isOverDarkSurface
-                      ? 'text-white/90 hover:bg-white/10 hover:text-white'
-                      : 'text-[#66737F] hover:bg-[#F3F6F8] hover:text-[#182026]'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="hidden items-center gap-2 md:flex">
-              <Link
-                to="/login"
-                className={`rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-tight transition-colors ${
-                  isOverDarkSurface ? 'text-white/90 hover:bg-white/10 hover:text-white' : 'text-[#25313A] hover:bg-[#F3F6F8]'
-                }`}
-              >
-                LOGIN
-              </Link>
-              <a
-                href="#how-margin-works"
-                className={`inline-flex h-10 items-center rounded-full px-5 text-[12px] font-semibold uppercase tracking-tight transition-colors ${
-                  isOverDarkSurface
-                    ? 'bg-white/[0.08] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] hover:bg-white/[0.14]'
-                    : 'bg-[#F3F6F8] text-[#25313A] shadow-[inset_0_0_0_1px_rgba(207,224,234,0.9)] hover:bg-[#EAF1F5]'
-                }`}
-              >
-                See Workflow
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
-            </div>
-
-            <button
-              type="button"
-              className={`flex h-10 w-10 items-center justify-center rounded-full border transition-colors md:hidden ${
-                isOverDarkSurface ? 'border-white/14 bg-white/10 text-white' : 'border-[#DCE8EE] bg-white text-[#25313A]'
-              }`}
-              aria-label="Toggle menu"
-              aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-            >
-              <Menu className="h-4 w-4" />
-            </button>
-          </div>
-
-          {mobileMenuOpen ? (
-            <div className="mt-4 grid gap-1 border-t border-[#E4EDF1] pt-4 md:hidden">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="products" className="border-none">
-                  <AccordionTrigger className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8] hover:no-underline [&>svg]:h-4 [&>svg]:w-4">
-                    Products
-                  </AccordionTrigger>
-                  <AccordionContent className="px-1 pb-4 pt-2">
-                    <div className="grid gap-5">
-                      {mobileProductSections.map((section) => (
-                        <div key={section.label} className="grid gap-2">
-                          <div className="px-2 text-[10px] font-semibold uppercase tracking-tight text-[#7A8994]">{section.label}</div>
-                          <div className="grid gap-1">
-                            {section.items.map((item) => {
-                              const Icon = item.icon;
-                              return (
-                                <div
-                                  key={item.title}
-                                  className={`flex items-center gap-3 rounded-2xl border p-3 ${
-                                    item.highlight
-                                      ? 'border-[#BFD8EA] bg-[#EAF4FF]'
-                                      : 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-[#F8FAFC]'
-                                  }`}
-                                >
-                                  <div
-                                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
-                                      item.highlight
-                                        ? 'border-[#BFD8EA] bg-white text-[#0B74DE]'
-                                        : 'border-[#DCE8EE] bg-[#EEF4F6] text-[#0B74DE]'
-                                    }`}
-                                  >
-                                    <Icon className="h-4 w-4" />
-                                  </div>
-                                  <div className="min-w-0">
-                                    <div className={`truncate text-[13px] font-semibold ${item.highlight ? 'text-[#0B74DE]' : 'text-[#182026]'}`}>
-                                      {item.title}
-                                    </div>
-                                    <div className="mt-1 truncate text-[11px] leading-none text-[#66737F]">
-                                      {item.description}
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-2xl px-3 py-3 text-sm font-medium text-[#25313A] hover:bg-[#F3F6F8]"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-2xl px-3 py-3 text-sm font-semibold uppercase tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
-              >
-                LOGIN
-              </Link>
-              <a
-                href="#how-margin-works"
-                onClick={() => setMobileMenuOpen(false)}
-                className="mt-2 inline-flex h-11 items-center justify-center rounded-full bg-[#F3F6F8] px-4 text-sm font-semibold uppercase tracking-tight text-[#25313A] shadow-[inset_0_0_0_1px_rgba(207,224,234,0.9)] hover:bg-[#EAF1F5]"
-              >
-                See Workflow
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </header>
-  );
-}
 
 function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   return (
@@ -964,7 +703,6 @@ function CoverageItem({
       transition={{ duration: 0.78, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ x: 5, scale: 1.005 }}
       whileFocus={{ x: 5, scale: 1.005 }}
-      tabIndex={0}
       className={`group relative max-w-[940px] py-7 outline-none md:py-10 ${isFeature ? 'md:max-w-[1040px]' : offsetClass}`}
       aria-label={`${item.label}. ${item.title} ${item.detail}`}
     >
@@ -1085,7 +823,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
-      <LightNavbar />
+      <PublicNavbar variant="light" ctaLabel="SEE WORKFLOW" ctaTo="#how-margin-works" />
 
       <main className="relative">
         <KineticHeroSection
@@ -1183,7 +921,6 @@ export default function Index() {
                     whileHover={{ x: 5 }}
                     transition={{ ...revealProps.transition, delay: index * 0.08 }}
                     className="group relative min-h-[210px] py-4 outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]"
-                    tabIndex={0}
                   >
                     <div className="pointer-events-none absolute -left-6 top-7 h-16 w-16 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
                     <div className="relative">
@@ -1209,10 +946,10 @@ export default function Index() {
             <motion.div {...revealProps} className="mx-auto mb-8 max-w-[880px] text-center md:mb-12">
               <div className={sectionLabelClass}>See Demo</div>
               <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[40px] md:text-[58px]">
-                See how Margin turns raw FBA activity into claim-ready recovery work.
+                See how Margin turns raw FBA activity into review-ready recovery work.
               </h2>
               <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
-                Amazon activity is converted into structured recovery workflows through event detection, claim clock assignment, evidence matching, approval gating, and payout tracking across the full lifecycle.
+                Follow the path from event detection and claim-clock assignment to evidence review, approval, and payout tracking.
               </p>
             </motion.div>
 
@@ -1239,7 +976,7 @@ export default function Index() {
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
                   <div className="text-[10px] font-semibold uppercase tracking-tight text-white/78 md:text-[11px]">Event-to-recovery walkthrough</div>
                   <div className="mt-2 max-w-[780px] text-[22px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[36px]">
-                    Amazon activity becomes structured recovery workflows from detection through payout state.
+                    Amazon activity moves from detection to payout state with evidence and approval attached.
                   </div>
                 </div>
               </div>
@@ -1270,7 +1007,7 @@ export default function Index() {
               <div className={sectionLabelClass}>What Margin Does</div>
               <h2 className={sectionHeadingClass}>What Margin does</h2>
               <p className="mt-5 max-w-[760px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:text-[26px] md:leading-9">
-                Margin is a workflow engine that converts Amazon operational data into structured recovery cases, enforces evidence requirements, applies claim timing logic, and tracks outcomes through final payout state.
+                Margin turns Amazon operational data into organized recovery cases, enforces evidence requirements, applies claim timing logic, and tracks outcomes through final payout state.
               </p>
               <p className={sectionBodyClass}>
                 States: detected → classified → evidence-linked → approved → filed → in-review → paid / blocked / expired.
@@ -1288,7 +1025,6 @@ export default function Index() {
                     {...revealProps}
                     whileHover={{ y: -3 }}
                     transition={{ ...revealProps.transition, delay: index * 0.08 }}
-                    tabIndex={0}
                     className={`group relative min-h-[188px] overflow-hidden bg-white/40 px-5 py-6 outline-none transition-[background-color,box-shadow] duration-500 hover:bg-white/92 hover:shadow-[0_18px_48px_rgba(11,116,222,0.09)] focus-visible:bg-white/92 focus-visible:ring-2 focus-visible:ring-[#0B74DE]/25 md:px-6 lg:min-h-[176px] ${
                       index > 0 ? 'border-t border-[#D8E3E8] lg:border-l lg:border-t-0' : ''
                     }`}
@@ -1363,10 +1099,10 @@ export default function Index() {
               <motion.div {...revealProps} className="hidden max-w-[560px] sm:block">
                 <div className={sectionLabelClass}>Marketplace Scope</div>
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
-                  Supported regions for Amazon FBA recovery workflows.
+                  Supported regions for Amazon FBA recoveries.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Marketplace coverage follows the approved Amazon Appstore regions Margin supports for FBA recovery workflows.
+                  Marketplace coverage follows the approved Amazon Appstore regions Margin supports for FBA recovery operations.
                 </p>
               </motion.div>
 
@@ -1451,7 +1187,6 @@ export default function Index() {
                   <div
                     key={item}
                     className="group relative flex items-center gap-4 py-4 text-[#25313A] outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:translate-x-[5px]"
-                    tabIndex={0}
                   >
                     <span className="absolute -left-5 h-12 w-12 rounded-full bg-[radial-gradient(circle,rgba(46,125,91,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
                     <Check className="relative mt-0.5 h-4 w-4 shrink-0 text-[#2E7D5B]" />
