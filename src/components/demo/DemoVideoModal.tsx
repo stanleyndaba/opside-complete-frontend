@@ -68,24 +68,24 @@ export function DemoVideoModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[calc(100vw-24px)] max-w-5xl gap-0 overflow-hidden rounded-[28px] border border-[#DCE6EC] bg-[#FBFCFD] p-0 text-[#182026] shadow-[0_36px_120px_rgba(24,32,38,0.22)] sm:rounded-[34px] [&>button]:right-5 [&>button]:top-5 [&>button]:rounded-full [&>button]:bg-white [&>button]:p-2 [&>button]:text-[#25313A] [&>button]:opacity-100 [&>button]:shadow-[0_10px_30px_rgba(24,32,38,0.12)] [&>button:hover]:bg-[#F3F6F8]">
-        <div className="relative overflow-hidden bg-white px-5 pb-5 pt-6 sm:px-7 sm:pb-6 sm:pt-7">
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_18%_0%,rgba(11,116,222,0.1),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(46,125,91,0.08),transparent_36%)]" />
+      <DialogContent className="max-h-[92dvh] w-[calc(100vw-24px)] max-w-[760px] gap-0 overflow-hidden rounded-[18px] border border-[#DCE6EC] bg-[#FBFCFD] p-0 text-[#182026] shadow-[0_28px_90px_rgba(24,32,38,0.2)] sm:rounded-[22px] [&>button]:right-4 [&>button]:top-4 [&>button]:rounded-full [&>button]:bg-white [&>button]:p-2 [&>button]:text-[#25313A] [&>button]:opacity-100 [&>button]:shadow-[0_10px_30px_rgba(24,32,38,0.12)] [&>button:hover]:bg-[#F3F6F8]">
+        <div className="relative overflow-hidden bg-white px-4 pb-3 pt-4 sm:px-5 sm:pb-4 sm:pt-5">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[radial-gradient(circle_at_18%_0%,rgba(11,116,222,0.1),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(46,125,91,0.08),transparent_36%)]" />
           <div className="relative max-w-3xl pr-12">
             <div className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
               Event-to-recovery walkthrough
             </div>
-            <DialogTitle className="mt-3 text-[22px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:text-[28px]">
+            <DialogTitle className="mt-2 text-[19px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:text-[23px]">
               {title}
             </DialogTitle>
-            <DialogDescription className="mt-3 max-w-2xl text-sm leading-6 text-[#66737F] sm:text-[15px] sm:leading-7">
+            <DialogDescription className="mt-2 max-w-2xl text-[13px] leading-5 text-[#66737F] sm:text-sm sm:leading-6">
               {description}
             </DialogDescription>
           </div>
         </div>
 
-        <div className="bg-[#FBFCFD] px-3 pb-3 sm:px-5 sm:pb-5">
-          <div className="relative aspect-video overflow-hidden rounded-[20px] border border-[#DCE6EC] bg-[#0B1117] shadow-[0_24px_70px_rgba(24,32,38,0.18)] sm:rounded-[26px]">
+        <div className="bg-[#FBFCFD] px-3 pb-3 sm:px-4 sm:pb-4">
+          <div className="relative mx-auto aspect-video max-h-[52dvh] w-full overflow-hidden rounded-[14px] border border-[#DCE6EC] bg-[#0B1117] shadow-[0_18px_50px_rgba(24,32,38,0.16)] sm:rounded-[18px]">
             {open ? (
               <iframe
                 title={title}
@@ -99,7 +99,7 @@ export function DemoVideoModal({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-[#E4EDF1] bg-white px-5 py-4 text-xs leading-5 text-[#66737F] sm:flex-row sm:items-center sm:justify-between sm:px-7">
+        <div className="flex flex-col gap-2 border-t border-[#E4EDF1] bg-white px-4 py-3 text-[11px] leading-4 text-[#66737F] sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <span>Playback stays inside Margin. Close this window to return to the page.</span>
           <a
             href={videoUrl}
