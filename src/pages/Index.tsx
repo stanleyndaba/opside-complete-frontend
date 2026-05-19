@@ -484,10 +484,10 @@ function MobileMarketplaceHub() {
     >
       <div className={sectionLabelClass}>Marketplace Scope</div>
       <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026]">
-        Supported regions for Amazon FBA recoveries.
+        Supported FBA marketplaces
       </h2>
       <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#66737F]">
-        Marketplace coverage follows the approved Amazon Appstore regions Margin supports for FBA recovery operations.
+        Margin supports FBA recovery workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
       </p>
       <div className="mt-8 border-y border-[#D8E3E8] py-6">
         <div className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
@@ -1006,10 +1006,10 @@ export default function Index() {
               <motion.div {...revealProps} className="hidden max-w-[560px] sm:block">
                 <div className={sectionLabelClass}>Marketplace Scope</div>
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
-                  Supported regions for Amazon FBA recoveries.
+                  Supported FBA marketplaces
                 </h2>
                 <p className={sectionBodyClass}>
-                  Marketplace coverage follows the approved Amazon Appstore regions Margin supports for FBA recovery operations.
+                  Margin supports FBA recovery workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
                 </p>
               </motion.div>
 
