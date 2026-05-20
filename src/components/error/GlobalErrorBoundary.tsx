@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { reportRuntimeError, shouldAutoReloadForChunkError } from '@/lib/runtimeErrorRecovery';
 
 interface Props {
     children: ReactNode;
@@ -9,20 +10,27 @@ interface Props {
 interface State {
     hasError: boolean;
     error: Error | null;
+    isRecoveringChunk: boolean;
 }
 
 export class GlobalErrorBoundary extends Component<Props, State> {
     public state: State = {
         hasError: false,
         error: null,
+        isRecoveringChunk: false,
     };
 
     public static getDerivedStateFromError(error: Error): State {
-        return { hasError: true, error };
+        return { hasError: true, error, isRecoveringChunk: false };
     }
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error('Uncaught error:', error, errorInfo);
+        reportRuntimeError('global', error, errorInfo);
+
+        if (shouldAutoReloadForChunkError('global', error)) {
+            this.setState({ isRecoveringChunk: true });
+            window.setTimeout(() => window.location.reload(), 120);
+        }
     }
 
     private handleReload = () => {
@@ -31,6 +39,26 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
     public render() {
         if (this.state.hasError) {
+            if (this.state.isRecoveringChunk) {
+                return (
+                    <div className="flex min-h-screen items-center justify-center bg-[#FAFAF7] px-6 text-[#182026]">
+                        <div className="w-full max-w-md rounded-[28px] border border-[#CFE0EA] bg-white p-6 shadow-[0_24px_80px_rgba(37,49,58,0.08)]">
+                            <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
+                                <div>
+                                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                                        Updating Margin
+                                    </p>
+                                    <p className="mt-1 text-sm text-[#66737F]">
+                                        Loading the latest platform version.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
             return (
                 <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
                     <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />

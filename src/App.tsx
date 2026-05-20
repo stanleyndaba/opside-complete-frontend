@@ -13,6 +13,7 @@ import { TenantProvider } from '@/contexts/TenantContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { PublicChatNode } from "@/components/chat/PublicChatNode";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
+import { RouteErrorBoundary } from "@/components/error/RouteErrorBoundary";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -144,8 +145,9 @@ const App = () => (
                   <Toaster />
                   <Sonner />
                   <SmoothScrollProvider>
-                    <Suspense fallback={<RouteSkeleton />}>
-                      <Routes>
+                    <RouteErrorBoundary>
+                      <Suspense fallback={<RouteSkeleton />}>
+                        <Routes>
                         {/* PUBLIC ROUTES - No tenant required */}
                         <Route path="/" element={<Index />} />
                         <Route path="/login" element={<Login />} />
@@ -247,10 +249,11 @@ const App = () => (
                         <Route path="/admin/users-integrations" element={<TenantRedirect />} />
                         <Route path="/pricing-adjust" element={<TenantRedirect />} />
                         <Route path="*" element={<NotFound />} />
-                      </Routes>
-                      <DemoOverlay />
-                      <PublicChatNode />
-                    </Suspense>
+                        </Routes>
+                        <DemoOverlay />
+                        <PublicChatNode />
+                      </Suspense>
+                    </RouteErrorBoundary>
                   </SmoothScrollProvider>
                 </NotificationsProvider>
               </TenantProvider>
