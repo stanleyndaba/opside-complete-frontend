@@ -23,10 +23,10 @@ export function Toaster() {
                 className="h-2.5 w-auto object-contain brightness-0 invert"
               />
               {title && title !== 'MARGIN' && (
-                <ToastTitle className="text-xs font-semibold text-gray-300">{title}</ToastTitle>
+                <ToastTitle className="text-xs font-semibold text-white">{title}</ToastTitle>
               )}
               {description && (
-                <ToastDescription className="text-xs text-[whitesmoke] font-normal">{description}</ToastDescription>
+                <ToastDescription className="text-xs font-normal text-white/90">{description}</ToastDescription>
               )}
             </div>
             {action}

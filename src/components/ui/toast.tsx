@@ -26,9 +26,9 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-white/10 bg-black text-gray-700 shadow-2xl",
+        default: "border-white/20 bg-[#0B74DE] text-white shadow-2xl",
         destructive:
-          "destructive group border-white/10 bg-black text-red-50 shadow-2xl",
+          "destructive group border-white/20 bg-[#0B74DE] text-white shadow-2xl",
       },
     },
     defaultVariants: {
@@ -71,7 +71,7 @@ const ToastClose = React.forwardRef<
     <ToastPrimitives.Close
       ref={ref}
       className={cn(
-        "absolute right-2 top-2 rounded-md p-1 text-white/50 opacity-0 transition-opacity hover:text-white focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-white/50 group-[.destructive]:hover:text-white group-[.destructive]:focus:ring-white/40 group-[.destructive]:focus:ring-offset-black",
+        "absolute right-2 top-2 rounded-md p-1 text-white/70 opacity-0 transition-opacity hover:text-white focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-[#0B74DE] group-hover:opacity-100 group-[.destructive]:text-white/70 group-[.destructive]:hover:text-white group-[.destructive]:focus:ring-white/50 group-[.destructive]:focus:ring-offset-[#0B74DE]",
         className
       )}
       toast-close=""
@@ -86,7 +86,7 @@ const ToastTitle = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>>(({ className, ...props }, ref) => (
     <ToastPrimitives.Title
       ref={ref}
-      className={cn("text-xs font-semibold text-gray-300", className)}
+      className={cn("text-xs font-semibold text-white", className)}
       {...props}
     />
   ))
@@ -97,7 +97,7 @@ const ToastDescription = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>>(({ className, ...props }, ref) => (
     <ToastPrimitives.Description
       ref={ref}
-      className={cn("text-xs text-[whitesmoke] opacity-90", className)}
+      className={cn("text-xs text-white/90", className)}
       {...props}
     />
   ))

@@ -744,7 +744,7 @@ export default function Index() {
         <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 md:py-10">
           <div className={containerClass}>
             <p className="max-w-[900px] text-[17px] font-medium leading-8 tracking-[-0.02em] text-[#25313A] md:text-[20px] md:leading-9">
-              Amazon does handle some reimbursements automatically. Margin is built for the recovery work that still needs visibility: missing proof, claim windows, case readiness, seller approval, underpaid reimbursements, rejections, and payout tracking.
+              While Amazon does handle some reimbursements automatically. Margin is built for the recovery work that still needs visibility: missing proof, claim windows, case readiness, seller approval, underpaid reimbursements, rejections, and payout tracking.
             </p>
           </div>
         </section>
