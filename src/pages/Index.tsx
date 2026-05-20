@@ -18,7 +18,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
-const DEMO_VIDEO_THUMBNAIL_URL = '/Gen-4 Turbo - Minimal cinematic logo reveal, modern SaaS motion, soft glow, structured lines forming.gif';
+const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
 
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
