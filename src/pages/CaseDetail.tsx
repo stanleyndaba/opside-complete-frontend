@@ -655,6 +655,15 @@ const isDemoFilingReceiptCaseReference = (value?: string | null) => {
   return normalized === 'ACME-2003' || normalized === 'ACME-CASE-2003' || normalized.endsWith('2003');
 };
 
+const isApprovedDemoCaseReference = (value?: string | null) => {
+  const normalized = String(value || '').trim().toUpperCase();
+  return ['2004', '2005', '2006'].some((suffix) => (
+    normalized === `ACME-${suffix}` ||
+    normalized === `ACME-CASE-${suffix}` ||
+    normalized.endsWith(suffix)
+  ));
+};
+
 const hasDemoFilingReceiptThread = (caseData: any, caseReference?: string | null) => {
   if (isDemoFilingReceiptCaseReference(caseReference)) return true;
 
@@ -676,7 +685,49 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
   const normalizedState = String(caseData.case_state || caseData.recovery_status || '').toLowerCase();
   const isRejected = normalizedState.includes('reject') || isRejectedDemoCaseReference(caseReference);
   const isFilingReceipt = hasDemoFilingReceiptThread(caseData, caseReference);
+  const isApprovedDemo = !isRejected && !isFilingReceipt && isApprovedDemoCaseReference(caseReference);
   const isPaid = !isRejected && (normalizedState.includes('paid') || normalizedState.includes('payout') || caseReference === 'ACME-CASE-2005');
+  const approvedBody = `Hello,\n\nWe have completed our review of the reimbursement request for the FBA inbound shipment discrepancy listed below. Based on the shipment reconciliation, receiving records, and inventory ledger information available to us, this request has been APPROVED.\n\nWe have issued a reimbursement of ${formatDemoCurrency(Number(reimbursementAmount), currency)} for the affected units. The reimbursement will appear in your seller account payments reporting after normal settlement processing completes.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\nApproved amount: ${formatDemoCurrency(Number(reimbursementAmount), currency)}\nStatus: APPROVED\n\nThank you,\nAmazon Selling Partner Support`;
+
+  if (isApprovedDemo) {
+    return [
+      {
+        id: `demo-amazon-filing-${caseId || 'case'}`,
+        direction: 'outbound',
+        recipients: ['Amazon Selling Partner Support'],
+        subject: `Reimbursement request for shipment ${shipmentReference}`,
+        body_text: `Hello Amazon Selling Partner Support,\n\nWe are requesting reimbursement review for an inbound shipment discrepancy identified during reconciliation.\n\nShipment ID: ${shipmentReference}\nCase reference: ${caseReference}\nSKU: ${fallbackIfMissing(caseData.sku || caseData.evidence?.sku, 'MGRN-BTL-18')}\nUnits affected: ${fallbackIfMissing(caseData.units_lost || caseData.evidence?.quantity, 18)}\nClaimed amount: ${formatDemoCurrency(Number(reimbursementAmount), currency)}\n\nAttached evidence includes the shipment reconciliation, supplier invoice, and inventory ledger excerpt supporting the missing quantity.\n\nThank you,\nDemo Workspace Store`,
+        sent_at: '2026-05-07T10:14:00Z',
+        state_signal: 'submitted',
+        attachments: [
+          { filename: 'Supplier invoice INV-2026-1842.pdf' },
+          { filename: 'FBA shipment reconciliation FBA17XJ4K2.pdf' },
+          { filename: 'Amazon inventory ledger excerpt.csv' },
+        ],
+      },
+      {
+        id: `demo-amazon-ack-${caseId || 'case'}`,
+        direction: 'inbound',
+        sender: 'Amazon Selling Partner Support',
+        subject: `Case opened for FBA reimbursement review - ${shipmentReference}`,
+        body_text: `Hello,\n\nThank you for contacting Amazon Selling Partner Support. We have opened a case to review the FBA inbound shipment discrepancy for shipment ${shipmentReference}.\n\nWe are reviewing the shipment plan, fulfillment center receiving records, and the documentation provided with your request. If additional information is required, we will reply on this case thread.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nCurrent status: Under review\n\nThank you,\nAmazon Selling Partner Support`,
+        received_at: '2026-05-07T16:42:00Z',
+        state_signal: 'pending',
+        attachments: [],
+      },
+      {
+        id: `demo-amazon-approved-${caseId || 'case'}`,
+        direction: 'inbound',
+        sender: 'Amazon Selling Partner Support',
+        subject: `APPROVED: Reimbursement issued for shipment ${shipmentReference}`,
+        body_text: approvedBody,
+        received_at: '2026-05-08T14:37:00Z',
+        state_signal: isPaid ? 'paid' : 'approved',
+        attachments: [],
+      },
+    ];
+  }
+
   const responseBody = isRejected
     ? `Hello,\n\nWe reviewed the information provided for this FBA inventory reimbursement request. At this time, we are unable to approve reimbursement for the affected units because the available shipment and inventory records do not confirm an eligible discrepancy under the current FBA reimbursement criteria.\n\nNo reimbursement has been issued for this case. If you have additional documentation, such as carrier confirmation, shipment reconciliation records, or supplier invoice detail that was not included in the original request, you may reply to this case for further review.\n\nCase ID: ${caseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy not confirmed\n\nThank you,\nAmazon Selling Partner Support`
     : isFilingReceipt
@@ -711,10 +762,11 @@ const hydrateDemoCaseDetail = (caseData: any, fallbackId?: string | null) => {
   const caseId = caseData.id || fallbackId || 'demo-case';
   const demoCaseReference = resolveDemoCaseReference(caseData, caseId);
   const isRejectedDemoCase = isRejectedDemoCaseReference(demoCaseReference);
+  const shouldForceApprovedDemoThread = isApprovedDemoCaseReference(demoCaseReference);
   const documents = isMissingDemoValue(caseData.documents) ? buildDemoCaseDocuments(caseId) : caseData.documents;
   const events = isMissingDemoValue(caseData.events) ? buildDemoCaseEvents(caseId) : caseData.events;
   const shouldUseDemoFilingReceipt = hasDemoFilingReceiptThread(caseData, demoCaseReference);
-  const caseMessages = shouldUseDemoFilingReceipt || isMissingDemoValue(caseData.case_messages)
+  const caseMessages = shouldForceApprovedDemoThread || shouldUseDemoFilingReceipt || isMissingDemoValue(caseData.case_messages)
     ? buildDemoAmazonThreadMessages(caseData, caseId)
     : caseData.case_messages;
   const evidence = {
