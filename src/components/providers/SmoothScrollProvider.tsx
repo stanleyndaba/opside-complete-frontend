@@ -1,5 +1,4 @@
-import { ReactLenis } from '@studio-freight/react-lenis';
-import { ReactNode } from 'react';
+import { ComponentType, ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface SmoothScrollProviderProps {
@@ -13,15 +12,51 @@ interface SmoothScrollProviderProps {
  */
 export const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
     const location = useLocation();
+    const [LenisRoot, setLenisRoot] = useState<ComponentType<any> | null>(null);
     const isPlatformPage = location.pathname.startsWith('/app');
+    const prefersReducedMotion = typeof window !== 'undefined'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
+
+    useEffect(() => {
+        if (isPlatformPage || prefersReducedMotion) {
+            setLenisRoot(null);
+            return;
+        }
+
+        let cancelled = false;
+        const loadLenis = () => {
+            void import('@studio-freight/react-lenis')
+                .then((module) => {
+                    if (!cancelled) {
+                        setLenisRoot(() => module.ReactLenis);
+                    }
+                })
+                .catch(() => undefined);
+        };
+
+        if ('requestIdleCallback' in window) {
+            const idleId = window.requestIdleCallback(loadLenis, { timeout: 2500 });
+            return () => {
+                cancelled = true;
+                window.cancelIdleCallback(idleId);
+            };
+        }
+
+        const timeoutId = window.setTimeout(loadLenis, 1200);
+        return () => {
+            cancelled = true;
+            window.clearTimeout(timeoutId);
+        };
+    }, [isPlatformPage, prefersReducedMotion]);
 
     // Return standard scroll for platform pages to ensure maximum utility and compatibility
-    if (isPlatformPage) {
+    if (isPlatformPage || prefersReducedMotion || !LenisRoot) {
         return <>{children}</>;
     }
 
     return (
-        <ReactLenis
+        <LenisRoot
             root
             options={{
                 duration: 2.2,
@@ -34,6 +69,6 @@ export const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) =>
             }}
         >
             {children}
-        </ReactLenis>
+        </LenisRoot>
     );
 };
