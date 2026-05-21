@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
+// Core Web Vitals reporting (LCP, FID/INP, CLS, TTFB, FCP)
+import { onLCP, onFID, onCLS, onTTFB, onFCP, onINP } from 'web-vitals'
+import { api } from '@/lib/api'
 // Sentry RUM (lazy init)
 if ((import.meta as any).env?.VITE_SENTRY_DSN) {
   // Lazy load Sentry to avoid impact on TTI
@@ -26,37 +29,19 @@ createRoot(document.getElementById("root")!).render(
   </GlobalErrorBoundary>
 );
 
-const schedulePostPaint = (callback: () => void) => {
-  const run = () => window.setTimeout(callback, 0);
-
-  if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(run, { timeout: 3000 });
-    return;
-  }
-
-  window.setTimeout(run, 2000);
+const report = (name: string, metric: any) => {
+  api.trackEvent('web_vital', {
+    name,
+    value: metric.value,
+    rating: (metric as any).rating,
+    id: metric.id,
+    navigationType: (performance.getEntriesByType('navigation')[0] as any)?.type,
+  });
 };
 
-schedulePostPaint(() => {
-  void Promise.all([
-    import('web-vitals'),
-    import('@/lib/api'),
-  ]).then(([vitals, apiModule]) => {
-    const report = (name: string, metric: any) => {
-      void apiModule.api.trackEvent('web_vital', {
-        name,
-        value: metric.value,
-        rating: metric.rating,
-        id: metric.id,
-        navigationType: (performance.getEntriesByType('navigation')[0] as any)?.type,
-      }).catch(() => undefined);
-    };
-
-    vitals.onLCP((metric) => report('LCP', metric));
-    vitals.onFID((metric) => report('FID', metric));
-    vitals.onINP((metric) => report('INP', metric));
-    vitals.onCLS((metric) => report('CLS', metric));
-    vitals.onTTFB((metric) => report('TTFB', metric));
-    vitals.onFCP((metric) => report('FCP', metric));
-  }).catch(() => undefined);
-});
+onLCP(m => report('LCP', m));
+onFID(m => report('FID', m));
+onINP(m => report('INP', m));
+onCLS(m => report('CLS', m));
+onTTFB(m => report('TTFB', m));
+onFCP(m => report('FCP', m));

@@ -115,24 +115,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         const getUser = async () => {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
+                const { data: { user } } = await supabase.auth.getUser();
                 const token = session?.access_token || localStorage.getItem('session_token') || null;
-                const publicRoute = typeof window !== 'undefined' && isPublicRoute(window.location.pathname);
-
-                if (!token && publicRoute) {
-                    setIsSessionValid(false);
-                    setAuthToken(null);
-                    setUserId(null);
-                    setUserEmail(null);
-                    setIsPaidUser(false);
-                    return;
-                }
 
                 if (token) {
                     localStorage.setItem('session_token', token);
                     setAuthToken(token);
                 }
-
-                const user = session?.user || (await supabase.auth.getUser()).data.user;
 
                 if (user?.email) {
                     setUserEmail(user.email);

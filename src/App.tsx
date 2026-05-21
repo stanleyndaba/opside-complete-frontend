@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React, { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,10 +6,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NotificationsProvider from '@/components/providers/NotificationsProvider';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { TenantProvider } from '@/contexts/TenantContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { PublicChatNode } from "@/components/chat/PublicChatNode";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { RouteErrorBoundary } from "@/components/error/RouteErrorBoundary";
 
@@ -42,8 +44,6 @@ const Help = lazy(() => import("./pages/Help"));
 const WhatsNew = lazy(() => import("./pages/WhatsNew"));
 const ReconnectProvider = lazy(() => import('./pages/ReconnectProvider'));
 const TenantRedirect = lazy(() => import('./components/navigation/TenantRedirect').then(module => ({ default: module.TenantRedirect })));
-const DemoOverlay = lazy(() => import("@/components/demo/DemoOverlay"));
-const PublicChatNode = lazy(() => import("@/components/chat/PublicChatNode").then(module => ({ default: module.PublicChatNode })));
 
 // Analytics injection
 const OAuthProviderSandbox = lazy(() => import("./pages/OAuthProviderSandbox"));
@@ -128,34 +128,6 @@ const RouteSkeleton = () => (
     </div>
   </div>
 );
-
-const SHOW_DEMO_OVERLAY = (import.meta as any).env?.VITE_SHOW_DEMO_OVERLAY === 'true';
-
-const DeferredPublicChatNode = () => {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (window.location.pathname.startsWith('/app')) return;
-
-    const reveal = () => setReady(true);
-    if ('requestIdleCallback' in window) {
-      const idleId = window.requestIdleCallback(reveal, { timeout: 4500 });
-      return () => window.cancelIdleCallback(idleId);
-    }
-
-    const timeoutId = window.setTimeout(reveal, 2500);
-    return () => window.clearTimeout(timeoutId);
-  }, []);
-
-  if (!ready) return null;
-
-  return (
-    <Suspense fallback={null}>
-      <PublicChatNode />
-    </Suspense>
-  );
-};
 
 import { SessionProvider } from '@/contexts/SessionContext';
 
@@ -278,8 +250,8 @@ const App = () => (
                         <Route path="/pricing-adjust" element={<TenantRedirect />} />
                         <Route path="*" element={<NotFound />} />
                         </Routes>
-                        {SHOW_DEMO_OVERLAY ? <DemoOverlay /> : null}
-                        <DeferredPublicChatNode />
+                        <DemoOverlay />
+                        <PublicChatNode />
                       </Suspense>
                     </RouteErrorBoundary>
                   </SmoothScrollProvider>
