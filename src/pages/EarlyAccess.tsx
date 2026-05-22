@@ -16,29 +16,30 @@ import { api } from '@/lib/api';
 
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
+const FREE_AUDIT_REPORT_TIMELINE = 'within 48 hours';
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
 
 const offerHighlights = [
   {
-    title: `${EARLY_ACCESS_PRICE} flat audit activation`,
-    detail: 'One-time Founding 100 audit fee. No recovery commission taken by Margin.'
+    title: 'Free audit report',
+    detail: `Request a no-payment pre-audit and get a written FBA recovery report ${FREE_AUDIT_REPORT_TIMELINE}.`
+  },
+  {
+    title: 'Personalized signals first',
+    detail: 'See potential missed reimbursements before deciding whether Founding 100 is worth it.'
+  },
+  {
+    title: 'Read-only review',
+    detail: 'The audit starts with visibility-first setup and seller-controlled next steps.'
+  },
+  {
+    title: 'Upgrade only after proof',
+    detail: `${EARLY_ACCESS_PRICE} Founding 100 activation is offered after your free audit shows what may be worth filing.`
   },
   {
     title: '0% recovery commission',
-    detail: 'Most recovery services take a share of approved reimbursements. Margin does not.'
-  },
-  {
-    title: 'Refund if no signal',
-    detail: 'If the initial audit finds no credible recovery opportunities to review, your $99 is refunded.'
-  },
-  {
-    title: 'Read-only setup',
-    detail: 'Review starts with visibility-first setup before any filing workflow begins.'
-  },
-  {
-    title: 'Founder-led review',
-    detail: 'Controlled onboarding, guided evidence review, and seller approval before any case moves.'
+    detail: 'If you upgrade, Margin takes no commission from approved reimbursements.'
   }
 ];
 
@@ -92,10 +93,10 @@ const fitPoints = [
 ];
 
 const auditBenefits = [
-  'Find hidden inventory, shipment, return, fee, and payout recovery signals.',
-  'Prioritize issues by evidence readiness instead of chasing weak claims.',
-  'Review a founder-led audit before any seller-approved filing workflow begins.',
-  'Pay a flat audit activation instead of giving away a percentage of recoveries.'
+  'Get a written pre-audit report before you pay.',
+  'See hidden inventory, shipment, return, fee, and payout recovery signals.',
+  'Understand which opportunities look claim-ready, blocked, or missing proof.',
+  'Upgrade to Founding 100 only after the audit shows personalized value.'
 ];
 
 const comparisonRows = [
@@ -123,9 +124,9 @@ const comparisonRows = [
 
 const auditFlowSteps = [
   'Enter your work email',
-  'Complete the $99 audit activation',
-  'Finish guided read-only setup',
-  'Review claim-ready, blocked, and missing-proof cases'
+  'We review your FBA recovery signals',
+  'You receive a written report within 48 hours',
+  'Upgrade to Founding 100 only if you want us to file'
 ];
 
 const marketplaceCountries = [
@@ -158,11 +159,12 @@ export default function EarlyAccess() {
   const [earlyAccessEmail, setEarlyAccessEmail] = useState('');
   const [isReserving, setIsReserving] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [auditRequested, setAuditRequested] = useState(false);
 
   usePageMeta({
-    title: 'Margin Founding 100 FBA Recovery Audit',
+    title: 'Free Amazon FBA Recovery Audit Report | Margin',
     description:
-      'Start a founder-led FBA recovery audit with a $99 flat activation, 0% recovery commission, read-only setup, evidence readiness review, and seller-approved filing.',
+      'Request a free Amazon FBA recovery audit report. Margin reviews hidden inventory losses, shipment issues, returns, fee errors, and payout discrepancies before any paid upgrade.',
     url: `${SITE_META.url}/early-access`,
     image: SITE_META.image,
   });
@@ -185,30 +187,29 @@ export default function EarlyAccess() {
       const response = await api.reserveEarlyAccess({
         email,
         source_page: '/early-access',
-        offer: 'Founding 100 Recovery Audit',
-        price: EARLY_ACCESS_PRICE,
-        intent: 'pay_flat_founding_recovery_audit',
+        offer: 'Free FBA Recovery Audit Report',
+        price: 'Free pre-audit',
+        intent: 'request_free_pre_audit_report',
       });
 
       if (!response.ok) {
         toast({
-          title: 'Could not secure details',
-          description: response.error || 'Please try again before checkout so onboarding can stay matched to your email.',
+          title: 'Could not request audit',
+          description: response.error || 'Please try again so we can queue your free audit report.',
           variant: 'destructive',
         });
         return;
       }
 
+      setAuditRequested(true);
       toast({
-        title: 'Audit request secured',
-        description: 'Your audit request is secured. Redirecting you to checkout.',
+        title: 'Free audit requested',
+        description: `We will email your pre-audit report ${FREE_AUDIT_REPORT_TIMELINE}.`,
       });
-
-      window.location.href = EARLY_ACCESS_CHECKOUT_URL;
     } catch {
       toast({
         title: 'Network issue',
-        description: 'We could not save your onboarding details before checkout. Please try again in a moment.',
+        description: 'We could not queue your free audit report. Please try again in a moment.',
         variant: 'destructive',
       });
     } finally {
@@ -236,19 +237,19 @@ export default function EarlyAccess() {
                 <div className={sectionLabelClass}>Founding 100</div>
 
                 <h1 className="mt-5 max-w-[760px] text-[38px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[46px] md:text-[78px]">
-                  Find missed Amazon FBA reimbursements before they expire.
+                  Find hidden Amazon reimbursements with a free audit report.
                 </h1>
 
                 <p className="mt-5 max-w-[640px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:mt-7 md:text-[28px] md:leading-9">
-                  A flat $99 founder-led audit. 0% recovery commission.
+                  We review your FBA recovery signals first. No payment required.
                 </p>
 
                 <p className="mt-5 max-w-[680px] text-[16px] leading-7 text-[#4D5B66] md:text-[19px] md:leading-8">
-                  Margin reviews your FBA activity for hidden inventory losses, shipment issues, returns, fee errors, and payout discrepancies. You see which cases look claim-ready, blocked, or missing proof before anything gets filed.
+                  Margin reviews your FBA activity for hidden inventory losses, shipment issues, returns, fee errors, and payout discrepancies. You get a written report of missed reimbursement opportunities before deciding whether to upgrade.
                 </p>
 
                 <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                  If the initial audit finds no credible recovery opportunities to review, your $99 audit activation is refunded. Setup starts read-only, and no filing happens without your approval.
+                  If the report shows opportunities worth filing, you can join Founding 100 for {EARLY_ACCESS_PRICE}. Margin keeps 0% commission, and no filing happens without your approval.
                 </p>
 
                 <div className="mt-6 grid max-w-[720px] gap-3 sm:grid-cols-2">
@@ -261,31 +262,42 @@ export default function EarlyAccess() {
                 </div>
 
                 <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[540px]">
-                  <Label htmlFor="early-access-email" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66737F]">
-                    Work email for onboarding
-                  </Label>
-                  <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-                    <Input
-                      id="early-access-email"
-                      type="email"
-                      value={earlyAccessEmail}
-                      onChange={(event) => setEarlyAccessEmail(event.target.value)}
-                      placeholder="you@company.com"
-                      className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-sm text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
-                      autoComplete="email"
-                    />
-                    <Button
-                      type="submit"
-                      disabled={isReserving}
-                      className="h-12 shrink-0 justify-center rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
-                    >
-                      {isReserving ? 'Securing...' : 'Pay $99 & Start My Audit'}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                  <p className="mt-3 text-[12px] leading-6 text-[#66737F]">
-                    Your email lets us match your PayPal checkout to your Founding 100 onboarding slot.
-                  </p>
+                  {auditRequested ? (
+                    <div className="rounded-[24px] border border-[#BBD8C8] bg-[#F4FBF6] px-5 py-5">
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2E7D5B]">Audit request received</div>
+                      <p className="mt-3 text-[15px] leading-7 text-[#25313A]">
+                        Thanks. We will email your free pre-audit report {FREE_AUDIT_REPORT_TIMELINE}. While you wait, you can watch the audit walkthrough below.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <Label htmlFor="early-access-email" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66737F]">
+                        Work email for your free report
+                      </Label>
+                      <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                        <Input
+                          id="early-access-email"
+                          type="email"
+                          value={earlyAccessEmail}
+                          onChange={(event) => setEarlyAccessEmail(event.target.value)}
+                          placeholder="you@company.com"
+                          className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-sm text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                          autoComplete="email"
+                        />
+                        <Button
+                          type="submit"
+                          disabled={isReserving}
+                          className="h-12 shrink-0 justify-center rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
+                        >
+                          {isReserving ? 'Requesting...' : 'Get My Free Audit Report'}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </div>
+                      <p className="mt-3 text-[12px] leading-6 text-[#66737F]">
+                        No payment required. We use this email to send your report and follow-up questions if needed.
+                      </p>
+                    </>
+                  )}
 
                   <div className="mt-3">
                     <Button
@@ -377,13 +389,20 @@ export default function EarlyAccess() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
               <motion.div {...revealProps} className="max-w-[560px]">
-                <div className={sectionLabelClass}>Why $99</div>
+                <div className={sectionLabelClass}>Why Upgrade After The Free Audit</div>
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
-                  A flat audit fee instead of a recovery commission.
+                  First we show you what may be recoverable.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Founding 100 is priced for fast validation: a one-time audit activation, founder-led setup, and no Margin percentage taken from approved reimbursements.
+                  The free report gives you personalized recovery signals before any payment. If there is value worth pursuing, Founding 100 is the paid filing and guided recovery cycle.
                 </p>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="mt-7 h-11 rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
+                >
+                  <a href={EARLY_ACCESS_CHECKOUT_URL}>Upgrade after receiving your report</a>
+                </Button>
               </motion.div>
 
               <motion.div {...revealProps} className="overflow-hidden rounded-[24px] border border-[#D8E3E8] bg-[#FAFAF7] shadow-[0_24px_70px_rgba(37,49,58,0.08)]">
@@ -460,10 +479,10 @@ export default function EarlyAccess() {
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>What You Get</div>
               <h2 className={sectionHeadingClass}>
-                Outcome-first audit work, not vague software access.
+                A free report first, then a paid filing path if it makes sense.
               </h2>
               <p className={sectionBodyClass}>
-                The audit is built to surface recoverable FBA issues, organize the evidence around them, and help you decide which cases are worth moving forward.
+                The audit is built to surface recoverable FBA issues, organize the evidence around them, and help you decide whether Founding 100 is worth upgrading into.
               </p>
             </motion.div>
 
@@ -539,7 +558,7 @@ export default function EarlyAccess() {
                 Founding 100 is managed because recovery work depends on accurate setup.
               </h2>
               <p className={sectionBodyClass}>
-                Early access is limited because setup quality matters. You get founder-led support and a careful read-only start, not an unsupported dashboard.
+                The free audit proves whether there is a recovery conversation worth having. The paid Founding 100 cycle is for sellers who want Margin to help move evidence-backed cases forward.
               </p>
             </motion.div>
 
@@ -550,7 +569,7 @@ export default function EarlyAccess() {
               <div className="max-w-[820px]">
                 <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]">Priority launch cohort</div>
                 <p className="mt-5 text-[18px] leading-8 text-[#4D5B66] md:text-[24px] md:leading-10">
-                  We keep launch access controlled on purpose. Each seller needs clean setup, correct marketplace coverage, evidence review, and a clear first recovery cycle before broader public access opens.
+                  We keep launch access controlled on purpose. Each seller needs clean setup, correct marketplace coverage, evidence review, and a clear first recovery cycle before broader public access opens. That is why the first step is proof, not payment.
                 </p>
               </div>
             </motion.div>
@@ -564,45 +583,53 @@ export default function EarlyAccess() {
               className="overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white px-6 py-8 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:px-10 md:py-12"
             >
               <div className="max-w-[900px]">
-                <div className={sectionLabelClass}>Join The Cohort</div>
+                <div className={sectionLabelClass}>Free Audit</div>
                 <h2 className="mt-4 max-w-[860px] text-[32px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[68px]">
-                  Pay $99 and start your Founding 100 audit.
+                  Get your free audit report.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
-                  A flat audit activation, read-only setup, 0% recovery commission, and seller approval before any filing.
+                  We will send a written pre-audit report within 48 hours. If it shows recovery opportunities worth pursuing, you can upgrade to Founding 100 for {EARLY_ACCESS_PRICE}.
                 </p>
                 <p className="mt-4 max-w-[780px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
-                  If the initial audit finds no credible recovery opportunities to review, your $99 audit activation is refunded.
+                  Founding 100 includes guided filing support, 0% recovery commission, and seller approval before any case moves.
                 </p>
               </div>
 
               <form onSubmit={handleReserveEarlyAccess} className="mt-8 w-full max-w-[560px] md:mt-10">
-                <Label htmlFor="early-access-email-bottom" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66737F]">
-                  Work email for onboarding
-                </Label>
-                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-                  <Input
-                    id="early-access-email-bottom"
-                    type="email"
-                    value={earlyAccessEmail}
-                    onChange={(event) => setEarlyAccessEmail(event.target.value)}
-                    placeholder="you@company.com"
-                    className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-sm text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
-                    autoComplete="email"
-                  />
-                  <Button
-                    type="submit"
-                    disabled={isReserving}
-                    className="h-12 shrink-0 justify-center rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
-                  >
-                    {isReserving ? 'Securing...' : 'Pay $99 & Start My Audit'}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
+                {auditRequested ? (
+                  <div className="rounded-[24px] border border-[#BBD8C8] bg-[#F4FBF6] px-5 py-5">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2E7D5B]">Audit request received</div>
+                    <p className="mt-3 text-[15px] leading-7 text-[#25313A]">
+                      Your free report is queued. We will email it {FREE_AUDIT_REPORT_TIMELINE}.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <Label htmlFor="early-access-email-bottom" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66737F]">
+                      Work email for your free report
+                    </Label>
+                    <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                      <Input
+                        id="early-access-email-bottom"
+                        type="email"
+                        value={earlyAccessEmail}
+                        onChange={(event) => setEarlyAccessEmail(event.target.value)}
+                        placeholder="you@company.com"
+                        className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-sm text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                        autoComplete="email"
+                      />
+                      <Button
+                        type="submit"
+                        disabled={isReserving}
+                        className="h-12 shrink-0 justify-center rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[206px] md:px-6 md:text-sm"
+                      >
+                        {isReserving ? 'Requesting...' : 'Get My Free Audit Report'}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
+                  </>
+                )}
                 <div className="mt-3">
-                  <p className="mb-3 text-[12px] leading-6 text-[#66737F]">
-                    We prepare Founding 100 workspaces carefully before read-only setup begins.
-                  </p>
                   <p className="mb-3 max-w-[540px] text-[12px] leading-6 text-[#66737F]">
                     Margin does not guarantee reimbursement outcomes. Amazon makes final reimbursement decisions. No filing happens without seller approval.
                   </p>
