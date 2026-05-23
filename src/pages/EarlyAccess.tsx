@@ -175,12 +175,8 @@ export default function EarlyAccess() {
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#0B74DE]/20 bg-[#0B74DE]/5 px-3 py-1 text-[13px] font-medium text-[#0B74DE]">
-                <div className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0B74DE] opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#0B74DE]"></span>
-                </div>
-                87 / 100 Founder's Passes Remaining
+              <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#0B74DE] opacity-90">
+                Founding 100: Batch 01 Open
               </div>
 
               <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
