@@ -1064,12 +1064,12 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
               <motion.div {...revealProps}>
-                <div className={sectionLabelClass}>Founding 100 Recovery Audit</div>
+                <div className={sectionLabelClass}>Founding 100</div>
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
-                  Join the Founding 100 before your next recovery window closes.
+                  Secure your Lifetime Managed Recovery Slot.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Founding 100 Recovery Audit starts with controlled onboarding, read-only setup, claim-clock scanning, evidence readiness review, and seller approval before filing. No recovery commissions.
+                  The first 100 sellers get 1 year of full-service recovery for a one-time $99 fee. We handle the evidence and win the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
@@ -1154,12 +1154,12 @@ export default function Index() {
               className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:p-12"
             >
               <div className="max-w-[880px]">
-                <div className={sectionLabelClass}>Start With Clarity</div>
+                <div className={sectionLabelClass}>End-to-End Recovery</div>
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  Find the recoveries already on the clock.
+                  No recovery left behind. We work until you win.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Start with the Founding 100 Recovery Audit. Margin helps identify Amazon loss events, match the required evidence, and show which recovery cases are ready, blocked, or waiting before anything gets filed.
+                  Margin identifies Amazon loss events, connects the required evidence, and manages every case until payout or escalation. Join the Founding 100 to get a year of active case management with no hidden fees and no "audit" homework.
                 </p>
               </div>
 
