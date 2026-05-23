@@ -1064,9 +1064,9 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
               <motion.div {...revealProps}>
-                <div className={sectionLabelClass}>Founding 100</div>
+                <div className={sectionLabelClass}>Margin 100</div>
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
-                  Secure your Lifetime Managed Recovery Slot.
+                  Margin 100 Slot.
                 </h2>
                 <p className={sectionBodyClass}>
                   The first 100 sellers get 1 year of full-service recovery for a one-time $99 fee. We handle the evidence and win the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
@@ -1154,9 +1154,9 @@ export default function Index() {
               className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:p-12"
             >
               <div className="max-w-[880px]">
-                <div className={sectionLabelClass}>End-to-End Recovery</div>
+                <div className={sectionLabelClass}>Hire The Agent</div>
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  No recovery left behind. We work until you win.
+                  Hire The Agent.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
                   Margin identifies Amazon loss events, connects the required evidence, and manages every case until payout or escalation. Join the Founding 100 to get a year of active case management with no hidden fees and no "audit" homework.
