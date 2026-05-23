@@ -75,7 +75,7 @@ function FounderPassCTA() {
         className="h-[56px] w-full max-w-[340px] justify-center rounded-full bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
       >
         <a href={EARLY_ACCESS_CHECKOUT_URL}>
-          Get Your Pass ({EARLY_ACCESS_PRICE})
+          Get Your Pass
           <ArrowRight className="ml-2 h-5 w-5" />
         </a>
       </Button>
@@ -350,7 +350,7 @@ export default function EarlyAccess() {
                   className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
                 >
                   <a href={EARLY_ACCESS_CHECKOUT_URL}>
-                    Get Your Pass ({EARLY_ACCESS_PRICE})
+                    Get Your Pass
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
