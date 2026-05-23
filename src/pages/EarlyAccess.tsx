@@ -75,7 +75,7 @@ function FounderPassCTA() {
         className="h-[56px] w-full max-w-[340px] justify-center rounded-full bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
       >
         <a href={EARLY_ACCESS_CHECKOUT_URL}>
-          Get Your Founder's Pass ({EARLY_ACCESS_PRICE})
+          Get Your Pass ({EARLY_ACCESS_PRICE})
           <ArrowRight className="ml-2 h-5 w-5" />
         </a>
       </Button>
@@ -175,8 +175,12 @@ export default function EarlyAccess() {
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <div className="inline-block rounded-[4px] bg-[#182026] px-3 py-1.5 text-[12px] font-bold font-mono tracking-[0.18em] text-white shadow-sm">
-                [ 87 / 100 FOUNDER'S PASSES REMAINING ]
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#0B74DE]/20 bg-[#0B74DE]/5 px-3 py-1 text-[13px] font-medium text-[#0B74DE]">
+                <div className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0B74DE] opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#0B74DE]"></span>
+                </div>
+                87 / 100 Founder's Passes Remaining
               </div>
 
               <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
@@ -346,7 +350,7 @@ export default function EarlyAccess() {
                   className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
                 >
                   <a href={EARLY_ACCESS_CHECKOUT_URL}>
-                    Get Your Founder's Pass ({EARLY_ACCESS_PRICE})
+                    Get Your Pass ({EARLY_ACCESS_PRICE})
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
