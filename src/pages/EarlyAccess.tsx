@@ -183,7 +183,7 @@ export default function EarlyAccess() {
         return;
       }
       setSubmitted(true);
-      toast({ title: 'Scan requested', description: 'We'll email results within 48 hours.' });
+      toast({ title: 'Scan requested', description: "We'll email results within 48 hours." });
     } catch {
       toast({
         title: 'Network issue',
