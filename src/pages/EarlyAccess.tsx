@@ -67,7 +67,7 @@ const reveal = {
 };
 
 /* ── primary cta component ─────────────────────────────────────── */
-function FounderPassCTA() {
+function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
   return (
     <div className="w-full max-w-[520px] mx-auto flex flex-col items-center">
       <Button
@@ -81,7 +81,7 @@ function FounderPassCTA() {
       </Button>
       <div className="mt-4 text-center">
         <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
-          Includes 1 year of active case management. Renew annually at $49 (founding member rate). Cancel anytime.
+          {subtext || 'Includes 1 year of active case management. One payment. No renewals.'}
         </p>
         <p className="mt-1 text-[13px] font-medium leading-5 text-[#4D5B66]">
           <span className="font-semibold text-[#0B74DE]">E2E Recovery Commitment. No recovery left behind.</span>
@@ -187,7 +187,7 @@ export default function EarlyAccess() {
               </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                The first 100 sellers get 1 year of full‑service recovery for a one‑time {EARLY_ACCESS_PRICE} fee. Then renew at a low, locked‑in rate.
+                {EARLY_ACCESS_PRICE} for 1 year of full‑service recovery. No commissions. No hidden fees.
               </p>
 
               <div className="mt-10 w-full">
@@ -316,10 +316,10 @@ export default function EarlyAccess() {
                   Founding 100
                 </div>
                 <h2 className="mt-5 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[66px]">
-                  Secure Your Lifetime Managed Recovery Slot.
+                  Secure Your Founding Member Slot.
                 </h2>
                 <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  {EARLY_ACCESS_PRICE} once. No commissions. No monthly fees. No "Audit" homework. We find the evidence and win the cases for you. Once the 100 spots are gone, Margin moves to a tiered base subscription.
+                  {EARLY_ACCESS_PRICE} for 1 year. No commissions. No monthly fees. No renewals. We find the evidence and win the cases for you. Once the 100 spots are gone, this offer closes.
                 </p>
               </div>
 
@@ -362,10 +362,10 @@ export default function EarlyAccess() {
                   </p>
                 </div>
                 <div className="mt-4 text-[13px] font-medium text-[#4D5B66]">
-                  One-time {EARLY_ACCESS_PRICE} for first year. 0% commission. Renew annually at $49 for founding members. No hidden fees.
+                  One payment. {EARLY_ACCESS_PRICE} for 1 year of service. No automatic renewals. No future charges.
                 </div>
                 <p className="mt-4 max-w-[500px] text-[11px] leading-4 text-[#8A98A3]">
-                  After 1 year, your plan renews automatically at the then‑current founding rate (locked at $49/year for Founding 100 members). You can cancel any time. No refunds on unused periods – we work until you win.
+                  Your access lasts 12 months from activation. After that, the service ends unless you choose to purchase again (no obligation).
                 </p>
               </div>
             </motion.div>
@@ -419,11 +419,11 @@ export default function EarlyAccess() {
                 Hire the Agent. Win the case.
               </h2>
               <p className="mx-auto mt-5 max-w-[600px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                Secure your lifetime Founder's Pass before the first 100 slots are gone.
+                Secure your Founding Pass before the first 100 slots are gone.
               </p>
 
               <div className="mt-10 w-full">
-                <FounderPassCTA />
+                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} for 1 year. One payment. No renewals.`} />
               </div>
 
               <p className="mt-6 max-w-[540px] text-[11px] leading-5 text-[#9AA8B2]">
