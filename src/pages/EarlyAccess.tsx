@@ -81,7 +81,10 @@ function FounderPassCTA() {
       </Button>
       <div className="mt-4 text-center">
         <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
-          One-time fee. 0% Commission. <span className="font-semibold text-[#0B74DE]">From lost units to deposited recoveries. End‑to‑end.</span>
+          Includes 1 year of active case management. Renew annually at $49 (founding member rate). Cancel anytime.
+        </p>
+        <p className="mt-1 text-[13px] font-medium leading-5 text-[#4D5B66]">
+          <span className="font-semibold text-[#0B74DE]">E2E Recovery Commitment. No recovery left behind.</span>
         </p>
       </div>
     </div>
@@ -184,7 +187,7 @@ export default function EarlyAccess() {
               </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                The first 100 sellers get lifetime access to the Evidence-First recovery engine for a one-time {EARLY_ACCESS_PRICE} fee. No commissions. No monthly fees. Just recovery.
+                The first 100 sellers get 1 year of full‑service recovery for a one‑time {EARLY_ACCESS_PRICE} fee. Then renew at a low, locked‑in rate.
               </p>
 
               <div className="mt-10 w-full">
@@ -354,10 +357,16 @@ export default function EarlyAccess() {
                   <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#E5F3EC] text-[#2E7D5B]">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                   </div>
-                  <p className="text-[12px] font-medium leading-5 text-[#2E7D5B]">
-                    From lost units to deposited recoveries. End‑to‑end.
+                  <p className="text-[13px] font-medium leading-5 text-[#2E7D5B]">
+                    E2E Recovery Commitment. No recovery left behind.
                   </p>
                 </div>
+                <div className="mt-4 text-[13px] font-medium text-[#4D5B66]">
+                  One-time {EARLY_ACCESS_PRICE} for first year. 0% commission. Renew annually at $49 for founding members. No hidden fees.
+                </div>
+                <p className="mt-4 max-w-[500px] text-[11px] leading-4 text-[#8A98A3]">
+                  After 1 year, your plan renews automatically at the then‑current founding rate (locked at $49/year for Founding 100 members). You can cancel any time. No refunds on unused periods – we work until you win.
+                </p>
               </div>
             </motion.div>
           </div>
