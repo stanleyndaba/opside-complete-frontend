@@ -81,7 +81,7 @@ function FounderPassCTA() {
       </Button>
       <div className="mt-4 text-center">
         <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
-          One-time fee. 0% Commission. <span className="font-semibold text-[#0B74DE]">100% Success Guarantee.</span>
+          One-time fee. 0% Commission. <span className="font-semibold text-[#0B74DE]">From lost units to deposited recoveries. End‑to‑end.</span>
         </p>
       </div>
     </div>
@@ -355,7 +355,7 @@ export default function EarlyAccess() {
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                   </div>
                   <p className="text-[12px] font-medium leading-5 text-[#2E7D5B]">
-                    100% Success Guarantee
+                    From lost units to deposited recoveries. End‑to‑end.
                   </p>
                 </div>
               </div>
