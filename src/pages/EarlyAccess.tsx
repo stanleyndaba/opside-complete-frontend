@@ -24,21 +24,21 @@ const timelineSteps = [
   {
     num: '01',
     label: 'Connect',
-    title: 'Read-only access to scan for the Evidence Gap.',
+    title: "Activate your Agent with a Founder's Pass.",
     detail:
       'Margin connects to your Seller Central with read-only permissions. We scan FBA inventory adjustments, shipment discrepancies, returns, fee errors, and payout records for loss events that may still be actionable.',
   },
   {
     num: '02',
     label: 'Verify',
-    title: "We show you the exact BOLs and Invoices we've retrieved.",
+    title: "The Agent retrieves the Evidence (BOLs/Invoices) Amazon says you don't have.",
     detail:
       'Before anything is filed, you see the evidence Margin located — Bills of Lading, commercial invoices, shipment IDs, and tracking records — matched to each potential recovery case.',
   },
   {
     num: '03',
     label: 'Recover',
-    title: 'The Agent files and wins. You keep 100%.',
+    title: 'We win the cases. You keep 100% of the money.',
     detail:
       'Margin prepares and submits reimbursement cases with full evidence packages. Every approved payout goes directly to you. Margin takes zero commission on recovered funds.',
   },
@@ -66,66 +66,25 @@ const reveal = {
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
 };
 
-/* ── reusable email form ───────────────────────────────────────── */
-function EvidenceScanForm({
-  id,
-  email,
-  setEmail,
-  isSubmitting,
-  submitted,
-  onSubmit,
-}: {
-  id: string;
-  email: string;
-  setEmail: (v: string) => void;
-  isSubmitting: boolean;
-  submitted: boolean;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-}) {
-  if (submitted) {
-    return (
-      <div className="rounded-2xl border border-[#c6e4d4] bg-[#f4fbf6] px-6 py-5">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2E7D5B]">
-          Scan requested
-        </div>
-        <p className="mt-2 text-[15px] leading-7 text-[#25313A]">
-          We'll email your evidence scan results within 48 hours.
+/* ── primary cta component ─────────────────────────────────────── */
+function FounderPassCTA() {
+  return (
+    <div className="w-full max-w-[520px] mx-auto flex flex-col items-center">
+      <Button
+        asChild
+        className="h-[56px] w-full max-w-[340px] justify-center rounded-full bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
+      >
+        <a href={EARLY_ACCESS_CHECKOUT_URL}>
+          Get Your Founder's Pass ({EARLY_ACCESS_PRICE})
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </a>
+      </Button>
+      <div className="mt-4 text-center">
+        <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
+          One-time fee. 0% Commission. <span className="font-semibold text-[#0B74DE]">100% Success Guarantee.</span>
         </p>
       </div>
-    );
-  }
-
-  return (
-    <form onSubmit={onSubmit} className="w-full max-w-[520px]">
-      <Label
-        htmlFor={id}
-        className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8896A1]"
-      >
-        Work email
-      </Label>
-      <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-        <Input
-          id={id}
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@company.com"
-          className="h-[52px] rounded-full border-[#D1DBE3] bg-white px-5 text-sm text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
-          autoComplete="email"
-        />
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="h-[52px] shrink-0 justify-center rounded-full bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[240px] md:text-sm"
-        >
-          {isSubmitting ? 'Requesting…' : 'Start Your Evidence Scan'}
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-      <p className="mt-3 text-[12px] leading-5 text-[#8896A1]">
-        Free. No payment required. No commitment.
-      </p>
-    </form>
+    </div>
   );
 }
 
@@ -216,29 +175,20 @@ export default function EarlyAccess() {
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
-                Evidence-First Recovery
+              <div className="inline-block rounded-[4px] bg-[#182026] px-3 py-1.5 text-[12px] font-bold font-mono tracking-[0.18em] text-white shadow-sm">
+                [ 87 / 100 FOUNDER'S PASSES REMAINING ]
               </div>
 
               <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
-                The End of the FBA Paperwork Nightmare.
+                Hire the Agent That Wins Your FBA Claims.
               </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                Most tools tell you what you lost. Margin is the only agent that finds the
-                Bill&nbsp;of&nbsp;Lading and Invoices to prove it. We win the cases you've given
-                up&nbsp;on.
+                The first 100 sellers get lifetime access to the Evidence-First recovery engine for a one-time {EARLY_ACCESS_PRICE} fee. No commissions. No monthly fees. Just recovery.
               </p>
 
-              <div className="mt-10">
-                <EvidenceScanForm
-                  id="hero-email"
-                  email={email}
-                  setEmail={setEmail}
-                  isSubmitting={isSubmitting}
-                  submitted={submitted}
-                  onSubmit={handleSubmit}
-                />
+              <div className="mt-10 w-full">
+                <FounderPassCTA />
               </div>
             </motion.div>
           </div>
@@ -366,9 +316,7 @@ export default function EarlyAccess() {
                   Reserve Your Managed Recovery Slot.
                 </h2>
                 <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  We are only accepting 100 sellers for the first Evidence-First cycle.{' '}
-                  {EARLY_ACCESS_PRICE} reserves your spot. If we don't find the evidence to win
-                  your cases, you don't pay.
+                  If the Agent doesn't win a case worth at least {EARLY_ACCESS_PRICE} within 30 days, we refund your Founder's Fee. No questions asked.
                 </p>
               </div>
 
@@ -392,20 +340,24 @@ export default function EarlyAccess() {
                 ))}
               </div>
 
-              <div className="mt-10 text-center">
+              <div className="mt-10 text-center flex flex-col items-center">
                 <Button
                   asChild
                   className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
                 >
                   <a href={EARLY_ACCESS_CHECKOUT_URL}>
-                    Reserve for {EARLY_ACCESS_PRICE}
+                    Get Your Founder's Pass ({EARLY_ACCESS_PRICE})
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <p className="mt-4 text-[12px] leading-5 text-[#8896A1]">
-                  Only after your free scan shows recoverable value. No filing without your
-                  approval.
-                </p>
+                <div className="mt-4 flex items-center justify-center gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#E5F3EC] text-[#2E7D5B]">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <p className="text-[12px] font-medium leading-5 text-[#2E7D5B]">
+                    100% Success Guarantee
+                  </p>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -455,22 +407,14 @@ export default function EarlyAccess() {
                 Start Here
               </div>
               <h2 className="mt-5 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                Find the evidence. Win the case.
+                Hire the Agent. Win the case.
               </h2>
               <p className="mx-auto mt-5 max-w-[600px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                Enter your work email and we'll scan your FBA account for recoverable loss events
-                with matching evidence — free, within 48&nbsp;hours.
+                Secure your lifetime Founder's Pass before the first 100 slots are gone.
               </p>
 
-              <div className="mt-10">
-                <EvidenceScanForm
-                  id="bottom-email"
-                  email={email}
-                  setEmail={setEmail}
-                  isSubmitting={isSubmitting}
-                  submitted={submitted}
-                  onSubmit={handleSubmit}
-                />
+              <div className="mt-10 w-full">
+                <FounderPassCTA />
               </div>
 
               <p className="mt-6 max-w-[540px] text-[11px] leading-5 text-[#9AA8B2]">
