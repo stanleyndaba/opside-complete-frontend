@@ -317,10 +317,10 @@ export default function EarlyAccess() {
                   Founding 100
                 </div>
                 <h2 className="mt-5 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[66px]">
-                  Reserve Your Managed Recovery Slot.
+                  Secure Your Lifetime Managed Recovery Slot.
                 </h2>
                 <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  If the Agent doesn't win a case worth at least {EARLY_ACCESS_PRICE} within 30 days, we refund your Founder's Fee. No questions asked.
+                  {EARLY_ACCESS_PRICE} once. No commissions. No monthly fees. No "Audit" homework. We find the evidence and win the cases for you. Once the 100 spots are gone, Margin moves to a tiered base subscription.
                 </p>
               </div>
 
