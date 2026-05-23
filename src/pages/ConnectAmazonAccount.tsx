@@ -111,6 +111,119 @@ export default function ConnectAmazonAccount() {
     }
 
     setConnecting(true);
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowRight, Loader2 } from 'lucide-react';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { Button } from '@/components/ui/button';
+import { useTenant } from '@/contexts/TenantContext';
+import { api } from '@/lib/api';
+import { useToast } from '@/components/ui/use-toast';
+import { normalizeTenantSlug } from '@/lib/routes';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AMAZON_MARKETPLACES } from '@/lib/amazonMarketplaces';
+import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+
+export default function ConnectAmazonAccount() {
+  const navigate = useNavigate();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const { toast } = useToast();
+  const { isFull, capacity } = useOnboardingCapacity();
+  const activeTenantSlug = tenantSlug || tenant?.slug || '';
+  const [resolvedTenantSlug, setResolvedTenantSlug] = useState(activeTenantSlug);
+  const [preparing, setPreparing] = useState(true);
+  const [connecting, setConnecting] = useState(false);
+  const [selectedMarketplace, setSelectedMarketplace] = useState('');
+
+  useEffect(() => {
+    let mounted = true;
+
+    const deriveWorkspaceName = (email: string) => {
+      const normalized = email.trim().toLowerCase();
+      const domain = normalized.split('@')[1] || '';
+      const base = domain.split('.')[0] || normalized.split('@')[0] || 'workspace';
+      return base
+        .split(/[^a-z0-9]+/i)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(' ') || 'Workspace';
+    };
+
+    const bootstrapWorkspace = async () => {
+      try {
+        const storedEmail = localStorage.getItem('user_email') || '';
+        const preferredTenantSlug = normalizeTenantSlug(tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug'));
+        const response = await api.post<{
+          success: boolean;
+          tenant?: { id: string; slug: string };
+        }>('/api/auth/bootstrap', {
+          workspaceName: deriveWorkspaceName(storedEmail),
+          preferredTenantSlug,
+        });
+
+        if (!mounted) {
+          return;
+        }
+
+        const nextTenantSlug = normalizeTenantSlug(response.data?.tenant?.slug) || preferredTenantSlug || '';
+        if (response.ok && response.data?.tenant?.id && nextTenantSlug) {
+          localStorage.setItem('active_tenant_id', response.data.tenant.id);
+          localStorage.setItem('active_tenant_slug', nextTenantSlug);
+          setResolvedTenantSlug(nextTenantSlug);
+
+          if (tenantSlug && nextTenantSlug !== tenantSlug) {
+            navigate(`/app/${nextTenantSlug}/connect-amazon`, { replace: true });
+            return;
+          }
+        }
+      } catch (error: any) {
+        if (mounted) {
+          toast({
+            title: 'Workspace setup incomplete',
+            description: error?.message || 'We could not finish preparing your workspace yet.',
+            variant: 'destructive',
+          });
+        }
+      } finally {
+        if (mounted) {
+          setPreparing(false);
+        }
+      }
+    };
+
+    bootstrapWorkspace();
+
+    return () => {
+      mounted = false;
+    };
+  }, [navigate, tenant?.slug, tenantSlug, toast]);
+
+  const handleConnectAmazon = async () => {
+    if (isFull) {
+      navigate('/waitlist?reason=capacity');
+      return;
+    }
+
+    if (!resolvedTenantSlug) {
+      toast({
+        title: 'Workspace unavailable',
+        description: 'We could not resolve your workspace yet. Please try again.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!selectedMarketplace) {
+      toast({
+        title: 'Marketplace required',
+        description: 'Select a marketplace before continuing to Amazon.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setConnecting(true);
 
     try {
       const response = await api.connectAmazon(selectedMarketplace, false, resolvedTenantSlug);
@@ -118,11 +231,18 @@ export default function ConnectAmazonAccount() {
       const stateParam = (response.data as any)?.state;
 
       if (!response.ok || !authUrl) {
+        const rawError = typeof response.error === 'string' ? response.error : '';
+        const isCapacityFull = rawError.includes('capacity_full') || (response.data as any)?.capacity_full;
         toast({
-          title: 'Amazon connection failed',
-          description: response.error || 'We could not start Amazon authorization. Please try again.',
+          title: isCapacityFull ? 'Batch 01 is currently onboarding' : 'Amazon connection failed',
+          description: isCapacityFull
+            ? 'Margin is onboarding our first cohort of founding members. Join the waitlist and we’ll notify you the moment a spot opens.'
+            : (response.error || 'We could not start Amazon authorization. Please try again.'),
           variant: 'destructive',
         });
+        if (isCapacityFull) {
+          navigate('/waitlist?reason=capacity');
+        }
         setConnecting(false);
         return;
       }
@@ -144,11 +264,18 @@ export default function ConnectAmazonAccount() {
 
       window.location.assign(authUrl);
     } catch (error: any) {
+      const rawMsg = error?.message || '';
+      const isCapacityFull = rawMsg.includes('capacity_full');
       toast({
-        title: 'Amazon connection failed',
-        description: error?.message || 'We could not start Amazon authorization. Please try again.',
+        title: isCapacityFull ? 'Batch 01 is currently onboarding' : 'Amazon connection failed',
+        description: isCapacityFull
+          ? 'Margin is onboarding our first cohort of founding members. Join the waitlist and we’ll notify you the moment a spot opens.'
+          : (rawMsg || 'We could not start Amazon authorization. Please try again.'),
         variant: 'destructive',
       });
+      if (isCapacityFull) {
+        navigate('/waitlist?reason=capacity');
+      }
       setConnecting(false);
     }
   };
@@ -210,10 +337,10 @@ export default function ConnectAmazonAccount() {
                 <div className="space-y-5 rounded-[22px] border border-[#DCE8EE] bg-[#F8FAFC] p-5 text-[#182026]">
                   <div className="space-y-2">
                     <p className="text-[12px] font-semibold tracking-tight text-[#182026]">
-                      We’re onboarding a small batch of sellers right now.
+                      Margin is currently onboarding our first cohort of founding members.
                     </p>
                     <p className="text-[12px] text-[#66737F]">
-                      Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
+                      We’ll open the next batch soon — join the waitlist and we’ll notify you the moment a spot opens.
                     </p>
                   </div>
                   <Button

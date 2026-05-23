@@ -65,11 +65,19 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           return;
         }
 
+        const rawError = typeof response.error === 'string' ? response.error : '';
+        const isCapacityFull = rawError.includes('capacity_full') || (response.error as any)?.capacity_full;
+
         toast({
-          title: 'Connection Failed',
-          description: response.error || 'Failed to start Amazon authentication. Please try again.',
+          title: isCapacityFull ? 'Batch 01 is currently onboarding' : 'Connection Failed',
+          description: isCapacityFull
+            ? 'Margin is onboarding our first cohort of founding members. Join the waitlist and we’ll notify you the moment a spot opens.'
+            : (response.error || 'Failed to start Amazon authentication. Please try again.'),
           variant: 'destructive'
         });
+        if (isCapacityFull) {
+          navigate('/waitlist?reason=capacity');
+        }
         setConnecting(false);
         return;
       }
@@ -115,12 +123,18 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         setConnecting(false);
       }
     } catch (error: any) {
-      console.error('[AmazonConnect] Connection failed:', error);
+      const rawMsg = error?.message || '';
+      const isCapacityFull = rawMsg.includes('capacity_full');
       toast({
-        title: 'Connection Error',
-        description: error?.message || 'An unexpected error occurred during authentication.',
+        title: isCapacityFull ? 'Batch 01 is currently onboarding' : 'Connection Error',
+        description: isCapacityFull
+          ? 'Margin is onboarding our first cohort of founding members. Join the waitlist and we’ll notify you the moment a spot opens.'
+          : (rawMsg || 'An unexpected error occurred during authentication.'),
         variant: 'destructive'
       });
+      if (isCapacityFull) {
+         navigate('/waitlist?reason=capacity');
+      }
       setConnecting(false);
     }
   };
@@ -261,10 +275,10 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       )}>
         <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-left text-white shadow-[0_10px_30px_rgba(0,0,0,0.1)]">
           <div className="text-[11px] font-semibold tracking-tight text-white">
-            We’re onboarding a small batch of sellers right now.
+            Margin is currently onboarding our first cohort of founding members.
           </div>
           <div className="mt-1 text-[10px] text-white/60">
-            Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
+            We’ll open the next batch soon — join the waitlist and we’ll notify you the moment a spot opens.
           </div>
           <Button
             onClick={() => navigate('/waitlist?reason=capacity')}
