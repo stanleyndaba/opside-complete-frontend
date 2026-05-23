@@ -38,7 +38,7 @@ const timelineSteps = [
   {
     num: '03',
     label: 'Recover',
-    title: 'We win the cases. You keep 100% of the money.',
+    title: 'We win the cases. You keep 100% of the recovered value.',
     detail:
       'Margin prepares and submits reimbursement cases with full evidence packages. Every approved payout goes directly to you. Margin takes zero commission on recovered funds.',
   },
