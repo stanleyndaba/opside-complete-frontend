@@ -194,7 +194,7 @@ const trustControls = [
 ];
 
 const earlyAccessItems = [
-  'Priority recovery waitlist',
+  'Founding 100 Recovery Audit',
   'Managed onboarding before filing',
   'Read-only setup first',
   'Claim-clock scan and evidence readiness review',
@@ -232,8 +232,8 @@ const faqs = [
     answer: 'Margin does not take a percentage of approved recoveries. Founding 100 starts with a managed recovery audit, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
-    question: 'What happens after I join the waitlist?',
-    answer: 'Your request joins the next access review queue. Margin opens access in controlled waves so setup, evidence review, and seller approval stay careful before any recovery workflow moves forward.'
+    question: 'What happens after I start the Founding 100 Recovery Audit?',
+    answer: 'Your activation joins the managed Founding 100 cohort. Margin prepares the workspace carefully, starts with read-only setup, scans claim clocks, reviews evidence readiness, and keeps seller approval before filing.'
   }
 ];
 
@@ -713,7 +713,7 @@ export default function Index() {
       return;
     }
 
-    navigate('/waitlist');
+    navigate('/early-access');
   };
 
   const openDemo = () => {
@@ -726,7 +726,7 @@ export default function Index() {
   };
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = 'Join Waitlist';
+  const primaryCtaLabel = 'Start Recovery Audit';
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
@@ -1064,12 +1064,12 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
               <motion.div {...revealProps}>
-                <div className={sectionLabelClass}>Priority Access</div>
+                <div className={sectionLabelClass}>Founding 100 Recovery Audit</div>
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
-                  Join the priority queue before your next recovery window closes.
+                  Join the Founding 100 before your next recovery window closes.
                 </h2>
                 <p className={sectionBodyClass}>
-                  Margin opens access in controlled waves with read-only setup, claim-clock scanning, evidence readiness review, and seller approval before filing. No recovery commissions.
+                  Founding 100 Recovery Audit starts with controlled onboarding, read-only setup, claim-clock scanning, evidence readiness review, and seller approval before filing. No recovery commissions.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
@@ -1159,7 +1159,7 @@ export default function Index() {
                   Find the recoveries already on the clock.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Join the priority queue for controlled recovery access. Margin helps identify Amazon loss events, match the required evidence, and show which recovery cases are ready, blocked, or waiting before anything gets filed.
+                  Start with the Founding 100 Recovery Audit. Margin helps identify Amazon loss events, match the required evidence, and show which recovery cases are ready, blocked, or waiting before anything gets filed.
                 </p>
               </div>
 

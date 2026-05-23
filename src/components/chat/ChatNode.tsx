@@ -21,7 +21,7 @@ const AUDIT_PATHWAYS = [
     },
     {
         label: 'Early access',
-        response: 'Access is managed in controlled onboarding waves. Approved sellers get guided setup and a first recovery workflow, without an instant self-serve dashboard promise.'
+        response: 'Early Access is managed in controlled onboarding waves. Founding members get guided setup and a first recovery workflow, without an instant self-serve dashboard promise.'
     }
 ];
 
@@ -31,7 +31,7 @@ export function ChatNode() {
         {
             id: 'init',
             role: 'agent',
-            text: "Hi, I’m here to help you understand Margin. Ask about read-only setup, recovery workflows, managed access, or how cases are reviewed before filing.",
+            text: "Hi, I’m here to help you understand Margin. Ask about read-only setup, recovery workflows, Early Access, or how cases are reviewed before filing.",
             timestamp: new Date().toISOString()
         }
     ]);
@@ -64,7 +64,7 @@ export function ChatNode() {
             const agentMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'agent',
-                text: 'Thanks for asking. Margin is built to surface recovery signals, organize evidence, and make the workflow easier to review. For account-specific answers, the safest next step is the waitlist so setup can happen read-only and with seller approval.',
+                text: 'Thanks for asking. Margin is built to surface recovery signals, organize evidence, and make the workflow easier to review. For account-specific answers, the safest next step is Managed Early Access so setup can happen read-only and with seller approval.',
                 timestamp: new Date().toISOString()
             };
             setMessages(prev => [...prev, agentMsg]);
@@ -113,7 +113,7 @@ export function ChatNode() {
                                     Margin guide
                                     <span className="rounded-full border border-[#BFD8EA] bg-[#EAF4FF] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">beta</span>
                                 </h3>
-                                <p className="mt-0.5 text-[11px] leading-5 text-[#66737F]">Ask about setup, safety, evidence, and managed access.</p>
+                                <p className="mt-0.5 text-[11px] leading-5 text-[#66737F]">Ask about setup, safety, evidence, and Early Access.</p>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}

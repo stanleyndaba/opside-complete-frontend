@@ -17,7 +17,7 @@ Margin turns Amazon loss events into claim-ready recoveries before time runs out
 ## Important Pages
 
 - [Homepage](https://margin-finance.com/)
-- [Waitlist](https://margin-finance.com/waitlist)
+- [Founding 100 Recovery Audit](https://margin-finance.com/early-access)
 - [Pricing](https://margin-finance.com/pricing)
 - [Research](https://margin-finance.com/research)
 - [About Margin](https://margin-finance.com/about-margin)
@@ -25,7 +25,7 @@ Margin turns Amazon loss events into claim-ready recoveries before time runs out
 
 ## Commercial Model
 
-Margin opens access in controlled waves. Margin runs as a monthly recovery management system rather than a percentage-based reimbursement service. Sellers keep approved recoveries.
+Founding 100 starts with a $99 audit activation. Margin runs as a monthly recovery management system rather than a percentage-based reimbursement service. Sellers keep approved recoveries.
 
 ## Contact
 

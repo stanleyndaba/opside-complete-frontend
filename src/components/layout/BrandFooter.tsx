@@ -15,7 +15,7 @@ type FooterLink = {
 const productLinks: FooterLink[] = [
   { label: 'Audit-to-Evidence', href: '/#how-margin-works' },
   { label: 'Zero-Friction Filing', href: '/#margin-demo' },
-  { label: 'Waitlist', href: '/waitlist' },
+  { label: 'Managed Access', href: '/early-access' },
   { label: 'Pricing', href: '/pricing' }
 ];
 

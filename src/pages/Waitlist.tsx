@@ -232,7 +232,7 @@ const Waitlist = () => {
         ]
         : captureMode === 'email_only'
         ? [
-            'Your email has been secured in the priority access queue.',
+            'Your email has been secured in the early-access queue.',
             'If we need more rollout context, we will reach out directly through the address you provided.'
         ]
         : [
