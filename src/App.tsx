@@ -69,7 +69,6 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Sales = lazy(() => import("./pages/Sales"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
-const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
 const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
@@ -166,7 +165,7 @@ const App = () => (
                         <Route path="/pricing" element={<PricingAdjust />} />
                         <Route path="/payment/success" element={<PaymentSuccess />} />
                         <Route path="/waitlist" element={<Waitlist />} />
-                        <Route path="/early-access" element={<EarlyAccess />} />
+                        <Route path="/early-access" element={<Navigate to="/waitlist" replace />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/branding" element={<Branding />} />
                         {/* AUTH & OAUTH ROUTES - No tenant required */}

@@ -163,7 +163,7 @@ export default function Research() {
       return;
     }
 
-    navigate('/early-access');
+    navigate('/waitlist');
   };
 
   return (
@@ -203,7 +203,7 @@ export default function Research() {
                   onClick={handlePrimaryCta}
                   className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Reserve Early Access'}
+                  Join Waitlist
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
 
@@ -522,7 +522,7 @@ export default function Research() {
                   onClick={handlePrimaryCta}
                   className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                 >
-                  {isFull ? 'Join Waitlist' : 'Reserve Early Access'}
+                  Join Waitlist
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
 
