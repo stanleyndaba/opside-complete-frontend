@@ -1064,7 +1064,7 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
               <motion.div {...revealProps}>
-                <div className={sectionLabelClass}>Margin 100</div>
+
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
                   Margin 100 Slot.
                 </h2>
@@ -1154,7 +1154,7 @@ export default function Index() {
               className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:p-12"
             >
               <div className="max-w-[880px]">
-                <div className={sectionLabelClass}>Hire The Agent</div>
+
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
                   Hire The Agent.
                 </h2>
