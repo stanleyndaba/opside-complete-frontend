@@ -41,19 +41,19 @@ const pricingTiers: PricingTier[] = [
     priceContext: 'One-time payment. Permanently grandfathered through Dec 2026.',
     purpose: 'Early adopters, proof of concept, and low-volume sellers.',
     features: [
-      'Zero commission on approved claims',
+      '0% commission on recovered funds',
       '$0 monthly subscription fee',
       'Includes one primary marketplace',
       'Standard support',
     ],
-    ctaLabel: 'Secure Founding Spot',
+    ctaLabel: 'Lock In Founding Access',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/T3BBGQ8TTSBUJ',
   },
   {
     name: 'Flex',
     planKey: 'pro',
     price: '10% on recovered funds',
-    priceContext: 'No upfront risk',
+    priceContext: 'Pay only when recoveries are made',
     purpose: 'Price-sensitive sellers with zero upfront risk.',
     features: [
       'Pay only on what we recover',
@@ -68,7 +68,7 @@ const pricingTiers: PricingTier[] = [
     name: 'Pro',
     planKey: 'enterprise',
     price: '$199/mo + 3% on recovered funds',
-    priceContext: 'Priority handling for serious sellers',
+    priceContext: 'Priority workflows for growing operations',
     purpose: 'Consistent claim volume requiring priority handling.',
     features: [
       'Lower 3% success fee',
@@ -86,12 +86,12 @@ const pricingTiers: PricingTier[] = [
     priceContext: '0% commission on recovered funds',
     purpose: 'High-volume, multi-marketplace enterprises and aggregators.',
     features: [
-      'Zero commission on approved claims',
+      '0% commission on recovered funds',
       'Unlimited global marketplace support',
       'Highest priority processing & 24/7 dedicated support',
       'Advanced analytics & API access',
     ],
-    ctaLabel: 'Deploy Scale Infrastructure',
+    ctaLabel: 'Run Recoveries at Scale',
     salesLed: true,
   },
 ];
@@ -390,7 +390,7 @@ export default function PricingAdjust() {
                 Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.
               </p>
               <p className="mx-auto max-w-2xl text-[11px] font-medium leading-5 text-[#7A8994]">
-                All plans include discrepancy monitoring for lost inventory, inbound shortages, fee errors, and returns; automated evidence collection across invoices, BOLs, and shipment logs; policy-aligned case building; one-click filing to Amazon; lowball dispute automation; rejection handling and auto-refiling; payout tracking; and a transparent case timeline.
+                All plans include discrepancy monitoring for lost inventory, inbound shortages, fee errors, and returns; automated evidence collection across invoices, BOLs, and shipment logs; policy-aligned case building; one-click filing to Amazon; underpayment recovery workflows; rejection handling and auto-refiling; payout tracking; and a transparent case timeline.
               </p>
             </div>
           </motion.div>
