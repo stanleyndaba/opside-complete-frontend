@@ -3,14 +3,17 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowRight,
-    Search,
     Briefcase,
     BadgePercent,
     FileText,
-    BoxSelect,
-    ArrowLeft,
-    Menu
+    Menu,
+    ShieldCheck,
+    BarChart3,
+    Activity,
+    Layers,
+    Globe2,
+    Network,
+    TrendingUp
 } from 'lucide-react';
 import {
     Accordion,
@@ -19,7 +22,6 @@ import {
     AccordionTrigger
 } from '@/components/ui/accordion';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
-import { Truck, TrendingUp, ShieldCheck, BarChart3, Activity, Layers } from 'lucide-react';
 
 type PublicNavbarProps = {
     variant?: 'dark' | 'light';
@@ -206,37 +208,35 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
-                                            {/* Recovery Coverage */}
+                                            {/* Recovery Infrastructure */}
                                             <div className="space-y-3">
-                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Recovery Coverage</h5>
+                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Recovery Infrastructure</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem variant={effectiveVariant} icon={Search} title="Inbound Shipments" description="Short receives and receiving drift" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={ShieldCheck} title="Lost or Damaged Inventory" description="Recovery across FBA states" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={BoxSelect} title="Fee Discrepancies" description="Overcharges, reversals, and gaps" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={ArrowLeft} title="Refund Without Return" description="Refunds not matched to real return outcome" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Truck} title="Transfer & Operations" description="Inter-fulfillment discrepancies" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={BarChart3} title="Recovery Workflow" description="Valid cases, evidence, filing, payout" highlight />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Activity} title="Discrepancy Engine" description="Continuous monitoring of inbound, inventory, and fee states." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Layers} title="Evidence Vault" description="Automated collection of BOLs, invoices, and shipment logs." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={FileText} title="Surgical Case Builder" description="Policy-aligned claim construction for maximum approval rates." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={ShieldCheck} title="Dispute Automation" description="Autonomous handling of lowball offers and rejections." highlight />
                                                 </div>
                                             </div>
 
-                                            {/* Evidence & Control */}
+                                            {/* Operational Control */}
                                             <div className="space-y-3">
-                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Evidence & Control</h5>
+                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Operational Control</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem variant={effectiveVariant} icon={Layers} title="Evidence Matching" description="Connect support to the right case" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Briefcase} title="Filing Readiness" description="Hold weak or duplicate issues back" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={BadgePercent} title="Recovery Tracking" description="Approval and payout visibility" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={FileText} title="Connected Sources" description="Email, storage, and uploaded proof" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={BarChart3} title="Recovery Intelligence" description="Real-time visibility into claim status, payouts, and ROI." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Briefcase} title="Audit Transparency" description="Full logs of every agent action and Amazon interaction." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Globe2} title="Global Sync" description="Unified recovery operations across all international marketplaces." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Network} title="API & Integrations" description="Connect recovery data to your existing ERP or warehouse stack." />
                                                 </div>
                                             </div>
 
-                                            {/* By Seller Type */}
+                                            {/* Solutions */}
                                             <div className="space-y-3">
-                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>By Seller Type</h5>
+                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Solutions</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem variant={effectiveVariant} icon={Activity} title="Emerging Sellers" description="Read-only audit and guided recovery" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={TrendingUp} title="Growth Sellers" description="Ongoing recovery coverage at scale" />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Layers} title="Enterprise Teams" description="Multi-workspace recovery operations" />
+                                                    <MobileNavItem variant={effectiveVariant} icon={BadgePercent} title="Founding 500" description="Exclusive infrastructure access for early believers." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={TrendingUp} title="Enterprise Ops" description="Multi-workspace recovery for aggregators and 8-figure brands." />
+                                                    <MobileNavItem variant={effectiveVariant} icon={Briefcase} title="Managed Recovery" description="White-glove oversight for complex, high-volume accounts." highlight />
                                                 </div>
                                             </div>
                                         </AccordionContent>
