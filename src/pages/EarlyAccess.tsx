@@ -70,6 +70,12 @@ const reveal = {
 function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
   return (
     <div className="w-full max-w-[520px] mx-auto flex flex-col items-center">
+      <div className="mb-4 inline-flex items-center rounded-full border border-[#E9EEF2] bg-white px-3 py-1 shadow-sm">
+        <span className="flex h-2 w-2 rounded-full bg-[#E05B52] mr-2 animate-pulse" />
+        <span className="text-[12px] font-semibold tracking-wide text-[#182026] uppercase">
+          Closes June 30
+        </span>
+      </div>
       <Button
         asChild
         className="h-[56px] w-full max-w-[340px] justify-center rounded-full bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
@@ -81,7 +87,7 @@ function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
       </Button>
       <div className="mt-4 text-center">
         <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
-          {subtext || 'Includes 1 year of active case management. One payment. No renewals.'}
+          {subtext || 'Covers full recovery service from activation through December 31, 2026. One payment. No automatic renewal.'}
         </p>
         <p className="mt-1 text-[13px] font-medium leading-5 text-[#4D5B66]">
           <span className="font-semibold text-[#0B74DE]">E2E Recovery Commitment. No recovery left behind.</span>
@@ -187,7 +193,7 @@ export default function EarlyAccess() {
               </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                {EARLY_ACCESS_PRICE} for 1 year of full‑service recovery. No commissions. No hidden fees.
+                {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 100 closes June 30, 2026 &ndash; after that, this offer is gone forever.
               </p>
 
               <div className="mt-10 w-full">
@@ -319,7 +325,7 @@ export default function EarlyAccess() {
                   Secure Your Founding Member Slot.
                 </h2>
                 <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  {EARLY_ACCESS_PRICE} for 1 year. No commissions. No monthly fees. No renewals. We find the evidence and win the cases for you. Once the 100 spots are gone, this offer closes.
+                  {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 100 closes June 30, 2026 – after that, this offer is gone forever.
                 </p>
               </div>
 
@@ -362,10 +368,10 @@ export default function EarlyAccess() {
                   </p>
                 </div>
                 <div className="mt-4 text-[13px] font-medium text-[#4D5B66]">
-                  One payment. {EARLY_ACCESS_PRICE} for 1 year of service. No automatic renewals. No future charges.
+                  One payment. {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No automatic renewals. No future charges.
                 </div>
                 <p className="mt-4 max-w-[500px] text-[11px] leading-4 text-[#8A98A3]">
-                  Your access lasts 12 months from activation. After that, the service ends unless you choose to purchase again (no obligation).
+                  Your access lasts through December 31, 2026. After 2026, the service ends unless you choose a new plan for 2027.
                 </p>
               </div>
             </motion.div>
@@ -423,7 +429,7 @@ export default function EarlyAccess() {
               </p>
 
               <div className="mt-10 w-full">
-                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} for 1 year. One payment. No renewals.`} />
+                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. One payment. No automatic renewals.`} />
               </div>
 
               <p className="mt-6 max-w-[540px] text-[11px] leading-5 text-[#9AA8B2]">

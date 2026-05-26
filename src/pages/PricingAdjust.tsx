@@ -35,69 +35,69 @@ type SelectablePlan = 'starter' | 'pro' | 'enterprise';
 
 const pricingTiers: PricingTier[] = [
   {
-    name: 'Starter',
+    name: 'Founding 500 (Early Access)',
     planKey: 'starter',
-    price: '$79/mo',
-    priceContext: 'Monthly recovery coverage',
-    purpose: 'Small sellers, limited claim volume.',
+    price: '$99',
+    priceContext: 'One-time payment. Covers through Dec 31, 2026.',
+    purpose: 'Early adopters, proof of concept, and low-volume sellers.',
     features: [
-      'Continuous discrepancy monitoring',
-      'Ongoing evidence collection from connected sources',
-      'Filing-ready cases as they appear',
-      '5 claims per month',
-      'Recovery and payout tracking',
+      'Full access to 11-agent detection & filing',
+      'Automated evidence collection & matching',
+      'Lowball dispute & rejection handling',
+      '0% commission on recovered funds',
+      '$0 monthly subscription fee',
+      'Single marketplace coverage',
     ],
+    ctaLabel: 'Secure Founding Spot',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/T3BBGQ8TTSBUJ',
   },
   {
-    name: 'Pro',
+    name: 'Performance',
     planKey: 'pro',
-    price: '$199/mo',
-    priceContext: 'Main plan. No recovery commissions.',
-    purpose: 'Main plan for serious sellers. Monthly recovery management.',
+    price: '10% Success Fee',
+    priceContext: 'No monthly subscription',
+    purpose: 'Price-sensitive sellers with zero upfront risk.',
     features: [
-      'Continuous recovery coverage',
-      '7 core recovery categories live today',
-      'Expanded detector coverage rolls into your plan automatically',
-      'Unlimited auto-filing',
-      'Ongoing evidence matching from connected repositories',
-      'Real-time alerts for new filing opportunities',
-      'Priority support',
+      'Full access to 11-agent detection & filing',
+      'Automated evidence collection & matching',
+      'Lowball dispute & rejection handling',
+      '10% commission (only on recovered funds)',
+      '$0 monthly subscription fee',
+      'Single marketplace coverage',
     ],
+    ctaLabel: 'Start Risk-Free',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/LE8SN5PGT6PPC',
+  },
+  {
+    name: 'Pro',
+    planKey: 'enterprise',
+    price: '$199/mo + 3% Success Fee',
+    priceContext: 'Main plan for serious sellers',
+    purpose: 'Consistent claim volume requiring priority handling.',
+    features: [
+      'Everything in Performance',
+      'Priority case processing & filing',
+      '3% commission (only on recovered funds)',
+      'Up to 3 marketplaces supported',
+      'Dedicated account manager (Email/Chat)',
+    ],
+    ctaLabel: 'Upgrade to Pro',
+    checkoutUrl: 'https://www.paypal.com/ncp/payment/FXJZGLPPDYWJU',
     featured: true,
   },
   {
-    name: 'Scale / Ultra',
-    planKey: 'enterprise',
+    name: 'Scale',
     price: '$399/mo',
-    priceContext: 'Priority recovery workflow',
-    purpose: 'Higher volume, multi-marketplace, priority workflow.',
+    priceContext: '0% Success Fee',
+    purpose: 'High-volume, multi-marketplace enterprises and aggregators.',
     features: [
       'Everything in Pro',
-      'Early access to expanded detector coverage',
-      'Uninterrupted multi-marketplace monitoring',
-      'Custom recovery rules',
-      'Custom valuation rules and sourcing-cost evidence collection',
-      'API access',
-      'High-priority operational coverage',
+      '0% commission on recovered funds',
+      'Unlimited global marketplace support',
+      'Highest priority processing & 24/7 support',
+      'Advanced analytics & API access',
     ],
-    checkoutUrl: 'https://www.paypal.com/ncp/payment/FXJZGLPPDYWJU',
-  },
-  {
-    name: 'Enterprise',
-    price: 'Custom',
-    priceContext: 'Managed recovery operations',
-    purpose: 'Managed recovery ops, bigger sellers.',
-    features: [
-      'Everything in Scale / Ultra',
-      'Dedicated recovery operations support',
-      'Custom detector coverage planning',
-      'Custom valuation and sourcing-cost workflows',
-      'Multi-marketplace and multi-workspace rollout support',
-      'SLA planning, volume pricing, and implementation support',
-    ],
-    ctaLabel: 'Contact Sales',
+    ctaLabel: 'Deploy Scale Infrastructure',
     salesLed: true,
   },
 ];
@@ -115,9 +115,9 @@ export default function PricingAdjust() {
   const isInAppOverlay = Boolean(tenantSlug);
 
   usePageMeta({
-    title: 'Margin Pricing | Monthly Recovery Management, No Recovery Commissions',
+    title: 'Margin Pricing | Institutional-Grade Revenue Recovery Infrastructure',
     description:
-      'Keep approved recoveries. Pay for the system, not a percentage of every reimbursement.',
+      'Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.',
     url: `${SITE_META.url}/pricing`,
   });
 
@@ -384,16 +384,16 @@ export default function PricingAdjust() {
           >
             <div className="flex flex-col items-center gap-3">
               <Badge variant="outline" className="border-[#DCE8EE] bg-white text-[10px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">
-                Flat Monthly Recovery Coverage
+                Tiered Revenue Recovery Infrastructure
               </Badge>
               <h1 className="text-2xl font-semibold tracking-[-0.035em] text-[#182026]">Pricing</h1>
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl font-semibold leading-tight tracking-[-0.055em] text-[#182026] md:text-6xl">
-                Keep approved recoveries. Pay for the system, not a percentage of every reimbursement.
+                Institutional-Grade Revenue Recovery Infrastructure
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
-                Margin keeps watching for discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time through flat monthly coverage.
+                Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.
               </p>
               <p className="mx-auto max-w-2xl text-[11px] font-medium leading-5 text-[#7A8994]">
                 Checkout is processed securely by PayPal for the selected plan.
@@ -404,6 +404,10 @@ export default function PricingAdjust() {
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">
             {pricingTiers.map((tier, index) => renderPricingTier(tier, index))}
           </div>
+
+          <p className="mx-auto mt-10 max-w-4xl text-center text-[11px] font-medium leading-5 text-[#7A8994]">
+            Recovery estimates are projections based on available Amazon activity and supporting records. All recovery actions are subject to seller approval. Amazon makes the final reimbursement decision.
+          </p>
         </div>
 
         {!isInAppOverlay ? (
