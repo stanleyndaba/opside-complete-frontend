@@ -194,7 +194,7 @@ const trustControls = [
 ];
 
 const earlyAccessItems = [
-  'Founding 100 Recovery Audit',
+  'Founding 500 Recovery Audit',
   'Managed onboarding before filing',
   'Read-only setup first',
   'Claim-clock scan and evidence readiness review',
@@ -229,11 +229,11 @@ const faqs = [
   },
   {
     question: 'Why no recovery commissions?',
-    answer: 'Margin does not take a percentage of approved recoveries. Founding 100 starts with a managed recovery audit, then sellers can keep Margin running as a monthly recovery management system.'
+    answer: 'Margin does not take a percentage of approved recoveries. Founding 500 starts with a managed recovery audit, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
-    question: 'What happens after I start the Founding 100 Recovery Audit?',
-    answer: 'Your activation joins the managed Founding 100 cohort. Margin prepares the workspace carefully, starts with read-only setup, scans claim clocks, reviews evidence readiness, and keeps seller approval before filing.'
+    question: 'What happens after I start the Founding 500 Recovery Audit?',
+    answer: 'Your activation joins the managed Founding 500 cohort. Margin prepares the workspace carefully, starts with read-only setup, scans claim clocks, reviews evidence readiness, and keeps seller approval before filing.'
   }
 ];
 
@@ -1066,10 +1066,10 @@ export default function Index() {
               <motion.div {...revealProps}>
 
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
-                  Margin 100 Slot.
+                  Margin 500 Slot.
                 </h2>
                 <p className={sectionBodyClass}>
-                  The first 100 sellers get 1 year of full-service recovery for a one-time $99 fee. We handle the evidence and win the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
+                  The first 500 sellers get 1 year of full-service recovery for a one-time $99 fee. We handle the evidence and win the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
@@ -1159,7 +1159,7 @@ export default function Index() {
                   Hire The Agent.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Margin identifies Amazon loss events, connects the required evidence, and manages every case until payout or escalation. Join the Founding 100 to get a year of active case management with no hidden fees and no "audit" homework.
+                  Margin identifies Amazon loss events, connects the required evidence, and manages every case until payout or escalation. Join the Founding 500 to get a year of active case management with no hidden fees and no "audit" homework.
                 </p>
               </div>
 

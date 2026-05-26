@@ -30,7 +30,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
         ? 'h-9 rounded-[6px] border border-transparent bg-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[#F3F6F8] hover:text-[#182026] focus:border-transparent focus:bg-transparent focus:text-[#25313A] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-[#F3F6F8] data-[state=open]:!text-[#182026]'
         : 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-white/90 outline-none ring-0 transition-colors hover:border-transparent hover:bg-white/10 hover:text-white focus:border-transparent focus:bg-transparent focus:text-white/90 focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-white/10 data-[state=open]:!text-white';
     const panelClassName = 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1240px] bg-[#FAFAF7] rounded-[22px] overflow-hidden shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8]';
-    const labelClassName = 'text-[9px] font-bold text-[#66737F] uppercase tracking-tight';
+    const labelClassName = 'text-[10px] font-bold text-[#66737F] uppercase tracking-tight';
 
     return (
         <NavigationMenu>
@@ -49,8 +49,8 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                         Recovery Infrastructure
                                     </h4>
                                     <span className={cn(
-                                        'rounded px-2 py-0.5 text-[7px] font-bold uppercase tracking-tighter',
-                                        'border border-[#D8E3E8] bg-white text-[#66737F]'
+                                        'rounded px-2.5 py-1 text-[8px] font-bold uppercase tracking-tighter',
+                                        'border border-[#BFD8EA] bg-[#EAF4FF] text-[#0B74DE]'
                                     )}>
                                         Core Systems
                                     </span>
@@ -183,11 +183,11 @@ function NavItem({
     return (
         <div
             className={cn(
-                'group block cursor-default rounded-xl border p-3.5 transition-all duration-200 ease-out hover:-translate-y-0.5',
+                'group block cursor-default rounded-xl border p-4 transition-all duration-200 ease-out hover:-translate-y-0.5',
                 isLight
                     ? highlight
-                        ? 'border-white/70 bg-white/70 shadow-[0_14px_36px_rgba(37,49,58,0.08)]'
-                        : 'border-transparent bg-transparent hover:border-white/70 hover:bg-white/60 hover:shadow-[0_14px_36px_rgba(37,49,58,0.08)]'
+                        ? 'border-[#BFD8EA] bg-[#EAF4FF] shadow-[0_14px_36px_rgba(11,116,222,0.10)]'
+                        : 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-[#F8FAFC] hover:shadow-[0_14px_36px_rgba(37,49,58,0.08)]'
                     : highlight
                         ? 'border-white/10 bg-white/[0.06]'
                         : 'border-transparent bg-transparent'
@@ -195,23 +195,23 @@ function NavItem({
         >
             <div className="flex items-center gap-3.5">
                 <div className={cn(
-                    'shrink-0 rounded-lg border p-2 transition-all',
+                    'shrink-0 rounded-lg border p-2.5 transition-all',
                     isLight
                         ? highlight
-                            ? 'border-white/70 bg-white/76 text-[#25313A]'
-                            : 'border-white/60 bg-white/40 text-[#25313A] group-hover:bg-white/76'
+                            ? 'border-[#BFD8EA] bg-white text-[#0B74DE]'
+                            : 'border-[#DCE8EE] bg-[#EEF4F6] text-[#0B74DE] group-hover:border-[#BFD8EA] group-hover:bg-white'
                         : highlight
                             ? 'border-white/15 bg-white/10 text-white/75'
                             : 'border-transparent bg-white/5 text-white/40'
                 )}>
-                    <Icon className="h-4.5 w-4.5" />
+                    <Icon className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
                     <span className={cn(
-                        'block text-[10px] font-bold tracking-tight',
+                        'block text-[13px] font-bold tracking-tight',
                         isLight
                             ? highlight
-                                ? 'text-[#25313A]'
+                                ? 'text-[#0B74DE]'
                                 : 'text-[#182026]'
                             : highlight
                                 ? 'text-white'
@@ -219,7 +219,7 @@ function NavItem({
                     )}>
                         {title}
                     </span>
-                    <p className={cn('mt-1 text-[8px] leading-[1.35]', isLight ? 'text-[#66737F]' : 'text-white/20')}>
+                    <p className={cn('mt-1.5 text-[11px] leading-[1.45]', isLight ? 'text-[#66737F]' : 'text-white/20')}>
                         {description}
                     </p>
                 </div>

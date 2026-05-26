@@ -185,7 +185,7 @@ export default function EarlyAccess() {
               className="flex flex-col items-center text-center"
             >
               <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#0B74DE] opacity-90">
-                Founding 100: Batch 01 Open
+                Founding 500: Batch 01 Open
               </div>
 
               <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
@@ -193,7 +193,7 @@ export default function EarlyAccess() {
               </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 100 closes June 30, 2026 &ndash; after that, this offer is gone forever.
+                {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 500 closes June 30, 2026 &ndash; after that, this offer is gone forever.
               </p>
 
               <div className="mt-10 w-full">
@@ -319,13 +319,13 @@ export default function EarlyAccess() {
             >
               <div className="text-center">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
-                  Founding 100
+                  Founding 500
                 </div>
                 <h2 className="mt-5 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[66px]">
                   Secure Your Founding Member Slot.
                 </h2>
                 <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 100 closes June 30, 2026 – after that, this offer is gone forever.
+                  {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 500 closes June 30, 2026 – after that, this offer is gone forever.
                 </p>
               </div>
 
@@ -425,7 +425,7 @@ export default function EarlyAccess() {
                 Hire the Agent. Win the case.
               </h2>
               <p className="mx-auto mt-5 max-w-[600px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                Secure your Founding Pass before the first 100 slots are gone.
+                Secure your Founding Pass before the first 500 slots are gone.
               </p>
 
               <div className="mt-10 w-full">
