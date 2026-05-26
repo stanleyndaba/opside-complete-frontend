@@ -38,32 +38,28 @@ const pricingTiers: PricingTier[] = [
     name: 'Founding 500 (Early Access)',
     planKey: 'starter',
     price: '$99',
-    priceContext: 'One-time payment. Covers through Dec 31, 2026.',
+    priceContext: 'One-time payment. Permanently grandfathered through Dec 2026.',
     purpose: 'Early adopters, proof of concept, and low-volume sellers.',
     features: [
-      'Full access to 11-agent detection & filing',
-      'Automated evidence collection & matching',
-      'Lowball dispute & rejection handling',
-      '0% commission on recovered funds',
+      'Zero commission on approved claims',
       '$0 monthly subscription fee',
-      'Single marketplace coverage',
+      'Includes one primary marketplace',
+      'Standard support',
     ],
     ctaLabel: 'Secure Founding Spot',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/T3BBGQ8TTSBUJ',
   },
   {
-    name: 'Performance',
+    name: 'Flex',
     planKey: 'pro',
-    price: '10% Success Fee',
-    priceContext: 'No monthly subscription',
+    price: '10% on recovered funds',
+    priceContext: 'No upfront risk',
     purpose: 'Price-sensitive sellers with zero upfront risk.',
     features: [
-      'Full access to 11-agent detection & filing',
-      'Automated evidence collection & matching',
-      'Lowball dispute & rejection handling',
-      '10% commission (only on recovered funds)',
+      'Pay only on what we recover',
       '$0 monthly subscription fee',
-      'Single marketplace coverage',
+      'Includes one primary marketplace',
+      'Standard support',
     ],
     ctaLabel: 'Start Risk-Free',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/LE8SN5PGT6PPC',
@@ -71,15 +67,14 @@ const pricingTiers: PricingTier[] = [
   {
     name: 'Pro',
     planKey: 'enterprise',
-    price: '$199/mo + 3% Success Fee',
-    priceContext: 'Main plan for serious sellers',
+    price: '$199/mo + 3% on recovered funds',
+    priceContext: 'Priority handling for serious sellers',
     purpose: 'Consistent claim volume requiring priority handling.',
     features: [
-      'Everything in Performance',
+      'Lower 3% success fee',
       'Priority case processing & filing',
-      '3% commission (only on recovered funds)',
       'Up to 3 marketplaces supported',
-      'Dedicated account manager (Email/Chat)',
+      'Priority email & chat support',
     ],
     ctaLabel: 'Upgrade to Pro',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/FXJZGLPPDYWJU',
@@ -88,13 +83,12 @@ const pricingTiers: PricingTier[] = [
   {
     name: 'Scale',
     price: '$399/mo',
-    priceContext: '0% Success Fee',
+    priceContext: '0% commission on recovered funds',
     purpose: 'High-volume, multi-marketplace enterprises and aggregators.',
     features: [
-      'Everything in Pro',
-      '0% commission on recovered funds',
+      'Zero commission on approved claims',
       'Unlimited global marketplace support',
-      'Highest priority processing & 24/7 support',
+      'Highest priority processing & 24/7 dedicated support',
       'Advanced analytics & API access',
     ],
     ctaLabel: 'Deploy Scale Infrastructure',
@@ -294,7 +288,7 @@ export default function PricingAdjust() {
           </div>
 
           <div className="mb-8 flex-grow rounded-[24px] border border-[#E4EDF1] bg-white p-5">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Key Features</div>
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Key Differentiators</div>
             <div className="mt-4 space-y-3">
               {tier.features.map((feature) => (
                 <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-[#4D5B66]">
@@ -396,7 +390,7 @@ export default function PricingAdjust() {
                 Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.
               </p>
               <p className="mx-auto max-w-2xl text-[11px] font-medium leading-5 text-[#7A8994]">
-                Checkout is processed securely by PayPal for the selected plan.
+                All plans include discrepancy monitoring for lost inventory, inbound shortages, fee errors, and returns; automated evidence collection across invoices, BOLs, and shipment logs; policy-aligned case building; one-click filing to Amazon; lowball dispute automation; rejection handling and auto-refiling; payout tracking; and a transparent case timeline.
               </p>
             </div>
           </motion.div>
