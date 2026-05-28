@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -158,6 +158,18 @@ const Login = () => {
   const [workspaceRetryAvailable, setWorkspaceRetryAvailable] = useState(false);
   const [sessionChecked, setSessionChecked] = useState(false);
   const [activeSessionEmail, setActiveSessionEmail] = useState<string | null>(null);
+
+  const enterDemoWorkspace = useCallback(() => {
+    seedDemoSession();
+    navigate(`/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!demoBypassAvailable || mode !== 'login') return;
+    if (nextPath === `/app/${DEMO_TENANT_SLUG}/dashboard` || nextPath.startsWith(`/app/${DEMO_TENANT_SLUG}/`)) {
+      enterDemoWorkspace();
+    }
+  }, [demoBypassAvailable, enterDemoWorkspace, mode, nextPath]);
 
   useEffect(() => {
     const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('user_email') : '';
@@ -374,14 +386,13 @@ const Login = () => {
     setError('');
     setLoginStep(null);
     setWorkspaceRetryAvailable(false);
-    seedDemoSession();
 
     toast({
       title: 'Demo workspace ready',
       description: 'Opening the local demo workspace without Supabase Auth.',
     });
 
-    navigate(`/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
+    enterDemoWorkspace();
   };
 
   const handleUseDifferentAccount = async () => {
