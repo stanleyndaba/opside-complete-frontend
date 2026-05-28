@@ -5,6 +5,7 @@ export const DEMO_TENANT_SLUG = 'demo-workspace';
 export const DEMO_USER_ID = 'demo-user';
 export const DEMO_USER_EMAIL = 'demo@margin.local';
 export const DEMO_SESSION_TOKEN = 'demo-session-local';
+export const DEMO_SESSION_EVENT = 'margin:demo-session-updated';
 
 const DEMO_SESSION_FLAG = 'demo_session_active';
 
@@ -37,9 +38,11 @@ export function seedDemoSession() {
   localStorage.setItem('user_email', DEMO_USER_EMAIL);
   localStorage.setItem('active_tenant_id', DEMO_TENANT_ID);
   localStorage.setItem('active_tenant_slug', DEMO_TENANT_SLUG);
+  window.dispatchEvent(new CustomEvent(DEMO_SESSION_EVENT));
 }
 
 export function clearDemoSession() {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(DEMO_SESSION_FLAG);
+  window.dispatchEvent(new CustomEvent(DEMO_SESSION_EVENT));
 }

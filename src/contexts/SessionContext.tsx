@@ -7,7 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { SESSION_RECOVERY_EVENT, attemptSilentSessionRefresh, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
-import { clearDemoSession, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
+import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -65,6 +65,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const [userId, setUserId] = useState<string | null>(null);
     const [isPaidUser, setIsPaidUser] = useState(false);
 
+    const applyDemoSession = useCallback(() => {
+        setIsSessionValid(true);
+        setAuthToken(DEMO_SESSION_TOKEN);
+        setUserId(DEMO_USER_ID);
+        setUserEmail(DEMO_USER_EMAIL);
+        setIsPaidUser(true);
+        setIsAuthReady(true);
+        clearSessionRecoveryPending();
+        clearSessionRecoverySuppression();
+    }, []);
+
     const clearStoredAuthContext = useCallback(() => {
         if (typeof window === 'undefined') return;
 
@@ -117,11 +128,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         const getUser = async () => {
             try {
                 if (isDemoSessionActive()) {
-                    setIsSessionValid(true);
-                    setAuthToken(DEMO_SESSION_TOKEN);
-                    setUserId(DEMO_USER_ID);
-                    setUserEmail(DEMO_USER_EMAIL);
-                    setIsPaidUser(true);
+                    applyDemoSession();
                     return;
                 }
 
@@ -157,18 +164,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             }
         };
         getUser();
-    }, []);
+    }, [applyDemoSession]);
 
     // Listen for auth state changes
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (isDemoSessionActive()) {
-                setIsSessionValid(true);
-                setAuthToken(DEMO_SESSION_TOKEN);
-                setUserId(DEMO_USER_ID);
-                setUserEmail(DEMO_USER_EMAIL);
-                setIsPaidUser(true);
-                setIsAuthReady(true);
+                applyDemoSession();
                 return;
             }
 
@@ -265,7 +267,22 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         });
 
         return () => subscription.unsubscribe();
-    }, []);
+    }, [applyDemoSession]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const handleDemoSessionUpdated = () => {
+            if (isDemoSessionActive()) {
+                applyDemoSession();
+            }
+        };
+
+        window.addEventListener(DEMO_SESSION_EVENT, handleDemoSessionUpdated as EventListener);
+        return () => {
+            window.removeEventListener(DEMO_SESSION_EVENT, handleDemoSessionUpdated as EventListener);
+        };
+    }, [applyDemoSession]);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -273,6 +290,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         let mounted = true;
 
         const handleRecoveryRequired = async () => {
+            if (isDemoSessionActive()) {
+                applyDemoSession();
+                return;
+            }
+
             const refreshed = await attemptSilentSessionRefresh();
             if (refreshed && mounted) {
                 const { data: { session } } = await supabase.auth.getSession();
@@ -303,7 +325,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             mounted = false;
             window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         };
-    }, [handleSessionExpiry]);
+    }, [applyDemoSession, handleSessionExpiry]);
 
     const showSessionTimeout = useCallback(() => {
         clearSessionRecoverySuppression();
