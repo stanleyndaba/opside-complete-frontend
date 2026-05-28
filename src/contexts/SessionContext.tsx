@@ -7,6 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { SESSION_RECOVERY_EVENT, attemptSilentSessionRefresh, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
+import { clearDemoSession, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -72,6 +73,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('user_email');
         localStorage.removeItem('active_tenant_id');
         localStorage.removeItem('active_tenant_slug');
+        clearDemoSession();
     }, []);
 
     const expireSessionLocally = useCallback(() => {
@@ -114,6 +116,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const getUser = async () => {
             try {
+                if (isDemoSessionActive()) {
+                    setIsSessionValid(true);
+                    setAuthToken(DEMO_SESSION_TOKEN);
+                    setUserId(DEMO_USER_ID);
+                    setUserEmail(DEMO_USER_EMAIL);
+                    setIsPaidUser(true);
+                    return;
+                }
+
                 const { data: { session } } = await supabase.auth.getSession();
                 const { data: { user } } = await supabase.auth.getUser();
                 const token = session?.access_token || localStorage.getItem('session_token') || null;
@@ -151,6 +162,16 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     // Listen for auth state changes
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (isDemoSessionActive()) {
+                setIsSessionValid(true);
+                setAuthToken(DEMO_SESSION_TOKEN);
+                setUserId(DEMO_USER_ID);
+                setUserEmail(DEMO_USER_EMAIL);
+                setIsPaidUser(true);
+                setIsAuthReady(true);
+                return;
+            }
+
             if (event === 'SIGNED_OUT') {
                 setIsSessionValid(false);
                 clearSessionRecoveryPending();

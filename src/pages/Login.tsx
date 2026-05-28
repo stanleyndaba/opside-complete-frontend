@@ -12,6 +12,7 @@ import { normalizeTenantSlug } from '@/lib/routes';
 import { api } from '@/lib/api';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { clearDemoSession, DEMO_TENANT_SLUG, isDemoBypassAvailable, seedDemoSession } from '@/lib/demoSession';
 
 const sanitizeNextPath = (value: string | null, intent: string | null) => {
   if (typeof window === 'undefined') {
@@ -143,6 +144,7 @@ const Login = () => {
   const intent = searchParams.get('intent');
   const next = searchParams.get('next');
   const nextPath = useMemo(() => sanitizeNextPath(next, intent), [intent, next]);
+  const demoBypassAvailable = isDemoBypassAvailable();
 
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
@@ -247,6 +249,7 @@ const Login = () => {
     localStorage.removeItem('session_token');
     localStorage.removeItem('user_id');
     localStorage.removeItem('user_email');
+    clearDemoSession();
     clearStoredTenantContext();
   };
 
@@ -364,6 +367,21 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoWorkspaceSignIn = () => {
+    setLoading(true);
+    setError('');
+    setLoginStep(null);
+    setWorkspaceRetryAvailable(false);
+    seedDemoSession();
+
+    toast({
+      title: 'Demo workspace ready',
+      description: 'Opening the local demo workspace without Supabase Auth.',
+    });
+
+    navigate(`/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
   };
 
   const handleUseDifferentAccount = async () => {
@@ -784,6 +802,19 @@ const Login = () => {
                     </Button>
                   ) : null}
                 </div>
+              ) : null}
+
+              {demoBypassAvailable && mode === 'login' ? (
+                <Button
+                  type="button"
+                  onClick={handleDemoWorkspaceSignIn}
+                  disabled={loading}
+                  variant="outline"
+                  className="h-11 w-full justify-between rounded-full border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
+                >
+                  Open demo workspace
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               ) : null}
 
               <div className="flex flex-col gap-3 pt-2 sm:flex-row">

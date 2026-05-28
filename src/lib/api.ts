@@ -260,7 +260,7 @@ async function requestJsonWithRetry<T>(
 ): Promise<ApiResponse<T>> {
   const requestStartTime = performance.now();
   const url = buildApiUrl(path);
-  const { token: sessionToken, userId, tenantId } = await getFrontendAuthContext();
+  const { token: sessionToken, userId, tenantId, isDemoSession } = await getFrontendAuthContext();
 
   const method = (options?.method || 'GET').toUpperCase();
   const callerHeaders = (options?.headers || {}) as Record<string, string>;
@@ -268,6 +268,7 @@ async function requestJsonWithRetry<T>(
     ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {}),
     ...(userId ? { 'x-user-id': userId } : {}),
     ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+    ...(isDemoSession ? { 'x-demo-mode': 'true' } : {}),
   };
 
   // Avoid forcing JSON content-type on GET/HEAD requests. It creates unnecessary preflights

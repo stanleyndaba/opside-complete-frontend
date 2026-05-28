@@ -1,4 +1,5 @@
 import { getAccessToken, supabase } from './supabaseClient';
+import { isDemoSessionActive } from './demoSession';
 
 export async function getFrontendAuthToken(): Promise<string> {
   if (typeof window === 'undefined') {
@@ -22,10 +23,12 @@ export async function getFrontendAuthContext() {
     return {
       token: '',
       userId: '',
-      tenantId: ''
+      tenantId: '',
+      isDemoSession: false
     };
   }
 
+  const isDemoSession = isDemoSessionActive();
   let userId = String(localStorage.getItem('user_id') || '').trim();
 
   if (!userId) {
@@ -43,6 +46,7 @@ export async function getFrontendAuthContext() {
   return {
     token: await getFrontendAuthToken(),
     userId,
-    tenantId: String(localStorage.getItem('active_tenant_id') || '').trim()
+    tenantId: String(localStorage.getItem('active_tenant_id') || '').trim(),
+    isDemoSession
   };
 }
