@@ -23,7 +23,7 @@ import {
     AccordionTrigger
 } from '@/components/ui/accordion';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
-import { ApisMegaMenu, apiMenuItems, ApiTile } from '@/components/landing/ApisMegaMenu';
+import { ApisMegaMenu, apiMenuGroups, ApiServiceItem } from '@/components/landing/ApisMegaMenu';
 
 type PublicNavbarProps = {
     variant?: 'dark' | 'light';
@@ -256,16 +256,24 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                             API
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2">
-                                            <div className="grid grid-cols-2 gap-2">
-                                                {apiMenuItems.map((item, index) => (
-                                                    <ApiTile
-                                                        key={item.title}
-                                                        variant={effectiveVariant}
-                                                        icon={item.icon}
-                                                        title={item.title}
-                                                        index={index + 1}
-                                                        highlight={index === 2 || index === 5}
-                                                    />
+                                            <div className="space-y-6">
+                                                {apiMenuGroups.map((group) => (
+                                                    <div key={group.label} className="space-y-3">
+                                                        <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
+                                                            {group.label}
+                                                        </h5>
+                                                        <div className="grid gap-1">
+                                                            {group.items.map((item) => (
+                                                                <ApiServiceItem
+                                                                    key={item.title}
+                                                                    variant={effectiveVariant}
+                                                                    icon={item.icon}
+                                                                    title={item.title}
+                                                                    description={item.description}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </AccordionContent>
