@@ -692,8 +692,8 @@ function TestimonialSection() {
           className="mx-auto flex max-w-[980px] flex-col items-center text-center"
         >
           <div className="h-px w-12 bg-[#0B74DE]" aria-hidden="true" />
-          <blockquote className="mt-10 text-[30px] font-semibold leading-relaxed tracking-[-0.035em] text-[#182026] sm:text-[38px] md:text-[44px] md:leading-relaxed">
-            "I'd been leaving money on the table for months. Amazon denied claims, underpaid others, and I didn't have the time to fight. Margin found everything – including a $400 lowball dispute Amazon never would have paid out. They recovered $1,200 in two weeks. Where was this all along?"
+          <blockquote className="mt-10 text-[20px] font-semibold leading-relaxed tracking-[-0.025em] text-[#182026] sm:text-[26px] md:text-[30px] md:leading-relaxed">
+            "I'd been leaving revenue on the table for months. Amazon denied claims, underpaid others, and I didn't have the time to fight. Margin found everything – including a $400 lowball dispute Amazon never would have paid out. They recovered $1,200 in two weeks. Where was this all along?"
           </blockquote>
           <div className="mt-10 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7A8994]">
             ANONYMOUS | APPROX $120K/MONTH
