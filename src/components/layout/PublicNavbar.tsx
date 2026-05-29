@@ -23,6 +23,7 @@ import {
     AccordionTrigger
 } from '@/components/ui/accordion';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
+import { ApisMegaMenu, apiMenuItems, ApiTile } from '@/components/landing/ApisMegaMenu';
 
 type PublicNavbarProps = {
     variant?: 'dark' | 'light';
@@ -139,6 +140,9 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                         <div className="hidden lg:block">
                             <ProductsMegaMenu variant={effectiveVariant} />
                         </div>
+                        <div className="hidden lg:block">
+                            <ApisMegaMenu variant={effectiveVariant} />
+                        </div>
                         <Link to="/pricing" className={desktopNavLinkClass}>
                             Pricing
                         </Link>
@@ -239,6 +243,30 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                                     <MobileNavItem variant={effectiveVariant} icon={TrendingUp} title="Enterprise Ops" description="Multi-workspace recovery for aggregators and 8-figure brands." />
                                                     <MobileNavItem variant={effectiveVariant} icon={Briefcase} title="Managed Recovery" description="White-glove oversight for complex, high-volume accounts." highlight />
                                                 </div>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                    <AccordionItem value="api" className="border-none">
+                                        <AccordionTrigger className={cn(
+                                            mobileMenuItemClass,
+                                            isLight
+                                                ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
+                                                : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
+                                        )}>
+                                            API
+                                        </AccordionTrigger>
+                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2">
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {apiMenuItems.map((item, index) => (
+                                                    <ApiTile
+                                                        key={item.title}
+                                                        variant={effectiveVariant}
+                                                        icon={item.icon}
+                                                        title={item.title}
+                                                        index={index + 1}
+                                                        highlight={index === 2 || index === 5}
+                                                    />
+                                                ))}
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>

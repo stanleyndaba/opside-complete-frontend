@@ -422,7 +422,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[680px] text-[16px] leading-7 text-slate-300 md:text-lg md:leading-8"
           >
-            Bind evidence, enforce claim readiness, and track payouts from detection to resolution.
+            An Enterprise Amazon FBA audit and recovery API platform that automates reimbursement discovery, evidence assembly, dispute filing, payout reconciliation, and billing. 11 sub orchestry agents. Full recovery pipeline at scale.
           </motion.p>
 
           <motion.div
