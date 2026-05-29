@@ -683,6 +683,27 @@ function CoverageExamplesSection() {
   );
 }
 
+function TestimonialSection() {
+  return (
+    <section className="relative py-32 md:py-40" aria-label="Customer testimonial">
+      <div className={containerClass}>
+        <motion.div
+          {...revealProps}
+          className="mx-auto flex max-w-[980px] flex-col items-center text-center"
+        >
+          <div className="h-px w-12 bg-[#0B74DE]" aria-hidden="true" />
+          <blockquote className="mt-10 text-[30px] font-semibold leading-relaxed tracking-[-0.035em] text-[#182026] sm:text-[38px] md:text-[44px] md:leading-relaxed">
+            "I'd been leaving money on the table for months. Amazon denied claims, underpaid others, and I didn't have the time to fight. Margin found everything – including a $400 lowball dispute Amazon never would have paid out. They recovered $1,200 in two weeks. Where was this all along?"
+          </blockquote>
+          <div className="mt-10 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7A8994]">
+            ANONYMOUS | APPROX $120K/MONTH
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -999,6 +1020,8 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        <TestimonialSection />
 
         <section className="relative bg-[#F7F5F0] py-8 sm:bg-transparent sm:py-16 md:py-24">
           <div className={containerClass}>

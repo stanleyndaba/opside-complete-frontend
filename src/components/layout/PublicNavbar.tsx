@@ -4,17 +4,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     ArrowRight,
-    Briefcase,
-    BadgePercent,
-    FileText,
     Menu,
-    ShieldCheck,
-    BarChart3,
-    Activity,
-    Layers,
-    Globe2,
-    Network,
-    TrendingUp
 } from 'lucide-react';
 import {
     Accordion,
@@ -22,7 +12,7 @@ import {
     AccordionItem,
     AccordionTrigger
 } from '@/components/ui/accordion';
-import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
+import { ProductsMegaMenu, productMenuGroups, ProductServiceItem } from '@/components/landing/ProductsMegaMenu';
 import { ApisMegaMenu, apiMenuGroups, ApiServiceItem } from '@/components/landing/ApisMegaMenu';
 
 type PublicNavbarProps = {
@@ -213,37 +203,24 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
-                                            {/* Recovery Infrastructure */}
-                                            <div className="space-y-3">
-                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Recovery Infrastructure</h5>
-                                                <div className="grid gap-1">
-                                                    <MobileNavItem variant={effectiveVariant} icon={Activity} title="Discrepancy Engine" description="Continuous monitoring of inbound, inventory, and fee states." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Layers} title="Evidence Vault" description="Automated collection of BOLs, invoices, and shipment logs." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={FileText} title="Surgical Case Builder" description="Policy-aligned claim construction for maximum approval rates." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={ShieldCheck} title="Dispute Automation" description="Autonomous handling of lowball offers and rejections." highlight />
+                                            {productMenuGroups.map((group) => (
+                                                <div key={group.label} className="space-y-3">
+                                                    <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
+                                                        {group.label}
+                                                    </h5>
+                                                    <div className="grid gap-1">
+                                                        {group.items.map((item) => (
+                                                            <ProductServiceItem
+                                                                key={item.title}
+                                                                variant={effectiveVariant}
+                                                                icon={item.icon}
+                                                                title={item.title}
+                                                                description={item.description}
+                                                            />
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </div>
-
-                                            {/* Operational Control */}
-                                            <div className="space-y-3">
-                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Operational Control</h5>
-                                                <div className="grid gap-1">
-                                                    <MobileNavItem variant={effectiveVariant} icon={BarChart3} title="Recovery Intelligence" description="Real-time visibility into claim status, payouts, and ROI." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Briefcase} title="Audit Transparency" description="Full logs of every agent action and Amazon interaction." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Globe2} title="Global Sync" description="Unified recovery operations across all international marketplaces." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Network} title="API & Integrations" description="Connect recovery data to your existing ERP or warehouse stack." />
-                                                </div>
-                                            </div>
-
-                                            {/* Solutions */}
-                                            <div className="space-y-3">
-                                                <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>Solutions</h5>
-                                                <div className="grid gap-1">
-                                                    <MobileNavItem variant={effectiveVariant} icon={BadgePercent} title="Founding 500" description="Exclusive infrastructure access for early believers." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={TrendingUp} title="Enterprise Ops" description="Multi-workspace recovery for aggregators and 8-figure brands." />
-                                                    <MobileNavItem variant={effectiveVariant} icon={Briefcase} title="Managed Recovery" description="White-glove oversight for complex, high-volume accounts." highlight />
-                                                </div>
-                                            </div>
+                                            ))}
                                         </AccordionContent>
                                     </AccordionItem>
                                     <AccordionItem value="api" className="border-none">
@@ -344,67 +321,3 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
     );
 };
 
-function MobileNavItem({
-    icon: Icon,
-    title,
-    description,
-    highlight = false,
-    variant = 'dark'
-}: {
-    icon: any,
-    title: string,
-    description?: string,
-    highlight?: boolean,
-    variant?: 'dark' | 'light'
-}) {
-    const isLight = variant === 'light';
-
-    return (
-        <div
-            className={cn(
-                "flex flex-col gap-1 p-3 rounded-lg border cursor-default",
-                isLight
-                    ? highlight
-                        ? "border-[#BFD8EA] bg-[#EAF4FF]"
-                        : "border-transparent hover:border-[#DCE8EE] hover:bg-[#F8FAFC]"
-                    : highlight
-                        ? "bg-emerald-500/[0.03] border-emerald-500/10"
-                        : "border-transparent"
-            )}
-        >
-            <div className="flex items-center gap-3">
-                <div className={cn(
-                    "p-1.5 rounded-lg border border-transparent shrink-0",
-                    isLight
-                        ? highlight
-                            ? "bg-white text-[#0B74DE] border-[#BFD8EA]"
-                            : "bg-[#EEF4F6] text-[#0B74DE] border-[#DCE8EE]"
-                        : highlight
-                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                            : "bg-white/5 text-white/40"
-                )}>
-                    <Icon className="h-4 w-4" />
-                </div>
-                <div className="min-w-0">
-                    <span className={cn(
-                        "text-[10px] font-bold tracking-tight block truncate",
-                        isLight
-                            ? highlight
-                                ? "text-[#0B74DE]"
-                                : "text-[#182026]"
-                            : highlight
-                                ? "text-emerald-400"
-                                : "text-white/90"
-                    )}>
-                        {title}
-                    </span>
-                    {description && (
-                        <p className={cn("text-[8px] mt-0.5 leading-none truncate", isLight ? "text-[#66737F]" : "text-white/20")}>
-                            {description}
-                        </p>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-}

@@ -10,7 +10,6 @@ import {
     FileText,
     Briefcase,
     TrendingUp,
-    ArrowRight,
     BadgePercent,
     ShieldCheck,
     Layers,
@@ -21,6 +20,36 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+export const productMenuGroups = [
+    {
+        label: 'Recovery Infrastructure',
+        badge: 'Core Systems',
+        items: [
+            { title: 'Discrepancy Engine', description: 'Continuous monitoring of inbound, inventory, and fee states.', icon: Activity },
+            { title: 'Evidence Vault', description: 'Automated collection of BOLs, invoices, and shipment logs.', icon: Layers },
+            { title: 'Surgical Case Builder', description: 'Policy-aligned claim construction for maximum approval rates.', icon: FileText },
+            { title: 'Dispute Automation', description: 'Autonomous handling of lowball offers and rejections.', icon: ShieldCheck }
+        ]
+    },
+    {
+        label: 'Operational Control',
+        items: [
+            { title: 'Recovery Intelligence', description: 'Real-time visibility into claim status, payouts, and ROI.', icon: BarChart3 },
+            { title: 'Audit Transparency', description: 'Full logs of every agent action and Amazon interaction.', icon: Briefcase },
+            { title: 'Global Sync', description: 'Unified recovery operations across all international marketplaces.', icon: Globe2 },
+            { title: 'API & Integrations', description: 'Connect recovery data to your existing ERP or warehouse stack.', icon: Network }
+        ]
+    },
+    {
+        label: 'Solutions',
+        items: [
+            { title: 'Founding 500', description: 'Exclusive infrastructure access for early believers.', icon: BadgePercent },
+            { title: 'Enterprise Ops', description: 'Multi-workspace recovery for aggregators and 8-figure brands.', icon: TrendingUp },
+            { title: 'Managed Recovery', description: 'White-glove oversight for complex, high-volume accounts.', icon: Briefcase }
+        ]
+    }
+];
+
 type ProductsMegaMenuProps = {
     variant?: 'dark' | 'light';
 };
@@ -29,8 +58,6 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
     const triggerClassName = variant === 'light'
         ? 'h-9 rounded-[6px] border border-transparent bg-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[#F3F6F8] hover:text-[#182026] focus:border-transparent focus:bg-transparent focus:text-[#25313A] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-[#F3F6F8] data-[state=open]:!text-[#182026]'
         : 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-white/90 outline-none ring-0 transition-colors hover:border-transparent hover:bg-white/10 hover:text-white focus:border-transparent focus:bg-transparent focus:text-white/90 focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-white/10 data-[state=open]:!text-white';
-    const panelClassName = 'lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1240px] bg-[#FAFAF7] rounded-[22px] overflow-hidden shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8]';
-    const labelClassName = 'text-[10px] font-bold text-[#66737F] uppercase tracking-tight';
 
     return (
         <NavigationMenu>
@@ -40,122 +67,39 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className={cn(panelClassName, 'relative z-[100]')}>
-
-                            {/* Column 1: Recovery Infrastructure */}
-                            <div className="flex-1 border-r border-[#E4EDF1] p-6 lg:p-7">
-                                <div className="mb-5 flex items-center justify-between">
-                                    <h4 className={labelClassName}>
-                                        Recovery Infrastructure
-                                    </h4>
-                                    <span className={cn(
-                                        'rounded px-2.5 py-1 text-[8px] font-bold uppercase tracking-tighter',
-                                        'border border-[#BFD8EA] bg-[#EAF4FF] text-[#0B74DE]'
-                                    )}>
-                                        Core Systems
-                                    </span>
-                                </div>
-                                <div className="grid grid-cols-1 gap-2.5">
-                                    <NavItem
-                                        variant="light"
-                                        icon={Activity}
-                                        title="Discrepancy Engine"
-                                        description="Continuous monitoring of inbound, inventory, and fee states."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={Layers}
-                                        title="Evidence Vault"
-                                        description="Automated collection of BOLs, invoices, and shipment logs."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={FileText}
-                                        title="Surgical Case Builder"
-                                        description="Policy-aligned claim construction for maximum approval rates."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={ShieldCheck}
-                                        title="Dispute Automation"
-                                        description="Autonomous handling of lowball offers and rejections."
-                                        highlight
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Column 2: Operational Control */}
-                            <div className="flex-1 border-r border-[#E4EDF1] bg-white/45 p-6 lg:p-7">
-                                <h4 className={cn(labelClassName, 'mb-5')}>
-                                    Operational Control
-                                </h4>
-                                <div className="grid grid-cols-1 gap-2.5">
-                                    <NavItem
-                                        variant="light"
-                                        icon={BarChart3}
-                                        title="Recovery Intelligence"
-                                        description="Real-time visibility into claim status, payouts, and ROI."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={Briefcase}
-                                        title="Audit Transparency"
-                                        description="Full logs of every agent action and Amazon interaction."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={Globe2}
-                                        title="Global Sync"
-                                        description="Unified recovery operations across all international marketplaces."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={Network}
-                                        title="API & Integrations"
-                                        description="Connect recovery data to your existing ERP or warehouse stack."
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Column 3: Solutions */}
-                            <div className="flex-1 bg-white/70 p-6 lg:p-7">
-                                <h4 className={cn(labelClassName, 'mb-5')}>
-                                    Solutions
-                                </h4>
-                                <div className="grid grid-cols-1 gap-2.5">
-                                    <NavItem
-                                        variant="light"
-                                        icon={BadgePercent}
-                                        title="Founding 500"
-                                        description="Exclusive infrastructure access for early believers."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={TrendingUp}
-                                        title="Enterprise Ops"
-                                        description="Multi-workspace recovery for aggregators and 8-figure brands."
-                                    />
-                                    <NavItem
-                                        variant="light"
-                                        icon={Briefcase}
-                                        title="Managed Recovery"
-                                        description="White-glove oversight for complex, high-volume accounts."
-                                        highlight
-                                    />
-                                </div>
-
-                                <div className={cn(
-                                    'relative mt-6 overflow-hidden rounded-xl border p-5',
-                                    'border-[#D8E3E8] bg-white'
-                                )}>
-                                    <h5 className="mb-1 text-[9px] font-bold text-[#182026]">Platform Coverage</h5>
-                                    <p className="mb-3 text-[8px] leading-relaxed text-[#66737F]">
-                                        One recovery system for detection, evidence, filing, disputes, and payout confirmation.
-                                    </p>
-                                    <div className="flex cursor-default items-center gap-1.5 text-[8px] font-bold uppercase tracking-tight text-[#182026]">
-                                        View Infrastructure <ArrowRight className="h-2.5 w-2.5" />
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[22px] bg-[#FAFAF7] shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[85px] lg:w-[95vw] lg:max-w-[1120px] lg:-translate-x-1/2">
+                            <div className="grid grid-cols-1 lg:grid-cols-3">
+                                {productMenuGroups.map((group, index) => (
+                                    <div
+                                        key={group.label}
+                                        className={cn(
+                                            'p-6 lg:p-7',
+                                            index === 1 && 'bg-white/45',
+                                            index < productMenuGroups.length - 1 && 'border-b border-[#E4EDF1] lg:border-b-0 lg:border-r'
+                                        )}
+                                    >
+                                        <div className="mb-5 flex items-center justify-between gap-3">
+                                            <h4 className="text-[10px] font-bold uppercase tracking-tight text-[#66737F]">
+                                                {group.label}
+                                            </h4>
+                                            {group.badge && (
+                                                <span className="rounded px-2.5 py-1 text-[8px] font-bold uppercase tracking-tighter text-[#0B74DE] ring-1 ring-[#BFD8EA] bg-[#EAF4FF]">
+                                                    {group.badge}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="grid grid-cols-1 gap-2.5">
+                                            {group.items.map((item) => (
+                                                <ProductServiceItem
+                                                    key={item.title}
+                                                    icon={item.icon}
+                                                    title={item.title}
+                                                    description={item.description}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </NavigationMenuContent>
@@ -165,17 +109,15 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
     );
 }
 
-function NavItem({
+export function ProductServiceItem({
     icon: Icon,
     title,
     description,
-    highlight = false,
-    variant = 'dark'
+    variant = 'light'
 }: {
     icon: any,
     title: string,
     description: string,
-    highlight?: boolean,
     variant?: 'dark' | 'light'
 }) {
     const isLight = variant === 'light';
@@ -183,46 +125,27 @@ function NavItem({
     return (
         <div
             className={cn(
-                'group block cursor-default rounded-xl border p-4 transition-all duration-200 ease-out hover:-translate-y-0.5',
+                'group flex cursor-default items-center gap-3.5 rounded-xl border p-4 transition-all duration-200 ease-out hover:-translate-y-0.5',
                 isLight
-                    ? highlight
-                        ? 'border-[#BFD8EA] bg-[#EAF4FF] shadow-[0_14px_36px_rgba(11,116,222,0.10)]'
-                        : 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-[#F8FAFC] hover:shadow-[0_14px_36px_rgba(37,49,58,0.08)]'
-                    : highlight
-                        ? 'border-white/10 bg-white/[0.06]'
-                        : 'border-transparent bg-transparent'
+                    ? 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-[#F8FAFC] hover:shadow-[0_14px_36px_rgba(11,102,255,0.09)]'
+                    : 'border-transparent bg-transparent hover:bg-white/[0.04]'
             )}
         >
-            <div className="flex items-center gap-3.5">
-                <div className={cn(
-                    'shrink-0 rounded-lg border p-2.5 transition-all',
-                    isLight
-                        ? highlight
-                            ? 'border-[#BFD8EA] bg-white text-[#0B74DE]'
-                            : 'border-[#DCE8EE] bg-[#EEF4F6] text-[#0B74DE] group-hover:border-[#BFD8EA] group-hover:bg-white'
-                        : highlight
-                            ? 'border-white/15 bg-white/10 text-white/75'
-                            : 'border-transparent bg-white/5 text-white/40'
-                )}>
-                    <Icon className="h-5 w-5" />
-                </div>
-                <div className="min-w-0">
-                    <span className={cn(
-                        'block text-[13px] font-bold tracking-tight',
-                        isLight
-                            ? highlight
-                                ? 'text-[#0B74DE]'
-                                : 'text-[#182026]'
-                            : highlight
-                                ? 'text-white'
-                                : 'text-white/90'
-                    )}>
-                        {title}
-                    </span>
-                    <p className={cn('mt-1.5 text-[11px] leading-[1.45]', isLight ? 'text-[#66737F]' : 'text-white/20')}>
-                        {description}
-                    </p>
-                </div>
+            <div className={cn(
+                'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border text-[#0066FF]',
+                isLight
+                    ? 'border-[#DCE8EE] bg-[#0066FF]/10 group-hover:border-[#BFD8EA] group-hover:bg-white'
+                    : 'border-white/10 bg-[#0066FF]/10'
+            )}>
+                <Icon className="h-5 w-5" strokeWidth={1.8} />
+            </div>
+            <div className="min-w-0">
+                <span className={cn('block text-[13px] font-bold tracking-tight', isLight ? 'text-[#182026]' : 'text-white/90')}>
+                    {title}
+                </span>
+                <p className={cn('mt-1.5 text-[11px] leading-[1.45]', isLight ? 'text-[#66737F]' : 'text-white/25')}>
+                    {description}
+                </p>
             </div>
         </div>
     );
