@@ -87,7 +87,7 @@ function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
       </Button>
       <div className="mt-4 text-center">
         <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
-          {subtext || 'Covers full recovery service from activation through December 31, 2026. One payment. No automatic renewal.'}
+          {subtext || 'Full access through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited.'}
         </p>
         <p className="mt-1 text-[13px] font-medium leading-5 text-[#4D5B66]">
           <span className="font-semibold text-[#0B74DE]">E2E Recovery Commitment. No recovery left behind.</span>
@@ -189,11 +189,11 @@ export default function EarlyAccess() {
               </div>
 
               <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
-                Hire the Agent That Wins Your FBA Claims.
+                Join the Founding 500.
               </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 500 closes June 30, 2026 &ndash; after that, this offer is gone forever.
+                {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited. Founding 500 closes June 30, 2026 or when 500 slots are filled.
               </p>
 
               <div className="mt-10 w-full">
@@ -250,7 +250,7 @@ export default function EarlyAccess() {
                 One path. Three milestones.
               </h2>
               <p className="mx-auto mt-5 max-w-[620px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                No decision fatigue. No pricing tiers. Just a clear sequence from scan&nbsp;to&nbsp;payout.
+                No decision fatigue. Start with Founding Access, then upgrade only when your recovery volume justifies it.
               </p>
             </motion.div>
 
@@ -325,7 +325,7 @@ export default function EarlyAccess() {
                   Secure Your Founding Member Slot.
                 </h2>
                 <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No monthly fees, no commissions, no automatic renewal. Founding 500 closes June 30, 2026 – after that, this offer is gone forever.
+                  {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. No monthly fees during Early Access, no automatic renewal, and your $99 is credited if you upgrade to Pro or Scale before the period ends.
                 </p>
               </div>
 
@@ -368,10 +368,10 @@ export default function EarlyAccess() {
                   </p>
                 </div>
                 <div className="mt-4 text-[13px] font-medium text-[#4D5B66]">
-                  One payment. {EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. No automatic renewals. No future charges.
+                  One payment. {EARLY_ACCESS_PRICE} one-time. Full access through December 31, 2026. Upgrade anytime and your $99 becomes plan credit.
                 </div>
                 <p className="mt-4 max-w-[500px] text-[11px] leading-4 text-[#8A98A3]">
-                  Your access lasts through December 31, 2026. After 2026, the service ends unless you choose a new plan for 2027.
+                  After 2026, the service ends unless you choose a Performance, Pro, or Scale plan for 2027.
                 </p>
               </div>
             </motion.div>
@@ -425,11 +425,11 @@ export default function EarlyAccess() {
                 Hire the Agent. Win the case.
               </h2>
               <p className="mx-auto mt-5 max-w-[600px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                Secure your Founding Pass before the first 500 slots are gone.
+                Secure your Founding Pass before June 30, 2026 or before the first 500 slots are gone.
               </p>
 
               <div className="mt-10 w-full">
-                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} one-time. Covers full recovery service from activation through December 31, 2026. One payment. No automatic renewals.`} />
+                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} one-time. Keep 100% through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited.`} />
               </div>
 
               <p className="mt-6 max-w-[540px] text-[11px] leading-5 text-[#9AA8B2]">

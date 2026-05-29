@@ -49,10 +49,10 @@ export default function PaymentSuccess() {
     : `Your ${isPayPal ? 'PayPal' : 'Yoco'} payment return page for Margin. Continue setup while payment confirmation is verified.`;
   const badgeLabel = isEarlyAccess ? 'Early Access Checkout' : isPayPal ? 'PayPal Return' : 'Yoco Return';
   const heading = isEarlyAccess
-    ? 'Reservation submitted. You are in the Founding 100 priority batch.'
+    ? 'Reservation submitted. You are in the Founding 500 priority batch.'
     : 'Payment submitted. Continue into Margin.';
   const body = isEarlyAccess
-    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment and send your onboarding invitation within 3-5 business days.`
+    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment, apply your Founding 500 access, and send your onboarding invitation within 3-5 business days.`
     : `You are back from ${isPayPal ? 'PayPal' : 'Yoco'} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
   const nextStepLabel = isEarlyAccess ? 'Next step' : 'Next step';
   const nextStepValue = isEarlyAccess ? 'Onboarding invite' : isScan ? 'Start scan setup' : 'Open workspace';
@@ -61,7 +61,7 @@ export default function PaymentSuccess() {
   const secondaryHref = isEarlyAccess ? '/' : '/pricing';
   const secondaryLabel = isEarlyAccess ? 'Back to homepage' : 'Return to Pricing';
   const infoCopy = isEarlyAccess
-    ? 'A redirect confirms that PayPal sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete. We provision Early Access workspaces manually to ensure setup quality.'
+    ? 'A redirect confirms that PayPal sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete. Founding 500 members can upgrade to Pro or Scale anytime and apply the $99 as plan credit.'
     : `A redirect confirms that ${isPayPal ? 'PayPal' : 'Yoco'} sent you back to Margin. The payment record itself is verified separately before Margin treats it as paid.`;
 
   usePageMeta({

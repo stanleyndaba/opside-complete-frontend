@@ -44,10 +44,10 @@ const RefundPolicy = () => {
                             </h2>
                             <div className="space-y-4 text-gray-700">
                                 <p>
-                                    Margin now uses flat subscription pricing. Starter, Pro, and Enterprise plans are billed monthly or annually depending on your selected interval.
+                                    Margin offers Early Access and standard recovery management plans. Plan terms may include a one-time Early Access fee, a monthly subscription, a success fee on approved recoveries, or a combination shown at checkout.
                                 </p>
                                 <p>
-                                    For the first 30 days you keep 100% of recoveries. After that, Margin continues as monthly recovery management with no recovery commissions. Amazon still pays reimbursements directly to your Seller Central account.
+                                    Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries. You can upgrade to Pro or Scale anytime and apply the $99 as plan credit.
                                 </p>
                             </div>
                         </section>
@@ -59,13 +59,13 @@ const RefundPolicy = () => {
                             </h2>
                             <div className="space-y-4 text-gray-700">
                                 <p>
-                                    Because Margin now bills by subscription period rather than by recovery outcome, refund requests apply to subscription invoices or renewal charges.
+                                    Refund requests apply to charges paid to Margin, including Early Access fees, subscription invoices, renewal charges, or other plan charges shown at checkout.
                                 </p>
                                 <p>
                                     <span className="text-gray-900">Billing Errors</span> — If a subscription charge was created in error, contact us within 30 days. We will review the billing record and issue a correction or refund when confirmed.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Promo Window</span> — Recoveries during the first 30 days do not create extra billing obligations. The promo never converts into a commission model later.
+                                    <span className="text-gray-900">Early Access Period</span> — Founding 500 members keep 100% of approved recoveries through December 31, 2026. After that, continued service requires choosing a standard plan unless another written agreement applies.
                                 </p>
                             </div>
                         </section>

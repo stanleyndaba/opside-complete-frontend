@@ -38,23 +38,23 @@ const pricingTiers: PricingTier[] = [
     name: 'Founding 500 (Early Access)',
     planKey: 'starter',
     price: '$99',
-    priceContext: 'One-time payment. Permanently grandfathered through Dec 2026.',
-    purpose: 'Early adopters, proof of concept, and low-volume sellers.',
+    priceContext: 'One-time payment. 0% commission through Dec 31, 2026.',
+    purpose: 'Early sellers who want full access before standard plans begin.',
     features: [
-      '0% commission on recovered funds',
-      '$0 monthly subscription fee',
-      'Includes one primary marketplace',
-      'Standard support',
+      'Keep 100% of every recovery during Early Access',
+      '$0 monthly subscription fee through Dec 31, 2026',
+      '$99 credited if you upgrade to Pro or Scale',
+      'Limited to 500 slots; closes June 30, 2026 or when filled',
     ],
     ctaLabel: 'Lock In Founding Access',
-    checkoutUrl: 'https://www.paypal.com/ncp/payment/T3BBGQ8TTSBUJ',
+    checkoutUrl: 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56',
   },
   {
-    name: 'Flex',
+    name: 'Performance',
     planKey: 'pro',
     price: '10% on recovered funds',
-    priceContext: 'Pay only when recoveries are made',
-    purpose: 'Price-sensitive sellers with zero upfront risk.',
+    priceContext: '$0 monthly fee. Pay only when recoveries are made.',
+    purpose: 'Low-volume or risk-averse sellers who prefer no base fee.',
     features: [
       'Pay only on what we recover',
       '$0 monthly subscription fee',
@@ -68,12 +68,13 @@ const pricingTiers: PricingTier[] = [
     name: 'Pro',
     planKey: 'enterprise',
     price: '$199/mo + 3% on recovered funds',
-    priceContext: 'Priority workflows for growing operations',
-    purpose: 'Consistent claim volume requiring priority handling.',
+    priceContext: 'Recommended for serious sellers',
+    purpose: 'Consistent claim volume requiring priority handling and lower success fees.',
     features: [
       'Lower 3% success fee',
       'Priority case processing & filing',
       'Up to 3 marketplaces supported',
+      'Founding 500 members can apply their $99 credit',
       'Priority email & chat support',
     ],
     ctaLabel: 'Upgrade to Pro',
@@ -88,6 +89,7 @@ const pricingTiers: PricingTier[] = [
     features: [
       '0% commission on recovered funds',
       'Unlimited global marketplace support',
+      'Founding 500 members can apply their $99 credit',
       'Highest priority processing & 24/7 dedicated support',
       'Advanced analytics & API access',
     ],
@@ -387,10 +389,10 @@ export default function PricingAdjust() {
                 Institutional-Grade Revenue Recovery Infrastructure
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
-                Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.
+                Founding 500 gives early users full access through 2026 with 0% commission. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
               </p>
               <p className="mx-auto max-w-2xl text-[11px] font-medium leading-5 text-[#7A8994]">
-                All plans include discrepancy monitoring for lost inventory, inbound shortages, fee errors, and returns; automated evidence collection across invoices, BOLs, and shipment logs; policy-aligned case building; one-click filing to Amazon; underpayment recovery workflows; rejection handling and auto-refiling; payout tracking; and a transparent case timeline.
+                All plans include discrepancy monitoring for lost inventory, inbound shortages, fee errors, and returns; automated evidence collection across invoices, BOLs, and shipment logs; policy-aligned case building; seller-approved filing to Amazon; underpayment recovery workflows; rejection handling; payout tracking; and a transparent case timeline.
               </p>
             </div>
           </motion.div>

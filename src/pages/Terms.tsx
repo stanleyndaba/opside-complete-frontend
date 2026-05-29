@@ -95,16 +95,16 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Subscription Pricing</span> — Margin uses flat subscription pricing with Starter, Pro, and Enterprise plan tiers. Pricing may be billed monthly or annually depending on the plan interval you choose.
+                  <span className="text-gray-900">Pricing</span> — Margin offers Early Access and standard recovery management plans. Plan terms may include a one-time Early Access fee, a monthly subscription, a success fee on approved recoveries, or a combination shown at checkout.
                 </p>
                 <p>
-                  <span className="text-gray-900">Billing Cycle</span> — Subscription invoices are issued on the selected monthly or annual billing interval. The first 30 days are a promotional period where you keep 100% of recoveries, but the billing model remains flat subscription pricing throughout.
+                  <span className="text-gray-900">Founding 500</span> — Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries. You may upgrade to Pro or Scale during that period and apply the $99 as plan credit.
                 </p>
                 <p>
                   <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays reimbursements directly to your Amazon Seller account. Margin does not receive, hold, or route reimbursement funds on your behalf.
                 </p>
                 <p>
-                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method on file for subscription invoices. Margin charges no recovery commissions. Sellers pay for ongoing recovery management, and approved recoveries stay with the seller.
+                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method for the plan, invoice, or checkout offer you select. Approved recoveries remain payable directly to the seller by Amazon.
                 </p>
               </div>
             </section>
@@ -116,10 +116,10 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Subscription Billing</span> — Margin no longer uses outcome-linked or commission billing. Refund requests apply to subscription charges only.
+                  <span className="text-gray-900">Billing Basis</span> — Refund requests apply to charges paid to Margin, including Early Access fees, subscription invoices, or other plan charges shown at checkout.
                 </p>
                 <p>
-                  <span className="text-gray-900">Promo Window</span> — During the first 30 days you keep 100% of recoveries. After that, the same flat subscription pricing continues with no transition into success-fee billing.
+                  <span className="text-gray-900">Early Access Period</span> — Founding 500 members keep 100% of approved recoveries through December 31, 2026. After that, continued service requires choosing a standard plan unless another written agreement applies.
                 </p>
                 <p>
                   <span className="text-gray-900">Disputes</span> — If you believe a subscription charge was billed in error, contact us within 30 days.
