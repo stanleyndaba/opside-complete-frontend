@@ -108,25 +108,27 @@ const DesignSimulate = () => {
           <FloatingDocument key={document.id} {...document} />
         ))}
 
-        <motion.div
-          className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3"
-          animate={
-            reduceMotion
-              ? undefined
-              : {
-                  scale: [1, 1.035, 1],
-                  filter: [
-                    'drop-shadow(0 16px 36px rgba(24,32,38,0.12))',
-                    'drop-shadow(0 22px 46px rgba(77,121,255,0.2))',
-                    'drop-shadow(0 16px 36px rgba(24,32,38,0.12))',
-                  ],
-                }
-          }
-          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <img src="/logoimagetwo.png" alt="Margin" width="72" height="72" className="h-14 w-auto object-contain md:h-20" />
-          <span className="brand-wordmark font-merriweather text-4xl tracking-tight text-[#182026] md:text-6xl">Margin</span>
-        </motion.div>
+        <div className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+          <motion.div
+            className="flex items-center gap-3"
+            animate={
+              reduceMotion
+                ? undefined
+                : {
+                    scale: [1, 1.035, 1],
+                    filter: [
+                      'drop-shadow(0 16px 36px rgba(24,32,38,0.12))',
+                      'drop-shadow(0 22px 46px rgba(77,121,255,0.2))',
+                      'drop-shadow(0 16px 36px rgba(24,32,38,0.12))',
+                    ],
+                  }
+            }
+            transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <img src="/logoimagetwo.png" alt="Margin" width="72" height="72" className="h-14 w-auto object-contain md:h-20" />
+            <span className="brand-wordmark font-merriweather text-4xl tracking-tight text-[#182026] md:text-6xl">Margin</span>
+          </motion.div>
+        </div>
       </section>
     </main>
   );
