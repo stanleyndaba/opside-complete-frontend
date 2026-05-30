@@ -1,63 +1,87 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
+type DocumentType = 'PDF' | 'DOC' | 'TSX';
+
 type VaultDocument = {
   id: string;
-  type: 'PDF' | 'DOC';
+  type: DocumentType;
   color: string;
   startX: number;
   startY: number;
   rotate: number;
   delay: number;
+  size?: 'sm' | 'md';
+};
+
+const TYPE_COLORS: Record<DocumentType, string> = {
+  PDF: '#FF4D4D',
+  DOC: '#4D79FF',
+  TSX: '#19A974',
 };
 
 const documents: VaultDocument[] = [
-  { id: 'proof-01', type: 'PDF', color: '#FF4D4D', startX: -420, startY: -210, rotate: -8, delay: 0 },
-  { id: 'proof-02', type: 'DOC', color: '#4D79FF', startX: 390, startY: -170, rotate: 7, delay: 0.55 },
-  { id: 'proof-03', type: 'PDF', color: '#FF4D4D', startX: -360, startY: 230, rotate: 5, delay: 1.1 },
-  { id: 'proof-04', type: 'DOC', color: '#4D79FF', startX: 440, startY: 210, rotate: -6, delay: 1.65 },
-  { id: 'proof-05', type: 'PDF', color: '#FF4D4D', startX: -120, startY: -310, rotate: 4, delay: 2.2 },
-  { id: 'proof-06', type: 'DOC', color: '#4D79FF', startX: 160, startY: 315, rotate: -4, delay: 2.75 },
+  { id: 'proof-01', type: 'PDF', color: TYPE_COLORS.PDF, startX: -520, startY: -260, rotate: -8, delay: 0 },
+  { id: 'proof-02', type: 'DOC', color: TYPE_COLORS.DOC, startX: 470, startY: -245, rotate: 7, delay: 0.18 },
+  { id: 'proof-03', type: 'TSX', color: TYPE_COLORS.TSX, startX: -420, startY: 285, rotate: 5, delay: 0.36 },
+  { id: 'proof-04', type: 'PDF', color: TYPE_COLORS.PDF, startX: 520, startY: 250, rotate: -6, delay: 0.54 },
+  { id: 'proof-05', type: 'DOC', color: TYPE_COLORS.DOC, startX: -165, startY: -350, rotate: 4, delay: 0.72, size: 'sm' },
+  { id: 'proof-06', type: 'TSX', color: TYPE_COLORS.TSX, startX: 210, startY: 350, rotate: -4, delay: 0.9, size: 'sm' },
+  { id: 'proof-07', type: 'PDF', color: TYPE_COLORS.PDF, startX: -610, startY: 45, rotate: 8, delay: 1.08 },
+  { id: 'proof-08', type: 'DOC', color: TYPE_COLORS.DOC, startX: 610, startY: -40, rotate: -7, delay: 1.26 },
+  { id: 'proof-09', type: 'TSX', color: TYPE_COLORS.TSX, startX: -285, startY: -300, rotate: -5, delay: 1.44, size: 'sm' },
+  { id: 'proof-10', type: 'PDF', color: TYPE_COLORS.PDF, startX: 320, startY: 305, rotate: 6, delay: 1.62, size: 'sm' },
+  { id: 'proof-11', type: 'DOC', color: TYPE_COLORS.DOC, startX: -545, startY: 180, rotate: -9, delay: 1.8 },
+  { id: 'proof-12', type: 'TSX', color: TYPE_COLORS.TSX, startX: 555, startY: -185, rotate: 9, delay: 1.98 },
+  { id: 'proof-13', type: 'PDF', color: TYPE_COLORS.PDF, startX: -70, startY: 395, rotate: 3, delay: 2.16, size: 'sm' },
+  { id: 'proof-14', type: 'DOC', color: TYPE_COLORS.DOC, startX: 75, startY: -395, rotate: -3, delay: 2.34, size: 'sm' },
+  { id: 'proof-15', type: 'TSX', color: TYPE_COLORS.TSX, startX: -655, startY: -115, rotate: 6, delay: 2.52 },
+  { id: 'proof-16', type: 'PDF', color: TYPE_COLORS.PDF, startX: 655, startY: 115, rotate: -6, delay: 2.7 },
+  { id: 'proof-17', type: 'DOC', color: TYPE_COLORS.DOC, startX: -360, startY: 375, rotate: 7, delay: 2.88, size: 'sm' },
+  { id: 'proof-18', type: 'TSX', color: TYPE_COLORS.TSX, startX: 390, startY: -370, rotate: -7, delay: 3.06, size: 'sm' },
 ];
 
-const FloatingDocument = ({ type, color, startX, startY, rotate, delay }: VaultDocument) => {
+const FloatingDocument = ({ type, color, startX, startY, rotate, delay, size = 'md' }: VaultDocument) => {
   const reduceMotion = useReducedMotion();
+  const isSmall = size === 'sm';
 
   return (
     <motion.div
       aria-hidden="true"
-      className="absolute left-1/2 top-1/2 flex h-20 w-14 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-md border bg-[#111214]/95 shadow-2xl"
+      className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-md border bg-white/95 shadow-sm"
       style={{
-        borderColor: `${color}B3`,
-        boxShadow: `0 0 24px ${color}26, inset 0 1px 0 rgba(255,255,255,0.06)`,
+        width: isSmall ? 46 : 56,
+        height: isSmall ? 64 : 78,
+        borderColor: `${color}CC`,
+        boxShadow: `0 14px 36px rgba(24, 32, 38, 0.08), 0 0 22px ${color}20`,
       }}
-      initial={{ x: startX, y: startY, opacity: 0, scale: 0.72, rotate }}
+      initial={{ x: startX, y: startY, opacity: 0, scale: 0.68, rotate }}
       animate={
         reduceMotion
-          ? { x: startX * 0.28, y: startY * 0.28, opacity: 0.72, scale: 0.9, rotate: 0 }
+          ? { x: startX * 0.24, y: startY * 0.24, opacity: 0.85, scale: 0.88, rotate: 0 }
           : {
-              x: [startX, startX * 0.56, startX * 0.18, 0],
-              y: [startY, startY * 0.48, startY * 0.16, 0],
-              opacity: [0, 0.96, 0.92, 0],
-              scale: [0.72, 1, 0.72, 0.14],
-              rotate: [rotate, rotate * 0.35, rotate * 0.12, 0],
+              x: [startX, startX * 0.62, startX * 0.28, 0],
+              y: [startY, startY * 0.54, startY * 0.22, 0],
+              opacity: [0, 0.98, 0.92, 0],
+              scale: [0.68, 1, 0.72, 0.08],
+              rotate: [rotate, rotate * 0.42, rotate * 0.12, 0],
             }
       }
       transition={{
-        duration: reduceMotion ? 0 : 4.8,
+        duration: reduceMotion ? 0 : 5.4,
         delay,
         repeat: reduceMotion ? 0 : Infinity,
-        repeatDelay: 0.15,
+        repeatDelay: 0.08,
         ease: [0.76, 0, 0.24, 1],
       }}
     >
-      <div className="absolute right-0 top-0 h-3 w-3 rounded-bl border-b border-l border-white/10 bg-white/[0.04]" />
-      <span className="text-[11px] font-black tracking-[0.16em]" style={{ color }}>
+      <div className="absolute right-0 top-0 h-3 w-3 rounded-bl border-b border-l border-[#D9E1E8] bg-[#F6F8FA]" />
+      <span className="text-[11px] font-black tracking-[0.14em]" style={{ color }}>
         {type}
       </span>
-      <span className="mt-3 h-px w-8" style={{ backgroundColor: color, opacity: 0.85 }} />
-      <span className="mt-2 h-px w-6" style={{ backgroundColor: color, opacity: 0.55 }} />
-      <span className="mt-2 h-px w-4" style={{ backgroundColor: color, opacity: 0.35 }} />
+      <span className="mt-3 h-px w-8" style={{ backgroundColor: color, opacity: 0.78 }} />
+      <span className="mt-2 h-px w-6" style={{ backgroundColor: color, opacity: 0.52 }} />
+      <span className="mt-2 h-px w-4" style={{ backgroundColor: color, opacity: 0.34 }} />
     </motion.div>
   );
 };
@@ -67,50 +91,43 @@ const DesignSimulate = () => {
 
   return (
     <main
-      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#0A0A0A] px-6 font-sans text-white"
-      aria-label="Margin Evidence Vault animation"
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white px-6 font-sans text-[#182026]"
+      aria-label="Margin document ingestion animation"
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-70"
+        className="pointer-events-none absolute inset-0 opacity-80"
         style={{
-          backgroundImage: 'radial-gradient(rgba(120, 135, 150, 0.34) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(114, 128, 143, 0.22) 1px, transparent 1px)',
           backgroundSize: '30px 30px',
         }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(77,121,255,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_45%,rgba(0,0,0,0.42))]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(77,121,255,0.1),transparent_31%),linear-gradient(180deg,rgba(246,248,250,0.88),rgba(255,255,255,0.7)_45%,rgba(246,248,250,0.9))]" />
 
-      <section className="relative h-[min(720px,100vh)] w-[min(1040px,100vw)]" aria-labelledby="evidence-vault-title">
+      <section className="relative h-[min(760px,100vh)] w-[min(1180px,100vw)]" aria-label="Documents flowing into the Margin logo">
         {documents.map((document) => (
           <FloatingDocument key={document.id} {...document} />
         ))}
 
         <motion.div
-          className="absolute left-1/2 top-1/2 z-10 flex h-36 w-36 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl border border-[#6F7A86] bg-[#0A0A0A]/95 text-center shadow-[0_0_42px_rgba(77,121,255,0.18),inset_0_1px_0_rgba(255,255,255,0.08)]"
+          className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3"
           animate={
             reduceMotion
               ? undefined
               : {
-                  boxShadow: [
-                    '0 0 28px rgba(77,121,255,0.14), inset 0 1px 0 rgba(255,255,255,0.08)',
-                    '0 0 54px rgba(77,121,255,0.28), inset 0 1px 0 rgba(255,255,255,0.12)',
-                    '0 0 28px rgba(77,121,255,0.14), inset 0 1px 0 rgba(255,255,255,0.08)',
+                  scale: [1, 1.035, 1],
+                  filter: [
+                    'drop-shadow(0 16px 36px rgba(24,32,38,0.12))',
+                    'drop-shadow(0 22px 46px rgba(77,121,255,0.2))',
+                    'drop-shadow(0 16px 36px rgba(24,32,38,0.12))',
                   ],
                 }
           }
-          transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <div>
-            <p id="evidence-vault-title" className="text-[11px] font-black uppercase tracking-[0.24em] text-[#DCE8F7]">
-              Evidence
-            </p>
-            <p className="mt-1 text-[11px] font-black uppercase tracking-[0.24em] text-[#8FA4BC]">Vault</p>
-          </div>
+          <img src="/logoimagetwo.png" alt="Margin" width="72" height="72" className="h-14 w-auto object-contain md:h-20" />
+          <span className="brand-wordmark font-merriweather text-4xl tracking-tight text-[#182026] md:text-6xl">Margin</span>
         </motion.div>
       </section>
-
-      <p className="absolute bottom-[9vh] left-1/2 w-full -translate-x-1/2 px-6 text-center text-[clamp(1rem,2vw,1.5rem)] font-light tracking-[0.08em] text-[#8DB5FF]">
-        building unbreakable truth
-      </p>
     </main>
   );
 };
