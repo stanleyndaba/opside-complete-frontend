@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NotificationsProvider from '@/components/providers/NotificationsProvider';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
@@ -135,6 +135,18 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 // ... (route-level imports)
 
+const RouteOverlays = () => {
+  const location = useLocation();
+  const hidePublicChat = location.pathname === '/designsimulate' || location.pathname === '/platformsimulate';
+
+  return (
+    <>
+      <DemoOverlay />
+      {!hidePublicChat ? <PublicChatNode /> : null}
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
@@ -254,8 +266,7 @@ const App = () => (
                         <Route path="/pricing-adjust" element={<TenantRedirect />} />
                         <Route path="*" element={<NotFound />} />
                         </Routes>
-                        <DemoOverlay />
-                        <PublicChatNode />
+                        <RouteOverlays />
                       </Suspense>
                     </RouteErrorBoundary>
                   </SmoothScrollProvider>
