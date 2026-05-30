@@ -762,14 +762,6 @@ export default function Index() {
           nextBatchHours={capacity?.nextBatchHours}
         />
 
-        <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 md:py-10">
-          <div className={containerClass}>
-            <p className="max-w-[900px] text-[17px] font-medium leading-8 tracking-[-0.02em] text-[#25313A] md:text-[20px] md:leading-9">
-              Amazon automates parts of reimbursement, but the recovery work that affects real outcomes still needs visibility: missing proof, claim windows, case readiness, seller approval, underpaid reimbursements, rejections, and payout tracking.
-            </p>
-          </div>
-        </section>
-
         <section className="relative py-28 md:py-40" aria-label="Margin recovery speed metrics">
           <div className={containerClass}>
             <div className="grid gap-20 md:grid-cols-3 md:items-start md:gap-12">
