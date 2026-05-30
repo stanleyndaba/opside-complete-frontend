@@ -52,18 +52,19 @@ const FloatingDocument = ({ type, color, startX, startY, rotate, delay, size = '
       style={{
         width: isSmall ? 46 : 56,
         height: isSmall ? 64 : 78,
+        transformOrigin: 'center',
         borderColor: `${color}CC`,
         boxShadow: `0 14px 36px rgba(24, 32, 38, 0.08), 0 0 22px ${color}20`,
       }}
-      initial={{ x: startX, y: startY, opacity: 0, scale: 0.68, rotate }}
+      initial={{ x: startX, y: startY, opacity: 0, scale: 0.92, rotate }}
       animate={
         reduceMotion
-          ? { x: startX * 0.24, y: startY * 0.24, opacity: 0.85, scale: 0.88, rotate: 0 }
+          ? { x: startX * 0.24, y: startY * 0.24, opacity: 0.85, scale: 1.19, rotate: 0 }
           : {
               x: [startX, startX * 0.62, startX * 0.28, 0],
               y: [startY, startY * 0.54, startY * 0.22, 0],
               opacity: [0, 0.98, 0.92, 0],
-              scale: [0.68, 1, 0.72, 0.08],
+              scale: [0.92, 1.35, 0.97, 0.11],
               rotate: [rotate, rotate * 0.42, rotate * 0.12, 0],
             }
       }
@@ -95,13 +96,13 @@ const DesignSimulate = () => {
       aria-label="Margin document ingestion animation"
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-80"
+        className="pointer-events-none absolute inset-0 opacity-100"
         style={{
-          backgroundImage: 'radial-gradient(rgba(114, 128, 143, 0.22) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(94, 108, 122, 0.42) 1.15px, transparent 1.15px)',
           backgroundSize: '30px 30px',
         }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(77,121,255,0.1),transparent_31%),linear-gradient(180deg,rgba(246,248,250,0.88),rgba(255,255,255,0.7)_45%,rgba(246,248,250,0.9))]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(77,121,255,0.07),transparent_31%),linear-gradient(180deg,rgba(246,248,250,0.42),rgba(255,255,255,0.28)_45%,rgba(246,248,250,0.46))]" />
 
       <section className="relative h-[min(760px,100vh)] w-[min(1180px,100vw)]" aria-label="Documents flowing into the Margin logo">
         {documents.map((document) => (
