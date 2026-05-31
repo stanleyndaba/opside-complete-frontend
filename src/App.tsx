@@ -78,6 +78,7 @@ const Research = lazy(() => import("./pages/Research"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const DesignSimulate = lazy(() => import("./pages/designsimulate"));
 const PlatformSimulate = lazy(() => import("./pages/platformsimulate"));
+const ScatterDesign = lazy(() => import("./pages/scatterdesign"));
 
 
 // New Evidence Pages
@@ -137,7 +138,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 const RouteOverlays = () => {
   const location = useLocation();
-  const hidePublicChat = location.pathname === '/designsimulate' || location.pathname === '/platformsimulate';
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign'].includes(location.pathname);
 
   return (
     <>
@@ -181,6 +182,7 @@ const App = () => (
                         <Route path="/payment/success" element={<PaymentSuccess />} />
                         <Route path="/designsimulate" element={<DesignSimulate />} />
                         <Route path="/platformsimulate" element={<PlatformSimulate />} />
+                        <Route path="/scatterdesign" element={<ScatterDesign />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
