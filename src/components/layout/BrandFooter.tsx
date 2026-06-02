@@ -205,6 +205,8 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
 
           <p className="mt-8 max-w-5xl text-[10px] leading-5 tracking-tight text-gray-600">
             Recovery estimates are projections based on available Amazon activity and supporting records, not guarantees of reimbursement. Amazon makes the final reimbursement decision.
+            <br />
+            Margin is a trading name of K2026125019 (SOUTH AFRICA) PTY LTD, registration number 2026/125019/07.
           </p>
         </div>
       </footer>

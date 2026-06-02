@@ -228,7 +228,10 @@ const Terms = () => {
       <footer className="border-t border-gray-100">
         <div className="container mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
-            <p>© {new Date().getFullYear()} Margin</p>
+            <div className="flex flex-col gap-1">
+              <p>© {new Date().getFullYear()} Margin</p>
+              <p className="text-[10px] text-gray-400">Margin is a trading name of K2026125019 (SOUTH AFRICA) PTY LTD, registration number 2026/125019/07.</p>
+            </div>
             <div className="flex items-center gap-6">
               <Link to="/privacy" className="hover:text-gray-600 transition-colors">Privacy</Link>
               <Link to="/terms" className="text-gray-600">Terms</Link>
