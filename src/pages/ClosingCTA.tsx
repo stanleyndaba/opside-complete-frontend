@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -95,14 +96,9 @@ const MagneticButton = () => {
         animate={reduceMotion ? undefined : { x: ['0%', '420%'] }}
         transition={{ duration: 1.05, repeat: Infinity, repeatDelay: 2.95, ease: 'easeInOut' }}
       />
-      <span className="relative z-10 inline-flex items-center gap-2 leading-none">
+      <span className="relative z-10 inline-flex items-center leading-none">
         <span>GET ACCESS</span>
-        <span
-          aria-hidden="true"
-          className="text-lg leading-none transition-transform duration-300 ease-out group-hover:translate-x-0.5"
-        >
-          →
-        </span>
+        <ArrowRight className="ml-2 h-4 w-4" />
       </span>
     </motion.button>
   );
