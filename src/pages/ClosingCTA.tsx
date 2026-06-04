@@ -4,12 +4,12 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const reveal = {
-  hidden: { opacity: 0, y: 22, filter: 'blur(16px)' },
+  hidden: { opacity: 0, y: 10, filter: 'blur(14px)' },
   show: (delay = 0) => ({
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.95, delay, ease },
+    transition: { duration: 0.82, delay, ease },
   }),
 };
 
@@ -42,16 +42,19 @@ const CommissionTicker = () => {
 
   return (
     <motion.span
-      className="inline-flex min-w-[2.35ch] justify-end tabular-nums"
-      animate={{ color: settled ? '#53E6A7' : '#A9B2BC', textShadow: settled ? '0 0 24px rgba(83,230,167,0.35)' : '0 0 0 rgba(0,0,0,0)' }}
+      className="relative inline-flex h-[1.22em] min-w-[2.1ch] justify-end overflow-hidden tabular-nums"
+      animate={{
+        color: settled ? '#007aff' : '#94a3b8',
+        textShadow: settled ? '0 10px 30px rgba(0,122,255,0.26)' : '0 0 0 rgba(0,0,0,0)',
+      }}
       transition={{ duration: 0.55, ease }}
     >
       <motion.span
         key={value}
-        initial={{ y: -18, opacity: 0, filter: 'blur(8px)' }}
+        className="block leading-[1.15]"
+        initial={{ y: '-105%', opacity: 0, filter: 'blur(8px)' }}
         animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-        exit={{ y: 18, opacity: 0, filter: 'blur(8px)' }}
-        transition={{ duration: 0.16, ease }}
+        transition={{ duration: 0.18, ease }}
       >
         {value}
       </motion.span>
@@ -71,7 +74,7 @@ const MagneticButton = () => {
   return (
     <motion.button
       type="button"
-      className="group relative mt-8 h-14 overflow-hidden rounded-full border border-[#F4C76A]/30 bg-[#F4C76A] px-7 text-[13px] font-semibold uppercase tracking-[0.16em] text-[#111315] shadow-[0_24px_80px_rgba(244,199,106,0.22)] outline-none transition-colors hover:bg-[#FFD982] focus-visible:ring-2 focus-visible:ring-[#F4C76A]/60"
+      className="group relative mt-8 h-14 overflow-hidden rounded-full bg-[#007aff] px-7 text-[13px] font-semibold uppercase tracking-[0.14em] text-white shadow-[0_22px_60px_rgba(0,122,255,0.28)] outline-none transition-shadow hover:shadow-[0_26px_76px_rgba(0,122,255,0.36)] focus-visible:ring-2 focus-visible:ring-[#007aff]/35 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
       style={reduceMotion ? undefined : { x, y }}
       onPointerMove={(event) => {
         if (reduceMotion) return;
@@ -88,9 +91,9 @@ const MagneticButton = () => {
     >
       <motion.span
         aria-hidden="true"
-        className="absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/55 to-transparent"
-        animate={reduceMotion ? undefined : { x: ['0%', '320%'] }}
-        transition={{ duration: 1.35, repeat: Infinity, repeatDelay: 1.65, ease: 'easeInOut' }}
+        className="absolute inset-y-0 -left-2/3 w-1/2 skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/55 to-transparent"
+        animate={reduceMotion ? undefined : { x: ['0%', '420%'] }}
+        transition={{ duration: 1.05, repeat: Infinity, repeatDelay: 2.95, ease: 'easeInOut' }}
       />
       <span className="relative z-10">Claim Founding Slot</span>
     </motion.button>
@@ -102,59 +105,58 @@ const ClosingCTA = () => {
 
   return (
     <main
-      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#060708] px-6 font-sans text-white"
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-pink-50 px-6 py-12 font-sans text-slate-900"
       aria-label="Founding member closing offer simulation"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(244,199,106,0.14),transparent_34%),radial-gradient(circle_at_18%_80%,rgba(11,116,222,0.16),transparent_30%),linear-gradient(180deg,#060708,#0A0D10_48%,#050506)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_24%,rgba(59,130,246,0.24),transparent_32%),radial-gradient(circle_at_78%_18%,rgba(244,114,182,0.18),transparent_30%),radial-gradient(circle_at_52%_82%,rgba(186,230,253,0.35),transparent_34%)]" />
       <div
-        className="pointer-events-none absolute inset-0 opacity-30"
+        className="pointer-events-none absolute inset-0 opacity-60"
         style={{
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.16) 1px, transparent 1px)',
-          backgroundSize: '34px 34px',
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.64), rgba(255,255,255,0.26))',
         }}
       />
 
       <section className="relative z-10 w-full max-w-[780px]">
-        <div className="relative overflow-hidden rounded-3xl p-px">
+        <div className="relative overflow-hidden rounded-[32px] p-px shadow-2xl shadow-blue-100/50">
           <motion.div
             aria-hidden="true"
-            className="absolute left-1/2 top-1/2 h-[160%] w-[160%] -translate-x-1/2 -translate-y-1/2"
-            animate={reduceMotion ? undefined : { rotate: 360 }}
-            transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+            className="absolute inset-0"
+            animate={reduceMotion ? undefined : { opacity: [0.62, 1, 0.62] }}
+            transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
             style={{
-              background: 'conic-gradient(from 0deg, rgba(244,199,106,0.12), rgba(83,230,167,0.42), rgba(11,116,222,0.35), rgba(244,199,106,0.76), rgba(244,199,106,0.12))',
+              background: 'linear-gradient(135deg, rgba(0,122,255,0.28), rgba(255,255,255,0.78) 38%, rgba(244,114,182,0.24) 72%, rgba(0,122,255,0.18))',
             }}
           />
           <motion.div
-            className="relative rounded-3xl border border-white/10 bg-black/40 p-7 shadow-[0_40px_140px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:p-10 md:p-12"
+            className="relative rounded-[32px] border border-white/60 bg-white/70 p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-2xl sm:p-10 md:p-12"
           >
             <motion.div initial="hidden" animate="show">
-              <motion.div custom={0.1} variants={reveal} className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#F4C76A]/80">
+              <motion.div custom={0.1} variants={reveal} className="text-[11px] font-semibold uppercase tracking-[0.24em] text-blue-600/80">
                 Founding Member Offer
               </motion.div>
 
               <motion.h1
                 custom={0.26}
                 variants={reveal}
-                className="mt-5 max-w-[620px] text-4xl font-semibold tracking-tight text-[#F4C76A] sm:text-5xl md:text-6xl"
+                className="mt-5 max-w-[620px] text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl"
               >
                 Founding 500: $99 One-Time
               </motion.h1>
 
-              <motion.p custom={0.48} variants={reveal} className="mt-6 text-lg font-medium tracking-tight text-white/78 sm:text-xl">
+              <motion.p custom={0.48} variants={reveal} className="mt-6 text-lg font-medium tracking-tight text-slate-500 sm:text-xl">
                 No Monthly Fees through 2026
               </motion.p>
 
               <motion.div
                 custom={0.7}
                 variants={reveal}
-                className="mt-7 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3 text-xl font-semibold tracking-tight text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:text-2xl"
+                className="mt-7 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-blue-100/80 bg-white/72 px-4 py-3 text-xl font-semibold tracking-tight text-slate-900 shadow-[0_18px_50px_rgba(59,130,246,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] sm:text-2xl"
               >
                 <CommissionTicker />
                 <span>% Commission. 500 slots only.</span>
               </motion.div>
 
-              <motion.p custom={1.08} variants={reveal} className="mt-6 text-[15px] font-semibold tracking-tight text-[#FF7A7A] sm:text-base">
+              <motion.p custom={1.08} variants={reveal} className="mt-6 text-[15px] font-semibold tracking-tight text-rose-500 sm:text-base">
                 Closes June 30 or when full. No exceptions.
               </motion.p>
 
