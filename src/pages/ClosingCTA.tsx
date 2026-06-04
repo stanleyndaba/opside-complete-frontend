@@ -95,7 +95,7 @@ const MagneticButton = () => {
         animate={reduceMotion ? undefined : { x: ['0%', '420%'] }}
         transition={{ duration: 1.05, repeat: Infinity, repeatDelay: 2.95, ease: 'easeInOut' }}
       />
-      <span className="relative z-10">GET ACCESS</span>
+      <span className="relative z-10">GET ACCESS →</span>
     </motion.button>
   );
 };
