@@ -74,7 +74,7 @@ const MagneticButton = () => {
   return (
     <motion.button
       type="button"
-      className="group relative mt-8 h-14 overflow-hidden rounded-full bg-[#007aff] px-7 text-[13px] font-semibold uppercase tracking-[0.14em] text-white shadow-[0_22px_60px_rgba(0,122,255,0.28)] outline-none transition-shadow hover:shadow-[0_26px_76px_rgba(0,122,255,0.36)] focus-visible:ring-2 focus-visible:ring-[#007aff]/35 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
+      className="group relative mt-8 h-14 overflow-hidden rounded-full bg-[#007aff] px-7 text-[13px] font-semibold uppercase tracking-tight text-white shadow-[0_22px_60px_rgba(0,122,255,0.28)] outline-none transition-shadow hover:shadow-[0_26px_76px_rgba(0,122,255,0.36)] focus-visible:ring-2 focus-visible:ring-[#007aff]/35 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
       style={reduceMotion ? undefined : { x, y }}
       onPointerMove={(event) => {
         if (reduceMotion) return;
@@ -95,7 +95,7 @@ const MagneticButton = () => {
         animate={reduceMotion ? undefined : { x: ['0%', '420%'] }}
         transition={{ duration: 1.05, repeat: Infinity, repeatDelay: 2.95, ease: 'easeInOut' }}
       />
-      <span className="relative z-10">Claim Founding Slot</span>
+      <span className="relative z-10">GET ACCESS</span>
     </motion.button>
   );
 };
@@ -131,7 +131,7 @@ const ClosingCTA = () => {
             className="relative rounded-[32px] border border-white/60 bg-white/70 p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-2xl sm:p-10 md:p-12"
           >
             <motion.div initial="hidden" animate="show">
-              <motion.div custom={0.1} variants={reveal} className="text-[11px] font-semibold uppercase tracking-[0.24em] text-blue-600/80">
+              <motion.div custom={0.1} variants={reveal} className="text-[11px] font-semibold uppercase tracking-tight text-blue-600/80">
                 Founding Member Offer
               </motion.div>
 
