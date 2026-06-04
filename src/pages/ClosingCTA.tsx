@@ -74,7 +74,7 @@ const MagneticButton = () => {
   return (
     <motion.button
       type="button"
-      className="group relative mt-8 h-14 overflow-hidden rounded-full bg-[#007aff] px-7 text-[13px] font-semibold uppercase tracking-tight text-white shadow-[0_22px_60px_rgba(0,122,255,0.28)] outline-none transition-shadow hover:shadow-[0_26px_76px_rgba(0,122,255,0.36)] focus-visible:ring-2 focus-visible:ring-[#007aff]/35 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
+      className="group relative mt-9 inline-flex h-14 min-w-[168px] items-center justify-center overflow-hidden rounded-full bg-[#007aff] px-7 text-[13px] font-semibold uppercase tracking-tight text-white shadow-[0_22px_60px_rgba(0,122,255,0.28)] outline-none transition-shadow hover:shadow-[0_26px_76px_rgba(0,122,255,0.36)] focus-visible:ring-2 focus-visible:ring-[#007aff]/35 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
       style={reduceMotion ? undefined : { x, y }}
       onPointerMove={(event) => {
         if (reduceMotion) return;
@@ -95,7 +95,15 @@ const MagneticButton = () => {
         animate={reduceMotion ? undefined : { x: ['0%', '420%'] }}
         transition={{ duration: 1.05, repeat: Infinity, repeatDelay: 2.95, ease: 'easeInOut' }}
       />
-      <span className="relative z-10">GET ACCESS →</span>
+      <span className="relative z-10 inline-flex items-center gap-2 leading-none">
+        <span>GET ACCESS</span>
+        <span
+          aria-hidden="true"
+          className="text-lg leading-none transition-transform duration-300 ease-out group-hover:translate-x-0.5"
+        >
+          →
+        </span>
+      </span>
     </motion.button>
   );
 };
