@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const STARTING_DAYS_LEFT = 30;
-const COUNTDOWN_STEP_MS = 140;
+const COUNTDOWN_STEP_MS = 28;
 
 const Countdown = () => {
   const reduceMotion = useReducedMotion();
@@ -29,7 +29,7 @@ const Countdown = () => {
   useEffect(() => {
     if (daysLeft !== 0) return undefined;
 
-    const timeout = window.setTimeout(() => setShowDaysLeft(false), 520);
+    const timeout = window.setTimeout(() => setShowDaysLeft(false), 180);
     return () => window.clearTimeout(timeout);
   }, [daysLeft]);
 
@@ -57,18 +57,29 @@ const Countdown = () => {
           textShadow: '0 0 5px rgba(232, 93, 4, 0.5), 0 0 10px rgba(232, 93, 4, 0.3)',
         }}
       >
-        <h1 className="text-[clamp(3.8rem,11vw,11rem)] font-[800] leading-none tracking-normal text-[#FF6B35]">
-          JUNE 30, 2026
+        <h1 className="flex flex-wrap items-baseline justify-center gap-x-[0.22em] text-[clamp(3.8rem,11vw,11rem)] font-[800] leading-none tracking-normal text-[#FF6B35]">
+          <span>JUNE</span>
+          {showDaysLeft ? (
+            <motion.span
+              key={daysLeft}
+              className="inline-block min-w-[1.28em] tabular-nums"
+              initial={reduceMotion ? false : { opacity: 0.45, y: -18, scale: 1.08 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.05, ease: 'linear' }}
+            >
+              {daysLeft}
+            </motion.span>
+          ) : null}
+          <span>, 2026</span>
         </h1>
 
         {showDaysLeft ? (
           <motion.p
             key={daysLeft}
             className="mt-6 text-[clamp(1.4rem,3.4vw,3.3rem)] font-[800] leading-none tracking-normal text-[#E85D04]"
-            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+            initial={reduceMotion ? false : { opacity: 0.35, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
+            transition={{ duration: 0.05, ease: 'linear' }}
           >
             {daysLeft} days left
           </motion.p>
