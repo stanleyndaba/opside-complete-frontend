@@ -49,17 +49,70 @@ const scatterFiles: ScatterFile[] = anchors.map(([left, top], index) => {
     color: FILE_COLORS[type],
     left,
     top,
-    path: basePaths[index % basePaths.length],
+    path: basePaths[index % basePaths.length].map((point) => ({
+      x: Math.round(point.x * 1.65),
+      y: Math.round(point.y * 1.65),
+      rotate: Math.round(point.rotate * 1.22),
+    })),
     delay: (index % 8) * 0.42,
-    duration: 9.4 + (index % 6) * 0.7,
+    duration: 13.2 + (index % 6) * 0.9,
     size: index % 7 === 0 ? 'lg' : index % 3 === 0 ? 'sm' : 'md',
   };
 });
 
 const sizeMap = {
-  sm: { width: 52, height: 72 },
-  md: { width: 64, height: 90 },
-  lg: { width: 74, height: 104 },
+  sm: { width: 60, height: 76, scale: 0.82 },
+  md: { width: 72, height: 92, scale: 1 },
+  lg: { width: 82, height: 106, scale: 1.14 },
+};
+
+const FileIcon = ({ type, color, scale }: { type: FileType; color: string; scale: number }) => {
+  if (type === 'DOC') {
+    return (
+      <div className="relative h-[72px] w-[62px]" style={{ transform: `scale(${scale})` }}>
+        <div className="absolute right-0 top-0 h-[58px] w-[48px] rounded-[8px] border border-[#c8d1dc] bg-white shadow-[0_8px_18px_rgba(15,23,42,0.12)]">
+          <div className="absolute right-0 top-0 h-4 w-4 rounded-bl-[5px] border-b border-l border-[#c8d1dc] bg-[#eef3f8]" />
+          <div className="absolute left-2 top-3 h-8 w-8 rounded-[7px] bg-gradient-to-br from-[#5de1ff] via-[#2563eb] to-[#7c3aed] opacity-95" />
+          <div className="absolute left-4 top-5 h-8 w-8 rounded-[7px] bg-gradient-to-br from-[#38bdf8] via-[#3b82f6] to-[#2563eb] opacity-90" />
+        </div>
+        <div className="absolute bottom-0 left-0 flex h-9 w-9 items-center justify-center rounded-[8px] bg-gradient-to-br from-[#2f7df6] to-[#183fb7] text-[22px] font-black text-white shadow-[0_8px_16px_rgba(37,99,235,0.32)]">
+          W
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'PDF') {
+    return (
+      <div className="relative h-[72px] w-[58px]" style={{ transform: `scale(${scale})` }}>
+        <div className="absolute inset-x-1 top-0 h-[68px] rounded-[2px] border border-[#cfd6dd] bg-[#f8fafc] shadow-[0_8px_18px_rgba(15,23,42,0.11)]">
+          <div className="absolute right-0 top-0 h-[18px] w-[18px] border-b border-l border-[#cfd6dd] bg-[#e9eef3]" />
+          <div className="absolute left-2 top-2 h-px w-6 bg-[#cbd5df]" />
+          <div className="absolute left-2 top-8 h-px w-8 bg-[#d7dde4]" />
+          <div className="absolute left-2 top-12 h-px w-8 bg-[#d7dde4]" />
+          <div className="absolute bottom-4 left-[-4px] right-[-4px] flex h-7 items-center justify-center bg-[#e30012] text-[19px] font-black tracking-[0.12em] text-white shadow-[0_5px_10px_rgba(227,0,18,0.24)]">
+            PDF
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-[72px] w-[58px]" style={{ transform: `scale(${scale})` }}>
+      <div className="absolute inset-x-1 top-0 h-[68px] rounded-[7px] border border-[#cfd6dd] bg-[#f8fafc] shadow-[0_8px_18px_rgba(15,23,42,0.1)]">
+        <div className="absolute right-0 top-0 h-4 w-4 rounded-bl-[5px] border-b border-l border-[#cfd6dd] bg-[#eef3f8]" />
+        <div
+          className="absolute left-[-2px] right-[-2px] top-7 rounded-[5px] py-1 text-center text-[14px] font-black tracking-[0.08em] text-white shadow-[0_5px_10px_rgba(15,23,42,0.13)]"
+          style={{ backgroundColor: color }}
+        >
+          {type}
+        </div>
+        <div className="absolute left-3 top-4 h-px w-7" style={{ backgroundColor: `${color}66` }} />
+        <div className="absolute bottom-3 left-3 h-px w-8" style={{ backgroundColor: `${color}55` }} />
+      </div>
+    </div>
+  );
 };
 
 const ScatterTile = ({ type, color, left, top, path, delay, duration, size = 'md' }: ScatterFile) => {
@@ -72,14 +125,13 @@ const ScatterTile = ({ type, color, left, top, path, delay, duration, size = 'md
   return (
     <motion.div
       aria-hidden="true"
-      className="absolute flex flex-col items-center justify-center rounded-md border bg-white/95 shadow-sm"
+      className="absolute flex items-center justify-center"
       style={{
         left,
         top,
         width: dimensions.width,
         height: dimensions.height,
-        borderColor: `${color}CC`,
-        boxShadow: `0 14px 36px rgba(24, 32, 38, 0.08), 0 0 22px ${color}1F`,
+        filter: `drop-shadow(0 14px 24px rgba(24, 32, 38, 0.1)) drop-shadow(0 0 18px ${color}18)`,
       }}
       initial={{ x: xPath[0], y: yPath[0], rotate: rotatePath[0], opacity: 0.88 }}
       animate={
@@ -99,13 +151,7 @@ const ScatterTile = ({ type, color, left, top, path, delay, duration, size = 'md
         ease: 'easeInOut',
       }}
     >
-      <div className="absolute right-0 top-0 h-3.5 w-3.5 rounded-bl border-b border-l border-[#D9E1E8] bg-[#F6F8FA]" />
-      <span className="text-[12px] font-black tracking-[0.14em]" style={{ color }}>
-        {type}
-      </span>
-      <span className="mt-3 h-px w-9" style={{ backgroundColor: color, opacity: 0.78 }} />
-      <span className="mt-2 h-px w-7" style={{ backgroundColor: color, opacity: 0.52 }} />
-      <span className="mt-2 h-px w-5" style={{ backgroundColor: color, opacity: 0.34 }} />
+      <FileIcon type={type} color={color} scale={dimensions.scale} />
     </motion.div>
   );
 };
