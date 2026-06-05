@@ -55,7 +55,7 @@ const scatterFiles: ScatterFile[] = anchors.map(([left, top], index) => {
       rotate: Math.round(point.rotate * 1.22),
     })),
     delay: (index % 8) * 0.42,
-    duration: 13.2 + (index % 6) * 0.9,
+    duration: 9.8 + (index % 6) * 0.67,
     size: index % 7 === 0 ? 'lg' : index % 3 === 0 ? 'sm' : 'md',
   };
 });

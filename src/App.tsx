@@ -79,6 +79,7 @@ const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const DesignSimulate = lazy(() => import("./pages/designsimulate"));
 const PlatformSimulate = lazy(() => import("./pages/platformsimulate"));
 const ScatterDesign = lazy(() => import("./pages/scatterdesign"));
+const Countdown = lazy(() => import("./pages/Countdown"));
 const Plane = lazy(() => import("./pages/plane"));
 const ClosingCTA = lazy(() => import("./pages/ClosingCTA"));
 
@@ -140,7 +141,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 const RouteOverlays = () => {
   const location = useLocation();
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/plane', '/closingcta'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta'].includes(location.pathname);
 
   return (
     <>
@@ -185,6 +186,7 @@ const App = () => (
                         <Route path="/designsimulate" element={<DesignSimulate />} />
                         <Route path="/platformsimulate" element={<PlatformSimulate />} />
                         <Route path="/scatterdesign" element={<ScatterDesign />} />
+                        <Route path="/countdown" element={<Countdown />} />
                         <Route path="/plane" element={<Plane />} />
                         <Route path="/closingcta" element={<ClosingCTA />} />
                         <Route path="/waitlist" element={<Waitlist />} />
