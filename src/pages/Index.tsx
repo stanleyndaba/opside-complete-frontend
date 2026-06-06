@@ -305,13 +305,13 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
 
 function KineticHeroSection({
   onPrimaryCta,
-  onDemoCta,
+  onEarlyAccessCta,
   primaryCtaLabel,
   isFull,
   nextBatchHours
 }: {
   onPrimaryCta: () => void;
-  onDemoCta: () => void;
+  onEarlyAccessCta: () => void;
   primaryCtaLabel: string;
   isFull: boolean;
   nextBatchHours?: number;
@@ -404,7 +404,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              Margin turns Amazon loss events
+              Finding what Amazon owes you
             </motion.span>
             <motion.span
               className="block text-slate-400"
@@ -412,7 +412,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
-              into structured recovery cases.
+              was never the hard part.
             </motion.span>
           </h1>
 
@@ -422,7 +422,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[680px] text-[16px] leading-7 text-slate-300 md:text-lg md:leading-8"
           >
-            An Enterprise Amazon FBA audit and recovery API platform that automates reimbursement discovery, evidence assembly, dispute filing, payout reconciliation, and billing. 11 sub orchestry agents. Full recovery pipeline at scale.
+            Margin handles the part every other tool ignores – the evidence, the rejections, the appeals, and the payouts. You approve. Margin fights.
           </motion.p>
 
           <motion.div
@@ -441,11 +441,11 @@ function KineticHeroSection({
             </Button>
             <Button
               variant="outline"
-              onClick={onDemoCta}
-              aria-label="Watch 60-Second Demo"
+              onClick={onEarlyAccessCta}
+              aria-label="Secure Early Access for 99 dollars"
               className="h-[52px] justify-center rounded-full border border-slate-800 bg-white/[0.04] px-7 text-sm font-semibold text-white backdrop-blur-md transition hover:scale-[1.02] hover:border-slate-700 hover:bg-white/[0.08]"
             >
-              Watch 60-Second Demo
+              Secure Early Access – $99
             </Button>
           </motion.div>
 
@@ -755,9 +755,9 @@ export default function Index() {
 
       <main className="relative">
         <KineticHeroSection
-          onPrimaryCta={handlePrimaryCta}
-          onDemoCta={openDemo}
-          primaryCtaLabel={primaryCtaLabel}
+          onPrimaryCta={scrollToWorkflow}
+          onEarlyAccessCta={() => navigate('/early-access')}
+          primaryCtaLabel="See Workflow"
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />

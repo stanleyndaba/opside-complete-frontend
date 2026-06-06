@@ -113,7 +113,7 @@ export default function PricingAdjust() {
   const isInAppOverlay = Boolean(tenantSlug);
 
   usePageMeta({
-    title: 'Margin Pricing | Keep More of What Amazon Owes You',
+    title: 'Margin Pricing | Finding What Amazon Owes You Was Never the Hard Part',
     description:
       'Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.',
     url: `${SITE_META.url}/pricing`,
@@ -388,7 +388,7 @@ export default function PricingAdjust() {
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl font-semibold leading-tight tracking-[-0.055em] text-[#182026] md:text-6xl">
-                Keep more of what Amazon owes you.
+                Finding what Amazon owes you was never the hard part.
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
                 Founding 500 gives early users full access through 2026 with 0% commission. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
