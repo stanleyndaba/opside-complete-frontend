@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock } from 'lucide-react';
+// No icons needed for this component
 
 const ClockSimulate = () => {
   const [timePassed, setTimePassed] = useState('Day 1');

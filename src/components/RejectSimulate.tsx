@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XCircle, AlertTriangle, FileX, ArrowCcw } from 'lucide-react';
+import { XCircle, FileX, RefreshCcw } from 'lucide-react';
 
 const RejectSimulate = () => {
   const [status, setStatus] = useState('pending'); // pending, rejected
@@ -86,7 +86,7 @@ const RejectSimulate = () => {
                   transition={{ delay: 1 }}
                   className="pt-4 flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest"
                 >
-                  <ArrowCcw size={14} />
+                  <RefreshCcw size={14} />
                   Awaiting Manual Fix...
                 </motion.div>
               </motion.div>
