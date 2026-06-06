@@ -44,16 +44,16 @@ const auditLines = [
 
 const whyNowItems = [
   {
-    title: 'Time-bound recovery data',
-    detail: 'Amazon recovery data is time-bound and distributed across systems that update independently. When claim windows expire, the associated loss becomes structurally unrecoverable regardless of later detection.'
+    title: 'The claim window closes fast',
+    detail: 'Amazon gives you 60 days to claim what they owe you. After that the window closes permanently - no matter how valid the case. Most sellers find the discrepancy after the deadline. Margin catches it in 16 seconds.'
   },
   {
-    title: 'Fragmented evidence',
-    detail: 'Required evidence is fragmented across invoices, shipment logs, and support records, which degrade in accessibility over time and reduce successful claim rates in delayed workflows.'
+    title: 'The proof is scattered everywhere',
+    detail: 'The invoice you need is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources automatically before the deadline hits.'
   },
   {
-    title: 'Compounding backlog',
-    detail: 'Continuous transaction-level noise causes delays to compound, turning recovery into backlog rather than resolution.'
+    title: 'Delay becomes lost money',
+    detail: "Every day you don't file is a day closer to losing the case permanently. Margin moves in minutes, not days."
   }
 ];
 
@@ -685,18 +685,21 @@ function CoverageExamplesSection() {
 
 function TestimonialSection() {
   return (
-    <section className="relative py-32 md:py-40" aria-label="Customer testimonial">
+    <section className="relative py-32 md:py-40" aria-label="Seller case study">
       <div className={containerClass}>
         <motion.div
           {...revealProps}
           className="mx-auto flex max-w-[980px] flex-col items-center text-center"
         >
           <div className="h-px w-12 bg-[#0B74DE]" aria-hidden="true" />
-          <blockquote className="mt-10 text-[20px] font-semibold leading-relaxed tracking-[-0.025em] text-[#182026] sm:text-[26px] md:text-[30px] md:leading-relaxed">
-            "I'd been leaving revenue on the table for months. Amazon denied claims, underpaid others, and I didn't have the time to fight. Margin found everything – including a $400 lowball dispute Amazon never would have paid out. They recovered $1,200 in two weeks. Where was this all along?"
-          </blockquote>
           <div className="mt-10 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7A8994]">
-            ANONYMOUS | APPROX $120K/MONTH
+            Seller case study | Approx. $120K/month
+          </div>
+          <p className="mt-8 text-[20px] font-semibold leading-relaxed tracking-[-0.025em] text-[#182026] sm:text-[26px] md:text-[30px] md:leading-relaxed">
+            A seller doing approximately $120K/month came to Margin after Amazon denied three consecutive claims and underpaid another. Margin rebuilt the evidence trail, surfaced a $400 lowball dispute, and helped recover $1,200 in two weeks.
+          </p>
+          <div className="mt-10 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7A8994]">
+            Outcome shown as an individual case study, not a reimbursement guarantee.
           </div>
         </motion.div>
       </div>
@@ -747,7 +750,9 @@ export default function Index() {
   };
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = 'Access';
+  const primaryCtaLabel = 'Secure Early Access – $99';
+  const foundingSlotsRemaining = capacity ? Math.max(capacity.max - capacity.active, 0) : 500;
+  const foundingSlotsLabel = `${foundingSlotsRemaining} ${foundingSlotsRemaining === 1 ? 'slot' : 'slots'} remaining.`;
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
@@ -761,6 +766,17 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />
+
+        <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8">
+          <div className={containerClass}>
+            <motion.p
+              {...revealProps}
+              className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] text-[#182026] md:text-[28px] md:leading-9"
+            >
+              Most tools find the discrepancy. They stop there. Margin starts there.
+            </motion.p>
+          </div>
+        </section>
 
         <section className="relative py-28 md:py-40" aria-label="Margin recovery speed metrics">
           <div className={containerClass}>
@@ -808,13 +824,13 @@ export default function Index() {
               <div className={sectionLabelClass}>Why Now</div>
               <h2 className={sectionHeadingClass}>Why timing matters</h2>
               <p className={sectionBodyClass}>
-                Amazon recovery data is time-bound and distributed across systems that update independently. When claim windows expire, the associated loss becomes structurally unrecoverable regardless of later detection.
+                Amazon gives you 60 days to claim what they owe you. After that the window closes permanently - no matter how valid the case. Most sellers find the discrepancy after the deadline. Margin catches it in 16 seconds.
               </p>
               <p className={sectionBodyClass}>
-                Required evidence is fragmented across invoices, shipment logs, and support records, which degrade in accessibility over time and reduce successful claim rates in delayed workflows.
+                The invoice you need is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources automatically before the deadline hits.
               </p>
               <p className={sectionBodyClass}>
-                Continuous transaction-level noise causes delays to compound, turning recovery into backlog rather than resolution.
+                Every day you don't file is a day closer to losing the case permanently. Margin moves in minutes, not days.
               </p>
               <Button
                 variant="outline"
@@ -1081,10 +1097,13 @@ export default function Index() {
               <motion.div {...revealProps}>
 
                 <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
-                  Margin 500 Slot.
+                  Founding 500 Access.
                 </h2>
                 <p className={sectionBodyClass}>
-                  The first 500 sellers get 1 year of full-service recovery for a one-time $99 fee. We handle the evidence and win the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
+                  The first 500 sellers get 1 year of full-service recovery for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
+                </p>
+                <p className="mt-5 max-w-[640px] text-[14px] font-semibold leading-7 text-[#25313A] md:text-[16px]">
+                  {foundingSlotsLabel} Closes June 30, 2026 or when full. Standard plans begin at $199/month after Early Access closes.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
@@ -1171,10 +1190,10 @@ export default function Index() {
               <div className="max-w-[880px]">
 
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  Hire The Agent.
+                  Start Your First Recovery.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Margin identifies Amazon loss events, connects the required evidence, and manages every case until payout or escalation. Join the Founding 500 to get a year of active case management with no hidden fees and no "audit" homework.
+                  Margin identifies Amazon loss events, connects the required evidence, and manages every case until payout or escalation.
                 </p>
               </div>
 
