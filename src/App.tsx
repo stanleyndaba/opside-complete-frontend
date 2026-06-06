@@ -85,6 +85,7 @@ const ClosingCTA = lazy(() => import("./pages/ClosingCTA"));
 const ClaimSimulate = lazy(() => import("@/components/ClaimSimulate"));
 const FileSimulate = lazy(() => import("@/components/FileSimulate"));
 const ClockSimulate = lazy(() => import("@/components/ClockSimulate"));
+const RejectSimulate = lazy(() => import("@/components/RejectSimulate"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -194,6 +195,7 @@ const App = () => (
                         <Route path="/claimsimulate" element={<ClaimSimulate />} />
                         <Route path="/filesimulate" element={<FileSimulate />} />
                         <Route path="/clocksimulate" element={<ClockSimulate />} />
+                        <Route path="/rejectsimulate" element={<RejectSimulate />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
