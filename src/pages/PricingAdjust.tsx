@@ -56,6 +56,7 @@ const pricingTiers: PricingTier[] = [
     priceContext: '$0 monthly fee. Pay only when recoveries are made.',
     purpose: 'Low-volume or risk-averse sellers who prefer no base fee.',
     features: [
+      'We win the cases other tools avoid.',
       'Pay only on what we recover',
       '$0 monthly subscription fee',
       'Includes one primary marketplace',
@@ -69,7 +70,7 @@ const pricingTiers: PricingTier[] = [
     planKey: 'enterprise',
     price: '$199/mo + 3% on recovered funds',
     priceContext: 'Recommended for serious sellers',
-    purpose: 'Consistent claim volume requiring priority handling and lower success fees.',
+    purpose: 'Consistent claim volume requiring priority handling and lower success fees. Recommended for sellers recovering $8,000+ annually.',
     features: [
       'Lower 3% success fee',
       'Priority case processing & filing',
@@ -95,6 +96,7 @@ const pricingTiers: PricingTier[] = [
     ],
     ctaLabel: 'Run Recoveries at Scale',
     salesLed: true,
+    badgeLabel: '0% Commission',
   },
 ];
 
@@ -111,7 +113,7 @@ export default function PricingAdjust() {
   const isInAppOverlay = Boolean(tenantSlug);
 
   usePageMeta({
-    title: 'Margin Pricing | Institutional-Grade Revenue Recovery Infrastructure',
+    title: 'Margin Pricing | Keep More of What Amazon Owes You',
     description:
       'Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.',
     url: `${SITE_META.url}/pricing`,
@@ -386,7 +388,7 @@ export default function PricingAdjust() {
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl font-semibold leading-tight tracking-[-0.055em] text-[#182026] md:text-6xl">
-                Institutional-Grade Revenue Recovery Infrastructure
+                Keep more of what Amazon owes you.
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
                 Founding 500 gives early users full access through 2026 with 0% commission. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
@@ -402,7 +404,7 @@ export default function PricingAdjust() {
           </div>
 
           <p className="mx-auto mt-10 max-w-4xl text-center text-[11px] font-medium leading-5 text-[#7A8994]">
-            Recovery estimates are projections based on available Amazon activity and supporting records. All recovery actions are subject to seller approval. Amazon makes the final reimbursement decision.
+            Every case is seller-approved before filing. Amazon makes the final call - we just make sure your case gives them no reason to say no.
           </p>
         </div>
 
