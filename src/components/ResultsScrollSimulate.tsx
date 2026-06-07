@@ -30,14 +30,14 @@ const ResultsScrollSimulate = () => {
                 initial={{ y: 0 }}
                 animate={{ y: -1000 }}
                 transition={{ duration: 2.5, ease: "linear" }}
-                className="space-y-3 opacity-40 grayscale blur-[1px]"
+                className="space-y-3"
               >
                 {results.map((res) => (
                   <div key={res.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <FileText size={20} className="text-gray-300" />
-                    <div className="flex-1 space-y-1">
-                      <div className="h-2 w-24 bg-gray-200 rounded-full" />
-                      <div className="h-2 w-16 bg-gray-100 rounded-full" />
+                    <FileText size={20} className="text-gray-400" />
+                    <div className="flex-1">
+                      <div className="text-sm font-bold text-gray-800">{res.name}</div>
+                      <div className="text-xs font-medium text-gray-400">{res.date}</div>
                     </div>
                   </div>
                 ))}
