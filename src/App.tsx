@@ -88,6 +88,7 @@ const ClockSimulate = lazy(() => import("@/components/ClockSimulate"));
 const RejectSimulate = lazy(() => import("@/components/RejectSimulate"));
 const StareSimulate = lazy(() => import("@/components/StareSimulate"));
 const DiscrepancySimulate = lazy(() => import("@/components/DiscrepancySimulate"));
+const ReframeSimulate = lazy(() => import("@/components/ReframeSimulate"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -200,6 +201,7 @@ const App = () => (
                         <Route path="/rejectsimulate" element={<RejectSimulate />} />
                         <Route path="/staresimulate" element={<StareSimulate />} />
                         <Route path="/discrepancysimulate" element={<DiscrepancySimulate />} />
+                        <Route path="/reframesimulate" element={<ReframeSimulate />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
