@@ -63,7 +63,7 @@ const StareSimulate = () => {
             transition={{ delay: 2, duration: 1 }}
             className="text-3xl font-black text-gray-900 tracking-tighter leading-tight"
           >
-            You stared at that screen...
+            You stare at that screen...
           </motion.div>
           
           <motion.div
@@ -72,7 +72,7 @@ const StareSimulate = () => {
             transition={{ delay: 4, duration: 1 }}
             className="text-xl font-bold text-gray-400 italic"
           >
-            and didn't know what to do next.
+            and don't know what to do next.
           </motion.div>
         </div>
 
