@@ -55,14 +55,8 @@ const FinalPayoffSimulate = () => {
               transition={{ type: "spring", damping: 20 }}
               className="mt-20 flex flex-col items-center gap-8"
             >
-              {/* Simple MARGIN Logo Simulation */}
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#007aff] rounded-lg" />
-                <span className="text-3xl font-black tracking-tighter text-gray-900 uppercase">Margin</span>
-              </div>
-
               <div className="space-y-1">
-                <h2 className="text-6xl font-black text-gray-900 tracking-[0.2em] uppercase">Monday.</h2>
+                <h2 className="text-6xl font-black text-gray-900 tracking-[0.2em] uppercase">Live in 3 days.</h2>
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
