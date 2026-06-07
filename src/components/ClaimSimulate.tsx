@@ -27,7 +27,7 @@ const ClaimSimulate = () => {
         className="w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-white border-b border-gray-100 p-6 flex justify-between items-center">
+        <div className="bg-gray-50 border-b border-gray-100 p-6 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-red-500" />
             <div className="w-3 h-3 rounded-full bg-yellow-500" />
@@ -55,7 +55,7 @@ const ClaimSimulate = () => {
                   className="flex items-center gap-2 text-green-600 text-sm font-bold"
                 >
                   <CheckCircle size={16} />
-                  UNBREAKABLE TRUTH SECURED
+                  Documents Uploaded
                 </motion.div>
               )}
             </div>
