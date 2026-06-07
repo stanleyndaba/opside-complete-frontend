@@ -90,6 +90,7 @@ const StareSimulate = lazy(() => import("@/components/StareSimulate"));
 const DiscrepancySimulate = lazy(() => import("@/components/DiscrepancySimulate"));
 const ReframeSimulate = lazy(() => import("@/components/ReframeSimulate"));
 const DiscoverySimulate = lazy(() => import("@/components/DiscoverySimulate"));
+const StatementSimulate = lazy(() => import("@/components/StatementSimulate"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -204,6 +205,7 @@ const App = () => (
                         <Route path="/discrepancysimulate" element={<DiscrepancySimulate />} />
                         <Route path="/reframesimulate" element={<ReframeSimulate />} />
                         <Route path="/discoverysimulate" element={<DiscoverySimulate />} />
+                        <Route path="/statementsimulate" element={<StatementSimulate />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
