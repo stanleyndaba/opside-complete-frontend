@@ -3,22 +3,22 @@ import { motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpri
 import { useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import {
   ArrowRight,
   Check,
-  PlayCircle,
 } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
-import { DemoVideoModal } from '@/components/demo/DemoVideoModal';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { InhaleSection } from '@/components/landing/InhaleSection';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
-
-const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
-const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
 
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: 'bg-blue-400', delay: 0.1, duration: 3.6 },
@@ -711,7 +711,6 @@ export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
-  const [isDemoOpen, setIsDemoOpen] = useState(false);
   const { isFull, capacity } = useOnboardingCapacity();
 
   usePageMeta(SITE_META);
@@ -738,10 +737,6 @@ export default function Index() {
     }
 
     navigate('/early-access');
-  };
-
-  const openDemo = () => {
-    setIsDemoOpen(true);
   };
 
   const scrollToWorkflow = () => {
@@ -874,49 +869,6 @@ export default function Index() {
                 ))}
               </div>
             </div>
-          </div>
-        </section>
-
-        <section className="relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24" id="margin-demo">
-          <div className={containerClass}>
-            <motion.div {...revealProps} className="mx-auto mb-8 max-w-[880px] text-center md:mb-12">
-              <div className={sectionLabelClass}>See Demo</div>
-              <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[40px] md:text-[58px]">
-                See how Margin turns raw FBA activity into review-ready recovery work.
-              </h2>
-              <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
-                Follow the path from event detection and claim-clock assignment to evidence review, approval, and payout tracking.
-              </p>
-            </motion.div>
-
-            <motion.button
-              type="button"
-              onClick={openDemo}
-              {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#F3F6F8]"
-              aria-label="Watch the Margin product demo"
-            >
-              <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">
-                <img
-                  src={DEMO_VIDEO_THUMBNAIL_URL}
-                  alt="Margin product demo thumbnail"
-                  className="h-full w-full object-cover opacity-95 saturate-[0.95] transition duration-500 group-hover:scale-[1.015]"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(24,32,38,0.54)_100%)]" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/60 bg-white/88 text-[#0B74DE] shadow-[0_22px_54px_rgba(37,49,58,0.18)] backdrop-blur transition group-hover:scale-105 md:h-20 md:w-20">
-                    <PlayCircle className="h-8 w-8 md:h-10 md:w-10" strokeWidth={1.7} />
-                  </div>
-                </div>
-                <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
-                  <div className="text-[10px] font-semibold uppercase tracking-tight text-white/78 md:text-[11px]">Event-to-recovery walkthrough</div>
-                  <div className="mt-2 max-w-[780px] text-[22px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[36px]">
-                    Amazon activity moves from detection to payout state with evidence and approval attached.
-                  </div>
-                </div>
-              </div>
-            </motion.button>
           </div>
         </section>
 
@@ -1113,13 +1065,6 @@ export default function Index() {
                     {primaryCtaLabel}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={openDemo}
-                    className="h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
-                  >
-                    Watch 60-Second Demo
-                  </Button>
                 </div>
               </motion.div>
 
@@ -1219,13 +1164,6 @@ export default function Index() {
         </section>
       </main>
 
-      <DemoVideoModal
-        open={isDemoOpen}
-        onOpenChange={setIsDemoOpen}
-        videoUrl={DEMO_VIDEO_URL}
-        title="Margin recovery walkthrough"
-        description="Watch how Margin detects Amazon loss events, starts the claim clock, matches evidence, prepares cases for review, and tracks recovery states through payout."
-      />
       <BrandFooter />
       <CookieConsent />
     </div>
