@@ -27,27 +27,27 @@ const ClaimSimulate = () => {
         className="w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gray-900 p-6 flex justify-between items-center">
+        <div className="bg-white border-b border-gray-100 p-6 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-red-500" />
             <div className="w-3 h-3 rounded-full bg-yellow-500" />
             <div className="w-3 h-3 rounded-full bg-green-500" />
-            <h2 className="text-white font-medium ml-4 tracking-tight">Amazon Case: #50013020607</h2>
+            <h2 className="text-gray-900 font-bold ml-4 tracking-tight">Recovery Case #50013020607</h2>
           </div>
-          <span className="text-gray-400 text-sm font-mono">Status: Drafting</span>
+          <span className="text-gray-400 text-sm font-mono">Status: Analyzing Proof</span>
         </div>
 
         {/* Form Content */}
         <div className="p-8 space-y-8">
           <div className="space-y-2">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Discrepancy Type</label>
+            <label className="text-sm font-bold text-gray-500">The Discrepancy</label>
             <div className="text-xl font-semibold text-gray-800">Inbound Shipment Shortage (6 Units)</div>
           </div>
 
           {/* The Evidence Vault Area */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Evidence Vault</label>
+              <label className="text-sm font-bold text-gray-500">Recovery Documentation</label>
               {step === 4 && (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -97,13 +97,22 @@ const ClaimSimulate = () => {
           {/* Action Button */}
           <motion.button
             animate={{ 
-              backgroundColor: step === 4 ? '#111827' : '#F3F4F6',
-              color: step === 4 ? '#FFFFFF' : '#9CA3AF'
+              backgroundColor: step === 4 ? '#111827' : '#eff6ff',
+              color: step === 4 ? '#FFFFFF' : '#007aff'
             }}
-            className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors"
+            className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors relative overflow-hidden"
           >
-            {step === 4 ? 'SUBMIT SURGICAL CLAIM' : 'WAITING FOR EVIDENCE...'}
-            {step === 4 && <ArrowRight size={18} />}
+            {step < 4 && (
+              <motion.div 
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-12"
+              />
+            )}
+            <span className="relative z-10 flex items-center gap-2">
+              {step === 4 ? 'SUBMIT SURGICAL CLAIM' : 'Searching for Evidence...'}
+              {step === 4 && <ArrowRight size={18} />}
+            </span>
           </motion.button>
         </div>
       </motion.div>
@@ -113,9 +122,9 @@ const ClaimSimulate = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="mt-12 text-gray-400 text-sm font-medium tracking-widest uppercase"
+        className="mt-12 text-gray-400 text-sm font-medium text-center"
       >
-        Margin // Agentic Finance Infrastructure
+        MARGIN
       </motion.div>
     </div>
   );
