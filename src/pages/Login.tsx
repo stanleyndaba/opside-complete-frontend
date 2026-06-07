@@ -93,6 +93,16 @@ const formatLoginError = (error: unknown, step: LoginStep) => {
   const rawMessage = extractLoginErrorMessage(error);
   const normalized = rawMessage.toLowerCase();
 
+  if (
+    normalized.includes('exceed_egress_quota') ||
+    normalized.includes('restricted') ||
+    normalized.includes('violations') ||
+    normalized.includes('spend cap') ||
+    normalized.includes('upgrade their plan')
+  ) {
+    return '__SERVICE_PREPARING__';
+  }
+
   if (normalized.includes('invalid login credentials') || normalized.includes('invalid credentials')) {
     return 'The email or password is incorrect. Please check the account details and try again.';
   }
@@ -782,7 +792,25 @@ const Login = () => {
                 </div>
               ) : null}
 
-              {error ? (
+              {error && error === '__SERVICE_PREPARING__' ? (
+                <div className="rounded-[22px] border border-[#CFE0EA] bg-[#F8FAFC] px-5 py-6 text-center">
+                  <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#182026] md:text-[26px]">
+                    We're preparing your account.
+                  </h3>
+                  <p className="mx-auto mt-3 max-w-[440px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">
+                    Margin is currently in final setup before our official launch. If you've secured Early Access, your account will be ready shortly. We'll notify you the moment you're in.
+                  </p>
+                  <Button
+                    asChild
+                    className="mt-5 h-11 rounded-full bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+                  >
+                    <Link to="/early-access">
+                      Join the Founding 500
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              ) : error ? (
                 <div className="rounded-[18px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   <p>{error}</p>
                   {loginStep ? (
