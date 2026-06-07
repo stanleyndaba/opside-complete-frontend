@@ -38,7 +38,7 @@ const RejectSimulate = () => {
         <div className="p-8 space-y-6">
           <div className="text-center space-y-2">
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Claim Amount</label>
-            <div className="text-5xl font-black text-gray-900 tracking-tighter">$574.02</div>
+            <div className="text-5xl font-black text-gray-900 tracking-tighter">$1,247.50</div>
           </div>
 
           <div className="space-y-4">
