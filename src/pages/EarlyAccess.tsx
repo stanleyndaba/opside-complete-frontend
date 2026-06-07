@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, PlayCircle } from 'lucide-react';
 
+import { DemoVideoModal } from '@/components/demo/DemoVideoModal';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,8 @@ import { api } from '@/lib/api';
 /* ── constants ─────────────────────────────────────────────────── */
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
 const EARLY_ACCESS_PRICE = '$99';
+const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
+const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
 
 /* ── timeline data ─────────────────────────────────────────────── */
 const timelineSteps = [
@@ -102,6 +105,7 @@ export default function EarlyAccess() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   const timelineRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -199,7 +203,41 @@ export default function EarlyAccess() {
           </div>
         </section>
 
-
+        {/* ═══ DEMO VIDEO ═══ */}
+        <section className="hidden relative pb-16 md:pb-24">
+          <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
+            <motion.button
+              type="button"
+              onClick={() => setIsDemoOpen(true)}
+              {...reveal}
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[3px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#FAFAF7]"
+              aria-label="Watch the Margin product demo"
+            >
+              <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">
+                <img
+                  src={DEMO_VIDEO_THUMBNAIL_URL}
+                  alt="Margin product demo thumbnail"
+                  className="h-full w-full object-cover opacity-95 saturate-[0.95] transition duration-500 group-hover:scale-[1.015]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(24,32,38,0.54)_100%)]" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/60 bg-white/88 text-[#0B74DE] shadow-[0_22px_54px_rgba(37,49,58,0.18)] backdrop-blur transition group-hover:scale-105 md:h-20 md:w-20">
+                    <PlayCircle className="h-8 w-8 md:h-10 md:w-10" strokeWidth={1.6} />
+                  </div>
+                </div>
+                <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/78 md:text-[11px]">
+                    Evidence-first walkthrough
+                  </div>
+                  <div className="mt-2 max-w-[760px] text-[20px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[34px]">
+                    Watch Margin retrieve evidence, match it to loss events, and file winning cases.
+                  </div>
+                </div>
+              </div>
+            </motion.button>
+          </div>
+        </section>
 
         {/* ═══ EXECUTION TIMELINE — "The Path to Recovery" ═══ */}
         <section className="relative border-t border-[#E4EDF1] bg-white py-20 md:py-32">
@@ -403,6 +441,13 @@ export default function EarlyAccess() {
         </section>
       </main>
 
+      <DemoVideoModal
+        open={isDemoOpen}
+        onOpenChange={setIsDemoOpen}
+        videoUrl={DEMO_VIDEO_URL}
+        title="Margin evidence-first recovery walkthrough"
+        description="Watch Margin retrieve evidence, match it to loss events, and file winning cases."
+      />
       <BrandFooter />
     </div>
   );

@@ -38,8 +38,6 @@ const FinalPayoffSimulate = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-5xl font-black text-gray-900 tracking-tighter"
               >
-                Finding it   
-
                 <span className="text-[#007aff]">was never the hard part.</span>
               </motion.h1>
             )}
