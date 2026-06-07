@@ -282,7 +282,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           </div>
           <Button
             onClick={() => navigate('/waitlist?reason=capacity')}
-            className="mt-3 h-9 w-full rounded-full border border-white/10 bg-white text-[10px] font-semibold uppercase tracking-tight text-black hover:bg-white/90"
+            className="hidden mt-3 h-9 w-full rounded-full border border-white/10 bg-white text-[10px] font-semibold uppercase tracking-tight text-black hover:bg-white/90"
           >
             Join Waitlist
           </Button>

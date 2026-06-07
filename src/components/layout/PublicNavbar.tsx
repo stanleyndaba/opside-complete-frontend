@@ -151,7 +151,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                         <Link to="/login" className={desktopActionClass}>
                             LOGIN
                         </Link>
-                        {ctaTo.startsWith('#') ? (
+                        {false && (ctaTo.startsWith('#') ? (
                             <a href={ctaTo} className={`${desktopActionClass} gap-2 px-6`}>
                                 {ctaLabel} <ArrowRight className="h-3 w-3" />
                             </a>
@@ -161,7 +161,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                 className={`${desktopActionClass} gap-2 px-6`}>
                                 {ctaLabel} <ArrowRight className="h-3 w-3" />
                             </Link>
-                        )}
+                        ))}
                     </nav>
 
                     <button
@@ -287,7 +287,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                     className={mobileMenuItemClass}>
                                     Enterprise
                                 </Link>
-                                {ctaTo.startsWith('#') ? (
+                                {false && (ctaTo.startsWith('#') ? (
                                     <a
                                         href={ctaTo}
                                         onClick={() => setMobileMenuOpen(false)}
@@ -311,7 +311,7 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                         )}>
                                         {ctaLabel}
                                     </Link>
-                                )}
+                                ))}
                             </div>
                         </motion.div>
                     )}
