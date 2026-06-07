@@ -151,7 +151,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 const RouteOverlays = () => {
   const location = useLocation();
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality'].includes(location.pathname);
 
   return (
     <>
