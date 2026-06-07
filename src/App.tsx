@@ -94,6 +94,7 @@ const StatementSimulate = lazy(() => import("@/components/StatementSimulate"));
 const ComparisonSimulate = lazy(() => import("@/components/ComparisonSimulate"));
 const FinalPayoffSimulate = lazy(() => import("@/components/FinalPayoffSimulate"));
 const Finality = lazy(() => import("@/components/Finality"));
+const EvidenceChaseSimulate = lazy(() => import("@/components/EvidenceChaseSimulate"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -152,7 +153,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 const RouteOverlays = () => {
   const location = useLocation();
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase'].includes(location.pathname);
 
   return (
     <>
@@ -212,6 +213,7 @@ const App = () => (
                         <Route path="/comparisonsimulate" element={<ComparisonSimulate />} />
                         <Route path="/finality" element={<Finality />} />
                         <Route path="/finalpayoffsimulate" element={<FinalPayoffSimulate />} />
+                        <Route path="/evidence-chase" element={<EvidenceChaseSimulate />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
