@@ -107,10 +107,7 @@ const FileSimulate = () => {
         </div>
 
         {/* Footer Stats */}
-        <div className="pt-4 border-t border-gray-50 flex justify-between items-center">
-          <div className="text-xs font-semibold text-gray-400">
-            Founding Member Benefit
-          </div>
+        <div className="pt-4 border-t border-gray-50 flex justify-end items-center">
           <div className="text-xs font-bold text-gray-400">MARGIN</div>
         </div>
       </motion.div>
