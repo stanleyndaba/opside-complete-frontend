@@ -14,9 +14,9 @@ const EvidenceChaseSimulate = () => {
   }, []);
 
   const platforms = [
-    { icon: <Mail size={20} />, name: "Email", query: 'Searching "invoice"...' },
-    { icon: <HardDrive size={20} />, name: "Google Drive", query: "Scanning PDF/2023..." },
-    { icon: <MessageSquare size={20} />, name: "WhatsApp", query: "Checking Supplier Chat..." },
+    { icon: <img src="/gmailicon.png" alt="Email" className="w-5 h-5 object-contain" />, name: "Email", query: 'Searching "invoice"...' },
+    { icon: <img src="/gd.png" alt="Google Drive" className="w-5 h-5 object-contain" />, name: "Google Drive", query: "Scanning PDF/2023..." },
+    { icon: <img src="/whatsappicon.webp" alt="WhatsApp" className="w-5 h-5 object-contain" />, name: "WhatsApp", query: "Checking Supplier Chat..." },
   ];
 
   return (
@@ -24,11 +24,8 @@ const EvidenceChaseSimulate = () => {
       
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 relative">
         
-        {/* Header: The Trigger */}
-        <div className="text-center mb-8">
-          <h2 className="text-xs font-black text-red-500 uppercase tracking-widest mb-2">Amazon Asked for Proof</h2>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight italic">"Evidence chase after rejection."</h1>
-        </div>
+        {/* Header removed as requested */}
+        <div className="mb-4"></div>
 
         {/* The Frantic Search Animation */}
         <div className="relative h-48 flex items-center justify-center">
