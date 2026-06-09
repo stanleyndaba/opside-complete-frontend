@@ -104,6 +104,7 @@ const GoogleDriveSimulate = lazy(() => import("@/components/GoogleDriveSimulate"
 const IntroPainSimulate = lazy(() => import("@/components/IntroPainSimulate"));
 const ActionSimulate = lazy(() => import("@/components/ActionSimulate"));
 const RejectionScreenSimulate = lazy(() => import("@/components/RejectionScreenSimulate"));
+const RejectCard = lazy(() => import("@/components/RejectCard"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -162,7 +163,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 const RouteOverlays = () => {
   const location = useLocation();
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review'].includes(location.pathname);
 
   return (
     <>
@@ -232,6 +233,7 @@ const App = () => (
                         <Route path="/intro-pain" element={<IntroPainSimulate />} />
                         <Route path="/action-simulate" element={<ActionSimulate />} />
                         <Route path="/rejection-screen" element={<RejectionScreenSimulate />} />
+                        <Route path="/card-review" element={<RejectCard />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
