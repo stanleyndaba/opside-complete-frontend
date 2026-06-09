@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Mail, HardDrive, MessageSquare, FileQuestion, XCircle } from 'lucide-react';
+import whatsappIcon from '@/assets/whatsappicon.webp';
 
 const EvidenceChaseSimulate = () => {
   const [stage, setStage] = useState(0); // 0: Start, 1: The Chase, 2: The Failure
@@ -16,7 +17,7 @@ const EvidenceChaseSimulate = () => {
   const platforms = [
     { icon: <img src="/gmailicon.png" alt="Email" className="w-5 h-5 object-contain" />, name: "Email", query: 'Searching "invoice"...' },
     { icon: <img src="/gd.png" alt="Google Drive" className="w-5 h-5 object-contain" />, name: "Google Drive", query: "Scanning PDF/2023..." },
-    { icon: <img src="/whatsappicon.webp" alt="WhatsApp" className="w-5 h-5 object-contain" />, name: "WhatsApp", query: "Checking Supplier Chat..." },
+    { icon: <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain" />, name: "WhatsApp", query: "Checking Supplier Chat..." },
   ];
 
   return (
