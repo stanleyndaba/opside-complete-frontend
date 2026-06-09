@@ -102,6 +102,7 @@ const ResultsScrollSimulate = lazy(() => import("@/components/ResultsScrollSimul
 const SupplierChatSimulate = lazy(() => import("@/components/SupplierChatSimulate"));
 const GoogleDriveSimulate = lazy(() => import("@/components/GoogleDriveSimulate"));
 const IntroPainSimulate = lazy(() => import("@/components/IntroPainSimulate"));
+const ActionSimulate = lazy(() => import("@/components/ActionSimulate"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -160,7 +161,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 const RouteOverlays = () => {
   const location = useLocation();
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate'].includes(location.pathname);
 
   return (
     <>
@@ -228,6 +229,7 @@ const App = () => (
                         <Route path="/supplier-chat" element={<SupplierChatSimulate />} />
                         <Route path="/google-drive" element={<GoogleDriveSimulate />} />
                         <Route path="/intro-pain" element={<IntroPainSimulate />} />
+                        <Route path="/action-simulate" element={<ActionSimulate />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
