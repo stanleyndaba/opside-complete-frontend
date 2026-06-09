@@ -17,7 +17,7 @@ const EvidenceChaseSimulate = () => {
   const platforms = [
     { icon: <img src="/gmailicon.png" alt="Email" className="w-5 h-5 object-contain" />, name: "Email", query: 'Searching "invoice"...' },
     { icon: <img src="/gd.png" alt="Google Drive" className="w-5 h-5 object-contain" />, name: "Google Drive", query: "Scanning PDF/2023..." },
-    { icon: <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5 object-contain" />, name: "WhatsApp", query: "Checking Supplier Chat..." },
+    { icon: <img src={whatsappIcon} alt="WhatsApp" className="w-7 h-7 object-contain" />, name: "WhatsApp", query: "Checking Supplier Chat..." },
   ];
 
   return (
