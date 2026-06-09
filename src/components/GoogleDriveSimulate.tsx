@@ -35,7 +35,6 @@ const GoogleDriveSimulate = () => {
         {/* Drive Header */}
         <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-white z-10">
           <div className="flex items-center gap-4 flex-1">
-            <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center text-white font-black">Δ</div>
             <div className="bg-gray-100 h-10 rounded-lg flex-1 max-w-md flex items-center px-4 gap-3 text-gray-400">
               <Search size={18} />
               <span className="text-sm">Search in Drive</span>
@@ -86,23 +85,7 @@ const GoogleDriveSimulate = () => {
           </AnimatePresence>
         </div>
 
-        {/* Footer Text Reveal */}
-        <AnimatePresence>
-          {isDone && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-8 bg-gray-50 border-t border-gray-100 text-center"
-            >
-              <h1 className="text-3xl font-black text-gray-900 tracking-tighter">
-                You checked Google Drive.
-              </h1>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">
-                Folders everywhere. None of them the one.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Footer Text Reveal removed as requested */}
       </motion.div>
     </div>
   );
