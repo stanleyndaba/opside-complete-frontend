@@ -166,17 +166,14 @@ export function Sidebar({
 
   const overviewHref = tenantRoute(currentTenantSlug, '');
   const pricingAdjustHref = tenantRoute(currentTenantSlug, '/pricing-adjust');
-  const mainMenuItems: NavItem[] = [
-    { title: 'Overview', icon: Gauge, href: overviewHref },
-    { title: 'Messages', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }
-  ];
   const navItems: NavItem[] = [
-    ...mainMenuItems,
+    { title: 'Overview', icon: Gauge, href: overviewHref },
     { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
-    { title: 'Submission Flow', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
-    { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-    { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
-    { title: 'Resubmissions', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
+    { title: 'Dispute Claims', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
+    { title: 'Documentation', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+    { title: 'Submission Structure', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
+    { title: 'Appeal Claims', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') },
+    { title: 'Notifications', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }
   ];
   const NavItemComponent = React.memo(({
     item,
