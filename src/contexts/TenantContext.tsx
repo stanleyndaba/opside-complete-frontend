@@ -11,6 +11,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { useSession } from '@/contexts/SessionContext';
+import { DEMO_TENANT, DEMO_TENANT_SLUG, isDemoSessionActive } from '@/lib/demoSession';
 
 /**
  * Get the stored tenant slug from localStorage
@@ -90,6 +91,15 @@ const DEFAULT_LIMITS: PlanLimits = {
     supportTier: 'community'
 };
 
+const DEMO_LIMITS: PlanLimits = {
+    maxAmazonAccounts: 1,
+    maxMonthlyRecoveries: -1,
+    maxEvidenceDocs: -1,
+    autoFilingEnabled: false,
+    apiAccessEnabled: true,
+    supportTier: 'priority'
+};
+
 interface TenantProviderProps {
     children: ReactNode;
 }
@@ -137,6 +147,19 @@ export function TenantProvider({ children }: TenantProviderProps) {
         }
 
         if (!isSessionValid || !authToken) {
+            setIsLoading(false);
+            setIsReady(true);
+            return;
+        }
+
+        if (isDemoSessionActive() && (!tenantSlug || tenantSlug === DEMO_TENANT_SLUG)) {
+            setTenant(DEMO_TENANT);
+            setTenants([DEMO_TENANT]);
+            setPlanLimits(DEMO_LIMITS);
+            setError(null);
+            setIsThrottled(false);
+            localStorage.setItem('active_tenant_id', DEMO_TENANT.id);
+            localStorage.setItem('active_tenant_slug', DEMO_TENANT.slug);
             setIsLoading(false);
             setIsReady(true);
             return;
@@ -235,6 +258,16 @@ export function TenantProvider({ children }: TenantProviderProps) {
      * Switch to a different tenant
      */
     const switchTenant = useCallback(async (tenantIdOrSlug: string) => {
+        if (isDemoSessionActive() && normalizeTenantSlug(tenantIdOrSlug) === DEMO_TENANT_SLUG) {
+            setTenant(DEMO_TENANT);
+            setTenants([DEMO_TENANT]);
+            setPlanLimits(DEMO_LIMITS);
+            setError(null);
+            localStorage.setItem('active_tenant_id', DEMO_TENANT.id);
+            localStorage.setItem('active_tenant_slug', DEMO_TENANT.slug);
+            return;
+        }
+
         try {
             setIsLoading(true);
             setError(null);

@@ -88,6 +88,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const expireSessionLocally = useCallback(() => {
+        if (isDemoSessionActive()) {
+            applyDemoSession();
+            return;
+        }
+
         setIsSessionValid(false);
         setAuthToken(null);
         setUserId(null);
@@ -96,10 +101,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         clearSessionRecoveryPending();
         clearStoredAuthContext();
         void supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
-    }, [clearStoredAuthContext]);
+    }, [applyDemoSession, clearStoredAuthContext]);
 
     const redirectToLogin = useCallback(() => {
         if (typeof window === 'undefined') return;
+        if (isDemoSessionActive()) {
+            applyDemoSession();
+            return;
+        }
 
         const { pathname, search, hash } = window.location;
         if (isPublicRoute(pathname)) {
@@ -110,10 +119,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         const next = `${pathname}${search}${hash}`;
         const loginPath = `/login?next=${encodeURIComponent(next)}`;
         window.location.assign(loginPath);
-    }, [expireSessionLocally]);
+    }, [applyDemoSession, expireSessionLocally]);
 
     const handleSessionExpiry = useCallback(() => {
         if (typeof window === 'undefined') return;
+        if (isDemoSessionActive()) {
+            applyDemoSession();
+            return;
+        }
 
         if (isPublicRoute(window.location.pathname)) {
             expireSessionLocally();
@@ -121,7 +134,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         }
 
         redirectToLogin();
-    }, [expireSessionLocally, redirectToLogin]);
+    }, [applyDemoSession, expireSessionLocally, redirectToLogin]);
 
     // Get user email and ID on mount
     useEffect(() => {
@@ -368,6 +381,9 @@ export function useSessionErrorHandler() {
 
     const handleAuthError = useCallback((status: number) => {
         if (status === 401) {
+            if (isDemoSessionActive()) {
+                return false;
+            }
             showSessionTimeout();
             return true; // Handled
         }

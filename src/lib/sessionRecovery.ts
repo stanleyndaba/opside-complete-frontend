@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { isDemoSessionActive } from './demoSession';
 
 export const SESSION_RECOVERY_EVENT = 'margin:session-recovery-required';
 
@@ -50,6 +51,7 @@ export function clearSessionRecoverySuppression() {
 
 export function dispatchSessionRecovery(detail: SessionRecoveryDetail = {}) {
   if (typeof window === 'undefined') return;
+  if (isDemoSessionActive()) return;
   if (readSuppressedFlag()) return;
 
   const now = Date.now();
@@ -62,6 +64,10 @@ export function dispatchSessionRecovery(detail: SessionRecoveryDetail = {}) {
 }
 
 export async function attemptSilentSessionRefresh(): Promise<boolean> {
+  if (isDemoSessionActive()) {
+    return true;
+  }
+
   if (refreshPromise) {
     return refreshPromise;
   }

@@ -7,6 +7,10 @@ export async function getFrontendAuthToken(): Promise<string> {
   }
 
   const storedToken = String(localStorage.getItem('session_token') || '').trim();
+  if (isDemoSessionActive()) {
+    return storedToken;
+  }
+
   const supabaseToken = (await getAccessToken()) || '';
   if (supabaseToken) {
     if (storedToken !== supabaseToken) {

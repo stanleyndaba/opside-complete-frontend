@@ -331,7 +331,7 @@ async function requestJsonWithRetry<T>(
     console.log(`[API] Response parsing took ${Math.round(parseDuration)}ms, total request time: ${Math.round(totalDuration)}ms`);
 
     if (!res.ok) {
-      if (res.status === 401 && !didRetryAfterRefresh) {
+      if (res.status === 401 && !isDemoSession && !didRetryAfterRefresh) {
         const refreshed = await attemptSilentSessionRefresh();
         if (refreshed) {
           return requestJsonWithRetry<T>(path, options, retryCount, maxRetries, true);
@@ -342,7 +342,7 @@ async function requestJsonWithRetry<T>(
 
       // Provide specific error messages based on status code
       let userFriendlyError = errorMsg;
-      const shouldRecoverSession = shouldDispatchSessionRecovery(res.status, errorMsg);
+      const shouldRecoverSession = !isDemoSession && shouldDispatchSessionRecovery(res.status, errorMsg);
 
       if (res.status === 404) {
         // If backend returned an error message, use it; otherwise show generic
@@ -471,7 +471,7 @@ async function requestBlob(
   didRetryAfterRefresh = false
 ): Promise<BlobApiResponse> {
   const url = buildApiUrl(path);
-  const { token: sessionToken, userId, tenantId } = await getFrontendAuthContext();
+  const { token: sessionToken, userId, tenantId, isDemoSession } = await getFrontendAuthContext();
   const callerHeaders = (options?.headers || {}) as Record<string, string>;
 
   const res = await fetch(url, {
@@ -481,13 +481,14 @@ async function requestBlob(
       ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
       ...(userId ? { 'x-user-id': userId } : {}),
       ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+      ...(isDemoSession ? { 'x-demo-mode': 'true' } : {}),
       ...callerHeaders,
     },
     ...options,
   });
 
   if (!res.ok) {
-    if (res.status === 401 && !didRetryAfterRefresh) {
+    if (res.status === 401 && !isDemoSession && !didRetryAfterRefresh) {
       const refreshed = await attemptSilentSessionRefresh();
       if (refreshed) {
         return requestBlob(path, options, true);
@@ -495,7 +496,7 @@ async function requestBlob(
     }
 
     const text = await res.text().catch(() => '');
-    const shouldRecoverSession = shouldDispatchSessionRecovery(res.status, text || res.statusText || 'Unauthorized');
+    const shouldRecoverSession = !isDemoSession && shouldDispatchSessionRecovery(res.status, text || res.statusText || 'Unauthorized');
     if (shouldRecoverSession) {
       dispatchSessionRecovery({
         status: res.status,

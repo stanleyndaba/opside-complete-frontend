@@ -1,11 +1,20 @@
 import { normalizeTenantSlug } from './routes';
 
-export const DEMO_TENANT_ID = '00000000-0000-0000-0000-000000000001';
+export const DEMO_TENANT_ID = '00000000-0000-0000-0000-0000000000d0';
 export const DEMO_TENANT_SLUG = 'demo-workspace';
 export const DEMO_USER_ID = 'demo-user';
 export const DEMO_USER_EMAIL = 'demo@margin.local';
 export const DEMO_SESSION_TOKEN = 'demo-session-local';
 export const DEMO_SESSION_EVENT = 'margin:demo-session-updated';
+
+export const DEMO_TENANT = {
+  id: DEMO_TENANT_ID,
+  name: 'Demo Workspace',
+  slug: DEMO_TENANT_SLUG,
+  plan: 'professional' as const,
+  status: 'active' as const,
+  role: 'viewer' as const,
+};
 
 const DEMO_SESSION_FLAG = 'demo_session_active';
 
