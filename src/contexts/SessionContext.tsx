@@ -7,7 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { SESSION_RECOVERY_EVENT, attemptSilentSessionRefresh, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
-import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
+import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, ensureDemoSessionForDemoWorkspace, isDemoSessionActive } from '@/lib/demoSession';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -76,6 +76,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         clearSessionRecoverySuppression();
     }, []);
 
+    const ensureActiveDemoSession = useCallback(() => {
+        return ensureDemoSessionForDemoWorkspace() || isDemoSessionActive();
+    }, []);
+
     const clearStoredAuthContext = useCallback(() => {
         if (typeof window === 'undefined') return;
 
@@ -88,7 +92,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const expireSessionLocally = useCallback(() => {
-        if (isDemoSessionActive()) {
+        if (ensureActiveDemoSession()) {
             applyDemoSession();
             return;
         }
@@ -101,11 +105,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         clearSessionRecoveryPending();
         clearStoredAuthContext();
         void supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
-    }, [applyDemoSession, clearStoredAuthContext]);
+    }, [applyDemoSession, clearStoredAuthContext, ensureActiveDemoSession]);
 
     const redirectToLogin = useCallback(() => {
         if (typeof window === 'undefined') return;
-        if (isDemoSessionActive()) {
+        if (ensureActiveDemoSession()) {
             applyDemoSession();
             return;
         }
@@ -119,11 +123,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         const next = `${pathname}${search}${hash}`;
         const loginPath = `/login?next=${encodeURIComponent(next)}`;
         window.location.assign(loginPath);
-    }, [applyDemoSession, expireSessionLocally]);
+    }, [applyDemoSession, ensureActiveDemoSession, expireSessionLocally]);
 
     const handleSessionExpiry = useCallback(() => {
         if (typeof window === 'undefined') return;
-        if (isDemoSessionActive()) {
+        if (ensureActiveDemoSession()) {
             applyDemoSession();
             return;
         }
@@ -134,13 +138,19 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         }
 
         redirectToLogin();
-    }, [applyDemoSession, expireSessionLocally, redirectToLogin]);
+    }, [applyDemoSession, ensureActiveDemoSession, expireSessionLocally, redirectToLogin]);
+
+    useEffect(() => {
+        if (ensureActiveDemoSession()) {
+            applyDemoSession();
+        }
+    }, [applyDemoSession, ensureActiveDemoSession]);
 
     // Get user email and ID on mount
     useEffect(() => {
         const getUser = async () => {
             try {
-                if (isDemoSessionActive()) {
+                if (ensureActiveDemoSession()) {
                     applyDemoSession();
                     return;
                 }
@@ -177,12 +187,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             }
         };
         getUser();
-    }, [applyDemoSession]);
+    }, [applyDemoSession, ensureActiveDemoSession]);
 
     // Listen for auth state changes
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            if (isDemoSessionActive()) {
+            if (ensureActiveDemoSession()) {
                 applyDemoSession();
                 return;
             }
@@ -280,13 +290,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         });
 
         return () => subscription.unsubscribe();
-    }, [applyDemoSession]);
+    }, [applyDemoSession, ensureActiveDemoSession]);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
         const handleDemoSessionUpdated = () => {
-            if (isDemoSessionActive()) {
+            if (ensureActiveDemoSession()) {
                 applyDemoSession();
             }
         };
@@ -295,7 +305,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         return () => {
             window.removeEventListener(DEMO_SESSION_EVENT, handleDemoSessionUpdated as EventListener);
         };
-    }, [applyDemoSession]);
+    }, [applyDemoSession, ensureActiveDemoSession]);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -303,7 +313,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         let mounted = true;
 
         const handleRecoveryRequired = async () => {
-            if (isDemoSessionActive()) {
+            if (ensureActiveDemoSession()) {
                 applyDemoSession();
                 return;
             }
@@ -338,7 +348,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             mounted = false;
             window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         };
-    }, [applyDemoSession, handleSessionExpiry]);
+    }, [applyDemoSession, ensureActiveDemoSession, handleSessionExpiry]);
 
     const showSessionTimeout = useCallback(() => {
         clearSessionRecoverySuppression();

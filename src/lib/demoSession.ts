@@ -31,6 +31,23 @@ export function isDemoBypassAvailable() {
   return isEnvDemoBypassEnabled() || isDevQueryDemoEnabled();
 }
 
+export function isDemoWorkspacePath(pathname: string) {
+  const path = pathname.split(/[?#]/)[0].replace(/\/+$/, '') || '/';
+  const demoRoot = `/app/${DEMO_TENANT_SLUG}`;
+  return path === demoRoot || path.startsWith(`${demoRoot}/`);
+}
+
+export function isDemoWorkspaceRequested() {
+  if (typeof window === 'undefined') return false;
+
+  if (isDemoWorkspacePath(window.location.pathname)) {
+    return true;
+  }
+
+  const nextPath = new URLSearchParams(window.location.search).get('next');
+  return !!nextPath && isDemoWorkspacePath(nextPath);
+}
+
 export function isDemoSessionActive() {
   if (typeof window === 'undefined') return false;
   return localStorage.getItem(DEMO_SESSION_FLAG) === 'true' &&
@@ -48,6 +65,14 @@ export function seedDemoSession() {
   localStorage.setItem('active_tenant_id', DEMO_TENANT_ID);
   localStorage.setItem('active_tenant_slug', DEMO_TENANT_SLUG);
   window.dispatchEvent(new CustomEvent(DEMO_SESSION_EVENT));
+}
+
+export function ensureDemoSessionForDemoWorkspace() {
+  if (!isDemoWorkspaceRequested()) return false;
+  if (!isDemoSessionActive()) {
+    seedDemoSession();
+  }
+  return true;
 }
 
 export function clearDemoSession() {
