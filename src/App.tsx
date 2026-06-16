@@ -71,6 +71,7 @@ const Sales = lazy(() => import("./pages/Sales"));
 const AmazonFbaReimbursement = lazy(() => import("./pages/AmazonFbaReimbursement"));
 const ReimbursementAcquisitionPage = lazy(() => import("./pages/ReimbursementAcquisitionPage"));
 const GetidaAlternative = lazy(() => import("./pages/GetidaAlternative"));
+const SellerboardAlternative = lazy(() => import("./pages/SellerboardAlternative"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
@@ -211,6 +212,7 @@ const App = () => (
                         <Route path="/amazon-inbound-shipment-shortage" element={<ReimbursementAcquisitionPage />} />
                         <Route path="/amazon-fee-overcharge-reimbursement" element={<ReimbursementAcquisitionPage />} />
                         <Route path="/getida-alternative" element={<GetidaAlternative />} />
+                        <Route path="/sellerboard-alternative" element={<SellerboardAlternative />} />
                         <Route path="/about" element={<AboutMargin />} />
                         <Route path="/about-margin" element={<AboutMargin />} />
                         <Route path="/research" element={<Research />} />

@@ -39,6 +39,7 @@ const PUBLIC_ROUTE_SEGMENTS = [
     '/amazon-inbound-shipment-shortage',
     '/amazon-fee-overcharge-reimbursement',
     '/getida-alternative',
+    '/sellerboard-alternative',
     '/about',
     '/about-margin',
     '/research',

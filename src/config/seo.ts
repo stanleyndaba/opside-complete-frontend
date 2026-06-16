@@ -112,6 +112,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/getida-alternative'),
     image: SITE_META.image,
   },
+  '/sellerboard-alternative': {
+    path: '/sellerboard-alternative',
+    title: 'Sellerboard Alternative | Margin',
+    description:
+      'Compare Sellerboard and Margin. Learn how reimbursement workflows differ from discrepancy detection through evidence collection, filing, dispute handling, and payout reconciliation.',
+    canonical: routeUrl('/sellerboard-alternative'),
+    ogTitle: 'Sellerboard Alternative | Margin',
+    ogDescription:
+      'Compare Sellerboard and Margin workflow differences across discrepancy detection, evidence collection, filing support, dispute handling, and payout reconciliation.',
+    ogUrl: routeUrl('/sellerboard-alternative'),
+    image: SITE_META.image,
+  },
   '/research': {
     path: '/research',
     title: 'FBA Reimbursement Research | Margin',

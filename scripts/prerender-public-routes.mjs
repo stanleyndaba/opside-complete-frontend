@@ -450,6 +450,82 @@ const getidaAlternativeRoute = createAcquisitionRoute({
     'Margin helps Amazon sellers evaluate a GETIDA alternative focused on reimbursement workflow stages, including evidence preparation, seller approval, filing, disputes, and payout reconciliation.',
 });
 
+const sellerboardAlternativeRoute = createAcquisitionRoute({
+  path: '/sellerboard-alternative',
+  title: 'Sellerboard Alternative | Margin',
+  description:
+    'Compare Sellerboard and Margin. Learn how reimbursement workflows differ from discrepancy detection through evidence collection, filing, dispute handling, and payout reconciliation.',
+  ogTitle: 'Sellerboard Alternative | Margin',
+  ogDescription:
+    'Compare Sellerboard and Margin workflow differences across discrepancy detection, evidence collection, filing support, dispute handling, and payout reconciliation.',
+  label: 'Sellerboard Alternative',
+  h1: 'Looking For A Sellerboard Alternative?',
+  intro:
+    'Many Amazon sellers use software to monitor profitability and identify reimbursement opportunities. The operational work begins after a discrepancy is identified. Margin is designed to support the workflow that follows, including evidence preparation, filing support, dispute handling, and payout reconciliation.',
+  sections: [
+    {
+      heading: 'Workflow comparison',
+      body:
+        'This comparison stays focused on workflow questions. It does not assert unverified Sellerboard capabilities. Where a workflow detail cannot be verified from public information, it is labeled: Public information not verified.',
+    },
+    {
+      heading: 'Finding A Discrepancy Is Only The Beginning',
+      body:
+        'The operational burden often comes after detection: locating documents, validating evidence, preparing claims, handling rejections, tracking outcomes, and reconciling payments.',
+    },
+    {
+      heading: 'How Margin approaches the workflow',
+      body:
+        'Margin uses Detect, Classify, Bind Evidence, Approve, and Track Outcome to keep reimbursement work connected from discrepancy discovery through payout reconciliation.',
+    },
+    {
+      heading: 'Trust controls',
+      body:
+        'Margin starts with a read-only first workflow, keeps seller approval before filing, and is designed around no unauthorized account actions.',
+    },
+  ],
+  links: [
+    { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+    { href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+    { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
+    { href: '/early-access', label: 'Secure early access' },
+    { href: '/getida-alternative', label: 'GETIDA alternative' },
+  ],
+  faqs: [
+    {
+      question: 'What should I look for in a Sellerboard alternative?',
+      answer:
+        'Look for clarity around the full reimbursement workflow, including evidence preparation, claim readiness, filing support, rejection follow-up, dispute handling, payout reconciliation, and seller approval before action.',
+    },
+    {
+      question: 'How does Margin differ from reimbursement reporting tools?',
+      answer:
+        'Margin is designed as a recovery workflow, not only a view of possible discrepancies. The workflow moves through Detect, Classify, Bind Evidence, Approve, and Track Outcome.',
+    },
+    {
+      question: 'Does Margin guarantee reimbursements?',
+      answer:
+        'No. Amazon controls reimbursement decisions. Margin helps sellers identify opportunities, organize evidence, prepare claim workflows, manage follow-up, and track outcomes.',
+    },
+    {
+      question: 'Can I review cases before filing?',
+      answer:
+        'Yes. Margin is designed with seller approval before filing so sellers can review cases before filing action moves forward.',
+    },
+    {
+      question: 'What happens after a reimbursement claim is submitted?',
+      answer:
+        'After submission, the work can continue through replies, document requests, rejections, low offers, dispute handling, approval, reversal checks, and payout reconciliation.',
+    },
+  ],
+  serviceName: 'Sellerboard alternative reimbursement workflow',
+  serviceType: 'Amazon reimbursement workflow software',
+  softwareDescription:
+    'Margin helps Amazon sellers manage reimbursement workflows from discrepancy detection through evidence preparation, approval, filing support, disputes, and payout reconciliation.',
+  serviceDescription:
+    'Margin helps Amazon sellers evaluate a Sellerboard alternative focused on reimbursement workflow stages, including evidence preparation, seller approval, filing support, disputes, and payout reconciliation.',
+});
+
 const routes = [
   {
     path: '/',
@@ -616,6 +692,7 @@ const routes = [
   },
   ...acquisitionRoutes,
   getidaAlternativeRoute,
+  sellerboardAlternativeRoute,
   {
     path: '/research',
     title: 'FBA Reimbursement Research | Margin',
@@ -643,6 +720,7 @@ const routes = [
       ],
       links: [
         { href: '/getida-alternative', label: 'GETIDA alternative' },
+        { href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
         { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
         { href: '/early-access', label: 'Secure early access' },
       ],
@@ -670,6 +748,7 @@ const routes = [
       ],
       links: [
         { href: '/getida-alternative', label: 'GETIDA alternative' },
+        { href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
         { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
         { href: '/early-access', label: 'Secure early access' },
       ],

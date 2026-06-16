@@ -534,6 +534,13 @@ export default function Research() {
                 >
                   GETIDA Alternative
                 </Link>
+
+                <Link
+                  to="/sellerboard-alternative"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                >
+                  Sellerboard Alternative
+                </Link>
               </div>
             </motion.div>
           </div>
