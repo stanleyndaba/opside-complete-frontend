@@ -10,6 +10,132 @@
 /
   Cache-Control: public, max-age=60
 
+/app/*
+  X-Robots-Tag: noindex, nofollow
+
+/auth/*
+  X-Robots-Tag: noindex, nofollow
+
+/payment/*
+  X-Robots-Tag: noindex, nofollow
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+/stripe/*
+  X-Robots-Tag: noindex, nofollow
+
+/login
+  X-Robots-Tag: noindex, nofollow
+
+/connect-amazon
+  X-Robots-Tag: noindex, nofollow
+
+/connect-amazon-account
+  X-Robots-Tag: noindex, nofollow
+
+/system-error-preview
+  X-Robots-Tag: noindex, nofollow
+
+/amazon-sandbox
+  X-Robots-Tag: noindex, nofollow
+
+/analyzing
+  X-Robots-Tag: noindex, nofollow
+
+/designsimulate
+  X-Robots-Tag: noindex, nofollow
+
+/platformsimulate
+  X-Robots-Tag: noindex, nofollow
+
+/scatterdesign
+  X-Robots-Tag: noindex, nofollow
+
+/countdown
+  X-Robots-Tag: noindex, nofollow
+
+/plane
+  X-Robots-Tag: noindex, nofollow
+
+/closingcta
+  X-Robots-Tag: noindex, nofollow
+
+/claimsimulate
+  X-Robots-Tag: noindex, nofollow
+
+/filesimulate
+  X-Robots-Tag: noindex, nofollow
+
+/clocksimulate
+  X-Robots-Tag: noindex, nofollow
+
+/rejectsimulate
+  X-Robots-Tag: noindex, nofollow
+
+/staresimulate
+  X-Robots-Tag: noindex, nofollow
+
+/discrepancysimulate
+  X-Robots-Tag: noindex, nofollow
+
+/reframesimulate
+  X-Robots-Tag: noindex, nofollow
+
+/discoverysimulate
+  X-Robots-Tag: noindex, nofollow
+
+/statementsimulate
+  X-Robots-Tag: noindex, nofollow
+
+/comparisonsimulate
+  X-Robots-Tag: noindex, nofollow
+
+/finality
+  X-Robots-Tag: noindex, nofollow
+
+/finalpayoffsimulate
+  X-Robots-Tag: noindex, nofollow
+
+/evidence-chase
+  X-Robots-Tag: noindex, nofollow
+
+/evidence-insight
+  X-Robots-Tag: noindex, nofollow
+
+/launch-countdown
+  X-Robots-Tag: noindex, nofollow
+
+/giving-up
+  X-Robots-Tag: noindex, nofollow
+
+/results-scroll
+  X-Robots-Tag: noindex, nofollow
+
+/supplier-chat
+  X-Robots-Tag: noindex, nofollow
+
+/google-drive
+  X-Robots-Tag: noindex, nofollow
+
+/intro-pain
+  X-Robots-Tag: noindex, nofollow
+
+/action-simulate
+  X-Robots-Tag: noindex, nofollow
+
+/rejection-screen
+  X-Robots-Tag: noindex, nofollow
+
+/card-review
+  X-Robots-Tag: noindex, nofollow
+
+/AppealSimulate
+  X-Robots-Tag: noindex, nofollow
+
+/appealsimulate
+  X-Robots-Tag: noindex, nofollow
+
 # Allow service worker at root; helps SPA routing on some hosts
 /*
   Service-Worker-Allowed: /

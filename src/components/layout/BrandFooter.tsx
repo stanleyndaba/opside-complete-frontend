@@ -20,7 +20,6 @@ const productLinks: FooterLink[] = [
 ];
 
 const resourceLinks: FooterLink[] = [
-  { label: 'FBA Reimbursement Research', href: '/fba-reimbursement-research' },
   { label: 'Docs', href: '/docs' },
   { label: 'Help Center', href: '/contact' },
   { label: 'Contact Support', href: '/contact' }

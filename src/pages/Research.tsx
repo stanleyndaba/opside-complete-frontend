@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
-import { SITE_META } from '@/config/site';
+import { getPublicRouteMeta } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
@@ -147,15 +147,10 @@ const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt
 
 export default function Research() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isFull } = useOnboardingCapacity();
 
-  usePageMeta({
-    title: 'FBA Reimbursement Research | Margin',
-    description:
-      'How Amazon sellers evaluate FBA reimbursement software, audit services, documentation, filing workflow, eligibility, deadlines, and payout tracking.',
-    url: `${SITE_META.url}/research`,
-    image: SITE_META.image
-  });
+  usePageMeta(getPublicRouteMeta(location.pathname) || getPublicRouteMeta('/research')!);
 
   const handlePrimaryCta = () => {
     if (isFull) {

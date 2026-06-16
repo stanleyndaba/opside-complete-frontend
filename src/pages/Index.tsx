@@ -13,7 +13,7 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { DemoVideoModal } from '@/components/demo/DemoVideoModal';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { InhaleSection } from '@/components/landing/InhaleSection';
-import { SITE_META } from '@/config/site';
+import { PUBLIC_ROUTE_META } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
@@ -714,7 +714,7 @@ export default function Index() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const { isFull, capacity } = useOnboardingCapacity();
 
-  usePageMeta(SITE_META);
+  usePageMeta(PUBLIC_ROUTE_META['/']);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

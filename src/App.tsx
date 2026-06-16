@@ -14,6 +14,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { PublicChatNode } from "@/components/chat/PublicChatNode";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { RouteErrorBoundary } from "@/components/error/RouteErrorBoundary";
+import { usePrivateRouteRobots } from "@/hooks/usePrivateRouteRobots";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -67,6 +68,7 @@ const AdminRevenue = lazy(() => import("./pages/AdminRevenue"));
 const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Sales = lazy(() => import("./pages/Sales"));
+const AmazonFbaReimbursement = lazy(() => import("./pages/AmazonFbaReimbursement"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
@@ -164,6 +166,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 
 const RouteOverlays = () => {
   const location = useLocation();
+  usePrivateRouteRobots(location.pathname);
   const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
 
   return (
@@ -200,6 +203,7 @@ const App = () => (
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/sales" element={<Sales />} />
+                        <Route path="/amazon-fba-reimbursement" element={<AmazonFbaReimbursement />} />
                         <Route path="/about" element={<AboutMargin />} />
                         <Route path="/about-margin" element={<AboutMargin />} />
                         <Route path="/research" element={<Research />} />

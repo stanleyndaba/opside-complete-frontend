@@ -140,9 +140,6 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                         <Link to="/pricing" className={desktopNavLinkClass}>
                             Pricing
                         </Link>
-                        <Link to="/research" className={desktopNavLinkClass}>
-                            Research
-                        </Link>
                         <Link to="/about-margin" className={desktopNavLinkClass}>
                             About
                         </Link>
@@ -298,13 +295,6 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                     className={mobileMenuItemClass}>
                                     About
                                 </Link>
-                                <Link
-                                    to="/research"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
-                                    Research
-                                </Link>
-
                                 <Link
                                     to="/login"
                                     onClick={() => setMobileMenuOpen(false)}

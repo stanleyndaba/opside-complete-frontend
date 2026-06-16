@@ -33,6 +33,7 @@ const PUBLIC_ROUTE_SEGMENTS = [
     '/refund-policy',
     '/contact',
     '/sales',
+    '/amazon-fba-reimbursement',
     '/about',
     '/about-margin',
     '/research',
