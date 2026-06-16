@@ -144,6 +144,7 @@ const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
 const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
 const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
+const inlineLinkClass = 'font-semibold text-[#0B74DE] underline-offset-4 transition-colors hover:text-[#0869C9] hover:underline';
 
 export default function Research() {
   const navigate = useNavigate();
@@ -258,6 +259,12 @@ export default function Research() {
                 </motion.div>
               ))}
             </div>
+
+            <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                For the main commercial category page, see <Link to="/amazon-fba-reimbursement" className={inlineLinkClass}>Amazon FBA reimbursement</Link>, where the same workflow is framed around seller intent rather than evaluation criteria.
+              </p>
+            </motion.div>
           </div>
         </section>
 
@@ -294,6 +301,9 @@ export default function Research() {
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
               <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 Regional fit still matters for UK and multi-marketplace operators. Evaluation should include marketplace coverage, evidence handling, filing model, and the clarity of recovery status across the workflow.
+              </p>
+              <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                Comparison traffic usually enters through pages like <Link to="/getida-alternative" className={inlineLinkClass}>GETIDA alternative</Link> and <Link to="/sellerboard-alternative" className={inlineLinkClass}>Sellerboard alternative</Link>, where those workflow questions are kept grounded in public information.
               </p>
             </motion.div>
           </div>
@@ -361,6 +371,9 @@ export default function Research() {
               <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 Exact policy windows and reimbursement rules can change, so current Amazon policy should always be verified directly. The software role is to make timing, evidence, and case-state risk visible before a filing path is chosen.
               </p>
+              <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                Eligibility pressure is especially visible on <Link to="/amazon-lost-inventory-reimbursement" className={inlineLinkClass}>Amazon lost inventory reimbursement</Link> work, where aged events can quickly weaken the evidence trail.
+              </p>
             </motion.div>
           </div>
         </section>
@@ -394,6 +407,12 @@ export default function Research() {
                 </motion.div>
               ))}
             </div>
+
+            <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                Shipment-heavy evidence questions are clearest on <Link to="/amazon-inbound-shipment-shortage" className={inlineLinkClass}>Amazon inbound shipment shortage recovery</Link>, where document completeness often decides whether the claim path can move.
+              </p>
+            </motion.div>
           </div>
         </section>
 
@@ -454,6 +473,12 @@ export default function Research() {
                 </motion.div>
               ))}
             </div>
+
+            <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
+              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                When teams need one view across filing risk, denials, and queue priority, an <Link to="/amazon-reimbursement-audit" className={inlineLinkClass}>Amazon reimbursement audit</Link> often becomes the organizing layer.
+              </p>
+            </motion.div>
           </div>
         </section>
 
@@ -490,6 +515,9 @@ export default function Research() {
             <motion.div {...revealProps} className="mt-8 max-w-[760px] md:mt-10">
               <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 Exact reimbursement timelines vary by case type, evidence quality, and case-state conditions. The core requirement is not perfect speed prediction. It is visibility into where the case sits and why it is moving, waiting, or blocked.
+              </p>
+              <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                That same tracking discipline matters on <Link to="/amazon-fee-overcharge-reimbursement" className={inlineLinkClass}>Amazon fee overcharge recovery</Link>, where payout truth can drift away from the original charge story.
               </p>
             </motion.div>
           </div>

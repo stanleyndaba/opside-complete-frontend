@@ -7,7 +7,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
-import { buildAcquisitionStructuredData, getAcquisitionPageData } from '@/config/acquisitionPages';
+import {
+  buildAcquisitionStructuredData,
+  getAcquisitionPageData,
+  type AcquisitionInlineSegment,
+} from '@/config/acquisitionPages';
 import { getPublicRouteMeta } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useStructuredData } from '@/hooks/useStructuredData';
@@ -25,6 +29,18 @@ const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[
 const headingClass =
   'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
+const inlineLinkClass = 'font-semibold text-[#0B74DE] underline-offset-4 transition-colors hover:text-[#0869C9] hover:underline';
+
+const renderContextualSentence = (segments: AcquisitionInlineSegment[]) =>
+  segments.map((segment, index) =>
+    segment.type === 'link' ? (
+      <Link key={`${segment.href}-${index}`} to={segment.href} className={inlineLinkClass}>
+        {segment.label}
+      </Link>
+    ) : (
+      <span key={`text-${index}`}>{segment.text}</span>
+    )
+  );
 
 export default function ReimbursementAcquisitionPage() {
   const location = useLocation();
@@ -121,6 +137,11 @@ export default function ReimbursementAcquisitionPage() {
                 <div className={labelClass}>{section.eyebrow}</div>
                 <h2 className={headingClass}>{section.heading}</h2>
                 <p className={bodyClass}>{section.body}</p>
+                {section.contextualSentence ? (
+                  <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                    {renderContextualSentence(section.contextualSentence)}
+                  </p>
+                ) : null}
               </motion.div>
 
               <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">

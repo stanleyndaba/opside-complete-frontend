@@ -115,6 +115,7 @@ const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
 const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
 const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
+const inlineLinkClass = 'font-semibold text-[#0B74DE] underline-offset-4 transition-colors hover:text-[#0869C9] hover:underline';
 
 const pageMeta = getPublicRouteMeta('/amazon-fba-reimbursement')!;
 
@@ -243,6 +244,9 @@ export default function AmazonFbaReimbursement() {
               <p className={bodyClass}>
                 Sellers often discover reimbursement issues after meaningful time has already passed. That delay matters because evidence gets harder to assemble, case context gets harder to reconstruct, and some claim windows close before anyone has organized the right filing path.
               </p>
+              <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                Those recovery paths often branch into <Link to="/amazon-lost-inventory-reimbursement" className={inlineLinkClass}>Amazon lost inventory reimbursement</Link>, <Link to="/amazon-inbound-shipment-shortage" className={inlineLinkClass}>Amazon inbound shipment shortage recovery</Link>, and <Link to="/amazon-fee-overcharge-reimbursement" className={inlineLinkClass}>Amazon fee overcharge recovery</Link> work, each with different evidence and timing requirements.
+              </p>
             </motion.div>
 
             <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
@@ -268,6 +272,9 @@ export default function AmazonFbaReimbursement() {
               <h2 className={headingClass}>Where most reimbursement tools stop is exactly where the harder work begins.</h2>
               <p className={bodyClass}>
                 Detection matters, but detection alone does not recover money. Once a discrepancy is found, the seller still needs evidence organization, claim preparation, filing control, rejection handling, and payout follow-through.
+              </p>
+              <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                That is also why sellers often look at an <Link to="/amazon-reimbursement-audit" className={inlineLinkClass}>Amazon reimbursement audit</Link> before deciding how findings should move through the rest of the workflow.
               </p>
             </motion.div>
 
@@ -371,6 +378,9 @@ export default function AmazonFbaReimbursement() {
                 </h2>
                 <p className="mt-5 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
                   Explore the early access flow, review pricing, or go deeper into the research page comparing reimbursement tools and recovery workflow quality.
+                </p>
+                <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                  Sellers comparing operating models can also review the <Link to="/getida-alternative" className={inlineLinkClass}>GETIDA alternative</Link> and <Link to="/sellerboard-alternative" className={inlineLinkClass}>Sellerboard alternative</Link> pages for workflow-focused evaluation.
                 </p>
               </div>
 

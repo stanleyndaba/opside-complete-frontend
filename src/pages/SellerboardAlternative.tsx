@@ -149,6 +149,7 @@ const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
 const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
 const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
+const inlineLinkClass = 'font-semibold text-[#0B74DE] underline-offset-4 transition-colors hover:text-[#0869C9] hover:underline';
 
 export default function SellerboardAlternative() {
   const navigate = useNavigate();
@@ -278,6 +279,9 @@ export default function SellerboardAlternative() {
               <p className={bodyClass}>
                 This page focuses on workflow questions sellers can use when evaluating Sellerboard and Margin. It does not assert unverified Sellerboard capabilities. When a workflow detail is not verified from public information, it is labeled that way.
               </p>
+              <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                Sellers who want the category view before comparisons can start with <Link to="/amazon-fba-reimbursement" className={inlineLinkClass}>Amazon FBA reimbursement</Link>, then contrast that with the workflow framing on the <Link to="/getida-alternative" className={inlineLinkClass}>GETIDA alternative</Link> page.
+              </p>
             </motion.div>
 
             <motion.div
@@ -315,6 +319,9 @@ export default function SellerboardAlternative() {
               <h2 className={headingClass}>Finding A Discrepancy Is Only The Beginning</h2>
               <p className={bodyClass}>
                 The operational burden often comes after detection: locating documents, validating evidence, preparing claims, handling rejections, tracking outcomes, and reconciling payments. Margin approaches those stages as one connected recovery workflow.
+              </p>
+              <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                Teams that need to prioritize that work across claim types often back up into an <Link to="/amazon-reimbursement-audit" className={inlineLinkClass}>Amazon reimbursement audit</Link> so post-detection effort is organized before filing begins.
               </p>
             </motion.div>
 

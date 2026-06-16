@@ -144,6 +144,7 @@ const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
 const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
 const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
+const inlineLinkClass = 'font-semibold text-[#0B74DE] underline-offset-4 transition-colors hover:text-[#0869C9] hover:underline';
 
 export default function GetidaAlternative() {
   const navigate = useNavigate();
@@ -273,6 +274,9 @@ export default function GetidaAlternative() {
               <p className={bodyClass}>
                 This page focuses on workflow questions sellers can use when evaluating GETIDA and Margin. It does not assert unverified GETIDA capabilities. When a workflow detail is not verified from public information, it is labeled that way.
               </p>
+              <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                Sellers who want category context first can start with <Link to="/amazon-fba-reimbursement" className={inlineLinkClass}>Amazon FBA reimbursement</Link>, then compare how a <Link to="/sellerboard-alternative" className={inlineLinkClass}>Sellerboard alternative</Link> frames post-detection workflow questions.
+              </p>
             </motion.div>
 
             <motion.div
@@ -310,6 +314,9 @@ export default function GetidaAlternative() {
               <h2 className={headingClass}>What Happens After Detection Matters</h2>
               <p className={bodyClass}>
                 Many reimbursement discussions focus on finding discrepancies. For sellers, the harder challenge is often locating evidence, preparing documentation, handling rejections, tracking outcomes, and reconciling payouts. Margin approaches those stages as one connected recovery workflow.
+              </p>
+              <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                That same post-detection burden is why many teams widen the lens to an <Link to="/amazon-reimbursement-audit" className={inlineLinkClass}>Amazon reimbursement audit</Link> before deciding which claims deserve workflow attention first.
               </p>
             </motion.div>
 

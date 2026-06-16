@@ -5,10 +5,22 @@ export type AcquisitionFaq = {
   answer: string;
 };
 
+export type AcquisitionInlineSegment =
+  | {
+      type: 'text';
+      text: string;
+    }
+  | {
+      type: 'link';
+      href: string;
+      label: string;
+    };
+
 export type AcquisitionSection = {
   eyebrow: string;
   heading: string;
   body: string;
+  contextualSentence?: AcquisitionInlineSegment[];
   points: Array<{
     label: string;
     detail: string;
@@ -86,6 +98,11 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: 'What lost inventory reimbursement is',
         body:
           'Amazon lost inventory reimbursement is the recovery process for units that should be accounted for inside FBA but are missing, adjusted, transferred, removed, or otherwise unresolved in seller reporting.',
+        contextualSentence: [
+          { type: 'text', text: 'For the broader operating model behind these cases, see ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: '.' },
+        ],
         points: [
           {
             label: 'Fulfillment center losses',
@@ -146,6 +163,11 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: 'How Margin tracks inventory recovery',
         body:
           'Margin connects detection, classification, evidence binding, seller approval, and outcome tracking so lost inventory work does not turn into a queue of unresolved case IDs.',
+        contextualSentence: [
+          { type: 'text', text: 'Teams prioritizing recurring loss patterns often pair this with an ' },
+          { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+          { type: 'text', text: ' view so inventory issues stay visible alongside other recovery categories.' },
+        ],
         points: [
           {
             label: 'Case-ready organization',
@@ -222,6 +244,11 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: 'What a reimbursement audit includes',
         body:
           'An Amazon reimbursement audit reviews account activity for events where Amazon may owe money because inventory, fees, refunds, shipments, or payouts do not reconcile cleanly.',
+        contextualSentence: [
+          { type: 'text', text: 'Sellers comparing the full category often start with ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: ' and then decide how audit coverage should be organized.' },
+        ],
         points: [
           {
             label: 'Inventory activity',
@@ -242,6 +269,13 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: 'Common reimbursement categories',
         body:
           'Margin treats reimbursement categories as workflows with different evidence requirements, timing rules, and outcome paths rather than one generic recovery bucket.',
+        contextualSentence: [
+          { type: 'text', text: 'That usually means breaking the work into ' },
+          { type: 'link', href: '/amazon-lost-inventory-reimbursement', label: 'Amazon lost inventory reimbursement' },
+          { type: 'text', text: ' and ' },
+          { type: 'link', href: '/amazon-inbound-shipment-shortage', label: 'Amazon inbound shipment shortage recovery' },
+          { type: 'text', text: ' paths before filing decisions are made.' },
+        ],
         points: [
           {
             label: 'Lost inventory',
@@ -358,6 +392,11 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: 'What inbound shortages are',
         body:
           'Amazon inbound shortages happen when the quantity a seller sends into FBA does not match what Amazon receives or recognizes. Recovery depends on proving the shipment trail clearly.',
+        contextualSentence: [
+          { type: 'text', text: 'Inside the broader category, this sits under ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: ' with its own document and timing requirements.' },
+        ],
         points: [
           {
             label: 'Sent quantity',
@@ -418,6 +457,11 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: "Margin's evidence workflow",
         body:
           'Margin organizes shortage evidence around the shipment and keeps the recovery path visible from detection through approval, dispute handling, and payout tracking.',
+        contextualSentence: [
+          { type: 'text', text: 'Sellers reviewing recurring receiving problems often connect this work back to an ' },
+          { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+          { type: 'text', text: ' so shortage cases can be prioritized against the rest of the recovery queue.' },
+        ],
         points: [
           {
             label: 'Shipment-centered review',
@@ -494,6 +538,11 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: 'Fee overcharges explained',
         body:
           'Amazon fee overcharge reimbursement focuses on fees that appear inconsistent with product dimensions, weight, transaction behavior, storage logic, or settlement records.',
+        contextualSentence: [
+          { type: 'text', text: 'It is one branch of the wider ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: ' workflow, but it depends on its own validation trail.' },
+        ],
         points: [
           {
             label: 'Measurement drift',
@@ -514,6 +563,11 @@ export const acquisitionPages: Record<string, AcquisitionPageData> = {
         heading: 'Common fee discrepancy scenarios',
         body:
           'Fee discrepancies can involve measurement errors, storage charges, fulfillment fee changes, category or handling logic, reimbursement reversals, and settlement mismatches.',
+        contextualSentence: [
+          { type: 'text', text: 'When these issues repeat across the account, an ' },
+          { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+          { type: 'text', text: ' helps keep fee recovery aligned with inventory, shipment, and payout findings.' },
+        ],
         points: [
           {
             label: 'Product measurement issues',

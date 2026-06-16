@@ -98,6 +98,11 @@ const acquisitionRoutes = [
         heading: 'What lost inventory reimbursement is',
         body:
           'Lost inventory reimbursement covers FBA units that are missing, adjusted, transferred, removed, or otherwise unresolved after Amazon inventory activity.',
+        contextualSentence: [
+          { type: 'text', text: 'For the broader operating model behind these cases, see ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: '.' },
+        ],
       },
       {
         heading: 'Why inventory claims are missed',
@@ -113,6 +118,11 @@ const acquisitionRoutes = [
         heading: 'How Margin tracks inventory recovery',
         body:
           'Margin connects detection, classification, evidence binding, seller approval, and outcome tracking so lost inventory work stays visible through resolution.',
+        contextualSentence: [
+          { type: 'text', text: 'Teams prioritizing recurring loss patterns often pair this with an ' },
+          { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+          { type: 'text', text: ' view so inventory issues stay visible alongside other recovery categories.' },
+        ],
       },
     ],
     links: [
@@ -171,11 +181,23 @@ const acquisitionRoutes = [
         heading: 'What a reimbursement audit includes',
         body:
           'A reimbursement audit reviews seller account activity for inventory, shipment, refund, fee, reimbursement, and payout events that may not reconcile correctly.',
+        contextualSentence: [
+          { type: 'text', text: 'Sellers comparing the full category often start with ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: ' and then decide how audit coverage should be organized.' },
+        ],
       },
       {
         heading: 'Common reimbursement categories',
         body:
           'Common categories include lost inventory, inbound shortages, refund gaps, fee overcharges, reimbursement reversals, and payout mismatches.',
+        contextualSentence: [
+          { type: 'text', text: 'That usually means breaking the work into ' },
+          { type: 'link', href: '/amazon-lost-inventory-reimbursement', label: 'Amazon lost inventory reimbursement' },
+          { type: 'text', text: ' and ' },
+          { type: 'link', href: '/amazon-inbound-shipment-shortage', label: 'Amazon inbound shipment shortage recovery' },
+          { type: 'text', text: ' paths before filing decisions are made.' },
+        ],
       },
       {
         heading: 'Why audit reports alone are not enough',
@@ -244,6 +266,11 @@ const acquisitionRoutes = [
         heading: 'What inbound shortages are',
         body:
           'Inbound shortages happen when the quantity sent to FBA does not match what Amazon receives, recognizes, or reconciles.',
+        contextualSentence: [
+          { type: 'text', text: 'Inside the broader category, this sits under ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: ' with its own document and timing requirements.' },
+        ],
       },
       {
         heading: 'Why shortages go unresolved',
@@ -259,6 +286,11 @@ const acquisitionRoutes = [
         heading: "Margin's evidence workflow",
         body:
           'Margin groups shortage signals by shipment, binds supporting evidence, keeps seller approval in the loop, and tracks reimbursement outcomes.',
+        contextualSentence: [
+          { type: 'text', text: 'Sellers reviewing recurring receiving problems often connect this work back to an ' },
+          { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+          { type: 'text', text: ' so shortage cases can be prioritized against the rest of the recovery queue.' },
+        ],
       },
     ],
     links: [
@@ -317,11 +349,21 @@ const acquisitionRoutes = [
         heading: 'Fee overcharges explained',
         body:
           'Fee overcharge reimbursement focuses on fees that appear inconsistent with product measurements, transaction context, storage activity, or settlement records.',
+        contextualSentence: [
+          { type: 'text', text: 'It is one branch of the wider ' },
+          { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+          { type: 'text', text: ' workflow, but it depends on its own validation trail.' },
+        ],
       },
       {
         heading: 'Common fee discrepancy scenarios',
         body:
           'Scenarios can include measurement errors, storage charges, fulfillment fee changes, category logic, reimbursement reversals, and settlement mismatches.',
+        contextualSentence: [
+          { type: 'text', text: 'When these issues repeat across the account, an ' },
+          { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+          { type: 'text', text: ' helps keep fee recovery aligned with inventory, shipment, and payout findings.' },
+        ],
       },
       {
         heading: 'Evidence and validation requirements',
@@ -392,11 +434,23 @@ const getidaAlternativeRoute = createAcquisitionRoute({
       heading: 'Workflow comparison',
       body:
         'This comparison stays focused on workflow questions. It does not assert unverified GETIDA capabilities. Where a workflow detail cannot be verified from public information, it is labeled: Public information not verified.',
+      contextualSentence: [
+        { type: 'text', text: 'Sellers who want category context first can start with ' },
+        { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+        { type: 'text', text: ', then compare how a ' },
+        { type: 'link', href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
+        { type: 'text', text: ' frames post-detection workflow questions.' },
+      ],
     },
     {
       heading: 'What Happens After Detection Matters',
       body:
         'Many reimbursement discussions focus on finding discrepancies. Sellers still need to locate evidence, prepare documentation, handle rejections, track outcomes, and reconcile payouts.',
+      contextualSentence: [
+        { type: 'text', text: 'That same post-detection burden is why many teams widen the lens to an ' },
+        { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+        { type: 'text', text: ' before deciding which claims deserve workflow attention first.' },
+      ],
     },
     {
       heading: 'How Margin approaches the workflow',
@@ -467,11 +521,23 @@ const sellerboardAlternativeRoute = createAcquisitionRoute({
       heading: 'Workflow comparison',
       body:
         'This comparison stays focused on workflow questions. It does not assert unverified Sellerboard capabilities. Where a workflow detail cannot be verified from public information, it is labeled: Public information not verified.',
+      contextualSentence: [
+        { type: 'text', text: 'Sellers who want the category view before comparisons can start with ' },
+        { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+        { type: 'text', text: ', then contrast that with the workflow framing on the ' },
+        { type: 'link', href: '/getida-alternative', label: 'GETIDA alternative' },
+        { type: 'text', text: ' page.' },
+      ],
     },
     {
       heading: 'Finding A Discrepancy Is Only The Beginning',
       body:
         'The operational burden often comes after detection: locating documents, validating evidence, preparing claims, handling rejections, tracking outcomes, and reconciling payments.',
+      contextualSentence: [
+        { type: 'text', text: 'Teams that need to prioritize that work across claim types often back up into an ' },
+        { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+        { type: 'text', text: ' so post-detection effort is organized before filing begins.' },
+      ],
     },
     {
       heading: 'How Margin approaches the workflow',
@@ -594,11 +660,37 @@ const routes = [
           heading: 'What Amazon FBA reimbursement includes',
           body:
             'Margin helps sellers work through lost inventory, inbound shortages, refund-without-return activity, fee overcharges, and payout discrepancies. These issues often surface after valuable time has already passed.',
+          contextualSentence: [
+            { type: 'text', text: 'Those recovery paths often branch into ' },
+            { type: 'link', href: '/amazon-lost-inventory-reimbursement', label: 'Amazon lost inventory reimbursement' },
+            { type: 'text', text: ', ' },
+            { type: 'link', href: '/amazon-inbound-shipment-shortage', label: 'Amazon inbound shipment shortage recovery' },
+            { type: 'text', text: ', and ' },
+            { type: 'link', href: '/amazon-fee-overcharge-reimbursement', label: 'Amazon fee overcharge recovery' },
+            { type: 'text', text: ' work, each with different evidence and timing requirements.' },
+          ],
         },
         {
           heading: 'How Margin approaches recovery',
           body:
             'The workflow moves through detect, classify, bind evidence, approve, and track outcome. That keeps each reimbursement issue tied to evidence quality, filing control, dispute handling, and payout truth.',
+          contextualSentence: [
+            { type: 'text', text: 'That is also why sellers often look at an ' },
+            { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+            { type: 'text', text: ' before deciding how findings should move through the rest of the workflow.' },
+          ],
+        },
+        {
+          heading: 'How sellers compare operating models',
+          body:
+            'Workflow evaluation often continues after the category page, especially when sellers want to compare how different operating models handle recovery after detection.',
+          contextualSentence: [
+            { type: 'text', text: 'For that comparison layer, review the ' },
+            { type: 'link', href: '/getida-alternative', label: 'GETIDA alternative' },
+            { type: 'text', text: ' and ' },
+            { type: 'link', href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
+            { type: 'text', text: ' pages.' },
+          ],
         },
       ],
       links: [
@@ -711,11 +803,63 @@ const routes = [
           heading: 'What sellers are actually buying',
           body:
             'The page focuses on the operational burden behind recoveries: identifying recoverable Amazon events, validating claim eligibility, assembling evidence, controlling submissions, and tracking payouts through completion.',
+          contextualSentence: [
+            { type: 'text', text: 'For the main commercial category page, see ' },
+            { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+            { type: 'text', text: ', where the same workflow is framed around seller intent rather than evaluation criteria.' },
+          ],
         },
         {
           heading: 'How to compare tools and services',
           body:
             'The comparison framework looks at whether a product is a tracker, an audit service, or a broader recovery platform, and whether it improves evidence quality, filing control, and recovery-state visibility.',
+          contextualSentence: [
+            { type: 'text', text: 'Comparison traffic usually enters through pages like ' },
+            { type: 'link', href: '/getida-alternative', label: 'GETIDA alternative' },
+            { type: 'text', text: ' and ' },
+            { type: 'link', href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
+            { type: 'text', text: ', where those workflow questions are kept grounded in public information.' },
+          ],
+        },
+        {
+          heading: 'Eligibility and deadlines',
+          body:
+            'Timing pressure, evidence strength, and live-case state all affect whether a discrepancy is actually recoverable, not just numerically interesting.',
+          contextualSentence: [
+            { type: 'text', text: 'Eligibility pressure is especially visible on ' },
+            { type: 'link', href: '/amazon-lost-inventory-reimbursement', label: 'Amazon lost inventory reimbursement' },
+            { type: 'text', text: ' work, where aged events can quickly weaken the evidence trail.' },
+          ],
+        },
+        {
+          heading: 'Documentation and evidence',
+          body:
+            'The research makes evidence quality central because shipment records, product records, case history, and payout context all shape whether the claim path can move.',
+          contextualSentence: [
+            { type: 'text', text: 'Shipment-heavy evidence questions are clearest on ' },
+            { type: 'link', href: '/amazon-inbound-shipment-shortage', label: 'Amazon inbound shipment shortage recovery' },
+            { type: 'text', text: ', where document completeness often decides whether the claim path can move.' },
+          ],
+        },
+        {
+          heading: 'Filing control and denials',
+          body:
+            'The filing layer is where weak evidence, duplicate case paths, timing failures, and unsupported value calculations become operational problems.',
+          contextualSentence: [
+            { type: 'text', text: 'When teams need one view across filing risk, denials, and queue priority, an ' },
+            { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+            { type: 'text', text: ' often becomes the organizing layer.' },
+          ],
+        },
+        {
+          heading: 'Tracking and financial truth',
+          body:
+            'Visibility after filing matters because approvals, holds, reversals, and payout truth are not the same state and should not be treated as interchangeable.',
+          contextualSentence: [
+            { type: 'text', text: 'That same tracking discipline matters on ' },
+            { type: 'link', href: '/amazon-fee-overcharge-reimbursement', label: 'Amazon fee overcharge recovery' },
+            { type: 'text', text: ', where payout truth can drift away from the original charge story.' },
+          ],
         },
       ],
       links: [
@@ -744,6 +888,63 @@ const routes = [
           heading: 'What this page covers',
           body:
             'The research compares reimbursement tools and services based on how they detect opportunities, document evidence, support seller review, and keep visibility into approvals, reversals, and payouts.',
+          contextualSentence: [
+            { type: 'text', text: 'For the main commercial category page, see ' },
+            { type: 'link', href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+            { type: 'text', text: ', where the same workflow is framed around seller intent rather than evaluation criteria.' },
+          ],
+        },
+        {
+          heading: 'Comparison pages',
+          body:
+            'Competitive evaluation works best when workflow differences are kept factual and tied to public information rather than exaggerated feature claims.',
+          contextualSentence: [
+            { type: 'text', text: 'Comparison traffic usually enters through pages like ' },
+            { type: 'link', href: '/getida-alternative', label: 'GETIDA alternative' },
+            { type: 'text', text: ' and ' },
+            { type: 'link', href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
+            { type: 'text', text: ', where those workflow questions are kept grounded in public information.' },
+          ],
+        },
+        {
+          heading: 'Eligibility and deadlines',
+          body:
+            'Timing pressure, evidence strength, and live-case state all affect whether a discrepancy is actually recoverable, not just numerically interesting.',
+          contextualSentence: [
+            { type: 'text', text: 'Eligibility pressure is especially visible on ' },
+            { type: 'link', href: '/amazon-lost-inventory-reimbursement', label: 'Amazon lost inventory reimbursement' },
+            { type: 'text', text: ' work, where aged events can quickly weaken the evidence trail.' },
+          ],
+        },
+        {
+          heading: 'Documentation and evidence',
+          body:
+            'The research makes evidence quality central because shipment records, product records, case history, and payout context all shape whether the claim path can move.',
+          contextualSentence: [
+            { type: 'text', text: 'Shipment-heavy evidence questions are clearest on ' },
+            { type: 'link', href: '/amazon-inbound-shipment-shortage', label: 'Amazon inbound shipment shortage recovery' },
+            { type: 'text', text: ', where document completeness often decides whether the claim path can move.' },
+          ],
+        },
+        {
+          heading: 'Filing control and denials',
+          body:
+            'The filing layer is where weak evidence, duplicate case paths, timing failures, and unsupported value calculations become operational problems.',
+          contextualSentence: [
+            { type: 'text', text: 'When teams need one view across filing risk, denials, and queue priority, an ' },
+            { type: 'link', href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
+            { type: 'text', text: ' often becomes the organizing layer.' },
+          ],
+        },
+        {
+          heading: 'Tracking and financial truth',
+          body:
+            'Visibility after filing matters because approvals, holds, reversals, and payout truth are not the same state and should not be treated as interchangeable.',
+          contextualSentence: [
+            { type: 'text', text: 'That same tracking discipline matters on ' },
+            { type: 'link', href: '/amazon-fee-overcharge-reimbursement', label: 'Amazon fee overcharge recovery' },
+            { type: 'text', text: ', where payout truth can drift away from the original charge story.' },
+          ],
         },
       ],
       links: [
@@ -917,6 +1118,15 @@ const htmlEscape = (value) =>
 
 const routeUrl = (routePath) => `${siteUrl}${routePath === '/' ? '/' : routePath}`;
 
+const renderInlineSegments = (segments = []) =>
+  segments
+    .map((segment) =>
+      segment.type === 'link'
+        ? `<a href="${htmlEscape(segment.href)}">${htmlEscape(segment.label)}</a>`
+        : htmlEscape(segment.text)
+    )
+    .join('');
+
 const replaceOrInsert = (html, pattern, replacement, before = '</head>') => {
   if (pattern.test(html)) return html.replace(pattern, replacement);
   return html.replace(before, `  ${replacement}\n${before}`);
@@ -946,6 +1156,7 @@ const renderShell = (route) => {
       (section) => `        <section>
           <h2>${htmlEscape(section.heading)}</h2>
           <p>${htmlEscape(section.body)}</p>
+${section.contextualSentence ? `          <p>${renderInlineSegments(section.contextualSentence)}</p>` : ''}
         </section>`
     )
     .join('\n');
