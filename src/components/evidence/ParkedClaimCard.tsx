@@ -17,6 +17,7 @@ import {
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { claimReferenceLabel, documentReferenceLabel } from '@/lib/displayReferences';
 
 interface ParkedClaim {
     id: string;
@@ -147,7 +148,7 @@ export function ParkedClaimCard({
                                 <div className="flex items-center gap-2">
                                     <Link2 className="h-3 w-3 text-white/10" />
                                     <Link to={`/recoveries/${claim.claim_id}`} className="text-[10px] font-sans font-medium text-white/65 hover:text-white transition-colors tracking-tight">
-                                        {claim.claim_id.substring(0, 16)}
+                                        {claimReferenceLabel(claim.claim_details, claim.claim_id)}
                                     </Link>
                                 </div>
                             </div>
@@ -158,7 +159,7 @@ export function ParkedClaimCard({
                                     <FileText className="h-3 w-3 text-white/10" />
                                     {claim.document_id ? (
                                         <Link to={`/documents/${claim.document_id}`} className="text-[10px] font-sans font-medium text-white/65 hover:text-white transition-colors tracking-tight">
-                                            {claim.document_details?.filename?.substring(0, 24) || claim.document_id.substring(0, 16)}
+                                            {documentReferenceLabel(claim.document_details, claim.document_id)}
                                         </Link>
                                     ) : (
                                         <span className="text-[10px] font-sans font-medium text-white/20 italic tracking-tight">No linked document</span>

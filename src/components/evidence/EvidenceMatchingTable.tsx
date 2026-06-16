@@ -8,6 +8,7 @@ import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { claimReferenceLabel, documentReferenceLabel } from '@/lib/displayReferences';
 
 interface MatchingResult {
   id: string;
@@ -421,9 +422,7 @@ export function EvidenceMatchingTable() {
   };
 
   const getClaimReference = (match: MatchingResult) =>
-    match.claim_details?.reference
-    || match.claim_details?.case_number
-    || match.claim_id.substring(0, 12).toUpperCase();
+    claimReferenceLabel(match.claim_details, match.claim_id);
 
   const getClaimTitle = (match: MatchingResult) =>
     match.claim_details?.title
@@ -441,9 +440,7 @@ export function EvidenceMatchingTable() {
   };
 
   const getDocumentTitle = (match: MatchingResult) =>
-    match.document_details?.title
-    || match.document_details?.filename?.substring(0, 40)
-    || match.document_id.substring(0, 12).toUpperCase();
+    documentReferenceLabel(match.document_details, match.document_id);
 
   const getDocumentSubtitle = (match: MatchingResult) => {
     if (match.document_details?.subtitle) return match.document_details.subtitle;

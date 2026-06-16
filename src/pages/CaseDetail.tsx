@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { AiExplanationDialog } from '@/components/ai/AiExplanationDialog';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { documentReferenceLabel } from '@/lib/displayReferences';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -3043,7 +3044,7 @@ export default function CaseDetail() {
                                     <div className="flex flex-wrap gap-2">
                                       {attachmentRows.map((attachment: any, attachmentIdx: number) => {
                                         const linkedDocumentId = String(attachment?.evidence_document_id || '').trim();
-                                        const label = attachment?.filename || `Attachment ${attachmentIdx + 1}`;
+                                        const label = documentReferenceLabel(attachment, linkedDocumentId || `Attachment ${attachmentIdx + 1}`);
                                         return linkedDocumentId && activeSlug ? (
                                           <Button
                                             key={`${message.id}-attachment-${attachmentIdx}`}
@@ -3116,7 +3117,7 @@ export default function CaseDetail() {
                                             onCheckedChange={(checked) => toggleReplyAttachment(documentId, checked === true)}
                                             disabled={sendingReply}
                                           />
-                                          <span className="font-sans font-bold">{doc?.filename || doc?.name || documentId}</span>
+                                          <span className="font-sans font-bold">{documentReferenceLabel(doc, documentId)}</span>
                                         </label>
                                       );
                                     })}

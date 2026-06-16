@@ -10,6 +10,7 @@ import { FileText, Download, ExternalLink, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { claimReferenceLabel, documentReferenceLabel } from '@/lib/displayReferences';
 
 interface ProofDocument {
     id: string;
@@ -60,7 +61,7 @@ export function ProofDocumentsModal({
     };
 
     const getDocumentName = (doc: ProofDocument) => {
-        return doc.filename || doc.name || `Document ${doc.id.slice(0, 8)}`;
+        return documentReferenceLabel(doc, doc.id);
     };
 
     const getDocumentDate = (doc: ProofDocument) => {
@@ -82,7 +83,7 @@ export function ProofDocumentsModal({
                         Proof Documents
                     </DialogTitle>
                     <DialogDescription className="text-xs text-[#4B5563] mt-1">
-                        Claim Reference: {claimNumber || claimId.slice(0, 12)}
+                        Claim Reference: {claimReferenceLabel({ claim_number: claimNumber }, claimId)}
                     </DialogDescription>
                 </DialogHeader>
 

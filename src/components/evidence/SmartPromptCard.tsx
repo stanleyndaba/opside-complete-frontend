@@ -23,6 +23,7 @@ import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Link2, FileText, Loader2 } from 'lucide-react';
+import { claimReferenceLabel, documentReferenceLabel } from '@/lib/displayReferences';
 
 interface SmartPromptMatch {
     id: string;
@@ -169,7 +170,7 @@ export function SmartPromptCard({
                                     <div className="flex items-center gap-2">
                                         <Link2 className="h-3 w-3 text-white/10" />
                                         <Link to={`/recoveries/${match.claim_id}`} className="text-[10px] font-sans font-medium text-white/65 hover:text-white transition-colors tracking-tight">
-                                            {match.claim_id.substring(0, 16)}
+                                            {claimReferenceLabel(match.claim_details, match.claim_id)}
                                         </Link>
                                     </div>
                                 </div>
@@ -179,7 +180,7 @@ export function SmartPromptCard({
                                     <div className="flex items-center gap-2">
                                         <FileText className="h-3 w-3 text-white/10" />
                                         <Link to={`/documents/${match.document_id}`} className="text-[10px] font-sans font-medium text-white/65 hover:text-white transition-colors tracking-tight">
-                                            {match.document_details?.filename?.substring(0, 24) || match.document_id.substring(0, 16)}
+                                            {documentReferenceLabel(match.document_details, match.document_id)}
                                         </Link>
                                     </div>
                                 </div>
