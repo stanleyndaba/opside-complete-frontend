@@ -511,7 +511,7 @@ export default function Research() {
                 </p>
               </div>
 
-              <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
+              <div className="mt-8 flex w-full max-w-[640px] flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center md:mt-10">
                 <button
                   type="button"
                   onClick={handlePrimaryCta}
@@ -526,6 +526,13 @@ export default function Research() {
                   className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                 >
                   About Margin
+                </Link>
+
+                <Link
+                  to="/getida-alternative"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                >
+                  GETIDA Alternative
                 </Link>
               </div>
             </motion.div>

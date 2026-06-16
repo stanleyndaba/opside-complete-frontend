@@ -100,6 +100,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/amazon-fee-overcharge-reimbursement'),
     image: SITE_META.image,
   },
+  '/getida-alternative': {
+    path: '/getida-alternative',
+    title: 'GETIDA Alternative | Margin',
+    description:
+      'Compare GETIDA and Margin. Learn how Amazon reimbursement workflows differ, from discrepancy detection through evidence collection, filing, disputes, and payout reconciliation.',
+    canonical: routeUrl('/getida-alternative'),
+    ogTitle: 'GETIDA Alternative | Margin',
+    ogDescription:
+      'Compare GETIDA and Margin workflow differences across discrepancy detection, evidence collection, filing, disputes, and payout reconciliation.',
+    ogUrl: routeUrl('/getida-alternative'),
+    image: SITE_META.image,
+  },
   '/research': {
     path: '/research',
     title: 'FBA Reimbursement Research | Margin',

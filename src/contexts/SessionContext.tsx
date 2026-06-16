@@ -38,6 +38,7 @@ const PUBLIC_ROUTE_SEGMENTS = [
     '/amazon-reimbursement-audit',
     '/amazon-inbound-shipment-shortage',
     '/amazon-fee-overcharge-reimbursement',
+    '/getida-alternative',
     '/about',
     '/about-margin',
     '/research',
