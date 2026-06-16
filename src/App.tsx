@@ -69,6 +69,7 @@ const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Sales = lazy(() => import("./pages/Sales"));
 const AmazonFbaReimbursement = lazy(() => import("./pages/AmazonFbaReimbursement"));
+const ReimbursementAcquisitionPage = lazy(() => import("./pages/ReimbursementAcquisitionPage"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
@@ -204,6 +205,10 @@ const App = () => (
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/sales" element={<Sales />} />
                         <Route path="/amazon-fba-reimbursement" element={<AmazonFbaReimbursement />} />
+                        <Route path="/amazon-lost-inventory-reimbursement" element={<ReimbursementAcquisitionPage />} />
+                        <Route path="/amazon-reimbursement-audit" element={<ReimbursementAcquisitionPage />} />
+                        <Route path="/amazon-inbound-shipment-shortage" element={<ReimbursementAcquisitionPage />} />
+                        <Route path="/amazon-fee-overcharge-reimbursement" element={<ReimbursementAcquisitionPage />} />
                         <Route path="/about" element={<AboutMargin />} />
                         <Route path="/about-margin" element={<AboutMargin />} />
                         <Route path="/research" element={<Research />} />

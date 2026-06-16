@@ -10,6 +10,371 @@ const indexPath = path.join(distDir, 'index.html');
 const siteUrl = 'https://margin-finance.com';
 const defaultImage = `${siteUrl}/margin-logo-reveal.gif`;
 
+const buildAcquisitionStructuredData = ({
+  path,
+  faqs,
+  serviceName,
+  serviceType,
+  softwareDescription,
+  serviceDescription,
+}) => {
+  const canonical = `${siteUrl}${path}`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'FAQPage',
+        '@id': `${canonical}#faq`,
+        mainEntity: faqs.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
+      },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${canonical}#software`,
+        name: 'Margin',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        url: canonical,
+        description: softwareDescription,
+        offers: {
+          '@type': 'Offer',
+          price: '99',
+          priceCurrency: 'USD',
+          description: 'Early access activation for Margin recovery workflow',
+        },
+      },
+      {
+        '@type': 'Service',
+        '@id': `${canonical}#service`,
+        name: serviceName,
+        serviceType,
+        provider: {
+          '@type': 'Organization',
+          name: 'Margin',
+          url: `${siteUrl}/`,
+        },
+        areaServed: 'Worldwide',
+        url: canonical,
+        description: serviceDescription,
+      },
+    ],
+  };
+};
+
+const createAcquisitionRoute = (route) => ({
+  ...route,
+  shell: {
+    label: route.label,
+    h1: route.h1,
+    intro: route.intro,
+    sections: route.sections,
+    links: route.links,
+  },
+  structuredData: buildAcquisitionStructuredData(route),
+});
+
+const acquisitionRoutes = [
+  createAcquisitionRoute({
+    path: '/amazon-lost-inventory-reimbursement',
+    title: 'Amazon Lost Inventory Reimbursement | Margin',
+    description:
+      'Recover money tied to lost Amazon inventory. Margin identifies inventory discrepancies, organizes supporting evidence, manages claim preparation, and tracks reimbursement outcomes through resolution.',
+    ogTitle: 'Amazon Lost Inventory Reimbursement | Margin',
+    ogDescription:
+      'Margin helps Amazon sellers identify lost inventory discrepancies, organize evidence, prepare claims, and track reimbursement outcomes through resolution.',
+    label: 'Amazon Lost Inventory Reimbursement',
+    h1: 'Amazon Lost Inventory Reimbursement Without Chasing Cases',
+    intro:
+      'Margin helps sellers identify lost inventory discrepancies, organize supporting evidence, manage claim preparation, and track reimbursement outcomes through resolution.',
+    sections: [
+      {
+        heading: 'What lost inventory reimbursement is',
+        body:
+          'Lost inventory reimbursement covers FBA units that are missing, adjusted, transferred, removed, or otherwise unresolved after Amazon inventory activity.',
+      },
+      {
+        heading: 'Why inventory claims are missed',
+        body:
+          'Claims are missed when inventory signals, shipment records, seller documents, case timing, and payout outcomes live in different reports and workflows.',
+      },
+      {
+        heading: 'Evidence required for inventory reimbursement',
+        body:
+          'Useful support can include inventory adjustments, reconciliation reports, inbound shipment details, invoices, reference IDs, case history, and settlement activity.',
+      },
+      {
+        heading: 'How Margin tracks inventory recovery',
+        body:
+          'Margin connects detection, classification, evidence binding, seller approval, and outcome tracking so lost inventory work stays visible through resolution.',
+      },
+    ],
+    links: [
+      { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+      { href: '/early-access', label: 'Secure early access' },
+      { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
+    ],
+    faqs: [
+      {
+        question: 'What is Amazon lost inventory reimbursement?',
+        answer:
+          'Amazon lost inventory reimbursement is the process of recovering money for FBA units that Amazon cannot properly account for after receiving, storage, transfer, fulfillment, removal, or adjustment activity.',
+      },
+      {
+        question: 'Why are lost inventory reimbursements often missed?',
+        answer:
+          'They are often missed because the inventory event, Amazon report trail, supporting seller records, and financial outcome are separated across different systems and time periods.',
+      },
+      {
+        question: 'What evidence supports a lost inventory reimbursement claim?',
+        answer:
+          'Useful evidence can include inventory adjustment records, reconciliation reports, inbound shipment details, invoices, reference IDs, case history, and settlement or reimbursement activity.',
+      },
+      {
+        question: 'Can Margin help track whether Amazon actually paid the reimbursement?',
+        answer:
+          'Yes. Margin is designed to keep recovery work visible through approval, rejection, dispute handling, reversal checks, and payout reconciliation.',
+      },
+      {
+        question: 'Does Margin file lost inventory claims without seller approval?',
+        answer:
+          'No. Margin keeps seller review in the workflow. Sellers can review evidence and approve before filing action moves forward.',
+      },
+    ],
+    serviceName: 'Amazon lost inventory reimbursement service',
+    serviceType: 'Amazon lost inventory reimbursement workflow',
+    softwareDescription:
+      'Margin identifies Amazon lost inventory reimbursement opportunities, organizes supporting evidence, and tracks recovery outcomes through resolution.',
+    serviceDescription:
+      'Margin helps Amazon sellers manage lost inventory reimbursement workflows by connecting discrepancy detection, evidence organization, claim preparation, approval, and payout tracking.',
+  }),
+  createAcquisitionRoute({
+    path: '/amazon-reimbursement-audit',
+    title: 'Amazon Reimbursement Audit | Margin',
+    description:
+      'Identify reimbursement opportunities across inventory losses, shipment discrepancies, fee errors, and payout mismatches. Margin helps organize audit findings into actionable recovery workflows.',
+    ogTitle: 'Amazon Reimbursement Audit | Margin',
+    ogDescription:
+      'Margin turns Amazon reimbursement audit findings across inventory, shipment, fee, and payout discrepancies into actionable recovery workflows.',
+    label: 'Amazon Reimbursement Audit',
+    h1: 'Amazon Reimbursement Audit For Sellers Who Need More Than Reports',
+    intro:
+      'Margin identifies reimbursement opportunities across inventory losses, shipment discrepancies, fee errors, and payout mismatches, then organizes audit findings into actionable recovery workflows.',
+    sections: [
+      {
+        heading: 'What a reimbursement audit includes',
+        body:
+          'A reimbursement audit reviews seller account activity for inventory, shipment, refund, fee, reimbursement, and payout events that may not reconcile correctly.',
+      },
+      {
+        heading: 'Common reimbursement categories',
+        body:
+          'Common categories include lost inventory, inbound shortages, refund gaps, fee overcharges, reimbursement reversals, and payout mismatches.',
+      },
+      {
+        heading: 'Why audit reports alone are not enough',
+        body:
+          'A report only identifies possible issues. Sellers still need evidence, claim preparation, filing control, rejection handling, and payout reconciliation.',
+      },
+      {
+        heading: "Margin's recovery workflow",
+        body:
+          'Margin turns audit signals into detect, classify, bind evidence, approve, and track outcome workflows so findings can move toward resolution.',
+      },
+    ],
+    links: [
+      { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+      { href: '/pricing', label: 'View pricing' },
+      { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
+    ],
+    faqs: [
+      {
+        question: 'What is an Amazon reimbursement audit?',
+        answer:
+          'An Amazon reimbursement audit reviews seller account activity for inventory losses, shipment discrepancies, fee errors, refund gaps, reimbursement reversals, and payout mismatches that may create recovery opportunities.',
+      },
+      {
+        question: 'What categories can an Amazon reimbursement audit review?',
+        answer:
+          'An audit can review lost inventory, inbound shipment shortages, refund-without-return activity, fee overcharges, measurement issues, reimbursement reversals, and settlement or payout discrepancies.',
+      },
+      {
+        question: 'Why is an audit report not enough by itself?',
+        answer:
+          'A report only identifies possible issues. Sellers still need evidence, claim preparation, filing control, rejection handling, and payout reconciliation before the opportunity becomes resolved recovery work.',
+      },
+      {
+        question: 'How does Margin turn audit findings into action?',
+        answer:
+          'Margin classifies reimbursement opportunities, organizes evidence, keeps seller approval in the workflow, supports filing preparation, and tracks outcomes through resolution.',
+      },
+      {
+        question: 'Does Margin guarantee reimbursement after an audit?',
+        answer:
+          'No. Amazon controls the final reimbursement decision. Margin helps sellers find, organize, prepare, and track recovery opportunities more consistently.',
+      },
+    ],
+    serviceName: 'Amazon reimbursement audit service',
+    serviceType: 'Amazon reimbursement audit and recovery workflow',
+    softwareDescription:
+      'Margin identifies Amazon reimbursement audit opportunities and organizes findings into evidence-backed recovery workflows.',
+    serviceDescription:
+      'Margin helps Amazon sellers audit reimbursement opportunities across inventory losses, shipment discrepancies, fee errors, and payout mismatches, then manage findings through recovery workflows.',
+  }),
+  createAcquisitionRoute({
+    path: '/amazon-inbound-shipment-shortage',
+    title: 'Amazon Inbound Shipment Shortage Reimbursement | Margin',
+    description:
+      'Track inbound shipment shortages, organize shipment evidence, and monitor reimbursement eligibility before claim windows expire.',
+    ogTitle: 'Amazon Inbound Shipment Shortage Reimbursement | Margin',
+    ogDescription:
+      'Margin helps Amazon sellers track inbound shipment shortages, organize shipment evidence, and monitor reimbursement eligibility before claim windows expire.',
+    label: 'Amazon Inbound Shipment Shortage',
+    h1: 'Amazon Inbound Shipment Shortage Recovery',
+    intro:
+      'Margin helps sellers track inbound shipment shortages, organize shipment evidence, and monitor reimbursement eligibility before claim windows expire.',
+    sections: [
+      {
+        heading: 'What inbound shortages are',
+        body:
+          'Inbound shortages happen when the quantity sent to FBA does not match what Amazon receives, recognizes, or reconciles.',
+      },
+      {
+        heading: 'Why shortages go unresolved',
+        body:
+          'Shortages go unresolved when shipment plans, carrier records, invoices, bills of lading, receiving reports, and case follow-up are hard to assemble manually.',
+      },
+      {
+        heading: 'Required shipment documentation',
+        body:
+          'Useful documents can include shipment IDs, tracking records, box content details, bills of lading, invoices, packing lists, receiving records, and case history.',
+      },
+      {
+        heading: "Margin's evidence workflow",
+        body:
+          'Margin groups shortage signals by shipment, binds supporting evidence, keeps seller approval in the loop, and tracks reimbursement outcomes.',
+      },
+    ],
+    links: [
+      { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+      { href: '/early-access', label: 'Secure early access' },
+      { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
+    ],
+    faqs: [
+      {
+        question: 'What is an Amazon inbound shipment shortage?',
+        answer:
+          'An inbound shipment shortage occurs when the quantity a seller sends to FBA does not match the quantity Amazon receives, recognizes, or reconciles.',
+      },
+      {
+        question: 'Why do inbound shipment shortages go unresolved?',
+        answer:
+          'They often go unresolved because shipment plans, carrier records, invoices, bills of lading, receiving reports, and case follow-up are difficult to assemble manually before timing windows weaken.',
+      },
+      {
+        question: 'What documents support an inbound shortage claim?',
+        answer:
+          'Helpful documents can include shipment IDs, tracking records, box content details, bills of lading, invoices, packing lists, purchase orders, receiving records, and Amazon case history.',
+      },
+      {
+        question: 'How does Margin help with inbound shipment shortages?',
+        answer:
+          'Margin detects shortage signals, classifies the recovery path, binds shipment evidence, keeps seller approval in the loop, and tracks the outcome through reimbursement resolution.',
+      },
+      {
+        question: 'Does Margin submit inbound shortage claims without approval?',
+        answer:
+          'No. Margin keeps sellers in control with review and approval before filing action moves forward.',
+      },
+    ],
+    serviceName: 'Amazon inbound shipment shortage reimbursement service',
+    serviceType: 'Amazon inbound shipment shortage recovery workflow',
+    softwareDescription:
+      'Margin tracks Amazon inbound shipment shortages, organizes shipment evidence, and monitors reimbursement outcomes.',
+    serviceDescription:
+      'Margin helps Amazon sellers manage inbound shipment shortage reimbursement by organizing shipment records, evidence, approval, claim preparation, and payout tracking.',
+  }),
+  createAcquisitionRoute({
+    path: '/amazon-fee-overcharge-reimbursement',
+    title: 'Amazon Fee Overcharge Reimbursement | Margin',
+    description:
+      'Identify fee discrepancies, measurement errors, and overcharges. Margin helps structure evidence and recovery workflows around fee-related reimbursement opportunities.',
+    ogTitle: 'Amazon Fee Overcharge Reimbursement | Margin',
+    ogDescription:
+      'Margin helps Amazon sellers identify fee discrepancies, measurement errors, and overcharge signals, then structure evidence and recovery workflows around them.',
+    label: 'Amazon Fee Overcharge Reimbursement',
+    h1: 'Amazon Fee Overcharge Recovery Without Manual Investigation',
+    intro:
+      'Margin helps sellers identify fee discrepancies, measurement errors, and overcharges, then structure evidence and recovery workflows around fee-related reimbursement opportunities.',
+    sections: [
+      {
+        heading: 'Fee overcharges explained',
+        body:
+          'Fee overcharge reimbursement focuses on fees that appear inconsistent with product measurements, transaction context, storage activity, or settlement records.',
+      },
+      {
+        heading: 'Common fee discrepancy scenarios',
+        body:
+          'Scenarios can include measurement errors, storage charges, fulfillment fee changes, category logic, reimbursement reversals, and settlement mismatches.',
+      },
+      {
+        heading: 'Evidence and validation requirements',
+        body:
+          'Useful support can include catalog records, SKU details, dimensions, weight, fee previews, transaction reports, settlement records, and case history.',
+      },
+      {
+        heading: 'Recovery workflow',
+        body:
+          'Margin ties fee discrepancy detection, classification, validation evidence, seller approval, and payout tracking into one recovery workflow.',
+      },
+    ],
+    links: [
+      { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
+      { href: '/pricing', label: 'View pricing' },
+      { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
+    ],
+    faqs: [
+      {
+        question: 'What is Amazon fee overcharge reimbursement?',
+        answer:
+          'Amazon fee overcharge reimbursement is the process of recovering money when Amazon fee charges appear inconsistent with product measurements, transaction context, storage activity, or settlement records.',
+      },
+      {
+        question: 'What fee issues can Margin help identify?',
+        answer:
+          'Margin can help identify fee discrepancies tied to measurement errors, fulfillment fees, storage fees, settlement mismatches, reimbursement reversals, and overcharge patterns that need evidence review.',
+      },
+      {
+        question: 'What evidence is useful for fee overcharge recovery?',
+        answer:
+          'Useful evidence can include catalog records, SKU details, dimensions, weight, fee previews, transaction reports, settlement records, support history, and reimbursement activity.',
+      },
+      {
+        question: 'How does Margin handle fee-related recovery workflow?',
+        answer:
+          'Margin detects the discrepancy, classifies the issue, organizes validation evidence, keeps seller approval in the workflow, and tracks the outcome through adjustment or reimbursement resolution.',
+      },
+      {
+        question: 'Does Margin guarantee Amazon will adjust a fee?',
+        answer:
+          'No. Amazon controls fee review and reimbursement decisions. Margin helps sellers structure the evidence and workflow around fee-related recovery opportunities.',
+      },
+    ],
+    serviceName: 'Amazon fee overcharge reimbursement service',
+    serviceType: 'Amazon fee overcharge recovery workflow',
+    softwareDescription:
+      'Margin identifies Amazon fee overcharge reimbursement opportunities, organizes validation evidence, and tracks fee recovery outcomes.',
+    serviceDescription:
+      'Margin helps Amazon sellers structure fee discrepancy recovery workflows around detection, evidence organization, claim preparation, approval, and payout tracking.',
+  }),
+];
+
 const routes = [
   {
     path: '/',
@@ -174,6 +539,7 @@ const routes = [
       ],
     },
   },
+  ...acquisitionRoutes,
   {
     path: '/research',
     title: 'FBA Reimbursement Research | Margin',

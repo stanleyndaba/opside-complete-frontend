@@ -52,6 +52,54 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/amazon-fba-reimbursement'),
     image: SITE_META.image,
   },
+  '/amazon-lost-inventory-reimbursement': {
+    path: '/amazon-lost-inventory-reimbursement',
+    title: 'Amazon Lost Inventory Reimbursement | Margin',
+    description:
+      'Recover money tied to lost Amazon inventory. Margin identifies inventory discrepancies, organizes supporting evidence, manages claim preparation, and tracks reimbursement outcomes through resolution.',
+    canonical: routeUrl('/amazon-lost-inventory-reimbursement'),
+    ogTitle: 'Amazon Lost Inventory Reimbursement | Margin',
+    ogDescription:
+      'Margin helps Amazon sellers identify lost inventory discrepancies, organize evidence, prepare claims, and track reimbursement outcomes through resolution.',
+    ogUrl: routeUrl('/amazon-lost-inventory-reimbursement'),
+    image: SITE_META.image,
+  },
+  '/amazon-reimbursement-audit': {
+    path: '/amazon-reimbursement-audit',
+    title: 'Amazon Reimbursement Audit | Margin',
+    description:
+      'Identify reimbursement opportunities across inventory losses, shipment discrepancies, fee errors, and payout mismatches. Margin helps organize audit findings into actionable recovery workflows.',
+    canonical: routeUrl('/amazon-reimbursement-audit'),
+    ogTitle: 'Amazon Reimbursement Audit | Margin',
+    ogDescription:
+      'Margin turns Amazon reimbursement audit findings across inventory, shipment, fee, and payout discrepancies into actionable recovery workflows.',
+    ogUrl: routeUrl('/amazon-reimbursement-audit'),
+    image: SITE_META.image,
+  },
+  '/amazon-inbound-shipment-shortage': {
+    path: '/amazon-inbound-shipment-shortage',
+    title: 'Amazon Inbound Shipment Shortage Reimbursement | Margin',
+    description:
+      'Track inbound shipment shortages, organize shipment evidence, and monitor reimbursement eligibility before claim windows expire.',
+    canonical: routeUrl('/amazon-inbound-shipment-shortage'),
+    ogTitle: 'Amazon Inbound Shipment Shortage Reimbursement | Margin',
+    ogDescription:
+      'Margin helps Amazon sellers track inbound shipment shortages, organize shipment evidence, and monitor reimbursement eligibility before claim windows expire.',
+    ogUrl: routeUrl('/amazon-inbound-shipment-shortage'),
+    image: SITE_META.image,
+  },
+  '/amazon-fee-overcharge-reimbursement': {
+    path: '/amazon-fee-overcharge-reimbursement',
+    title: 'Amazon Fee Overcharge Reimbursement | Margin',
+    description:
+      'Identify fee discrepancies, measurement errors, and overcharges. Margin helps structure evidence and recovery workflows around fee-related reimbursement opportunities.',
+    canonical: routeUrl('/amazon-fee-overcharge-reimbursement'),
+    ogTitle: 'Amazon Fee Overcharge Reimbursement | Margin',
+    ogDescription:
+      'Margin helps Amazon sellers identify fee discrepancies, measurement errors, and overcharge signals, then structure evidence and recovery workflows around them.',
+    ogUrl: routeUrl('/amazon-fee-overcharge-reimbursement'),
+    image: SITE_META.image,
+  },
   '/research': {
     path: '/research',
     title: 'FBA Reimbursement Research | Margin',
