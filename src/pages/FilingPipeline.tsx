@@ -3156,7 +3156,7 @@ function CompletedRecoveryCard({
               <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(recoveredAmount, row.currency)}</span>
             </div>
 
-            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.recoverySummary}</p>
+            <p className="mt-1.5 max-w-3xl text-sm font-medium leading-5 text-[#E5E7EB]">{preview.recoverySummary}</p>
             <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
               Amazon case {amazonCase} · Proof {proofReference}
             </div>
