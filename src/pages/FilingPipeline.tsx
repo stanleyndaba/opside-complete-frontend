@@ -17,6 +17,21 @@ import { useParams } from 'react-router-dom';
 type DisputeRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
 type DisputeQueueData = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>;
 
+type PayoutTrackingPreview = {
+  approvalSummary: string;
+  settlementStage: string;
+  progress: number;
+  expectedDeposit: string;
+  nextReconciliation: string;
+  payoutRisk: string;
+  reconciliationSource: string;
+  variance: string;
+  daysWaiting: number;
+  cashAction: string;
+  watchedReports: string[];
+  ledgerChecks: string[];
+};
+
 type LedgerRow = {
   row_type: 'dispute_case_projection' | 'detection_projection' | null;
   entity_type: 'dispute_case' | 'detection' | null;
@@ -54,6 +69,7 @@ type LedgerRow = {
   outstanding_amount?: number | null;
   currency: string;
   last_updated_at: string | null;
+  payout_preview?: PayoutTrackingPreview | null;
 };
 
 type LedgerResponse = {
@@ -1135,6 +1151,279 @@ const DEMO_COMPLETED_RECOVERY_VARIANTS = [
   },
 ];
 
+const DEMO_AWAITING_PAYOUT_VARIANTS = [
+  {
+    caseNumber: '784-720141',
+    providerCaseId: '16911480251',
+    merchantReference: 'Acme Operations US FBA · Inbound shortage approved',
+    proofReference: 'AMZ-APP-INB-80251',
+    externalReference: 'REC-INB-WATCH-7419',
+    approvedAmount: 486.2,
+    reconciliationSource: 'amazon_approval_thread',
+    payoutStatus: 'not_paid',
+    operatorState: 'waiting_for_settlement',
+    submittedMinutesAgo: 920,
+    updatedMinutesAgo: 37,
+    preview: {
+      approvalSummary: 'Amazon approved the inbound shortage. Margin is now watching settlement reports until the exact credit lands.',
+      settlementStage: 'Approved, not deposited',
+      progress: 68,
+      expectedDeposit: 'Expected in next settlement close',
+      nextReconciliation: 'Next settlement scan in 41 min',
+      payoutRisk: 'Low risk - approval amount and claim amount match',
+      reconciliationSource: 'Amazon approval thread + settlement report',
+      variance: '$0.00 variance expected',
+      daysWaiting: 1,
+      cashAction: 'Hold as receivable until deposit appears',
+      watchedReports: ['settlement-v2-report.csv', 'reimbursements.csv', 'payment-events.json'],
+      ledgerChecks: ['Approval reference captured', 'No payment event yet', 'Amount watcher armed'],
+    },
+  },
+  {
+    caseNumber: '784-720242',
+    providerCaseId: '16920491764',
+    merchantReference: 'Acme Operations US FBA · Warehouse transfer reimbursement',
+    proofReference: 'AMZ-APP-XFER-91764',
+    externalReference: 'REC-XFER-WATCH-2248',
+    approvedAmount: 312.18,
+    reconciliationSource: 'amazon_reimbursement_event',
+    payoutStatus: 'pending',
+    operatorState: 'waiting_for_payout',
+    submittedMinutesAgo: 1084,
+    updatedMinutesAgo: 52,
+    preview: {
+      approvalSummary: 'Amazon created a reimbursement event, but the settlement deposit has not posted to the payout ledger yet.',
+      settlementStage: 'Reimbursement event found',
+      progress: 74,
+      expectedDeposit: 'Expected with open settlement batch',
+      nextReconciliation: 'Next reimbursement sweep in 29 min',
+      payoutRisk: 'Low risk - reimbursement event already exists',
+      reconciliationSource: 'Amazon reimbursement event',
+      variance: '$0.00 variance expected',
+      daysWaiting: 2,
+      cashAction: 'Monitor batch until paid',
+      watchedReports: ['reimbursement-events.csv', 'settlement-batch.csv', 'transaction-ledger.csv'],
+      ledgerChecks: ['Event ID matched', 'Settlement batch still open', 'Duplicate payout check clear'],
+    },
+  },
+  {
+    caseNumber: '784-720343',
+    providerCaseId: '16900243920',
+    merchantReference: 'Acme Operations US FBA · Damaged inventory payout',
+    proofReference: 'AMZ-APP-DMG-43920',
+    externalReference: 'REC-DMG-WATCH-6182',
+    approvedAmount: 96.44,
+    reconciliationSource: 'amazon_approval',
+    payoutStatus: 'not_paid',
+    operatorState: 'waiting_for_payout',
+    submittedMinutesAgo: 1216,
+    updatedMinutesAgo: 74,
+    preview: {
+      approvalSummary: 'Damage reimbursement was approved. Margin is checking whether Amazon nets it into the next account-level payout.',
+      settlementStage: 'Waiting for netted payout',
+      progress: 57,
+      expectedDeposit: 'Expected within 2 business days',
+      nextReconciliation: 'Next account payout check in 55 min',
+      payoutRisk: 'Medium-low risk - small reimbursements can net with fees',
+      reconciliationSource: 'Approval record + account payout ledger',
+      variance: 'Possible fee-netting variance',
+      daysWaiting: 2,
+      cashAction: 'Watch net settlement amount',
+      watchedReports: ['account-level-payout.csv', 'fee-adjustments.csv', 'reimbursements.csv'],
+      ledgerChecks: ['Approval stored', 'Fee-netting watch active', 'No credit found yet'],
+    },
+  },
+  {
+    caseNumber: '784-720444',
+    providerCaseId: '16911803788',
+    merchantReference: 'Acme Operations US FBA · Return not received approval',
+    proofReference: 'AMZ-APP-RWR-03788',
+    externalReference: 'REC-RWR-WATCH-5091',
+    approvedAmount: 57.9,
+    reconciliationSource: 'seller_central_case_thread',
+    payoutStatus: 'not_paid',
+    operatorState: 'waiting_for_settlement',
+    submittedMinutesAgo: 1388,
+    updatedMinutesAgo: 91,
+    preview: {
+      approvalSummary: 'Amazon approved the customer-return claim. Margin is watching for the reimbursement event and final settlement credit.',
+      settlementStage: 'Approval captured',
+      progress: 49,
+      expectedDeposit: 'Expected after reimbursement event posts',
+      nextReconciliation: 'Next case-thread check in 34 min',
+      payoutRisk: 'Low risk - approval language is explicit',
+      reconciliationSource: 'Case thread + reimbursement ledger',
+      variance: '$0.00 variance expected',
+      daysWaiting: 1,
+      cashAction: 'Keep claim open until paid',
+      watchedReports: ['case-thread-snapshot.pdf', 'reimbursements.csv', 'settlement-report.csv'],
+      ledgerChecks: ['Approval sentence parsed', 'Return claim linked', 'Payout still missing'],
+    },
+  },
+  {
+    caseNumber: '784-720545',
+    providerCaseId: '16914565413',
+    merchantReference: 'Acme Operations US FBA · FBA fee correction approved',
+    proofReference: 'AMZ-APP-FEE-65413',
+    externalReference: 'REC-FEE-WATCH-3310',
+    approvedAmount: 128.36,
+    reconciliationSource: 'fee_adjustment_ledger',
+    payoutStatus: 'pending',
+    operatorState: 'waiting_for_fee_credit',
+    submittedMinutesAgo: 1494,
+    updatedMinutesAgo: 113,
+    preview: {
+      approvalSummary: 'Amazon accepted the FBA fee correction. Margin is watching fee-adjustment rows rather than inventory reimbursements.',
+      settlementStage: 'Fee credit pending',
+      progress: 63,
+      expectedDeposit: 'Expected as fee adjustment credit',
+      nextReconciliation: 'Next fee-ledger scan in 48 min',
+      payoutRisk: 'Low risk - fee tier correction approved',
+      reconciliationSource: 'Fee adjustment ledger',
+      variance: '$0.00 fee-credit target',
+      daysWaiting: 3,
+      cashAction: 'Track as fee credit, not inventory payout',
+      watchedReports: ['fee-adjustments.csv', 'transaction-view.csv', 'settlement-v2-report.csv'],
+      ledgerChecks: ['Correction accepted', 'Fee rows targeted', 'No duplicate credit'],
+    },
+  },
+  {
+    caseNumber: '784-720646',
+    providerCaseId: '16922028577',
+    merchantReference: 'Acme Operations US FBA · Lost inventory approval',
+    proofReference: 'AMZ-APP-LOST-28577',
+    externalReference: 'REC-LOST-WATCH-9026',
+    approvedAmount: 421.65,
+    reconciliationSource: 'amazon_reimbursement_event',
+    payoutStatus: 'not_paid',
+    operatorState: 'escalation_timer_running',
+    submittedMinutesAgo: 1639,
+    updatedMinutesAgo: 128,
+    preview: {
+      approvalSummary: 'High-value lost inventory reimbursement is approved. Margin is watching closely and will escalate if the payout misses the next cycle.',
+      settlementStage: 'High-value payout watch',
+      progress: 78,
+      expectedDeposit: 'Expected in current payout cycle',
+      nextReconciliation: 'Next high-value watch in 17 min',
+      payoutRisk: 'Medium-low risk - escalation timer is active',
+      reconciliationSource: 'Reimbursement event + settlement cycle',
+      variance: '$0.00 variance expected',
+      daysWaiting: 4,
+      cashAction: 'Escalate if not deposited next cycle',
+      watchedReports: ['high-value-reimbursements.csv', 'settlement-batch.csv', 'case-thread.pdf'],
+      ledgerChecks: ['Approval amount verified', 'Escalation timer set', 'Settlement credit not found'],
+    },
+  },
+  {
+    caseNumber: '784-720747',
+    providerCaseId: '16908367244',
+    merchantReference: 'Acme Operations US FBA · Customer return reimbursement',
+    proofReference: 'AMZ-APP-RET-67244',
+    externalReference: 'REC-RET-WATCH-1173',
+    approvedAmount: 73.28,
+    reconciliationSource: 'amazon_approval',
+    payoutStatus: 'not_paid',
+    operatorState: 'waiting_for_payout',
+    submittedMinutesAgo: 1776,
+    updatedMinutesAgo: 144,
+    preview: {
+      approvalSummary: 'Customer-return reimbursement was approved and is being monitored until the credit appears in payout data.',
+      settlementStage: 'Awaiting reimbursement credit',
+      progress: 54,
+      expectedDeposit: 'Expected within 48 hours',
+      nextReconciliation: 'Next reimbursement check in 26 min',
+      payoutRisk: 'Low risk - case ID and order ID match',
+      reconciliationSource: 'Approval record + reimbursement feed',
+      variance: '$0.00 variance expected',
+      daysWaiting: 2,
+      cashAction: 'Wait for credit, then close',
+      watchedReports: ['reimbursements.csv', 'order-transaction.csv', 'settlement-report.csv'],
+      ledgerChecks: ['Order refund matched', 'Approval captured', 'Payout feed missing'],
+    },
+  },
+  {
+    caseNumber: '784-720848',
+    providerCaseId: '16908153906',
+    merchantReference: 'Acme Operations US FBA · Removal damage approval',
+    proofReference: 'AMZ-APP-REM-53906',
+    externalReference: 'REC-REM-WATCH-4407',
+    approvedAmount: 267.11,
+    reconciliationSource: 'amazon_approval_thread',
+    payoutStatus: 'pending',
+    operatorState: 'waiting_for_settlement',
+    submittedMinutesAgo: 1908,
+    updatedMinutesAgo: 163,
+    preview: {
+      approvalSummary: 'Removal damage claim is approved. Margin is matching the credit against removal order and reimbursement references.',
+      settlementStage: 'Reference matching',
+      progress: 61,
+      expectedDeposit: 'Expected in open settlement',
+      nextReconciliation: 'Next reference match in 39 min',
+      payoutRisk: 'Medium-low risk - removal credits can post under alternate refs',
+      reconciliationSource: 'Approval thread + removal order ledger',
+      variance: 'Alternate reference possible',
+      daysWaiting: 3,
+      cashAction: 'Match by removal ID if Amazon renames credit',
+      watchedReports: ['removal-order-ledger.csv', 'reimbursements.csv', 'settlement-report.csv'],
+      ledgerChecks: ['Removal ID stored', 'Alternate refs indexed', 'Settlement still open'],
+    },
+  },
+  {
+    caseNumber: '784-720949',
+    providerCaseId: '16917734655',
+    merchantReference: 'Acme Operations US FBA · Approved payout follow-up',
+    proofReference: 'AMZ-APP-SET-34655',
+    externalReference: 'REC-SET-WATCH-7864',
+    approvedAmount: 144.83,
+    reconciliationSource: 'settlement_reconciliation',
+    payoutStatus: 'not_paid',
+    operatorState: 'payout_gap_open',
+    submittedMinutesAgo: 2055,
+    updatedMinutesAgo: 181,
+    preview: {
+      approvalSummary: 'Amazon approval exists, but the expected settlement deposit is still missing. Margin is keeping the payout gap open.',
+      settlementStage: 'Payout gap open',
+      progress: 82,
+      expectedDeposit: 'Overdue by one settlement cycle',
+      nextReconciliation: 'Next settlement-gap scan in 21 min',
+      payoutRisk: 'Medium risk - approved amount missed one cycle',
+      reconciliationSource: 'Settlement reconciliation worksheet',
+      variance: 'Full amount still outstanding',
+      daysWaiting: 5,
+      cashAction: 'Prepare follow-up if next cycle misses',
+      watchedReports: ['settlement-gap.xlsx', 'approval-thread.pdf', 'payment-events.json'],
+      ledgerChecks: ['Approval found', 'Deposit missing', 'Follow-up timer active'],
+    },
+  },
+  {
+    caseNumber: '784-721050',
+    providerCaseId: '16906619833',
+    merchantReference: 'Acme Operations US FBA · Disposal reimbursement approval',
+    proofReference: 'AMZ-APP-DISP-19833',
+    externalReference: 'REC-DISP-WATCH-2580',
+    approvedAmount: 219.47,
+    reconciliationSource: 'amazon_reimbursement_event',
+    payoutStatus: 'pending',
+    operatorState: 'waiting_for_payout',
+    submittedMinutesAgo: 2197,
+    updatedMinutesAgo: 202,
+    preview: {
+      approvalSummary: 'Inventory disposal reimbursement is approved and awaiting the matching Amazon settlement credit.',
+      settlementStage: 'Settlement credit pending',
+      progress: 66,
+      expectedDeposit: 'Expected next payout cycle',
+      nextReconciliation: 'Next disposal-credit scan in 44 min',
+      payoutRisk: 'Low risk - reimbursement event posted',
+      reconciliationSource: 'Reimbursement event + settlement report',
+      variance: '$0.00 variance expected',
+      daysWaiting: 3,
+      cashAction: 'Close once deposit lands',
+      watchedReports: ['disposal-reimbursement.csv', 'settlement-report.csv', 'payment-events.json'],
+      ledgerChecks: ['Disposal event linked', 'Credit event posted', 'Deposit still pending'],
+    },
+  },
+];
+
 function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', index: number, baseMs: number): DisputeRow {
   const entryNumber = index + 1;
   const padded = String(entryNumber).padStart(2, '0');
@@ -1325,15 +1614,20 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
   const entryNumber = index + 1;
   const padded = String(entryNumber).padStart(2, '0');
   const amount = 210 + entryNumber * 23;
+  const payoutVariant = stage === 'payout'
+    ? DEMO_AWAITING_PAYOUT_VARIANTS[index % DEMO_AWAITING_PAYOUT_VARIANTS.length]
+    : null;
   const completedVariant = stage === 'completed'
     ? DEMO_COMPLETED_RECOVERY_VARIANTS[index % DEMO_COMPLETED_RECOVERY_VARIANTS.length]
     : null;
   const updatedAt = completedVariant
     ? demoTimestamp(baseMs, completedVariant.updatedMinutesAgo)
-    : demoTimestamp(baseMs, index * 13 + 58);
-  const providerReference = stage === 'payout' ? `784-66${padded}10` : `791-48${padded}24`;
-  const internalReference = stage === 'payout' ? `784-72${padded}41` : `791-55${padded}38`;
-  const resolvedAmount = completedVariant?.approvedAmount ?? amount;
+    : payoutVariant
+      ? demoTimestamp(baseMs, payoutVariant.updatedMinutesAgo)
+      : demoTimestamp(baseMs, index * 13 + 58);
+  const providerReference = payoutVariant?.providerCaseId ?? (stage === 'payout' ? `784-66${padded}10` : `791-48${padded}24`);
+  const internalReference = payoutVariant?.caseNumber ?? (stage === 'payout' ? `784-72${padded}41` : `791-55${padded}38`);
+  const resolvedAmount = completedVariant?.approvedAmount ?? payoutVariant?.approvedAmount ?? amount;
   const paidAmount = completedVariant?.paidAmount ?? null;
 
   return {
@@ -1347,15 +1641,15 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
     detection_result_id: `demo-${stage}-detection-${padded}`,
     case_number: completedVariant?.caseNumber ?? internalReference,
     provider_case_id: completedVariant?.providerCaseId ?? providerReference,
-    merchant_reference: completedVariant?.merchantReference ?? 'Margin Merchant',
+    merchant_reference: completedVariant?.merchantReference ?? payoutVariant?.merchantReference ?? 'Margin Merchant',
     status: completedVariant?.status ?? 'approved',
     filing_status: 'filed',
     submission_proof: {
       proof_present: true,
-      proof_reference: completedVariant?.proofReference ?? `AMZ-${stage.toUpperCase()}-${padded}`,
+      proof_reference: completedVariant?.proofReference ?? payoutVariant?.proofReference ?? `AMZ-${stage.toUpperCase()}-${padded}`,
       amazon_case_id: completedVariant?.providerCaseId ?? providerReference,
-      external_reference: completedVariant?.externalReference ?? `LEDGER-${padded}`,
-      submitted_at: demoTimestamp(baseMs, completedVariant?.submittedMinutesAgo ?? index * 15 + 120),
+      external_reference: completedVariant?.externalReference ?? payoutVariant?.externalReference ?? `LEDGER-${padded}`,
+      submitted_at: demoTimestamp(baseMs, completedVariant?.submittedMinutesAgo ?? payoutVariant?.submittedMinutesAgo ?? index * 15 + 120),
       status: 'submitted',
       outcome: 'approved',
     },
@@ -1367,12 +1661,13 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
     actual_payout_amount: stage === 'completed' ? paidAmount ?? resolvedAmount : null,
     expected_payout_amount: resolvedAmount,
     reconciliation_status: completedVariant?.reconciliationStatus ?? 'pending_payout',
-    reconciliation_source: completedVariant?.reconciliationSource ?? 'amazon_approval',
-    payout_status: completedVariant?.payoutStatus ?? 'not_paid',
-    operator_state: completedVariant?.operatorState ?? 'waiting_for_payout',
+    reconciliation_source: completedVariant?.reconciliationSource ?? payoutVariant?.reconciliationSource ?? 'amazon_approval',
+    payout_status: completedVariant?.payoutStatus ?? payoutVariant?.payoutStatus ?? 'not_paid',
+    operator_state: completedVariant?.operatorState ?? payoutVariant?.operatorState ?? 'waiting_for_payout',
     outstanding_amount: stage === 'completed' ? Math.max(0, resolvedAmount - (paidAmount ?? resolvedAmount)) : resolvedAmount,
     currency: 'USD',
     last_updated_at: updatedAt,
+    payout_preview: payoutVariant?.preview ?? null,
   };
 }
 
@@ -1884,11 +2179,45 @@ function filedProofRows(row: DisputeRow) {
   ];
 }
 
-function pendingPayoutReason(row: LedgerRow) {
-  if (row.has_approval_truth !== true) return 'Approval not verified';
-  const payout = humanize(row.payout_status);
-  if (payout !== NOT_AVAILABLE) return `Awaiting payout · ${payout}`;
-  return 'Approved with Amazon · awaiting payout';
+function getPayoutTrackingPreview(row: LedgerRow): PayoutTrackingPreview {
+  if (row.payout_preview) return row.payout_preview;
+
+  const seed = stableNumber(ledgerReference(row));
+  const approvedAmount = ledgerApprovedAmount(row);
+  const outstandingAmount = amountOrNull(row.outstanding_amount) ?? approvedAmount;
+  const source = humanize(row.reconciliation_source);
+  const payoutStatus = humanize(row.payout_status);
+  const stageOptions = ['Approval captured', 'Settlement watch', 'Payout reconciliation', 'Deposit matching'];
+  const reportSets = [
+    ['settlement-report.csv', 'reimbursements.csv', 'payment-events.json'],
+    ['transaction-ledger.csv', 'settlement-batch.csv', 'case-thread.pdf'],
+    ['fee-adjustments.csv', 'account-level-payout.csv', 'reconciliation.xlsx'],
+  ];
+  const lastUpdatedTime = row.last_updated_at ? new Date(row.last_updated_at).getTime() : NaN;
+  const daysWaiting = Number.isNaN(lastUpdatedTime)
+    ? (seed % 5) + 1
+    : Math.max(1, Math.ceil((Date.now() - lastUpdatedTime) / 86_400_000));
+
+  return {
+    approvalSummary: approvedAmount
+      ? `Amazon approved ${formatMoney(approvedAmount, row.currency)}. Margin is tracking the payout until the matching settlement credit lands.`
+      : 'Amazon approval is recorded. Margin is tracking payout truth until the matching settlement credit lands.',
+    settlementStage: stageOptions[seed % stageOptions.length],
+    progress: 48 + (seed % 34),
+    expectedDeposit: seed % 4 === 0 ? 'Expected next settlement cycle' : 'Expected in the open payout batch',
+    nextReconciliation: `Next settlement scan in ${(seed % 45) + 15} min`,
+    payoutRisk: seed % 5 === 0 ? 'Medium-low risk - watch for settlement variance' : 'Low risk - approval and ledger references match',
+    reconciliationSource: source !== NOT_AVAILABLE ? source : 'Amazon approval + settlement ledger',
+    variance: outstandingAmount ? `${formatMoney(outstandingAmount, row.currency)} still outstanding` : '$0.00 variance expected',
+    daysWaiting,
+    cashAction: seed % 5 === 0 ? 'Escalate if next payout cycle misses' : 'Keep open until deposit is confirmed',
+    watchedReports: reportSets[seed % reportSets.length],
+    ledgerChecks: [
+      row.provider_case_id ? 'Amazon case reference captured' : 'Internal recovery reference captured',
+      payoutStatus !== NOT_AVAILABLE ? `Payout status: ${payoutStatus}` : 'Payout status pending',
+      outstandingAmount ? 'Outstanding amount monitored' : 'Variance check active',
+    ],
+  };
 }
 
 function completedReason(row: LedgerRow) {
@@ -2452,6 +2781,145 @@ function FiledFilingCard({
   );
 }
 
+function PayoutTrackingCard({
+  row,
+  detailHref,
+  timeLabel,
+}: {
+  row: LedgerRow;
+  detailHref: string | null;
+  timeLabel?: string | null;
+}) {
+  const classes = toneClasses('approved');
+  const preview = getPayoutTrackingPreview(row);
+  const progress = Math.max(35, Math.min(94, preview.progress));
+  const approvedAmount = ledgerApprovedAmount(row);
+  const outstandingAmount = amountOrNull(row.outstanding_amount) ?? approvedAmount;
+  const proof = row.submission_proof || null;
+  const amazonCase = row.provider_case_id || proof?.amazon_case_id || row.case_number || NOT_AVAILABLE;
+  const proofReference = proof?.proof_reference || NOT_AVAILABLE;
+  const payoutStatus = humanize(row.payout_status);
+  const title = ledgerMeta(row) !== 'Identity not available' ? ledgerMeta(row) : ledgerReference(row);
+
+  return (
+    <Card className={cn('border shadow-none', classes.card)}>
+      <CardContent className="p-4">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+                Amazon approved
+              </span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-violet-200/70">{preview.daysWaiting} day{preview.daysWaiting === 1 ? '' : 's'} waiting</span>
+            </div>
+
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{title}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(approvedAmount, row.currency)}</span>
+            </div>
+
+            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.approvalSummary}</p>
+            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+              Amazon case {amazonCase} · Proof {proofReference}
+            </div>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {preview.watchedReports.slice(0, 3).map((report) => (
+                <span
+                  key={report}
+                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                >
+                  <span className="truncate">{report}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Settlement tracker</div>
+                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.settlementStage}</div>
+              </div>
+              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-violet-200">
+                {progress}% watched
+              </div>
+            </div>
+
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+              <div className="h-full rounded-full bg-violet-300 shadow-[0_0_16px_rgba(196,181,253,0.35)]" style={{ width: `${progress}%` }} />
+            </div>
+
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Reconciliation source</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.reconciliationSource}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Expected deposit</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.expectedDeposit}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Variance</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.variance}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Risk</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.payoutRisk}</span>
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-1.5">
+              {preview.ledgerChecks.slice(0, 3).map((check) => (
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-300" />
+                  <span className="truncate">{check}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:items-end">
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+              <Clock3 className="h-3.5 w-3.5" />
+              Payout watch
+            </span>
+
+            {detailHref ? (
+              <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
+                <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+                  <Link to={detailHref}>Open Recovery<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+                </Button>
+                <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+                  <Link to={detailHref}>Audit Payout<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+                </Button>
+              </div>
+            ) : null}
+
+            <div className="w-full space-y-1.5 lg:max-w-[240px]">
+              {[
+                { label: 'Approved', value: formatMoney(approvedAmount, row.currency) },
+                { label: 'Outstanding', value: formatMoney(outstandingAmount, row.currency) },
+                { label: 'Payout status', value: payoutStatus },
+                { label: 'Amazon case', value: amazonCase },
+                { label: 'Next scan', value: preview.nextReconciliation },
+                { label: 'Cash action', value: preview.cashAction },
+                { label: 'Last movement', value: timeLabel || null },
+              ].filter((item) => item.value && item.value !== NOT_AVAILABLE).map((item) => (
+                <div key={item.label} className="flex items-start justify-between gap-3">
+                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function LedgerCard({
   row,
   tone,
@@ -2812,7 +3280,7 @@ export default function FilingPipeline() {
       value: 'payout' as const,
       label: 'Awaiting payout',
       title: 'Approved / Awaiting Payout',
-      detail: 'Approved value that still needs payout confirmation.',
+      detail: 'Amazon-approved value being watched until the settlement credit actually lands.',
       amount: formatMoney(totalAmount(approvedRows.map(ledgerApprovedAmount))),
       countLabel: `${approvedRows.length} recovery item${approvedRows.length === 1 ? '' : 's'} awaiting payout`,
       action: null,
@@ -2821,14 +3289,9 @@ export default function FilingPipeline() {
       ) : approvedRows.length ? (
         <div className="grid gap-3">
           {approvedRows.map((row) => (
-            <LedgerCard
+            <PayoutTrackingCard
               key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
               row={row}
-              tone="approved"
-              amountLabel="Approved value"
-              amount={ledgerApprovedAmount(row)}
-              statusLabel={pendingPayoutReason(row)}
-              detail="Amazon approval is already recorded. Margin is now waiting on payout truth to land."
               timeLabel={row.last_updated_at ? `Awaiting payout · updated ${formatRelative(row.last_updated_at)}` : null}
               detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
             />
