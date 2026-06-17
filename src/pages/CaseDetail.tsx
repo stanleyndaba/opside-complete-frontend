@@ -2472,7 +2472,7 @@ export default function CaseDetail() {
                   </div>
                 </ClaimRecordSection>
 
-                <ClaimRecordSection title="Recovery Math" eyebrow="Financial logic">
+                <ClaimRecordSection title="Recovery Ledger" eyebrow="Financial Controls">
                   <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <ClaimRecordMetric label="Estimated claim value" value={formatCurrencyOrDash(claimRecordEstimatedClaimValue, effectiveCase?.currency || 'USD')} tone="money" />
                     <ClaimRecordMetric label="Approved amount" value={formatCurrencyOrDash(claimRecordApprovedAmount, effectiveCase?.currency || 'USD')} tone="money" />

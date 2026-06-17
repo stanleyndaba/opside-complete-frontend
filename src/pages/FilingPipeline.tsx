@@ -114,6 +114,11 @@ const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'und
 const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
 const DEMO_PIPELINE_ROW_COUNT = 10;
+const PIPELINE_EXPLAINER_CLASS = 'mt-1.5 max-w-3xl text-sm font-medium leading-5 text-sky-100/85';
+const PIPELINE_META_CLASS = 'mt-2 text-[11px] font-medium tracking-tight text-sky-100/60';
+const PIPELINE_PROGRESS_LABEL_CLASS = 'mt-1 text-[13px] font-semibold tracking-tight text-sky-50';
+const PIPELINE_PROGRESS_VALUE_CLASS = 'text-right text-[11px] font-semibold tabular-nums tracking-tight text-sky-200';
+const PIPELINE_PROGRESS_TRACK_CLASS = 'mt-3 h-1.5 overflow-hidden rounded-full bg-sky-400/15';
 
 type ActiveFilingPreview = {
   currentAction: string;
@@ -2590,8 +2595,8 @@ function DisputeCard({
             <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
           </div>
           <h3 className="mt-2 text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
-          <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#9a9a9a]">{detail}</p>
-          <div className="mt-2 text-[11px] font-medium tracking-tight text-white/38">{disputeMeta(row)}</div>
+          <p className={PIPELINE_EXPLAINER_CLASS}>{detail}</p>
+          <div className={PIPELINE_META_CLASS}>{disputeMeta(row)}</div>
         </div>
         <InlineMetricStack
           rows={[
@@ -2639,8 +2644,8 @@ function ReadyFilingCard({
               <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
             </div>
 
-            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.whyFile}</p>
-            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+            <p className={PIPELINE_EXPLAINER_CLASS}>{preview.whyFile}</p>
+            <div className={PIPELINE_META_CLASS}>
               {row.order_id ? `${row.order_id} · ` : ''}{preview.unitsAffected} units · SKU {row.sku || NOT_AVAILABLE} · ASIN {row.asin || NOT_AVAILABLE}
             </div>
 
@@ -2660,14 +2665,14 @@ function ReadyFilingCard({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Evidence confidence</div>
-                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{confidence}% ready</div>
+                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{confidence}% ready</div>
               </div>
-              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-emerald-200">
+              <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {preview.daysLeft} days left
               </div>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
               <div className="h-full rounded-full bg-emerald-300 shadow-[0_0_16px_rgba(110,231,183,0.35)]" style={{ width: `${confidence}%` }} />
             </div>
 
@@ -2759,8 +2764,8 @@ function ActiveFilingCard({
               <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
             </div>
 
-            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.currentAction}</p>
-            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+            <p className={PIPELINE_EXPLAINER_CLASS}>{preview.currentAction}</p>
+            <div className={PIPELINE_META_CLASS}>
               {row.order_id ? `${row.order_id} · ` : ''}{preview.unitsAffected} units · SKU {row.sku || NOT_AVAILABLE} · ASIN {row.asin || NOT_AVAILABLE}
             </div>
 
@@ -2780,14 +2785,14 @@ function ActiveFilingCard({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Live stage</div>
-                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.stageLabel}</div>
+                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.stageLabel}</div>
               </div>
-              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-amber-200">
+              <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 Step {preview.step} of {preview.totalSteps}
               </div>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
               <div className="h-full rounded-full bg-amber-300 shadow-[0_0_16px_rgba(252,211,77,0.35)]" style={{ width: `${progress}%` }} />
             </div>
 
@@ -2881,8 +2886,8 @@ function FiledFilingCard({
               <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
             </div>
 
-            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.submissionSummary}</p>
-            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+            <p className={PIPELINE_EXPLAINER_CLASS}>{preview.submissionSummary}</p>
+            <div className={PIPELINE_META_CLASS}>
               {row.order_id ? `${row.order_id} · ` : ''}SKU {row.sku || NOT_AVAILABLE} · ASIN {row.asin || NOT_AVAILABLE}
             </div>
 
@@ -2902,14 +2907,14 @@ function FiledFilingCard({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Amazon case tracker</div>
-                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.trackerStage}</div>
+                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.trackerStage}</div>
               </div>
-              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-blue-200">
+              <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {progress}% monitored
               </div>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
               <div className="h-full rounded-full bg-blue-300 shadow-[0_0_16px_rgba(147,197,253,0.35)]" style={{ width: `${progress}%` }} />
             </div>
 
@@ -3018,8 +3023,8 @@ function PayoutTrackingCard({
               <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(approvedAmount, row.currency)}</span>
             </div>
 
-            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.approvalSummary}</p>
-            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+            <p className={PIPELINE_EXPLAINER_CLASS}>{preview.approvalSummary}</p>
+            <div className={PIPELINE_META_CLASS}>
               Amazon case {amazonCase} · Proof {proofReference}
             </div>
 
@@ -3039,14 +3044,14 @@ function PayoutTrackingCard({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Settlement tracker</div>
-                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.settlementStage}</div>
+                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.settlementStage}</div>
               </div>
-              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-violet-200">
+              <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {progress}% watched
               </div>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
               <div className="h-full rounded-full bg-violet-300 shadow-[0_0_16px_rgba(196,181,253,0.35)]" style={{ width: `${progress}%` }} />
             </div>
 
@@ -3156,8 +3161,8 @@ function CompletedRecoveryCard({
               <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(recoveredAmount, row.currency)}</span>
             </div>
 
-            <p className="mt-1.5 max-w-3xl text-sm font-medium leading-5 text-[#E5E7EB]">{preview.recoverySummary}</p>
-            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+            <p className={PIPELINE_EXPLAINER_CLASS}>{preview.recoverySummary}</p>
+            <div className={PIPELINE_META_CLASS}>
               Amazon case {amazonCase} · Proof {proofReference}
             </div>
 
@@ -3177,14 +3182,14 @@ function CompletedRecoveryCard({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Recovery closeout</div>
-                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.closureStage}</div>
+                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.closureStage}</div>
               </div>
-              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-emerald-200">
+              <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {progress}% closed
               </div>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
               <div className="h-full rounded-full bg-emerald-300 shadow-[0_0_16px_rgba(110,231,183,0.35)]" style={{ width: `${progress}%` }} />
             </div>
 
