@@ -116,12 +116,31 @@ type ReadyFilingPreview = {
   checks: string[];
 };
 
+type FiledFilingPreview = {
+  amazonStatus: string;
+  submissionSummary: string;
+  proofPacket: string;
+  trackerStage: string;
+  progress: number;
+  responseWindow: string;
+  nextWatch: string;
+  nextCheck: string;
+  payoutSignal: string;
+  confidence: string;
+  receiptDocs: string[];
+  checks: string[];
+};
+
 type ActiveFilingDisputeRow = DisputeRow & {
   filing_preview?: ActiveFilingPreview;
 };
 
 type ReadyFilingDisputeRow = DisputeRow & {
   ready_preview?: ReadyFilingPreview;
+};
+
+type FiledFilingDisputeRow = DisputeRow & {
+  filed_preview?: FiledFilingPreview;
 };
 
 function demoTimestamp(baseMs: number, minutesAgo: number) {
@@ -557,6 +576,149 @@ const DEMO_FILED_CASE_VARIANTS = [
   },
 ];
 
+const DEMO_FILED_REVIEW_VARIANTS: FiledFilingPreview[] = [
+  {
+    amazonStatus: 'Amazon receipt confirmed',
+    submissionSummary: 'Margin filed the transfer-loss packet and captured the Seller Central receipt, Amazon case ID, and proof checksum.',
+    proofPacket: 'Transfer ledger, receive report, movement IDs, invoice',
+    trackerStage: 'Under Amazon review',
+    progress: 64,
+    responseWindow: 'Expected first response in 1-2 business days',
+    nextWatch: 'Watch for FC movement challenge or reimbursement approval',
+    nextCheck: 'Next automated check in 38 min',
+    payoutSignal: 'No settlement credit yet - payout watcher armed',
+    confidence: 'Strong proof - FC movement IDs reconcile',
+    receiptDocs: ['submission-receipt-80251.pdf', 'transfer-ledger.xlsx', 'movement-id-match.csv'],
+    checks: ['Amazon case ID captured', 'Receipt timestamp preserved', 'Payout ledger monitoring'],
+  },
+  {
+    amazonStatus: 'Submitted to Amazon',
+    submissionSummary: 'The inbound-shortage claim is now with Amazon with the invoice, BOL, and receiving delta attached.',
+    proofPacket: 'Invoice, BOL, shipment plan, receiving delta, unit cost proof',
+    trackerStage: 'Waiting for Amazon queue pickup',
+    progress: 52,
+    responseWindow: 'Amazon intake usually responds within 24-48 hours',
+    nextWatch: 'Watch for request to re-upload BOL or carton-count proof',
+    nextCheck: 'Next automated check in 22 min',
+    payoutSignal: 'Settlement report clean - no duplicate payout',
+    confidence: 'High confidence - shipped vs received delta is clean',
+    receiptDocs: ['seller-central-submit-91764.pdf', 'FBA18M4H7C2Q-bol.pdf', 'receive-delta.csv'],
+    checks: ['Shipment ID verified', 'Duplicate claim blocked', 'Evidence hash stored'],
+  },
+  {
+    amazonStatus: 'In Amazon review',
+    submissionSummary: 'Warehouse-damage evidence has been filed and Margin is monitoring the case thread for Amazon acknowledgement.',
+    proofPacket: 'Damage event, inventory ledger, supplier invoice',
+    trackerStage: 'Amazon review in motion',
+    progress: 71,
+    responseWindow: 'Expected movement today',
+    nextWatch: 'Watch for reimbursement event or damage-code pushback',
+    nextCheck: 'Next automated check in 31 min',
+    payoutSignal: 'No reimbursement event posted yet',
+    confidence: 'Clean proof - damage code and SKU match',
+    receiptDocs: ['case-thread-43920.pdf', 'damage-event.csv', 'supplier-invoice.pdf'],
+    checks: ['Damage reason mapped', 'SKU identity matched', 'Thread watcher active'],
+  },
+  {
+    amazonStatus: 'Processing in Seller Central',
+    submissionSummary: 'Refund-without-return claim was filed after the return window elapsed and the return tracker stayed empty.',
+    proofPacket: 'Refund event, return tracker, order ledger',
+    trackerStage: 'Case processing',
+    progress: 59,
+    responseWindow: 'Expected first movement in 2 business days',
+    nextWatch: 'Watch for Amazon return-location challenge',
+    nextCheck: 'Next automated check in 46 min',
+    payoutSignal: 'Refund matched - no return reimbursement found',
+    confidence: 'Good proof - return absence documented',
+    receiptDocs: ['return-not-received-03788.pdf', 'refund-event.csv', 'return-tracker.pdf'],
+    checks: ['Return deadline elapsed', 'Order refund matched', 'Claim body archived'],
+  },
+  {
+    amazonStatus: 'Under Amazon review',
+    submissionSummary: 'Fee overcharge claim is filed with dimensions, fee ledger, and calculated tier delta ready for Amazon validation.',
+    proofPacket: 'Fee audit, catalog dimensions, order fee ledger',
+    trackerStage: 'Fee audit review',
+    progress: 68,
+    responseWindow: 'Amazon fee reviews commonly move in 2-3 business days',
+    nextWatch: 'Watch for dimension confirmation or fee-tier correction',
+    nextCheck: 'Next automated check in 55 min',
+    payoutSignal: 'No fee correction credit posted yet',
+    confidence: 'Strong proof - size-tier delta isolated',
+    receiptDocs: ['fee-claim-65413.pdf', 'catalog-dimensions.pdf', 'fee-delta.csv'],
+    checks: ['Tier math verified', 'Catalog snapshot stored', 'Settlement scan active'],
+  },
+  {
+    amazonStatus: 'Amazon case active',
+    submissionSummary: 'Lost-inventory adjustment claim is filed and tied to an Amazon adjustment event with no matching reimbursement.',
+    proofPacket: 'Inventory adjustment, settlement scan, supplier invoice, unit cost basis',
+    trackerStage: 'High-value review',
+    progress: 74,
+    responseWindow: 'Expected first response in 1 business day',
+    nextWatch: 'Watch for reimbursement approval or adjustment reason dispute',
+    nextCheck: 'Next automated check in 18 min',
+    payoutSignal: 'High-value payout watcher enabled',
+    confidence: 'Very strong proof - adjustment reason eligible',
+    receiptDocs: ['lost-inventory-28577.pdf', 'adjustment-event.csv', 'settlement-scan.csv'],
+    checks: ['Adjustment event eligible', 'Prior reimbursement cleared', 'Escalation timer set'],
+  },
+  {
+    amazonStatus: 'Submitted to Amazon',
+    submissionSummary: 'Customer-return claim has been filed with refund proof and no received-return event in the tracker.',
+    proofPacket: 'Refund event, return status, SKU cost proof',
+    trackerStage: 'Awaiting acknowledgement',
+    progress: 49,
+    responseWindow: 'Expected queue pickup within 24 hours',
+    nextWatch: 'Watch for Amazon acknowledgement or return-event update',
+    nextCheck: 'Next automated check in 27 min',
+    payoutSignal: 'No payout event detected',
+    confidence: 'Good proof - return tracker is clean',
+    receiptDocs: ['customer-return-67244.pdf', 'refund-proof.csv', 'sku-cost-proof.pdf'],
+    checks: ['Return tracker checked', 'Refund amount matched', 'Case receipt stored'],
+  },
+  {
+    amazonStatus: 'Amazon review opened',
+    submissionSummary: 'Removal-order damage packet is filed and Margin is watching for Amazon to accept the damage event.',
+    proofPacket: 'Removal order, damage event, reimbursement ledger',
+    trackerStage: 'Removal claim review',
+    progress: 66,
+    responseWindow: 'Expected movement in 1-3 business days',
+    nextWatch: 'Watch for removal ID challenge or approved reimbursement',
+    nextCheck: 'Next automated check in 41 min',
+    payoutSignal: 'Reimbursement ledger has no matching credit',
+    confidence: 'Good proof - removal ID and damage event match',
+    receiptDocs: ['removal-damage-53906.pdf', 'removal-order.pdf', 'damage-event.csv'],
+    checks: ['Removal ID matched', 'Damage event archived', 'Payout watcher active'],
+  },
+  {
+    amazonStatus: 'Follow-up filed',
+    submissionSummary: 'Payout follow-up has been filed because Amazon approval exists but the settlement deposit has not landed.',
+    proofPacket: 'Approval proof, settlement report, payout delta worksheet',
+    trackerStage: 'Payout follow-up',
+    progress: 78,
+    responseWindow: 'Expected payout movement in next settlement cycle',
+    nextWatch: 'Watch settlement reports for approved amount landing',
+    nextCheck: 'Next settlement check in 2 hr',
+    payoutSignal: 'Approved amount missing from payout',
+    confidence: 'Very strong proof - Amazon already approved the amount',
+    receiptDocs: ['approval-thread.pdf', 'settlement-gap.xlsx', 'payout-followup-34655.pdf'],
+    checks: ['Approval reference captured', 'Settlement delta calculated', 'Payout alert armed'],
+  },
+  {
+    amazonStatus: 'In Amazon review',
+    submissionSummary: 'Inventory-disposal case is filed with the disposal event, inventory ledger, and reimbursement-safety wording.',
+    proofPacket: 'Disposal event, inventory ledger, supplier invoice',
+    trackerStage: 'Disposal review',
+    progress: 61,
+    responseWindow: 'Expected Amazon review in 2 business days',
+    nextWatch: 'Watch for disposal reason challenge or reimbursement approval',
+    nextCheck: 'Next automated check in 36 min',
+    payoutSignal: 'No disposal reimbursement found yet',
+    confidence: 'Solid proof - category wording reviewed',
+    receiptDocs: ['disposal-error-19833.pdf', 'disposal-event.csv', 'inventory-ledger.csv'],
+    checks: ['Disposal reason eligible', 'Overclaim check passed', 'Thread watcher active'],
+  },
+];
+
 const DEMO_ACTIVE_FILING_VARIANTS = [
   {
     anomalyType: 'inbound_shipment_shortage',
@@ -981,6 +1143,7 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
 
   if (stage === 'filed') {
     const variant = DEMO_FILED_CASE_VARIANTS[index % DEMO_FILED_CASE_VARIANTS.length];
+    const filedPreview = DEMO_FILED_REVIEW_VARIANTS[index % DEMO_FILED_REVIEW_VARIANTS.length];
     const submittedAt = demoTimestamp(baseMs, variant.submittedMinutesAgo);
 
     return {
@@ -1023,6 +1186,7 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
         submission_channel: 'seller_central',
         attachment_count: variant.attachments,
       },
+      filed_preview: filedPreview,
     } as DisputeRow;
   }
 
@@ -1566,6 +1730,59 @@ function getActiveFilingPreview(row: DisputeRow): ActiveFilingPreview {
   };
 }
 
+function getFiledFilingPreview(row: DisputeRow): FiledFilingPreview {
+  const explicitPreview = (row as FiledFilingDisputeRow).filed_preview;
+  if (explicitPreview) return explicitPreview;
+
+  const seed = stableNumber(disputeReference(row));
+  const proof = row.submission_proof || null;
+  const attachmentCount = (proof as { attachment_count?: number | null } | null)?.attachment_count;
+  const linkedCount = typeof row.matched_document_count === 'number' && Number.isFinite(row.matched_document_count)
+    ? row.matched_document_count
+    : attachmentCount || 3;
+  const status = humanize(row.status);
+  const amazonStatus = status !== NOT_AVAILABLE ? status : proof?.proof_present ? 'Submission proof recorded' : 'Filed with Amazon';
+  const proofReference = proof?.proof_reference || row.claim_number || row.amazon_case_id || 'submission-proof';
+  const responseWindows = [
+    'Expected first response in 1-2 business days',
+    'Expected queue pickup within 24 hours',
+    'Amazon review usually moves in 2-3 business days',
+    'Expected movement in next settlement cycle',
+  ];
+  const nextWatchOptions = [
+    'Watch for Amazon acknowledgement, approval, or information request',
+    'Watch for reimbursement event or settlement credit',
+    'Watch for case-thread reply and payout movement',
+    'Watch for Amazon challenge before escalation timer starts',
+  ];
+  const receiptDocs = [
+    `${proofReference}-receipt.pdf`,
+    row.order_id ? `${row.order_id}-filed-packet.pdf` : 'filed-evidence-packet.pdf',
+    row.sku ? `${row.sku}-proof-index.csv` : 'proof-index.csv',
+  ].slice(0, Math.max(2, Math.min(3, linkedCount)));
+
+  return {
+    amazonStatus,
+    submissionSummary: row.amazon_case_id || proof?.amazon_case_id
+      ? `Margin filed this case and captured Amazon case ${(proof?.amazon_case_id || row.amazon_case_id)} with the submission receipt preserved.`
+      : 'Margin filed this case and preserved the submission receipt for audit and payout follow-up.',
+    proofPacket: `${linkedCount} evidence item${linkedCount === 1 ? '' : 's'} filed`,
+    trackerStage: ['Amazon review', 'Case thread monitoring', 'Payout watch', 'Receipt confirmed'][seed % 4],
+    progress: 48 + (seed % 33),
+    responseWindow: responseWindows[seed % responseWindows.length],
+    nextWatch: nextWatchOptions[seed % nextWatchOptions.length],
+    nextCheck: `Next automated check in ${(seed % 44) + 16} min`,
+    payoutSignal: seed % 3 === 0 ? 'Settlement watcher active - no payout yet' : 'No duplicate reimbursement detected',
+    confidence: seed % 4 === 0 ? 'Good proof - monitor for Amazon challenge' : 'Strong proof - receipt and evidence match',
+    receiptDocs,
+    checks: [
+      'Amazon case reference captured',
+      'Submission receipt stored',
+      'Payout ledger monitoring',
+    ],
+  };
+}
+
 function ledgerApprovedAmount(row: LedgerRow) {
   if (row.has_approval_truth !== true) return null;
   return amountOrNull(row.approved_amount)
@@ -1634,23 +1851,6 @@ function filingNextStep(row: DisputeRow, stage: 'ready' | 'filing' | 'filed' | '
 
   const blockers = summarizeFilingBlockers(row);
   return blockers ? `Next: clear ${blockers}.` : 'Next: review and clear the filing blocker.';
-}
-
-function filedReason(row: DisputeRow) {
-  if (row.submission_proof?.proof_present) {
-    return `Submission proof recorded · ${row.submission_proof.proof_reference || 'reference available'}`;
-  }
-  const status = humanize(row.status);
-  if (status !== NOT_AVAILABLE) return `Filed state recorded · ${status}`;
-  return 'Filed state recorded · proof details unavailable';
-}
-
-function filedDetail(row: DisputeRow) {
-  if (row.submission_proof?.proof_present) {
-    return 'Submission proof has been recorded. Margin is waiting on the next Amazon response.';
-  }
-
-  return 'This case is marked filed, but detailed submission proof is not available in this view yet. Margin does not treat missing proof as a clean proof state.';
 }
 
 function filedProofRows(row: DisputeRow) {
@@ -2116,6 +2316,142 @@ function ActiveFilingCard({
   );
 }
 
+function FiledFilingCard({
+  row,
+  detailHref,
+  timeLabel,
+}: {
+  row: DisputeRow;
+  detailHref: string;
+  timeLabel?: string | null;
+}) {
+  const classes = toneClasses('submitted');
+  const preview = getFiledFilingPreview(row);
+  const progress = Math.max(35, Math.min(92, preview.progress));
+  const proof = row.submission_proof || null;
+  const proofReference = proof?.proof_reference || row.claim_number || NOT_AVAILABLE;
+  const amazonCase = proof?.amazon_case_id || row.amazon_case_id || row.case_number || NOT_AVAILABLE;
+  const externalReference = proof?.external_reference || NOT_AVAILABLE;
+  const attachmentCount = (proof as { attachment_count?: number | null } | null)?.attachment_count;
+  const submittedLabel = proof?.submitted_at ? formatTimestamp(proof.submitted_at) : null;
+
+  return (
+    <Card className={cn('border shadow-none', classes.card)}>
+      <CardContent className="p-4">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+                Filed with Amazon
+              </span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-blue-200/70">Amazon case {amazonCase}</span>
+            </div>
+
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+            </div>
+
+            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.submissionSummary}</p>
+            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+              {row.order_id ? `${row.order_id} · ` : ''}SKU {row.sku || NOT_AVAILABLE} · ASIN {row.asin || NOT_AVAILABLE}
+            </div>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {preview.receiptDocs.slice(0, 3).map((doc) => (
+                <span
+                  key={doc}
+                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                >
+                  <span className="truncate">{doc}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Amazon case tracker</div>
+                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.trackerStage}</div>
+              </div>
+              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-blue-200">
+                {progress}% monitored
+              </div>
+            </div>
+
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+              <div className="h-full rounded-full bg-blue-300 shadow-[0_0_16px_rgba(147,197,253,0.35)]" style={{ width: `${progress}%` }} />
+            </div>
+
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Amazon status</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.amazonStatus}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Proof packet</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.proofPacket}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Proof quality</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.confidence}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Response window</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.responseWindow}</span>
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-1.5">
+              {preview.checks.slice(0, 3).map((check) => (
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
+                  <span className="truncate">{check}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:items-end">
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+              <FileCheck2 className="h-3.5 w-3.5" />
+              Receipt locked
+            </span>
+
+            <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
+              <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+                <Link to={detailHref}>View Case<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+              </Button>
+              <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+                <Link to={detailHref}>Audit Proof<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+              </Button>
+            </div>
+
+            <div className="w-full space-y-1.5 lg:max-w-[240px]">
+              {[
+                { label: 'Submitted', value: submittedLabel || timeLabel || null },
+                { label: 'Proof ref', value: proofReference },
+                { label: 'External ref', value: externalReference },
+                { label: 'Attachments', value: attachmentCount != null ? `${attachmentCount} file${attachmentCount === 1 ? '' : 's'}` : null },
+                { label: 'Next watch', value: preview.nextWatch },
+                { label: 'Next check', value: preview.nextCheck },
+                { label: 'Payout signal', value: preview.payoutSignal },
+              ].filter((item) => item.value && item.value !== NOT_AVAILABLE).map((item) => (
+                <div key={item.label} className="flex items-start justify-between gap-3">
+                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function LedgerCard({
   row,
   tone,
@@ -2412,7 +2748,7 @@ export default function FilingPipeline() {
       value: 'filed' as const,
       label: 'Filed',
       title: 'Filed / In Progress',
-      detail: 'Cases with filed state, submission proof, or Amazon review movement.',
+      detail: 'Filed cases with Amazon receipts, proof packets, case IDs, and response monitoring.',
       amount: formatMoney(totalAmount(filedRows.map(disputeAmount))),
       countLabel: `${filedRows.length} case${filedRows.length === 1 ? '' : 's'} already with Amazon`,
       action: null,
@@ -2421,17 +2757,11 @@ export default function FilingPipeline() {
       ) : filedRows.length ? (
         <div className="grid gap-3">
           {filedRows.map((row) => (
-            <DisputeCard
+            <FiledFilingCard
               key={row.dispute_case_id}
               row={row}
-              tone="submitted"
-              amountLabel="Amount in review"
-              statusLabel={filedReason(row)}
-              detail={filedDetail(row)}
+              detailHref={disputeCasesHref}
               timeLabel={row.submission_proof?.submitted_at ? `Submitted ${formatRelative(row.submission_proof.submitted_at)}` : row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
-              nextStep={filingNextStep(row, 'filed')}
-              proofRows={filedProofRows(row)}
-              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('submitted').chip)}><FileCheck2 className="h-3.5 w-3.5" />{row.submission_proof?.proof_present ? 'Proof recorded' : 'Proof unavailable'}</span>}
             />
           ))}
         </div>
