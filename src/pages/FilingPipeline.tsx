@@ -32,6 +32,21 @@ type PayoutTrackingPreview = {
   ledgerChecks: string[];
 };
 
+type CompletedRecoveryPreview = {
+  recoverySummary: string;
+  closureStage: string;
+  progress: number;
+  payoutProof: string;
+  reconciliationSource: string;
+  depositTrail: string;
+  variance: string;
+  closeoutAction: string;
+  daysToRecover: number;
+  recoveredSignal: string;
+  proofDocs: string[];
+  checks: string[];
+};
+
 type LedgerRow = {
   row_type: 'dispute_case_projection' | 'detection_projection' | null;
   entity_type: 'dispute_case' | 'detection' | null;
@@ -70,6 +85,7 @@ type LedgerRow = {
   currency: string;
   last_updated_at: string | null;
   payout_preview?: PayoutTrackingPreview | null;
+  completed_preview?: CompletedRecoveryPreview | null;
 };
 
 type LedgerResponse = {
@@ -1151,6 +1167,149 @@ const DEMO_COMPLETED_RECOVERY_VARIANTS = [
   },
 ];
 
+const DEMO_COMPLETED_PROOF_VARIANTS: CompletedRecoveryPreview[] = [
+  {
+    recoverySummary: 'Warehouse transfer reimbursement landed in settlement and was matched back to the original Amazon case.',
+    closureStage: 'Paid and reconciled',
+    progress: 100,
+    payoutProof: 'Settlement credit matched',
+    reconciliationSource: 'Amazon settlement report',
+    depositTrail: 'Settlement batch -> reimbursement row -> recovery ledger',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed with receipt archived',
+    daysToRecover: 4,
+    recoveredSignal: 'Cash recovered and ledger closed',
+    proofDocs: ['settlement-credit-2034.pdf', 'reimbursement-row.csv', 'case-closeout.pdf'],
+    checks: ['Payout amount matched', 'Amazon case reconciled', 'Receipt archived'],
+  },
+  {
+    recoverySummary: 'Inbound shortage reimbursement posted cleanly and reconciled against the expected recovery amount.',
+    closureStage: 'Clean settlement match',
+    progress: 100,
+    payoutProof: 'Settlement reimbursement confirmed',
+    reconciliationSource: 'Settlement reconciliation',
+    depositTrail: 'FBA reimbursement -> settlement close -> recovered balance',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed after payout confirmation',
+    daysToRecover: 5,
+    recoveredSignal: 'Full amount paid back',
+    proofDocs: ['settlement-reconciliation-7162.xlsx', 'payout-event.csv', 'approval-thread.pdf'],
+    checks: ['Shipment claim matched', 'Deposit found', 'Recovery record closed'],
+  },
+  {
+    recoverySummary: 'Damage reimbursement landed with a small settlement adjustment; Margin captured the variance instead of hiding it.',
+    closureStage: 'Paid with variance note',
+    progress: 96,
+    payoutProof: 'Partial settlement match',
+    reconciliationSource: 'Partial settlement match',
+    depositTrail: 'Damage approval -> partial credit -> variance note',
+    variance: '$4.26 variance documented',
+    closeoutAction: 'Closed with variance memo',
+    daysToRecover: 6,
+    recoveredSignal: 'Cash recovered, variance explained',
+    proofDocs: ['partial-credit-3418.pdf', 'variance-memo.pdf', 'settlement-row.csv'],
+    checks: ['Paid amount captured', 'Variance documented', 'No duplicate credit'],
+  },
+  {
+    recoverySummary: 'Refund-without-return reimbursement appeared in Amazon reimbursement events and is fully closed.',
+    closureStage: 'Reimbursement event closed',
+    progress: 100,
+    payoutProof: 'Amazon reimbursement event',
+    reconciliationSource: 'Amazon reimbursement event',
+    depositTrail: 'Return claim approval -> reimbursement event -> settlement paid',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed as recovered',
+    daysToRecover: 7,
+    recoveredSignal: 'Returned cash confirmed',
+    proofDocs: ['return-reimbursement-7440.csv', 'settlement-credit.pdf', 'case-thread.pdf'],
+    checks: ['Return claim paid', 'Order ID reconciled', 'Closeout proof saved'],
+  },
+  {
+    recoverySummary: 'FBA fee correction posted as a fee adjustment credit rather than an inventory reimbursement.',
+    closureStage: 'Fee credit reconciled',
+    progress: 100,
+    payoutProof: 'Fee adjustment credit confirmed',
+    reconciliationSource: 'Settlement fee adjustment',
+    depositTrail: 'Fee correction -> adjustment ledger -> settlement net credit',
+    variance: '$0.00 fee-credit variance',
+    closeoutAction: 'Closed as fee recovery',
+    daysToRecover: 8,
+    recoveredSignal: 'Fee overcharge recovered',
+    proofDocs: ['fee-adjustment-6329.csv', 'dimension-correction.pdf', 'settlement-netting.pdf'],
+    checks: ['Fee row matched', 'Credit posted', 'Recovery categorized'],
+  },
+  {
+    recoverySummary: 'High-value lost inventory reimbursement was matched to the bank reconciliation trail and closed.',
+    closureStage: 'Bank reconciliation closed',
+    progress: 100,
+    payoutProof: 'Bank reconciliation match',
+    reconciliationSource: 'Bank reconciliation',
+    depositTrail: 'Amazon reimbursement -> settlement payout -> bank match',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed with bank match',
+    daysToRecover: 9,
+    recoveredSignal: 'High-value recovery paid',
+    proofDocs: ['bank-match-0551.pdf', 'settlement-payout.csv', 'inventory-adjustment-proof.pdf'],
+    checks: ['Bank deposit matched', 'Amazon payout confirmed', 'High-value audit complete'],
+  },
+  {
+    recoverySummary: 'Customer return reimbursement posted to the settlement report and closed against the original refund event.',
+    closureStage: 'Paid from settlement',
+    progress: 100,
+    payoutProof: 'Settlement report paid',
+    reconciliationSource: 'Amazon settlement report',
+    depositTrail: 'Return not received -> reimbursement -> seller payout',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed with refund linkage',
+    daysToRecover: 6,
+    recoveredSignal: 'Refund loss recovered',
+    proofDocs: ['customer-return-credit-6690.pdf', 'refund-linkage.csv', 'settlement-row.csv'],
+    checks: ['Refund event matched', 'Payout posted', 'Claim closed'],
+  },
+  {
+    recoverySummary: 'Removal-order damage payout landed under an alternate reference, and Margin matched it manually.',
+    closureStage: 'Manual match closed',
+    progress: 98,
+    payoutProof: 'Manual payout match',
+    reconciliationSource: 'Manual payout match',
+    depositTrail: 'Removal ID -> alternate reimbursement ref -> paid credit',
+    variance: '$2.26 variance documented',
+    closeoutAction: 'Closed with alternate-reference note',
+    daysToRecover: 10,
+    recoveredSignal: 'Payout confirmed despite renamed reference',
+    proofDocs: ['manual-match-0427.pdf', 'alternate-reference.csv', 'removal-order-proof.pdf'],
+    checks: ['Alternate ref matched', 'Variance noted', 'Recovery closed'],
+  },
+  {
+    recoverySummary: 'Approved settlement gap was paid after follow-up and reconciled back to the missing deposit.',
+    closureStage: 'Follow-up paid',
+    progress: 100,
+    payoutProof: 'Settlement gap resolved',
+    reconciliationSource: 'Settlement reconciliation',
+    depositTrail: 'Approval follow-up -> settlement correction -> paid',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed after follow-up success',
+    daysToRecover: 11,
+    recoveredSignal: 'Previously missing payout recovered',
+    proofDocs: ['settlement-gap-closed.xlsx', 'followup-thread.pdf', 'payment-event.json'],
+    checks: ['Gap resolved', 'Correction paid', 'Receivable closed'],
+  },
+  {
+    recoverySummary: 'Inventory disposal reimbursement posted as an Amazon reimbursement event and closed cleanly.',
+    closureStage: 'Disposal recovery closed',
+    progress: 100,
+    payoutProof: 'Reimbursement event paid',
+    reconciliationSource: 'Amazon reimbursement event',
+    depositTrail: 'Disposal approval -> reimbursement event -> settlement payout',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed with disposal proof',
+    daysToRecover: 8,
+    recoveredSignal: 'Disposal error recovered',
+    proofDocs: ['disposal-reimbursement-3702.csv', 'settlement-credit.pdf', 'disposal-event-proof.pdf'],
+    checks: ['Disposal event linked', 'Payout matched', 'Closeout archived'],
+  },
+];
+
 const DEMO_AWAITING_PAYOUT_VARIANTS = [
   {
     caseNumber: '784-720141',
@@ -1620,6 +1779,9 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
   const completedVariant = stage === 'completed'
     ? DEMO_COMPLETED_RECOVERY_VARIANTS[index % DEMO_COMPLETED_RECOVERY_VARIANTS.length]
     : null;
+  const completedPreview = stage === 'completed'
+    ? DEMO_COMPLETED_PROOF_VARIANTS[index % DEMO_COMPLETED_PROOF_VARIANTS.length]
+    : null;
   const updatedAt = completedVariant
     ? demoTimestamp(baseMs, completedVariant.updatedMinutesAgo)
     : payoutVariant
@@ -1668,6 +1830,7 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
     currency: 'USD',
     last_updated_at: updatedAt,
     payout_preview: payoutVariant?.preview ?? null,
+    completed_preview: completedPreview,
   };
 }
 
@@ -1886,12 +2049,6 @@ function ledgerReference(row: LedgerRow) {
 
 function disputeTypeLabel(row: DisputeRow) {
   return row.has_real_dispute_case === true ? 'Case' : 'Detection';
-}
-
-function ledgerTypeLabel(row: LedgerRow) {
-  if (row.has_real_recovery_record === true) return 'Recovery';
-  if (row.has_real_dispute_case === true) return 'Case';
-  return 'Record';
 }
 
 function disputeTitle(row: DisputeRow) {
@@ -2220,8 +2377,50 @@ function getPayoutTrackingPreview(row: LedgerRow): PayoutTrackingPreview {
   };
 }
 
-function completedReason(row: LedgerRow) {
-  return String(row.payout_status || '').trim().toLowerCase() === 'paid' ? 'Payout confirmed' : 'Recovered and reconciled';
+function getCompletedRecoveryPreview(row: LedgerRow): CompletedRecoveryPreview {
+  if (row.completed_preview) return row.completed_preview;
+
+  const seed = stableNumber(ledgerReference(row));
+  const recoveredAmount = ledgerRecoveredAmount(row);
+  const approvedAmount = ledgerApprovedAmount(row) ?? amountOrNull(row.expected_payout_amount);
+  const paidAmount = amountOrNull(row.actual_payout_amount) ?? recoveredAmount;
+  const varianceAmount = approvedAmount != null && paidAmount != null ? Math.max(0, approvedAmount - paidAmount) : null;
+  const source = humanize(row.reconciliation_source);
+  const payoutStatus = humanize(row.payout_status);
+  const proofReference = row.submission_proof?.proof_reference || row.provider_case_id || ledgerReference(row);
+  const daysToRecover = row.submission_proof?.submitted_at && row.last_updated_at
+    ? Math.max(1, Math.ceil((new Date(row.last_updated_at).getTime() - new Date(row.submission_proof.submitted_at).getTime()) / 86_400_000))
+    : (seed % 8) + 4;
+  const proofDocs = [
+    `${proofReference}-payout-proof.pdf`,
+    row.provider_case_id ? `${row.provider_case_id}-settlement-row.csv` : 'settlement-row.csv',
+    'recovery-closeout.pdf',
+  ];
+
+  return {
+    recoverySummary: recoveredAmount
+      ? `${formatMoney(recoveredAmount, row.currency)} has been confirmed back to the account and reconciled against the Amazon recovery record.`
+      : 'Recovered value has been confirmed back to the account and reconciled against the Amazon recovery record.',
+    closureStage: ['Paid and reconciled', 'Recovery closed', 'Settlement matched', 'Closeout archived'][seed % 4],
+    progress: varianceAmount && varianceAmount > 0 ? 96 : 100,
+    payoutProof: payoutStatus !== NOT_AVAILABLE ? `Payout ${payoutStatus}` : 'Payout confirmed',
+    reconciliationSource: source !== NOT_AVAILABLE ? source : 'Recovery ledger reconciliation',
+    depositTrail: row.provider_case_id
+      ? `Amazon case ${row.provider_case_id} -> settlement credit -> recovery ledger`
+      : 'Amazon approval -> settlement credit -> recovery ledger',
+    variance: varianceAmount && varianceAmount > 0
+      ? `${formatMoney(varianceAmount, row.currency)} variance documented`
+      : '$0.00 variance',
+    closeoutAction: varianceAmount && varianceAmount > 0 ? 'Closed with variance memo' : 'Closed with receipt archived',
+    daysToRecover,
+    recoveredSignal: varianceAmount && varianceAmount > 0 ? 'Cash recovered with documented adjustment' : 'Cash recovered and ledger closed',
+    proofDocs,
+    checks: [
+      'Payout amount confirmed',
+      row.provider_case_id ? 'Amazon case reconciled' : 'Recovery reference reconciled',
+      'Closeout proof archived',
+    ],
+  };
 }
 
 function toneClasses(tone: RowTone) {
@@ -2920,56 +3119,137 @@ function PayoutTrackingCard({
   );
 }
 
-function LedgerCard({
+function CompletedRecoveryCard({
   row,
-  tone,
-  amountLabel,
-  amount,
-  statusLabel,
-  detail,
-  timeLabel,
   detailHref,
+  timeLabel,
 }: {
   row: LedgerRow;
-  tone: RowTone;
-  amountLabel: string;
-  amount: number | null;
-  statusLabel: string;
-  detail: string;
-  timeLabel?: string | null;
   detailHref: string | null;
+  timeLabel?: string | null;
 }) {
-  const classes = toneClasses(tone);
+  const classes = toneClasses('completed');
+  const preview = getCompletedRecoveryPreview(row);
+  const progress = Math.max(90, Math.min(100, preview.progress));
+  const recoveredAmount = ledgerRecoveredAmount(row);
+  const approvedAmount = ledgerApprovedAmount(row) ?? amountOrNull(row.expected_payout_amount);
+  const proof = row.submission_proof || null;
+  const amazonCase = row.provider_case_id || proof?.amazon_case_id || row.case_number || NOT_AVAILABLE;
+  const proofReference = proof?.proof_reference || NOT_AVAILABLE;
+  const title = ledgerMeta(row) !== 'Identity not available' ? ledgerMeta(row) : ledgerReference(row);
+
   return (
     <Card className={cn('border shadow-none', classes.card)}>
-      <CardContent className="grid gap-3 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-4">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{ledgerTypeLabel(row)}</span>
-            <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
+      <CardContent className="p-4">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+                Recovered
+              </span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-emerald-200/70">{preview.daysToRecover} day closeout</span>
+            </div>
+
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{title}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(recoveredAmount, row.currency)}</span>
+            </div>
+
+            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.recoverySummary}</p>
+            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+              Amazon case {amazonCase} · Proof {proofReference}
+            </div>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {preview.proofDocs.slice(0, 3).map((doc) => (
+                <span
+                  key={doc}
+                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                >
+                  <span className="truncate">{doc}</span>
+                </span>
+              ))}
+            </div>
           </div>
-          <h3 className="mt-2 text-[14px] font-medium tracking-tight text-white/90">{ledgerReference(row)}</h3>
-          <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#9a9a9a]">{detail}</p>
-          <div className="mt-2 text-[11px] font-medium tracking-tight text-white/38">{ledgerMeta(row)}</div>
-        </div>
-        <InlineMetricStack
-          rows={[
-            { label: amountLabel, value: formatMoney(amount, row.currency) },
-            { label: 'Payout status', value: statusLabel },
-            { label: 'Last movement', value: timeLabel || null },
-          ]}
-        />
-        <div className="flex flex-col items-start gap-2 lg:items-end">
-          {detailHref ? (
-            <Button asChild size="sm" variant="outline" className="border-white/12 bg-transparent text-white/72 hover:bg-white/[0.05] hover:text-white">
-              <Link to={detailHref}>
-                Open recovery
-                <ArrowUpRight className="ml-2 h-3.5 w-3.5" />
-              </Link>
-            </Button>
-          ) : (
-            <span className="text-[11px] font-medium uppercase tracking-tight text-white/34">Not Available</span>
-          )}
+
+          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Recovery closeout</div>
+                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.closureStage}</div>
+              </div>
+              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-emerald-200">
+                {progress}% closed
+              </div>
+            </div>
+
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+              <div className="h-full rounded-full bg-emerald-300 shadow-[0_0_16px_rgba(110,231,183,0.35)]" style={{ width: `${progress}%` }} />
+            </div>
+
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Payout proof</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.payoutProof}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Reconciliation source</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.reconciliationSource}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Deposit trail</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.depositTrail}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Variance</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.variance}</span>
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-1.5">
+              {preview.checks.slice(0, 3).map((check) => (
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
+                  <span className="truncate">{check}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:items-end">
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+              <FileCheck2 className="h-3.5 w-3.5" />
+              Money landed
+            </span>
+
+            {detailHref ? (
+              <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
+                <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+                  <Link to={detailHref}>Open Recovery<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+                </Button>
+                <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+                  <Link to={detailHref}>View Receipt<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+                </Button>
+              </div>
+            ) : null}
+
+            <div className="w-full space-y-1.5 lg:max-w-[240px]">
+              {[
+                { label: 'Recovered', value: formatMoney(recoveredAmount, row.currency) },
+                { label: 'Approved', value: formatMoney(approvedAmount, row.currency) },
+                { label: 'Signal', value: preview.recoveredSignal },
+                { label: 'Closeout', value: preview.closeoutAction },
+                { label: 'Amazon case', value: amazonCase },
+                { label: 'Confirmed', value: timeLabel || null },
+              ].filter((item) => item.value && item.value !== NOT_AVAILABLE).map((item) => (
+                <div key={item.label} className="flex items-start justify-between gap-3">
+                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -3307,7 +3587,7 @@ export default function FilingPipeline() {
       value: 'completed' as const,
       label: 'Completed',
       title: 'Completed',
-      detail: 'Recovered value already confirmed back to the account.',
+      detail: 'Recovered cash confirmed, reconciled, and archived with payout proof.',
       amount: formatMoney(recoveredTotal),
       countLabel: `${completedRows.length} recovery item${completedRows.length === 1 ? '' : 's'} completed`,
       action: null,
@@ -3316,14 +3596,9 @@ export default function FilingPipeline() {
       ) : completedRows.length ? (
         <div className="grid gap-3">
           {completedRows.map((row) => (
-            <LedgerCard
+            <CompletedRecoveryCard
               key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
               row={row}
-              tone="completed"
-              amountLabel="Recovered value"
-              amount={ledgerRecoveredAmount(row)}
-              statusLabel={completedReason(row)}
-              detail="The payout has already been confirmed or reconciled in the recovery ledger."
               timeLabel={row.last_updated_at ? `Confirmed ${formatRelative(row.last_updated_at)}` : null}
               detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
             />
