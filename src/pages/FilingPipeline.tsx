@@ -6,7 +6,6 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
-import { formatEligibilityStatus, formatProofStatus, getProofStatus } from '@/lib/disputeProof';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -103,8 +102,26 @@ type ActiveFilingPreview = {
   activity: string[];
 };
 
+type ReadyFilingPreview = {
+  whyFile: string;
+  evidencePacket: string;
+  evidenceDocs: string[];
+  amazonRoute: string;
+  safety: string;
+  priority: string;
+  confidence: number;
+  daysLeft: number;
+  unitsAffected: number;
+  recommendedAction: string;
+  checks: string[];
+};
+
 type ActiveFilingDisputeRow = DisputeRow & {
   filing_preview?: ActiveFilingPreview;
+};
+
+type ReadyFilingDisputeRow = DisputeRow & {
+  ready_preview?: ReadyFilingPreview;
 };
 
 function demoTimestamp(baseMs: number, minutesAgo: number) {
@@ -241,6 +258,139 @@ const DEMO_READY_CASE_VARIANTS = [
     amount: 219.47,
     matchedDocuments: 4,
     updatedMinutesAgo: 97,
+  },
+];
+
+const DEMO_READY_DECISION_VARIANTS: ReadyFilingPreview[] = [
+  {
+    whyFile: 'Amazon received fewer units than the shipment plan shows, and the invoice plus BOL prove the shipped quantity.',
+    evidencePacket: 'Invoice, BOL, shipment plan, receive delta',
+    evidenceDocs: ['INV-NS-7419.pdf', 'BOL-FBA17KQ2N6P8.pdf', 'shipment-plan.csv', 'receive-delta.csv'],
+    amazonRoute: 'Seller Central / FBA inventory reimbursement / Inbound shortage',
+    safety: 'Low risk - duplicate reimbursement check passed',
+    priority: 'High priority',
+    confidence: 94,
+    daysLeft: 31,
+    unitsAffected: 8,
+    recommendedAction: 'Approve filing now',
+    checks: ['Policy window valid', 'Unit cost verified', 'No prior reimbursement found'],
+  },
+  {
+    whyFile: 'The transfer ledger shows inventory left the source FC but never appeared in available inventory at the destination FC.',
+    evidencePacket: 'Transfer ledger, receive report, inventory movement log, invoice',
+    evidenceDocs: ['transfer-ledger.xlsx', 'destination-receive-report.csv', 'movement-log.pdf', 'CLM-XFER-2248-invoice.pdf'],
+    amazonRoute: 'Seller Central / Inventory reimbursement / Warehouse transfer loss',
+    safety: 'Low risk - Amazon movement IDs reconcile',
+    priority: 'High value',
+    confidence: 92,
+    daysLeft: 44,
+    unitsAffected: 5,
+    recommendedAction: 'Approve after quick packet review',
+    checks: ['FC movement IDs matched', 'Claim amount inside tolerance', 'No duplicate payout'],
+  },
+  {
+    whyFile: 'Warehouse damage was recorded against the SKU, but no reimbursement event exists in settlement data.',
+    evidencePacket: 'Damage event, supplier invoice, SKU cost basis',
+    evidenceDocs: ['warehouse-damage-event.pdf', 'ATL-PET-BOWL-XL-invoice.pdf', 'unit-cost-proof.pdf'],
+    amazonRoute: 'Seller Central / FBA inventory reimbursement / Warehouse damaged',
+    safety: 'Low risk - amount and damage reason agree',
+    priority: 'Clean win',
+    confidence: 89,
+    daysLeft: 26,
+    unitsAffected: 3,
+    recommendedAction: 'Approve filing',
+    checks: ['Damage code mapped', 'Settlement checked', 'Safe claim language generated'],
+  },
+  {
+    whyFile: 'Customer refund was issued, but the return event never checked back into sellable or unsellable inventory.',
+    evidencePacket: 'Order refund event, return status, settlement ledger',
+    evidenceDocs: ['refund-event-3847442.csv', 'return-status-proof.pdf', 'settlement-ledger.csv'],
+    amazonRoute: 'Seller Central / Customer return reimbursement / Return not received',
+    safety: 'Low risk - return absence confirmed',
+    priority: 'Fast file',
+    confidence: 87,
+    daysLeft: 19,
+    unitsAffected: 1,
+    recommendedAction: 'Approve filing now',
+    checks: ['Return not received', 'Order ID verified', 'Refund amount matched'],
+  },
+  {
+    whyFile: 'Amazon charged a larger FBA fee tier than the catalog dimensions support for this SKU.',
+    evidencePacket: 'Fee audit, catalog dimensions, order fee ledger',
+    evidenceDocs: ['fee-audit-3310.csv', 'catalog-dimensions.pdf', 'order-fee-ledger.csv'],
+    amazonRoute: 'Seller Central / FBA fee reimbursement / Size-tier correction',
+    safety: 'Low risk - fee tier delta isolated',
+    priority: 'Recommended',
+    confidence: 91,
+    daysLeft: 52,
+    unitsAffected: 11,
+    recommendedAction: 'Approve filing',
+    checks: ['Dimensions verified', 'Fee delta calculated', 'Policy-safe body ready'],
+  },
+  {
+    whyFile: 'Amazon inventory adjustment removed units from available stock without a matching reimbursement in settlements.',
+    evidencePacket: 'Inventory adjustment, settlement scan, supplier invoice',
+    evidenceDocs: ['adjustment-event-FBA15P7R8V3X.csv', 'settlement-scan.csv', 'supplier-invoice.pdf'],
+    amazonRoute: 'Seller Central / Inventory adjustment reimbursement / Lost inventory',
+    safety: 'Low risk - duplicate claim suppressed',
+    priority: 'Highest value',
+    confidence: 93,
+    daysLeft: 38,
+    unitsAffected: 6,
+    recommendedAction: 'Approve filing now',
+    checks: ['Adjustment reason eligible', 'Prior reimbursement cleared', 'Unit cost verified'],
+  },
+  {
+    whyFile: 'The return deadline passed without Amazon receiving the customer return for the refunded order.',
+    evidencePacket: 'Refund event, return tracker, SKU cost proof',
+    evidenceDocs: ['refund-5259417.csv', 'return-tracker.pdf', 'HBK-cost-proof.pdf'],
+    amazonRoute: 'Seller Central / Customer return reimbursement / Return not received',
+    safety: 'Low risk - return window elapsed',
+    priority: 'Recommended',
+    confidence: 86,
+    daysLeft: 23,
+    unitsAffected: 2,
+    recommendedAction: 'Approve filing',
+    checks: ['Return deadline passed', 'Refund matched', 'SKU identity verified'],
+  },
+  {
+    whyFile: 'Removal order damage appears in Amazon events, but the reimbursement ledger does not show a matching credit.',
+    evidencePacket: 'Removal order, damage event, reimbursement ledger',
+    evidenceDocs: ['removal-order-FBA19B6Y2D8S.pdf', 'damage-event.csv', 'reimbursement-ledger.csv'],
+    amazonRoute: 'Seller Central / Removal order reimbursement / Damaged removal',
+    safety: 'Medium-low risk - category selected carefully',
+    priority: 'Good recovery',
+    confidence: 88,
+    daysLeft: 34,
+    unitsAffected: 4,
+    recommendedAction: 'Review packet, then approve',
+    checks: ['Removal ID matched', 'Damage event present', 'No reimbursement found'],
+  },
+  {
+    whyFile: 'Amazon approved reimbursement, but settlement records do not show the expected payout landing.',
+    evidencePacket: 'Approval proof, settlement report, payout delta worksheet',
+    evidenceDocs: ['approval-thread.pdf', 'settlement-report.csv', 'payout-delta.xlsx'],
+    amazonRoute: 'Seller Central / Reimbursement follow-up / Settlement gap',
+    safety: 'Low risk - approved amount already exists',
+    priority: 'Money waiting',
+    confidence: 95,
+    daysLeft: 58,
+    unitsAffected: 1,
+    recommendedAction: 'Approve follow-up filing',
+    checks: ['Approval reference found', 'Payout missing', 'Delta worksheet ready'],
+  },
+  {
+    whyFile: 'Inventory disposal event removed sellable units, but the disposal reason supports reimbursement review.',
+    evidencePacket: 'Disposal event, inventory ledger, supplier invoice',
+    evidenceDocs: ['disposal-event.pdf', 'inventory-ledger.csv', 'LMA-SERUM-invoice.pdf'],
+    amazonRoute: 'Seller Central / Inventory reimbursement / Disposal error',
+    safety: 'Medium-low risk - category and wording reviewed',
+    priority: 'Recommended',
+    confidence: 84,
+    daysLeft: 28,
+    unitsAffected: 3,
+    recommendedAction: 'Review packet, then approve',
+    checks: ['Disposal reason eligible', 'SKU matched', 'Overclaim check passed'],
   },
 ];
 
@@ -969,6 +1119,7 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
   }
 
   const readyVariant = DEMO_READY_CASE_VARIANTS[index % DEMO_READY_CASE_VARIANTS.length];
+  const readyPreview = DEMO_READY_DECISION_VARIANTS[index % DEMO_READY_DECISION_VARIANTS.length];
 
   return {
     dispute_case_id: `demo-ready-${padded}`,
@@ -1002,6 +1153,7 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
     block_reasons: [],
     last_error: null,
     submission_proof: null,
+    ready_preview: readyPreview,
   } as DisputeRow;
 }
 
@@ -1323,6 +1475,43 @@ function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+function getReadyFilingPreview(row: DisputeRow): ReadyFilingPreview {
+  const explicitPreview = (row as ReadyFilingDisputeRow).ready_preview;
+  if (explicitPreview) return explicitPreview;
+
+  const seed = stableNumber(disputeReference(row));
+  const linkedCount = typeof row.matched_document_count === 'number' && Number.isFinite(row.matched_document_count)
+    ? row.matched_document_count
+    : 3;
+  const amount = disputeAmount(row);
+  const evidenceDocs = [
+    row.order_id ? `${row.order_id}-shipment-proof.pdf` : 'shipment-proof.pdf',
+    row.sku ? `${row.sku}-unit-cost.pdf` : 'unit-cost-proof.pdf',
+    'inventory-ledger-excerpt.csv',
+    'seller-central-claim-draft.txt',
+  ].slice(0, Math.max(2, Math.min(4, linkedCount)));
+
+  return {
+    whyFile: row.order_id
+      ? `Margin found a recoverable Amazon discrepancy tied to ${row.order_id}; proof is complete and ready for seller approval.`
+      : 'Margin found a recoverable Amazon discrepancy; proof is complete and ready for seller approval.',
+    evidencePacket: `${linkedCount} evidence document${linkedCount === 1 ? '' : 's'} ready`,
+    evidenceDocs,
+    amazonRoute: 'Seller Central / FBA reimbursement workflow',
+    safety: seed % 4 === 0 ? 'Medium-low risk - review packet before approval' : 'Low risk - filing checks passed',
+    priority: amount && amount > 300 ? 'High value' : seed % 3 === 0 ? 'High priority' : 'Recommended',
+    confidence: 84 + (seed % 12),
+    daysLeft: 18 + (seed % 43),
+    unitsAffected: (seed % 9) + 1,
+    recommendedAction: seed % 4 === 0 ? 'Review packet, then approve' : 'Approve filing',
+    checks: [
+      'Policy window valid',
+      'No prior reimbursement found',
+      'Safe claim body generated',
+    ],
+  };
+}
+
 function getActiveFilingPreview(row: DisputeRow): ActiveFilingPreview {
   const explicitPreview = (row as ActiveFilingDisputeRow).filing_preview;
   if (explicitPreview) return explicitPreview;
@@ -1388,24 +1577,6 @@ function ledgerRecoveredAmount(row: LedgerRow) {
   return amountOrNull(row.actual_payout_amount)
     ?? amountOrNull(row.approved_amount)
     ?? amountOrNull(row.expected_payout_amount);
-}
-
-function readyReason(row: DisputeRow) {
-  const proofStatus = getProofStatus(row);
-  if (proofStatus) return `Proof complete · ${formatProofStatus(proofStatus)}`;
-  const eligibility = formatEligibilityStatus(row.eligibility_status || null);
-  if (eligibility !== 'Not available') return eligibility;
-  return 'Proof requirements met';
-}
-
-function readyDetail(row: DisputeRow) {
-  const evidenceCount = typeof row.matched_document_count === 'number' && Number.isFinite(row.matched_document_count)
-    ? row.matched_document_count
-    : null;
-
-  return evidenceCount && evidenceCount > 0
-    ? `This case is ready because required proof is complete and ${evidenceCount} evidence document${evidenceCount === 1 ? ' is' : 's are'} linked. It has not been submitted yet.`
-    : 'This case is ready because required proof is complete. It has not been submitted yet.';
 }
 
 function attentionReason(row: DisputeRow) {
@@ -1704,6 +1875,128 @@ function DisputeCard({
           ]}
         />
         <div className="flex flex-col items-start gap-2 lg:items-end">{action}</div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ReadyFilingCard({
+  row,
+  decisionHref,
+  timeLabel,
+}: {
+  row: DisputeRow;
+  decisionHref: string;
+  timeLabel?: string | null;
+}) {
+  const classes = toneClasses('ready');
+  const preview = getReadyFilingPreview(row);
+  const confidence = Math.max(1, Math.min(99, preview.confidence));
+
+  return (
+    <Card className={cn('border shadow-none', classes.card)}>
+      <CardContent className="p-4">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+                Seller decision
+              </span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-emerald-200/70">{preview.priority}</span>
+            </div>
+
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+            </div>
+
+            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.whyFile}</p>
+            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+              {row.order_id ? `${row.order_id} · ` : ''}{preview.unitsAffected} units · SKU {row.sku || NOT_AVAILABLE} · ASIN {row.asin || NOT_AVAILABLE}
+            </div>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {preview.evidenceDocs.slice(0, 4).map((doc) => (
+                <span
+                  key={doc}
+                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                >
+                  <span className="truncate">{doc}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Evidence confidence</div>
+                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{confidence}% ready</div>
+              </div>
+              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-emerald-200">
+                {preview.daysLeft} days left
+              </div>
+            </div>
+
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+              <div className="h-full rounded-full bg-emerald-300 shadow-[0_0_16px_rgba(110,231,183,0.35)]" style={{ width: `${confidence}%` }} />
+            </div>
+
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Amazon route</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.amazonRoute}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Evidence packet</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.evidencePacket}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Safety</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.safety}</span>
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-1.5">
+              {preview.checks.slice(0, 3).map((check) => (
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
+                  <span className="truncate">{check}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:items-end">
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+              <FileCheck2 className="h-3.5 w-3.5" />
+              Seller controlled
+            </span>
+
+            <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
+              <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+                <Link to={decisionHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+              </Button>
+              <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+                <Link to={decisionHref}>Review Packet<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+              </Button>
+            </div>
+
+            <div className="w-full space-y-1.5 lg:max-w-[240px]">
+              {[
+                { label: 'Recommendation', value: preview.recommendedAction },
+                { label: 'Control', value: 'Nothing submits until approved' },
+                { label: 'Last movement', value: timeLabel || null },
+              ].filter((item) => item.value).map((item) => (
+                <div key={item.label} className="flex items-start justify-between gap-3">
+                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
@@ -2062,9 +2355,9 @@ export default function FilingPipeline() {
       value: 'ready' as const,
       label: 'Ready to file',
       title: 'Ready to File',
-      detail: 'Proof-complete cases that can move into filing. Not submitted yet.',
+      detail: 'Seller-approved filing queue. Review proof, risk, route, and upside before anything is sent.',
       amount: formatMoney(readyTotal),
-      countLabel: `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} ready`,
+      countLabel: `${readyRows.length} seller decision${readyRows.length === 1 ? '' : 's'} waiting`,
       action: readyRows.length ? (
         <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
           <Link to={disputeCasesHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
@@ -2075,16 +2368,11 @@ export default function FilingPipeline() {
       ) : readyRows.length ? (
         <div className="grid gap-3">
           {readyRows.map((row) => (
-            <DisputeCard
+            <ReadyFilingCard
               key={row.dispute_case_id}
               row={row}
-              tone="ready"
-              amountLabel="Estimated recovery"
-              statusLabel={readyReason(row)}
-              detail={readyDetail(row)}
+              decisionHref={disputeCasesHref}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-              nextStep={filingNextStep(row, 'ready')}
-              action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
             />
           ))}
         </div>
