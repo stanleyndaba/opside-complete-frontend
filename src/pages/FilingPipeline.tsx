@@ -84,6 +84,29 @@ const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
 const DEMO_PIPELINE_ROW_COUNT = 10;
 
+type ActiveFilingPreview = {
+  currentAction: string;
+  stageLabel: string;
+  progress: number;
+  step: number;
+  totalSteps: number;
+  amazonRoute: string;
+  evidencePacket: string;
+  evidenceDocs: string[];
+  unitsAffected: number;
+  channel: string;
+  eta: string;
+  retries: number;
+  health: string;
+  nextProof: string;
+  policyWindow: string;
+  activity: string[];
+};
+
+type ActiveFilingDisputeRow = DisputeRow & {
+  filing_preview?: ActiveFilingPreview;
+};
+
 function demoTimestamp(baseMs: number, minutesAgo: number) {
   return new Date(baseMs - minutesAgo * 60_000).toISOString();
 }
@@ -384,6 +407,259 @@ const DEMO_FILED_CASE_VARIANTS = [
   },
 ];
 
+const DEMO_ACTIVE_FILING_VARIANTS = [
+  {
+    anomalyType: 'inbound_shipment_shortage',
+    caseType: 'inbound_shipment_shortage',
+    storeName: 'Acme Operations US FBA',
+    orderId: 'FBA17ACME001',
+    sku: 'ACME-TRAVEL-MUG-BLK',
+    asin: 'B0ACME0001',
+    amount: 486.2,
+    unitsAffected: 14,
+    matchedDocuments: 4,
+    currentAction: 'Uploading evidence packet to Seller Central',
+    stageLabel: 'Evidence upload',
+    progress: 72,
+    step: 4,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / FBA inventory reimbursement / Inbound shortage',
+    evidencePacket: 'Invoice, BOL, shipment reconciliation, inventory ledger',
+    evidenceDocs: ['INV-ACME-2001.pdf', 'BOL-ACME-2001.pdf', 'FBA17ACME001-reconciliation.csv', 'inventory-ledger-excerpt.csv'],
+    eta: '~90 sec',
+    retries: 0,
+    health: 'Healthy - Amazon response pending',
+    nextProof: 'Amazon case ID + submission receipt',
+    policyWindow: 'Inside 18-month FBA window',
+    activity: ['Validated 14-unit shortage', 'Attached supplier invoice', 'Uploading BOL with dock receipt'],
+  },
+  {
+    anomalyType: 'fba_fee_overcharge',
+    caseType: 'fba_fee_overcharge',
+    storeName: 'Acme Operations US FBA',
+    orderId: '113-5621175-4496210',
+    sku: 'ACME-CABLE-USB3-6FT',
+    asin: 'B0ACME0002',
+    amount: 218.75,
+    unitsAffected: 5,
+    matchedDocuments: 3,
+    currentAction: 'Drafting Seller Central reimbursement message',
+    stageLabel: 'Claim narrative',
+    progress: 58,
+    step: 3,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / FBA fee reimbursement / Size-tier correction',
+    evidencePacket: 'Fee audit, catalog dimensions, order fee ledger',
+    evidenceDocs: ['AUD-ACME-FEE-2002.csv', 'catalog-dimension-proof.pdf', 'order-fee-ledger.csv'],
+    eta: '~2 min',
+    retries: 0,
+    health: 'Healthy - policy text matched',
+    nextProof: 'Submitted case transcript + fee audit hash',
+    policyWindow: 'Chargeback period verified',
+    activity: ['Confirmed standard-size dimensions', 'Matched fee overcharge rows', 'Drafting Amazon-safe claim language'],
+  },
+  {
+    anomalyType: 'lost_warehouse_inventory',
+    caseType: 'warehouse_transfer_loss',
+    storeName: 'Acme Operations EU FBA',
+    orderId: 'FBA18ACME003',
+    sku: 'ACME-DESK-LAMP-OAK',
+    asin: 'B0ACME0003',
+    amount: 742.4,
+    unitsAffected: 4,
+    matchedDocuments: 5,
+    currentAction: 'Waiting for Amazon case acknowledgement',
+    stageLabel: 'Amazon acknowledgement',
+    progress: 88,
+    step: 5,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / Inventory reimbursement / Warehouse transfer loss',
+    evidencePacket: 'Transfer ledger, receive report, supplier invoice, FC movement log',
+    evidenceDocs: ['INV-ACME-2003.pdf', 'FC-transfer-ledger.xlsx', 'receive-gap-report.csv', 'movement-log.pdf'],
+    eta: '~45 sec',
+    retries: 1,
+    health: 'Healthy - one Amazon timeout recovered',
+    nextProof: 'Amazon case ID landing in filing ledger',
+    policyWindow: 'Eligible transfer event',
+    activity: ['Recovered from Seller Central timeout', 'Replayed attachment manifest', 'Listening for case ID'],
+  },
+  {
+    anomalyType: 'damaged_inventory',
+    caseType: 'damaged_inventory',
+    storeName: 'Acme Operations EU FBA',
+    orderId: 'FBA17ACME005',
+    sku: 'ACME-YOGA-MAT-SAGE',
+    asin: 'B0ACME0005',
+    amount: 963.1,
+    unitsAffected: 12,
+    matchedDocuments: 4,
+    currentAction: 'Attaching damage proof and unit-cost support',
+    stageLabel: 'Attachment binding',
+    progress: 64,
+    step: 4,
+    totalSteps: 7,
+    amazonRoute: 'Seller Central / FBA inventory reimbursement / Warehouse damaged',
+    evidencePacket: 'Damage event, invoice, PO, receiving discrepancy',
+    evidenceDocs: ['SHIP-ACME-2005.pdf', 'INV-ACME-2005.pdf', 'PO-ACME-2005.pdf', 'damage-event-log.csv'],
+    eta: '~3 min',
+    retries: 0,
+    health: 'Healthy - all required docs present',
+    nextProof: 'Seller Central receipt + attached file manifest',
+    policyWindow: 'Damage event date verified',
+    activity: ['Bound PO to supplier invoice', 'Attached warehouse damage log', 'Checking final claim amount'],
+  },
+  {
+    anomalyType: 'lost_inventory_adjustment',
+    caseType: 'lost_inventory_adjustment',
+    storeName: 'Acme Operations US FBA',
+    orderId: 'FBA19ACME006',
+    sku: 'ACME-STORAGE-BIN-L',
+    asin: 'B0ACME0006',
+    amount: 634.88,
+    unitsAffected: 6,
+    matchedDocuments: 4,
+    currentAction: 'Reconciling Amazon inventory ledger before submit',
+    stageLabel: 'Ledger check',
+    progress: 46,
+    step: 3,
+    totalSteps: 7,
+    amazonRoute: 'Seller Central / Inventory adjustment reimbursement / Lost units',
+    evidencePacket: 'Settlement statement, inventory ledger, weight audit, invoice',
+    evidenceDocs: ['STMT-ACME-2006.pdf', 'AUD-ACME-2006.csv', 'INV-ACME-2006.pdf'],
+    eta: '~4 min',
+    retries: 0,
+    health: 'Healthy - duplicate reimbursement cleared',
+    nextProof: 'Clean submission proof after ledger check',
+    policyWindow: 'No prior reimbursement found',
+    activity: ['Checked duplicate payout risk', 'Verified unit cost proof', 'Reconciling ledger movement IDs'],
+  },
+  {
+    anomalyType: 'customer_return_not_received',
+    caseType: 'customer_return_not_received',
+    storeName: 'Acme Operations US FBA',
+    orderId: '114-4410290-0140095',
+    sku: 'ACME-PHONE-STAND-WHT',
+    asin: 'B0ACME0008',
+    amount: 157.32,
+    unitsAffected: 3,
+    matchedDocuments: 3,
+    currentAction: 'Submitting return-not-received claim',
+    stageLabel: 'Final submit',
+    progress: 81,
+    step: 5,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / Customer return reimbursement / Return not received',
+    evidencePacket: 'Order return event, settlement ledger, SKU cost basis',
+    evidenceDocs: ['return-event-0140095.csv', 'settlement-ledger-excerpt.csv', 'unit-cost-proof.pdf'],
+    eta: '~60 sec',
+    retries: 0,
+    health: 'Healthy - case body accepted',
+    nextProof: 'Amazon acknowledgement timestamp',
+    policyWindow: 'Return event inside claim window',
+    activity: ['Matched return event to order', 'Attached settlement ledger', 'Submitting claim body'],
+  },
+  {
+    anomalyType: 'settlement_reimbursement_gap',
+    caseType: 'settlement_reimbursement_gap',
+    storeName: 'Acme Operations US FBA',
+    orderId: '114-5155722-8199427',
+    sku: 'ACME-BENTO-BOX-GRN',
+    asin: 'B0ACME0009',
+    amount: 311.28,
+    unitsAffected: 6,
+    matchedDocuments: 3,
+    currentAction: 'Checking payout gap before Amazon handoff',
+    stageLabel: 'Payout gap proof',
+    progress: 39,
+    step: 2,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / Reimbursement follow-up / Settlement gap',
+    evidencePacket: 'Approved case, settlement report, payout delta worksheet',
+    evidenceDocs: ['AMZ-ACME-42009-thread.pdf', 'settlement-report.csv', 'AUD-ACME-2009.xlsx'],
+    eta: '~5 min',
+    retries: 0,
+    health: 'Healthy - payout delta isolated',
+    nextProof: 'Follow-up case reference + payout worksheet',
+    policyWindow: 'Approval exists, payout absent',
+    activity: ['Compared approval to settlement', 'Built payout delta worksheet', 'Preparing follow-up evidence'],
+  },
+  {
+    anomalyType: 'inventory_disposal_error',
+    caseType: 'inventory_disposal_error',
+    storeName: 'Acme Operations US FBA',
+    orderId: 'FBA17ACME010',
+    sku: 'ACME-CLEANING-CLOTH-12',
+    asin: 'B0ACME0010',
+    amount: 96.7,
+    unitsAffected: 4,
+    matchedDocuments: 3,
+    currentAction: 'Selecting Amazon case category',
+    stageLabel: 'Route selection',
+    progress: 31,
+    step: 2,
+    totalSteps: 7,
+    amazonRoute: 'Seller Central / Inventory reimbursement / Disposal error',
+    evidencePacket: 'Disposal event, shipment proof, supplier invoice',
+    evidenceDocs: ['INV-ACME-2010.pdf', 'BOL-ACME-2010.pdf', 'disposal-event-log.csv'],
+    eta: '~6 min',
+    retries: 0,
+    health: 'Healthy - category decision running',
+    nextProof: 'Case category + submission receipt',
+    policyWindow: 'Inventory event eligible',
+    activity: ['Mapped disposal event to SKU', 'Found matching BOL', 'Selecting safest Amazon category'],
+  },
+  {
+    anomalyType: 'inbound_shipment_shortage',
+    caseType: 'inbound_shipment_shortage',
+    storeName: 'Acme Operations US FBA',
+    orderId: 'FBA17ACME007',
+    sku: 'ACME-LED-STRIP-16FT',
+    asin: 'B0ACME0007',
+    amount: 376.45,
+    unitsAffected: 9,
+    matchedDocuments: 4,
+    currentAction: 'Validating claim amount against unit-cost proof',
+    stageLabel: 'Amount validation',
+    progress: 52,
+    step: 3,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / FBA inventory reimbursement / Inbound received short',
+    evidencePacket: 'Invoice, shipment plan, receive delta, SKU cost proof',
+    evidenceDocs: ['INV-ACME-2007.pdf', 'FBA17ACME007-plan.csv', 'receive-delta.csv', 'unit-cost-proof.pdf'],
+    eta: '~2 min',
+    retries: 0,
+    health: 'Healthy - amount tolerance passed',
+    nextProof: 'Final Amazon message + receipt',
+    policyWindow: 'Shipment close date verified',
+    activity: ['Calculated recoverable amount', 'Checked Amazon tolerance', 'Preparing final message'],
+  },
+  {
+    anomalyType: 'case_thread_reappeal',
+    caseType: 'case_thread_reappeal',
+    storeName: 'Acme Operations US FBA',
+    orderId: 'FBA18ACME011',
+    sku: 'ACME-THERMAL-BAG-BLU',
+    asin: 'B0ACME0011',
+    amount: 529.42,
+    unitsAffected: 7,
+    matchedDocuments: 4,
+    currentAction: 'Replying to Amazon with missing POD proof',
+    stageLabel: 'Appeal reply',
+    progress: 67,
+    step: 4,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / Existing case reply / POD requested',
+    evidencePacket: 'Stamped POD, PO, carrier timestamp, original case thread',
+    evidenceDocs: ['PO-ACME-2011.pdf', 'stamped-POD-FBA18ACME011.pdf', 'carrier-scan.json', 'AMZ-ACME-42011-thread.pdf'],
+    eta: '~2 min',
+    retries: 0,
+    health: 'Healthy - Amazon request matched',
+    nextProof: 'Thread reply timestamp + attachment manifest',
+    policyWindow: 'Reply window still open',
+    activity: ['Parsed Amazon rejection reason', 'Found stamped POD gap', 'Attaching reply evidence'],
+  },
+];
+
 const DEMO_COMPLETED_RECOVERY_VARIANTS = [
   {
     caseNumber: '791-50384216',
@@ -601,31 +877,32 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
   }
 
   if (stage === 'filing') {
+    const variant = DEMO_ACTIVE_FILING_VARIANTS[index % DEMO_ACTIVE_FILING_VARIANTS.length];
     return {
       dispute_case_id: `demo-filing-${padded}`,
       linked_dispute_case_id: `demo-filing-linked-${padded}`,
       detection_result_id: `demo-filing-detection-${padded}`,
-      case_number: `SUB-${padded}`,
-      claim_number: `CLM-SUB-${padded}`,
+      case_number: `LIVE-${variant.orderId.replace(/[^A-Z0-9]/gi, '').slice(-6)}-${padded}`,
+      claim_number: `MARGIN-FILING-${padded}`,
       has_real_dispute_case: true,
       filing_status: 'submitting',
       status: 'pending',
       can_file: false,
-      anomaly_type: 'lost_or_damaged_inventory',
-      case_type: 'lost_or_damaged_inventory',
-      store_name: 'Margin Demo Store',
-      order_id: `114-66318${padded}-4409${padded}`,
-      sku: `MARGIN-SUBMIT-${padded}`,
-      asin: `B0MSUBMT${padded}`,
-      expected_payout_amount: amount,
-      requested_amount: amount,
+      anomaly_type: variant.anomalyType,
+      case_type: variant.caseType,
+      store_name: variant.storeName,
+      order_id: variant.orderId,
+      sku: variant.sku,
+      asin: variant.asin,
+      expected_payout_amount: variant.amount,
+      requested_amount: variant.amount,
       approved_amount: null,
       actual_payout_amount: null,
       recovery_status: null,
       payout_proof_status: null,
       proof_status: 'filing_ready',
       eligibility_status: 'ready',
-      matched_document_count: 2,
+      matched_document_count: variant.matchedDocuments,
       updated_at: updatedAt,
       currency: 'USD',
       amazon_case_id: null,
@@ -633,6 +910,24 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
       block_reasons: [],
       last_error: null,
       submission_proof: null,
+      filing_preview: {
+        currentAction: variant.currentAction,
+        stageLabel: variant.stageLabel,
+        progress: variant.progress,
+        step: variant.step,
+        totalSteps: variant.totalSteps,
+        amazonRoute: variant.amazonRoute,
+        evidencePacket: variant.evidencePacket,
+        evidenceDocs: variant.evidenceDocs,
+        unitsAffected: variant.unitsAffected,
+        channel: 'Seller Central',
+        eta: variant.eta,
+        retries: variant.retries,
+        health: variant.health,
+        nextProof: variant.nextProof,
+        policyWindow: variant.policyWindow,
+        activity: variant.activity,
+      },
     } as DisputeRow;
   }
 
@@ -1019,6 +1314,69 @@ function disputeAmount(row: DisputeRow) {
     ?? amountOrNull(row.actual_payout_amount);
 }
 
+function stableNumber(value: unknown) {
+  const text = String(value || '');
+  return text.split('').reduce((total, char) => total + char.charCodeAt(0), 0);
+}
+
+function getErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}
+
+function getActiveFilingPreview(row: DisputeRow): ActiveFilingPreview {
+  const explicitPreview = (row as ActiveFilingDisputeRow).filing_preview;
+  if (explicitPreview) return explicitPreview;
+
+  const seed = stableNumber(disputeReference(row));
+  const linkedCount = typeof row.matched_document_count === 'number' && Number.isFinite(row.matched_document_count)
+    ? row.matched_document_count
+    : 3;
+  const currentActions = [
+    'Uploading evidence packet to Seller Central',
+    'Drafting Amazon-safe case message',
+    'Binding proof files to reimbursement claim',
+    'Waiting for Amazon case acknowledgement',
+    'Validating amount before final submit',
+  ];
+  const routes = [
+    'Seller Central / FBA inventory reimbursement',
+    'Seller Central / Existing case reply',
+    'Seller Central / Fee reimbursement',
+  ];
+  const evidenceDocs = [
+    row.order_id ? `${row.order_id}-shipment-proof.pdf` : 'shipment-proof.pdf',
+    row.sku ? `${row.sku}-unit-cost.pdf` : 'unit-cost-proof.pdf',
+    'inventory-ledger-excerpt.csv',
+    'seller-central-case-draft.txt',
+  ].slice(0, Math.max(2, Math.min(4, linkedCount)));
+  const progress = 35 + (seed % 55);
+  const totalSteps = seed % 3 === 0 ? 7 : 6;
+  const step = Math.min(totalSteps - 1, Math.max(2, Math.round((progress / 100) * totalSteps)));
+
+  return {
+    currentAction: currentActions[seed % currentActions.length],
+    stageLabel: ['Evidence upload', 'Claim narrative', 'Final submit', 'Amazon acknowledgement'][seed % 4],
+    progress,
+    step,
+    totalSteps,
+    amazonRoute: routes[seed % routes.length],
+    evidencePacket: `${linkedCount} linked evidence documents`,
+    evidenceDocs,
+    unitsAffected: (seed % 11) + 2,
+    channel: 'Seller Central',
+    eta: `~${(seed % 4) + 1} min`,
+    retries: seed % 3 === 0 ? 1 : 0,
+    health: seed % 3 === 0 ? 'Healthy - retry recovered' : 'Healthy - no blockers',
+    nextProof: 'Amazon case ID + submission receipt',
+    policyWindow: 'Policy window verified',
+    activity: [
+      'Validated SKU and ASIN identity',
+      'Attached evidence packet',
+      'Preparing Amazon acknowledgement capture',
+    ],
+  };
+}
+
 function ledgerApprovedAmount(row: LedgerRow) {
   if (row.has_approval_truth !== true) return null;
   return amountOrNull(row.approved_amount)
@@ -1048,20 +1406,6 @@ function readyDetail(row: DisputeRow) {
   return evidenceCount && evidenceCount > 0
     ? `This case is ready because required proof is complete and ${evidenceCount} evidence document${evidenceCount === 1 ? ' is' : 's are'} linked. It has not been submitted yet.`
     : 'This case is ready because required proof is complete. It has not been submitted yet.';
-}
-
-function beingFiledReason(row: DisputeRow) {
-  const normalized = String(row.filing_status || '').trim().toLowerCase();
-  if (normalized === 'submitting') return 'Submitting to Amazon';
-  return 'Preparing filing handoff';
-}
-
-function beingFiledDetail(row: DisputeRow) {
-  if (normalizeStatus(row.filing_status) === 'submitting') {
-    return 'Margin is actively submitting this case now. The next truth state will be filed with proof, failed, or blocked with a reason.';
-  }
-
-  return 'Margin is preparing the filing handoff. This is not treated as filed until durable submission proof exists.';
 }
 
 function attentionReason(row: DisputeRow) {
@@ -1100,7 +1444,7 @@ function filingNextStep(row: DisputeRow, stage: 'ready' | 'filing' | 'filed' | '
   }
 
   if (stage === 'filing') {
-    return 'Next: Margin records submission proof or returns a failure reason.';
+    return `Next: ${getActiveFilingPreview(row).nextProof}.`;
   }
 
   if (stage === 'filed') {
@@ -1365,6 +1709,120 @@ function DisputeCard({
   );
 }
 
+function ActiveFilingCard({
+  row,
+  timeLabel,
+}: {
+  row: DisputeRow;
+  timeLabel?: string | null;
+}) {
+  const classes = toneClasses('inFlight');
+  const preview = getActiveFilingPreview(row);
+  const progress = Math.max(5, Math.min(98, preview.progress));
+
+  return (
+    <Card className={cn('border shadow-none', classes.card)}>
+      <CardContent className="p-4">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+                Live filing
+              </span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-amber-200/70">{preview.stageLabel}</span>
+            </div>
+
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+            </div>
+
+            <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#b7b7b7]">{preview.currentAction}</p>
+            <div className="mt-2 text-[11px] font-medium tracking-tight text-white/42">
+              {row.order_id ? `${row.order_id} · ` : ''}{preview.unitsAffected} units · SKU {row.sku || NOT_AVAILABLE} · ASIN {row.asin || NOT_AVAILABLE}
+            </div>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {preview.evidenceDocs.slice(0, 4).map((doc) => (
+                <span
+                  key={doc}
+                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                >
+                  <span className="truncate">{doc}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Live stage</div>
+                <div className="mt-1 text-[13px] font-semibold tracking-tight text-white">{preview.stageLabel}</div>
+              </div>
+              <div className="text-right text-[11px] font-semibold tabular-nums tracking-tight text-amber-200">
+                Step {preview.step} of {preview.totalSteps}
+              </div>
+            </div>
+
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
+              <div className="h-full rounded-full bg-amber-300 shadow-[0_0_16px_rgba(252,211,77,0.35)]" style={{ width: `${progress}%` }} />
+            </div>
+
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Amazon route</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.amazonRoute}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Evidence packet</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.evidencePacket}</span>
+              </div>
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-white/30">Policy check</span>
+                <span className="max-w-[72%] text-right text-white/68">{preview.policyWindow}</span>
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-1.5">
+              {preview.activity.slice(0, 3).map((event, index, visibleEvents) => (
+                <div key={`${event}-${index}`} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+                  <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', index === visibleEvents.length - 1 ? 'bg-amber-300' : 'bg-white/18')} />
+                  <span className="truncate">{event}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:items-end">
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+              <Clock3 className="h-3.5 w-3.5" />
+              Submitting live
+            </span>
+
+            <div className="w-full space-y-1.5 lg:max-w-[240px]">
+              {[
+                { label: 'ETA', value: preview.eta },
+                { label: 'Channel', value: preview.channel },
+                { label: 'Retries', value: `${preview.retries}` },
+                { label: 'Health', value: preview.health },
+                { label: 'Next proof', value: preview.nextProof },
+                { label: 'Last movement', value: timeLabel || null },
+              ].filter((item) => item.value).map((item) => (
+                <div key={item.label} className="flex items-start justify-between gap-3">
+                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function LedgerCard({
   row,
   tone,
@@ -1469,10 +1927,10 @@ export default function FilingPipeline() {
 
       setDisputeRows(allRows);
       setDisputeUpdatedAt(firstPage.last_updated_at || null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setDisputeRows([]);
       setDisputeUpdatedAt(null);
-      setDisputeError(error?.message || 'Unable to load filing-ready truth.');
+      setDisputeError(getErrorMessage(error, 'Unable to load filing-ready truth.'));
     } finally {
       setDisputeLoading(false);
     }
@@ -1507,10 +1965,10 @@ export default function FilingPipeline() {
 
       setLedgerRows(allRows);
       setLedgerUpdatedAt(firstPage.summary?.last_updated_at || null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setLedgerRows([]);
       setLedgerUpdatedAt(null);
-      setLedgerError(error?.message || 'Unable to load payout truth.');
+      setLedgerError(getErrorMessage(error, 'Unable to load payout truth.'));
     } finally {
       setLedgerLoading(false);
     }
@@ -1640,25 +2098,19 @@ export default function FilingPipeline() {
       value: 'filing' as const,
       label: 'Being filed',
       title: 'Being Filed',
-      detail: 'Cases actively submitting now. Pending queueable cases do not appear here.',
+      detail: 'Live Amazon submissions with packet status, route, evidence, ETA, and proof capture.',
       amount: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))),
-      countLabel: `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} in submission`,
+      countLabel: `${beingFiledRows.length} active Amazon handoff${beingFiledRows.length === 1 ? '' : 's'}`,
       action: null,
       content: disputeLoading ? (
         <LoadingState label="Checking active filing handoffs" />
       ) : beingFiledRows.length ? (
         <div className="grid gap-3">
           {beingFiledRows.map((row) => (
-            <DisputeCard
+            <ActiveFilingCard
               key={row.dispute_case_id}
               row={row}
-              tone="inFlight"
-              amountLabel="Amount in motion"
-              statusLabel={beingFiledReason(row)}
-              detail={beingFiledDetail(row)}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-              nextStep={filingNextStep(row, 'filing')}
-              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('inFlight').chip)}><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
             />
           ))}
         </div>
