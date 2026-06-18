@@ -7,7 +7,7 @@ import { Upload, X, FileText, Folder, Play } from 'lucide-react';
 interface UploadedFile {
   id: string;
   name: string;
-  type: 'pdf' | 'folder' | 'video';
+  type: 'csv' | 'folder' | 'video';
   fileType: string;
 }
 
@@ -15,9 +15,10 @@ export default function DocumentUploads() {
   const [isUploaded, setIsUploaded] = useState(false);
 
   const files: UploadedFile[] = [
-    { id: '1', name: 'Quality_Control_Rubric.pdf', type: 'pdf', fileType: 'PDF File' },
-    { id: '2', name: 'Disputes_SOP.pdf', type: 'pdf', fileType: 'PDF File' },
-    { id: '3', name: 'Training_Videos', type: 'folder', fileType: 'Folder' },
+    { id: '1', name: 'Carrier Bill of Lading SHP-48291.csv', type: 'csv', fileType: 'CSV File' },
+    { id: '2', name: 'Supplier Commercial Invoice INV-0922.csv', type: 'csv', fileType: 'CSV File' },
+    { id: '3', name: 'FBA Packing List BoxCount.csv', type: 'csv', fileType: 'CSV File' },
+    { id: '4', name: 'Proof of Delivery POD Signature.csv', type: 'csv', fileType: 'CSV File' },
   ];
 
   const handleUpload = () => {
@@ -30,7 +31,7 @@ export default function DocumentUploads() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-md">
         <AnimatePresence mode="wait">
           {!isUploaded ? (
             // UPLOAD STATE
@@ -40,7 +41,7 @@ export default function DocumentUploads() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-2xl p-12 shadow-lg border border-gray-200"
+              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
             >
               {/* Header */}
               <div className="text-center mb-8">
@@ -59,21 +60,21 @@ export default function DocumentUploads() {
               </div>
 
               {/* File List */}
-              <div className="space-y-3 mb-8">
+              <div className="flex flex-wrap gap-2 justify-center mb-8">
                 {files.map((file, index) => (
                   <motion.div
                     key={file.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1, duration: 0.4 }}
-                    className="flex items-center gap-3 bg-[#007AFF] text-white px-4 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#007AFF] text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transition-colors shadow-sm cursor-default"
                   >
-                    <div className="w-5 h-5 flex items-center justify-center">
-                      {file.type === 'pdf' && <FileText className="w-5 h-5" />}
-                      {file.type === 'folder' && <Folder className="w-5 h-5" />}
-                      {file.type === 'video' && <Play className="w-5 h-5" />}
+                    <div className="flex items-center justify-center opacity-90">
+                      {file.type === 'csv' && <FileText className="w-4 h-4" />}
+                      {file.type === 'folder' && <Folder className="w-4 h-4" />}
+                      {file.type === 'video' && <Play className="w-4 h-4" />}
                     </div>
-                    <span className="text-sm font-medium flex-1">{file.name}</span>
+                    <span className="text-xs font-medium tracking-wide">{file.name}</span>
                   </motion.div>
                 ))}
               </div>
@@ -83,9 +84,9 @@ export default function DocumentUploads() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleUpload}
-                className="w-full bg-[#007AFF] text-white font-medium py-3 rounded-lg hover:bg-blue-600 transition-colors"
+                className="w-full bg-[#007AFF] text-white font-medium py-3 rounded-lg hover:bg-blue-600 transition-colors shadow-sm"
               >
-                Upload & Analyze
+                Upload
               </motion.button>
             </motion.div>
           ) : (
@@ -96,7 +97,7 @@ export default function DocumentUploads() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-2xl p-12 shadow-lg border border-gray-200"
+              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
             >
               {/* Header */}
               <div className="text-center mb-8">
@@ -105,7 +106,7 @@ export default function DocumentUploads() {
               </div>
 
               {/* Attached Files Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 gap-4 mb-8">
                 {files.map((file, index) => (
                   <motion.div
                     key={file.id}
@@ -116,22 +117,22 @@ export default function DocumentUploads() {
                   >
                     {/* File Icon */}
                     <div
-                      className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        file.type === 'pdf'
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        file.type === 'csv'
                           ? 'bg-red-100'
                           : file.type === 'folder'
                             ? 'bg-blue-100'
                             : 'bg-blue-100'
                       }`}
                     >
-                      {file.type === 'pdf' && (
-                        <FileText className="w-6 h-6 text-red-500" />
+                      {file.type === 'csv' && (
+                        <FileText className="w-5 h-5 text-red-500" />
                       )}
                       {file.type === 'folder' && (
-                        <Folder className="w-6 h-6 text-blue-500" />
+                        <Folder className="w-5 h-5 text-blue-500" />
                       )}
                       {file.type === 'video' && (
-                        <Play className="w-6 h-6 text-blue-500" />
+                        <Play className="w-5 h-5 text-blue-500" />
                       )}
                     </div>
 
