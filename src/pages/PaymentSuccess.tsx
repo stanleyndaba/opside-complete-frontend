@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
@@ -8,6 +8,7 @@ import { BrandFooter } from '@/components/layout/BrandFooter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { markFoundingReservationConfirmed } from '@/lib/foundingActivation';
 import { getPendingYocoCheckoutContext, getSafeYocoReturnPath } from '@/lib/yocoCheckout';
 
 function readLocalStorage(key: string): string | null {
@@ -43,26 +44,32 @@ export default function PaymentSuccess() {
   const isEarlyAccess = checkoutKind.includes('early_access');
   const isPayPal = source === 'paypal' || isEarlyAccess;
 
-  const pageTitle = isEarlyAccess ? 'Early Access Submitted | Margin' : 'Payment Submitted | Margin';
+  const pageTitle = isEarlyAccess ? 'Founding 500 Reservation Confirmed | Margin' : 'Payment Submitted | Margin';
   const pageDescription = isEarlyAccess
-    ? 'Your early-access checkout return page for Margin. We will confirm the PayPal payment and follow up with onboarding details.'
+    ? 'Your Founding 500 reservation is confirmed. Founder pricing is locked and priority activation is reserved.'
     : `Your ${isPayPal ? 'PayPal' : 'Yoco'} payment return page for Margin. Continue setup while payment confirmation is verified.`;
-  const badgeLabel = isEarlyAccess ? 'Early Access Checkout' : isPayPal ? 'PayPal Return' : 'Yoco Return';
+  const badgeLabel = isEarlyAccess ? 'Founding 500 Reservation' : isPayPal ? 'PayPal Return' : 'Yoco Return';
   const heading = isEarlyAccess
-    ? 'Reservation submitted. You are in the Founding 500 priority batch.'
+    ? 'Founding 500 reservation confirmed.'
     : 'Payment submitted. Continue into Margin.';
   const body = isEarlyAccess
-    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment, apply your Founding 500 access, and send your onboarding invitation within 3-5 business days.`
+    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Your seat is secured, founder pricing is locked, and priority activation is reserved. A founder or team member will contact you with the next setup step.`
     : `You are back from ${isPayPal ? 'PayPal' : 'Yoco'} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
   const nextStepLabel = isEarlyAccess ? 'Next step' : 'Next step';
-  const nextStepValue = isEarlyAccess ? 'Onboarding invite' : isScan ? 'Start scan setup' : 'Open workspace';
+  const nextStepValue = isEarlyAccess ? 'Founder onboarding begins soon' : isScan ? 'Start scan setup' : 'Open workspace';
   const referenceValue = invoiceId || (isEarlyAccess ? 'Early access reservation' : `${isPayPal ? 'PayPal' : 'Yoco'} receipt`);
-  const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
+  const primaryButtonLabel = isEarlyAccess ? 'Back to Founding 500' : 'Continue to Margin';
   const secondaryHref = isEarlyAccess ? '/' : '/pricing';
   const secondaryLabel = isEarlyAccess ? 'Back to homepage' : 'Return to Pricing';
   const infoCopy = isEarlyAccess
-    ? 'A redirect confirms that PayPal sent you back to Margin. Payment confirmation is still verified separately before we treat an early-access reservation as complete. Founding 500 members can upgrade to Pro or Scale anytime and apply the $99 as plan credit.'
+    ? 'A redirect confirms that PayPal sent you back to Margin. Payment confirmation is reconciled separately before infrastructure activation and platform access.'
     : `A redirect confirms that ${isPayPal ? 'PayPal' : 'Yoco'} sent you back to Margin. The payment record itself is verified separately before Margin treats it as paid.`;
+
+  useEffect(() => {
+    if (isEarlyAccess) {
+      markFoundingReservationConfirmed('payment_success');
+    }
+  }, [isEarlyAccess]);
 
   usePageMeta({
     title: pageTitle,
@@ -70,7 +77,7 @@ export default function PaymentSuccess() {
   });
 
   return (
-    <PageLayout title="Payment Submitted" noPadding hideNavbar hideSidebar hideLogo midnight>
+    <PageLayout title={isEarlyAccess ? 'Founding 500 Reservation Confirmed' : 'Payment Submitted'} noPadding hideNavbar hideSidebar hideLogo midnight>
       <div className="min-h-screen bg-[#060606] text-white">
         <PublicNavbar />
         <main className="relative overflow-hidden pt-32 md:pt-40">
@@ -98,7 +105,7 @@ export default function PaymentSuccess() {
               {[
                 ['Payment path', `Processed by ${isPayPal ? 'PayPal' : 'Yoco'}`],
                 [nextStepLabel, nextStepValue],
-                ['Reference', referenceValue],
+                ['Status', isEarlyAccess ? 'Seat secured' : referenceValue],
               ].map(([label, value]) => (
                 <div key={label} className="border-b border-white/10 p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
                   <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{label}</div>
@@ -110,7 +117,7 @@ export default function PaymentSuccess() {
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
               <Button
                 onClick={() => {
-                  navigate(isEarlyAccess ? '/early-access' : returnPath);
+                  navigate(isEarlyAccess ? '/founding-500/status' : returnPath);
                 }}
                 className="h-12 rounded-xl bg-white px-6 text-sm font-sans font-semibold text-black hover:bg-white/90"
               >
@@ -130,7 +137,7 @@ export default function PaymentSuccess() {
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-white/42" strokeWidth={1.8} />
               <p className="text-xs leading-6 text-white/42">
                 {infoCopy}
-                {isEarlyAccess ? ' Your onboarding invitation will be sent within 3-5 business days after payment verification.' : ''}
+                {isEarlyAccess ? ' Priority onboarding is included. Activation begins after onboarding readiness is confirmed.' : ''}
               </p>
             </div>
           </section>

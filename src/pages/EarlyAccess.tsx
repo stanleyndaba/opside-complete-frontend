@@ -18,15 +18,41 @@ const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPW
 const EARLY_ACCESS_PRICE = '$99';
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
+const EARLY_ACCESS_PAYMENT_SUCCESS_PATH = '/payment/success?source=paypal&kind=early_access&offer=Founding%20500&price=%2499';
+
+const getEarlyAccessSuccessUrl = () => {
+  if (typeof window === 'undefined') {
+    return EARLY_ACCESS_PAYMENT_SUCCESS_PATH;
+  }
+
+  return `${window.location.origin}${EARLY_ACCESS_PAYMENT_SUCCESS_PATH}`;
+};
+
+const rememberEarlyAccessCheckout = () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const successUrl = getEarlyAccessSuccessUrl();
+  window.localStorage.setItem('margin_pending_checkout', JSON.stringify({
+    kind: 'early_access',
+    source: 'paypal',
+    offer: 'Founding 500',
+    price: EARLY_ACCESS_PRICE,
+    returnPath: '/early-access',
+    successUrl,
+    createdAt: new Date().toISOString(),
+  }));
+};
 
 /* ── timeline data ─────────────────────────────────────────────── */
 const timelineSteps = [
   {
     num: '01',
-    label: 'Connect',
-    title: "Activate your Agent with a Founder's Pass.",
+    label: 'Reserve',
+    title: 'Reserve your Founding 500 seat.',
     detail:
-      'Margin connects to your Seller Central with read-only permissions. We scan FBA inventory adjustments, shipment discrepancies, returns, fee errors, and payout records for loss events that may still be actionable.',
+      'Your reservation locks founder pricing and priority activation. Margin prepares infrastructure and onboarding readiness before platform access begins.',
   },
   {
     num: '02',
@@ -80,14 +106,14 @@ function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
         asChild
         className="h-[56px] w-full max-w-[340px] justify-center rounded-full bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
       >
-        <a href={EARLY_ACCESS_CHECKOUT_URL}>
-          Get Your Pass
+        <a href={EARLY_ACCESS_CHECKOUT_URL} onClick={rememberEarlyAccessCheckout}>
+          Reserve Founding Seat
           <ArrowRight className="ml-2 h-5 w-5" />
         </a>
       </Button>
       <div className="mt-4 text-center">
         <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
-          {subtext || 'Full access through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited.'}
+          {subtext || 'Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.'}
         </p>
         <p className="mt-1 text-[13px] font-medium leading-5 text-[#4D5B66]">
           <span className="font-semibold text-[#0B74DE]">E2E Recovery Commitment. No recovery left behind.</span>
@@ -354,8 +380,8 @@ export default function EarlyAccess() {
                   asChild
                   className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
                 >
-                  <a href={EARLY_ACCESS_CHECKOUT_URL}>
-                    Get Your Pass
+                  <a href={EARLY_ACCESS_CHECKOUT_URL} onClick={rememberEarlyAccessCheckout}>
+                    Reserve Founding Seat
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
@@ -368,7 +394,7 @@ export default function EarlyAccess() {
                   </p>
                 </div>
                 <div className="mt-4 text-[13px] font-medium text-[#4D5B66]">
-                  One payment. {EARLY_ACCESS_PRICE} one-time. Full access through December 31, 2026. Upgrade anytime and your $99 becomes plan credit.
+                  One payment. {EARLY_ACCESS_PRICE} one-time. Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.
                 </div>
                 <p className="mt-4 max-w-[500px] text-[11px] leading-4 text-[#8A98A3]">
                   After 2026, the service ends unless you choose a Performance, Pro, or Scale plan for 2027.
@@ -429,7 +455,7 @@ export default function EarlyAccess() {
               </p>
 
               <div className="mt-10 w-full">
-                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} one-time. Keep 100% through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited.`} />
+                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} one-time. Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.`} />
               </div>
 
               <p className="mt-6 max-w-[540px] text-[11px] leading-5 text-[#9AA8B2]">

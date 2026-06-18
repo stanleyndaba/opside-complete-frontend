@@ -12,6 +12,7 @@ import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { TenantProvider } from '@/contexts/TenantContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { PublicChatNode } from "@/components/chat/PublicChatNode";
+import { FoundingActivationGate } from "@/components/navigation/FoundingActivationGate";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { RouteErrorBoundary } from "@/components/error/RouteErrorBoundary";
 import { usePrivateRouteRobots } from "@/hooks/usePrivateRouteRobots";
@@ -81,6 +82,7 @@ const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
 const AboutMargin = lazy(() => import("./pages/AboutMargin"));
 const Research = lazy(() => import("./pages/Research"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const FoundingActivationStatus = lazy(() => import("./pages/FoundingActivationStatus"));
 const DesignSimulate = lazy(() => import("./pages/designsimulate"));
 const PlatformSimulate = lazy(() => import("./pages/platformsimulate"));
 const ScatterDesign = lazy(() => import("./pages/scatterdesign"));
@@ -219,6 +221,7 @@ const App = () => (
                         <Route path="/fba-reimbursement-research" element={<Research />} />
                         <Route path="/pricing" element={<PricingAdjust />} />
                         <Route path="/payment/success" element={<PaymentSuccess />} />
+                        <Route path="/founding-500/status" element={<FoundingActivationStatus />} />
                         <Route path="/designsimulate" element={<DesignSimulate />} />
                         <Route path="/platformsimulate" element={<PlatformSimulate />} />
                         <Route path="/scatterdesign" element={<ScatterDesign />} />
@@ -268,15 +271,15 @@ const App = () => (
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
                         <Route path="/app" element={<TenantRedirect />} />
                         <Route path="/app/redirect" element={<EmailActionRedirect />} />
-                        <Route path="/app/:tenantSlug" element={<Dashboard />} />
-                        <Route path="/app/:tenantSlug/dashboard" element={<Dashboard />} />
+                        <Route path="/app/:tenantSlug" element={<FoundingActivationGate><Dashboard /></FoundingActivationGate>} />
+                        <Route path="/app/:tenantSlug/dashboard" element={<FoundingActivationGate><Dashboard /></FoundingActivationGate>} />
                         <Route path="/app/:tenantSlug/reports" element={<Navigate to="../dashboard" replace />} />
                         <Route path="/app/:tenantSlug/export" element={<ExportCenter />} />
                         <Route path="/app/:tenantSlug/learning-insights" element={<LearningInsights />} />
                         <Route path="/app/:tenantSlug/sync" element={<Sync />} />
-                        <Route path="/app/:tenantSlug/auth/callback" element={<OAuthCallback />} />
-                        <Route path="/app/:tenantSlug/auth/success" element={<OAuthSuccess />} />
-                        <Route path="/app/:tenantSlug/integrations-hub" element={<IntegrationsHub />} />
+                        <Route path="/app/:tenantSlug/auth/callback" element={<FoundingActivationGate><OAuthCallback /></FoundingActivationGate>} />
+                        <Route path="/app/:tenantSlug/auth/success" element={<FoundingActivationGate><OAuthSuccess /></FoundingActivationGate>} />
+                        <Route path="/app/:tenantSlug/integrations-hub" element={<FoundingActivationGate><IntegrationsHub /></FoundingActivationGate>} />
                         <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
                         <Route path="/app/:tenantSlug/filing-pipeline" element={<FilingPipeline />} />
                         <Route path="/app/:tenantSlug/approved-reimbursements" element={<ApprovedReimbursements />} />
@@ -292,17 +295,17 @@ const App = () => (
                         <Route path="/app/:tenantSlug/notifications" element={<NotificationHub />} />
                         <Route path="/app/:tenantSlug/settings" element={<Settings />} />
                         <Route path="/app/:tenantSlug/upcoming-payments" element={<Navigate to="../billing" replace />} />
-                        <Route path="/app/:tenantSlug/reconnect-amazon" element={<ReconnectProvider />} />
-                        <Route path="/app/:tenantSlug/connect-amazon" element={<ConnectAmazonAccount />} />
-                        <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={<ReconnectProvider />} />
-                        <Route path="/app/:tenantSlug/billing" element={<Billing />} />
+                        <Route path="/app/:tenantSlug/reconnect-amazon" element={<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>} />
+                        <Route path="/app/:tenantSlug/connect-amazon" element={<FoundingActivationGate><ConnectAmazonAccount /></FoundingActivationGate>} />
+                        <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>} />
+                        <Route path="/app/:tenantSlug/billing" element={<FoundingActivationGate><Billing /></FoundingActivationGate>} />
                         <Route path="/app/:tenantSlug/api-access" element={<ApiAccess />} />
                         <Route path="/app/:tenantSlug/help" element={<Help />} />
                         <Route path="/app/:tenantSlug/whats-new" element={<WhatsNew />} />
-                        <Route path="/app/:tenantSlug/evidence-onboarding" element={<EvidenceOnboarding />} />
+                        <Route path="/app/:tenantSlug/evidence-onboarding" element={<FoundingActivationGate><EvidenceOnboarding /></FoundingActivationGate>} />
                         <Route path="/app/:tenantSlug/evidence-search" element={<EvidenceSearch />} />
                         <Route path="/app/:tenantSlug/margin-board" element={<MarginBoard />} />
-                        <Route path="/app/:tenantSlug/data-upload" element={<DataUpload />} />
+                        <Route path="/app/:tenantSlug/data-upload" element={<FoundingActivationGate><DataUpload /></FoundingActivationGate>} />
                         <Route path="/app/:tenantSlug/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/app/:tenantSlug/pricing-adjust" element={<PricingAdjust />} />
                         <Route path="/app/:tenantSlug/admin" element={<Admin />} />

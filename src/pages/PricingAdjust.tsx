@@ -39,14 +39,14 @@ const pricingTiers: PricingTier[] = [
     planKey: 'starter',
     price: '$99',
     priceContext: 'One-time payment. 0% commission through Dec 31, 2026.',
-    purpose: 'Early sellers who want full access before standard plans begin.',
+    purpose: 'Early sellers who want founder pricing locked and priority activation reserved before standard plans begin.',
     features: [
       'Keep 100% of every recovery during Early Access',
       '$0 monthly subscription fee through Dec 31, 2026',
       '$99 credited if you upgrade to Pro or Scale',
       'Limited to 500 slots; closes June 30, 2026 or when filled',
     ],
-    ctaLabel: 'Lock In Founding Access',
+    ctaLabel: 'Reserve Founding Seat',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56',
   },
   {
@@ -391,7 +391,7 @@ export default function PricingAdjust() {
                 Finding what Amazon owes you was never the hard part.
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
-                Founding 500 gives early users full access through 2026 with 0% commission. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
+                Founding 500 locks founder pricing through 2026 with 0% commission, priority activation, and founder onboarding included. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
               </p>
               <p className="mx-auto max-w-2xl text-[11px] font-medium leading-5 text-[#7A8994]">
                 All plans include discrepancy monitoring for lost inventory, inbound shortages, fee errors, and returns; automated evidence collection across invoices, BOLs, and shipment logs; policy-aligned case building; seller-approved filing to Amazon; underpayment recovery workflows; rejection handling; payout tracking; and a transparent case timeline.

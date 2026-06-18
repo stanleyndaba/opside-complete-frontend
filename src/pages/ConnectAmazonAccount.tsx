@@ -168,7 +168,7 @@ export default function ConnectAmazonAccount() {
   };
 
   return (
-    <PageLayout title="Connect Amazon Account" hideNavbar hideSidebar hideLogo plainBackground noPadding>
+    <PageLayout title="Founder Onboarding" hideNavbar hideSidebar hideLogo plainBackground noPadding>
       <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] py-12 text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
@@ -177,17 +177,17 @@ export default function ConnectAmazonAccount() {
         <div className="relative mx-auto max-w-[860px] space-y-8 px-4 pt-20 md:px-6">
           <section className="space-y-5">
             <div className="inline-flex items-center gap-3 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
-              <span>Amazon authorization</span>
+              <span>Founder onboarding</span>
               <span className="h-1 w-1 rounded-full bg-[#0B74DE]/80" />
-              <span className="text-[#66737F]">Workspace step 2</span>
+              <span className="text-[#66737F]">Activation preparation</span>
             </div>
 
             <div className="space-y-4">
               <h1 className="max-w-[620px] text-[38px] font-semibold leading-[0.95] tracking-[-0.06em] text-[#182026] md:text-[60px]">
-                Connect your Amazon seller account.
+                Founder onboarding begins soon.
               </h1>
               <p className="max-w-[560px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
-                Your Margin login is already complete. This step sends you to Amazon so Seller Central can authorize the account and return you back into Margin.
+                Your Founding 500 seat is secured. Margin will prepare infrastructure, confirm readiness, and guide marketplace setup during founder-led onboarding.
               </p>
             </div>
           </section>
@@ -200,18 +200,18 @@ export default function ConnectAmazonAccount() {
               <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
-                    Seller Central handoff
+                    Activation preparation
                   </div>
                   <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
-                    Choose the marketplace and continue.
+                    Setup is scheduled through founder onboarding.
                   </h2>
                   <p className="max-w-[520px] text-[14px] leading-6 text-[#66737F] md:text-[15px]">
-                    Margin prepares the workspace here. Amazon still handles the authorization itself. When the OAuth flow finishes, we resume from there.
+                    Amazon authorization is not an immediate self-serve step for Founding 500 reservations. A founder or team member will confirm activation readiness before connection begins.
                   </p>
                 </div>
 
                 <div className="rounded-full border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
-                  OAuth step
+                  Reserved seat
                 </div>
               </div>
 
@@ -251,7 +251,7 @@ export default function ConnectAmazonAccount() {
                       disabled={connecting}
                     >
                       <SelectTrigger className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-left text-[14px] tracking-tight text-[#182026] focus:border-[#0B74DE]/50 focus:ring-0">
-                        <SelectValue placeholder="Choose the Amazon marketplace you want to connect" />
+                        <SelectValue placeholder="Marketplace will be confirmed during onboarding" />
                       </SelectTrigger>
                       <SelectContent className="rounded-[20px] border-[#CFE0EA] bg-white text-[#182026] shadow-[0_22px_70px_rgba(37,49,58,0.14)]">
                         {AMAZON_MARKETPLACES.map((marketplace) => (
@@ -269,8 +269,8 @@ export default function ConnectAmazonAccount() {
 
                   <Button
                     type="button"
-                    onClick={handleConnectAmazon}
-                    disabled={connecting || !selectedMarketplace}
+                    onClick={() => navigate('/early-access')}
+                    disabled={connecting}
                     className="h-12 w-full justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:bg-[#BFD8EA] disabled:text-white"
                   >
                     {connecting ? (
@@ -282,7 +282,7 @@ export default function ConnectAmazonAccount() {
                       </>
                     ) : (
                       <>
-                        Connect Amazon account
+                        Founder Onboarding Begins Soon
                         <ArrowRight className="h-4 w-4" />
                       </>
                     )}

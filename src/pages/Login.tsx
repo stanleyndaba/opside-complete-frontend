@@ -13,17 +13,22 @@ import { api } from '@/lib/api';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { clearDemoSession, DEMO_TENANT_SLUG, isDemoBypassAvailable, seedDemoSession } from '@/lib/demoSession';
+import { applyFoundingActivationState, hasFoundingReservationContext, markFoundingReservationConfirmed } from '@/lib/foundingActivation';
 
 const sanitizeNextPath = (value: string | null, intent: string | null) => {
   if (typeof window === 'undefined') {
     return '/app';
   }
 
+  const storedTenantSlug = normalizeTenantSlug(localStorage.getItem('active_tenant_slug'));
+  if (intent === 'onboarding') {
+    return '/founding-500/status';
+  }
+
   if (value && value.startsWith('/') && !value.startsWith('/login')) {
     return value;
   }
 
-  const storedTenantSlug = normalizeTenantSlug(localStorage.getItem('active_tenant_slug'));
   if (intent === 'upload-csv' && storedTenantSlug) {
     return `/app/${storedTenantSlug}/data-upload`;
   }
@@ -189,6 +194,12 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
+    if (intent === 'onboarding') {
+      markFoundingReservationConfirmed('signup_intent');
+    }
+  }, [intent]);
+
+  useEffect(() => {
     let isMounted = true;
 
     const loadActiveSession = async () => {
@@ -239,10 +250,10 @@ const Login = () => {
   const subtitle = 'User access and marketplace OAuth are separate flows. Your account login gets you into the workspace. Amazon, Gmail, and the other providers are connected after that from Integrations Hub.';
 
   const heading = mode === 'signup'
-    ? 'Create your workspace account'
+    ? 'Create your reservation account'
     : mode === 'recovery'
       ? 'Reset your password'
-      : 'Log in to your workspace';
+    : 'Log in to your account';
 
   const resetLocalAuthError = () => {
     setError('');
@@ -321,10 +332,16 @@ const Login = () => {
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
     const bootstrapResponse = await api.post<{
       success: boolean;
-      tenant?: { id: string; slug: string };
+      tenant?: { id: string; slug: string; foundingReservation?: boolean; foundingActivationReady?: boolean };
     }>('/api/auth/bootstrap', {
       workspaceName,
       preferredTenantSlug: normalizeTenantSlug(preferredTenantSlug || localStorage.getItem('active_tenant_slug')),
+      foundingReservation: intent === 'onboarding' || hasFoundingReservationContext(),
+    });
+
+    applyFoundingActivationState({
+      reserved: bootstrapResponse.data?.tenant?.foundingReservation,
+      activationReady: bootstrapResponse.data?.tenant?.foundingActivationReady,
     });
 
     const resolvedTenantSlug = normalizeTenantSlug(bootstrapResponse.data?.tenant?.slug);
@@ -509,7 +526,10 @@ const Login = () => {
           failureStep = 'workspace';
           setLoginStep('workspace');
           const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
-          await routeWithCapacityGate(`/app/${resolvedTenantSlug}/connect-amazon`);
+          const targetPath = intent === 'onboarding' || hasFoundingReservationContext()
+            ? '/founding-500/status'
+            : `/app/${resolvedTenantSlug}/connect-amazon`;
+          await routeWithCapacityGate(targetPath);
         } else {
           setMode('login');
         }
@@ -573,7 +593,7 @@ const Login = () => {
         ? bindPathToTenant(nextPath, resolvedTenantSlug)
         : `/app/${resolvedTenantSlug}/connect-amazon`;
       await routeWithCapacityGate(targetPath);
-    } catch (loginError: any) {
+    } catch (loginError: unknown) {
       setWorkspaceRetryAvailable(failureStep === 'workspace');
       setError(formatLoginError(loginError, failureStep));
     } finally {
@@ -649,7 +669,9 @@ const Login = () => {
               <p className="max-w-[560px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
                 {intent === 'upload-csv' && mode === 'login'
                   ? 'Sign in to upload files into your workspace. Data import starts after account access, not before.'
-                  : 'Your Margin account gets you into the workspace first. Amazon, Gmail, and other providers are connected after that from inside the product.'}
+                  : intent === 'onboarding'
+                    ? 'Your Founding 500 seat is reserved first. Platform activation begins after payment reconciliation and founder onboarding readiness.'
+                    : 'Your Margin account gets you into the workspace first. Amazon, Gmail, and other providers are connected after that from inside the product.'}
               </p>
             </div>
           </section>
@@ -666,7 +688,7 @@ const Login = () => {
                   </div>
                   <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
                     {mode === 'signup'
-                      ? 'Create your workspace access'
+                      ? 'Create your reservation access'
                       : mode === 'recovery'
                         ? 'Set your new password'
                         : 'Enter your details'}
