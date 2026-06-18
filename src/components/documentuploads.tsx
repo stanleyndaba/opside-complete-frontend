@@ -49,34 +49,44 @@ export default function DocumentUploads() {
                 <p className="text-sm text-gray-400">Add your CSV files for analysis</p>
               </div>
 
-              {/* Drop Zone */}
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-8 hover:border-[#007AFF] transition-colors cursor-pointer">
-                <div className="flex justify-center mb-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                    <Upload className="w-6 h-6 text-gray-400" />
-                  </div>
+              {/* Drop Zone with Animated Badges */}
+              <div className="border-2 border-dashed border-[#007AFF]/30 bg-[#007AFF]/5 rounded-xl p-8 text-center mb-8 hover:border-[#007AFF] hover:bg-[#007AFF]/10 transition-colors cursor-pointer relative overflow-hidden min-h-[220px] flex flex-col items-center justify-center">
+                {/* Animated Files */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                  {files.map((file, i) => {
+                    const startX = [-140, 140, -140, 140][i % 4];
+                    const startY = [-100, -80, 100, 80][i % 4];
+                    return (
+                      <motion.div
+                        key={file.id}
+                        className="absolute inline-flex items-center gap-1.5 bg-[#007AFF] text-white px-3 py-1.5 rounded-full shadow-md text-xs font-medium whitespace-nowrap"
+                        initial={{ opacity: 0, scale: 0.5, x: startX, y: startY }}
+                        animate={{ 
+                          opacity: [0, 1, 1, 0], 
+                          scale: [0.5, 1, 0.9, 0.4], 
+                          x: [startX, startX * 0.6, 0], 
+                          y: [startY, startY * 0.6, 0] 
+                        }}
+                        transition={{
+                          duration: 3,
+                          delay: i * 0.75,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span className="max-w-[100px] truncate">{file.name}</span>
+                      </motion.div>
+                    );
+                  })}
                 </div>
-                <p className="text-gray-500 text-sm">Drag and drop your files here</p>
-              </div>
-
-              {/* File List */}
-              <div className="flex flex-col gap-3 mb-8 items-center">
-                {files.map((file, index) => (
-                  <motion.div
-                    key={file.id}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.4 }}
-                    className="flex items-center gap-3 bg-[#007AFF] text-white px-5 py-2.5 rounded-full hover:bg-blue-600 transition-colors shadow-sm w-full max-w-[90%]"
-                  >
-                    <div className="flex items-center justify-center opacity-90">
-                      {file.type === 'csv' && <FileText className="w-5 h-5" />}
-                      {file.type === 'folder' && <Folder className="w-5 h-5" />}
-                      {file.type === 'video' && <Play className="w-5 h-5" />}
-                    </div>
-                    <span className="text-sm font-medium tracking-wide truncate">{file.name}</span>
-                  </motion.div>
-                ))}
+                
+                {/* Upload Icon */}
+                <div className="relative z-10 w-14 h-14 bg-white shadow-sm border border-gray-100 rounded-full flex items-center justify-center mb-3">
+                  <Upload className="w-6 h-6 text-[#007AFF]" />
+                </div>
+                <p className="text-gray-600 text-sm relative z-10 font-medium">Drag and drop your files here</p>
+                <p className="text-gray-400 text-xs relative z-10 mt-1">or click to browse</p>
               </div>
 
               {/* Upload Button */}
