@@ -68,6 +68,7 @@ const LearningInsights = lazy(() => import("./pages/LearningInsights"));
 const AdminRevenue = lazy(() => import("./pages/AdminRevenue"));
 const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
+
 const Sales = lazy(() => import("./pages/Sales"));
 const AmazonFbaReimbursement = lazy(() => import("./pages/AmazonFbaReimbursement"));
 const ReimbursementAcquisitionPage = lazy(() => import("./pages/ReimbursementAcquisitionPage"));
@@ -76,6 +77,7 @@ const SellerboardAlternative = lazy(() => import("./pages/SellerboardAlternative
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
+const DocumentUploads = lazy(() => import("@/components/documentuploads"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
 const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
@@ -255,6 +257,7 @@ const App = () => (
                         <Route path="/appealsimulate" element={<ReAppealSimulate />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
+                        <Route path="/document-uploads" element={<DocumentUploads />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/branding" element={<Branding />} />
                         {/* AUTH & OAUTH ROUTES - No tenant required */}
