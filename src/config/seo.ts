@@ -24,7 +24,7 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     canonical: routeUrl('/'),
     ogTitle: SITE_META.title,
     ogDescription:
-      'Deadline-aware recovery automation for Amazon sellers. Margin detects Amazon loss events, matches evidence, prepares claim-ready cases, and tracks recovery states from detection to payout.',
+      'Amazon FBA reimbursement workflow management after discrepancies are identified, from evidence collection and filing to disputes and payout reconciliation.',
     ogUrl: routeUrl('/'),
     image: SITE_META.image,
   },

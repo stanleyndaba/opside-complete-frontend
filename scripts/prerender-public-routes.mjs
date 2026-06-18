@@ -595,27 +595,27 @@ const sellerboardAlternativeRoute = createAcquisitionRoute({
 const routes = [
   {
     path: '/',
-    title: 'Margin | Claim-Ready Amazon FBA Recovery Automation',
+    title: 'Margin | Amazon FBA Reimbursement Workflow Automation',
     description:
-      'Margin turns Amazon loss events into claim-ready recoveries with claim-clock tracking, evidence matching, seller approval before filing, and no recovery commissions.',
-    ogTitle: 'Margin | Claim-Ready Amazon FBA Recovery Automation',
+      'Margin manages Amazon FBA reimbursement workflows after discrepancies are identified: evidence collection, filing, disputes, and payout reconciliation.',
+    ogTitle: 'Margin | Amazon FBA Reimbursement Workflow Automation',
     ogDescription:
-      'Deadline-aware recovery automation for Amazon sellers. Margin detects Amazon loss events, matches evidence, prepares claim-ready cases, and tracks recovery states from detection to payout.',
+      'Amazon FBA reimbursement workflow management after discrepancies are identified, from evidence collection and filing to disputes and payout reconciliation.',
     shell: {
-      label: 'Deadline-aware recovery automation for Amazon sellers',
+      label: 'Always-on reimbursement workflow management for Amazon sellers',
       h1: 'Finding what Amazon owes you was never the hard part.',
       intro:
-        'Margin helps Amazon FBA sellers turn loss events, shipment discrepancies, return gaps, fee events, reversals, and payout noise into deadline-aware recovery work. The system detects reimbursement-worthy activity, starts the claim clock, identifies the claim type, matches the required evidence, prepares the case for seller review, and tracks recovery states from detection to payout.',
+        'Margin helps Amazon FBA sellers manage the work that begins after a discrepancy is identified: evidence collection, evidence matching, filing workflows, rejection handling, dispute handling, and payout reconciliation. Sellers start read-only, review evidence before action, approve before filing, and keep approved recoveries without recovery commissions.',
       sections: [
         {
           heading: 'What Margin does',
           body:
-            'Every Amazon loss event has a clock. Margin keeps that clock visible while it organizes invoices, shipment records, Amazon reports, support files, reference IDs, sourcing costs, and payout activity into a recovery trail.',
+            'Every Amazon reimbursement claim has a clock. Margin keeps that clock visible while it organizes invoices, shipment records, Amazon reports, support files, reference IDs, sourcing costs, and payout activity into a reimbursement workflow.',
         },
         {
           heading: 'How sellers stay in control',
           body:
-            'Sellers start read-only, review evidence before action, approve before filing, and keep approved recoveries without recovery commissions. Weak, duplicate, expired, unsupported, or low-confidence findings are held back instead of being pushed into reckless filing volume.',
+            'Sellers start read-only, review evidence before action, approve before filing, and keep approved recoveries without recovery commissions. Weak, duplicate, expired, unsupported, or low-confidence reimbursement issues are held back instead of being pushed into reckless filing volume.',
         },
       ],
     },

@@ -45,8 +45,8 @@ export const AGENT_HIGHLIGHTS = [
 ];
 
 export const SITE_META = {
-  title: 'Margin | Claim-Ready Amazon FBA Recovery Automation',
-  description: 'Margin turns Amazon loss events into claim-ready recoveries with claim-clock tracking, evidence matching, seller approval before filing, and no recovery commissions.',
+  title: 'Margin | Amazon FBA Reimbursement Workflow Automation',
+  description: 'Margin manages Amazon FBA reimbursement workflows after discrepancies are identified: evidence collection, filing, disputes, and payout reconciliation.',
   url: 'https://margin-finance.com',
   image: 'https://margin-finance.com/margin-logo-reveal.gif',
   preloadImages: []

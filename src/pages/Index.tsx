@@ -45,34 +45,34 @@ const auditLines = [
 const whyNowItems = [
   {
     title: 'The claim window closes fast',
-    detail: 'Amazon gives you 60 days to claim what they owe you. After that the window closes permanently - no matter how valid the case. Most sellers find the discrepancy after the deadline. Margin catches it in 16 seconds.'
+    detail: 'Amazon reimbursement claims can move on short deadlines. Once a discrepancy is identified, the evidence, filing path, and response work need to move before the window closes.'
   },
   {
     title: 'The proof is scattered everywhere',
-    detail: 'The invoice you need is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources automatically before the deadline hits.'
+    detail: 'The invoice you need for a reimbursement claim is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources before the deadline hits.'
   },
   {
     title: 'Delay becomes lost money',
-    detail: "Every day you don't file is a day closer to losing the case permanently. Margin moves in minutes, not days."
+    detail: "Every day a reimbursement claim is not filed is a day closer to losing the case permanently. Margin keeps the workflow moving in minutes, not days."
   }
 ];
 
 const proofItems = [
   {
     title: 'Claim Clock Visibility',
-    detail: 'Every event is assigned a deadline state that governs eligibility until resolution or expiry.'
+    detail: 'Every reimbursement case is assigned a deadline state that governs eligibility until resolution or expiry.'
   },
   {
     title: 'Evidence Binding',
-    detail: 'Reports, invoices, and shipment data are linked before any case can advance.'
+    detail: 'Reports, invoices, and shipment data are linked before any reimbursement case can advance.'
   },
   {
     title: 'Read-only First Mode',
-    detail: 'All recovery signals are structured without enabling actions until approval is granted.'
+    detail: 'All reimbursement workflows are structured without enabling actions until approval is granted.'
   },
   {
     title: 'Payout Trail Tracking',
-    detail: 'Each case is tracked across detected → filed → approved → paid or blocked states without merging outcomes.'
+    detail: 'Each reimbursement case is tracked across identified -> validated -> filed -> approved -> reconciled or blocked states without merging outcomes.'
   }
 ];
 
@@ -90,28 +90,28 @@ const velocityMetrics = [
     detail: 'Evidence-complete cases pass approval and move directly into submission queue.'
   },
   {
-    label: 'Detection Latency',
+    label: 'Workflow Intake',
     value: 16,
     suffix: 's',
-    detail: 'Incoming Amazon activity is parsed and mapped to potential recovery cases in real time.'
+    detail: 'An identified discrepancy is mapped to the right reimbursement workflow, claim type, and evidence path.'
   }
 ];
 
 const workflowSteps = [
   {
     step: '01',
-    title: 'Detect',
-    detail: 'Amazon events are captured and converted into structured signals.'
+    title: 'Validate',
+    detail: 'A known discrepancy is checked against reimbursement claim rules and required evidence.'
   },
   {
     step: '02',
     title: 'Classify',
-    detail: 'Signals are mapped to recovery types and claim rules.'
+    detail: 'The case is mapped to the reimbursement workflow, claim type, and filing path.'
   },
   {
     step: '03',
     title: 'Bind Evidence',
-    detail: 'Supporting records are attached and validated.'
+    detail: 'Invoices, shipment records, Amazon reports, and support files are attached and validated.'
   },
   {
     step: '04',
@@ -121,15 +121,15 @@ const workflowSteps = [
   {
     step: '05',
     title: 'Track Outcome',
-    detail: 'Filed cases move through Amazon response to payout or rejection.'
+    detail: 'Filed reimbursement claims move through Amazon response, dispute handling, and payout reconciliation.'
   }
 ];
 
 const coverageExamples = [
   {
-    label: 'Lost units detected',
+    label: 'Lost inventory discrepancy',
     title: 'Shipment mismatch → claim clock activated',
-    detail: 'Lost units are converted from inventory variance into a timed recovery case.'
+    detail: 'Lost inventory reimbursement work is converted from inventory variance into a timed workflow.'
   },
   {
     label: 'Inbound shortage',
@@ -138,13 +138,13 @@ const coverageExamples = [
   },
   {
     label: 'Refund without return',
-    title: 'Refund event unmatched to return scan → held for validation',
+    title: 'Refund event unmatched to return record -> held for validation',
     detail: 'Refund activity is separated from return proof before a case advances.'
   },
   {
     label: 'Fee drift',
-    title: 'Measurement or fee adjustment detected → recalculation required',
-    detail: 'Fee changes are mapped to the records required before recovery execution.'
+    title: 'Measurement or fee adjustment variance -> recalculation required',
+    detail: 'Fee changes are mapped to the records required before reimbursement workflow execution.'
   },
   {
     label: 'Payout mismatch',
@@ -194,10 +194,10 @@ const trustControls = [
 ];
 
 const earlyAccessItems = [
-  'Founding 500 Recovery Audit',
+  'Founding 500 Reimbursement Workflow Audit',
   'Managed onboarding before filing',
   'Read-only setup first',
-  'Claim-clock scan and evidence readiness review',
+  'Claim-clock review and evidence readiness check',
   'Seller approval before filing',
   'No recovery commissions'
 ];
@@ -205,7 +205,7 @@ const earlyAccessItems = [
 const faqs = [
   {
     question: 'What does Margin do after I connect my Amazon account?',
-    answer: 'Margin starts in read-only mode. It reviews FBA activity for recovery-relevant events, identifies the claim type, tracks the claim window, matches supporting evidence, and prepares recovery cases for seller review.'
+    answer: 'Margin starts in read-only mode. After a discrepancy is identified, it validates the claim type, tracks the claim window, matches supporting evidence, and prepares reimbursement cases for seller review.'
   },
   {
     question: 'Does Margin guarantee reimbursements?',
@@ -217,11 +217,11 @@ const faqs = [
   },
   {
     question: 'Why does recovery timing matter more now?',
-    answer: 'Some recovery windows are short, and manual or quarterly audits can surface issues too late. Margin keeps each recovery issue tied to its claim clock, required evidence, and next action before the window closes.'
+    answer: 'Some reimbursement windows are short, and manual or quarterly audits can surface issues too late. Margin keeps each reimbursement issue tied to its claim clock, required evidence, and next action before the window closes.'
   },
   {
-    question: 'Does Margin file every issue it finds?',
-    answer: 'No. Margin holds back weak, duplicate, unsupported, expired, or low-confidence findings. The system is designed to move evidence-supported cases forward and block risky ones.'
+    question: 'Does Margin file every reimbursement issue?',
+    answer: 'No. Margin holds back weak, duplicate, unsupported, expired, or low-confidence reimbursement issues. The system is designed to move evidence-supported cases forward and block risky ones.'
   },
   {
     question: 'How is this different from commission-based services?',
@@ -229,11 +229,11 @@ const faqs = [
   },
   {
     question: 'Why no recovery commissions?',
-    answer: 'Margin does not take a percentage of approved recoveries. Founding 500 starts with a managed recovery audit, then sellers can keep Margin running as a monthly recovery management system.'
+    answer: 'Margin does not take a percentage of approved recoveries. Founding 500 starts with a managed reimbursement workflow audit, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
-    question: 'What happens after I start the Founding 500 Recovery Audit?',
-    answer: 'Your activation joins the managed Founding 500 cohort. Margin prepares the workspace carefully, starts with read-only setup, scans claim clocks, reviews evidence readiness, and keeps seller approval before filing.'
+    question: 'What happens after I start the Founding 500 Reimbursement Workflow Audit?',
+    answer: 'Your activation joins the managed Founding 500 cohort. Margin prepares the workspace carefully, starts with read-only setup, reviews claim clocks, checks evidence readiness, and keeps seller approval before filing.'
   }
 ];
 
@@ -391,7 +391,7 @@ function KineticHeroSection({
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"
           >
-            Always-on recovery management for Amazon sellers
+            Always-on reimbursement workflow management for Amazon sellers
           </motion.div>
 
           <h1
@@ -422,7 +422,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[680px] text-[16px] leading-7 text-slate-300 md:text-lg md:leading-8"
           >
-            Margin handles the part every other tool ignores – the evidence, the rejections, the appeals, and the payouts. You approve. Margin fights.
+            Margin handles the part Amazon reimbursement tools often leave manual - the evidence, the rejections, the appeals, and the payouts. You approve. Margin fights.
           </motion.p>
 
           <motion.div
@@ -487,7 +487,7 @@ function MobileMarketplaceHub() {
         Supported FBA marketplaces
       </h2>
       <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#66737F]">
-        Margin supports FBA recovery workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
+        Margin supports FBA reimbursement workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
       </p>
       <div className="mt-8 border-y border-[#D8E3E8] py-6">
         <div className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
@@ -667,9 +667,9 @@ function CoverageExamplesSection() {
       <div className={containerClass}>
         <InhaleSection className="max-w-[760px]">
           <div className={sectionLabelClass}>Coverage Examples</div>
-          <h2 className={sectionHeadingClass}>Recovery categories Margin reviews.</h2>
+          <h2 className={sectionHeadingClass}>Amazon reimbursement workflows Margin manages.</h2>
           <p className={sectionBodyClass}>
-            These are representative recovery categories, not the limit of the system. Each case stays tied to what happened, what deadline applies, what evidence exists, and whether the recovery is evidence-supported.
+            These are representative Amazon FBA reimbursement workflows, not the limit of the system. Each case starts after a discrepancy is identified and stays tied to what happened, what deadline applies, what evidence exists, and whether the reimbursement claim is evidence-supported.
           </p>
         </InhaleSection>
 
@@ -773,7 +773,7 @@ export default function Index() {
               {...revealProps}
               className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] text-[#182026] md:text-[28px] md:leading-9"
             >
-              Most tools find the discrepancy. They stop there. Margin starts there.
+              Most tools stop at the discrepancy. Margin starts there.
             </motion.p>
           </div>
         </section>
@@ -824,13 +824,13 @@ export default function Index() {
               <div className={sectionLabelClass}>Why Now</div>
               <h2 className={sectionHeadingClass}>Why timing matters</h2>
               <p className={sectionBodyClass}>
-                Amazon gives you 60 days to claim what they owe you. After that the window closes permanently - no matter how valid the case. Most sellers find the discrepancy after the deadline. Margin catches it in 16 seconds.
+                Amazon reimbursement claims can move on short deadlines. Once a discrepancy is identified, the evidence, filing path, and response work need to move before the window closes.
               </p>
               <p className={sectionBodyClass}>
-                The invoice you need is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources automatically before the deadline hits.
+                The invoice you need for a reimbursement claim is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources before the deadline hits.
               </p>
               <p className={sectionBodyClass}>
-                Every day you don't file is a day closer to losing the case permanently. Margin moves in minutes, not days.
+                Every day a reimbursement claim is not filed is a day closer to losing the case permanently. Margin keeps the workflow moving in minutes, not days.
               </p>
               <Button
                 variant="outline"
@@ -882,10 +882,10 @@ export default function Index() {
             <motion.div {...revealProps} className="mx-auto mb-8 max-w-[880px] text-center md:mb-12">
               <div className={sectionLabelClass}>See Demo</div>
               <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[40px] md:text-[58px]">
-                See how Margin turns raw FBA activity into review-ready recovery work.
+                See how Margin turns identified FBA discrepancies into review-ready reimbursement work.
               </h2>
               <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
-                Follow the path from event detection and claim-clock assignment to evidence review, approval, and payout tracking.
+                Follow the path from claim-clock assignment to evidence review, filing approval, dispute handling, and payout reconciliation.
               </p>
             </motion.div>
 
@@ -899,7 +899,7 @@ export default function Index() {
               <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">
                 <img
                   src={DEMO_VIDEO_THUMBNAIL_URL}
-                  alt="Margin product demo thumbnail"
+                  alt="Margin reimbursement workflow product demo thumbnail"
                   className="h-full w-full object-cover opacity-95 saturate-[0.95] transition duration-500 group-hover:scale-[1.015]"
                   loading="lazy"
                 />
@@ -910,9 +910,9 @@ export default function Index() {
                   </div>
                 </div>
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
-                  <div className="text-[10px] font-semibold uppercase tracking-tight text-white/78 md:text-[11px]">Event-to-recovery walkthrough</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-tight text-white/78 md:text-[11px]">Discrepancy-to-workflow walkthrough</div>
                   <div className="mt-2 max-w-[780px] text-[22px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[36px]">
-                    Amazon activity moves from detection to payout state with evidence and approval attached.
+                    Amazon reimbursement work moves from validation to payout state with evidence and approval attached.
                   </div>
                 </div>
               </div>
@@ -928,7 +928,7 @@ export default function Index() {
                 Connect the places where recovery proof already lives.
               </h2>
               <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                Margin organizes Amazon activity, inbox records, files, shipment documents, invoices, and support trails into deadline-aware recovery work.
+                Margin organizes Amazon reimbursement activity, inbox records, files, shipment documents, invoices, and support trails into deadline-aware reimbursement workflows.
               </p>
             </div>
             <div className="mt-7 md:mt-9">
@@ -943,13 +943,13 @@ export default function Index() {
               <div className={sectionLabelClass}>What Margin Does</div>
               <h2 className={sectionHeadingClass}>What Margin does</h2>
               <p className="mt-5 max-w-[760px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:text-[26px] md:leading-9">
-                Margin turns Amazon operational data into organized recovery cases, enforces evidence requirements, applies claim timing logic, and tracks outcomes through final payout state.
+                After a discrepancy is identified, Margin turns Amazon operational data into organized reimbursement workflows, enforces evidence requirements, applies claim timing logic, and tracks outcomes through final payout state.
               </p>
               <p className={sectionBodyClass}>
-                States: detected → classified → evidence-linked → approved → filed → in-review → paid / blocked / expired.
+                States: identified -&gt; validated -&gt; evidence-linked -&gt; approved -&gt; filed -&gt; in-review -&gt; reconciled / disputed / blocked / expired.
               </p>
               <p className={sectionBodyClass}>
-                Each state keeps the recovery case tied to its evidence, deadline, approval, filing, and payout context.
+                Each state keeps the reimbursement case tied to its evidence, deadline, approval, filing, and payout context.
               </p>
             </motion.div>
 
@@ -1040,7 +1040,7 @@ export default function Index() {
                   Supported FBA marketplaces
                 </h2>
                 <p className={sectionBodyClass}>
-                  Margin supports FBA recovery workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
+                  Margin supports FBA reimbursement workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
                 </p>
               </motion.div>
 
@@ -1100,7 +1100,7 @@ export default function Index() {
                   Founding 500 Access.
                 </h2>
                 <p className={sectionBodyClass}>
-                  The first 500 sellers get 1 year of full-service recovery for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
+                  The first 500 sellers get 1 year of full-service Amazon reimbursement workflow support for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
                 </p>
                 <p className="mt-5 max-w-[640px] text-[14px] font-semibold leading-7 text-[#25313A] md:text-[16px]">
                   {foundingSlotsLabel} Closes June 30, 2026 or when full. Standard plans begin at $199/month after Early Access closes.
@@ -1193,7 +1193,7 @@ export default function Index() {
                   Start Your First Recovery.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Margin identifies Amazon loss events, connects the required evidence, and manages every case until payout or escalation.
+                  Margin manages Amazon reimbursement workflows after discrepancies are identified, connects the required evidence, and carries each case through payout or escalation.
                 </p>
               </div>
 
@@ -1224,7 +1224,7 @@ export default function Index() {
         onOpenChange={setIsDemoOpen}
         videoUrl={DEMO_VIDEO_URL}
         title="Margin recovery walkthrough"
-        description="Watch how Margin detects Amazon loss events, starts the claim clock, matches evidence, prepares cases for review, and tracks recovery states through payout."
+        description="Watch how Margin manages Amazon reimbursement workflows after discrepancies are identified, from claim-clock review and evidence matching to filing, disputes, and payout reconciliation."
       />
       <BrandFooter />
       <CookieConsent />
