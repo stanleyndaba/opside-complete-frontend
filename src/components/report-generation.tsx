@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle2, Download, Eye, FileSearch, FileText, Layers, X } from 'lucide-react';
+import { CheckCircle2, Download, FileSearch, FileText, Layers, X } from 'lucide-react';
 
 type Phase = 'extracting' | 'compiling' | 'output';
 
@@ -64,7 +64,7 @@ export default function ReportGeneration() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4 font-sans sm:p-8">
-      <section className="flex h-[min(720px,calc(100vh-32px))] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
+      <section className="flex h-[min(580px,calc(100vh-32px))] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
         <header className="flex min-h-16 items-center justify-between border-b border-gray-100 bg-white px-5 sm:px-7">
           {phase === 'output' ? (
             <div className="flex min-w-0 items-center gap-4 sm:gap-6">
@@ -216,16 +216,16 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={spring}
-                className="absolute inset-0 overflow-y-auto p-5 sm:p-8"
+                className="absolute inset-0 overflow-y-auto p-4 sm:p-6"
               >
                 <div className="mx-auto max-w-4xl">
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">Dispute Investigation Report</h2>
                     <p className="mt-1 text-sm text-gray-400">All evidence bound and verified.</p>
                   </div>
 
-                  <article className="flex flex-col items-center gap-7 rounded-2xl border border-gray-100 bg-white p-6 shadow-xl sm:flex-row sm:p-8">
-                    <div className="relative h-56 w-40 shrink-0">
+                  <article className="flex flex-col items-center gap-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-xl sm:flex-row sm:p-6">
+                    <div className="relative h-48 w-36 shrink-0">
                       <div className="absolute inset-0 translate-x-3 -rotate-3 rounded-lg border border-gray-200 bg-gray-100" />
                       <div className="absolute inset-0 translate-x-1.5 rotate-2 rounded-lg border border-gray-200 bg-gray-50" />
                       <div className="absolute inset-0 rounded-lg border border-gray-200 bg-white p-4 shadow-md">
@@ -257,15 +257,14 @@ export default function ReportGeneration() {
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
-                          className="flex h-11 items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                          className="flex h-10 items-center rounded-xl border border-gray-950 bg-gray-950 px-5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
                         >
-                          <Eye className="h-4 w-4" />
                           View
                         </button>
                         <button
                           type="button"
                           onClick={downloadReport}
-                          className="flex h-11 items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100"
+                          className="flex h-10 items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 text-sm font-semibold text-gray-950 transition-colors hover:bg-gray-50"
                         >
                           <Download className="h-4 w-4" />
                           Download
@@ -277,7 +276,7 @@ export default function ReportGeneration() {
                   <button
                     type="button"
                     onClick={restartSimulation}
-                    className="mx-auto mt-5 block text-xs font-medium text-gray-400 transition-colors hover:text-[#007AFF]"
+                    className="mx-auto mt-3 block text-xs font-medium text-gray-400 transition-colors hover:text-[#007AFF]"
                   >
                     Restart generation
                   </button>
