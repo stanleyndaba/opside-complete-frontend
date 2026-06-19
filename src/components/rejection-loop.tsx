@@ -56,7 +56,7 @@ export default function RejectionLoop() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4 font-sans sm:p-8">
-      <section className="flex h-[min(620px,calc(100vh-32px))] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 shadow-xl backdrop-blur-xl">
+      <section className="flex h-[min(520px,calc(100vh-32px))] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 shadow-xl backdrop-blur-xl">
         <header className="flex items-center justify-between border-b border-gray-100 bg-white/80 px-5 py-3 backdrop-blur-md sm:px-6">
           <div>
             <h1 className="text-base font-semibold text-gray-900">Resolution Workflow</h1>
