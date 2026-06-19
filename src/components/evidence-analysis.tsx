@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle, ShieldCheck, FileText, Search, ArrowRight, RefreshCw } from 'lucide-react';
+import { Check, FileText, Search, ArrowRight, RefreshCw } from 'lucide-react';
 
 interface AnalysisCard {
   id: string;
   title: string;
   description: string;
-  type: 'warning' | 'success';
-  icon: 'warning' | 'check' | 'shield';
   triggerLine: number;
 }
 
@@ -18,24 +16,18 @@ const ANALYSIS_CARDS: AnalysisCard[] = [
     id: '1',
     title: 'Contradiction Identified',
     description: 'Amazon claims 0 units received while carrier records confirm delivery.',
-    type: 'warning',
-    icon: 'warning',
     triggerLine: 25,
   },
   {
     id: '2',
     title: 'Weight Evidence Bound',
     description: 'Carrier weight log confirms 45.2 lbs, matching the packing list.',
-    type: 'success',
-    icon: 'check',
     triggerLine: 50,
   },
   {
     id: '3',
     title: 'Signature Verified',
     description: 'Receiving clerk J. Smith signed for delivery on Jan 14.',
-    type: 'success',
-    icon: 'shield',
     triggerLine: 75,
   },
 ];
@@ -60,11 +52,11 @@ export default function EvidenceAnalysis() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl flex gap-6 h-[600px]">
+      <div className="w-full max-w-5xl flex gap-5 h-[560px]">
 
         {/* LEFT: DOCUMENT PREVIEW */}
-        <div className="flex-1 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
-          <div className="p-4 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+        <div className="flex-1 bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
+          <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between bg-white z-10">
             <div className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-gray-400" />
               <span className="text-xs font-medium text-gray-500">Intake_Form_26197503.pdf</span>
@@ -76,7 +68,7 @@ export default function EvidenceAnalysis() {
             </div>
           </div>
 
-          <div className="flex-1 p-10 relative overflow-hidden">
+          <div className="flex-1 p-8 relative overflow-hidden">
             {/* Scanner Line */}
             <motion.div
               className="absolute left-0 right-0 h-1 bg-[#007AFF] shadow-[0_0_15px_rgba(0,122,255,0.5)] z-20 pointer-events-none"
@@ -84,7 +76,7 @@ export default function EvidenceAnalysis() {
             />
 
             {/* Document Content */}
-            <div className="space-y-6 text-gray-400 text-sm leading-relaxed select-none">
+            <div className="space-y-4 text-gray-400 text-sm leading-relaxed select-none">
               <p>Member submitted a formal dispute on January 15, 2024, regarding a series of unauthorized charges appearing on their account between January 10-13, 2024.</p>
 
               <p className="relative">
@@ -125,37 +117,41 @@ export default function EvidenceAnalysis() {
         </div>
 
         {/* RIGHT: ANALYSIS PANEL */}
-        <div className="w-[380px] flex flex-col gap-4">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex-1 flex flex-col">
-            <div className="flex items-center gap-2 mb-6">
-              <Search className="w-5 h-5 text-[#007AFF]" />
-              <h3 className="font-semibold text-gray-900">Intake Form Analysis</h3>
+        <div className="w-[360px] flex flex-col">
+          <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex-1 flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <Search className="w-[18px] h-[18px] text-gray-600" />
+              <h3 className="text-[15px] font-semibold text-gray-900">Meta-Data Analysis</h3>
             </div>
 
-            <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="flex-1 space-y-2.5 overflow-y-auto pr-1 custom-scrollbar">
               <AnimatePresence initial={false}>
-                {activeCards.map((card) => (
+                {activeCards.map((card, index) => (
                   <motion.div
                     key={card.id}
-                    initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                    initial={{ opacity: 0, x: 16, scale: 0.96 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
-                    className={`p-4 rounded-xl border ${
-                      card.type === 'warning'
-                        ? 'bg-orange-50 border-orange-100'
-                        : 'bg-emerald-50 border-emerald-100'
-                    }`}
+                    className="rounded-[10px] border border-gray-300 bg-gray-100/80 px-3 py-2.5"
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={`mt-1 ${card.type === 'warning' ? 'text-orange-500' : 'text-emerald-500'}`}>
-                        {card.icon === 'warning' && <AlertCircle className="w-5 h-5" />}
-                        {card.icon === 'check' && <CheckCircle className="w-5 h-5" />}
-                        {card.icon === 'shield' && <ShieldCheck className="w-5 h-5" />}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className={`text-sm font-bold ${card.type === 'warning' ? 'text-orange-900' : 'text-emerald-900'}`}>
-                          {card.title}
-                        </h4>
-                        <p className={`text-xs mt-1 leading-relaxed ${card.type === 'warning' ? 'text-orange-700' : 'text-emerald-700'}`}>
+                    <div className="flex items-start gap-2.5">
+                      <motion.div
+                        initial={{ rotate: 0 }}
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 0.55, delay: index * 0.12, ease: 'easeInOut' }}
+                        className="relative mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] border-gray-300 border-t-[#3aaa78] text-[#3aaa78]"
+                      >
+                        <motion.span
+                          initial={{ opacity: 0, scale: 0.2 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ type: 'spring', stiffness: 460, damping: 18, delay: 0.5 + index * 0.12 }}
+                          className="absolute inset-[-1.5px] flex items-center justify-center rounded-full border-[1.5px] border-[#3aaa78] bg-emerald-50"
+                        >
+                          <Check className="h-3 w-3" strokeWidth={3} />
+                        </motion.span>
+                      </motion.div>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="text-[13px] font-semibold leading-5 text-gray-800">{card.title}</h4>
+                        <p className="mt-0.5 text-[11px] leading-[17px] text-gray-600">
                           {card.description}
                         </p>
                       </div>
@@ -181,10 +177,10 @@ export default function EvidenceAnalysis() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleReset}
-                className="mt-6 w-full bg-[#007AFF] text-white py-3 rounded-xl font-medium flex items-center justify-center gap-2 shadow-lg shadow-blue-100"
+                className="mt-4 h-10 w-full bg-[#007AFF] text-white rounded-[10px] text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-blue-100"
               >
                 Proceed to Dispute
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </motion.button>
             )}
           </div>
