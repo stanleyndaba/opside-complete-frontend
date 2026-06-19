@@ -52,7 +52,7 @@ export default function EvidenceAnalysis() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl flex gap-5 h-[560px]">
+      <div className="w-full max-w-5xl flex items-start gap-5">
 
         {/* LEFT: DOCUMENT PREVIEW */}
         <div className="flex-1 bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
@@ -69,18 +69,26 @@ export default function EvidenceAnalysis() {
           </div>
 
           <div className="flex-1 p-8 relative overflow-hidden">
-            {/* Scanner Line */}
-            <motion.div
-              className="absolute left-0 right-0 h-1 bg-[#007AFF] shadow-[0_0_15px_rgba(0,122,255,0.5)] z-20 pointer-events-none"
-              style={{ top: `${scanProgress}%` }}
-            />
-
             {/* Document Content */}
             <div className="space-y-4 text-gray-400 text-sm leading-relaxed select-none">
-              <p>Member submitted a formal dispute on January 15, 2024, regarding a series of unauthorized charges appearing on their account between January 10-13, 2024.</p>
+              <p>
+                Member submitted a formal dispute on{' '}
+                <motion.span
+                  animate={scanProgress >= 12 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                >
+                  January 15, 2024
+                </motion.span>
+                , regarding a series of unauthorized charges appearing on their account between{' '}
+                <motion.span
+                  animate={scanProgress >= 12 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                >
+                  January 10-13, 2024
+                </motion.span>
+                .
+              </p>
 
               <p className="relative">
-                <span className="relative z-10"><span className="text-gray-900 font-medium">Amazon claims 0 units received</span>, despite the carrier delivery record and warehouse intake confirmation.</span>
+                <span className="relative z-10"><span className="text-gray-900 font-semibold">Amazon claims 0 units received</span>, despite the <span className="font-medium text-gray-800">carrier delivery record</span> and warehouse intake confirmation.</span>
                 <motion.span
                   className="absolute inset-0 bg-yellow-100 -z-0 rounded"
                   initial={{ width: 0 }}
@@ -89,10 +97,24 @@ export default function EvidenceAnalysis() {
                 />
               </p>
 
-              <p>Upon discovering the transactions, member attempted to resolve the matter directly by contacting the merchant. Technoworld Online, on January 14, 2024. The merchant's customer service representative was unable to locate an order associated with the member's account.</p>
+              <p>
+                Upon discovering the transactions, member attempted to resolve the matter directly by contacting{' '}
+                <motion.span
+                  animate={scanProgress >= 38 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                >
+                  Technoworld Online
+                </motion.span>{' '}
+                on{' '}
+                <motion.span
+                  animate={scanProgress >= 38 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                >
+                  January 14, 2024
+                </motion.span>
+                . The merchant's customer service representative was unable to locate an order associated with the member's account.
+              </p>
 
               <p className="relative">
-                <span className="relative z-10">Carrier weight log confirms <span className="text-gray-900 font-medium">shipment weight of 45.2 lbs</span>, matching the original packing list exactly. No discrepancies found in physical transit logs.</span>
+                <span className="relative z-10">Carrier weight log confirms <span className="text-gray-900 font-semibold">shipment weight of 45.2 lbs</span>, matching the <span className="font-medium text-gray-800">original packing list</span> exactly. No discrepancies found in physical transit logs.</span>
                 <motion.span
                   className="absolute inset-0 bg-emerald-100 -z-0 rounded"
                   initial={{ width: 0 }}
@@ -102,29 +124,43 @@ export default function EvidenceAnalysis() {
               </p>
 
               <p className="relative">
-                <span className="relative z-10">Receiving clerk <span className="text-gray-900 font-medium">J. Smith signed for delivery</span> at 14:22 on Jan 14. Signature verified against warehouse staff registry.</span>
+                <span className="relative z-10">Receiving clerk <span className="text-gray-900 font-semibold">J. Smith signed for delivery</span> at <span className="font-semibold text-gray-900">14:22</span> on <span className="font-semibold text-gray-900">Jan 14</span>. Signature verified against the <span className="font-medium text-gray-800">warehouse staff registry</span>.</span>
                 <motion.span
-                  className="absolute inset-0 bg-emerald-100 -z-0 rounded"
+                  className="absolute inset-0 bg-rose-100 -z-0 rounded"
                   initial={{ width: 0 }}
                   animate={{ width: scanProgress > 75 ? '100%' : 0 }}
                   transition={{ duration: 1 }}
                 />
               </p>
 
-              <p>Member confirmed that their physical debit card was in their possession at all times during the disputed transaction window and was not lost or stolen. Member further confirmed they have not shared their card number, PIN, or online banking credentials.</p>
+              <p>
+                Member confirmed that their{' '}
+                <motion.span
+                  animate={scanProgress >= 90 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                >
+                  physical debit card remained in their possession
+                </motion.span>{' '}
+                during the disputed transaction window and was{' '}
+                <motion.span
+                  animate={scanProgress >= 90 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                >
+                  not lost or stolen
+                </motion.span>
+                . Member further confirmed they have not shared their card number, PIN, or online banking credentials.
+              </p>
             </div>
           </div>
         </div>
 
         {/* RIGHT: ANALYSIS PANEL */}
         <div className="w-[360px] flex flex-col">
-          <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex-1 flex flex-col">
+          <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex flex-col">
             <div className="flex items-center gap-2 mb-4">
               <Search className="w-[18px] h-[18px] text-gray-600" />
               <h3 className="text-[15px] font-semibold text-gray-900">Meta-Data Analysis</h3>
             </div>
 
-            <div className="flex-1 space-y-2.5 overflow-y-auto pr-1 custom-scrollbar">
+            <div className="min-h-[210px] space-y-2.5 overflow-y-auto pr-1 custom-scrollbar">
               <AnimatePresence initial={false}>
                 {activeCards.map((card, index) => (
                   <motion.div
@@ -177,7 +213,7 @@ export default function EvidenceAnalysis() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleReset}
-                className="mt-4 h-10 w-full bg-[#007AFF] text-white rounded-[10px] text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-blue-100"
+                className="mt-3 h-10 w-full bg-[#007AFF] text-white rounded-[10px] text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-blue-100"
               >
                 Proceed to Dispute
                 <ArrowRight className="w-3.5 h-3.5" />
