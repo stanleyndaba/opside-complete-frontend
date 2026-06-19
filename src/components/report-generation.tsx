@@ -224,7 +224,7 @@ export default function ReportGeneration() {
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">Generated Report</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">Generated Report</h2>
                     <p className="mt-1 text-sm text-gray-400">All evidence bound and verified.</p>
                   </div>
 
@@ -253,7 +253,7 @@ export default function ReportGeneration() {
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
-                        <h3 className="text-xl font-semibold text-gray-900 sm:text-2xl">Dispute Investigation Report</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 sm:text-xl">Dispute Investigation Report</h3>
                         <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase text-emerald-700">
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           Verified
