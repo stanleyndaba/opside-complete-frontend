@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle2 } from 'lucide-react';
 
 type TimelineEvent = {
   id: string;
@@ -20,9 +20,28 @@ const TIMELINE: TimelineEvent[] = [
 
 const spring = { type: 'spring' as const, stiffness: 320, damping: 28 };
 
+function AnimatedCheck() {
+  return (
+    <motion.div
+      initial={{ rotate: 0 }}
+      animate={{ rotate: 360 }}
+      transition={{ duration: 0.65, ease: 'easeInOut' }}
+      className="relative flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-gray-300 border-t-[#3aaa78] text-[#3aaa78]"
+    >
+      <motion.span
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: 'spring', stiffness: 460, damping: 18, delay: 0.58 }}
+        className="absolute inset-[-1.5px] flex items-center justify-center rounded-full border-[1.5px] border-[#3aaa78] bg-emerald-50"
+      >
+        <Check className="h-3 w-3" strokeWidth={3} />
+      </motion.span>
+    </motion.div>
+  );
+}
+
 export default function RejectionLoop() {
   const [visibleCount, setVisibleCount] = useState(0);
-  const [runId, setRunId] = useState(0);
   const isSimulating = visibleCount < TIMELINE.length;
 
   useEffect(() => {
@@ -31,18 +50,13 @@ export default function RejectionLoop() {
     );
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [runId]);
-
-  const restartSimulation = () => {
-    setVisibleCount(0);
-    setRunId((current) => current + 1);
-  };
+  }, []);
 
   const visibleEvents = TIMELINE.slice(0, visibleCount);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4 font-sans sm:p-8">
-      <section className="flex h-[min(680px,calc(100vh-32px))] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 shadow-xl backdrop-blur-xl">
+      <section className="flex h-[min(620px,calc(100vh-32px))] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 shadow-xl backdrop-blur-xl">
         <header className="flex items-center justify-between border-b border-gray-100 bg-white/80 px-5 py-3 backdrop-blur-md sm:px-6">
           <div>
             <h1 className="text-base font-semibold text-gray-900">Resolution Workflow</h1>
@@ -52,7 +66,7 @@ export default function RejectionLoop() {
             <motion.span
               animate={isSimulating ? { opacity: [0.4, 1, 0.4] } : { opacity: 1 }}
               transition={{ duration: 1.2, repeat: isSimulating ? Infinity : 0 }}
-              className={`h-2 w-2 rounded-full ${isSimulating ? 'bg-[#007AFF]' : 'bg-emerald-500'}`}
+              className={`h-2 w-2 rounded-full ${isSimulating ? 'bg-[#3aaa78]' : 'bg-emerald-500'}`}
             />
             <span className="text-[10px] font-semibold uppercase text-gray-500">
               {isSimulating ? 'Processing' : 'Resolved'}
@@ -73,23 +87,19 @@ export default function RejectionLoop() {
                       initial={{ opacity: 0, scaleX: 0.75 }}
                       animate={{ opacity: 1, scaleX: 1 }}
                       transition={spring}
-                      className="ml-8 rounded-xl border border-blue-100 bg-blue-50/80 p-3 backdrop-blur sm:ml-11"
+                      className="ml-8 rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 backdrop-blur sm:ml-11"
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-blue-100 bg-white">
-                          <img src="/logoimagetwo.png" alt="Margin" className="h-3.5 w-auto object-contain" />
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white">
+                          <img src="/logoimagetwo.png" alt="" aria-hidden="true" className="h-3.5 w-auto object-contain" />
                         </div>
-                        <motion.div
-                          animate={{ opacity: [0.45, 1, 0.45] }}
-                          transition={{ duration: 1.1, repeat: Infinity }}
-                          className="h-7 w-1 rounded-full bg-[#007AFF] shadow-[0_0_12px_rgba(0,122,255,0.55)]"
-                        />
-                        <div>
-                          <p className="text-xs font-semibold text-[#007AFF]">Margin</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-semibold text-emerald-700">Margin</p>
                           <p className="mt-0.5 text-sm font-medium text-gray-700">
                             Analyzing Rejection Root-Cause...
                           </p>
                         </div>
+                        <AnimatedCheck />
                       </div>
                     </motion.div>
                   );
@@ -105,19 +115,19 @@ export default function RejectionLoop() {
                       className="ml-8 py-1 sm:ml-11"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-semibold uppercase text-[#007AFF]">Resubmitting</span>
-                        <div className="relative h-px flex-1 overflow-visible bg-blue-100">
+                        <span className="text-[10px] font-semibold uppercase text-emerald-700">Resubmitting</span>
+                        <div className="relative h-px flex-1 overflow-visible bg-emerald-100">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: '100%' }}
                             transition={{ duration: 1.1, ease: 'easeOut' }}
-                            className="absolute inset-y-0 left-0 bg-[#007AFF] shadow-[0_0_12px_rgba(0,122,255,0.8)]"
+                            className="absolute inset-y-0 left-0 bg-[#3aaa78] shadow-[0_0_10px_rgba(58,170,120,0.55)]"
                           />
                           <motion.div
                             initial={{ left: 0, opacity: 0 }}
                             animate={{ left: '100%', opacity: [0, 1, 1] }}
                             transition={{ duration: 1.1, ease: 'easeOut' }}
-                            className="absolute -top-3 -translate-x-full rounded-full bg-[#007AFF] p-1.5 text-white shadow-lg shadow-blue-200"
+                            className="absolute -top-3 -translate-x-full rounded-full bg-[#3aaa78] p-1.5 text-white shadow-lg shadow-emerald-100"
                           >
                             <ArrowRight className="h-3 w-3" />
                           </motion.div>
@@ -140,8 +150,8 @@ export default function RejectionLoop() {
                       isApproval
                         ? 'border-emerald-100 bg-emerald-50/90'
                         : event.kind === 'amazon'
-                          ? 'border-red-100 bg-red-50/80'
-                          : 'border-blue-100 bg-white/90'
+                          ? 'border-gray-200 bg-gray-100/80'
+                          : 'border-emerald-200 bg-emerald-50/70'
                     }`}
                   >
                     <div
@@ -149,18 +159,19 @@ export default function RejectionLoop() {
                         isApproval
                           ? 'border-emerald-200 text-emerald-500'
                           : event.kind === 'amazon'
-                            ? 'border-red-200 text-red-400'
-                            : 'border-blue-200 text-[#007AFF]'
+                            ? 'border-gray-300 text-gray-500'
+                            : 'border-emerald-200 text-emerald-600'
                       }`}
                     >
                       {isAmazon ? (
                         <img
                           src="/amazon-logo-transparent-circle.png"
-                          alt="Amazon"
+                          alt=""
+                          aria-hidden="true"
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <img src="/logoimagetwo.png" alt="Margin" className="h-3 w-auto object-contain" />
+                        <img src="/logoimagetwo.png" alt="" aria-hidden="true" className="h-3 w-auto object-contain" />
                       )}
                     </div>
 
@@ -171,8 +182,8 @@ export default function RejectionLoop() {
                             isApproval
                               ? 'text-emerald-700'
                               : event.kind === 'amazon'
-                                ? 'text-red-500'
-                                : 'text-[#007AFF]'
+                                ? 'text-gray-600'
+                                : 'text-emerald-700'
                           }`}
                         >
                           {isAmazon ? 'Amazon Seller Central Support' : 'Margin'}
@@ -185,7 +196,7 @@ export default function RejectionLoop() {
                               : 'Executing Second Strike Logic. Binding Carrier Metadata & Digital Signature.'}
                         </p>
                       </div>
-                      {event.kind === 'amazon' && <ShieldAlert className="h-5 w-5 shrink-0 text-red-400" />}
+                      {event.kind === 'margin' && <AnimatedCheck />}
                       {isApproval && <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />}
                     </div>
                   </motion.article>
@@ -195,18 +206,6 @@ export default function RejectionLoop() {
           </div>
         </div>
 
-        <footer className="border-t border-gray-100 bg-white/80 p-3 backdrop-blur-md sm:px-6">
-          <motion.button
-            type="button"
-            onClick={restartSimulation}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            disabled={isSimulating}
-            className="flex h-10 w-full items-center justify-center rounded-xl bg-[#007AFF] px-4 text-sm font-semibold text-white shadow-lg shadow-blue-100 transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none"
-          >
-            {isSimulating ? 'Second Strike Running' : 'Replay Second Strike'}
-          </motion.button>
-        </footer>
       </section>
     </main>
   );
