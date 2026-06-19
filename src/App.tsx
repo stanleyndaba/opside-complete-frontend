@@ -94,6 +94,7 @@ const ClosingCTA = lazy(() => import("./pages/ClosingCTA"));
 const ClaimSimulate = lazy(() => import("@/components/ClaimSimulate"));
 const FileSimulate = lazy(() => import("@/components/FileSimulate"));
 const ApiConnection = lazy(() => import("@/components/api-connection"));
+const EvidenceAnalysis = lazy(() => import("@/components/evidence-analysis"));
 const ClockSimulate = lazy(() => import("@/components/ClockSimulate"));
 const RejectSimulate = lazy(() => import("@/components/RejectSimulate"));
 const StareSimulate = lazy(() => import("@/components/StareSimulate"));
@@ -175,7 +176,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
 
   return (
     <>
@@ -234,6 +235,7 @@ const App = () => (
                         <Route path="/claimsimulate" element={<ClaimSimulate />} />
                         <Route path="/filesimulate" element={<FileSimulate />} />
                         <Route path="/api-connection" element={<ApiConnection />} />
+                        <Route path="/evidence-analysis" element={<EvidenceAnalysis />} />
                         <Route path="/clocksimulate" element={<ClockSimulate />} />
                         <Route path="/rejectsimulate" element={<RejectSimulate />} />
                         <Route path="/staresimulate" element={<StareSimulate />} />
