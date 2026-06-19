@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, Download, FileSearch, FileText, Layers, X } from 'lucide-react';
@@ -7,17 +8,51 @@ import { CheckCircle2, Download, FileSearch, FileText, Layers, X } from 'lucide-
 type Phase = 'extracting' | 'compiling' | 'output';
 
 const METADATA = [
-  { label: 'Weight: 45.2lb', top: '30%', left: '78%' },
-  { label: 'Signature: J. Smith', top: '61%', left: '34%' },
-  { label: 'Timestamp: 14:22:01', top: '79%', left: '68%' },
+  { label: 'Shipment: FBA15JJ4K7L1' },
+  { label: 'Units: 120' },
+  { label: 'Weight: 45.2lb' },
+  { label: 'Carrier: UPS Freight' },
+  { label: 'Tracking: 1Z84...2216' },
+  { label: 'Status: Signed & accepted' },
+  { label: 'Signature: J. Smith' },
+  { label: 'Delivered: Nov 10 · 14:22:01' },
 ];
 
 const TABS = ['Inputs', 'Reasoning', 'Screenshots', 'Output'];
 const spring = { type: 'spring' as const, stiffness: 260, damping: 24 };
 
+type HighlightTone = 'blue' | 'amber' | 'emerald';
+
+const highlightColors: Record<HighlightTone, string> = {
+  blue: 'bg-blue-200/70',
+  amber: 'bg-amber-200/70',
+  emerald: 'bg-emerald-200/70',
+};
+
+function MetadataHighlight({
+  active,
+  children,
+  tone,
+}: {
+  active: boolean;
+  children: ReactNode;
+  tone: HighlightTone;
+}) {
+  return (
+    <span className="relative -mx-1 inline-flex overflow-hidden rounded px-1">
+      <motion.span
+        initial={false}
+        animate={{ scaleX: active ? 1 : 0 }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+        className={`absolute inset-0 origin-left ${highlightColors[tone]}`}
+      />
+      <span className="relative z-10">{children}</span>
+    </span>
+  );
+}
+
 export default function ReportGeneration() {
   const [phase, setPhase] = useState<Phase>('extracting');
-  const [activeSpotlight, setActiveSpotlight] = useState(0);
   const [extractedCount, setExtractedCount] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
 
@@ -26,11 +61,10 @@ export default function ReportGeneration() {
       const timers: number[] = [];
 
       METADATA.forEach((_, index) => {
-        timers.push(window.setTimeout(() => setActiveSpotlight(index), index * 1300));
-        timers.push(window.setTimeout(() => setExtractedCount(index + 1), index * 1300 + 720));
+        timers.push(window.setTimeout(() => setExtractedCount(index + 1), index * 550 + 400));
       });
 
-      timers.push(window.setTimeout(() => setPhase('compiling'), METADATA.length * 1300 + 450));
+      timers.push(window.setTimeout(() => setPhase('compiling'), METADATA.length * 550 + 650));
       return () => timers.forEach((timer) => window.clearTimeout(timer));
     }
 
@@ -42,7 +76,6 @@ export default function ReportGeneration() {
 
   const restartSimulation = () => {
     setShowPreview(false);
-    setActiveSpotlight(0);
     setExtractedCount(0);
     setPhase('extracting');
   };
@@ -135,61 +168,71 @@ export default function ReportGeneration() {
                   <div className="mt-5 grid grid-cols-3 gap-3">
                     <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                       <p className="text-[9px] font-medium uppercase text-gray-400">Shipment ID</p>
-                      <p className="mt-1 text-[11px] font-semibold text-gray-800">FBA15JJ4K7L1</p>
+                      <p className="mt-1 text-[11px] font-semibold text-gray-800">
+                        <MetadataHighlight active={extractedCount >= 1} tone="blue">FBA15JJ4K7L1</MetadataHighlight>
+                      </p>
                     </div>
                     <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                       <p className="text-[9px] font-medium uppercase text-gray-400">Units Shipped</p>
-                      <p className="mt-1 text-[11px] font-semibold text-gray-800">120 units</p>
+                      <p className="mt-1 text-[11px] font-semibold text-gray-800">
+                        <MetadataHighlight active={extractedCount >= 2} tone="amber">120 units</MetadataHighlight>
+                      </p>
                     </div>
-                    <div className="rounded-lg border border-blue-100 bg-blue-50/70 p-3">
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                       <p className="text-[9px] font-medium uppercase text-gray-400">Carrier Weight</p>
-                      <p className="mt-1 text-[11px] font-semibold text-gray-900">45.2 lb</p>
+                      <p className="mt-1 text-[11px] font-semibold text-gray-900">
+                        <MetadataHighlight active={extractedCount >= 3} tone="amber">45.2 lb</MetadataHighlight>
+                      </p>
                     </div>
                   </div>
 
                   <div className="mt-5 rounded-xl border border-gray-200">
                     <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5">
                       <span className="text-[10px] text-gray-400">Carrier</span>
-                      <span className="text-[11px] font-medium text-gray-800">UPS Freight</span>
+                      <span className="text-[11px] font-medium text-gray-800">
+                        <MetadataHighlight active={extractedCount >= 4} tone="blue">UPS Freight</MetadataHighlight>
+                      </span>
                     </div>
                     <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5">
                       <span className="text-[10px] text-gray-400">Tracking ID</span>
-                      <span className="text-[11px] font-medium text-gray-800">1Z84A07Y0391842216</span>
+                      <span className="text-[11px] font-medium text-gray-800">
+                        <MetadataHighlight active={extractedCount >= 5} tone="blue">1Z84A07Y0391842216</MetadataHighlight>
+                      </span>
                     </div>
                     <div className="flex items-center justify-between px-4 py-2.5">
                       <span className="text-[10px] text-gray-400">Receiving status</span>
-                      <span className="text-[11px] font-medium text-emerald-700">Signed and accepted</span>
+                      <span className="text-[11px] font-medium text-emerald-700">
+                        <MetadataHighlight active={extractedCount >= 6} tone="emerald">Signed and accepted</MetadataHighlight>
+                      </span>
                     </div>
                   </div>
 
                   <div className="mt-5 grid grid-cols-2 gap-3">
                     <div className="rounded-lg border border-emerald-100 bg-emerald-50/60 p-3">
                       <p className="text-[9px] font-medium uppercase text-gray-400">Received By</p>
-                      <p className="mt-1 text-xs font-semibold text-gray-900">J. Smith</p>
+                      <p className="mt-1 text-xs font-semibold text-gray-900">
+                        <MetadataHighlight active={extractedCount >= 7} tone="emerald">J. Smith</MetadataHighlight>
+                      </p>
                       <p className="mt-1 text-[10px] text-gray-500">Dock D-14 · Signature verified</p>
                     </div>
                     <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                       <p className="text-[9px] font-medium uppercase text-gray-400">Delivery Event</p>
-                      <p className="mt-1 text-xs font-semibold text-gray-900">Nov 10, 2025</p>
-                      <p className="mt-1 text-[10px] text-gray-500">Timestamp 14:22:01 UTC</p>
+                      <p className="mt-1 text-xs font-semibold text-gray-900">
+                        <MetadataHighlight active={extractedCount >= 8} tone="amber">Nov 10, 2025</MetadataHighlight>
+                      </p>
+                      <p className="mt-1 text-[10px] text-gray-500">
+                        Timestamp <MetadataHighlight active={extractedCount >= 8} tone="amber">14:22:01 UTC</MetadataHighlight>
+                      </p>
                     </div>
                   </div>
-
-                  <motion.div
-                    animate={{
-                      top: METADATA[activeSpotlight].top,
-                      left: METADATA[activeSpotlight].left,
-                    }}
-                    transition={spring}
-                    className="absolute z-20 -ml-12 -mt-12 flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#007AFF] bg-blue-50/55 shadow-[0_0_0_1000px_rgba(248,250,252,0.3),0_0_24px_rgba(0,122,255,0.3)]"
-                  >
-                    <FileSearch className="h-6 w-6 text-[#007AFF]" />
-                  </motion.div>
                 </div>
 
                 <aside className="rounded-2xl border border-gray-100 bg-gray-50/80 p-5">
-                  <p className="mb-5 text-xs font-semibold uppercase text-gray-400">Metadata Identified</p>
-                  <div className="space-y-3">
+                  <div className="mb-4 flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase text-gray-400">Metadata Identified</p>
+                    <span className="text-[10px] font-semibold text-gray-400">{extractedCount}/{METADATA.length}</span>
+                  </div>
+                  <div className="space-y-2">
                     <AnimatePresence>
                       {METADATA.slice(0, extractedCount).map((item) => (
                         <motion.div
@@ -197,10 +240,10 @@ export default function ReportGeneration() {
                           initial={{ opacity: 0, x: 24, scale: 0.96 }}
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           transition={spring}
-                          className="flex items-center gap-3 rounded-xl border border-blue-100 bg-white p-3 shadow-sm"
+                          className="flex items-center gap-2.5 rounded-lg border border-gray-200 bg-white px-3 py-2.5 shadow-sm"
                         >
-                          <CheckCircle2 className="h-4 w-4 shrink-0 text-[#007AFF]" />
-                          <span className="text-xs font-medium text-gray-700">{item.label}</span>
+                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+                          <span className="text-[11px] font-medium text-gray-700">{item.label}</span>
                         </motion.div>
                       ))}
                     </AnimatePresence>
@@ -221,9 +264,9 @@ export default function ReportGeneration() {
                   {METADATA.map((item, index) => (
                     <motion.div
                       key={item.label}
-                      initial={{ opacity: 1, x: -230, y: (index - 1) * 56, scale: 1 }}
+                      initial={{ opacity: 1, x: -230, y: (index - (METADATA.length - 1) / 2) * 28, scale: 1 }}
                       animate={{ opacity: [1, 1, 0], x: 0, y: 0, scale: 0.7 }}
-                      transition={{ duration: 1.6, delay: index * 0.22, ease: 'easeInOut' }}
+                      transition={{ duration: 1.4, delay: index * 0.12, ease: 'easeInOut' }}
                       className="absolute rounded-xl border border-blue-100 bg-white px-4 py-3 text-xs font-medium text-gray-700 shadow-md"
                     >
                       {item.label}
