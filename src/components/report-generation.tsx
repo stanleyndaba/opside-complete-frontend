@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle2, Download, FileSearch, FileText, Layers, X } from 'lucide-react';
+import { Check, CheckCircle2, Download, FileSearch, FileText, Layers, X } from 'lucide-react';
 
 type Phase = 'extracting' | 'compiling' | 'output';
 
@@ -48,6 +48,38 @@ function MetadataHighlight({
       />
       <span className="relative z-10">{children}</span>
     </span>
+  );
+}
+
+function PdfDocumentIcon() {
+  return (
+    <div className="relative flex h-24 w-20 flex-col items-center rounded-xl border border-red-100 bg-white px-3 pt-4 shadow-xl shadow-red-100/60">
+      <div className="absolute right-0 top-0 h-5 w-5 rounded-bl-lg rounded-tr-xl bg-red-100" />
+      <div className="mt-2 w-full rounded-md bg-red-600 py-1.5 text-center text-[10px] font-bold text-white">PDF</div>
+      <div className="mt-3 h-1 w-full rounded bg-gray-200" />
+      <div className="mt-1.5 h-1 w-3/4 self-start rounded bg-gray-100" />
+    </div>
+  );
+}
+
+function CompilingCheck() {
+  return (
+    <div className="relative mt-5 h-9 w-9">
+      <motion.div
+        initial={{ rotate: 0 }}
+        animate={{ rotate: 720 }}
+        transition={{ duration: 2, ease: 'easeInOut' }}
+        className="absolute inset-0 rounded-full border-2 border-emerald-100 border-t-[#3aaa78]"
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: 'spring', stiffness: 460, damping: 18, delay: 1.9 }}
+        className="absolute inset-0 flex items-center justify-center rounded-full border-2 border-[#3aaa78] bg-emerald-50 text-[#3aaa78]"
+      >
+        <Check className="h-4 w-4" strokeWidth={3} />
+      </motion.div>
+    </div>
   );
 }
 
@@ -277,22 +309,15 @@ export default function ReportGeneration() {
                     initial={{ scale: 0.82 }}
                     animate={{ scale: [0.82, 1.08, 1] }}
                     transition={{ duration: 1.8, delay: 1.1 }}
-                    className="z-10 flex h-24 w-20 items-center justify-center rounded-xl border border-blue-100 bg-white text-[#007AFF] shadow-xl shadow-blue-100"
+                    className="z-10"
                   >
-                    <FileText className="h-10 w-10" />
+                    <PdfDocumentIcon />
                   </motion.div>
                 </div>
 
                 <h2 className="text-xl font-semibold text-gray-900">Compiling Report...</h2>
                 <p className="mt-2 text-sm text-gray-400">Binding verified evidence and investigation reasoning</p>
-                <div className="mt-6 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-gray-200">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 2.6, ease: 'easeInOut' }}
-                    className="h-full rounded-full bg-[#007AFF]"
-                  />
-                </div>
+                <CompilingCheck />
               </motion.div>
             )}
 
@@ -314,21 +339,22 @@ export default function ReportGeneration() {
                     <div className="relative h-48 w-36 shrink-0">
                       <div className="absolute inset-0 translate-x-3 -rotate-3 rounded-lg border border-gray-200 bg-gray-100" />
                       <div className="absolute inset-0 translate-x-1.5 rotate-2 rounded-lg border border-gray-200 bg-gray-50" />
-                      <div className="absolute inset-0 rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-                        <div className="flex items-center gap-2 text-[#007AFF]">
-                          <FileText className="h-5 w-5" />
-                          <span className="text-[9px] font-semibold uppercase">Margin</span>
+                      <div className="absolute inset-0 rounded-lg border border-gray-200 bg-white p-3.5 shadow-md">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[8px] font-bold uppercase text-gray-950">Margin</span>
+                          <span className="text-[7px] text-gray-400">CONFIDENTIAL</span>
                         </div>
-                        <div className="mt-5 h-2 w-3/4 rounded bg-gray-300" />
-                        <div className="mt-3 space-y-2">
-                          <div className="h-1.5 rounded bg-gray-100" />
-                          <div className="h-1.5 rounded bg-gray-100" />
-                          <div className="h-1.5 w-4/5 rounded bg-gray-100" />
+                        <div className="mt-3 border-y-2 border-gray-950 py-1.5">
+                          <p className="text-[8px] font-bold uppercase leading-tight text-gray-950">Dispute Investigation</p>
+                          <p className="mt-0.5 text-[6px] text-gray-500">Delivery evidence report</p>
                         </div>
-                        <div className="mt-6 rounded-md bg-blue-50 p-3">
-                          <div className="h-1.5 w-2/3 rounded bg-blue-200" />
-                          <div className="mt-2 h-1.5 rounded bg-blue-100" />
+                        <div className="mt-2.5 space-y-1.5">
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">CASE ID</span><span className="font-semibold text-gray-900">#17520708561</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">SHIPMENT</span><span className="font-semibold text-gray-900">FBA15JJ4K7L1</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">WEIGHT</span><span className="font-semibold text-gray-900">45.2 lb</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">SIGNED BY</span><span className="font-semibold text-gray-900">J. Smith</span></div>
                         </div>
+                        <div className="mt-2 bg-gray-950 px-2 py-1 text-[6px] font-semibold uppercase text-white">Delivery verified</div>
                         <span className="absolute bottom-3 right-3 text-[8px] text-gray-300">1 / 14</span>
                       </div>
                     </div>
