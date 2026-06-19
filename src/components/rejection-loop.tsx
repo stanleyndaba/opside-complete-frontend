@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, MessageSquare, ShieldAlert, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 type TimelineEvent = {
   id: string;
@@ -42,11 +42,11 @@ export default function RejectionLoop() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4 font-sans sm:p-8">
-      <section className="flex h-[min(760px,calc(100vh-32px))] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 shadow-xl backdrop-blur-xl">
-        <header className="flex items-center justify-between border-b border-gray-100 bg-white/80 px-5 py-4 backdrop-blur-md sm:px-7">
+      <section className="flex h-[min(680px,calc(100vh-32px))] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white/90 shadow-xl backdrop-blur-xl">
+        <header className="flex items-center justify-between border-b border-gray-100 bg-white/80 px-5 py-3 backdrop-blur-md sm:px-6">
           <div>
-            <p className="text-xs font-medium text-gray-400">Case Timeline</p>
-            <h1 className="mt-1 text-lg font-semibold text-gray-900">Second Strike</h1>
+            <h1 className="text-base font-semibold text-gray-900">Resolution Workflow</h1>
+            <p className="mt-0.5 text-xs text-gray-400">Analyzing responses and advancing the case</p>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-gray-100 bg-gray-50 px-3 py-1.5">
             <motion.span
@@ -60,10 +60,10 @@ export default function RejectionLoop() {
           </div>
         </header>
 
-        <div className="relative flex-1 overflow-y-auto bg-gray-50/60 px-5 py-7 sm:px-8">
-          <div className="absolute bottom-8 left-9 top-8 w-px bg-gray-200 sm:left-12" />
+        <div className="relative flex-1 overflow-y-auto bg-gray-50/60 px-5 py-5 sm:px-7">
+          <div className="absolute bottom-6 left-9 top-6 w-px bg-gray-200 sm:left-11" />
 
-          <div className="relative space-y-5">
+          <div className="relative space-y-3">
             <AnimatePresence initial={false}>
               {visibleEvents.map((event) => {
                 if (event.kind === 'analysis') {
@@ -73,17 +73,20 @@ export default function RejectionLoop() {
                       initial={{ opacity: 0, scaleX: 0.75 }}
                       animate={{ opacity: 1, scaleX: 1 }}
                       transition={spring}
-                      className="ml-8 rounded-2xl border border-blue-100 bg-blue-50/80 p-4 backdrop-blur sm:ml-12"
+                      className="ml-8 rounded-xl border border-blue-100 bg-blue-50/80 p-3 backdrop-blur sm:ml-11"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-blue-100 bg-white">
+                          <img src="/logoimagetwo.png" alt="Margin" className="h-3.5 w-auto object-contain" />
+                        </div>
                         <motion.div
                           animate={{ opacity: [0.45, 1, 0.45] }}
                           transition={{ duration: 1.1, repeat: Infinity }}
-                          className="h-8 w-1 rounded-full bg-[#007AFF] shadow-[0_0_12px_rgba(0,122,255,0.55)]"
+                          className="h-7 w-1 rounded-full bg-[#007AFF] shadow-[0_0_12px_rgba(0,122,255,0.55)]"
                         />
                         <div>
-                          <p className="text-xs font-semibold text-[#007AFF]">Margin AI</p>
-                          <p className="mt-1 text-sm font-medium text-gray-700">
+                          <p className="text-xs font-semibold text-[#007AFF]">Margin</p>
+                          <p className="mt-0.5 text-sm font-medium text-gray-700">
                             Analyzing Rejection Root-Cause...
                           </p>
                         </div>
@@ -99,7 +102,7 @@ export default function RejectionLoop() {
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={spring}
-                      className="ml-8 py-2 sm:ml-12"
+                      className="ml-8 py-1 sm:ml-11"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-[10px] font-semibold uppercase text-[#007AFF]">Resubmitting</span>
@@ -133,7 +136,7 @@ export default function RejectionLoop() {
                     initial={{ opacity: 0, x: isAmazon ? 44 : -44, scale: 0.96 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
                     transition={spring}
-                    className={`relative ml-8 rounded-2xl border p-4 shadow-sm backdrop-blur sm:ml-12 sm:p-5 ${
+                    className={`relative ml-8 rounded-xl border p-3.5 shadow-sm backdrop-blur sm:ml-11 sm:p-4 ${
                       isApproval
                         ? 'border-emerald-100 bg-emerald-50/90'
                         : event.kind === 'amazon'
@@ -142,7 +145,7 @@ export default function RejectionLoop() {
                     }`}
                   >
                     <div
-                      className={`absolute -left-[45px] top-5 flex h-7 w-7 items-center justify-center rounded-full border bg-white shadow-sm sm:-left-[61px] ${
+                      className={`absolute -left-[45px] top-4 flex h-7 w-7 items-center justify-center overflow-hidden rounded-full border bg-white shadow-sm sm:-left-[53px] ${
                         isApproval
                           ? 'border-emerald-200 text-emerald-500'
                           : event.kind === 'amazon'
@@ -150,12 +153,14 @@ export default function RejectionLoop() {
                             : 'border-blue-200 text-[#007AFF]'
                       }`}
                     >
-                      {isApproval ? (
-                        <CheckCircle2 className="h-4 w-4" />
-                      ) : event.kind === 'amazon' ? (
-                        <MessageSquare className="h-4 w-4" />
+                      {isAmazon ? (
+                        <img
+                          src="/amazon-logo-transparent-circle.png"
+                          alt="Amazon"
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
-                        <Zap className="h-4 w-4" />
+                        <img src="/logoimagetwo.png" alt="Margin" className="h-3 w-auto object-contain" />
                       )}
                     </div>
 
@@ -170,9 +175,9 @@ export default function RejectionLoop() {
                                 : 'text-[#007AFF]'
                           }`}
                         >
-                          {isAmazon ? 'Amazon Support' : 'Margin'}
+                          {isAmazon ? 'Amazon Seller Central Support' : 'Margin'}
                         </p>
-                        <p className={`mt-2 text-sm leading-6 ${isApproval ? 'font-medium text-emerald-900' : 'text-gray-700'}`}>
+                        <p className={`mt-1.5 text-sm leading-5 ${isApproval ? 'font-medium text-emerald-900' : 'text-gray-700'}`}>
                           {isApproval
                             ? 'Refund Approved. $1,420.00 initiated to Seller Balance.'
                             : event.kind === 'amazon'
@@ -190,16 +195,15 @@ export default function RejectionLoop() {
           </div>
         </div>
 
-        <footer className="border-t border-gray-100 bg-white/80 p-4 backdrop-blur-md sm:px-7">
+        <footer className="border-t border-gray-100 bg-white/80 p-3 backdrop-blur-md sm:px-6">
           <motion.button
             type="button"
             onClick={restartSimulation}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             disabled={isSimulating}
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#007AFF] px-4 text-sm font-semibold text-white shadow-lg shadow-blue-100 transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none"
+            className="flex h-10 w-full items-center justify-center rounded-xl bg-[#007AFF] px-4 text-sm font-semibold text-white shadow-lg shadow-blue-100 transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none"
           >
-            <Zap className="h-4 w-4" />
             {isSimulating ? 'Second Strike Running' : 'Replay Second Strike'}
           </motion.button>
         </footer>
