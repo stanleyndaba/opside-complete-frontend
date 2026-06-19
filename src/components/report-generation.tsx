@@ -7,9 +7,9 @@ import { CheckCircle2, Download, FileSearch, FileText, Layers, X } from 'lucide-
 type Phase = 'extracting' | 'compiling' | 'output';
 
 const METADATA = [
-  { label: 'Weight: 45.2lb', top: '25%', left: '42%' },
-  { label: 'Signature: J. Smith', top: '55%', left: '30%' },
-  { label: 'Timestamp: 14:22:01', top: '76%', left: '56%' },
+  { label: 'Weight: 45.2lb', top: '30%', left: '78%' },
+  { label: 'Signature: J. Smith', top: '61%', left: '34%' },
+  { label: 'Timestamp: 14:22:01', top: '79%', left: '68%' },
 ];
 
 const TABS = ['Inputs', 'Reasoning', 'Screenshots', 'Output'];
@@ -123,17 +123,56 @@ export default function ReportGeneration() {
                 className="absolute inset-0 grid gap-5 overflow-y-auto p-5 md:grid-cols-[minmax(0,1fr)_280px] md:p-8"
               >
                 <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-gray-100 bg-white p-8 shadow-sm sm:p-10">
-                  <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-5">
+                  <div className="flex items-start justify-between border-b border-gray-200 pb-4">
                     <div>
-                      <div className="h-3 w-40 rounded bg-gray-200" />
-                      <div className="mt-2 h-2 w-24 rounded bg-gray-100" />
+                      <p className="text-[10px] font-semibold uppercase text-[#007AFF]">Carrier Proof of Delivery</p>
+                      <h2 className="mt-1 text-base font-semibold text-gray-900">Inbound Shipment Receipt</h2>
+                      <p className="mt-1 text-[11px] text-gray-400">Amazon FBA receiving documentation</p>
                     </div>
                     <FileText className="h-5 w-5 text-gray-300" />
                   </div>
-                  <div className="space-y-4">
-                    {[78, 100, 88, 96, 65, 100, 74, 91, 56].map((width, index) => (
-                      <div key={`${width}-${index}`} className="h-2.5 rounded bg-gray-100" style={{ width: `${width}%` }} />
-                    ))}
+
+                  <div className="mt-5 grid grid-cols-3 gap-3">
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                      <p className="text-[9px] font-medium uppercase text-gray-400">Shipment ID</p>
+                      <p className="mt-1 text-[11px] font-semibold text-gray-800">FBA15JJ4K7L1</p>
+                    </div>
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                      <p className="text-[9px] font-medium uppercase text-gray-400">Units Shipped</p>
+                      <p className="mt-1 text-[11px] font-semibold text-gray-800">120 units</p>
+                    </div>
+                    <div className="rounded-lg border border-blue-100 bg-blue-50/70 p-3">
+                      <p className="text-[9px] font-medium uppercase text-gray-400">Carrier Weight</p>
+                      <p className="mt-1 text-[11px] font-semibold text-gray-900">45.2 lb</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 rounded-xl border border-gray-200">
+                    <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5">
+                      <span className="text-[10px] text-gray-400">Carrier</span>
+                      <span className="text-[11px] font-medium text-gray-800">UPS Freight</span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5">
+                      <span className="text-[10px] text-gray-400">Tracking ID</span>
+                      <span className="text-[11px] font-medium text-gray-800">1Z84A07Y0391842216</span>
+                    </div>
+                    <div className="flex items-center justify-between px-4 py-2.5">
+                      <span className="text-[10px] text-gray-400">Receiving status</span>
+                      <span className="text-[11px] font-medium text-emerald-700">Signed and accepted</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <div className="rounded-lg border border-emerald-100 bg-emerald-50/60 p-3">
+                      <p className="text-[9px] font-medium uppercase text-gray-400">Received By</p>
+                      <p className="mt-1 text-xs font-semibold text-gray-900">J. Smith</p>
+                      <p className="mt-1 text-[10px] text-gray-500">Dock D-14 · Signature verified</p>
+                    </div>
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                      <p className="text-[9px] font-medium uppercase text-gray-400">Delivery Event</p>
+                      <p className="mt-1 text-xs font-semibold text-gray-900">Nov 10, 2025</p>
+                      <p className="mt-1 text-[10px] text-gray-500">Timestamp 14:22:01 UTC</p>
+                    </div>
                   </div>
 
                   <motion.div
@@ -142,7 +181,7 @@ export default function ReportGeneration() {
                       left: METADATA[activeSpotlight].left,
                     }}
                     transition={spring}
-                    className="absolute z-20 -ml-12 -mt-12 flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#007AFF] bg-blue-50/70 shadow-[0_0_0_1000px_rgba(255,255,255,0.72),0_0_24px_rgba(0,122,255,0.35)]"
+                    className="absolute z-20 -ml-12 -mt-12 flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#007AFF] bg-blue-50/55 shadow-[0_0_0_1000px_rgba(248,250,252,0.3),0_0_24px_rgba(0,122,255,0.3)]"
                   >
                     <FileSearch className="h-6 w-6 text-[#007AFF]" />
                   </motion.div>
