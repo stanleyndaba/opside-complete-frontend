@@ -25,10 +25,6 @@ export default function DocumentUploads() {
     setIsUploaded(true);
   };
 
-  const handleReset = () => {
-    setIsUploaded(false);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
@@ -44,8 +40,8 @@ export default function DocumentUploads() {
               className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
             >
               {/* Header */}
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-light text-gray-700 mb-2">Upload documentation</h2>
+              <div className="text-left mb-7">
+                <h2 className="text-xl font-semibold text-gray-800 mb-1.5">Document Uploads</h2>
                 <p className="text-sm text-gray-400">Add your CSV files for analysis</p>
               </div>
 
@@ -90,14 +86,19 @@ export default function DocumentUploads() {
               </div>
 
               {/* Upload Button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleUpload}
-                className="w-full bg-[#007AFF] text-white font-medium py-3 rounded-lg hover:bg-blue-600 transition-colors shadow-sm"
-              >
-                Upload
-              </motion.button>
+              <div className="flex justify-end">
+                <motion.button
+                  type="button"
+                  aria-label="Upload documents"
+                  title="Upload documents"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.94 }}
+                  onClick={handleUpload}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-950 text-white shadow-md transition-colors hover:bg-gray-800"
+                >
+                  <Upload className="h-5 w-5" strokeWidth={2} />
+                </motion.button>
+              </div>
             </motion.div>
           ) : (
             // ATTACHMENT STATE
@@ -110,24 +111,26 @@ export default function DocumentUploads() {
               className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
             >
               {/* Header */}
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-light text-gray-700 mb-2">Files Attached</h2>
+              <div className="text-left mb-6">
+                <h2 className="text-xl font-semibold text-gray-800 mb-1.5">Files Attached</h2>
                 <p className="text-sm text-gray-400">Your documents are ready for analysis</p>
               </div>
 
               {/* Attached Files Grid */}
-              <div className="grid grid-cols-1 gap-4 mb-8">
+              <div className="grid grid-cols-2 gap-3 mb-6">
                 {files.slice(0, 3).map((file, index) => (
                   <motion.div
                     key={file.id}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1, duration: 0.4 }}
-                    className="relative bg-gray-50 border border-gray-200 rounded-xl p-4 flex items-center gap-4 hover:shadow-md transition-shadow"
+                    className={`relative flex min-h-[132px] flex-col items-start rounded-xl border border-gray-200 bg-gray-50 p-3.5 transition-colors hover:border-gray-300 hover:bg-white ${
+                      index === 2 ? 'col-span-2 w-[calc(50%-6px)] justify-self-center' : ''
+                    }`}
                   >
                     {/* File Icon */}
                     <div
-                      className={`w-12 h-12 rounded-[14px] flex items-center justify-center flex-shrink-0 ${
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
                         file.type === 'csv'
                           ? 'bg-[#EE3E38]'
                           : file.type === 'folder'
@@ -136,26 +139,27 @@ export default function DocumentUploads() {
                       }`}
                     >
                       {file.type === 'csv' && (
-                        <FileText className="w-6 h-6 text-white" />
+                        <FileText className="w-[18px] h-[18px] text-white" />
                       )}
                       {file.type === 'folder' && (
-                        <Folder className="w-6 h-6 text-white" />
+                        <Folder className="w-[18px] h-[18px] text-white" />
                       )}
                       {file.type === 'video' && (
-                        <Play className="w-6 h-6 text-white" />
+                        <Play className="w-[18px] h-[18px] text-white" />
                       )}
                     </div>
 
                     {/* File Info */}
-                    <div className="flex-1 min-w-0 pr-6">
-                      <p className="text-[15px] font-semibold text-gray-900 truncate">{file.name}</p>
-                      <p className="text-sm text-gray-400 mt-0.5">{file.fileType}</p>
+                    <div className="mt-3 min-w-0 w-full">
+                      <p className="line-clamp-2 text-xs font-semibold leading-4 text-gray-900">{file.name}</p>
+                      <p className="text-[11px] text-gray-400 mt-1">{file.fileType}</p>
                     </div>
 
                     {/* Remove Button */}
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
+                      aria-label={`Remove ${file.name}`}
                       className="absolute top-3 right-3 w-5 h-5 rounded-full bg-black flex items-center justify-center flex-shrink-0 hover:bg-gray-800 transition-colors shadow-sm"
                     >
                       <X className="w-3 h-3 text-white" strokeWidth={3} />
@@ -165,19 +169,11 @@ export default function DocumentUploads() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-4">
+              <div className="flex justify-end">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="flex-1 border-2 border-gray-300 text-gray-700 font-medium py-3 rounded-lg hover:border-gray-400 transition-colors"
-                >
-                  Upload More
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex-1 bg-[#007AFF] text-white font-medium py-3 rounded-lg hover:bg-blue-600 transition-colors"
+                  className="h-10 rounded-lg bg-[#007AFF] px-5 text-sm font-medium text-white transition-colors hover:bg-blue-600"
                 >
                   Start Analysis
                 </motion.button>
