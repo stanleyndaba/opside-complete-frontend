@@ -64,7 +64,11 @@ export default function ReportGeneration() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4 font-sans sm:p-8">
-      <section className="flex h-[min(580px,calc(100vh-32px))] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
+      <section
+        className={`flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl ${
+          phase === 'output' ? 'h-[min(480px,calc(100vh-32px))]' : 'h-[min(580px,calc(100vh-32px))]'
+        }`}
+      >
         <header className="flex min-h-16 items-center justify-between border-b border-gray-100 bg-white px-5 sm:px-7">
           {phase === 'output' ? (
             <div className="flex min-w-0 items-center gap-4 sm:gap-6">
@@ -220,7 +224,7 @@ export default function ReportGeneration() {
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">Dispute Investigation Report</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">Generated Report</h2>
                     <p className="mt-1 text-sm text-gray-400">All evidence bound and verified.</p>
                   </div>
 
@@ -248,12 +252,18 @@ export default function ReportGeneration() {
                     </div>
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
-                      <h3 className="text-xl font-semibold text-gray-900 sm:text-2xl">Dispute Investigation Report</h3>
+                      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
+                        <h3 className="text-xl font-semibold text-gray-900 sm:text-2xl">Dispute Investigation Report</h3>
+                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase text-emerald-700">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          Verified
+                        </span>
+                      </div>
                       <p className="mt-2 text-sm font-medium text-gray-500">PDF Document</p>
                       <p className="mt-1 text-sm text-gray-400">2.4 MB · 14 pages</p>
                       <p className="mt-1 text-sm text-gray-400">Created Nov 12, 2025</p>
 
-                      <div className="mt-7 flex justify-center gap-3 sm:justify-start">
+                      <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
@@ -269,17 +279,16 @@ export default function ReportGeneration() {
                           <Download className="h-4 w-4" />
                           Download
                         </button>
+                        <button
+                          type="button"
+                          onClick={restartSimulation}
+                          className="px-2 text-xs font-medium text-gray-400 transition-colors hover:text-gray-900"
+                        >
+                          Regenerate
+                        </button>
                       </div>
                     </div>
                   </article>
-
-                  <button
-                    type="button"
-                    onClick={restartSimulation}
-                    className="mx-auto mt-3 block text-xs font-medium text-gray-400 transition-colors hover:text-[#007AFF]"
-                  >
-                    Restart generation
-                  </button>
                 </div>
               </motion.div>
             )}
