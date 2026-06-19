@@ -88,7 +88,20 @@ export default function EvidenceAnalysis() {
               </p>
 
               <p className="relative">
-                <span className="relative z-10"><span className="text-gray-900 font-semibold">Amazon claims 0 units received</span>, despite the <span className="font-medium text-gray-800">carrier delivery record</span> and warehouse intake confirmation.</span>
+                <span className="relative z-10">
+                  <motion.span
+                    animate={scanProgress >= 25 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    Amazon claims 0 units received
+                  </motion.span>
+                  , despite the{' '}
+                  <motion.span
+                    animate={scanProgress >= 25 ? { color: '#1f2937', fontWeight: 500 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    carrier delivery record
+                  </motion.span>{' '}
+                  and warehouse intake confirmation.
+                </span>
                 <motion.span
                   className="absolute inset-0 bg-yellow-100 -z-0 rounded"
                   initial={{ width: 0 }}
@@ -114,7 +127,21 @@ export default function EvidenceAnalysis() {
               </p>
 
               <p className="relative">
-                <span className="relative z-10">Carrier weight log confirms <span className="text-gray-900 font-semibold">shipment weight of 45.2 lbs</span>, matching the <span className="font-medium text-gray-800">original packing list</span> exactly. No discrepancies found in physical transit logs.</span>
+                <span className="relative z-10">
+                  Carrier weight log confirms{' '}
+                  <motion.span
+                    animate={scanProgress >= 50 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    shipment weight of 45.2 lbs
+                  </motion.span>
+                  , matching the{' '}
+                  <motion.span
+                    animate={scanProgress >= 50 ? { color: '#1f2937', fontWeight: 500 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    original packing list
+                  </motion.span>{' '}
+                  exactly. No discrepancies found in physical transit logs.
+                </span>
                 <motion.span
                   className="absolute inset-0 bg-emerald-100 -z-0 rounded"
                   initial={{ width: 0 }}
@@ -124,7 +151,33 @@ export default function EvidenceAnalysis() {
               </p>
 
               <p className="relative">
-                <span className="relative z-10">Receiving clerk <span className="text-gray-900 font-semibold">J. Smith signed for delivery</span> at <span className="font-semibold text-gray-900">14:22</span> on <span className="font-semibold text-gray-900">Jan 14</span>. Signature verified against the <span className="font-medium text-gray-800">warehouse staff registry</span>.</span>
+                <span className="relative z-10">
+                  Receiving clerk{' '}
+                  <motion.span
+                    animate={scanProgress >= 75 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    J. Smith signed for delivery
+                  </motion.span>{' '}
+                  at{' '}
+                  <motion.span
+                    animate={scanProgress >= 75 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    14:22
+                  </motion.span>{' '}
+                  on{' '}
+                  <motion.span
+                    animate={scanProgress >= 75 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    Jan 14
+                  </motion.span>
+                  . Signature verified against the{' '}
+                  <motion.span
+                    animate={scanProgress >= 75 ? { color: '#1f2937', fontWeight: 500 } : { color: '#9ca3af', fontWeight: 400 }}
+                  >
+                    warehouse staff registry
+                  </motion.span>
+                  .
+                </span>
                 <motion.span
                   className="absolute inset-0 bg-rose-100 -z-0 rounded"
                   initial={{ width: 0 }}
