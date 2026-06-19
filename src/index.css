@@ -11,6 +11,18 @@
     font-family: 'Inter', system-ui, sans-serif;
   }
 
+  .font-apple-system,
+  .font-apple-system * {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', 'Inter', 'Segoe UI', sans-serif !important;
+    letter-spacing: 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .font-apple-system :where(h1, h2, h3, h4, h5, h6) {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Inter', 'Segoe UI', sans-serif !important;
+  }
+
   .font-brand {
     font-family: 'Merriweather', Georgia, serif !important;
     font-weight: 700;

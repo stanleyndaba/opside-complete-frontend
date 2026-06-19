@@ -63,7 +63,7 @@ export default function ReportGeneration() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4 font-sans sm:p-8">
+    <main className="font-apple-system flex min-h-screen items-center justify-center bg-gray-50 p-4 sm:p-8">
       <section
         className={`flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl ${
           phase === 'output' ? 'h-[min(480px,calc(100vh-32px))]' : 'h-[min(580px,calc(100vh-32px))]'
