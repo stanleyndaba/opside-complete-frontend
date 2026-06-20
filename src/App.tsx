@@ -99,6 +99,7 @@ const RejectionLoop = lazy(() => import("@/components/rejection-loop"));
 const ReportGeneration = lazy(() => import("@/components/report-generation"));
 const AccuracyScaling = lazy(() => import("@/components/accuracy-scaling"));
 const FeedbackLearning = lazy(() => import("@/components/feedback-learning"));
+const AuditableWorkspace = lazy(() => import("@/components/auditable-workspace"));
 const ClockSimulate = lazy(() => import("@/components/ClockSimulate"));
 const RejectSimulate = lazy(() => import("@/components/RejectSimulate"));
 const StareSimulate = lazy(() => import("@/components/StareSimulate"));
@@ -180,7 +181,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
 
   return (
     <>
@@ -244,6 +245,7 @@ const App = () => (
                         <Route path="/report-generation" element={<ReportGeneration />} />
                         <Route path="/accuracy-scaling" element={<AccuracyScaling />} />
                         <Route path="/feedback-learning" element={<FeedbackLearning />} />
+                        <Route path="/auditable-workspace" element={<AuditableWorkspace />} />
                         <Route path="/clocksimulate" element={<ClockSimulate />} />
                         <Route path="/rejectsimulate" element={<RejectSimulate />} />
                         <Route path="/staresimulate" element={<StareSimulate />} />
