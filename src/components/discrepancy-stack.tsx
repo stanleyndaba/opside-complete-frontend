@@ -91,8 +91,8 @@ export default function DiscrepancyStack() {
                                 </p>
 
                                 {/* Meta row */}
-                                <div className="flex items-center gap-4 text-[10px]">
-                                    <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-3 text-[10px] flex-nowrap whitespace-nowrap overflow-hidden">
+                                    <div className="flex items-center gap-1">
                                         <div className={`w-1.5 h-1.5 rounded-full ${item.dotColor}`} />
                                         <span className="text-[#4b5563] font-medium">{item.status}</span>
                                     </div>
@@ -103,8 +103,6 @@ export default function DiscrepancyStack() {
                                     </div>
                                     <div className="w-px h-3 bg-[#e4e4e7]" />
                                     <span className="text-[#6b7280]">{item.timeLeft}</span>
-                                    <div className="w-px h-3 bg-[#e4e4e7]" />
-                                    <span className="text-[#9ca3af] italic truncate">{item.movementDesc}</span>
                                 </div>
                             </motion.div>
                         ))}
