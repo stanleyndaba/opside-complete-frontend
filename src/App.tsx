@@ -129,6 +129,7 @@ const ActionSimulate = lazy(() => import("@/components/ActionSimulate"));
 const RejectionScreenSimulate = lazy(() => import("@/components/RejectionScreenSimulate"));
 const RejectCard = lazy(() => import("@/components/RejectCard"));
 const ReAppealSimulate = lazy(() => import("@/components/ReAppealSimulate"));
+const DiscrepancyStack = lazy(() => import("@/components/discrepancy-stack"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -283,6 +284,7 @@ const App = () => (
                         <Route path="/card-review" element={<RejectCard />} />
                         <Route path="/AppealSimulate" element={<ReAppealSimulate />} />
                         <Route path="/appealsimulate" element={<ReAppealSimulate />} />
+                        <Route path="/discrepancy-stack" element={<DiscrepancyStack />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/early-access" element={<EarlyAccess />} />
                         <Route path="/document-uploads" element={<DocumentUploads />} />
