@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { Clock, CheckCircle2 } from 'lucide-react';
 
 const discrepancies = [
     {
@@ -41,11 +41,11 @@ const discrepancies = [
         status: 'Review only',
         timeLeft: '24 days left',
         value: '$995.65',
-        movement: 'Blocked',
+        movement: 'Under review',
         movementDesc: 'Margin found a possible duplicate or previously handled recovery path, holding before another submission.',
         color: 'text-amber-600',
         dotColor: 'bg-amber-400',
-        icon: <ShieldAlert className="w-3.5 h-3.5" />
+        icon: <Clock className="w-3.5 h-3.5" />
     }
 ];
 
@@ -76,21 +76,9 @@ export default function DiscrepancyStack() {
                             >
                                 {/* Top row: title + value */}
                                 <div className="flex justify-between items-center mb-1.5">
-                                    <div className="flex items-center gap-2 min-w-0">
-                                        <h3 className="text-[13px] font-semibold text-[#1f2937] truncate">
-                                            {item.type}
-                                        </h3>
-                                        {item.movement === 'Blocked' && (
-                                            <motion.span
-                                                animate={{ opacity: [0.5, 1, 0.5] }}
-                                                transition={{ repeat: Infinity, duration: 2 }}
-                                                className="text-[9px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded-full font-medium tracking-tight shrink-0"
-                                                title="Preventing Duplicate Claim"
-                                            >
-                                                Intelligence Hold
-                                            </motion.span>
-                                        )}
-                                    </div>
+                                    <h3 className="text-[13px] font-semibold text-[#1f2937] truncate">
+                                        {item.type}
+                                    </h3>
                                     <span className="text-base font-normal text-[#1f2937] shrink-0 ml-4">{item.value}</span>
                                 </div>
 
