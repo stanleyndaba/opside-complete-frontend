@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Archive, Clock, FileText, Fingerprint, ShieldCheck } from 'lucide-react';
+import { Archive, Check, Clock, FileText, Fingerprint, ShieldCheck } from 'lucide-react';
 
 const auditCards = [
   {
@@ -99,6 +99,27 @@ export default function AuditableWorkspace() {
               ))}
             </AnimatePresence>
           </div>
+
+          <AnimatePresence>
+            {isVerified && (
+              <div className="relative mx-auto mt-5 h-10 w-10">
+                <motion.div
+                  initial={{ rotate: 0, opacity: 1 }}
+                  animate={{ rotate: 360, opacity: 0 }}
+                  transition={{ duration: 0.55, ease: 'easeInOut' }}
+                  className="absolute inset-0 rounded-full border-2 border-emerald-100 border-t-[#3aaa78]"
+                />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.2 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 460, damping: 18, delay: 0.48 }}
+                  className="absolute inset-0 flex items-center justify-center rounded-full bg-[#3aaa78]"
+                >
+                  <Check className="h-5 w-5 text-white" strokeWidth={3} />
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </div>

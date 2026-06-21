@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 
-const firstLine = ['And', 'produces', 'fully', 'auditable'];
+const firstLine = ['producing', 'fully', 'auditable'];
 const secondLine = ['outputs,', 'all', 'in', 'your', 'workspace'];
 
 const container = {
@@ -39,12 +39,12 @@ function AnimatedLine({ words, strong = false }: { words: string[]; strong?: boo
 
 export default function AuditableOutputs() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-white p-6 font-sans text-[#111827]">
+    <main className="flex min-h-screen items-center justify-center bg-white p-6 font-sans text-[#242424]">
       <motion.h1
         variants={container}
         initial="hidden"
         animate="visible"
-        className="max-w-4xl text-center text-4xl leading-[1.12] sm:text-6xl"
+        className="max-w-4xl text-center text-4xl leading-[1.12] text-[#242424] sm:text-6xl"
       >
         <AnimatedLine words={firstLine} />
         <AnimatedLine words={secondLine} strong />
