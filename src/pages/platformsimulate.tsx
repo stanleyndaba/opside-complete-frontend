@@ -186,23 +186,27 @@ const PlatformSimulate = () => {
           )),
         )}
 
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
-          animate={{
-            opacity: 1,
-            scale: reduceMotion ? 1 : [1, 1, 1.08, 1],
-            borderColor: reduceMotion ? '#D1D5DB' : ['#D1D5DB', '#D1D5DB', '#3AAA78', '#D1D5DB'],
-          }}
-          transition={{
-            opacity: { duration: 0.4 },
-            scale: { delay: finalDelay, duration: 0.85 },
-            borderColor: { delay: finalDelay, duration: 0.85 },
-          }}
-          className="absolute z-40 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl border bg-white sm:h-24 sm:w-24"
+        <div
+          className="absolute z-40 -translate-x-1/2 -translate-y-1/2"
           style={{ left: `${center.x}%`, top: `${center.y}%` }}
         >
-          <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain sm:h-9" />
-        </motion.div>
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
+            animate={{
+              opacity: 1,
+              scale: reduceMotion ? 1 : [1, 1, 1.08, 1],
+              borderColor: reduceMotion ? '#D1D5DB' : ['#D1D5DB', '#D1D5DB', '#3AAA78', '#D1D5DB'],
+            }}
+            transition={{
+              opacity: { duration: 0.4 },
+              scale: { delay: finalDelay, duration: 0.85 },
+              borderColor: { delay: finalDelay, duration: 0.85 },
+            }}
+            className="flex h-20 w-20 items-center justify-center rounded-xl border bg-white sm:h-24 sm:w-24"
+          >
+            <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain sm:h-9" />
+          </motion.div>
+        </div>
 
       </section>
     </main>
