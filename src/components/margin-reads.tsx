@@ -6,9 +6,9 @@ export default function MarginReads() {
   return (
     <AnimatedStatement
       lines={[
-        { text: 'Margin reads your shipment records,' },
-        { text: 'emails, and invoices —' },
-        { text: 'without you lifting a finger.', strong: true },
+        { text: 'Scrapes meta-data from shipment records,' },
+        { text: 'PODs, BOLs and invoices -' },
+        { text: 'for precise case building', strong: true },
       ]}
     />
   );
