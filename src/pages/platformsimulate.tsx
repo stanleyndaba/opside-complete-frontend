@@ -8,20 +8,44 @@ type Integration = {
   x: number;
   y: number;
   delay: number;
+  route: Array<{ x: number; y: number }>;
 };
 
 const integrations: Integration[] = [
-  { id: 'amazon', name: 'Amazon', icon: '/amazon-logo-transparent-circle.png', evidence: 'CSV', x: 50, y: 10, delay: 0.2 },
-  { id: 'gmail', name: 'Gmail', icon: '/gmailicon.png', evidence: 'Invoice', x: 11, y: 31, delay: 0.65 },
-  { id: 'outlook', name: 'Outlook', icon: '/outlookicon.webp', evidence: 'BOL', x: 10, y: 62, delay: 1.1 },
-  { id: 'gdrive', name: 'Google Drive', icon: '/gd.png', evidence: 'POD', x: 89, y: 27, delay: 1.55 },
-  { id: 'dropbox', name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', evidence: 'Photo', x: 92, y: 52, delay: 2 },
-  { id: 'onedrive', name: 'OneDrive', icon: '/onedriive.png', evidence: 'Ledger', x: 85, y: 75, delay: 2.45 },
-  { id: 'slack', name: 'Slack', icon: '/slack-icon-2019.png', evidence: 'Message', x: 30, y: 88, delay: 2.9 },
-  { id: 'adobe-sign', name: 'Adobe Sign', icon: '/dobe.png', evidence: 'Signature', x: 69, y: 88, delay: 3.35 },
+  {
+    id: 'amazon', name: 'Amazon', icon: '/amazon-logo-transparent-circle.png', evidence: 'CSV', x: 50, y: 10, delay: 0.2,
+    route: [{ x: 50, y: 10 }, { x: 50, y: 22 }, { x: 50, y: 46 }],
+  },
+  {
+    id: 'gmail', name: 'Gmail', icon: '/gmailicon.png', evidence: 'Invoice', x: 16, y: 29, delay: 0.65,
+    route: [{ x: 16, y: 29 }, { x: 23, y: 29 }, { x: 23, y: 46 }, { x: 50, y: 46 }],
+  },
+  {
+    id: 'outlook', name: 'Outlook', icon: '/outlookicon.webp', evidence: 'BOL', x: 16, y: 59, delay: 1.1,
+    route: [{ x: 16, y: 59 }, { x: 23, y: 59 }, { x: 23, y: 46 }, { x: 50, y: 46 }],
+  },
+  {
+    id: 'gdrive', name: 'Google Drive', icon: '/gd.png', evidence: 'POD', x: 84, y: 24, delay: 1.55,
+    route: [{ x: 84, y: 24 }, { x: 77, y: 24 }, { x: 77, y: 46 }, { x: 50, y: 46 }],
+  },
+  {
+    id: 'dropbox', name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', evidence: 'Photo', x: 84, y: 46, delay: 2,
+    route: [{ x: 84, y: 46 }, { x: 77, y: 46 }, { x: 50, y: 46 }],
+  },
+  {
+    id: 'onedrive', name: 'OneDrive', icon: '/onedriive.png', evidence: 'Ledger', x: 84, y: 68, delay: 2.45,
+    route: [{ x: 84, y: 68 }, { x: 77, y: 68 }, { x: 77, y: 46 }, { x: 50, y: 46 }],
+  },
+  {
+    id: 'slack', name: 'Slack', icon: '/slack-icon-2019.png', evidence: 'Message', x: 34, y: 86, delay: 2.9,
+    route: [{ x: 34, y: 86 }, { x: 34, y: 72 }, { x: 50, y: 72 }, { x: 50, y: 46 }],
+  },
+  {
+    id: 'adobe-sign', name: 'Adobe Sign', icon: '/dobe.png', evidence: 'Signature', x: 66, y: 86, delay: 3.35,
+    route: [{ x: 66, y: 86 }, { x: 66, y: 72 }, { x: 50, y: 72 }, { x: 50, y: 46 }],
+  },
 ];
 
-const evidenceBundle = ['POD', 'BOL', 'Invoice', 'CSV', 'Signature'];
 const center = { x: 50, y: 46 };
 
 function SourceNode({ integration, reduceMotion }: { integration: Integration; reduceMotion: boolean }) {
@@ -44,19 +68,21 @@ function SourceNode({ integration, reduceMotion }: { integration: Integration; r
 function EvidenceToken({ integration, reduceMotion }: { integration: Integration; reduceMotion: boolean }) {
   if (reduceMotion) return null;
 
+  const lastIndex = integration.route.length - 1;
+
   return (
     <motion.div
       initial={{ left: `${integration.x}%`, top: `${integration.y}%`, opacity: 0, scale: 0.85 }}
       animate={{
-        left: [`${integration.x}%`, `${integration.x}%`, `${center.x}%`],
-        top: [`${integration.y}%`, `${integration.y}%`, `${center.y}%`],
-        opacity: [0, 1, 0],
-        scale: [0.85, 1, 0.72],
+        left: integration.route.map((point) => `${point.x}%`),
+        top: integration.route.map((point) => `${point.y}%`),
+        opacity: integration.route.map((_, index) => index === 0 || index === lastIndex ? 0 : 1),
+        scale: integration.route.map((_, index) => index === lastIndex ? 0.72 : 1),
       }}
       transition={{
-        duration: 1.35,
+        duration: 1.65,
         delay: integration.delay + 0.6,
-        times: [0, 0.18, 1],
+        times: integration.route.map((_, index) => index / lastIndex),
         ease: [0.4, 0, 0.2, 1],
       }}
       className="pointer-events-none absolute z-30 -translate-x-1/2 -translate-y-1/2 rounded-md border border-gray-300 bg-white px-2 py-1 text-[9px] font-semibold text-[#242424]"
@@ -85,25 +111,46 @@ const PlatformSimulate = () => {
       />
 
       <section className="relative h-[min(720px,100vh)] w-full max-w-6xl" aria-label="Evidence orchestra">
-        <div className="absolute left-[4%] top-[19%] hidden text-[10px] font-medium text-gray-400 sm:block">Email</div>
-        <div className="absolute right-[3%] top-[16%] hidden text-[10px] font-medium text-gray-400 sm:block">Storage</div>
-        <div className="absolute bottom-[4%] left-1/2 hidden -translate-x-1/2 text-[10px] font-medium text-gray-400 sm:block">Collaboration</div>
+        <div className="absolute left-[8%] top-[17%] hidden text-[10px] font-medium text-gray-400 sm:block">Email</div>
+        <div className="absolute right-[8%] top-[15%] hidden text-[10px] font-medium text-gray-400 sm:block">Storage</div>
+        <div className="absolute bottom-[3%] left-1/2 hidden -translate-x-1/2 text-[10px] font-medium text-gray-400 sm:block">Collaboration</div>
         <div className="absolute left-1/2 top-[2%] hidden -translate-x-1/2 text-[10px] font-medium text-gray-400 sm:block">Commerce</div>
 
         <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 640" aria-hidden="true">
+          <motion.rect
+            x="230"
+            y="141"
+            width="540"
+            height="320"
+            rx="10"
+            fill="none"
+            stroke="#E5E7EB"
+            strokeWidth="1"
+            initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
+          />
+
           {integrations.map((integration) => (
-            <motion.line
+            <motion.path
               key={integration.id}
-              x1={integration.x * 10}
-              y1={integration.y * 6.4}
-              x2={center.x * 10}
-              y2={center.y * 6.4}
+              d={integration.route.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x * 10} ${point.y * 6.4}`).join(' ')}
+              fill="none"
               initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: reduceMotion ? 0.45 : [0, 0.35, 0.55] }}
               transition={{ delay: reduceMotion ? 0 : integration.delay + 0.25, duration: 0.9, ease: 'easeOut' }}
               stroke="#9CA3AF"
               strokeWidth="1"
             />
+          ))}
+
+          {[
+            { x: 500, y: 141 },
+            { x: 230, y: 294 },
+            { x: 770, y: 294 },
+            { x: 500, y: 461 },
+          ].map((point) => (
+            <circle key={`${point.x}-${point.y}`} cx={point.x} cy={point.y} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
           ))}
         </svg>
 
@@ -133,21 +180,6 @@ const PlatformSimulate = () => {
           <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain sm:h-9" />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: finalDelay, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute left-1/2 top-[59%] z-40 w-[min(280px,78vw)] -translate-x-1/2 rounded-lg border border-gray-200 bg-white p-3"
-        >
-          <p className="text-center text-[10px] font-semibold text-gray-500">Case-ready evidence</p>
-          <div className="mt-2 flex flex-wrap justify-center gap-1.5">
-            {evidenceBundle.map((item) => (
-              <span key={item} className="rounded border border-gray-200 bg-gray-50 px-2 py-1 text-[9px] font-medium text-[#242424]">
-                {item}
-              </span>
-            ))}
-          </div>
-        </motion.div>
       </section>
     </main>
   );
