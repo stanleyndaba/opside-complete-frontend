@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, CheckCircle2, ShieldAlert, ArrowUpRight } from 'lucide-react';
+import { Clock, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 const discrepancies = [
     {
         type: 'Duplicate Charge — Identified',
         desc: 'A charge or adjustment appears more than once against the same seller event, without a clean offset in the record trail. · Settlement SETTLE-ACME-004',
         ref: 'Ref ACM-LI-2604-0017',
-        found: 'Jan 26, 2026, 12:06 PM',
+        found: 'Jan 26, 2026',
         status: 'Claim candidate',
         timeLeft: '30 days left',
         value: '$853.60',
@@ -23,7 +23,7 @@ const discrepancies = [
         type: 'Fee Charge Review — Logged',
         desc: 'A storage-related charge appears to have been applied more than the seller record supports. · $1484.80 charged vs $742.40 expected',
         ref: 'Ref ACM-FD-2604-0018',
-        found: 'Jan 21, 2026, 06:37 PM',
+        found: 'Jan 21, 2026',
         status: 'Claim candidate',
         timeLeft: '28 days left',
         value: '$900.95',
@@ -37,12 +37,12 @@ const discrepancies = [
         type: 'Inbound Shipment Shortage — Logged',
         desc: 'Amazon received fewer units than the inbound shipment record shows were shipped. · 60 shipped, 46 received · 14-unit gap at ONT8',
         ref: 'Ref ACM-IR-2604-0020',
-        found: 'Jan 12, 2026, 04:16 PM',
+        found: 'Jan 12, 2026',
         status: 'Review only',
         timeLeft: '24 days left',
         value: '$995.65',
         movement: 'Blocked',
-        movementDesc: 'Margin found a possible duplicate or previously handled recovery path, so it is holding this before another Amazon submission is created.',
+        movementDesc: 'Margin found a possible duplicate or previously handled recovery path, holding before another submission.',
         color: 'text-amber-600',
         dotColor: 'bg-amber-400',
         icon: <ShieldAlert className="w-3.5 h-3.5" />
@@ -60,95 +60,68 @@ export default function DiscrepancyStack() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center p-6 font-sans overflow-hidden">
-            <div className="w-full max-w-xl flex flex-col items-center">
-
-                <div className="w-full space-y-2.5 relative">
+        <div className="min-h-screen bg-white flex items-center justify-center px-4 py-6 font-sans overflow-hidden">
+            <div className="w-full max-w-3xl flex flex-col items-center">
+                <div className="w-full space-y-2 relative">
                     <AnimatePresence>
                         {discrepancies.slice(0, visibleCount).map((item, idx) => (
                             <motion.div
                                 key={idx}
                                 layout
-                                initial={{ opacity: 0, y: 60, scale: 0.97 }}
+                                initial={{ opacity: 0, y: 50, scale: 0.97 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.97 }}
                                 transition={{ type: "spring", damping: 22, stiffness: 120 }}
-                                className="w-full bg-[#f8f8f9] border border-[#e4e4e7] rounded-xl px-5 py-4"
+                                className="w-full bg-[#f8f8f9] border border-[#e4e4e7] rounded-lg px-5 py-3"
                             >
-                                {/* Header row */}
-                                <div className="flex justify-between items-start mb-2">
-                                    <div>
-                                        <h3 className="text-[13px] font-semibold text-[#1f2937] leading-snug flex items-center gap-2">
+                                {/* Top row: title + value */}
+                                <div className="flex justify-between items-center mb-1.5">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <h3 className="text-[13px] font-semibold text-[#1f2937] truncate">
                                             {item.type}
-                                            {item.movement === 'Blocked' && (
-                                                <motion.span
-                                                    animate={{ opacity: [0.5, 1, 0.5] }}
-                                                    transition={{ repeat: Infinity, duration: 2 }}
-                                                    className="text-[9px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded-full font-medium tracking-tight"
-                                                    title="Preventing Duplicate Claim"
-                                                >
-                                                    Intelligence Hold
-                                                </motion.span>
-                                            )}
                                         </h3>
-                                        <p className="text-[11px] text-[#9ca3af] font-normal mt-0.5">{item.ref} · {item.found}</p>
+                                        {item.movement === 'Blocked' && (
+                                            <motion.span
+                                                animate={{ opacity: [0.5, 1, 0.5] }}
+                                                transition={{ repeat: Infinity, duration: 2 }}
+                                                className="text-[9px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded-full font-medium tracking-tight shrink-0"
+                                                title="Preventing Duplicate Claim"
+                                            >
+                                                Intelligence Hold
+                                            </motion.span>
+                                        )}
                                     </div>
-                                    <div className="text-right shrink-0 ml-4">
-                                        <p className="text-lg font-normal text-[#1f2937]">{item.value}</p>
-                                        <p className="text-[9px] text-[#9ca3af] font-normal tracking-tight">Estimated Value</p>
-                                    </div>
+                                    <span className="text-base font-normal text-[#1f2937] shrink-0 ml-4">{item.value}</span>
                                 </div>
 
-                                {/* Description */}
-                                <p className="text-[12px] text-[#6b7280] leading-relaxed mb-3">
+                                {/* Ref line */}
+                                <p className="text-[10px] text-[#9ca3af] mb-1.5">{item.ref} · {item.found}</p>
+
+                                {/* Description - single line truncated */}
+                                <p className="text-[11px] text-[#6b7280] leading-snug mb-2 line-clamp-1">
                                     {item.desc}
                                 </p>
 
                                 {/* Meta row */}
-                                <div className="flex items-center gap-5 text-[11px]">
+                                <div className="flex items-center gap-4 text-[10px]">
                                     <div className="flex items-center gap-1.5">
-                                        <span className="text-[#9ca3af] font-normal tracking-tight">Status</span>
                                         <div className={`w-1.5 h-1.5 rounded-full ${item.dotColor}`} />
                                         <span className="text-[#4b5563] font-medium">{item.status}</span>
                                     </div>
                                     <div className="w-px h-3 bg-[#e4e4e7]" />
-                                    <div className={`flex items-center gap-1.5 font-medium ${item.color}`}>
+                                    <div className={`flex items-center gap-1 font-medium ${item.color}`}>
                                         {item.icon}
                                         {item.movement}
                                     </div>
                                     <div className="w-px h-3 bg-[#e4e4e7]" />
-                                    <span className="text-[#6b7280] font-normal">{item.timeLeft}</span>
-                                </div>
-
-                                {/* Movement note */}
-                                <div className="mt-3 px-3 py-2 bg-white rounded-lg border border-[#ebebef]">
-                                    <p className="text-[11px] text-[#9ca3af] leading-snug">
-                                        {item.movementDesc}
-                                    </p>
+                                    <span className="text-[#6b7280]">{item.timeLeft}</span>
+                                    <div className="w-px h-3 bg-[#e4e4e7]" />
+                                    <span className="text-[#9ca3af] italic truncate">{item.movementDesc}</span>
                                 </div>
                             </motion.div>
                         ))}
                     </AnimatePresence>
                 </div>
-
-                {/* Global Footer */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: visibleCount === 3 ? 1 : 0 }}
-                    className="mt-10 text-center flex flex-col items-center"
-                >
-                    <div className="flex items-center gap-2 justify-center mb-3">
-                        <div className="h-px w-6 bg-[#e4e4e7]" />
-                        <span className="text-[9px] text-[#9ca3af] font-normal tracking-tight">Total Identified Recovery</span>
-                        <div className="h-px w-6 bg-[#e4e4e7]" />
-                    </div>
-                    <h2 className="text-3xl font-normal text-[#1f2937] tracking-tight">$2,750.20</h2>
-                    <button className="mt-6 px-6 py-3 bg-[#1f2937] text-white rounded-full font-medium text-sm flex items-center gap-2 hover:bg-[#111827] transition-all group">
-                        Begin Bulk Filing
-                        <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </button>
-                </motion.div>
-
             </div>
         </div>
     );
