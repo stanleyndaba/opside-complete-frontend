@@ -92,45 +92,6 @@ const reveal = {
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
 };
 
-  },
-  {
-    num: '02',
-    label: 'Verify',
-    title: "The Agent retrieves the Evidence (BOLs/Invoices) Amazon says you don't have.",
-    detail:
-      'Before anything is filed, you see the evidence Margin located — Bills of Lading, commercial invoices, shipment IDs, and tracking records — matched to each potential recovery case.',
-  },
-  {
-    num: '03',
-    label: 'Recover',
-    title: 'We win the cases. You keep 100% of the recovered value.',
-    detail:
-      'Margin prepares and submits reimbursement cases with full evidence packages. Every approved payout goes directly to you. Margin takes zero commission on recovered funds.',
-  },
-];
-
-/* ── marketplace flags ─────────────────────────────────────────── */
-const marketplaceCountries = [
-  { country: 'United States', code: 'US', flagCode: 'us' },
-  { country: 'Canada', code: 'CA', flagCode: 'ca' },
-  { country: 'Mexico', code: 'MX', flagCode: 'mx' },
-  { country: 'Germany', code: 'DE', flagCode: 'de' },
-  { country: 'United Kingdom', code: 'UK', flagCode: 'gb' },
-  { country: 'Italy', code: 'IT', flagCode: 'it' },
-  { country: 'France', code: 'FR', flagCode: 'fr' },
-  { country: 'South Africa', code: 'ZA', flagCode: 'za' },
-  { country: 'Japan', code: 'JP', flagCode: 'jp' },
-  { country: 'Australia', code: 'AU', flagCode: 'au' },
-];
-
-/* ── animation presets ─────────────────────────────────────────── */
-const reveal = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.25 },
-  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-};
-
 /* ── primary cta component ─────────────────────────────────────── */
 function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
   return (
@@ -495,6 +456,8 @@ export default function EarlyAccess() {
 
               <div className="mt-10 w-full">
                 <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} one-time. Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.`} />
+              </div>
+
               <p className="mt-6 max-w-[540px] text-[11px] leading-5 text-[#9AA8B2]">
                 Margin does not guarantee reimbursement outcomes. Amazon makes final reimbursement
                 decisions. No filing happens without seller approval.
