@@ -102,6 +102,7 @@ const FeedbackLearning = lazy(() => import("@/components/feedback-learning"));
 const AuditableWorkspace = lazy(() => import("@/components/auditable-workspace"));
 const AuditableOutputs = lazy(() => import("@/components/auditable-outputs"));
 const EveryCase = lazy(() => import("@/components/every-case"));
+const MarginTakesOver = lazy(() => import("@/components/margin-takes-over"));
 const MarginReads = lazy(() => import("@/components/margin-reads"));
 const EvidenceBeforeAsked = lazy(() => import("@/components/evidence-before-asked"));
 const RecoveryLifecycle = lazy(() => import("@/components/recovery-lifecycle"));
@@ -189,7 +190,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
 
   return (
     <>
@@ -256,6 +257,7 @@ const App = () => (
                         <Route path="/auditable-workspace" element={<AuditableWorkspace />} />
                         <Route path="/auditable-outputs" element={<AuditableOutputs />} />
                         <Route path="/every-case" element={<EveryCase />} />
+                        <Route path="/margin-takes-over" element={<MarginTakesOver />} />
                         <Route path="/margin-reads" element={<MarginReads />} />
                         <Route path="/evidence-before-asked" element={<EvidenceBeforeAsked />} />
                         <Route path="/recovery-lifecycle" element={<RecoveryLifecycle />} />
