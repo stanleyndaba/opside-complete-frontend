@@ -161,7 +161,7 @@ const ClosingCTA = () => {
               </motion.div>
 
               <motion.p custom={1.08} variants={reveal} className="mt-6 text-[15px] font-semibold tracking-tight text-rose-500 sm:text-base">
-                Closes June 30 or when full. No exceptions.
+                Closes July 30 or when full. No exceptions.
               </motion.p>
 
               <motion.div custom={1.28} variants={reveal}>
