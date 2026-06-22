@@ -36,7 +36,7 @@ const Countdown = () => {
   return (
     <main
       className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#121212] px-6 font-sans text-[#FF6B35]"
-      aria-label="June 30 2026 countdown animation"
+      aria-label="July 30 2026 countdown animation"
     >
       <motion.section
         className="text-center"

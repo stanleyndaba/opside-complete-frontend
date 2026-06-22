@@ -1103,7 +1103,7 @@ export default function Index() {
                   The first 500 sellers get 1 year of full-service Amazon reimbursement workflow support for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
                 </p>
                 <p className="mt-5 max-w-[640px] text-[14px] font-semibold leading-7 text-[#25313A] md:text-[16px]">
-                  {foundingSlotsLabel} Closes June 30, 2026 or when full. Standard plans begin at $199/month after Early Access closes.
+                  {foundingSlotsLabel} Closes July 30, 2026 or when full. Standard plans begin at $199/month after Early Access closes.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
