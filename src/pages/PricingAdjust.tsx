@@ -64,6 +64,7 @@ const pricingTiers: PricingTier[] = [
     ],
     ctaLabel: 'Start Risk-Free',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/LE8SN5PGT6PPC',
+    badgeLabel: 'Coming Soon / Contact Sales',
   },
   {
     name: 'Pro',
@@ -81,6 +82,7 @@ const pricingTiers: PricingTier[] = [
     ctaLabel: 'Upgrade to Pro',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/FXJZGLPPDYWJU',
     featured: true,
+    badgeLabel: 'Coming Soon',
   },
   {
     name: 'Scale',
@@ -96,7 +98,7 @@ const pricingTiers: PricingTier[] = [
     ],
     ctaLabel: 'Run Recoveries at Scale',
     salesLed: true,
-    badgeLabel: '0% Commission',
+    badgeLabel: 'Coming Soon',
   },
 ];
 
@@ -270,7 +272,15 @@ export default function PricingAdjust() {
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[#182026]">{tier.name}</h2>
             </div>
             {featured || tier.badgeLabel ? (
-              <Badge variant="outline" className="border-[#BFD8EA] bg-white text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">
+              <Badge 
+                variant={tier.badgeLabel?.includes('Coming Soon') ? 'default' : 'outline'} 
+                className={cn(
+                  "text-[9px] font-semibold uppercase tracking-[0.14em]",
+                  tier.badgeLabel?.includes('Coming Soon')
+                    ? "bg-[#007AFF] text-white border-transparent shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
+                    : "border-[#BFD8EA] bg-white text-[#0B74DE]"
+                )}
+              >
                 {tier.badgeLabel || 'Most Popular'}
               </Badge>
             ) : null}
@@ -316,18 +326,20 @@ export default function PricingAdjust() {
                 }
                 startSubscribeIntent(tier.planKey, 'monthly');
               }}
-              disabled={processingSelectionKey !== null}
+              disabled={processingSelectionKey !== null || tier.badgeLabel?.includes('Coming Soon')}
               className={cn(
                 "h-12 rounded-full font-semibold",
-                featured
-                  ? "bg-[#0B74DE] text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
-                  : "border border-[#CFE0EA] bg-white text-[#25313A] hover:bg-[#F8FAFC]"
+                tier.badgeLabel?.includes('Coming Soon')
+                  ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed hover:bg-slate-100 opacity-80"
+                  : featured
+                    ? "bg-[#0B74DE] text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
+                    : "border border-[#CFE0EA] bg-white text-[#25313A] hover:bg-[#F8FAFC]"
               )}
             >
               {tier.planKey && processingSelectionKey === `${tier.planKey}:monthly`
                 ? 'Preparing Checkout'
                 : tier.ctaLabel || `Start ${tier.name} Coverage`}
-              <ArrowRight className="ml-2 h-4 w-4" />
+              {!tier.badgeLabel?.includes('Coming Soon') && <ArrowRight className="ml-2 h-4 w-4" />}
             </Button>
           </div>
         </div>
