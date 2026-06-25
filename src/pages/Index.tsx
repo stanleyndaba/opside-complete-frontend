@@ -16,7 +16,7 @@ import { InhaleSection } from '@/components/landing/InhaleSection';
 import { PUBLIC_ROUTE_META } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
-import DiscrepancyStack from '@/components/discrepancy-stack';
+import { ScrollytellingCoverage } from '@/components/landing/ScrollytellingCoverage';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -123,34 +123,6 @@ const workflowSteps = [
     step: '05',
     title: 'Track Outcome',
     detail: 'Filed reimbursement claims move through Amazon response, dispute handling, and payout reconciliation.'
-  }
-];
-
-const coverageExamples = [
-  {
-    label: 'Lost inventory discrepancy',
-    title: 'Shipment mismatch → claim clock activated',
-    detail: 'Lost inventory reimbursement work is converted from inventory variance into a timed workflow.'
-  },
-  {
-    label: 'Inbound shortage',
-    title: 'Received quantity variance → evidence required before eligibility',
-    detail: 'Inbound discrepancies are held until shipment data and supporting records validate eligibility.'
-  },
-  {
-    label: 'Refund without return',
-    title: 'Refund event unmatched to return record -> held for validation',
-    detail: 'Refund activity is separated from return proof before a case advances.'
-  },
-  {
-    label: 'Fee drift',
-    title: 'Measurement or fee adjustment variance -> recalculation required',
-    detail: 'Fee changes are mapped to the records required before reimbursement workflow execution.'
-  },
-  {
-    label: 'Payout mismatch',
-    title: 'Approved value differs from received payout → reconciliation state triggered',
-    detail: 'Approval and cash movement stay separated until payout state is resolved.'
   }
 ];
 
@@ -472,20 +444,6 @@ function KineticHeroSection({
           ) : null}
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="hidden w-full lg:block"
-        >
-          <div className="glass-card relative overflow-hidden rounded-2xl shadow-[0_32px_64px_rgba(0,0,0,0.4)]">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
-            <div className="scale-[0.85] origin-top xl:scale-90">
-              <DiscrepancyStack />
-            </div>
-          </div>
-        </motion.div>
       </div>
     </motion.section>
   );
@@ -613,114 +571,6 @@ function MinimalMetric({
   );
 }
 
-function CoverageItem({
-  item,
-  index
-}: {
-  item: (typeof coverageExamples)[number];
-  index: number;
-}) {
-  const isFeature = index === 0;
-  const offsetClass = index % 2 === 1 ? 'md:ml-[12%]' : index % 3 === 2 ? 'md:ml-[6%]' : '';
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, x: index % 2 === 0 ? -10 : 10 }}
-      whileInView={{ opacity: 1, y: 0, x: 0 }}
-      viewport={{ once: true, amount: 0.38 }}
-      transition={{ duration: 0.78, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ x: 5, scale: 1.005 }}
-      whileFocus={{ x: 5, scale: 1.005 }}
-      className={`group relative max-w-[940px] py-7 outline-none md:py-10 ${isFeature ? 'md:max-w-[1040px]' : offsetClass}`}
-      aria-label={`${item.label}. ${item.title} ${item.detail}`}
-    >
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-6 inset-y-0 rounded-[40px] bg-[radial-gradient(circle_at_18%_50%,rgba(11,116,222,0.10),transparent_58%)] opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-      />
-      <div className="relative grid gap-4 md:grid-cols-[minmax(180px,240px)_minmax(0,1fr)] md:gap-10">
-        <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]/70 transition duration-200 group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.20)] group-focus-visible:text-[#0B74DE]"
-        >
-          {item.label}
-        </motion.div>
-        <div className="max-w-[760px]">
-          <motion.h3
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.62, delay: 0.08 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className={`${isFeature ? 'text-[34px] md:text-[48px]' : 'text-[29px] md:text-[40px]'} font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026]/90 transition duration-200 group-hover:text-[#182026] group-focus-visible:text-[#182026]`}
-          >
-            {item.title}
-          </motion.h3>
-          <motion.p
-            initial={{ opacity: 0, y: 5 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.62, delay: 0.16 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-4 max-w-[690px] text-[15px] leading-7 text-[#66737F]/68 transition duration-200 group-hover:text-[#4D5B66] group-focus-visible:text-[#4D5B66] md:text-[17px] md:leading-8"
-          >
-            {item.detail}
-          </motion.p>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function CoverageExamplesSection() {
-  const reduceMotion = useReducedMotion();
-
-  return (
-    <section className="relative overflow-hidden py-20 md:py-32 bg-[#F3F6F8]">
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-24 hidden h-px bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.08)_18%,rgba(11,116,222,0.30)_48%,rgba(46,125,91,0.10)_78%,transparent_100%)] md:block"
-        style={{ backgroundSize: '220% 100%' }}
-        animate={reduceMotion ? undefined : { backgroundPosition: ['0% 50%', '220% 50%'] }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'linear' }}
-      />
-      <div className={containerClass}>
-        <InhaleSection className="max-w-[760px]">
-          <div className={sectionLabelClass}>Coverage Examples</div>
-          <h2 className={sectionHeadingClass}>Amazon reimbursement workflows Margin manages.</h2>
-          <p className={sectionBodyClass}>
-            These are representative Amazon FBA reimbursement workflows, not the limit of the system. Each case starts after a discrepancy is identified and stays tied to what happened, what deadline applies, what evidence exists, and whether the reimbursement claim is evidence-supported.
-          </p>
-        </InhaleSection>
-
-        <div className="relative mt-12 md:mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {coverageExamples.map((item, index) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="glass-card flex flex-col rounded-3xl bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md border border-[#DCE8EE]"
-            >
-              <div className="text-[12px] font-bold uppercase tracking-wider text-[#0B74DE] mb-4">
-                {item.label}
-              </div>
-              <h3 className="text-[22px] font-bold leading-tight text-[#182026] mb-3">
-                {item.title}
-              </h3>
-              <p className="text-[15px] leading-relaxed text-[#66737F]">
-                {item.detail}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function TestimonialSection() {
   return (
     <section className="relative py-28 md:py-40 bg-[#F3F6F8]" aria-label="Seller case study">
@@ -729,7 +579,7 @@ function TestimonialSection() {
           {...revealProps}
           className="mx-auto flex max-w-[980px] flex-col"
         >
-          <div className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#0B74DE] mb-10">
+          <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE] mb-10">
             Seller case study
           </div>
           
@@ -742,22 +592,24 @@ function TestimonialSection() {
             </p>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="glass-card rounded-2xl p-6 bg-white shadow-sm border border-[#DCE8EE]">
-              <div className="text-[32px] font-bold text-[#182026]">$120K</div>
-              <div className="text-[13px] font-medium text-[#66737F] mt-1">Monthly Revenue</div>
+          <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+            <div className="text-center">
+              <div className="text-[42px] font-black tracking-[-0.04em] text-[#182026]">$120K</div>
+              <div className="mt-1 text-[13px] font-semibold uppercase tracking-tight text-[#66737F]">Monthly Revenue</div>
             </div>
-            <div className="glass-card rounded-2xl p-6 bg-white shadow-sm border border-[#DCE8EE]">
-              <div className="text-[32px] font-bold text-[#0B74DE]">$1,200</div>
-              <div className="text-[13px] font-medium text-[#66737F] mt-1">Recovered Value</div>
+            <div className="hidden md:block h-12 w-px bg-[#DCE8EE]" />
+            <div className="text-center">
+              <div className="text-[42px] font-black tracking-[-0.04em] text-[#0B74DE]">$1,200</div>
+              <div className="mt-1 text-[13px] font-semibold uppercase tracking-tight text-[#66737F]">Recovered Value</div>
             </div>
-            <div className="glass-card rounded-2xl p-6 bg-white shadow-sm border border-[#DCE8EE]">
-              <div className="text-[32px] font-bold text-[#182026]">2 Weeks</div>
-              <div className="text-[13px] font-medium text-[#66737F] mt-1">Resolution Time</div>
+            <div className="hidden md:block h-12 w-px bg-[#DCE8EE]" />
+            <div className="text-center">
+              <div className="text-[42px] font-black tracking-[-0.04em] text-[#182026]">2 Weeks</div>
+              <div className="mt-1 text-[13px] font-semibold uppercase tracking-tight text-[#66737F]">Resolution Time</div>
             </div>
           </div>
 
-          <div className="mt-10 text-[10px] font-semibold uppercase tracking-widest text-[#7A8994] text-center md:text-left">
+          <div className="mt-10 text-[10px] font-semibold uppercase tracking-widest text-[#4D5B66] text-center">
             * Outcome shown as an individual case study, not a reimbursement guarantee.
           </div>
         </motion.div>
@@ -810,8 +662,7 @@ export default function Index() {
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
   const primaryCtaLabel = 'Secure Early Access – $99';
-  const foundingSlotsRemaining = capacity ? Math.max(capacity.max - capacity.active, 0) : 500;
-  const foundingSlotsLabel = `${foundingSlotsRemaining} ${foundingSlotsRemaining === 1 ? 'slot' : 'slots'} remaining.`;
+
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
@@ -1036,7 +887,7 @@ export default function Index() {
           </div>
         </section>
 
-        <CoverageExamplesSection />
+        <ScrollytellingCoverage />
 
         <section className="relative py-16 md:py-28">
           <div className={containerClass}>
@@ -1143,39 +994,12 @@ export default function Index() {
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20" />
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
-                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200/50 bg-amber-50/50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-amber-700">
-                    <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
-                    </span>
-                    {foundingSlotsLabel}
-                  </div>
-
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-[0.5px] text-[#182026] sm:text-[48px] md:text-[64px]">
                     Founding 500 Access.
                   </h2>
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
                     The first 500 sellers get 1 year of full-service Amazon reimbursement workflow support for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
                   </p>
-                  
-                  {/* Countdown Timer */}
-                  <div className="mt-8 flex gap-4 text-center">
-                    {[
-                      { label: 'Days', value: '35' },
-                      { label: 'Hours', value: '12' },
-                      { label: 'Mins', value: '45' },
-                      { label: 'Secs', value: '00' }
-                    ].map((time) => (
-                      <div key={time.label} className="flex flex-col items-center">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#DCE8EE] bg-white text-xl font-bold text-[#182026] shadow-sm">
-                          {time.value}
-                        </div>
-                        <span className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#66737F]">
-                          {time.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
                   
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                     <Button
