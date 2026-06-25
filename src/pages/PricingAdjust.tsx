@@ -405,8 +405,8 @@ export default function PricingAdjust() {
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
                 Founding 500 locks founder pricing through 2026 with 0% commission, priority activation, and founder onboarding included. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
               </p>
-              <p className="mx-auto max-w-2xl text-[11px] font-medium leading-5 text-[#7A8994]">
-                All plans include discrepancy monitoring for lost inventory, inbound shortages, fee errors, and returns; automated evidence collection across invoices, BOLs, and shipment logs; policy-aligned case building; seller-approved filing to Amazon; underpayment recovery workflows; rejection handling; payout tracking; and a transparent case timeline.
+              <p className="mx-auto max-w-2xl text-[13px] font-semibold leading-6 text-[#182026] md:text-[15px]">
+                Founding 500 Early Access is now open. Performance, Pro, and Scale plans will become available after the Early Access launch.
               </p>
             </div>
           </motion.div>
