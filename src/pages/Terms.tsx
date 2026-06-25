@@ -83,7 +83,7 @@ const Terms = () => {
                   <span className="text-gray-900">Automated Audits</span> — We scan your transaction logs to find potential claims.
                 </p>
                 <p>
-                  <span className="text-gray-900">No Guarantee</span> — Margin identifies potential discrepancies. We do not guarantee that Amazon will approve any specific reimbursement claim. Final reimbursement decisions rest solely with Amazon.
+                  <span className="text-gray-900">No Guarantee</span> — Margin identifies potential discrepancies. We do not guarantee that Amazon will approve any reimbursement claim, that any particular amount will be recovered, or that recoveries will occur within any specific timeframe. Final reimbursement decisions rest solely with Amazon.
                 </p>
                 <p>
                   <span className="text-gray-900">Fair Use</span> — You agree not to use Margin to submit false, misleading, or duplicative claims to Amazon.
@@ -101,13 +101,13 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Current Offering</span> — At launch, Margin offers access through the Founding 500 Early Access program. This is a one-time payment of USD $99 and includes access to the Service under the Early Access terms described at checkout. Additional plans or pricing models may be introduced in the future and will be governed by the terms applicable at that time.
+                  <span className="text-gray-900">Current Offering</span> — At launch, Margin offers access through the Founding 500 Early Access program. This is a one-time payment of USD $99 for access to the Founding 500 Early Access program and the Services made available during the Early Access period. The fee is not a guarantee of any reimbursement or recovery from Amazon. Additional plans or pricing models may be introduced in the future and will be governed by the terms applicable at that time.
                 </p>
                 <p>
                   <span className="text-gray-900">Founding 500</span> — Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries.
                 </p>
                 <p>
-                  <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays reimbursements directly to your Amazon Seller account. Margin does not receive, hold, or route reimbursement funds on your behalf.
+                  <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays all approved reimbursements directly to your Amazon Seller account. Margin does not receive, hold, route, or control reimbursement funds on your behalf.
                 </p>
                 <p>
                   <span className="text-gray-900">Payment Method</span> — By completing your purchase, you authorize Margin to charge the payment method you provide for the applicable Founding 500 Early Access fee.
@@ -170,7 +170,7 @@ const Terms = () => {
                   <span className="text-gray-900">By You</span> — You may terminate your account at any time via your dashboard. Termination does not automatically entitle you to a refund. Refund eligibility is governed by the Refund & Cancellation Policy.
                 </p>
                 <p>
-                  <span className="text-gray-900">By Us</span> — We may suspend your access immediately if you violate these Terms or if your Amazon Seller account is suspended.
+                  <span className="text-gray-900">By Us</span> — We may suspend or terminate your access if you violate these Terms, misuse the Service, or if continued access would expose Margin or its users to legal, security, or operational risk.
                 </p>
               </div>
             </section>
@@ -215,7 +215,7 @@ const Terms = () => {
               </h2>
               <div className="space-y-2 text-gray-700">
                 <p>
-                  For questions about these Terms, contact us at support@margin-finance.com or billing@margin-finance.com
+                  For questions about these Terms, contact us at support@margin-finance.com or billing@margin-finance.com. Billing inquiries should generally go to the billing address.
                 </p>
               </div>
             </section>
