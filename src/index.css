@@ -190,16 +190,16 @@
 
   html,
   body {
-    @apply h-full overflow-x-hidden antialiased;
+    @apply h-full overflow-x-clip antialiased;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
   }
 
   #root {
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     min-height: 100vh;
     background-color: #f9fafb;
   }
