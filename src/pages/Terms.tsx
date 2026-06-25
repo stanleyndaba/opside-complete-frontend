@@ -77,6 +77,9 @@ const Terms = () => {
                   Margin provides automated analysis of Amazon SP-API data to identify potential inventory and financial discrepancies.
                 </p>
                 <p>
+                  <span className="text-gray-900">Account Activation</span> — Access to the Service may require completion of onboarding and connection of an eligible Amazon Seller Central account. Certain functionality may not be available until onboarding is complete.
+                </p>
+                <p>
                   <span className="text-gray-900">Automated Audits</span> — We scan your transaction logs to find potential claims.
                 </p>
                 <p>
@@ -84,6 +87,9 @@ const Terms = () => {
                 </p>
                 <p>
                   <span className="text-gray-900">Fair Use</span> — You agree not to use Margin to submit false, misleading, or duplicative claims to Amazon.
+                </p>
+                <p>
+                  <span className="text-gray-900">Service Availability</span> — We may update, improve, maintain, or temporarily suspend the Service as reasonably necessary to provide, secure, or improve the platform.
                 </p>
               </div>
             </section>
@@ -95,16 +101,16 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Pricing</span> — Margin offers Early Access and standard recovery management plans. Plan terms may include a one-time Early Access fee, a monthly subscription, a success fee on approved recoveries, or a combination shown at checkout.
+                  <span className="text-gray-900">Current Offering</span> — At launch, Margin offers access through the Founding 500 Early Access program. This is a one-time payment of USD $99 and includes access to the Service under the Early Access terms described at checkout. Additional plans or pricing models may be introduced in the future and will be governed by the terms applicable at that time.
                 </p>
                 <p>
-                  <span className="text-gray-900">Founding 500</span> — Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries. You may upgrade to Pro or Scale during that period and apply the $99 as plan credit.
+                  <span className="text-gray-900">Founding 500</span> — Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries.
                 </p>
                 <p>
                   <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays reimbursements directly to your Amazon Seller account. Margin does not receive, hold, or route reimbursement funds on your behalf.
                 </p>
                 <p>
-                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method for the plan, invoice, or checkout offer you select. Approved recoveries remain payable directly to the seller by Amazon.
+                  <span className="text-gray-900">Payment Method</span> — By completing your purchase, you authorize Margin to charge the payment method you provide for the applicable Founding 500 Early Access fee.
                 </p>
               </div>
             </section>
@@ -116,13 +122,7 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Billing Basis</span> — Refund requests apply to charges paid to Margin, including Early Access fees, subscription invoices, or other plan charges shown at checkout.
-                </p>
-                <p>
-                  <span className="text-gray-900">Early Access Period</span> — Founding 500 members keep 100% of approved recoveries through December 31, 2026. After that, continued service requires choosing a standard plan unless another written agreement applies.
-                </p>
-                <p>
-                  <span className="text-gray-900">Disputes</span> — If you believe a subscription charge was billed in error, contact us within 30 days.
+                  Refunds for the Founding 500 Early Access fee are governed by the Refund & Cancellation Policy available on our website. By purchasing Early Access, you acknowledge that refund requests will be reviewed in accordance with that policy.
                 </p>
               </div>
             </section>
@@ -167,7 +167,7 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">By You</span> — You may cancel your access to the Service at any time via your dashboard.
+                  <span className="text-gray-900">By You</span> — You may terminate your account at any time via your dashboard. Termination does not automatically entitle you to a refund. Refund eligibility is governed by the Refund & Cancellation Policy.
                 </p>
                 <p>
                   <span className="text-gray-900">By Us</span> — We may suspend your access immediately if you violate these Terms or if your Amazon Seller account is suspended.
@@ -185,7 +185,7 @@ const Terms = () => {
                   To the fullest extent permitted by South African law:
                 </p>
                 <p>
-                  <span className="text-gray-900">Liability Cap</span> — Margin's total liability to you shall not exceed the total fees paid by you to Margin in the 6 months preceding the claim.
+                  <span className="text-gray-900">Liability Cap</span> — Margin's total liability to you shall not exceed the total amount paid for the applicable Founding 500 Early Access purchase.
                 </p>
                 <p>
                   <span className="text-gray-900">Amazon Actions</span> — Margin is not liable for any actions taken by Amazon against your account, including account suspension, warning letters, or withheld funds. You use this tool at your own risk.
@@ -215,7 +215,7 @@ const Terms = () => {
               </h2>
               <div className="space-y-2 text-gray-700">
                 <p>
-                  For questions about these Terms, contact us at support@margin-finance.com
+                  For questions about these Terms, contact us at support@margin-finance.com or billing@margin-finance.com
                 </p>
               </div>
             </section>
