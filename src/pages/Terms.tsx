@@ -27,7 +27,7 @@ const Terms = () => {
           {/* Document Header */}
           <header className="mb-16">
             <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-              Effective December 22, 2025
+              Effective 25 June 2027
             </p>
             <h1 className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight leading-tight">
               Terms of Service

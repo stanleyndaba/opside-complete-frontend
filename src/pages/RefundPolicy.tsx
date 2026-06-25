@@ -27,7 +27,7 @@ const RefundPolicy = () => {
                     {/* Document Header */}
                     <header className="mb-16">
                         <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                            Last Updated June 25, 2026
+                            Last Updated 25 June 2027
                         </p>
                         <h1 className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight leading-tight">
                             Refund & Cancellation Policy

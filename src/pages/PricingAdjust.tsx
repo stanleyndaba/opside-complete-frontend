@@ -64,7 +64,7 @@ const pricingTiers: PricingTier[] = [
     ],
     ctaLabel: 'Start Risk-Free',
     checkoutUrl: 'https://www.paypal.com/ncp/payment/LE8SN5PGT6PPC',
-    badgeLabel: 'Coming Soon / Contact Sales',
+    badgeLabel: 'Coming Soon',
   },
   {
     name: 'Pro',
@@ -275,10 +275,10 @@ export default function PricingAdjust() {
               <Badge 
                 variant={tier.badgeLabel?.includes('Coming Soon') ? 'default' : 'outline'} 
                 className={cn(
-                  "text-[9px] font-semibold uppercase tracking-[0.14em]",
+                  "text-[9px] uppercase",
                   tier.badgeLabel?.includes('Coming Soon')
-                    ? "bg-[#007AFF] text-white border-transparent shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
-                    : "border-[#BFD8EA] bg-white text-[#0B74DE]"
+                    ? "font-medium tracking-tight bg-[#007AFF] text-white border-transparent shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
+                    : "font-semibold tracking-[0.14em] border-[#BFD8EA] bg-white text-[#0B74DE]"
                 )}
               >
                 {tier.badgeLabel || 'Most Popular'}
