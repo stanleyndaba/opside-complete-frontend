@@ -43,6 +43,7 @@ export default {
 				heading: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
 				sans: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
 				brand: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
+				playfair: ['"Playfair Display"', 'Georgia', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

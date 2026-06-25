@@ -16,6 +16,7 @@ import { InhaleSection } from '@/components/landing/InhaleSection';
 import { PUBLIC_ROUTE_META } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+import DiscrepancyStack from '@/components/discrepancy-stack';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -383,7 +384,7 @@ function KineticHeroSection({
         ))}
       </motion.div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1180px] items-center">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center gap-12 lg:grid lg:grid-cols-[1.1fr_0.9fr]">
         <div className="max-w-[980px]">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -396,7 +397,7 @@ function KineticHeroSection({
 
           <h1
             id="margin-hero-title"
-            className="mt-7 max-w-[1040px] text-[48px] font-bold leading-[0.96] tracking-[-0.055em] sm:text-[64px] md:text-[88px] lg:text-[104px]"
+            className="mt-7 font-serif-headline max-w-[1040px] text-[48px] font-bold leading-[0.96] tracking-[-0.055em] sm:text-[64px] md:text-[88px] lg:text-[112px]"
           >
             <motion.span
               className="block text-white"
@@ -420,7 +421,7 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-7 max-w-[680px] text-[16px] leading-7 text-slate-300 md:text-lg md:leading-8"
+            className="mt-7 max-w-[680px] text-[17px] leading-[1.7] text-slate-300 md:text-[20px]"
           >
             Margin handles the part Amazon reimbursement tools often leave manual - the evidence, the rejections, the appeals, and the payouts. You approve. Margin fights.
           </motion.p>
@@ -432,30 +433,35 @@ function KineticHeroSection({
             className="mt-10 grid w-full max-w-[700px] grid-cols-1 gap-3 min-[680px]:grid-cols-[1.18fr_1fr]"
           >
             <Button
-              onClick={onPrimaryCta}
-              aria-label="Start Recovery Audit"
-              className="h-[52px] justify-center rounded-full bg-[#007AFF] px-7 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(0,122,255,0.34)] transition hover:scale-[1.02] hover:bg-[#168BFF] hover:shadow-[0_22px_70px_rgba(0,122,255,0.48)]"
+              onClick={onEarlyAccessCta}
+              aria-label="Secure Early Access for 99 dollars"
+              className="group relative h-[52px] justify-center overflow-hidden rounded-full bg-[#0B74DE] px-7 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
             >
-              {primaryCtaLabel}
+              <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              Secure Early Access – $99
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
               variant="outline"
-              onClick={onEarlyAccessCta}
-              aria-label="Secure Early Access for 99 dollars"
-              className="h-[52px] justify-center rounded-full border border-slate-800 bg-white/[0.04] px-7 text-sm font-semibold text-white backdrop-blur-md transition hover:scale-[1.02] hover:border-slate-700 hover:bg-white/[0.08]"
+              onClick={onPrimaryCta}
+              aria-label="See Workflow"
+              className="h-[52px] justify-center rounded-full border border-white/20 bg-white/[0.04] px-7 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-white/[0.08]"
             >
-              Secure Early Access – $99
+              {primaryCtaLabel}
             </Button>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 1.02 }}
-            className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1 }}
+            className="mt-8 flex items-center gap-4 text-[12px] font-medium text-slate-400"
           >
-            100% Read-Only • No Commissions • Full Seller Approval
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> 100% Read-Only</span>
+            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No Commissions</span>
+            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Full Seller Approval</span>
           </motion.div>
 
           {isFull ? (
@@ -465,6 +471,21 @@ function KineticHeroSection({
             </div>
           ) : null}
         </div>
+
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="hidden w-full lg:block"
+        >
+          <div className="glass-card relative overflow-hidden rounded-2xl shadow-[0_32px_64px_rgba(0,0,0,0.4)]">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
+            <div className="scale-[0.85] origin-top xl:scale-90">
+              <DiscrepancyStack />
+            </div>
+          </div>
+        </motion.div>
       </div>
     </motion.section>
   );
@@ -656,7 +677,7 @@ function CoverageExamplesSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden py-20 md:py-32">
+    <section className="relative overflow-hidden py-20 md:py-32 bg-[#F3F6F8]">
       <motion.div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-24 hidden h-px bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.08)_18%,rgba(11,116,222,0.30)_48%,rgba(46,125,91,0.10)_78%,transparent_100%)] md:block"
@@ -673,9 +694,26 @@ function CoverageExamplesSection() {
           </p>
         </InhaleSection>
 
-        <div className="relative mt-12 md:mt-20">
+        <div className="relative mt-12 md:mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {coverageExamples.map((item, index) => (
-            <CoverageItem key={item.label} item={item} index={index} />
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="glass-card flex flex-col rounded-3xl bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md border border-[#DCE8EE]"
+            >
+              <div className="text-[12px] font-bold uppercase tracking-wider text-[#0B74DE] mb-4">
+                {item.label}
+              </div>
+              <h3 className="text-[22px] font-bold leading-tight text-[#182026] mb-3">
+                {item.title}
+              </h3>
+              <p className="text-[15px] leading-relaxed text-[#66737F]">
+                {item.detail}
+              </p>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -685,21 +723,42 @@ function CoverageExamplesSection() {
 
 function TestimonialSection() {
   return (
-    <section className="relative py-32 md:py-40" aria-label="Seller case study">
+    <section className="relative py-28 md:py-40 bg-[#F3F6F8]" aria-label="Seller case study">
       <div className={containerClass}>
         <motion.div
           {...revealProps}
-          className="mx-auto flex max-w-[980px] flex-col items-center text-center"
+          className="mx-auto flex max-w-[980px] flex-col"
         >
-          <div className="h-px w-12 bg-[#0B74DE]" aria-hidden="true" />
-          <div className="mt-10 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7A8994]">
-            Seller case study | Approx. $120K/month
+          <div className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#0B74DE] mb-10">
+            Seller case study
           </div>
-          <p className="mt-8 text-[20px] font-semibold leading-relaxed tracking-[-0.025em] text-[#182026] sm:text-[26px] md:text-[30px] md:leading-relaxed">
-            A seller doing approximately $120K/month came to Margin after Amazon denied three consecutive claims and underpaid another. Margin rebuilt the evidence trail, surfaced a $400 lowball dispute, and helped recover $1,200 in two weeks.
-          </p>
-          <div className="mt-10 text-[11px] font-medium uppercase tracking-[0.24em] text-[#7A8994]">
-            Outcome shown as an individual case study, not a reimbursement guarantee.
+          
+          <div className="relative border-l-4 border-[#0B74DE] pl-6 md:pl-12">
+            <div className="absolute -left-6 -top-10 text-[120px] leading-none text-[#0B74DE] opacity-10 font-serif-headline select-none">
+              &ldquo;
+            </div>
+            <p className="relative z-10 font-serif-headline text-[24px] italic leading-relaxed tracking-[0.2px] text-[#182026] sm:text-[32px] md:text-[40px] md:leading-[1.4]">
+              A seller doing approximately $120K/month came to Margin after Amazon denied three consecutive claims and underpaid another. Margin rebuilt the evidence trail, surfaced a $400 lowball dispute, and helped recover $1,200 in two weeks.
+            </p>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="glass-card rounded-2xl p-6 bg-white shadow-sm border border-[#DCE8EE]">
+              <div className="text-[32px] font-bold text-[#182026]">$120K</div>
+              <div className="text-[13px] font-medium text-[#66737F] mt-1">Monthly Revenue</div>
+            </div>
+            <div className="glass-card rounded-2xl p-6 bg-white shadow-sm border border-[#DCE8EE]">
+              <div className="text-[32px] font-bold text-[#0B74DE]">$1,200</div>
+              <div className="text-[13px] font-medium text-[#66737F] mt-1">Recovered Value</div>
+            </div>
+            <div className="glass-card rounded-2xl p-6 bg-white shadow-sm border border-[#DCE8EE]">
+              <div className="text-[32px] font-bold text-[#182026]">2 Weeks</div>
+              <div className="text-[13px] font-medium text-[#66737F] mt-1">Resolution Time</div>
+            </div>
+          </div>
+
+          <div className="mt-10 text-[10px] font-semibold uppercase tracking-widest text-[#7A8994] text-center md:text-left">
+            * Outcome shown as an individual case study, not a reimbursement guarantee.
           </div>
         </motion.div>
       </div>
@@ -797,83 +856,73 @@ export default function Index() {
 
         <section className="relative mt-14 md:mt-22">
           <div className={containerClass}>
-            <div className="grid border-y border-[#D8E3E8] md:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {proofItems.map((item, index) => (
                 <motion.div
                   key={item.title}
                   {...revealProps}
+                  whileHover={{ y: -4 }}
                   transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                  className={`py-7 md:px-7 md:py-9 ${
-                    index > 0 ? 'border-t border-[#D8E3E8] md:border-l md:border-t-0' : ''
-                  }`}
+                  className="glass-card flex flex-col rounded-2xl p-6 bg-white border border-[#DCE8EE] shadow-sm hover:shadow-md transition-all duration-300"
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#9AA8B2]">
+                  <div className="mb-4 text-[13px] font-bold uppercase tracking-wider text-[#9AA8B2]">
                     {String(index + 1).padStart(2, '0')}
                   </div>
-                  <div className="mt-4 text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.title}</div>
-                  <p className="mt-3 max-w-[250px] text-[15px] leading-7 text-[#4D5B66]">{item.detail}</p>
+                  <div className="text-[14px] font-bold uppercase tracking-tight text-[#0B74DE] mb-2">
+                    {item.title}
+                  </div>
+                  <p className="text-[14px] leading-relaxed text-[#4D5B66]">
+                    {item.detail}
+                  </p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative py-16 md:py-28">
+        <section className="relative py-20 md:py-32">
           <div className={containerClass}>
             <motion.div {...revealProps} className="max-w-[820px]">
               <div className={sectionLabelClass}>Why Now</div>
-              <h2 className={sectionHeadingClass}>Why timing matters</h2>
-              <p className={sectionBodyClass}>
-                Amazon reimbursement claims can move on short deadlines. Once a discrepancy is identified, the evidence, filing path, and response work need to move before the window closes.
-              </p>
-              <p className={sectionBodyClass}>
-                The invoice you need for a reimbursement claim is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources before the deadline hits.
-              </p>
-              <p className={sectionBodyClass}>
+              <h2 className="font-serif-headline mt-4 max-w-[760px] text-[36px] font-bold leading-[1.05] tracking-[-0.02em] text-[#182026] sm:text-[44px] md:text-[56px]">
+                Why timing matters
+              </h2>
+              <p className="mt-6 max-w-[680px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
                 Every day a reimbursement claim is not filed is a day closer to losing the case permanently. Margin keeps the workflow moving in minutes, not days.
               </p>
+            </motion.div>
+
+            <div className="relative mt-12 md:mt-16 grid gap-6 md:grid-cols-3">
+              {whyNowItems.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  {...revealProps}
+                  whileHover={{ y: -4 }}
+                  transition={{ ...revealProps.transition, delay: index * 0.1 }}
+                  className="glass-card flex flex-col rounded-3xl p-8 bg-white border border-[#DCE8EE] shadow-sm hover:shadow-md transition-all duration-300"
+                >
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#0B74DE]/10 text-[16px] font-bold text-[#0B74DE]">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
+                  <h3 className="text-[20px] font-semibold leading-tight text-[#182026] mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-[15px] leading-relaxed text-[#66737F]">
+                    {item.detail}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+            
+            <motion.div {...revealProps} className="mt-12 text-center md:text-left">
               <Button
                 variant="outline"
                 onClick={scrollToWorkflow}
-                className="mt-7 h-11 rounded-full border-[#CFE0EA] bg-white/72 px-5 text-sm font-semibold text-[#25313A] hover:bg-white"
+                className="h-[52px] rounded-full border border-slate-200 bg-white px-8 text-sm font-semibold text-[#182026] hover:bg-slate-50 hover:scale-[1.02] transition-all shadow-sm"
               >
                 See the Recovery Flow
               </Button>
             </motion.div>
-
-            <div className="relative mt-10 md:mt-14">
-              <motion.div
-                className="pointer-events-none absolute left-0 right-0 top-10 z-0 hidden h-px bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.08)_16%,rgba(11,116,222,0.42)_48%,rgba(46,125,91,0.16)_76%,transparent_100%)] opacity-70 md:block"
-                style={{ backgroundSize: '240% 100%' }}
-                animate={{ backgroundPosition: ['0% 50%', '240% 50%'] }}
-                transition={{ duration: 9, repeat: Infinity, ease: 'linear' }}
-              />
-
-              <div className="relative z-10 grid gap-9 md:grid-cols-3 md:gap-10">
-                {whyNowItems.map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    {...revealProps}
-                    whileHover={{ x: 5 }}
-                    transition={{ ...revealProps.transition, delay: index * 0.08 }}
-                    className="group relative min-h-[210px] py-4 outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]"
-                  >
-                    <div className="pointer-events-none absolute -left-6 top-7 h-16 w-16 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
-                    <div className="relative">
-                      <div className="text-[11px] font-semibold uppercase tracking-tight text-[#9AA8B2] transition duration-500 group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_22px_rgba(11,116,222,0.28)] group-focus-visible:text-[#0B74DE]">
-                        {String(index + 1).padStart(2, '0')}
-                      </div>
-                      <h3 className="mt-6 text-[22px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#0B74DE] group-hover:[text-shadow:0_0_24px_rgba(11,116,222,0.18)] group-focus-visible:text-[#0B74DE] md:text-[28px]">
-                        {item.title}
-                      </h3>
-                      <p className="mt-4 text-[15px] leading-7 text-[#66737F]/70 transition duration-500 group-hover:translate-x-[5px] group-hover:text-[#4D5B66] group-hover:opacity-100 group-focus-visible:text-[#4D5B66] md:text-[16px] md:leading-8">
-                        {item.detail}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
           </div>
         </section>
 
@@ -1084,62 +1133,78 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative overflow-hidden py-16 md:py-28">
+        <section className="relative overflow-hidden py-28 md:py-40">
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-24 hidden h-px w-full bg-[linear-gradient(90deg,transparent_0%,rgba(11,116,222,0.1)_20%,rgba(46,125,91,0.26)_50%,rgba(11,116,222,0.1)_80%,transparent_100%)] md:block"
-            style={{ backgroundSize: '220% 100%' }}
-            animate={{ backgroundPosition: ['0% 50%', '220% 50%'] }}
-            transition={{ duration: 11, repeat: Infinity, ease: 'linear' }}
+            className="pointer-events-none absolute left-0 top-1/3 hidden h-[500px] w-full bg-[radial-gradient(circle_at_50%_50%,rgba(11,116,222,0.06),transparent_60%)] md:block"
           />
           <div className={containerClass}>
-            <div className="grid gap-10 lg:grid-cols-[1fr_0.78fr] lg:items-center">
-              <motion.div {...revealProps}>
-
-                <h2 className="mt-4 max-w-[760px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
-                  Founding 500 Access.
-                </h2>
-                <p className={sectionBodyClass}>
-                  The first 500 sellers get 1 year of full-service Amazon reimbursement workflow support for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
-                </p>
-                <p className="mt-5 max-w-[640px] text-[14px] font-semibold leading-7 text-[#25313A] md:text-[16px]">
-                  {foundingSlotsLabel} Closes July 30, 2026 or when full. Standard plans begin at $199/month after Early Access closes.
-                </p>
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Button
-                    onClick={handlePrimaryCta}
-                    className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
-                  >
-                    {primaryCtaLabel}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={openDemo}
-                    className="hidden h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
-                  >
-                    Watch 60-Second Demo
-                  </Button>
-                </div>
-              </motion.div>
-
-              <motion.div {...revealProps} className="grid gap-1">
-                {earlyAccessItems.map((item, index) => (
-                  <div
-                    key={item}
-                    className="group relative flex items-center gap-4 py-4 text-[#25313A] outline-none transition-transform duration-500 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:translate-x-[5px]"
-                  >
-                    <span className="absolute -left-5 h-12 w-12 rounded-full bg-[radial-gradient(circle,rgba(46,125,91,0.13),transparent_68%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
-                    <Check className="relative mt-0.5 h-4 w-4 shrink-0 text-[#2E7D5B]" />
-                    <span className="relative text-[15px] font-semibold leading-6 tracking-[-0.015em] transition duration-500 group-hover:text-[#182026] group-focus-visible:text-[#182026]">
-                      {item}
+            <div className="glass-card relative overflow-hidden rounded-[32px] p-8 md:p-16 lg:p-20 shadow-[0_32px_64px_rgba(0,0,0,0.08)] bg-white/60 backdrop-blur-3xl border border-white/40">
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20" />
+              <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+                <motion.div {...revealProps}>
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200/50 bg-amber-50/50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-amber-700">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
                     </span>
-                    <span className="ml-auto hidden text-[11px] font-semibold uppercase tracking-tight text-[#9AA8B2]/70 transition duration-500 group-hover:text-[#0B74DE] sm:inline">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
+                    {foundingSlotsLabel}
                   </div>
-                ))}
-              </motion.div>
+
+                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-[0.5px] text-[#182026] sm:text-[48px] md:text-[64px]">
+                    Founding 500 Access.
+                  </h2>
+                  <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
+                    The first 500 sellers get 1 year of full-service Amazon reimbursement workflow support for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
+                  </p>
+                  
+                  {/* Countdown Timer */}
+                  <div className="mt-8 flex gap-4 text-center">
+                    {[
+                      { label: 'Days', value: '35' },
+                      { label: 'Hours', value: '12' },
+                      { label: 'Mins', value: '45' },
+                      { label: 'Secs', value: '00' }
+                    ].map((time) => (
+                      <div key={time.label} className="flex flex-col items-center">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#DCE8EE] bg-white text-xl font-bold text-[#182026] shadow-sm">
+                          {time.value}
+                        </div>
+                        <span className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#66737F]">
+                          {time.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                    <Button
+                      onClick={handlePrimaryCta}
+                      className="group relative h-14 w-full rounded-full bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] sm:w-auto"
+                    >
+                      <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-full" />
+                      {primaryCtaLabel}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </motion.div>
+
+                <motion.div {...revealProps} className="grid gap-2">
+                  {earlyAccessItems.map((item, index) => (
+                    <div
+                      key={item}
+                      className="group relative flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/60 hover:shadow-sm"
+                    >
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0B74DE]/10 text-[#0B74DE]">
+                        <Check className="h-4 w-4" strokeWidth={3} />
+                      </div>
+                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[#182026]">
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
             </div>
           </div>
         </section>

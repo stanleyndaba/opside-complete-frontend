@@ -56,6 +56,17 @@
   .font-extralight-200 {
     font-weight: 200 !important;
   }
+
+  /* Premium Redesign Utilities */
+  .font-serif-headline {
+    font-family: 'Playfair Display', Georgia, serif !important;
+  }
+
+  .glass-card {
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
 @layer base {
@@ -601,6 +612,26 @@ footer .brand-wordmark,
   font-style: normal !important;
   font-weight: 700 !important;
   letter-spacing: -0.025em;
+}
+
+/* Landing Premium Redesign Scope */
+.landing-premium {
+  --section-y-mobile: 60px;
+  --section-y-tablet: 80px;
+  --section-y-desktop: 120px;
+}
+
+.landing-premium p,
+.landing-premium li,
+.landing-premium .leading-relaxed {
+  line-height: 1.7 !important;
+}
+
+.landing-premium h1, 
+.landing-premium h2, 
+.landing-premium h3, 
+.landing-premium .font-serif-headline {
+  letter-spacing: 0.5px !important;
 }
 
 /* Vitality Light Theme: app dashboard shell without layout changes */
