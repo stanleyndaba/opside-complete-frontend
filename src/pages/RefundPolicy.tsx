@@ -44,10 +44,10 @@ const RefundPolicy = () => {
                             </h2>
                             <div className="space-y-4 text-gray-700">
                                 <p>
-                                    Margin offers Early Access and standard recovery management plans. Plan terms may include a one-time Early Access fee, a monthly subscription, a success fee on approved recoveries, or a combination shown at checkout.
+                                    At launch, Margin offers access through the Founding 500 Early Access program. This is a one-time payment of USD $99 and includes access to the Service under the Early Access terms described at checkout. Additional plans or pricing models may be introduced in the future and will be governed by the terms applicable at that time.
                                 </p>
                                 <p>
-                                    Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries. You can upgrade to Pro or Scale anytime and apply the $99 as plan credit.
+                                    Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries.
                                 </p>
                             </div>
                         </section>
@@ -59,10 +59,10 @@ const RefundPolicy = () => {
                             </h2>
                             <div className="space-y-4 text-gray-700">
                                 <p>
-                                    Refund requests apply to charges paid to Margin, including Early Access fees, subscription invoices, renewal charges, or other plan charges shown at checkout.
+                                    Refund requests apply to the Founding 500 Early Access fee and any other charges paid to Margin shown at checkout.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Billing Errors</span> — If a subscription charge was created in error, contact us within 30 days. We will review the billing record and issue a correction or refund when confirmed.
+                                    <span className="text-gray-900">Billing Errors</span> — If a charge was created in error, contact us within 30 days. We will review the billing record and issue a correction or refund when confirmed.
                                 </p>
                                 <p>
                                     <span className="text-gray-900">Early Access Period</span> — Founding 500 members keep 100% of approved recoveries through December 31, 2026. After that, continued service requires choosing a standard plan unless another written agreement applies.
@@ -83,7 +83,7 @@ const RefundPolicy = () => {
                                     <span className="text-gray-900">Effect of Cancellation</span> — We will immediately stop auditing your account and filing new claims.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Outstanding Invoices</span> — You remain responsible for subscription invoices covering service periods that started before your cancellation takes effect, unless a different treatment is required by law or an explicit written agreement.
+                                    <span className="text-gray-900">Outstanding Fees</span> — You remain responsible for any outstanding fees covering service periods that started before your cancellation takes effect, unless a different treatment is required by law or an explicit written agreement.
                                 </p>
                             </div>
                         </section>
