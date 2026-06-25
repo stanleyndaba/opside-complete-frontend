@@ -27,10 +27,10 @@ const RefundPolicy = () => {
                     {/* Document Header */}
                     <header className="mb-16">
                         <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                            Last Updated January 13, 2026
+                            Last Updated June 25, 2026
                         </p>
                         <h1 className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight leading-tight">
-                            Refund and Cancellation Policy
+                            Refund & Cancellation Policy
                         </h1>
                     </header>
 
@@ -40,14 +40,17 @@ const RefundPolicy = () => {
                         {/* Section 1 */}
                         <section>
                             <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                                01 — Pricing Model
+                                01 — Overview
                             </h2>
                             <div className="space-y-4 text-gray-700">
                                 <p>
-                                    At launch, Margin offers access through the Founding 500 Early Access program. This is a one-time payment of USD $99 and includes access to the Service under the Early Access terms described at checkout. Additional plans or pricing models may be introduced in the future and will be governed by the terms applicable at that time.
+                                    Margin is committed to transparent billing and the fair resolution of customer concerns.
                                 </p>
                                 <p>
-                                    Founding 500 Early Access is a $99 one-time offer that runs through December 31, 2026. During the Early Access period, you keep 100% of approved recoveries.
+                                    This Refund & Cancellation Policy explains how we handle refunds, cancellations, billing questions, and payment disputes relating to the <span className="text-gray-900 font-medium">Founding 500 Early Access</span> program.
+                                </p>
+                                <p>
+                                    This policy should be read together with our Terms of Service.
                                 </p>
                             </div>
                         </section>
@@ -55,17 +58,20 @@ const RefundPolicy = () => {
                         {/* Section 2 */}
                         <section>
                             <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                                02 — Refund Policy
+                                02 — Founding 500 Early Access
                             </h2>
                             <div className="space-y-4 text-gray-700">
                                 <p>
-                                    Refund requests apply to the Founding 500 Early Access fee and any other charges paid to Margin shown at checkout.
+                                    Margin currently offers access to the Service through the <span className="text-gray-900 font-medium">Founding 500 Early Access</span> program.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Billing Errors</span> — If a charge was created in error, contact us within 30 days. We will review the billing record and issue a correction or refund when confirmed.
+                                    Early Access is a <span className="text-gray-900 font-medium">one-time payment of USD $99</span> and provides access to the Margin platform during the Early Access period, together with the features and services described at checkout.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Early Access Period</span> — Founding 500 members keep 100% of approved recoveries through December 31, 2026. After that, continued service requires choosing a standard plan unless another written agreement applies.
+                                    The Early Access fee is a payment for access to the Service. It is <span className="text-gray-900 font-medium">not</span> a guarantee that Amazon will approve any reimbursement claim or that any specific recovery amount will be achieved.
+                                </p>
+                                <p>
+                                    Amazon remains solely responsible for approving or rejecting reimbursement claims and pays all approved reimbursements directly to your Amazon Seller account.
                                 </p>
                             </div>
                         </section>
@@ -73,17 +79,26 @@ const RefundPolicy = () => {
                         {/* Section 3 */}
                         <section>
                             <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                                03 — Cancellation
+                                03 — Refund Policy
                             </h2>
                             <div className="space-y-4 text-gray-700">
                                 <p>
-                                    You may stop using Margin at any time by disconnecting your Amazon Seller Central account in the dashboard or by contacting us directly.
+                                    If you believe you have been charged incorrectly or wish to request a refund, please contact Margin Support as soon as possible.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Effect of Cancellation</span> — We will immediately stop auditing your account and filing new claims.
+                                    All refund requests are reviewed individually and fairly in accordance with this policy and any applicable laws.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Outstanding Fees</span> — You remain responsible for any outstanding fees covering service periods that started before your cancellation takes effect, unless a different treatment is required by law or an explicit written agreement.
+                                    Refunds may be considered in circumstances including:
+                                </p>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    <li>verified billing or payment errors;</li>
+                                    <li>duplicate charges;</li>
+                                    <li>charges processed incorrectly; or</li>
+                                    <li>other circumstances where a refund is required under applicable law.</li>
+                                </ul>
+                                <p>
+                                    Where a refund request is not approved, we will explain the reason for our decision.
                                 </p>
                             </div>
                         </section>
@@ -91,15 +106,79 @@ const RefundPolicy = () => {
                         {/* Section 4 */}
                         <section>
                             <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                                04 — Contact
+                                04 — Cancellation Policy
                             </h2>
-                            <div className="space-y-2 text-gray-700">
+                            <div className="space-y-4 text-gray-700">
                                 <p>
-                                    For questions about billing or refunds, contact us at support@margin-finance.com or billing@margin-finance.com
+                                    You may stop using Margin at any time by disconnecting your Amazon Seller Central account through the dashboard or by contacting our support team.
                                 </p>
-                                <p className="text-gray-500">
-                                    Response time: Within 48 hours
+                                <p>
+                                    Once your cancellation takes effect:
                                 </p>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    <li>Margin will stop auditing your account.</li>
+                                    <li>No new reimbursement claims will be prepared or submitted.</li>
+                                    <li>Your access to the Service may be disabled in accordance with our Terms of Service.</li>
+                                </ul>
+                                <p>
+                                    Cancellation of your account does not automatically entitle you to a refund. Refund eligibility is determined in accordance with this Refund & Cancellation Policy.
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* Section 5 */}
+                        <section>
+                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                                05 — Billing Disputes & Chargebacks
+                            </h2>
+                            <div className="space-y-4 text-gray-700">
+                                <p>
+                                    If you believe a payment was processed incorrectly or you are dissatisfied with the Service, we encourage you to contact us before initiating a payment dispute or chargeback through your bank or payment provider.
+                                </p>
+                                <p>
+                                    Our team will:
+                                </p>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    <li>acknowledge your request within 48 hours;</li>
+                                    <li>investigate the matter promptly;</li>
+                                    <li>work with you to reach a fair resolution; and</li>
+                                    <li>issue a refund where appropriate under this policy.</li>
+                                </ul>
+                                <p>
+                                    We are committed to resolving billing concerns quickly and fairly.
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* Section 6 */}
+                        <section>
+                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                                06 — Refund Processing
+                            </h2>
+                            <div className="space-y-4 text-gray-700">
+                                <p>
+                                    Where a refund is approved, it will be returned to the original payment method used for the purchase.
+                                </p>
+                                <p>
+                                    Refund processing times may vary depending on your payment provider or financial institution, but approved refunds are generally processed within <span className="text-gray-900 font-medium">5–10 business days</span>.
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* Section 7 */}
+                        <section>
+                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                                07 — Contact Us
+                            </h2>
+                            <div className="space-y-4 text-gray-700">
+                                <p>
+                                    If you have any questions regarding billing, refunds, cancellations, or this policy, please contact us:
+                                </p>
+                                <div className="space-y-2">
+                                    <p><span className="text-gray-900 font-medium">Support:</span> <a href="mailto:support@margin-finance.com" className="text-blue-600 hover:underline">support@margin-finance.com</a></p>
+                                    <p><span className="text-gray-900 font-medium">Billing:</span> <a href="mailto:billing@margin-finance.com" className="text-blue-600 hover:underline">billing@margin-finance.com</a></p>
+                                    <p><span className="text-gray-900 font-medium">Response Time:</span> Within 48 hours</p>
+                                </div>
                             </div>
                         </section>
 
