@@ -460,7 +460,7 @@ function PayoutReconciliationViz() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
               Approved
             </span>
-            <span className="font-mono text-[14px] font-semibold text-slate-700">
+            <span className="font-mono text-[12px] text-slate-700">
               $1,847.00
             </span>
           </div>
@@ -480,7 +480,7 @@ function PayoutReconciliationViz() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
               Received
             </span>
-            <span className="font-mono text-[14px] font-semibold text-slate-500">
+            <span className="font-mono text-[12px] text-slate-500">
               $1,412.00
             </span>
           </div>
@@ -507,7 +507,7 @@ function PayoutReconciliationViz() {
                 </span>
               </div>
             </div>
-            <div className="font-mono text-[20px] font-semibold tracking-tight text-slate-700">
+            <div className="font-mono text-[16px] font-semibold tracking-tight text-slate-700">
               ${variance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </div>
           </div>
