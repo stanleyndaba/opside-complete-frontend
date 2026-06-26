@@ -17,6 +17,7 @@ import { PUBLIC_ROUTE_META } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 import { ScrollytellingCoverage } from '@/components/landing/ScrollytellingCoverage';
+import { ProgressiveNarrativeTabs } from '@/components/landing/ProgressiveNarrativeTabs';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -686,51 +687,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative py-20 md:py-32">
-          <div className={containerClass}>
-            <motion.div {...revealProps} className="max-w-[820px]">
-              <div className={sectionLabelClass}>Why Now</div>
-              <h2 className="font-serif-headline mt-4 max-w-[760px] text-[36px] font-bold leading-[1.05] tracking-[-0.02em] text-[#182026] sm:text-[44px] md:text-[56px]">
-                Why timing matters
-              </h2>
-              <p className="mt-6 max-w-[680px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
-                Every day a reimbursement claim is not filed is a day closer to losing the case permanently. Margin keeps the workflow moving in minutes, not days.
-              </p>
-            </motion.div>
-
-            <div className="relative mt-12 md:mt-16 grid gap-6 md:grid-cols-3">
-              {whyNowItems.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  {...revealProps}
-                  whileHover={{ y: -4 }}
-                  transition={{ ...revealProps.transition, delay: index * 0.1 }}
-                  className="glass-card flex flex-col rounded-3xl p-8 bg-white border border-[#DCE8EE] shadow-sm hover:shadow-md transition-all duration-300"
-                >
-                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#0B74DE]/10 text-[16px] font-bold text-[#0B74DE]">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-                  <h3 className="text-[20px] font-semibold leading-tight text-[#182026] mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-[15px] leading-relaxed text-[#66737F]">
-                    {item.detail}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-            
-            <motion.div {...revealProps} className="mt-12 text-center md:text-left">
-              <Button
-                variant="outline"
-                onClick={scrollToWorkflow}
-                className="h-[52px] rounded-full border border-slate-200 bg-white px-8 text-sm font-semibold text-[#182026] hover:bg-slate-50 hover:scale-[1.02] transition-all shadow-sm"
-              >
-                See the Recovery Flow
-              </Button>
-            </motion.div>
-          </div>
-        </section>
+        <ProgressiveNarrativeTabs />
 
         <section className="hidden relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24" id="margin-demo">
           <div className={containerClass}>
