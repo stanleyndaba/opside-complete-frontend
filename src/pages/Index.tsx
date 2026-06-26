@@ -18,6 +18,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 import { ScrollytellingCoverage } from '@/components/landing/ScrollytellingCoverage';
 import { ProgressiveNarrativeTabs } from '@/components/landing/ProgressiveNarrativeTabs';
+import { TechnicalProtocolGrid } from '@/components/landing/TechnicalProtocolGrid';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -661,31 +662,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative mt-14 md:mt-22">
-          <div className={containerClass}>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {proofItems.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  {...revealProps}
-                  whileHover={{ y: -4 }}
-                  transition={{ ...revealProps.transition, delay: index * 0.05 }}
-                  className="glass-card flex flex-col rounded-2xl p-6 bg-white border border-[#DCE8EE] shadow-sm hover:shadow-md transition-all duration-300"
-                >
-                  <div className="mb-4 text-[13px] font-bold uppercase tracking-wider text-[#9AA8B2]">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-                  <div className="text-[14px] font-bold uppercase tracking-tight text-[#0B74DE] mb-2">
-                    {item.title}
-                  </div>
-                  <p className="text-[14px] leading-relaxed text-[#4D5B66]">
-                    {item.detail}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <TechnicalProtocolGrid />
 
         <ProgressiveNarrativeTabs />
 
