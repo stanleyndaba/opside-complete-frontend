@@ -70,14 +70,14 @@ function DiscrepancyDetectionViz() {
   };
 
   const clusters = [
-    { sku: 'SKU-4821', source: 'INBOUND #FBA15J', units: '-12 UNITS', price: '$847.20', urgency: 'EXP: 4D', tags: ['[INVOICE]', '[BOL]', '[PACKING LIST]'] },
-    { sku: 'SKU-7103', source: 'INBOUND #FBA12X', units: '-8 UNITS', price: '$523.84', urgency: 'T-MINUS 96H', tags: ['[INVOICE]', '[BOL]'] },
-    { sku: 'SKU-2954', source: 'INBOUND #FBA88Q', units: '-23 UNITS', price: '$1,102.50', urgency: 'EXP: 2D', tags: ['[INVOICE]', '[POD]'] },
+    { sku: 'SKU-4821', source: 'Inbound FBA15J', units: '-12 Units', price: '$847.20', urgency: 'Exp: 4D', tags: ['Invoice', 'BOL', 'Packing List'] },
+    { sku: 'SKU-7103', source: 'Inbound FBA12X', units: '-8 Units', price: '$523.84', urgency: 'T-Minus 96H', tags: ['Invoice', 'BOL'] },
+    { sku: 'SKU-2954', source: 'Inbound FBA88Q', units: '-23 Units', price: '$1,102.50', urgency: 'Exp: 2D', tags: ['Invoice', 'POD'] },
   ];
 
   return (
     <div className="flex h-full flex-col justify-between">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-5">
         {clusters.map((cluster, i) => (
           <motion.div
             key={cluster.sku}
@@ -88,14 +88,14 @@ function DiscrepancyDetectionViz() {
           >
             {/* Line 1: SKU & Price & Urgency */}
             <div className="flex items-end justify-between leading-none">
-              <span className="font-sans text-[17px] font-bold tracking-tight text-slate-900">
+              <span className="font-sans text-[15px] font-bold tracking-tight text-slate-900">
                 {cluster.sku}
               </span>
-              <div className="flex items-center gap-4">
-                <span className="font-mono text-[11px] font-semibold tracking-wider text-slate-400">
+              <div className="flex items-center gap-3">
+                <span className="font-sans text-[12px] font-semibold text-slate-500">
                   {cluster.urgency}
                 </span>
-                <span className="font-sans text-[16px] font-bold tracking-tight text-slate-900">
+                <span className="font-sans text-[15px] font-bold tracking-tight text-slate-900">
                   {cluster.price}
                 </span>
               </div>
@@ -103,20 +103,20 @@ function DiscrepancyDetectionViz() {
 
             {/* Line 2: Source ID & Units */}
             <div className="flex items-center">
-              <span className="font-mono text-[12px] font-medium uppercase tracking-wide text-slate-500">
-                {cluster.source} // {cluster.units}
+              <span className="font-sans text-[13px] font-medium text-slate-500">
+                {cluster.source} &middot; {cluster.units}
               </span>
             </div>
 
             {/* Line 3: Proof Tags */}
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-1 flex items-center gap-2">
               {cluster.tags.map((tag, tagIndex) => (
                 <motion.span
                   key={tag}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: i * 0.15 + 0.3 + tagIndex * 0.1, duration: 0.4 }}
-                  className="rounded-[2px] bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-slate-500"
+                  className="rounded-md bg-slate-100 px-2 py-1 font-sans text-[11px] font-semibold text-slate-600"
                 >
                   {tag}
                 </motion.span>
@@ -126,14 +126,14 @@ function DiscrepancyDetectionViz() {
         ))}
       </div>
 
-      <div className="mt-14 flex flex-col gap-4">
+      <div className="mt-6 flex flex-col gap-3">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="font-mono text-[10px] font-medium uppercase tracking-widest text-slate-400"
+          className="font-sans text-[12px] font-medium text-slate-500"
         >
-          // SYSTEM SCAN DEPTH: 100% EVIDENCE MATCHED
+          System scan depth: 100% evidence matched
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -141,14 +141,14 @@ function DiscrepancyDetectionViz() {
           transition={{ delay: 0.7, duration: 0.5 }}
           className="flex items-end justify-between"
         >
-          <span className="font-sans text-[13px] font-bold tracking-widest text-slate-900">
-            RECLAIMABLE CAPITAL
+          <span className="font-sans text-[14px] font-bold text-slate-900">
+            Reclaimable Capital
           </span>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] font-semibold tracking-wider text-slate-500">
-              [4 ACTIVE CASE FILES]
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 font-sans text-[11px] font-bold text-slate-600">
+              4 Active Case Files
             </span>
-            <span className="font-sans text-[42px] font-bold leading-none tracking-[-0.03em] text-slate-900">
+            <span className="font-sans text-[32px] font-bold leading-none tracking-tight text-slate-900">
               {formatCurrency(total)}
             </span>
           </div>
