@@ -40,20 +40,20 @@ export function TechnicalProtocolGrid() {
   };
 
   return (
-    <section className="relative bg-[#050B14] py-24 md:py-32 overflow-hidden">
+    <section className="relative bg-[#FAFAF7] py-24 md:py-32 overflow-hidden border-y border-[#E4EDF1]">
       <div className="mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8">
-        <div className="relative border border-white/10">
+        <div className="relative border border-[#DCE8EE] bg-white">
           
           {/* Structural Dividers (Desktop Cross-Grid) */}
           <motion.div 
-            className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10 hidden md:block"
+            className="absolute left-1/2 top-0 bottom-0 w-px bg-[#DCE8EE] hidden md:block"
             variants={lineVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           />
           <motion.div 
-            className="absolute top-1/2 left-0 right-0 h-px bg-white/10 hidden md:block"
+            className="absolute top-1/2 left-0 right-0 h-px bg-[#DCE8EE] hidden md:block"
             variants={lineVariants}
             initial="hidden"
             whileInView="visible"
@@ -66,12 +66,12 @@ export function TechnicalProtocolGrid() {
               // We handle the desktop cross grid with the absolute dividers above, 
               // but we need mobile horizontal dividers too.
               const isLastMobile = index === protocols.length - 1;
-              const mobileBorderClass = isLastMobile ? '' : 'border-b border-white/10 md:border-b-0';
+              const mobileBorderClass = isLastMobile ? '' : 'border-b border-[#DCE8EE] md:border-b-0';
 
               return (
                 <div 
                   key={protocol.number} 
-                  className={`relative p-12 md:p-20 lg:p-24 ${mobileBorderClass}`}
+                  className={`relative bg-white p-12 md:p-20 lg:p-24 ${mobileBorderClass}`}
                 >
                   <motion.div
                     custom={index}
@@ -81,14 +81,14 @@ export function TechnicalProtocolGrid() {
                     viewport={{ once: true, amount: 0.3 }}
                     className="flex flex-col h-full"
                   >
-                    <div className="font-serif-headline text-5xl md:text-6xl text-[#444444] mb-8 md:mb-12">
+                    <div className="font-serif-headline text-5xl md:text-6xl text-[#8A98A3] mb-8 md:mb-12">
                       {protocol.number}
                     </div>
                     <div className="mt-auto">
-                      <h3 className="text-white font-bold text-[18px] md:text-[20px] tracking-widest uppercase mb-6 leading-snug">
+                      <h3 className="text-[#182026] font-bold text-[18px] md:text-[20px] tracking-widest uppercase mb-6 leading-snug">
                         {protocol.title}
                       </h3>
-                      <p className="text-[#8A98A3] text-[16px] md:text-[18px] leading-relaxed max-w-[420px]">
+                      <p className="text-[#66737F] text-[16px] md:text-[18px] leading-relaxed max-w-[420px]">
                         {protocol.subtext}
                       </p>
                     </div>

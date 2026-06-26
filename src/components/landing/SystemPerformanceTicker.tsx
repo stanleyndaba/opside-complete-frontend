@@ -50,16 +50,16 @@ function TickerItem({ metric, index }: { metric: typeof metrics[0], index: numbe
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: [0, 1, 0, 1, 0.5, 1] } : {}}
         transition={{ duration: 0.4, delay: index * 0.15 }}
-        className="font-mono text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-6"
+        className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE] mb-6"
       >
         [{metric.label}]
       </motion.div>
       
       <div className="flex items-baseline mb-4">
-        <div className="text-[64px] sm:text-[72px] md:text-[88px] font-bold leading-none tracking-tighter text-white tabular-nums">
+        <div className="text-[64px] sm:text-[72px] md:text-[88px] font-bold leading-none tracking-tighter text-[#182026] tabular-nums">
           {currentValue}
         </div>
-        <div className="font-mono text-[18px] sm:text-[20px] font-medium text-slate-500 ml-3 mb-2">
+        <div className="text-[18px] sm:text-[20px] font-medium text-[#8A98A3] ml-3 mb-2">
           {metric.unit}
         </div>
       </div>
@@ -71,8 +71,8 @@ function TickerItem({ metric, index }: { metric: typeof metrics[0], index: numbe
       {/* Right vertical divider for desktop, bottom horizontal for mobile */}
       {index !== metrics.length - 1 && (
         <>
-          <div className="absolute right-0 top-12 bottom-12 w-px bg-white/10 hidden md:block" />
-          <div className="absolute bottom-0 left-8 right-8 h-px bg-white/10 md:hidden" />
+          <div className="absolute right-0 top-12 bottom-12 w-px bg-[#DCE8EE] hidden md:block" />
+          <div className="absolute bottom-0 left-8 right-8 h-px bg-[#DCE8EE] md:hidden" />
         </>
       )}
     </div>
@@ -81,9 +81,9 @@ function TickerItem({ metric, index }: { metric: typeof metrics[0], index: numbe
 
 export function SystemPerformanceTicker() {
   return (
-    <section className="relative bg-[#050B14] border-y border-white/5">
+    <section className="relative bg-[#FAFAF7] border-y border-[#E4EDF1]">
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 divide-white/10 md:divide-x-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 divide-[#DCE8EE] md:divide-x-0">
           {metrics.map((metric, index) => (
             <TickerItem key={metric.label} metric={metric} index={index} />
           ))}

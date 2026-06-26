@@ -136,8 +136,6 @@ function DiscrepancyDetectionViz() {
                 </div>
                 <div className="flex items-center text-[10px]">
                   <span className="font-semibold text-emerald-600">{cluster.percent}</span>
-                  <span className="mx-1.5 text-slate-300">|</span>
-                  <span className="font-medium text-slate-500">In prog</span>
                 </div>
               </div>
             </motion.div>
