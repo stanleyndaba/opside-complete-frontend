@@ -396,7 +396,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[680px] text-[17px] leading-[1.7] text-slate-300 md:text-[20px]"
           >
-            Margin handles the part Amazon reimbursement tools often leave manual - the evidence, the rejections, the appeals, and the payouts. You approve. Margin fights.
+            Where Amazon operators run their entire recovery program, from discrepancy identification to final payout. Margin’s workflow automates the evidence-binding, the rejections, and the appeals—all on top of the systems you already use, with zero recovery commissions.
           </motion.p>
 
           <motion.div
