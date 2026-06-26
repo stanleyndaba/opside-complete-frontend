@@ -119,13 +119,8 @@ function DiscrepancyDetectionViz() {
                 {cluster.statement}
               </div>
 
-              {/* Line 3: Progress & Proof Tags */}
-              <div className="mt-1.5 flex items-center gap-3">
-                <div className="flex items-center text-[10px]">
-                  <span className="font-semibold text-emerald-500">{cluster.percent}</span>
-                  <span className="mx-1.5 text-slate-300">|</span>
-                  <span className="font-medium text-slate-500">In prog</span>
-                </div>
+              {/* Line 3: Proof Tags + Progress (right-aligned) */}
+              <div className="mt-1.5 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   {cluster.tags.map((tag, tagIndex) => (
                     <motion.span
@@ -138,6 +133,11 @@ function DiscrepancyDetectionViz() {
                       {tag}
                     </motion.span>
                   ))}
+                </div>
+                <div className="flex items-center text-[10px]">
+                  <span className="font-semibold text-emerald-600">{cluster.percent}</span>
+                  <span className="mx-1.5 text-slate-300">|</span>
+                  <span className="font-medium text-slate-500">In prog</span>
                 </div>
               </div>
             </motion.div>
@@ -167,7 +167,7 @@ function DiscrepancyDetectionViz() {
             <span className="rounded-full bg-slate-100 px-2 py-0.5 font-sans text-[10px] font-bold text-slate-600">
               4 Active Case Files
             </span>
-            <span className="font-sans text-[26px] font-bold leading-none tracking-tight text-slate-900">
+            <span className="font-sans text-[20px] font-semibold leading-none tracking-tight text-slate-700">
               {formatCurrency(total)}
             </span>
           </div>
