@@ -40,10 +40,10 @@ export function ProgressiveNarrativeTabs() {
   }, [activeChapter, isInView, isPaused]);
 
   return (
-    <section ref={containerRef} className="relative bg-[#050B14] py-32 md:py-48">
+    <section ref={containerRef} className="relative bg-white py-32 md:py-48">
       <div className="mx-auto w-full max-w-[880px] px-6 md:px-8">
         
-        <div className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-16 md:mb-24">
+        <div className="text-[11px] font-bold uppercase tracking-widest text-[#0B74DE] mb-16 md:mb-24">
           Why timing matters
         </div>
 
@@ -58,7 +58,7 @@ export function ProgressiveNarrativeTabs() {
               >
                 <h3 
                   className={`font-serif-headline text-[32px] sm:text-[42px] md:text-[56px] font-bold leading-[1.1] tracking-tight transition-colors duration-500 ${
-                    isActive ? 'text-white' : 'text-white/20 group-hover:text-white/40'
+                    isActive ? 'text-[#182026]' : 'text-[#182026]/20 group-hover:text-[#182026]/40'
                   }`}
                 >
                   {chapter.title}
@@ -73,7 +73,7 @@ export function ProgressiveNarrativeTabs() {
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="max-w-[720px] text-[18px] sm:text-[20px] md:text-[24px] leading-relaxed text-slate-400">
+                      <p className="max-w-[720px] text-[18px] sm:text-[20px] md:text-[24px] leading-relaxed text-[#66737F]">
                         {chapter.subtext}
                       </p>
                     </motion.div>
