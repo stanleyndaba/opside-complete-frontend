@@ -314,10 +314,10 @@ function RefundMatchingViz() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="mt-5 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3"
+        className="mt-5 flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-50 p-3"
       >
-        <div className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-        <span className="text-[11px] font-medium text-red-700">
+        <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]" />
+        <span className="text-[11px] font-medium text-slate-600">
           1 unmatched refund held for validation
         </span>
       </motion.div>
