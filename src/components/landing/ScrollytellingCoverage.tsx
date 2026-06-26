@@ -70,68 +70,82 @@ function DiscrepancyDetectionViz() {
   };
 
   const clusters = [
-    { sku: 'SKU-4821', source: 'Inbound FBA15J', units: '-12 Units', price: '$847.20', urgency: 'Exp: 4D', statement: 'Received quantity variance detected in FC transfer', tags: ['Invoice', 'BOL', 'Packing List'] },
-    { sku: 'SKU-7103', source: 'Inbound FBA12X', units: '-8 Units', price: '$523.84', urgency: 'T-Minus 96H', statement: 'Units lost during fulfillment center processing', tags: ['Invoice', 'BOL'] },
-    { sku: 'SKU-2954', source: 'Inbound FBA88Q', units: '-23 Units', price: '$1,102.50', urgency: 'Exp: 2D', statement: 'Discrepancy in unit weight/dimensions upon receipt', tags: ['Invoice', 'POD'] },
+    { sku: 'SKU-4821', source: 'Inbound FBA15J', units: '-12 Units', price: '$847.20', urgency: 'Exp: 4D', statement: 'Received quantity variance detected in FC transfer', tags: ['Invoice', 'BOL', 'Packing List'], percent: '74%' },
+    { sku: 'SKU-7103', source: 'Inbound FBA12X', units: '-8 Units', price: '$523.84', urgency: 'T-Minus 96H', statement: 'Units lost during fulfillment center processing', tags: ['Invoice', 'BOL'], percent: '70%' },
+    { sku: 'SKU-2954', source: 'Inbound FBA88Q', units: '-23 Units', price: '$1,102.50', urgency: 'Exp: 2D', statement: 'Discrepancy in unit weight/dimensions upon receipt', tags: ['Invoice', 'POD'], percent: '90%' },
   ];
 
   return (
     <div className="flex h-full flex-col justify-between">
-      <div className="flex flex-col gap-0">
-        {clusters.map((cluster, i) => (
-          <motion.div
-            key={cluster.sku}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col gap-1 border-b border-slate-100 py-3 first:pt-0 last:border-0 last:pb-0"
-          >
-            {/* Line 1: SKU & Price & Urgency */}
-            <div className="flex items-end justify-between leading-none">
-              <span className="font-sans text-[13px] font-bold tracking-tight text-slate-900">
-                {cluster.sku}
-              </span>
-              <div className="flex items-center gap-2.5">
-                <span className="font-sans text-[11px] font-semibold text-slate-500">
-                  {cluster.urgency}
+      <div>
+        <div className="flex items-center justify-between border-b border-slate-200 pb-2 mb-2">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            21 Active Transaction Disputes
+          </span>
+        </div>
+        <div className="flex flex-col gap-0">
+          {clusters.map((cluster, i) => (
+            <motion.div
+              key={cluster.sku}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col border-b border-slate-100 py-2 first:pt-0 last:border-0 last:pb-0"
+            >
+              {/* Line 1: SKU & Price & Urgency */}
+              <div className="flex items-end justify-between leading-none">
+                <span className="font-mono text-[12px] text-slate-700">
+                  {cluster.sku}
                 </span>
-                <span className="font-sans text-[13px] font-bold tracking-tight text-slate-900">
-                  {cluster.price}
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[11px] text-slate-500">
+                    {cluster.urgency}
+                  </span>
+                  <span className="font-mono text-[12px] text-slate-700">
+                    {cluster.price}
+                  </span>
+                </div>
+              </div>
+
+              {/* Line 2: Source ID & Units */}
+              <div className="mt-1 flex items-center">
+                <span className="text-[11px] text-slate-500">
+                  {cluster.source} &middot; {cluster.units}
                 </span>
               </div>
-            </div>
 
-            {/* Line 2: Source ID & Units */}
-            <div className="flex items-center">
-              <span className="font-sans text-[12px] font-medium text-slate-500">
-                {cluster.source} &middot; {cluster.units}
-              </span>
-            </div>
+              {/* Issue Statement */}
+              <div className="mt-0.5 text-[11px] text-slate-400">
+                {cluster.statement}
+              </div>
 
-            {/* Issue Statement */}
-            <div className="text-[11px] text-slate-400">
-              {cluster.statement}
-            </div>
-
-            {/* Line 3: Proof Tags */}
-            <div className="mt-0.5 flex items-center gap-1.5">
-              {cluster.tags.map((tag, tagIndex) => (
-                <motion.span
-                  key={tag}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.15 + 0.3 + tagIndex * 0.1, duration: 0.4 }}
-                  className="rounded bg-slate-100 px-1.5 py-0.5 font-sans text-[10px] font-semibold text-slate-600"
-                >
-                  {tag}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+              {/* Line 3: Progress & Proof Tags */}
+              <div className="mt-1.5 flex items-center gap-3">
+                <div className="flex items-center text-[10px]">
+                  <span className="font-semibold text-emerald-500">{cluster.percent}</span>
+                  <span className="mx-1.5 text-slate-300">|</span>
+                  <span className="font-medium text-slate-500">In prog</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {cluster.tags.map((tag, tagIndex) => (
+                    <motion.span
+                      key={tag}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: i * 0.15 + 0.3 + tagIndex * 0.1, duration: 0.4 }}
+                      className="rounded bg-slate-100 px-1.5 py-0.5 font-sans text-[10px] font-semibold text-slate-600"
+                    >
+                      {tag}
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2">
+      <div className="mt-3 flex flex-col gap-2">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
