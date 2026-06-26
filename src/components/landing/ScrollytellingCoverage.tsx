@@ -413,76 +413,129 @@ function FeeDriftViz() {
 }
 
 function PayoutReconciliationViz() {
+  const [variance, setVariance] = useState(0);
+
+  useEffect(() => {
+    const target = 435;
+    const duration = 1200;
+    const startTime = Date.now();
+    
+    const tick = () => {
+      const now = Date.now();
+      const progress = Math.min((now - startTime) / duration, 1);
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setVariance(Math.floor(target * easeProgress));
+      
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      }
+    };
+    
+    // Slight delay before counting up
+    const timeoutId = setTimeout(() => {
+      requestAnimationFrame(tick);
+    }, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          Payout Reconciliation
+          Ledger Variance Protocol
         </span>
-        <div className="flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-          <span className="text-[10px] font-mono text-amber-600">MISMATCH</span>
-        </div>
       </div>
 
-      <div className="mt-6 space-y-5">
+      <div className="mt-3 flex flex-col">
+        {/* The Approval */}
         <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="border-b border-slate-100 py-2.5"
         >
-          <div className="mb-1.5 flex justify-between text-[11px]">
-            <span className="font-semibold uppercase tracking-wider text-slate-500">Approved</span>
-            <span className="font-mono font-bold text-slate-900">$1,847.00</span>
+          <div className="flex items-end justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
+              Approved
+            </span>
+            <span className="font-mono text-[14px] font-semibold text-slate-700">
+              $1,847.00
+            </span>
           </div>
-          <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100 border border-slate-200">
-            <motion.div
-              className="h-full rounded-full bg-emerald-500"
-              initial={{ width: '0%' }}
-              animate={{ width: '100%' }}
-              transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            />
+          <div className="mt-1 font-mono text-[9px] tracking-wide text-slate-400">
+            CASE_ID: #8821-X  ·  STATUS: GRANTED
           </div>
         </motion.div>
 
+        {/* The Reality */}
         <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+          className="border-b border-slate-100 py-2.5"
         >
-          <div className="mb-1.5 flex justify-between text-[11px]">
-            <span className="font-semibold uppercase tracking-wider text-slate-500">Received</span>
-            <span className="font-mono font-bold text-slate-700">$1,412.00</span>
+          <div className="flex items-end justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
+              Received
+            </span>
+            <span className="font-mono text-[14px] font-semibold text-slate-500">
+              $1,412.00
+            </span>
           </div>
-          <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100 border border-slate-200">
-            <motion.div
-              className="h-full rounded-full bg-[#0B74DE]"
-              initial={{ width: '0%' }}
-              animate={{ width: '76.4%' }}
-              transition={{ delay: 0.5, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            />
+          <div className="mt-1 font-mono text-[9px] tracking-wide text-slate-400">
+            SETTLEMENT: #S-992  ·  DATE: 2026-06-20
+          </div>
+        </motion.div>
+
+        {/* The Variance */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+          className="py-3"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                Unreconciled Variance
+              </div>
+              <div className="mt-1.5 flex items-center gap-2">
+                <span className="animate-pulse rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-slate-500">
+                  TRIGGERING_RECONCILIATION_WORKFLOW
+                </span>
+              </div>
+            </div>
+            <div className="font-mono text-[20px] font-semibold tracking-tight text-slate-700">
+              ${variance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            </div>
           </div>
         </motion.div>
       </div>
 
+      {/* Forensic Audit Log */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-        className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7 }}
+        className="mt-2 border-t border-slate-200 pt-3"
       >
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-wider text-amber-600/80">
-              Underpaid Delta
-            </div>
-            <div className="mt-1 font-mono text-[28px] font-bold tracking-tight text-amber-600">
-              $435.00
-            </div>
-          </div>
-          <div className="rounded-full bg-amber-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-700">
-            Reconciliation
-          </div>
+        <div className="flex flex-col gap-1 font-mono text-[9px] tracking-wide text-slate-400">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.2 }}
+          >
+            [09:01] PAYOUT_MISMATCH_DETECTED_($435.00)
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.2 }}
+          >
+            [09:02] DISPUTE_RE-ENTRY_INITIATED
+          </motion.div>
         </div>
       </motion.div>
     </div>
