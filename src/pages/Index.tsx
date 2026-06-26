@@ -571,52 +571,7 @@ function MinimalMetric({
   );
 }
 
-function TestimonialSection() {
-  return (
-    <section className="relative py-28 md:py-40 bg-[#F3F6F8]" aria-label="Seller case study">
-      <div className={containerClass}>
-        <motion.div
-          {...revealProps}
-          className="mx-auto flex max-w-[980px] flex-col"
-        >
-          <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE] mb-10">
-            Seller case study
-          </div>
-          
-          <div className="relative border-l-4 border-[#0B74DE] pl-6 md:pl-12">
-            <div className="absolute -left-6 -top-10 text-[120px] leading-none text-[#0B74DE] opacity-10 font-serif-headline select-none">
-              &ldquo;
-            </div>
-            <p className="relative z-10 font-serif-headline text-[24px] italic leading-relaxed tracking-[0.2px] text-[#182026] sm:text-[32px] md:text-[40px] md:leading-[1.4]">
-              A seller doing approximately $120K/month came to Margin after Amazon denied three consecutive claims and underpaid another. Margin rebuilt the evidence trail, surfaced a $400 lowball dispute, and helped recover $1,200 in two weeks.
-            </p>
-          </div>
 
-          <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
-            <div className="text-center">
-              <div className="text-[42px] font-black tracking-[-0.04em] text-[#182026]">$120K</div>
-              <div className="mt-1 text-[13px] font-semibold uppercase tracking-tight text-[#66737F]">Monthly Revenue</div>
-            </div>
-            <div className="hidden md:block h-12 w-px bg-[#DCE8EE]" />
-            <div className="text-center">
-              <div className="text-[42px] font-black tracking-[-0.04em] text-[#0B74DE]">$1,200</div>
-              <div className="mt-1 text-[13px] font-semibold uppercase tracking-tight text-[#66737F]">Recovered Value</div>
-            </div>
-            <div className="hidden md:block h-12 w-px bg-[#DCE8EE]" />
-            <div className="text-center">
-              <div className="text-[42px] font-black tracking-[-0.04em] text-[#182026]">2 Weeks</div>
-              <div className="mt-1 text-[13px] font-semibold uppercase tracking-tight text-[#66737F]">Resolution Time</div>
-            </div>
-          </div>
-
-          <div className="mt-10 text-[10px] font-semibold uppercase tracking-widest text-[#4D5B66] text-center">
-            * Outcome shown as an individual case study, not a reimbursement guarantee.
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
 
 export default function Index() {
   const navigate = useNavigate();
@@ -929,7 +884,7 @@ export default function Index() {
           </div>
         </section>
 
-        <TestimonialSection />
+
 
         <section className="relative bg-[#F7F5F0] py-8 sm:bg-transparent sm:py-16 md:py-24">
           <div className={containerClass}>
@@ -994,7 +949,7 @@ export default function Index() {
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20" />
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
-                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-[0.5px] text-[#182026] sm:text-[48px] md:text-[64px]">
+                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
                     Founding 500 Access.
                   </h2>
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
