@@ -329,49 +329,47 @@ function FeeDriftViz() {
   const fees = [
     { label: 'FBA Fulfillment Fee', listed: '$4.82', actual: '$5.17', delta: '+$0.35' },
     { label: 'Storage Fee (Monthly)', listed: '$0.87', actual: '$1.12', delta: '+$0.25' },
+    { label: 'Referral Fee Override', listed: '$3.40', actual: '$3.68', delta: '+$0.28' },
   ];
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
           Fee Recalculation
         </span>
         <span className="text-[10px] font-mono text-amber-600">DRIFT DETECTED</span>
       </div>
 
-      <div className="mt-5 space-y-4">
+      {/* Column headers */}
+      <div className="mt-3 grid grid-cols-[1fr_auto_auto_auto] gap-x-4 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+        <span>Fee Type</span>
+        <span className="text-right">Listed</span>
+        <span className="text-right">Actual</span>
+        <span className="text-right">Drift</span>
+      </div>
+
+      <div className="flex flex-col">
         {fees.map((fee, i) => (
           <motion.div
             key={fee.label}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.15, duration: 0.4 }}
-            className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+            transition={{ delay: i * 0.12, duration: 0.4 }}
+            className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-x-4 border-b border-slate-100 py-2.5 last:border-0"
           >
-            <div className="text-[11px] font-semibold uppercase tracking-tight text-slate-500">
+            <span className="text-[11px] font-medium text-slate-700">
               {fee.label}
-            </div>
-            <div className="mt-3 grid grid-cols-3 gap-2">
-              <div>
-                <div className="text-[10px] text-slate-400">Listed</div>
-                <div className="mt-0.5 font-mono text-[18px] font-bold text-slate-400 line-through">
-                  {fee.listed}
-                </div>
-              </div>
-              <div>
-                <div className="text-[10px] text-slate-400">Actual</div>
-                <div className="mt-0.5 font-mono text-[18px] font-bold text-slate-900">
-                  {fee.actual}
-                </div>
-              </div>
-              <div>
-                <div className="text-[10px] text-slate-400">Drift</div>
-                <div className="mt-0.5 font-mono text-[18px] font-bold text-amber-600">
-                  {fee.delta}
-                </div>
-              </div>
-            </div>
+            </span>
+            <span className="font-mono text-[11px] text-slate-400 line-through text-right">
+              {fee.listed}
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-slate-700 text-right">
+              {fee.actual}
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-amber-600 text-right">
+              {fee.delta}
+            </span>
           </motion.div>
         ))}
       </div>
@@ -380,16 +378,16 @@ function FeeDriftViz() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="mt-5 border-t border-slate-200 pt-4"
+        className="mt-3 border-t border-slate-200 pt-3"
       >
         <div className="flex items-end justify-between">
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
               Cumulative Impact
             </div>
-            <div className="mt-1 text-[11px] text-slate-500">$0.60/unit × 847 units</div>
+            <div className="mt-0.5 text-[11px] text-slate-500">$0.88/unit × 847 units</div>
           </div>
-          <div className="font-mono text-[28px] font-bold tracking-tight text-amber-600">$508</div>
+          <div className="font-mono text-[20px] font-semibold tracking-tight text-slate-700">$745</div>
         </div>
       </motion.div>
     </div>
