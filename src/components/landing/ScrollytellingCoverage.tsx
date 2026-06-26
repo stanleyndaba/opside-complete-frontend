@@ -44,79 +44,116 @@ const workflows = [
 /* ── Visual Simulations ───────────────────────────────────────── */
 
 function DiscrepancyDetectionViz() {
-  const items = [
-    { sku: 'SKU-4821', units: -12, value: '$847.20', status: 'critical' as const },
-    { sku: 'SKU-7103', units: -8, value: '$523.84', status: 'critical' as const },
-    { sku: 'SKU-2954', units: -23, value: '$1,102.50', status: 'validating' as const },
-    { sku: 'SKU-6618', units: -5, value: '$375.00', status: 'queued' as const },
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const target = 2847;
+    const duration = 1500;
+    const startTime = Date.now();
+    
+    const tick = () => {
+      const now = Date.now();
+      const progress = Math.min((now - startTime) / duration, 1);
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setTotal(Math.floor(target * easeProgress));
+      
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      }
+    };
+    
+    requestAnimationFrame(tick);
+  }, []);
+
+  const formatCurrency = (val: number) => {
+    return '$' + val.toLocaleString('en-US');
+  };
+
+  const clusters = [
+    { sku: 'SKU-4821', source: 'INBOUND #FBA15J', units: '-12 UNITS', price: '$847.20', urgency: 'EXP: 4D', tags: ['[INVOICE]', '[BOL]', '[PACKING LIST]'] },
+    { sku: 'SKU-7103', source: 'INBOUND #FBA12X', units: '-8 UNITS', price: '$523.84', urgency: 'T-MINUS 96H', tags: ['[INVOICE]', '[BOL]'] },
+    { sku: 'SKU-2954', source: 'INBOUND #FBA88Q', units: '-23 UNITS', price: '$1,102.50', urgency: 'EXP: 2D', tags: ['[INVOICE]', '[POD]'] },
   ];
 
   return (
-    <div>
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          Discrepancy Feed
-        </span>
-        <div className="flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-mono text-emerald-600">SCANNING</span>
-        </div>
-      </div>
-
-      <div className="mt-4">
-        {items.map((item, i) => (
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col gap-8">
+        {clusters.map((cluster, i) => (
           <motion.div
-            key={item.sku}
-            initial={{ opacity: 0, x: -12 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="flex items-center justify-between border-b border-slate-100 py-3"
+            key={cluster.sku}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col gap-1.5"
           >
-            <div className="flex items-center gap-3">
-              <div
-                className={`h-2 w-2 rounded-full ${
-                  item.status === 'critical'
-                    ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]'
-                    : item.status === 'validating'
-                    ? 'bg-amber-500 animate-pulse'
-                    : 'bg-slate-300'
-                }`}
-              />
-              <span className="font-mono text-[13px] text-slate-700">{item.sku}</span>
+            {/* Line 1: SKU & Price & Urgency */}
+            <div className="flex items-end justify-between leading-none">
+              <span className="font-sans text-[17px] font-bold tracking-tight text-slate-900">
+                {cluster.sku}
+              </span>
+              <div className="flex items-center gap-4">
+                <span className="font-mono text-[11px] font-semibold tracking-wider text-slate-400">
+                  {cluster.urgency}
+                </span>
+                <span className="font-sans text-[16px] font-bold tracking-tight text-slate-900">
+                  {cluster.price}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="font-mono text-[12px] text-red-600">{item.units} units</span>
-              <span className="font-mono text-[13px] text-slate-500">{item.value}</span>
+
+            {/* Line 2: Source ID & Units */}
+            <div className="flex items-center">
+              <span className="font-mono text-[12px] font-medium uppercase tracking-wide text-slate-500">
+                {cluster.source} // {cluster.units}
+              </span>
+            </div>
+
+            {/* Line 3: Proof Tags */}
+            <div className="mt-2 flex items-center gap-2">
+              {cluster.tags.map((tag, tagIndex) => (
+                <motion.span
+                  key={tag}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.15 + 0.3 + tagIndex * 0.1, duration: 0.4 }}
+                  className="rounded-[2px] bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-slate-500"
+                >
+                  {tag}
+                </motion.span>
+              ))}
             </div>
           </motion.div>
         ))}
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="mt-5 flex items-end justify-between"
-      >
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-          Total at risk
-        </span>
-        <span className="font-mono text-[24px] font-bold tracking-tight text-slate-900">$2,847</span>
-      </motion.div>
-
-      <motion.div
-        className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-200"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-      >
+      <div className="mt-14 flex flex-col gap-4">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="font-mono text-[10px] font-medium uppercase tracking-widest text-slate-400"
+        >
+          // SYSTEM SCAN DEPTH: 100% EVIDENCE MATCHED
+        </motion.div>
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-red-500 to-amber-500"
-          initial={{ width: '0%' }}
-          animate={{ width: '73%' }}
-          transition={{ delay: 0.8, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </motion.div>
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="flex items-end justify-between"
+        >
+          <span className="font-sans text-[13px] font-bold tracking-widest text-slate-900">
+            RECLAIMABLE CAPITAL
+          </span>
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-[10px] font-semibold tracking-wider text-slate-500">
+              [4 ACTIVE CASE FILES]
+            </span>
+            <span className="font-sans text-[42px] font-bold leading-none tracking-[-0.03em] text-slate-900">
+              {formatCurrency(total)}
+            </span>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
