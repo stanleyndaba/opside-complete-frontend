@@ -15,10 +15,11 @@ import { CookieConsent } from '@/components/landing/CookieConsent';
 import { InhaleSection } from '@/components/landing/InhaleSection';
 import { PUBLIC_ROUTE_META } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 import { ScrollytellingCoverage } from '@/components/landing/ScrollytellingCoverage';
+import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 import { ProgressiveNarrativeTabs } from '@/components/landing/ProgressiveNarrativeTabs';
 import { TechnicalProtocolGrid } from '@/components/landing/TechnicalProtocolGrid';
+import { SystemPerformanceTicker } from '@/components/landing/SystemPerformanceTicker';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -645,22 +646,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative py-28 md:py-40" aria-label="Margin recovery speed metrics">
-          <div className={containerClass}>
-            <div className="grid gap-20 md:grid-cols-3 md:items-start md:gap-12">
-              {velocityMetrics.map((metric, index) => (
-                <MinimalMetric
-                  key={metric.label}
-                  label={metric.label}
-                  value={metric.value}
-                  suffix={metric.suffix}
-                  detail={metric.detail}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
+        <SystemPerformanceTicker />
 
         <TechnicalProtocolGrid />
 
