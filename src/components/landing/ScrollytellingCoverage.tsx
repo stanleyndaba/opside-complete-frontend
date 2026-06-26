@@ -179,76 +179,94 @@ function DiscrepancyDetectionViz() {
 
 function EvidenceBindingViz() {
   const sources = [
-    { label: 'Shipment Record', status: 'Linked', linked: true },
-    { label: 'Supplier Invoice', status: 'Linked', linked: true },
-    { label: 'Amazon Receiving Report', status: 'Binding...', linked: false },
+    { label: 'Shipment Record', status: 'VERIFIED', verified: true, meta: 'REF: #FBA15J2K  ·  CARRIER: UPS  ·  500 UNITS' },
+    { label: 'Supplier Invoice', status: 'VERIFIED', verified: true, meta: 'INV-2024-88  ·  OCR MATCH: 100%  ·  $12,400' },
+    { label: 'Amazon Receiving Report', status: 'ANALYZING', verified: false, meta: 'SCANNING FOR RECEIVED QUANTITY VARIANCE...' },
   ];
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          Evidence Chain
-        </span>
-        <span className="text-[10px] font-mono text-amber-600">2/3 BOUND</span>
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+        <div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            Evidence Binding Protocol
+          </span>
+          <div className="mt-0.5 font-mono text-[9px] text-slate-400">
+            SESSION_ID: 882-AUDIT
+          </div>
+        </div>
+        <span className="text-[10px] font-mono text-slate-500">2/3 BOUND</span>
       </div>
 
-      <div className="mt-5 space-y-1.5">
+      {/* Evidence Blocks */}
+      <div className="mt-3 flex flex-col">
         {sources.map((src, i) => (
           <React.Fragment key={src.label}>
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.15, duration: 0.4 }}
-              className={`flex items-center justify-between rounded-xl border p-4 ${
-                src.linked
-                  ? 'border-emerald-200 bg-emerald-50'
-                  : 'border-amber-200 bg-amber-50'
-              }`}
+              className="border-b border-slate-100 py-2.5 last:border-0"
             >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[12px] font-bold ${
-                    src.linked
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-amber-100 text-amber-700'
+              {/* Row: Label + Status */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-slate-100 font-mono text-[9px] font-bold text-slate-500">
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
+                  <span className="text-[11px] font-medium text-slate-700">{src.label}</span>
+                </div>
+                <span
+                  className={`rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold ${
+                    src.verified ? 'text-slate-600' : 'text-slate-500 animate-pulse'
                   }`}
                 >
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <span className="text-[13px] font-medium text-slate-800">{src.label}</span>
+                  {src.status}
+                </span>
               </div>
-              <span
-                className={`text-[11px] font-semibold ${
-                  src.linked ? 'text-emerald-600' : 'text-amber-600 animate-pulse'
-                }`}
-              >
-                {src.status}
-              </span>
-            </motion.div>
-            {i < sources.length - 1 && (
+
+              {/* Metadata line */}
               <motion.div
-                className="ml-8 flex h-2.5 items-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 + i * 0.15 }}
+                transition={{ delay: 0.3 + i * 0.2, duration: 0.6 }}
+                className={`mt-1 ml-7 font-mono text-[9px] tracking-wide ${
+                  src.verified ? 'text-slate-400' : 'text-slate-400 animate-pulse'
+                }`}
               >
-                <div
-                  className={`h-full w-px ${src.linked ? 'bg-emerald-300' : 'bg-slate-200'}`}
-                />
+                {src.meta}
+              </motion.div>
+            </motion.div>
+
+            {/* Connector line */}
+            {i < sources.length - 1 && (
+              <motion.div
+                className="ml-[18px] flex h-2 items-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.25 + i * 0.15 }}
+              >
+                <div className="h-full w-px bg-slate-200" />
               </motion.div>
             )}
           </React.Fragment>
         ))}
       </div>
 
+      {/* Footer */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
-        className="mt-5 rounded-lg bg-slate-50 p-3 text-[11px] leading-5 text-slate-500 border border-slate-100"
+        className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3"
       >
-        Case held until all evidence sources are bound and validated.
+        <span className="font-mono text-[9px] tracking-wide text-slate-400">
+          PROTOCOL: HOLD_UNTIL_VALIDATED
+        </span>
+        <span className="font-mono text-[9px] tracking-wide text-slate-500">
+          INTEGRITY: 66%
+        </span>
       </motion.div>
     </div>
   );
