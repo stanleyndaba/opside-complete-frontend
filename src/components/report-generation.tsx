@@ -331,58 +331,58 @@ export default function ReportGeneration() {
               >
                 <div className="mx-auto max-w-4xl">
                   <div className="mb-4">
-                    <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">Generated Report</h2>
-                    <p className="mt-1 text-sm text-gray-400">All evidence bound and verified.</p>
+                    <h2 className="text-base font-medium tracking-tight text-[#242424] sm:text-lg">Generated Report</h2>
+                    <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
-                  <article className="flex flex-col items-center gap-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-xl sm:flex-row sm:p-6">
-                    <div className="relative h-48 w-36 shrink-0">
-                      <div className="absolute inset-0 translate-x-3 -rotate-3 rounded-lg border border-gray-200 bg-gray-100" />
-                      <div className="absolute inset-0 translate-x-1.5 rotate-2 rounded-lg border border-gray-200 bg-gray-50" />
-                      <div className="absolute inset-0 rounded-lg border border-gray-200 bg-white p-3.5 shadow-md">
+                  <article className="flex flex-col items-center gap-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-lg shadow-gray-200/50 sm:flex-row sm:p-6">
+                    <div className="relative h-44 w-32 shrink-0">
+                      <div className="absolute inset-0 translate-x-2.5 -rotate-2 rounded-lg border border-gray-200 bg-[#F4F5F6]" />
+                      <div className="absolute inset-0 translate-x-1 rotate-1 rounded-lg border border-gray-200 bg-[#FAFAFA]" />
+                      <div className="absolute inset-0 rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
                         <div className="flex items-center justify-between">
-                          <span className="text-[8px] font-bold uppercase text-gray-950">Margin</span>
-                          <span className="text-[7px] text-gray-400">CONFIDENTIAL</span>
+                          <span className="text-[8px] font-medium uppercase text-[#242424]">Margin</span>
+                          <span className="text-[6px] text-[#A0A6AE]">Private</span>
                         </div>
-                        <div className="mt-3 border-y-2 border-gray-950 py-1.5">
-                          <p className="text-[8px] font-bold uppercase leading-tight text-gray-950">Dispute Investigation</p>
-                          <p className="mt-0.5 text-[6px] text-gray-500">Delivery evidence report</p>
+                        <div className="mt-3 border-y border-[#D8DDE3] py-2">
+                          <p className="text-[7px] font-medium leading-tight text-[#242424]">Dispute investigation</p>
+                          <p className="mt-0.5 text-[6px] text-[#8A8F98]">Delivery evidence report</p>
                         </div>
                         <div className="mt-2.5 space-y-1.5">
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">CASE ID</span><span className="font-semibold text-gray-900">#17520708561</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">SHIPMENT</span><span className="font-semibold text-gray-900">FBA15JJ4K7L1</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">WEIGHT</span><span className="font-semibold text-gray-900">45.2 lb</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-gray-400">SIGNED BY</span><span className="font-semibold text-gray-900">J. Smith</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Case ID</span><span className="font-medium text-[#242424]">#17520708561</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Shipment</span><span className="font-medium text-[#242424]">FBA15JJ4K7L1</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Weight</span><span className="font-medium text-[#242424]">45.2 lb</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Signed by</span><span className="font-medium text-[#242424]">J. Smith</span></div>
                         </div>
-                        <div className="mt-2 bg-gray-950 px-2 py-1 text-[6px] font-semibold uppercase text-white">Delivery verified</div>
-                        <span className="absolute bottom-3 right-3 text-[8px] text-gray-300">1 / 14</span>
+                        <div className="mt-2 rounded-sm border border-emerald-100 bg-emerald-50 px-2 py-1 text-[6px] font-medium text-emerald-700">Delivery verified</div>
+                        <span className="absolute bottom-3 right-3 text-[8px] text-[#C5CBD3]">1 / 14</span>
                       </div>
                     </div>
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
-                        <h3 className="text-lg font-semibold text-gray-900 sm:text-xl">Dispute Investigation Report</h3>
-                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase text-emerald-700">
+                        <h3 className="text-base font-medium tracking-tight text-[#242424] sm:text-lg">Dispute Investigation Report</h3>
+                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-medium text-emerald-700">
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           Verified
                         </span>
                       </div>
-                      <p className="mt-2 text-sm font-medium text-gray-500">PDF Document</p>
-                      <p className="mt-1 text-sm text-gray-400">2.4 MB · 14 pages</p>
-                      <p className="mt-1 text-sm text-gray-400">Created Nov 12, 2025</p>
+                      <p className="mt-2 text-sm font-normal text-[#5E6670]">PDF Document</p>
+                      <p className="mt-1 text-sm text-[#8A8F98]">2.4 MB · 14 pages</p>
+                      <p className="mt-1 text-sm text-[#8A8F98]">Created Nov 12, 2025</p>
 
-                      <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                      <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
-                          className="flex h-10 items-center rounded-xl border border-gray-950 bg-gray-950 px-5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+                          className="flex h-9 items-center rounded-[10px] border border-[#242424] bg-[#242424] px-5 text-sm font-medium text-white transition-colors hover:bg-[#343434]"
                         >
                           View
                         </button>
                         <button
                           type="button"
                           onClick={downloadReport}
-                          className="flex h-10 items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 text-sm font-semibold text-gray-950 transition-colors hover:bg-gray-50"
+                          className="flex h-9 items-center gap-2 rounded-[10px] border border-[#D3D7DE] bg-white px-5 text-sm font-medium text-[#242424] transition-colors hover:bg-gray-50"
                         >
                           <Download className="h-4 w-4" />
                           Download
@@ -390,7 +390,7 @@ export default function ReportGeneration() {
                         <button
                           type="button"
                           onClick={restartSimulation}
-                          className="px-2 text-xs font-medium text-gray-400 transition-colors hover:text-gray-900"
+                          className="px-2 text-xs font-normal text-[#8A8F98] transition-colors hover:text-[#242424]"
                         >
                           Regenerate
                         </button>
