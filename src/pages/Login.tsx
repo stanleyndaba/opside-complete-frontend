@@ -39,6 +39,33 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
 type AuthMode = 'login' | 'signup' | 'recovery';
 type LoginStep = 'account' | 'workspace';
 
+type DemoReviewerLoginResponse = {
+  success: boolean;
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
+  tenant: {
+    id: string;
+    name: string;
+    slug: string;
+    plan: string;
+    status: string;
+    role: string;
+  };
+  redirectPath: string;
+};
+
+const PAYSTACK_REVIEW_EMAIL = String(
+  import.meta.env.VITE_PAYSTACK_REVIEW_EMAIL || 'paystack-review@margin-finance.com'
+).trim().toLowerCase();
+
+const isPaystackReviewerEmail = (value: string) => {
+  return value.trim().toLowerCase() === PAYSTACK_REVIEW_EMAIL;
+};
+
 const extractLoginErrorMessage = (value: unknown): string => {
   if (!value) {
     return '';
@@ -565,6 +592,37 @@ const Login = () => {
       }
 
       failureStep = 'account';
+      if (isPaystackReviewerEmail(email)) {
+        await resetBrowserAuthForFreshLogin();
+
+        const reviewerResponse = await api.post<DemoReviewerLoginResponse>('/api/auth/demo-reviewer/login', {
+          email: email.trim(),
+          password,
+        });
+
+        if (!reviewerResponse.ok || !reviewerResponse.data?.success) {
+          setLoginStep('account');
+          const reviewerError = reviewerResponse.status === 401
+            ? 'The reviewer email or password is incorrect.'
+            : reviewerResponse.status === 503
+              ? 'Reviewer access is not available right now.'
+              : reviewerResponse.error || 'Reviewer access is not available right now.';
+          setError(reviewerError);
+          return;
+        }
+
+        seedDemoSession({ userEmail: reviewerResponse.data.user?.email || email.trim() });
+        setActiveSessionEmail(reviewerResponse.data.user?.email || email.trim());
+
+        toast({
+          title: 'Reviewer workspace ready',
+          description: 'Opening the Acme Operations demo workspace.',
+        });
+
+        navigate(reviewerResponse.data.redirectPath || `/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
+        return;
+      }
+
       await resetBrowserAuthForFreshLogin();
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: email.trim(),

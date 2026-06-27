@@ -148,6 +148,7 @@ const NON_SESSION_401_PATTERNS = [
   'workspace context',
   'no tenant-bound user profile found',
   'user id is required',
+  'invalid reviewer credentials',
 ];
 
 function normalizeErrorMessage(errorMessage: unknown): string {

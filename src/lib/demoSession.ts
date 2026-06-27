@@ -9,7 +9,7 @@ export const DEMO_SESSION_EVENT = 'margin:demo-session-updated';
 
 export const DEMO_TENANT = {
   id: DEMO_TENANT_ID,
-  name: 'Demo Workspace',
+  name: 'Acme Operations',
   slug: DEMO_TENANT_SLUG,
   plan: 'professional' as const,
   status: 'active' as const,
@@ -17,6 +17,10 @@ export const DEMO_TENANT = {
 };
 
 const DEMO_SESSION_FLAG = 'demo_session_active';
+
+type DemoSessionOptions = {
+  userEmail?: string | null;
+};
 
 function isEnvDemoBypassEnabled() {
   return import.meta.env.VITE_ENABLE_DEMO_BYPASS === 'true';
@@ -55,13 +59,15 @@ export function isDemoSessionActive() {
     normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) === DEMO_TENANT_SLUG;
 }
 
-export function seedDemoSession() {
+export function seedDemoSession(options: DemoSessionOptions = {}) {
   if (typeof window === 'undefined') return;
+
+  const userEmail = String(options.userEmail || DEMO_USER_EMAIL).trim() || DEMO_USER_EMAIL;
 
   localStorage.setItem(DEMO_SESSION_FLAG, 'true');
   localStorage.setItem('session_token', DEMO_SESSION_TOKEN);
   localStorage.setItem('user_id', DEMO_USER_ID);
-  localStorage.setItem('user_email', DEMO_USER_EMAIL);
+  localStorage.setItem('user_email', userEmail);
   localStorage.setItem('active_tenant_id', DEMO_TENANT_ID);
   localStorage.setItem('active_tenant_slug', DEMO_TENANT_SLUG);
   window.dispatchEvent(new CustomEvent(DEMO_SESSION_EVENT));

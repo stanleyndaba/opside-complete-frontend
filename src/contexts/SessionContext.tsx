@@ -64,6 +64,11 @@ function isPublicRoute(pathname: string) {
     return PUBLIC_ROUTE_SEGMENTS.some((route) => matchesRouteSegment(pathname, route));
 }
 
+function getStoredDemoEmail() {
+    if (typeof window === 'undefined') return DEMO_USER_EMAIL;
+    return localStorage.getItem('user_email') || DEMO_USER_EMAIL;
+}
+
 export function SessionProvider({ children }: { children: ReactNode }) {
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
@@ -76,7 +81,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setIsSessionValid(true);
         setAuthToken(DEMO_SESSION_TOKEN);
         setUserId(DEMO_USER_ID);
-        setUserEmail(DEMO_USER_EMAIL);
+        setUserEmail(getStoredDemoEmail());
         setIsPaidUser(true);
         setIsAuthReady(true);
         clearSessionRecoveryPending();
