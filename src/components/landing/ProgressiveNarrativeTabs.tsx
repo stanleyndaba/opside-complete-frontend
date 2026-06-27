@@ -5,19 +5,19 @@ const CHAPTERS = [
   {
     id: 1,
     title: 'The claim window closes fast.',
-    subtext: 'Amazon reimbursement claims move on short deadlines. Once a discrepancy is identified, the evidence and filing path must move before the window closes permanently.',
+    subtext: 'Once a discrepancy is identified, the seller has limited time to gather the right evidence and file correctly.',
     duration: 6000,
   },
   {
     id: 2,
     title: 'The proof is scattered everywhere.',
-    subtext: 'The invoice is in Gmail. The POD is in a carrier portal. The BOL is in Drive. The case ID is in Seller Central. The payout is in a settlement report. Margin connects these sources into a claim-ready evidence pack before the deadline hits.',
+    subtext: 'The invoice is in Gmail. The POD is in a carrier portal. The BOL is in Drive. The case ID is in Seller Central. The payout is buried in a settlement report.',
     duration: 6000,
   },
   {
     id: 3,
     title: 'Delay becomes lost money.',
-    subtext: 'Every day a claim is not filed is a day closer to losing the case. Margin keeps evidence readiness, seller approval, Amazon response, and payout reconciliation moving together.',
+    subtext: 'If the evidence is missing, late, weak, or rejected, a valid recovery opportunity can expire.',
     duration: 6000,
   }
 ];

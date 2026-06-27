@@ -114,7 +114,7 @@ const workflowSteps = [
   },
   {
     step: '03',
-    title: 'Locate matching documents',
+    title: 'Locate and match documents',
     detail: 'Relevant records are pulled from inboxes, drives, shipment files, reports, and support trails.'
   },
   {
@@ -124,8 +124,13 @@ const workflowSteps = [
   },
   {
     step: '05',
-    title: 'Track Amazon response',
-    detail: 'Margin follows the case through rejection recovery, escalation, payout, dispute, or reconciliation.'
+    title: 'Seller approves filing',
+    detail: 'Seller review controls whether the evidence-backed case advances into filing.'
+  },
+  {
+    step: '06',
+    title: 'Track response and payout',
+    detail: 'Margin follows the case through Amazon response, rejection recovery, escalation, payout, dispute, or reconciliation.'
   }
 ];
 
@@ -133,44 +138,37 @@ const marketplaceCountries = [
   { country: 'United States', code: 'US', flagCode: 'us', region: 'Americas' },
   { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'Americas' },
   { country: 'Mexico', code: 'MX', flagCode: 'mx', region: 'Americas' },
-  { country: 'Germany', code: 'DE', flagCode: 'de', region: 'Europe' },
-  { country: 'Netherlands', code: 'NL', flagCode: 'nl', region: 'Europe' },
   { country: 'United Kingdom', code: 'UK', flagCode: 'gb', region: 'Europe' },
-  { country: 'South Africa', code: 'ZA', flagCode: 'za', region: 'Europe' },
+  { country: 'Germany', code: 'DE', flagCode: 'de', region: 'Europe' },
   { country: 'France', code: 'FR', flagCode: 'fr', region: 'Europe' },
-  { country: 'Spain', code: 'ES', flagCode: 'es', region: 'Europe' },
-  { country: 'Poland', code: 'PL', flagCode: 'pl', region: 'Europe' },
   { country: 'Italy', code: 'IT', flagCode: 'it', region: 'Europe' },
-  { country: 'Saudi Arabia', code: 'SA', flagCode: 'sa', region: 'Middle East' },
-  { country: 'Egypt', code: 'EG', flagCode: 'eg', region: 'Middle East' },
+  { country: 'Spain', code: 'ES', flagCode: 'es', region: 'Europe' },
+  { country: 'Netherlands', code: 'NL', flagCode: 'nl', region: 'Europe' },
+  { country: 'Poland', code: 'PL', flagCode: 'pl', region: 'Europe' },
   { country: 'Japan', code: 'JP', flagCode: 'jp', region: 'Asia Pacific' },
-  { country: 'China', code: 'CN', flagCode: 'cn', region: 'Asia Pacific' },
-  { country: 'Singapore', code: 'SG', flagCode: 'sg', region: 'Asia Pacific' },
-  { country: 'Australia', code: 'AU', flagCode: 'au', region: 'Asia Pacific' },
-  { country: 'India', code: 'IN', flagCode: 'in', region: 'Asia Pacific' }
+  { country: 'Australia', code: 'AU', flagCode: 'au', region: 'Asia Pacific' }
 ];
 
 const trustControls = [
   {
-    title: 'Read-only mode enforced',
-    detail: 'Read-only mode is enforced until explicit approval.'
+    title: 'Read-only by default',
+    detail: 'Amazon connection starts read-only.'
   },
   {
-    title: 'No filing without validation',
-    detail: 'No filing occurs without evidence validation and seller approval.'
+    title: 'Seller approval before filing',
+    detail: 'No filing advances without seller approval.'
   },
   {
-    title: 'Low-confidence cases filtered',
-    detail: 'Low-confidence cases are filtered out of the execution queue.'
+    title: 'Evidence validation before action',
+    detail: 'No filing advances without evidence validation.'
   },
   {
     title: 'No reimbursement guarantee',
-    detail: 'No guarantee of reimbursement outcomes; the system only structures recovery execution.'
+    detail: 'Margin structures recovery workflow; Amazon makes final reimbursement decisions.'
   }
 ];
 
 const earlyAccessItems = [
-  'Founding 500 Evidence Workflow Audit',
   'Managed onboarding before filing',
   'Read-only setup first',
   'Claim deadline and evidence readiness check',
@@ -205,11 +203,19 @@ const faqs = [
   },
   {
     question: 'Why no recovery commissions?',
-    answer: 'Margin does not take a percentage of approved recoveries. Founding 500 starts with a managed evidence workflow audit, then sellers can keep Margin running as a monthly recovery management system.'
+    answer: 'Margin does not take a percentage of approved recoveries. Founding 500 starts with early access to managed evidence workflow support, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
-    question: 'What happens after I start the Founding 500 Evidence Workflow Audit?',
+    question: 'What happens after I start Founding 500 Early Access?',
     answer: 'Your activation joins the managed Founding 500 cohort. Margin prepares the workspace carefully, starts with read-only setup, reviews claim deadlines, checks evidence readiness, and keeps seller approval before filing.'
+  },
+  {
+    question: 'What is an evidence pack?',
+    answer: 'An evidence pack is the claim-ready set of records behind a reimbursement case: invoices, BOLs, PODs, shipment records, cost data, Amazon case history, seller approval, and payout context.'
+  },
+  {
+    question: 'What happens if my invoice, POD, or BOL is missing?',
+    answer: 'Margin flags the missing proof before filing so the case can be completed, held, or reviewed instead of submitting weak evidence and risking rejection.'
   }
 ];
 
@@ -396,7 +402,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[680px] text-[17px] leading-[1.7] text-slate-300 md:text-[20px]"
           >
-            Margin turns scattered invoices, BOLs, PODs, shipment records, cost data, case history, and payout records into claim-ready evidence packs so Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.
+            Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs. So Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.
           </motion.p>
 
           <motion.div
@@ -430,13 +436,13 @@ function KineticHeroSection({
             transition={{ duration: 0.6, delay: 1 }}
             className="mt-8 flex items-center gap-4 text-[12px] font-medium text-slate-400"
           >
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> 100% Read-Only</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Read-only setup</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Seller Approval Before Filing</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Seller approval before filing</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No Recovery Commissions</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No recovery commissions</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Evidence-Heavy Claims</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Built for hard-to-prove claims</span>
           </motion.div>
 
           {isFull ? (
@@ -469,7 +475,7 @@ function MobileMarketplaceHub() {
         Supported FBA marketplaces
       </h2>
       <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#66737F]">
-        Margin supports FBA reimbursement workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
+        Margin is designed for Amazon FBA reimbursement workflows across supported Amazon marketplaces. Marketplace availability may vary during Early Access.
       </p>
       <div className="mt-8 border-y border-[#D8E3E8] py-6">
         <div className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
@@ -651,6 +657,49 @@ export default function Index() {
           </div>
         </section>
 
+        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
+          <div className={containerClass}>
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+              <motion.div {...revealProps}>
+                <div className={sectionLabelClass}>Evidence Readiness</div>
+                <h2 className={sectionHeadingClass}>Know what is ready, what is missing, and when the claim window closes.</h2>
+                <p className={sectionBodyClass}>
+                  Margin scores each recovery case by evidence readiness so operators can see which cases can move, which need proof, and which are at risk of expiring.
+                </p>
+              </motion.div>
+
+              <motion.div
+                {...revealProps}
+                className="rounded-[28px] border border-[#D8E3E8] bg-[#FAFAF7] p-6 shadow-[0_24px_70px_rgba(37,49,58,0.08)] md:p-8"
+              >
+                <div className="flex items-center justify-between gap-4 border-b border-[#D8E3E8] pb-5">
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-tight text-[#7A8994]">Case readiness</div>
+                    <div className="mt-2 text-[24px] font-semibold tracking-[-0.045em] text-[#182026]">Inbound shortage claim</div>
+                  </div>
+                  <div className="rounded-full bg-[#EAF6EF] px-4 py-2 text-[13px] font-bold text-[#2E7D5B]">
+                    82% evidence-ready
+                  </div>
+                </div>
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
+                  <div className="rounded-2xl border border-[#D8E3E8] bg-white p-5">
+                    <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Missing proof</div>
+                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">
+                      Signed POD and supplier invoice cost breakdown.
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-[#D8E3E8] bg-white p-5">
+                    <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Filing window</div>
+                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">
+                      12 days remaining before review risk increases.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         <SystemPerformanceTicker />
 
         <TechnicalProtocolGrid />
@@ -708,7 +757,7 @@ export default function Index() {
                 Connect the places where recovery proof already lives.
               </h2>
               <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                Amazon does not just ask what happened. It asks you to prove it. Margin organizes invoices, BOLs, PODs, shipment IDs, ASIN/FNSKU records, carrier records, cost data, case history, settlement reports, and payout data into one evidence workflow.
+                Amazon does not just ask what happened. It asks you to prove it. Margin organizes the records behind reimbursement work - invoices, BOLs, PODs, shipment IDs, ASIN/FNSKU records, carrier documents, cost data, case history, settlement reports, and payout data - into one evidence workflow.
               </p>
             </div>
             <div className="mt-7 md:mt-9">
@@ -726,7 +775,7 @@ export default function Index() {
                 After a discrepancy is identified, Margin finds the records needed to support the claim, links them to the shipment or case, prepares the evidence pack for seller review, and tracks Amazon response through payout or escalation.
               </p>
               <p className={sectionBodyClass}>
-                Evidence workflow: detect discrepancy -&gt; identify required evidence -&gt; locate matching documents -&gt; link proof to shipment or case -&gt; generate evidence pack -&gt; seller approves -&gt; track response -&gt; reconcile payout.
+                Workflow: detect discrepancy -&gt; identify required evidence -&gt; locate matching documents -&gt; link proof to shipment, ASIN, quantity, and cost -&gt; generate evidence pack -&gt; seller approves -&gt; track Amazon response -&gt; reconcile payout.
               </p>
               <p className={sectionBodyClass}>
                 Each case stays tied to its evidence, deadline, approval, Amazon response, and payout context.
@@ -734,7 +783,7 @@ export default function Index() {
             </motion.div>
 
             <div className="relative mt-10 md:mt-12">
-              <div className="relative z-10 grid gap-3 border-y border-[#D8E3E8] bg-white/36 lg:grid-cols-5 lg:gap-0">
+              <div className="relative z-10 grid gap-3 border-y border-[#D8E3E8] bg-white/36 lg:grid-cols-6 lg:gap-0">
                 {workflowSteps.map((item, index) => (
                   <motion.div
                     key={item.step}
@@ -763,49 +812,6 @@ export default function Index() {
                   </motion.div>
                 ))}
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
-          <div className={containerClass}>
-            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-              <motion.div {...revealProps}>
-                <div className={sectionLabelClass}>Evidence Readiness</div>
-                <h2 className={sectionHeadingClass}>Know what is ready, what is missing, and when the claim window closes.</h2>
-                <p className={sectionBodyClass}>
-                  Margin scores each recovery case by evidence readiness so operators can see what can move, what needs proof, and what may expire soon.
-                </p>
-              </motion.div>
-
-              <motion.div
-                {...revealProps}
-                className="rounded-[28px] border border-[#D8E3E8] bg-[#FAFAF7] p-6 shadow-[0_24px_70px_rgba(37,49,58,0.08)] md:p-8"
-              >
-                <div className="flex items-center justify-between gap-4 border-b border-[#D8E3E8] pb-5">
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-tight text-[#7A8994]">Case readiness</div>
-                    <div className="mt-2 text-[24px] font-semibold tracking-[-0.045em] text-[#182026]">Inbound shortage claim</div>
-                  </div>
-                  <div className="rounded-full bg-[#EAF6EF] px-4 py-2 text-[13px] font-bold text-[#2E7D5B]">
-                    82% evidence-ready
-                  </div>
-                </div>
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <div className="rounded-2xl border border-[#D8E3E8] bg-white p-5">
-                    <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Missing proof</div>
-                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">
-                      Signed POD and supplier invoice cost breakdown.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-[#D8E3E8] bg-white p-5">
-                    <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Filing window</div>
-                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">
-                      12 days remaining before review risk increases.
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
             </div>
           </div>
         </section>
@@ -859,10 +865,7 @@ export default function Index() {
                 <div className={sectionLabelClass}>Trust & Control</div>
                 <h2 className={sectionHeadingClass}>Why sellers trust the workflow.</h2>
                 <p className={sectionBodyClass}>
-                  Read-only mode is enforced until explicit approval. No filing can advance without evidence validation and seller approval.
-                </p>
-                <p className={sectionBodyClass}>
-                  Low-confidence cases are filtered out of the execution queue. Margin does not guarantee reimbursement outcomes; it structures recovery execution.
+                  Margin starts read-only. No filing advances without evidence validation and seller approval. Low-confidence cases are filtered out, and Margin does not guarantee reimbursement outcomes - it structures the recovery workflow.
                 </p>
               </motion.div>
 
@@ -892,61 +895,6 @@ export default function Index() {
           </div>
         </section>
 
-
-
-        <section className="relative bg-[#F7F5F0] py-8 sm:bg-transparent sm:py-16 md:py-24">
-          <div className={containerClass}>
-            <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
-              <motion.div {...revealProps} className="hidden max-w-[560px] sm:block">
-                <div className={sectionLabelClass}>Marketplace Scope</div>
-                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
-                  Supported FBA marketplaces
-                </h2>
-                <p className={sectionBodyClass}>
-                  Margin supports FBA reimbursement workflows across major Amazon marketplaces in North America, Europe, and selected global regions.
-                </p>
-              </motion.div>
-
-              <MobileMarketplaceHub />
-
-              <motion.div
-                {...revealProps}
-                className="hidden border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
-              >
-                {marketplaceCountries.map((marketplace, index) => (
-                  <motion.div
-                    key={marketplace.code}
-                    {...revealProps}
-                    transition={{ ...revealProps.transition, delay: index * 0.035 }}
-                    className={`group flex items-center gap-4 py-5 sm:px-5 ${
-                      index > 0 ? 'border-t border-[#D8E3E8] sm:border-t-0' : ''
-                    } ${
-                      index % 2 === 1 ? 'sm:border-l sm:border-[#D8E3E8]' : ''
-                    } ${
-                      index >= 2 ? 'sm:border-t sm:border-[#D8E3E8]' : ''
-                    } ${
-                      index % 3 !== 0 ? 'xl:border-l xl:border-[#D8E3E8]' : 'xl:border-l-0'
-                    } ${
-                      index >= 3 ? 'xl:border-t xl:border-[#D8E3E8]' : ''
-                    }`}
-                  >
-                    <span
-                      className={`fi fi-${marketplace.flagCode} h-5 w-7 shrink-0 rounded-[4px] shadow-[0_8px_18px_rgba(37,49,58,0.12)]`}
-                      aria-hidden="true"
-                    />
-                    <div>
-                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">{marketplace.country}</div>
-                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
-                        {marketplace.region} · {marketplace.code}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
         <section className="relative overflow-hidden py-28 md:py-40">
           <motion.div
             aria-hidden="true"
@@ -958,10 +906,10 @@ export default function Index() {
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
-                    Founding 500 Evidence Workflow Audit.
+                    Founding 500 Early Access.
                   </h2>
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
-                    The first 500 sellers reserve founder pricing and priority activation for a one-time $99 fee. We help prepare, organize, and manage evidence-heavy reimbursement workflows with seller approval before filing. No recovery commissions.
+                    The first 500 sellers reserve founder pricing and priority activation for a one-time $99 fee. Margin helps prepare, organize, and manage evidence-heavy reimbursement workflows with seller approval before filing. No recovery commissions.
                   </p>
                   
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -1042,10 +990,10 @@ export default function Index() {
               <div className="max-w-[880px]">
 
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  Turn scattered recovery proof into a claim-ready evidence pack.
+                  Turn scattered recovery proof into claim-ready evidence.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Margin helps Amazon sellers prepare the evidence layer behind reimbursement work, from document matching and deadline tracking to seller approval, Amazon response, and payout reconciliation.
+                  Margin helps Amazon sellers organize the documents, deadlines, approvals, case history, and payout records behind reimbursement work - from discrepancy to resolved recovery.
                 </p>
               </div>
 
@@ -1067,6 +1015,59 @@ export default function Index() {
                 </Button>
               </div>
             </motion.div>
+          </div>
+        </section>
+
+        <section className="relative bg-[#F7F5F0] py-8 sm:bg-transparent sm:py-16 md:py-24">
+          <div className={containerClass}>
+            <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+              <motion.div {...revealProps} className="hidden max-w-[560px] sm:block">
+                <div className={sectionLabelClass}>Marketplace Scope</div>
+                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
+                  Supported FBA marketplaces
+                </h2>
+                <p className={sectionBodyClass}>
+                  Margin is designed for Amazon FBA reimbursement workflows across supported Amazon marketplaces. Marketplace availability may vary during Early Access.
+                </p>
+              </motion.div>
+
+              <MobileMarketplaceHub />
+
+              <motion.div
+                {...revealProps}
+                className="hidden border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+              >
+                {marketplaceCountries.map((marketplace, index) => (
+                  <motion.div
+                    key={marketplace.code}
+                    {...revealProps}
+                    transition={{ ...revealProps.transition, delay: index * 0.035 }}
+                    className={`group flex items-center gap-4 py-5 sm:px-5 ${
+                      index > 0 ? 'border-t border-[#D8E3E8] sm:border-t-0' : ''
+                    } ${
+                      index % 2 === 1 ? 'sm:border-l sm:border-[#D8E3E8]' : ''
+                    } ${
+                      index >= 2 ? 'sm:border-t sm:border-[#D8E3E8]' : ''
+                    } ${
+                      index % 3 !== 0 ? 'xl:border-l xl:border-[#D8E3E8]' : 'xl:border-l-0'
+                    } ${
+                      index >= 3 ? 'xl:border-t xl:border-[#D8E3E8]' : ''
+                    }`}
+                  >
+                    <span
+                      className={`fi fi-${marketplace.flagCode} h-5 w-7 shrink-0 rounded-[4px] shadow-[0_8px_18px_rgba(37,49,58,0.12)]`}
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">{marketplace.country}</div>
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
+                        {marketplace.region} · {marketplace.code}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
           </div>
         </section>
       </main>

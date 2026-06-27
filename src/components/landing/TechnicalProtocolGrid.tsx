@@ -14,13 +14,13 @@ const protocols = [
   },
   {
     number: '03',
-    title: 'Read-only Setup',
-    subtext: 'Amazon connection starts read-only, with no filing action until seller approval.'
+    title: 'Seller-Controlled Filing',
+    subtext: 'Margin starts read-only and no filing action advances without seller approval.'
   },
   {
     number: '04',
     title: 'Payout Reconciliation',
-    subtext: 'Each case is tracked through Amazon response, dispute, payout, or blocker.'
+    subtext: 'Each case is tracked through Amazon response, dispute, payout, underpayment, or blocker.'
   }
 ];
 

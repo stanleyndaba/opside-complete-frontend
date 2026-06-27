@@ -37,7 +37,7 @@ const workflows = [
     label: 'Payout mismatch',
     title: 'Approved value differs from received payout → reconciliation triggered',
     detail:
-      'Approval and cash movement stay separated until payout state is resolved. Delta amounts are tracked through reconciliation.',
+      'Amazon approval is not the same as money received. Margin separates approved value from actual payout and flags any difference that needs follow-up.',
   },
 ];
 
@@ -442,7 +442,7 @@ function PayoutReconciliationViz() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 pb-2">
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          Ledger Variance Protocol
+          Payout Reconciliation
         </span>
       </div>
 
