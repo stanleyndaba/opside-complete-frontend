@@ -30,11 +30,11 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
   },
   '/pricing': {
     path: '/pricing',
-    title: 'Margin Pricing | Finding What Amazon Owes You Was Never the Hard Part',
+    title: 'Margin Pricing | Evidence-Ready Amazon Reimbursement Workflows',
     description:
       'Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.',
     canonical: routeUrl('/pricing'),
-    ogTitle: 'Margin Pricing | Finding What Amazon Owes You Was Never the Hard Part',
+    ogTitle: 'Margin Pricing | Evidence-Ready Amazon Reimbursement Workflows',
     ogDescription:
       'Keep your approved recoveries with Margin pricing built around recovery management, evidence workflow, and seller-controlled filing.',
     ogUrl: routeUrl('/pricing'),

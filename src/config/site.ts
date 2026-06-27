@@ -45,8 +45,8 @@ export const AGENT_HIGHLIGHTS = [
 ];
 
 export const SITE_META = {
-  title: 'Margin | Amazon FBA Reimbursement Workflow Automation',
-  description: 'Margin manages Amazon FBA reimbursement workflows after discrepancies are identified: evidence collection, filing, disputes, and payout reconciliation.',
+  title: 'Margin | Claim-Ready Evidence Packs for Amazon FBA Reimbursements',
+  description: 'Margin turns scattered invoices, BOLs, PODs, shipment records, case history, and payout data into claim-ready Amazon FBA reimbursement evidence packs.',
   url: 'https://margin-finance.com',
   image: 'https://margin-finance.com/margin-logo-reveal.gif',
   preloadImages: []

@@ -4,23 +4,23 @@ import { motion } from 'framer-motion';
 const protocols = [
   {
     number: '01',
-    title: 'SYSTEM DEADLINE GOVERNANCE',
-    subtext: 'Every case is assigned a deadline state that governs eligibility until resolution or expiry.'
+    title: 'Claim Deadline Tracking',
+    subtext: 'Every case stays attached to the filing window that controls eligibility.'
   },
   {
     number: '02',
-    title: 'FORENSIC DATA LINKING',
-    subtext: 'Reports, invoices, and shipment data are linked before any reimbursement case can advance.'
+    title: 'Document Matching',
+    subtext: 'Invoices, BOLs, PODs, shipment records, and support history are linked before filing.'
   },
   {
     number: '03',
-    title: 'ZERO-WRITE SECURITY PROTOCOL',
-    subtext: 'All workflows are structured in read-only mode, with no enabling actions until explicit approval.'
+    title: 'Read-only Setup',
+    subtext: 'Amazon connection starts read-only, with no filing action until seller approval.'
   },
   {
     number: '04',
-    title: 'CAPITAL RECONCILIATION ENGINE',
-    subtext: 'Each case is tracked across identified, validated, and filed states through final payout reconciliation.'
+    title: 'Payout Reconciliation',
+    subtext: 'Each case is tracked through Amazon response, dispute, payout, or blocker.'
   }
 ];
 

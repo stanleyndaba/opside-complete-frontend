@@ -63,69 +63,69 @@ const whyNowItems = [
 
 const proofItems = [
   {
-    title: 'Claim Clock Visibility',
-    detail: 'Every reimbursement case is assigned a deadline state that governs eligibility until resolution or expiry.'
+    title: 'Claim Deadline Tracking',
+    detail: 'Every reimbursement case stays tied to the filing window that controls eligibility.'
   },
   {
-    title: 'Evidence Binding',
-    detail: 'Reports, invoices, and shipment data are linked before any reimbursement case can advance.'
+    title: 'Document Matching',
+    detail: 'Invoices, BOLs, PODs, shipment records, and support history are matched before filing.'
   },
   {
     title: 'Read-only First Mode',
     detail: 'All reimbursement workflows are structured without enabling actions until approval is granted.'
   },
   {
-    title: 'Payout Trail Tracking',
-    detail: 'Each reimbursement case is tracked across identified -> validated -> filed -> approved -> reconciled or blocked states without merging outcomes.'
+    title: 'Payout Reconciliation',
+    detail: 'Each case is tracked from evidence pack to Amazon response, payout, dispute, or blocker.'
   }
 ];
 
 const velocityMetrics = [
   {
-    label: 'Audit-to-Evidence Speed',
+    label: 'Evidence Readiness',
     value: 3,
     suffix: 'min',
-    detail: 'Event is classified, matched to supporting records, and validated for claim readiness.'
+    detail: 'Discrepancy is checked against the records Amazon may ask for before filing.'
   },
   {
-    label: 'Filing Preparation Cycle',
+    label: 'Document Matching',
     value: 1,
     suffix: 'min',
-    detail: 'Evidence-complete cases pass approval and move directly into submission queue.'
+    detail: 'Invoices, shipment records, and support files are linked to the case context.'
   },
   {
-    label: 'Workflow Intake',
+    label: 'Claim Deadline Tracking',
     value: 16,
     suffix: 's',
-    detail: 'An identified discrepancy is mapped to the right reimbursement workflow, claim type, and evidence path.'
+    detail: 'Each issue is mapped to a claim window, required proof, and next action.'
   }
 ];
 
 const workflowSteps = [
   {
     step: '01',
-    title: 'Validate',
-    detail: 'A known discrepancy is checked against reimbursement claim rules and required evidence.'
+    title: 'Detect discrepancy',
+    detail: 'A potential reimbursement issue is identified from Amazon operational data.'
   },
   {
     step: '02',
-    title: 'Classify',
-    detail: 'The case is mapped to the reimbursement workflow, claim type, and filing path.'
+    title: 'Identify required evidence',
+    detail: 'Margin maps the issue to the invoices, BOLs, PODs, shipment IDs, carrier records, cost data, case history, and payout records Amazon may ask for.'
   },
   {
     step: '03',
-    title: 'Bind Evidence',
-    detail: 'Invoices, shipment records, Amazon reports, and support files are attached and validated.'
+    title: 'Locate matching documents',
+    detail: 'Relevant records are pulled from inboxes, drives, shipment files, reports, and support trails.'
   },
   {
     step: '04',
-    title: 'Approve',
-    detail: 'Seller review gates progression into filing.'
+    title: 'Generate evidence pack',
+    detail: 'The claim is assembled with linked proof, deadline context, and seller approval before filing.'
   },
   {
     step: '05',
-    title: 'Track Outcome',
-    detail: 'Filed reimbursement claims move through Amazon response, dispute handling, and payout reconciliation.'
+    title: 'Track Amazon response',
+    detail: 'Margin follows the case through rejection recovery, escalation, payout, dispute, or reconciliation.'
   }
 ];
 
@@ -170,10 +170,10 @@ const trustControls = [
 ];
 
 const earlyAccessItems = [
-  'Founding 500 Reimbursement Workflow Audit',
+  'Founding 500 Evidence Workflow Audit',
   'Managed onboarding before filing',
   'Read-only setup first',
-  'Claim-clock review and evidence readiness check',
+  'Claim deadline and evidence readiness check',
   'Seller approval before filing',
   'No recovery commissions'
 ];
@@ -181,7 +181,7 @@ const earlyAccessItems = [
 const faqs = [
   {
     question: 'What does Margin do after I connect my Amazon account?',
-    answer: 'Margin starts in read-only mode. After a discrepancy is identified, it validates the claim type, tracks the claim window, matches supporting evidence, and prepares reimbursement cases for seller review.'
+    answer: 'Margin starts in read-only mode. After a discrepancy is identified, it maps the required evidence, tracks the claim window, matches supporting documents, and prepares reimbursement cases for seller review.'
   },
   {
     question: 'Does Margin guarantee reimbursements?',
@@ -193,7 +193,7 @@ const faqs = [
   },
   {
     question: 'Why does recovery timing matter more now?',
-    answer: 'Some reimbursement windows are short, and manual or quarterly audits can surface issues too late. Margin keeps each reimbursement issue tied to its claim clock, required evidence, and next action before the window closes.'
+    answer: 'Some reimbursement windows are short, and manual or quarterly audits can surface issues too late. Margin keeps each reimbursement issue tied to its deadline, required evidence, and next action before the window closes.'
   },
   {
     question: 'Does Margin file every reimbursement issue?',
@@ -201,15 +201,15 @@ const faqs = [
   },
   {
     question: 'How is this different from commission-based services?',
-    answer: 'Margin is monthly recovery management, not a percentage-based reimbursement service. It is built around claim-clock visibility, evidence-backed case preparation, seller approval before filing, and no recovery commissions.'
+    answer: 'Margin is monthly recovery management, not a percentage-based reimbursement service. It is built around claim deadline tracking, evidence-backed case preparation, seller approval before filing, and no recovery commissions.'
   },
   {
     question: 'Why no recovery commissions?',
-    answer: 'Margin does not take a percentage of approved recoveries. Founding 500 starts with a managed reimbursement workflow audit, then sellers can keep Margin running as a monthly recovery management system.'
+    answer: 'Margin does not take a percentage of approved recoveries. Founding 500 starts with a managed evidence workflow audit, then sellers can keep Margin running as a monthly recovery management system.'
   },
   {
-    question: 'What happens after I start the Founding 500 Reimbursement Workflow Audit?',
-    answer: 'Your activation joins the managed Founding 500 cohort. Margin prepares the workspace carefully, starts with read-only setup, reviews claim clocks, checks evidence readiness, and keeps seller approval before filing.'
+    question: 'What happens after I start the Founding 500 Evidence Workflow Audit?',
+    answer: 'Your activation joins the managed Founding 500 cohort. Margin prepares the workspace carefully, starts with read-only setup, reviews claim deadlines, checks evidence readiness, and keeps seller approval before filing.'
   }
 ];
 
@@ -282,13 +282,11 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
 function KineticHeroSection({
   onPrimaryCta,
   onEarlyAccessCta,
-  primaryCtaLabel,
   isFull,
   nextBatchHours
 }: {
   onPrimaryCta: () => void;
   onEarlyAccessCta: () => void;
-  primaryCtaLabel: string;
   isFull: boolean;
   nextBatchHours?: number;
 }) {
@@ -367,7 +365,7 @@ function KineticHeroSection({
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"
           >
-            Always-on reimbursement workflow management for Amazon sellers
+            Claim-ready evidence packs for Amazon reimbursement work
           </motion.div>
 
           <h1
@@ -380,7 +378,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              Finding what Amazon owes you
+              Finding a discrepancy
             </motion.span>
             <motion.span
               className="block text-slate-400"
@@ -388,7 +386,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
-              was never the hard part.
+              is only the beginning.
             </motion.span>
           </h1>
 
@@ -398,7 +396,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-7 max-w-[680px] text-[17px] leading-[1.7] text-slate-300 md:text-[20px]"
           >
-            Where Amazon operators run their entire recovery program, from discrepancy identification to final payout. Margin’s workflow automates the evidence-binding, the rejections, and the appeals—all on top of the systems you already use, with zero recovery commissions.
+            Margin turns scattered invoices, BOLs, PODs, shipment records, cost data, case history, and payout records into claim-ready evidence packs so Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.
           </motion.p>
 
           <motion.div
@@ -419,10 +417,10 @@ function KineticHeroSection({
             <Button
               variant="outline"
               onClick={onPrimaryCta}
-              aria-label="See Workflow"
+              aria-label="See Evidence Workflow"
               className="h-[52px] justify-center rounded-full border border-white/20 bg-white/[0.04] px-7 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-white/[0.08]"
             >
-              {primaryCtaLabel}
+              See Evidence Workflow
             </Button>
           </motion.div>
 
@@ -434,9 +432,11 @@ function KineticHeroSection({
           >
             <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> 100% Read-Only</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No Commissions</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Seller Approval Before Filing</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Full Seller Approval</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No Recovery Commissions</span>
+            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Evidence-Heavy Claims</span>
           </motion.div>
 
           {isFull ? (
@@ -624,13 +624,12 @@ export default function Index() {
 
   return (
     <div className="min-h-screen overflow-x-clip bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
-      <PublicNavbar variant="light" ctaLabel="SEE WORKFLOW" ctaTo="#how-margin-works" />
+      <PublicNavbar variant="light" ctaLabel="EVIDENCE WORKFLOW" ctaTo="#how-margin-works" />
 
       <main className="relative">
         <KineticHeroSection
           onPrimaryCta={scrollToWorkflow}
           onEarlyAccessCta={() => navigate('/early-access')}
-          primaryCtaLabel="See Workflow"
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />
@@ -641,7 +640,13 @@ export default function Index() {
               {...revealProps}
               className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] text-[#182026] md:text-[28px] md:leading-9"
             >
-              Most tools stop at the discrepancy. Margin starts there.
+              Most tools help you find or file reimbursement claims. Margin helps you prove them.
+            </motion.p>
+            <motion.p
+              {...revealProps}
+              className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8"
+            >
+              We organize the evidence Amazon asks for - invoices, proof of delivery, bills of lading, shipment records, cost data, support history, and payout records - into deadline-aware recovery workflows.
             </motion.p>
           </div>
         </section>
@@ -660,7 +665,7 @@ export default function Index() {
                 See how Margin turns identified FBA discrepancies into review-ready reimbursement work.
               </h2>
               <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
-                Follow the path from claim-clock assignment to evidence review, filing approval, dispute handling, and payout reconciliation.
+                Follow the path from claim deadline review to evidence matching, filing approval, dispute handling, and payout reconciliation.
               </p>
             </motion.div>
 
@@ -703,7 +708,7 @@ export default function Index() {
                 Connect the places where recovery proof already lives.
               </h2>
               <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                Margin organizes Amazon reimbursement activity, inbox records, files, shipment documents, invoices, and support trails into deadline-aware reimbursement workflows.
+                Amazon does not just ask what happened. It asks you to prove it. Margin organizes invoices, BOLs, PODs, shipment IDs, ASIN/FNSKU records, carrier records, cost data, case history, settlement reports, and payout data into one evidence workflow.
               </p>
             </div>
             <div className="mt-7 md:mt-9">
@@ -716,15 +721,15 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className={sectionLabelClass}>What Margin Does</div>
-              <h2 className={sectionHeadingClass}>What Margin does</h2>
+              <h2 className={sectionHeadingClass}>From scattered proof to claim-ready evidence packs.</h2>
               <p className="mt-5 max-w-[760px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:text-[26px] md:leading-9">
-                After a discrepancy is identified, Margin turns Amazon operational data into organized reimbursement workflows, enforces evidence requirements, applies claim timing logic, and tracks outcomes through final payout state.
+                After a discrepancy is identified, Margin finds the records needed to support the claim, links them to the shipment or case, prepares the evidence pack for seller review, and tracks Amazon response through payout or escalation.
               </p>
               <p className={sectionBodyClass}>
-                States: identified -&gt; validated -&gt; evidence-linked -&gt; approved -&gt; filed -&gt; in-review -&gt; reconciled / disputed / blocked / expired.
+                Evidence workflow: detect discrepancy -&gt; identify required evidence -&gt; locate matching documents -&gt; link proof to shipment or case -&gt; generate evidence pack -&gt; seller approves -&gt; track response -&gt; reconcile payout.
               </p>
               <p className={sectionBodyClass}>
-                Each state keeps the reimbursement case tied to its evidence, deadline, approval, filing, and payout context.
+                Each case stays tied to its evidence, deadline, approval, Amazon response, and payout context.
               </p>
             </motion.div>
 
@@ -758,6 +763,89 @@ export default function Index() {
                   </motion.div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
+          <div className={containerClass}>
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+              <motion.div {...revealProps}>
+                <div className={sectionLabelClass}>Evidence Readiness</div>
+                <h2 className={sectionHeadingClass}>Know what is ready, what is missing, and when the claim window closes.</h2>
+                <p className={sectionBodyClass}>
+                  Margin scores each recovery case by evidence readiness so operators can see what can move, what needs proof, and what may expire soon.
+                </p>
+              </motion.div>
+
+              <motion.div
+                {...revealProps}
+                className="rounded-[28px] border border-[#D8E3E8] bg-[#FAFAF7] p-6 shadow-[0_24px_70px_rgba(37,49,58,0.08)] md:p-8"
+              >
+                <div className="flex items-center justify-between gap-4 border-b border-[#D8E3E8] pb-5">
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-tight text-[#7A8994]">Case readiness</div>
+                    <div className="mt-2 text-[24px] font-semibold tracking-[-0.045em] text-[#182026]">Inbound shortage claim</div>
+                  </div>
+                  <div className="rounded-full bg-[#EAF6EF] px-4 py-2 text-[13px] font-bold text-[#2E7D5B]">
+                    82% evidence-ready
+                  </div>
+                </div>
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
+                  <div className="rounded-2xl border border-[#D8E3E8] bg-white p-5">
+                    <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Missing proof</div>
+                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">
+                      Signed POD and supplier invoice cost breakdown.
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-[#D8E3E8] bg-white p-5">
+                    <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Filing window</div>
+                    <p className="mt-3 text-[15px] leading-7 text-[#4D5B66]">
+                      12 days remaining before review risk increases.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative bg-[#F3F6F8] py-16 md:py-28">
+          <div className={containerClass}>
+            <motion.div {...revealProps} className="max-w-[780px]">
+              <div className={sectionLabelClass}>Before and After Margin</div>
+              <h2 className={sectionHeadingClass}>Evidence-heavy claims stop living across five tools.</h2>
+              <p className={sectionBodyClass}>
+                Margin gives operators one place to see the proof, deadline, approval, Amazon response, and payout state behind a reimbursement claim.
+              </p>
+            </motion.div>
+
+            <div className="mt-10 grid gap-4 lg:grid-cols-2">
+              <motion.div
+                {...revealProps}
+                className="rounded-[28px] border border-[#D8E3E8] bg-white p-6 md:p-8"
+              >
+                <div className="text-[11px] font-bold uppercase tracking-tight text-[#D76A3D]">Before Margin</div>
+                <h3 className="mt-4 text-[24px] font-semibold tracking-[-0.04em] text-[#182026] md:text-[32px]">
+                  Proof is scattered across the operation.
+                </h3>
+                <p className="mt-5 text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">
+                  Invoice in Gmail. POD in carrier portal. BOL in Drive. Case ID in Seller Central. Payout in settlement report. A VA tracking it all in Excel.
+                </p>
+              </motion.div>
+
+              <motion.div
+                {...revealProps}
+                className="rounded-[28px] border border-[#BFD8EA] bg-white p-6 shadow-[0_24px_70px_rgba(11,116,222,0.08)] md:p-8"
+              >
+                <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">After Margin</div>
+                <h3 className="mt-4 text-[24px] font-semibold tracking-[-0.04em] text-[#182026] md:text-[32px]">
+                  One claim-ready evidence pack.
+                </h3>
+                <p className="mt-5 text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">
+                  The reimbursement case is linked to shipment records, required documents, deadline state, seller approval, Amazon case status, and payout reconciliation.
+                </p>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -870,10 +958,10 @@ export default function Index() {
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
-                    Founding 500 Access.
+                    Founding 500 Evidence Workflow Audit.
                   </h2>
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
-                    The first 500 sellers get 1 year of full-service Amazon reimbursement workflow support for a one-time $99 fee. We handle the evidence and fight the cases for you. Then renew at a low, locked-in rate. No recovery commissions, ever.
+                    The first 500 sellers reserve founder pricing and priority activation for a one-time $99 fee. We help prepare, organize, and manage evidence-heavy reimbursement workflows with seller approval before filing. No recovery commissions.
                   </p>
                   
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -954,10 +1042,10 @@ export default function Index() {
               <div className="max-w-[880px]">
 
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  Start Your First Recovery.
+                  Turn scattered recovery proof into a claim-ready evidence pack.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Margin manages Amazon reimbursement workflows after discrepancies are identified, connects the required evidence, and carries each case through payout or escalation.
+                  Margin helps Amazon sellers prepare the evidence layer behind reimbursement work, from document matching and deadline tracking to seller approval, Amazon response, and payout reconciliation.
                 </p>
               </div>
 
@@ -975,7 +1063,7 @@ export default function Index() {
                   onClick={scrollToWorkflow}
                   className="h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
                 >
-                  Review Workflow
+                  Review Evidence Workflow
                 </Button>
               </div>
             </motion.div>
@@ -988,7 +1076,7 @@ export default function Index() {
         onOpenChange={setIsDemoOpen}
         videoUrl={DEMO_VIDEO_URL}
         title="Margin recovery walkthrough"
-        description="Watch how Margin manages Amazon reimbursement workflows after discrepancies are identified, from claim-clock review and evidence matching to filing, disputes, and payout reconciliation."
+        description="Watch how Margin manages Amazon reimbursement workflows after discrepancies are identified, from claim deadline review and evidence matching to filing, disputes, and payout reconciliation."
       />
       <BrandFooter />
       <CookieConsent />

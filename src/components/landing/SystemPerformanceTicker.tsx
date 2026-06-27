@@ -3,22 +3,22 @@ import { motion, useInView } from 'framer-motion';
 
 const metrics = [
   {
-    label: 'INTAKE_VELOCITY',
+    label: 'Evidence Readiness',
     value: 16,
     unit: 's',
-    subtext: 'Discrepancy-to-workflow mapping and evidence path identification.'
+    subtext: 'Discrepancy mapped to the claim type, proof requirements, and next action.'
   },
   {
-    label: 'VERIFICATION_LATENCY',
+    label: 'Document Matching',
     value: 3,
     unit: 'min',
-    subtext: 'Automated classification and matching to supporting records.'
+    subtext: 'Invoices, shipment records, and support files matched to the recovery case.'
   },
   {
-    label: 'SUBMISSION_CYCLE',
+    label: 'Case Assembly',
     value: 1,
     unit: 'min',
-    subtext: 'Direct queue injection for evidence-complete, approved cases.'
+    subtext: 'Evidence-complete cases prepared for seller approval before filing.'
   }
 ];
 

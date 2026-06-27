@@ -11,13 +11,13 @@ const CHAPTERS = [
   {
     id: 2,
     title: 'The proof is scattered everywhere.',
-    subtext: 'The invoice you need is in an old email; the shipment log is in a WhatsApp thread. Margin connects these sources into a single dossier before the deadline hits.',
+    subtext: 'The invoice is in Gmail. The POD is in a carrier portal. The BOL is in Drive. The case ID is in Seller Central. The payout is in a settlement report. Margin connects these sources into a claim-ready evidence pack before the deadline hits.',
     duration: 6000,
   },
   {
     id: 3,
     title: 'Delay becomes lost money.',
-    subtext: 'Every day a claim is not filed is a day closer to losing the case. Margin keeps the workflow moving in minutes, ensuring no capital is left behind.',
+    subtext: 'Every day a claim is not filed is a day closer to losing the case. Margin keeps evidence readiness, seller approval, Amazon response, and payout reconciliation moving together.',
     duration: 6000,
   }
 ];
