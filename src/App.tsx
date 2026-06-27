@@ -108,6 +108,7 @@ const EvidenceBeforeAsked = lazy(() => import("@/components/evidence-before-aske
 const RecoveryLifecycle = lazy(() => import("@/components/recovery-lifecycle"));
 const LearningRecovery = lazy(() => import("@/components/learning-recovery"));
 const AuditReadyHistory = lazy(() => import("@/components/audit-ready-history"));
+const AmazonAsks = lazy(() => import("@/components/Amazon-asks"));
 const ClockSimulate = lazy(() => import("@/components/ClockSimulate"));
 const RejectSimulate = lazy(() => import("@/components/RejectSimulate"));
 const StareSimulate = lazy(() => import("@/components/StareSimulate"));
@@ -190,7 +191,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
 
   return (
     <>
@@ -263,6 +264,7 @@ const App = () => (
                         <Route path="/recovery-lifecycle" element={<RecoveryLifecycle />} />
                         <Route path="/learning-recovery" element={<LearningRecovery />} />
                         <Route path="/audit-ready-history" element={<AuditReadyHistory />} />
+                        <Route path="/amazon-asks" element={<AmazonAsks />} />
                         <Route path="/clocksimulate" element={<ClockSimulate />} />
                         <Route path="/rejectsimulate" element={<RejectSimulate />} />
                         <Route path="/staresimulate" element={<StareSimulate />} />
