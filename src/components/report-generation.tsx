@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, CheckCircle2, Download, FileSearch, FileText, Layers, X } from 'lucide-react';
+import { Check, CheckCircle2, Download, FileSearch, FileText, Layers, RefreshCw, X } from 'lucide-react';
 
 type Phase = 'extracting' | 'compiling' | 'output';
 
@@ -137,18 +137,25 @@ export default function ReportGeneration() {
         <header className="flex min-h-16 items-center justify-between border-b border-gray-100 bg-white px-5 sm:px-7">
           {phase === 'output' ? (
             <div className="flex min-w-0 items-center gap-4 sm:gap-6">
-              <span className="hidden text-sm font-semibold text-gray-500 sm:block">Run Output</span>
+              <span className="hidden text-[11px] font-medium uppercase tracking-[0.08em] text-[#6F7680] sm:block">Run Output</span>
               <div className="hidden h-5 w-px bg-gray-200 sm:block" />
-              <nav className="flex min-w-0 gap-1" aria-label="Report output">
+              <nav className="flex min-w-0 gap-5" aria-label="Report output">
                 {TABS.map((tab) => (
                   <button
                     key={tab}
                     type="button"
-                    className={`rounded-lg px-2 py-2 text-xs font-medium sm:px-3 sm:text-sm ${
-                      tab === 'Output' ? 'bg-gray-100 text-gray-900' : 'text-gray-400'
+                    className={`relative py-3 text-[11px] font-medium uppercase tracking-[0.08em] transition-colors ${
+                      tab === 'Output' ? 'text-[#242424]' : 'text-[#A0A6AE] hover:text-[#6F7680]'
                     }`}
                   >
                     {tab}
+                    {tab === 'Output' && (
+                      <motion.span
+                        layoutId="report-output-tab"
+                        className="absolute -bottom-px left-0 h-px w-full bg-[#242424]"
+                        transition={spring}
+                      />
+                    )}
                   </button>
                 ))}
               </nav>
@@ -327,71 +334,72 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={spring}
-                className="absolute inset-0 overflow-y-auto p-4 sm:p-6"
+                className="absolute inset-0 overflow-y-auto p-6 sm:p-8"
               >
-                <div className="mx-auto max-w-4xl">
-                  <div className="mb-4">
-                    <h2 className="text-base font-medium tracking-tight text-[#242424] sm:text-lg">Generated Report</h2>
+                <div className="mx-auto max-w-4xl pt-1 sm:pt-2">
+                  <div className="mb-8">
+                    <h2 className="text-base font-medium tracking-tight text-[#242424]">Generated Report</h2>
                     <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
-                  <article className="flex flex-col items-center gap-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-lg shadow-gray-200/50 sm:flex-row sm:p-6">
-                    <div className="relative h-44 w-32 shrink-0">
-                      <div className="absolute inset-0 translate-x-2.5 -rotate-2 rounded-lg border border-gray-200 bg-[#F4F5F6]" />
-                      <div className="absolute inset-0 translate-x-1 rotate-1 rounded-lg border border-gray-200 bg-[#FAFAFA]" />
-                      <div className="absolute inset-0 rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[8px] font-medium uppercase text-[#242424]">Margin</span>
-                          <span className="text-[6px] text-[#A0A6AE]">Private</span>
+                  <article className="flex flex-col items-center gap-8 sm:flex-row sm:items-center">
+                    <div className="relative h-48 w-36 shrink-0">
+                      <div className="absolute inset-0 translate-x-4 -rotate-3 rounded-xl border border-white/70 bg-white/35 backdrop-blur-md" />
+                      <div className="absolute inset-0 translate-x-2 rotate-2 rounded-xl border border-white/80 bg-white/55 backdrop-blur-md" />
+                      <div className="absolute inset-0 rounded-xl border border-white/90 bg-white/75 p-4 shadow-[0_24px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl">
+                        <div className="flex items-center justify-between border-b border-[#D8DDE3] pb-2">
+                          <span className="text-[8px] font-medium uppercase tracking-[0.06em] text-[#242424]">Margin</span>
+                          <span className="text-[6px] uppercase tracking-[0.08em] text-[#A0A6AE]">Dossier</span>
                         </div>
-                        <div className="mt-3 border-y border-[#D8DDE3] py-2">
-                          <p className="text-[7px] font-medium leading-tight text-[#242424]">Dispute investigation</p>
-                          <p className="mt-0.5 text-[6px] text-[#8A8F98]">Delivery evidence report</p>
+                        <div className="mt-4 space-y-1">
+                          <div className="h-1.5 w-20 rounded-full bg-[#242424]/70" />
+                          <div className="h-1 w-24 rounded-full bg-[#C7CDD4]" />
+                          <div className="h-1 w-16 rounded-full bg-[#E1E5EA]" />
                         </div>
-                        <div className="mt-2.5 space-y-1.5">
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Case ID</span><span className="font-medium text-[#242424]">#17520708561</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Shipment</span><span className="font-medium text-[#242424]">FBA15JJ4K7L1</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Weight</span><span className="font-medium text-[#242424]">45.2 lb</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">Signed by</span><span className="font-medium text-[#242424]">J. Smith</span></div>
+                        <div className="mt-5 space-y-2 border-y border-[#E6E9EE] py-3">
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">CASE</span><span className="font-medium text-[#242424]">#17520708561</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">SHIPMENT</span><span className="font-medium text-[#242424]">FBA15JJ4K7L1</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">WEIGHT</span><span className="font-medium text-[#242424]">45.2 lb</span></div>
+                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">SIGNATURE</span><span className="font-medium text-[#242424]">J. Smith</span></div>
                         </div>
-                        <div className="mt-2 rounded-sm border border-emerald-100 bg-emerald-50 px-2 py-1 text-[6px] font-medium text-emerald-700">Delivery verified</div>
+                        <div className="mt-3 grid grid-cols-2 gap-1">
+                          <div className="h-1 rounded-full bg-[#D8DDE3]" />
+                          <div className="h-1 rounded-full bg-[#E6E9EE]" />
+                          <div className="h-1 rounded-full bg-[#E6E9EE]" />
+                          <div className="h-1 rounded-full bg-[#D8DDE3]" />
+                        </div>
                         <span className="absolute bottom-3 right-3 text-[8px] text-[#C5CBD3]">1 / 14</span>
                       </div>
                     </div>
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
-                      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
-                        <h3 className="text-base font-medium tracking-tight text-[#242424] sm:text-lg">Dispute Investigation Report</h3>
-                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-medium text-emerald-700">
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                          Verified
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm font-normal text-[#5E6670]">PDF Document</p>
-                      <p className="mt-1 text-sm text-[#8A8F98]">2.4 MB · 14 pages</p>
-                      <p className="mt-1 text-sm text-[#8A8F98]">Created Nov 12, 2025</p>
+                      <h3 className="text-lg font-medium tracking-tight text-[#242424] sm:text-xl">Dispute Investigation Report</h3>
+                      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[#8A8F98] sm:text-[11px]">
+                        FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
+                      </p>
 
-                      <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                      <div className="mt-7 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
-                          className="flex h-9 items-center rounded-[10px] border border-[#242424] bg-[#242424] px-5 text-sm font-medium text-white transition-colors hover:bg-[#343434]"
+                          className="flex h-9 items-center rounded-full border border-[#242424]/25 bg-white/20 px-5 text-sm font-medium text-[#242424] backdrop-blur-sm transition-colors hover:border-[#242424] hover:bg-white/50"
                         >
                           View
                         </button>
                         <button
                           type="button"
                           onClick={downloadReport}
-                          className="flex h-9 items-center gap-2 rounded-[10px] border border-[#D3D7DE] bg-white px-5 text-sm font-medium text-[#242424] transition-colors hover:bg-gray-50"
+                          className="flex h-9 items-center gap-2 text-sm font-medium text-[#8A8F98] transition-colors hover:text-[#242424]"
                         >
-                          <Download className="h-4 w-4" />
+                          <Download className="h-3.5 w-3.5" />
                           Download
                         </button>
                         <button
                           type="button"
                           onClick={restartSimulation}
-                          className="px-2 text-xs font-normal text-[#8A8F98] transition-colors hover:text-[#242424]"
+                          className="flex h-9 items-center gap-2 text-sm font-medium text-[#8A8F98] transition-colors hover:text-[#242424]"
                         >
+                          <RefreshCw className="h-3.5 w-3.5" />
                           Regenerate
                         </button>
                       </div>
