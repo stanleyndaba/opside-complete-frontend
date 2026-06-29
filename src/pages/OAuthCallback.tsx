@@ -152,7 +152,7 @@ export default function OAuthCallback() {
                       <span className="font-medium">{errorMessage}</span>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Access was denied or failed. You can retry connecting with the correct account and read-only permissions.
+                      Access was denied or failed. You can retry connecting with the correct account and the required permissions.
                     </div>
                     <div className="flex gap-2">
                       <Button variant="outline" onClick={() => navigate(tenantRoute(tenantSlug || 'beta', '/integrations-hub'))} className="gap-2">
@@ -172,7 +172,7 @@ export default function OAuthCallback() {
                     <div>
                       <Badge variant="secondary">Scopes</Badge>
                       <div className="text-xs text-muted-foreground mt-1">
-                        We request read-only access to emails and files for invoice ingestion. We never send email, alter files, or delete content.
+                        Margin scans Gmail and Drive to find reimbursement evidence and attachments. It only ingests reimbursement-relevant content, does not delete, move, or modify emails or files, and email sending or replies only happen in approved case workflows or reply automation.
                       </div>
                     </div>
                   </div>

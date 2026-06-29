@@ -152,10 +152,10 @@ const Privacy = () => {
               </h2>
               <div className="space-y-4 text-gray-700">
                 <p>
-                  Whale Hunter's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" className="text-gray-900 underline underline-offset-4 decoration-gray-200 hover:decoration-gray-400 transition-colors">Google API Services User Data Policy</a>, including the Limited Use requirements.
+                  Margin's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" className="text-gray-900 underline underline-offset-4 decoration-gray-200 hover:decoration-gray-400 transition-colors">Google API Services User Data Policy</a>, including the Limited Use requirements.
                 </p>
                 <p>
-                  <span className="text-gray-900 italic font-medium">Data Access & Security:</span> We strictly limit our use of Google user data to providing our core e-commerce auditing features. Whale Hunter does not allow human access to read your email data unless we first obtain your affirmative agreement for specific messages, doing so is necessary for security purposes, or it is required to comply with applicable laws. We do not use your Google data for serving ads, including retargeting, personalized, or interest-based advertising.
+                  <span className="text-gray-900 italic font-medium">Data Access & Security:</span> Margin scans Gmail and Drive to find reimbursement-relevant evidence, and only ingests messages, attachments, and files that are relevant to the reimbursement workflow. Margin does not delete, move, or modify emails or files. Email sending and replies only happen as part of approved case workflows or reply automation. We do not use your Google data for serving ads, including retargeting, personalized, or interest-based advertising.
                 </p>
               </div>
             </section>

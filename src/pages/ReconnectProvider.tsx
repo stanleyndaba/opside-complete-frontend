@@ -58,8 +58,8 @@ const PERMISSION_MAPPING: Record<string, { title: string; desc: string }> = {
   'finance': { title: 'Finance and Accounting', desc: 'Financial events, settlement reports, and transaction data.' },
   'inventory': { title: 'Inventory and Order Tracking', desc: 'Real-time inventory levels and order lifecycle data.' },
   'listings': { title: 'Product Listing', desc: 'Product catalog and listing information access.' },
-  'mail.readonly': { title: 'Evidence Ingestion', desc: 'Passive scanning for refund and return confirmations.' },
-  'mail.read': { title: 'Evidence Ingestion', desc: 'Passive scanning for refund and return confirmations.' },
+  'mail.readonly': { title: 'Evidence Ingestion', desc: 'Margin scans email for reimbursement-relevant evidence and attachments. Approved case replies may be sent through automation when a workflow requires it.' },
+  'mail.read': { title: 'Evidence Ingestion', desc: 'Margin scans email for reimbursement-relevant evidence and attachments. Approved case replies may be sent through automation when a workflow requires it.' },
   'drive.readonly': { title: 'Document Extraction', desc: 'Secure access to support documentation and proof.' },
   'files.metadata.read': { title: 'Metadata Analysis', desc: 'Structure-level scanning for specific evidence tags.' },
 };
