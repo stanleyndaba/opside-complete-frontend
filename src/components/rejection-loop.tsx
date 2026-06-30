@@ -55,36 +55,34 @@ const WORKFLOW: WorkflowEvent[] = [
 
 const spring = { type: 'spring' as const, stiffness: 260, damping: 28 };
 
-function ThreadMarker({
-  owner,
-  active,
-  win,
-  topOffset = 'top-1.5',
-}: {
-  owner: WorkflowEvent['owner'];
-  active: boolean;
-  win?: boolean;
-  topOffset?: string;
-}) {
-  if (owner === 'amazon' && !win) {
-    return <span className={`absolute left-0 ${topOffset} h-2 w-2 -translate-x-1/2 rounded-full bg-[#9AA3B2]`} />;
-  }
-
+function StepStatus({ active }: { active: boolean }) {
   return (
-      <span
-      className={`absolute left-0 ${topOffset} -translate-x-1/2 rounded-full border ${
-        win ? 'h-3 w-3 border-[#3aaa78] bg-[#3aaa78] shadow-[0_0_14px_rgba(58,170,120,0.25)]' : 'h-3 w-3 border-[#D4D9E2] bg-white'
-      }`}
-    >
-      {active && (
-        <motion.span
-          className="absolute inset-[-8px] rounded-full border border-[#3aaa78]/20"
-          initial={{ opacity: 0, scale: 0.35 }}
-          animate={{ opacity: [0, 0.7, 0], scale: [0.35, 1.35, 1.9] }}
-          transition={{ duration: 1.35, repeat: Infinity, ease: 'easeOut' }}
+    <div className="relative mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#E6E9EE]">
+      {active ? (
+        <motion.div
+          initial={{ rotate: 0, opacity: 0.85 }}
+          animate={{ rotate: 360, opacity: 1 }}
+          transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0 rounded-full border border-[#7D8696] border-t-[#242424]"
         />
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.35 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 360, damping: 22 }}
+          className="absolute inset-0 rounded-full border border-[#C8CED7] bg-[#E6E9EE]"
+        >
+          <motion.span
+            initial={{ opacity: 0, scale: 0.2 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.08, type: 'spring', stiffness: 460, damping: 18 }}
+            className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold text-[#242424]"
+          >
+            ✓
+          </motion.span>
+        </motion.div>
       )}
-    </span>
+    </div>
   );
 }
 
@@ -135,81 +133,84 @@ function WorkflowItem({
       transition={spring}
       className="relative pl-8 sm:pl-10"
     >
-      <ThreadMarker owner={event.owner} active={active && event.owner === 'margin'} win={isWin} topOffset={isWin ? 'top-0.5' : 'top-1.5'} />
-
       <motion.div
         whileInView={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0.94, y: 4 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
       >
-        <p
-          className={
-            isWin
-              ? 'text-lg font-medium tracking-tight text-[#242424] sm:text-xl'
-              : isHero
-                ? 'text-sm font-medium tracking-tight text-[#242424] sm:text-base'
-                : event.owner === 'amazon'
-                  ? 'text-sm font-normal text-[#A0A6AE]'
-                  : 'text-sm font-medium text-[#242424]'
-          }
-        >
-          {event.label}
-        </p>
+        <div className="flex items-start gap-3">
+          <StepStatus active={active} />
+          <div className="min-w-0 flex-1">
+            <p
+              className={
+                isWin
+                  ? 'text-lg font-medium tracking-tight text-[#242424] sm:text-xl'
+                  : isHero
+                    ? 'text-sm font-medium tracking-tight text-[#242424] sm:text-base'
+                    : event.owner === 'amazon'
+                      ? 'text-sm font-normal text-[#8B95A5]'
+                      : 'text-sm font-medium text-[#242424]'
+              }
+            >
+              {event.label}
+            </p>
 
-        {isWin ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              textShadow: [
-                '0 0 0 rgba(58,170,120,0)',
-                '0 0 16px rgba(58,170,120,0.18)',
-                '0 0 10px rgba(58,170,120,0.1)',
-              ],
-            }}
-            transition={{ delay: 0.18, duration: 0.75, ease: 'easeOut' }}
-            className="mt-2 text-2xl font-medium tracking-tight text-[#242424] sm:text-[1.85rem]"
-          >
-            <CountUpCurrency start={isVisible} />
-            <p className="mt-1.5 text-sm font-normal text-[#8B95A5]">{event.body}</p>
-          </motion.div>
-        ) : (
-          event.body && <p className="mt-1.5 text-sm leading-6 text-[#6F7785]">{event.body}</p>
-        )}
-
-        {event.steps && (
-          <motion.ul
-            className="mt-3 space-y-2"
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.45 }}
-            variants={{
-              hidden: {},
-              show: {
-                transition: {
-                  staggerChildren: 0.1,
-                },
-              },
-            }}
-          >
-            {event.steps.map((step) => (
-              <motion.li
-                key={step}
-                variants={{
-                  hidden: { opacity: 0, y: 8 },
-                  show: { opacity: 1, y: 0 },
+            {isWin ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  textShadow: [
+                    '0 0 0 rgba(58,170,120,0)',
+                    '0 0 16px rgba(58,170,120,0.18)',
+                    '0 0 10px rgba(58,170,120,0.1)',
+                  ],
                 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
-                className="flex items-center gap-2.5 text-sm leading-5 text-[#8B95A5]"
+                transition={{ delay: 0.18, duration: 0.75, ease: 'easeOut' }}
+                className="mt-2 text-lg font-medium tracking-tight text-[#242424] sm:text-[1.25rem]"
               >
-                <span className="h-px w-4 bg-[#D7DCE4]" />
-                {step}
-              </motion.li>
-            ))}
-          </motion.ul>
-        )}
+                <CountUpCurrency start={isVisible} />
+                <p className="mt-1.5 text-sm font-normal text-[#8B95A5]">{event.body}</p>
+              </motion.div>
+            ) : (
+              event.body && <p className="mt-1.5 text-sm leading-6 text-[#6F7785]">{event.body}</p>
+            )}
+
+            {event.steps && (
+              <motion.ul
+                className="mt-3 space-y-2"
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.45 }}
+                variants={{
+                  hidden: {},
+                  show: {
+                    transition: {
+                      staggerChildren: 0.1,
+                    },
+                  },
+                }}
+              >
+                {event.steps.map((step) => (
+                  <motion.li
+                    key={step}
+                    variants={{
+                      hidden: { opacity: 0, y: 8 },
+                      show: { opacity: 1, y: 0 },
+                    }}
+                    transition={{ duration: 0.35, ease: 'easeOut' }}
+                    className="flex items-center gap-2.5 text-sm leading-5 text-[#6F7785]"
+                  >
+                    <span className="h-px w-4 bg-[#D7DCE4]" />
+                    {step}
+                  </motion.li>
+                ))}
+              </motion.ul>
+            )}
+          </div>
+        </div>
       </motion.div>
     </motion.article>
   );
@@ -258,15 +259,13 @@ export default function RejectionLoop() {
         </header>
 
         <div ref={scrollRef} className="relative flex-1 overflow-y-auto px-6 py-5 sm:px-8 sm:py-6">
-          <div className="absolute bottom-6 left-[35px] top-6 w-px bg-[#D9DEE6] sm:left-[43px]" />
-
-          <div className="relative space-y-7">
+          <div className="relative space-y-6">
             <AnimatePresence initial={false}>
               {visibleEvents.map((event, index) => (
                 <WorkflowItem
                   key={event.id}
                   event={event}
-                  active={index === visibleEvents.length - 1 && isSimulating}
+                  active={index === visibleEvents.length - 1 && event.owner === 'margin'}
                   isVisible={visibleCount > index}
                 />
               ))}
