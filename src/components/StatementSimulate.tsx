@@ -22,18 +22,22 @@ const StatementSimulate = () => {
           animate={show ? { 
             opacity: 1, 
             filter: "blur(0px)", 
-            letterSpacing: "-0.02em",
+            letterSpacing: "0em",
             scale: 1 
           } : {}}
           transition={{ 
             duration: 1.2, 
             ease: [0.16, 1, 0.3, 1] // Premium Apple-style ease-out
           }}
-          className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter leading-tight"
+          className="text-4xl md:text-5xl font-black text-gray-900 leading-tight"
         >
-          Not because the money   
- 
-          <span className="text-gray-300"> wasn't real.</span>
+          <span className="block">Margin adapts from Amazon policy changes</span>
+          <span className="block">
+            in{' '}
+            <span className="text-[#007AFF] underline decoration-[#007AFF] decoration-2 underline-offset-[6px]">
+              real-time
+            </span>
+          </span>
         </motion.h1>
 
         {/* The "Pause" Indicator (Subtle) */}
