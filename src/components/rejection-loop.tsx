@@ -55,37 +55,6 @@ const WORKFLOW: WorkflowEvent[] = [
 
 const spring = { type: 'spring' as const, stiffness: 260, damping: 28 };
 
-function StepStatus({ active }: { active: boolean }) {
-  return (
-    <div className="relative mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#E6E9EE]">
-      {active ? (
-        <motion.div
-          initial={{ rotate: 0, opacity: 0.85 }}
-          animate={{ rotate: 360, opacity: 1 }}
-          transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
-          className="absolute inset-0 rounded-full border border-[#7D8696] border-t-[#242424]"
-        />
-      ) : (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.35 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', stiffness: 360, damping: 22 }}
-          className="absolute inset-0 rounded-full border border-[#C8CED7] bg-[#E6E9EE]"
-        >
-          <motion.span
-            initial={{ opacity: 0, scale: 0.2 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.08, type: 'spring', stiffness: 460, damping: 18 }}
-            className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold text-[#242424]"
-          >
-            ✓
-          </motion.span>
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
 function CountUpCurrency({ start }: { start: boolean }) {
   const [value, setValue] = useState(0);
 
@@ -115,11 +84,9 @@ function CountUpCurrency({ start }: { start: boolean }) {
 
 function WorkflowItem({
   event,
-  active,
   isVisible,
 }: {
   event: WorkflowEvent;
-  active: boolean;
   isVisible: boolean;
 }) {
   const isHero = event.emphasis === 'hero';
@@ -131,7 +98,7 @@ function WorkflowItem({
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       exit={{ opacity: 0, y: -10 }}
       transition={spring}
-      className="relative pl-8 sm:pl-10"
+      className="relative"
     >
       <motion.div
         whileInView={{ opacity: 1, y: 0 }}
@@ -139,77 +106,74 @@ function WorkflowItem({
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
       >
-        <div className="flex items-start gap-3">
-          <StepStatus active={active} />
-          <div className="min-w-0 flex-1">
-            <p
-              className={
-                isWin
-                  ? 'text-lg font-medium tracking-tight text-[#242424] sm:text-xl'
-                  : isHero
-                    ? 'text-sm font-medium tracking-tight text-[#242424] sm:text-base'
-                    : event.owner === 'amazon'
-                      ? 'text-sm font-normal text-[#8B95A5]'
-                      : 'text-sm font-medium text-[#242424]'
-              }
+        <div className="min-w-0">
+          <p
+            className={
+              isWin
+                ? 'text-lg font-medium tracking-tight text-[#242424] sm:text-xl'
+                : isHero
+                  ? 'text-sm font-medium tracking-tight text-[#242424] sm:text-base'
+                  : event.owner === 'amazon'
+                    ? 'text-sm font-normal text-[#8B95A5]'
+                    : 'text-sm font-medium text-[#242424]'
+            }
+          >
+            {event.label}
+          </p>
+
+          {isWin ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                textShadow: [
+                  '0 0 0 rgba(58,170,120,0)',
+                  '0 0 16px rgba(58,170,120,0.18)',
+                  '0 0 10px rgba(58,170,120,0.1)',
+                ],
+              }}
+              transition={{ delay: 0.18, duration: 0.75, ease: 'easeOut' }}
+              className="mt-2 text-lg font-medium tracking-tight text-[#242424] sm:text-[1.25rem]"
             >
-              {event.label}
-            </p>
+              <CountUpCurrency start={isVisible} />
+              <p className="mt-1.5 text-sm font-normal text-[#8B95A5]">{event.body}</p>
+            </motion.div>
+          ) : (
+            event.body && <p className="mt-1.5 text-sm leading-6 text-[#6F7785]">{event.body}</p>
+          )}
 
-            {isWin ? (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  textShadow: [
-                    '0 0 0 rgba(58,170,120,0)',
-                    '0 0 16px rgba(58,170,120,0.18)',
-                    '0 0 10px rgba(58,170,120,0.1)',
-                  ],
-                }}
-                transition={{ delay: 0.18, duration: 0.75, ease: 'easeOut' }}
-                className="mt-2 text-lg font-medium tracking-tight text-[#242424] sm:text-[1.25rem]"
-              >
-                <CountUpCurrency start={isVisible} />
-                <p className="mt-1.5 text-sm font-normal text-[#8B95A5]">{event.body}</p>
-              </motion.div>
-            ) : (
-              event.body && <p className="mt-1.5 text-sm leading-6 text-[#6F7785]">{event.body}</p>
-            )}
-
-            {event.steps && (
-              <motion.ul
-                className="mt-3 space-y-2"
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.45 }}
-                variants={{
-                  hidden: {},
-                  show: {
-                    transition: {
-                      staggerChildren: 0.1,
-                    },
+          {event.steps && (
+            <motion.ul
+              className="mt-3 space-y-2"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.45 }}
+              variants={{
+                hidden: {},
+                show: {
+                  transition: {
+                    staggerChildren: 0.1,
                   },
-                }}
-              >
-                {event.steps.map((step) => (
-                  <motion.li
-                    key={step}
-                    variants={{
-                      hidden: { opacity: 0, y: 8 },
-                      show: { opacity: 1, y: 0 },
-                    }}
-                    transition={{ duration: 0.35, ease: 'easeOut' }}
-                    className="flex items-center gap-2.5 text-sm leading-5 text-[#6F7785]"
-                  >
-                    <span className="h-px w-4 bg-[#D7DCE4]" />
-                    {step}
-                  </motion.li>
-                ))}
-              </motion.ul>
-            )}
-          </div>
+                },
+              }}
+            >
+              {event.steps.map((step) => (
+                <motion.li
+                  key={step}
+                  variants={{
+                    hidden: { opacity: 0, y: 8 },
+                    show: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="flex items-center gap-2.5 text-sm leading-5 text-[#6F7785]"
+                >
+                  <span className="h-px w-4 bg-[#D7DCE4]" />
+                  {step}
+                </motion.li>
+              ))}
+            </motion.ul>
+          )}
         </div>
       </motion.div>
     </motion.article>
@@ -265,7 +229,6 @@ export default function RejectionLoop() {
                 <WorkflowItem
                   key={event.id}
                   event={event}
-                  active={index === visibleEvents.length - 1 && event.owner === 'margin'}
                   isVisible={visibleCount > index}
                 />
               ))}
