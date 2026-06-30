@@ -34,7 +34,7 @@ const StatementSimulate = () => {
               }}
               className="text-4xl md:text-5xl font-black text-gray-900 leading-tight"
             >
-              Margin adapts from Amazon policy changes
+              Adapting from Amazon policy changes
             </motion.h1>
           )}
 
