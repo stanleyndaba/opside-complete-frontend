@@ -32,7 +32,7 @@ type SolutionsMegaMenuProps = {
 export function SolutionsMegaMenu({ variant = 'dark' }: SolutionsMegaMenuProps) {
     const triggerClassName = variant === 'light'
         ? 'h-9 rounded-[6px] border border-transparent bg-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] outline-none ring-0 transition-colors hover:border-transparent hover:bg-[#F3F6F8] hover:text-[#182026] focus:border-transparent focus:bg-transparent focus:text-[#25313A] focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-[#F3F6F8] data-[state=open]:!text-[#182026]'
-        : 'h-9 rounded-full border border-transparent bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-white/90 outline-none ring-0 transition-colors hover:border-transparent hover:bg-white/10 hover:text-white focus:border-transparent focus:bg-transparent focus:text-white/90 focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-transparent data-[state=open]:!bg-white/10 data-[state=open]:!text-white';
+        : 'h-9 rounded-full !border-0 bg-transparent px-3 text-[11px] font-semibold uppercase tracking-tight text-white/90 shadow-none outline-none ring-0 transition-colors hover:!border-0 hover:bg-white/10 hover:text-white focus:!border-0 focus:bg-transparent focus:text-white/90 focus-visible:!border-0 focus-visible:outline-none focus-visible:ring-0 data-[state=open]:!border-0 data-[state=open]:!bg-white/10 data-[state=open]:!text-white';
 
     return (
         <NavigationMenu>
@@ -89,10 +89,10 @@ export function SolutionServiceItem({
             )}
         >
             <div className={cn(
-                'flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border transition-all duration-200',
+                'flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] transition-all duration-200',
                 isLight
-                    ? 'border-[#CDD7DE] bg-[#F9F9FB] text-[#25313A] group-hover:border-[#9EACB6] group-hover:bg-white group-hover:shadow-[0_0_0_3px_rgba(24,32,38,0.04)]'
-                    : 'border-white/14 bg-white/[0.035] text-white group-hover:border-white/28 group-hover:shadow-[0_0_0_3px_rgba(255,255,255,0.055)]'
+                    ? 'border border-[#CDD7DE] bg-[#F9F9FB] text-[#25313A] group-hover:border-[#9EACB6] group-hover:bg-white group-hover:shadow-[0_0_0_3px_rgba(24,32,38,0.04)]'
+                    : 'bg-white/[0.055] text-white group-hover:bg-white/[0.075] group-hover:shadow-[0_0_0_3px_rgba(255,255,255,0.055)]'
             )}>
                 <Icon className="h-5 w-5" strokeWidth={1.8} />
             </div>

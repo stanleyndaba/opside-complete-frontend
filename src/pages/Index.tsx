@@ -903,7 +903,7 @@ export default function Index() {
               <div className="grid lg:grid-cols-2">
                 <div className="px-1 py-8 md:px-8 md:py-11 lg:pr-12">
                   <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
-                    // STATUS: CHAOS
+                    STATUS: CHAOS
                   </div>
                   <h3 className="mt-5 max-w-[440px] text-[26px] font-semibold leading-tight tracking-[-0.04em] text-[#4E5B65] md:text-[34px]">
                     Proof is scattered across the operation.
@@ -937,7 +937,7 @@ export default function Index() {
 
                 <div className="border-t border-[#CBD7DE] px-1 py-8 md:px-8 md:py-11 lg:border-l lg:border-t-0 lg:pl-12">
                   <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5F6D77]">
-                    // STATUS: RECOVERY_OS
+                    STATUS: RECOVERY_OS
                   </div>
                   <motion.div
                     initial={{ opacity: 0, x: 30 }}

@@ -188,7 +188,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                                 ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
                                                 : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
                                         )}>
-                                            Products
+                                            Agents
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
                                             {productMenuGroups.map((group) => (
@@ -244,7 +244,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                                 ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
                                                 : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
                                         )}>
-                                            API
+                                            Operations
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2">
                                             <div className="space-y-6">
