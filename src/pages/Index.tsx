@@ -482,29 +482,29 @@ function EvidenceReadinessBlueprint() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[28px] border border-[#2F3A43]/30 bg-[#182026] p-7 shadow-[0_28px_90px_rgba(24,32,38,0.22)] md:p-9"
+      className="relative overflow-hidden rounded-[28px] border border-[#D8E3E8] bg-[linear-gradient(135deg,#FFFFFF_0%,#FAFAF7_52%,#F2F7F8_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] md:p-9"
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        className="pointer-events-none absolute inset-0 opacity-[0.38]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px)',
+            'linear-gradient(rgba(122,137,148,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(122,137,148,0.11) 1px, transparent 1px)',
           backgroundSize: '56px 56px',
         }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_16%,rgba(255,255,255,0.10),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent_52%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_14%,rgba(11,116,222,0.08),transparent_34%),radial-gradient(circle_at_12%_92%,rgba(46,125,91,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.82),transparent_54%)]" />
 
       <div className="relative">
-        <div className="text-[10px] font-semibold uppercase text-[#96A0AA]">
+        <div className="text-[10px] font-semibold uppercase text-[#7A8994]">
           System readiness score
         </div>
         <div className="mt-3 flex items-end gap-2">
-          <span className="text-[78px] font-bold leading-none tracking-[-0.06em] text-white md:text-[104px]">
+          <span className="text-[78px] font-bold leading-none tracking-[-0.06em] text-[#182026] md:text-[104px]">
             {score}
           </span>
-          <span className="mb-2 text-[28px] font-bold leading-none text-white md:mb-3 md:text-[38px]">%</span>
+          <span className="mb-2 text-[28px] font-bold leading-none text-[#182026] md:mb-3 md:text-[38px]">%</span>
         </div>
-        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#AAB3BC] md:text-[16px]">
+        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#66737F] md:text-[16px]">
           Inbound shortage claim is close to ready, with two diagnostic items controlling review risk.
         </p>
       </div>
@@ -515,36 +515,36 @@ function EvidenceReadinessBlueprint() {
           initial={{ scaleX: 0 }}
           animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
           transition={{ duration: 0.65, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute left-0 right-0 top-0 h-px origin-left bg-white/[0.18]"
+          className="absolute left-0 right-0 top-0 h-px origin-left bg-[#C9D6DE]"
         />
         <motion.div
           aria-hidden="true"
           initial={{ scaleY: 0 }}
           animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
           transition={{ duration: 0.65, delay: 0.34, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute bottom-0 left-1/2 top-0 hidden w-px origin-top bg-white/[0.18] md:block"
+          className="absolute bottom-0 left-1/2 top-0 hidden w-px origin-top bg-[#C9D6DE] md:block"
         />
         <motion.div
           aria-hidden="true"
           initial={{ scaleX: 0 }}
           animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
           transition={{ duration: 0.65, delay: 0.34, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute left-0 right-0 top-1/2 h-px origin-left bg-white/[0.18] md:hidden"
+          className="absolute left-0 right-0 top-1/2 h-px origin-left bg-[#C9D6DE] md:hidden"
         />
 
         <div className="min-h-[148px] py-7 pr-0 md:pr-8">
-          <div className="text-[11px] font-bold uppercase text-white">
+          <div className="text-[11px] font-bold uppercase text-[#182026]">
             Missing evidence
           </div>
-          <p className="mt-4 max-w-[260px] text-[15px] leading-7 text-[#AAB3BC]">
+          <p className="mt-4 max-w-[260px] text-[15px] leading-7 text-[#66737F]">
             Signed POD and supplier invoice cost breakdown.
           </p>
         </div>
         <div className="min-h-[148px] py-7 md:pl-8">
-          <div className="text-[11px] font-bold uppercase text-white">
+          <div className="text-[11px] font-bold uppercase text-[#182026]">
             T-minus 12d
           </div>
-          <p className="mt-4 max-w-[280px] text-[15px] leading-7 text-[#AAB3BC]">
+          <p className="mt-4 max-w-[280px] text-[15px] leading-7 text-[#66737F]">
             Review risk increases as the claim window closes.
           </p>
         </div>
