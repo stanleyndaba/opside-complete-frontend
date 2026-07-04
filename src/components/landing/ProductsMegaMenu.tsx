@@ -16,7 +16,8 @@ import {
     BarChart3,
     Activity,
     Globe2,
-    Network
+    Network,
+    type LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -83,7 +84,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                                 {group.label}
                                             </h4>
                                             {group.badge && (
-                                                <span className="rounded px-2.5 py-1 text-[8px] font-bold uppercase tracking-tighter text-[#0B74DE] ring-1 ring-[#BFD8EA] bg-[#EAF4FF]">
+                                                <span className="rounded-[4px] border border-[#CDD7DE] bg-white/65 px-2.5 py-1 text-[8px] font-bold uppercase tracking-tight text-[#3D4952]">
                                                     {group.badge}
                                                 </span>
                                             )}
@@ -115,7 +116,7 @@ export function ProductServiceItem({
     description,
     variant = 'light'
 }: {
-    icon: any,
+    icon: LucideIcon,
     title: string,
     description: string,
     variant?: 'dark' | 'light'
@@ -125,25 +126,25 @@ export function ProductServiceItem({
     return (
         <div
             className={cn(
-                'group flex cursor-default items-center gap-3.5 rounded-xl border p-4 transition-all duration-200 ease-out hover:-translate-y-0.5',
+                'group flex cursor-default items-center gap-3.5 rounded-[8px] border p-4 transition-all duration-200 ease-out hover:-translate-y-0.5',
                 isLight
-                    ? 'border-transparent bg-transparent hover:border-[#DCE8EE] hover:bg-[#F8FAFC] hover:shadow-[0_14px_36px_rgba(11,102,255,0.09)]'
-                    : 'border-transparent bg-transparent hover:bg-white/[0.04]'
+                    ? 'border-transparent bg-transparent hover:border-[#DCE3E8] hover:bg-white hover:shadow-[0_16px_34px_rgba(24,32,38,0.08)]'
+                    : 'border-transparent bg-transparent hover:bg-white/[0.045] hover:shadow-[0_16px_34px_rgba(255,255,255,0.05)]'
             )}
         >
             <div className={cn(
-                'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border text-[#0066FF]',
+                'flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border transition-all duration-200',
                 isLight
-                    ? 'border-[#DCE8EE] bg-[#0066FF]/10 group-hover:border-[#BFD8EA] group-hover:bg-white'
-                    : 'border-white/10 bg-[#0066FF]/10'
+                    ? 'border-[#CDD7DE] bg-[#F9F9FB] text-[#25313A] group-hover:border-[#9EACB6] group-hover:bg-white group-hover:shadow-[0_0_0_3px_rgba(24,32,38,0.04)]'
+                    : 'border-white/14 bg-white/[0.035] text-white group-hover:border-white/28 group-hover:shadow-[0_0_0_3px_rgba(255,255,255,0.055)]'
             )}>
                 <Icon className="h-5 w-5" strokeWidth={1.8} />
             </div>
             <div className="min-w-0">
-                <span className={cn('block text-[13px] font-bold tracking-tight', isLight ? 'text-[#182026]' : 'text-white/90')}>
+                <span className={cn('block text-[13px] font-bold tracking-tight', isLight ? 'text-[#182026]' : 'text-white')}>
                     {title}
                 </span>
-                <p className={cn('mt-1.5 text-[11px] leading-[1.45]', isLight ? 'text-[#66737F]' : 'text-white/25')}>
+                <p className={cn('mt-1.5 text-[11px] leading-[1.45]', isLight ? 'text-[#66737F]' : 'text-white/55')}>
                     {description}
                 </p>
             </div>

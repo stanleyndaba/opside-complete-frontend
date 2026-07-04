@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowRight,
     Menu,
 } from 'lucide-react';
 import {
@@ -22,7 +21,7 @@ type PublicNavbarProps = {
     ctaTo?: string;
 };
 
-export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', ctaTo = '/waitlist' }: PublicNavbarProps) => {
+export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
@@ -117,7 +116,6 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                 alt="Margin"
                                 width="20"
                                 height="20"
-                                // @ts-ignore - fetchpriority is valid but react types might lag
                                 fetchPriority="high"
                                 className={cn("h-4 w-auto object-contain md:h-5", isLight ? "" : "invert brightness-0")}
                             />
@@ -152,17 +150,6 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                         <Link to="/login" className={desktopActionClass}>
                             LOGIN
                         </Link>
-                        {false && (ctaTo.startsWith('#') ? (
-                            <a href={ctaTo} className={`${desktopActionClass} gap-2 px-6`}>
-                                {ctaLabel} <ArrowRight className="h-3 w-3" />
-                            </a>
-                        ) : (
-                            <Link
-                                to={ctaTo}
-                                className={`${desktopActionClass} gap-2 px-6`}>
-                                {ctaLabel} <ArrowRight className="h-3 w-3" />
-                            </Link>
-                        ))}
                     </nav>
 
                     <button
@@ -307,31 +294,6 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel = 'JOIN WAITLIST', cta
                                     className={mobileMenuItemClass}>
                                     Enterprise
                                 </Link>
-                                {false && (ctaTo.startsWith('#') ? (
-                                    <a
-                                        href={ctaTo}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className={cn(
-                                            "px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight",
-                                            isLight
-                                                ? "rounded-[6px] bg-[#0B74DE] text-white"
-                                                : "rounded-[6px] bg-white text-black"
-                                        )}>
-                                        {ctaLabel}
-                                    </a>
-                                ) : (
-                                    <Link
-                                        to={ctaTo}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className={cn(
-                                            "px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight",
-                                            isLight
-                                                ? "rounded-[6px] bg-[#0B74DE] text-white"
-                                                : "rounded-[6px] bg-white text-black"
-                                        )}>
-                                        {ctaLabel}
-                                    </Link>
-                                ))}
                             </div>
                         </motion.div>
                     )}
