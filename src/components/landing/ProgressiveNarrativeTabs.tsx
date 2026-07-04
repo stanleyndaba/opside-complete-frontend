@@ -41,49 +41,49 @@ export function ProgressiveNarrativeTabs() {
 
   return (
     <section ref={containerRef} className="relative bg-white py-32 md:py-48">
-      <div className="mx-auto w-full max-w-[880px] px-6 md:px-8">
-        
-        <div className="text-[11px] font-bold uppercase tracking-widest text-[#0B74DE] mb-16 md:mb-24">
-          Why timing matters
-        </div>
+      <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
+        <div className="max-w-[880px]">
+          <div className="mb-16 text-[11px] font-bold uppercase tracking-widest text-[#0B74DE] md:mb-24">
+            Why timing matters
+          </div>
 
-        <div className="flex flex-col space-y-12 md:space-y-20">
-          {CHAPTERS.map((chapter, idx) => {
-            const isActive = idx === activeChapter;
-            return (
-              <button
-                key={chapter.id}
-                onClick={() => { setActiveChapter(idx); setIsPaused(true); }}
-                className="group relative flex flex-col text-left outline-none"
-              >
-                <h3 
-                  className={`font-serif-headline text-[32px] sm:text-[42px] md:text-[56px] font-bold leading-[1.1] tracking-tight transition-colors duration-500 ${
-                    isActive ? 'text-[#182026]' : 'text-[#182026]/20 group-hover:text-[#182026]/40'
-                  }`}
+          <div className="flex flex-col space-y-12 md:space-y-20">
+            {CHAPTERS.map((chapter, idx) => {
+              const isActive = idx === activeChapter;
+              return (
+                <button
+                  key={chapter.id}
+                  onClick={() => { setActiveChapter(idx); setIsPaused(true); }}
+                  className="group relative flex flex-col text-left outline-none"
                 >
-                  {chapter.title}
-                </h3>
-                
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                      animate={{ opacity: 1, height: 'auto', marginTop: 24 }}
-                      exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <p className="max-w-[720px] text-[18px] sm:text-[20px] md:text-[24px] leading-relaxed text-[#66737F]">
-                        {chapter.subtext}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </button>
-            );
-          })}
-        </div>
+                  <h3
+                    className={`font-serif-headline text-[32px] font-bold leading-[1.1] tracking-tight transition-colors duration-500 sm:text-[42px] md:text-[56px] ${
+                      isActive ? 'text-[#182026]' : 'text-[#182026]/20 group-hover:text-[#182026]/40'
+                    }`}
+                  >
+                    {chapter.title}
+                  </h3>
 
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{ opacity: 1, height: 'auto', marginTop: 24 }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="max-w-[720px] text-[18px] leading-relaxed text-[#66737F] sm:text-[20px] md:text-[24px]">
+                          {chapter.subtext}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -306,7 +306,7 @@ function KineticHeroSection({
     <motion.section
       style={{ scale: heroScale, opacity: heroOpacity }}
       data-navbar-theme="dark"
-      className="relative isolate flex min-h-[calc(100svh-24px)] overflow-hidden bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.18),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.12),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-5 pb-32 pt-52 text-white sm:px-6 md:min-h-screen md:px-8 md:pb-44 md:pt-64"
+      className="relative isolate flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.18),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.12),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-4 pb-16 pt-28 text-white sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-64"
       aria-labelledby="margin-hero-title"
     >
       <div
@@ -369,14 +369,14 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"
+            className="inline-flex max-w-full items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl sm:text-[11px]"
           >
             Claim-ready evidence packs for Amazon reimbursement work
           </motion.div>
 
           <h1
             id="margin-hero-title"
-            className="mt-7 font-serif-headline max-w-[1040px] text-[48px] font-bold leading-[0.96] tracking-[-0.055em] sm:text-[64px] md:text-[88px] lg:text-[112px]"
+            className="mt-6 font-serif-headline max-w-[1040px] text-[38px] font-bold leading-[0.98] tracking-[-0.045em] min-[390px]:text-[44px] sm:mt-7 sm:text-[64px] sm:tracking-[-0.055em] md:text-[88px] lg:text-[112px]"
           >
             <motion.span
               className="block text-white"
@@ -400,7 +400,7 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-7 max-w-[680px] text-[17px] leading-[1.7] text-slate-300 md:text-[20px]"
+            className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[20px]"
           >
             Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs. So Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.
           </motion.p>
@@ -409,15 +409,15 @@ function KineticHeroSection({
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-10 grid w-full max-w-[700px] grid-cols-1 gap-3 min-[680px]:grid-cols-[1.18fr_1fr]"
+            className="mt-8 grid w-full max-w-[700px] grid-cols-1 gap-3 sm:mt-10 min-[680px]:grid-cols-[1.18fr_1fr]"
           >
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Secure Early Access for 99 dollars"
+              aria-label="Secure Early Access"
               className="group relative h-[52px] justify-center overflow-hidden rounded-full bg-[#0B74DE] px-7 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              Secure Early Access – $99
+              Secure Early Access
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
@@ -434,7 +434,7 @@ function KineticHeroSection({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="mt-8 flex items-center gap-4 text-[12px] font-medium text-slate-400"
+            className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-medium text-slate-400 sm:mt-8"
           >
             <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Read-only setup</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
@@ -625,7 +625,7 @@ export default function Index() {
   };
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = 'Secure Early Access – $99';
+  const primaryCtaLabel = 'Secure Early Access';
 
 
   return (
