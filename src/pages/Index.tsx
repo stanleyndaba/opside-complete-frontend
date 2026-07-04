@@ -134,6 +134,8 @@ const workflowSteps = [
   }
 ];
 
+const stateTransitionSources = ['Gmail', 'Drive', 'Seller Central', 'Excel'];
+
 const marketplaceCountries = [
   { country: 'United States', code: 'US', flagCode: 'us', region: 'Americas' },
   { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'Americas' },
@@ -894,33 +896,87 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className="mt-10 grid gap-4 lg:grid-cols-2">
-              <motion.div
-                {...revealProps}
-                className="rounded-[28px] border border-[#D8E3E8] bg-white p-6 md:p-8"
-              >
-                <div className="text-[11px] font-bold uppercase tracking-tight text-[#D76A3D]">Before Margin</div>
-                <h3 className="mt-4 text-[24px] font-semibold tracking-[-0.04em] text-[#182026] md:text-[32px]">
-                  Proof is scattered across the operation.
-                </h3>
-                <p className="mt-5 text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">
-                  Invoice in Gmail. POD in carrier portal. BOL in Drive. Case ID in Seller Central. Payout in settlement report. A VA tracking it all in Excel.
-                </p>
-              </motion.div>
+            <motion.div
+              {...revealProps}
+              className="mt-12 overflow-hidden border-y border-[#CBD7DE] bg-white/28"
+            >
+              <div className="grid lg:grid-cols-2">
+                <div className="px-1 py-8 md:px-8 md:py-11 lg:pr-12">
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
+                    // STATUS: CHAOS
+                  </div>
+                  <h3 className="mt-5 max-w-[440px] text-[26px] font-semibold leading-tight tracking-[-0.04em] text-[#4E5B65] md:text-[34px]">
+                    Proof is scattered across the operation.
+                  </h3>
 
-              <motion.div
-                {...revealProps}
-                className="rounded-[28px] border border-[#BFD8EA] bg-white p-6 shadow-[0_24px_70px_rgba(11,116,222,0.08)] md:p-8"
-              >
-                <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">After Margin</div>
-                <h3 className="mt-4 text-[24px] font-semibold tracking-[-0.04em] text-[#182026] md:text-[32px]">
-                  One claim-ready evidence pack.
-                </h3>
-                <p className="mt-5 text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">
-                  The reimbursement case is linked to shipment records, required documents, deadline state, seller approval, Amazon case status, and payout reconciliation.
-                </p>
-              </motion.div>
-            </div>
+                  <div className="mt-9 border-y border-[#D8E3E8]">
+                    {stateTransitionSources.map((source, index) => (
+                      <motion.div
+                        key={source}
+                        initial={{ opacity: 0, x: -8 }}
+                        whileInView={{
+                          opacity: [0, 0.72, 0.48, 0.78, 0.62],
+                          x: [-8, 2, -2, 1, 0]
+                        }}
+                        viewport={{ once: true, amount: 0.4 }}
+                        transition={{ duration: 0.72, delay: index * 0.08, ease: 'easeOut' }}
+                        className={`flex items-center justify-between gap-4 py-4 ${
+                          index > 0 ? 'border-t border-[#D8E3E8]' : ''
+                        }`}
+                      >
+                        <span className="text-[15px] font-semibold tracking-[-0.015em] text-[#25313A] md:text-[16px]">
+                          {source}
+                        </span>
+                        <span className="font-mono text-[10px] uppercase tracking-tight text-[#9AA8B2]">
+                          detached source
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-[#CBD7DE] px-1 py-8 md:px-8 md:py-11 lg:border-l lg:border-t-0 lg:pl-12">
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5F6D77]">
+                    // STATUS: RECOVERY_OS
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, amount: 0.38 }}
+                    transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <h3 className="mt-5 max-w-[460px] text-[28px] font-semibold leading-tight tracking-[-0.045em] text-[#182026] md:text-[38px]">
+                      One claim-ready evidence pack.
+                    </h3>
+
+                    <div className="mt-9 border-y border-[#C9D6DE] bg-white/38">
+                      {stateTransitionSources.map((source, index) => (
+                        <motion.div
+                          key={source}
+                          initial={{ opacity: 0, x: 16 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true, amount: 0.5 }}
+                          transition={{ duration: 0.45, delay: 0.18 + index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                          className={`flex items-center gap-3 py-4 ${
+                            index > 0 ? 'border-t border-[#D8E3E8]' : ''
+                          }`}
+                        >
+                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#21B487] text-white">
+                            <Check className="h-2.5 w-2.5" strokeWidth={3} />
+                          </span>
+                          <span className="text-[15px] font-semibold tracking-[-0.015em] text-[#182026] md:text-[16px]">
+                            {source}
+                          </span>
+                          <span className="ml-auto font-mono text-[10px] uppercase tracking-tight text-[#7B8A95]">
+                            verified
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
