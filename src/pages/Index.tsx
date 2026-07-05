@@ -951,52 +951,63 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative py-16 md:py-28" id="how-margin-works">
+        <section
+          className="relative overflow-hidden bg-[linear-gradient(135deg,#101827_0%,#06080C_56%,#000000_100%)] py-20 text-white md:py-28"
+          id="how-margin-works"
+          data-navbar-theme="dark"
+        >
           <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={sectionLabelClass}>What Margin Does</div>
-              <h2 className={sectionHeadingClass}>From scattered proof to claim-ready evidence packs.</h2>
-              <p className="mt-5 max-w-[760px] text-[20px] font-semibold leading-8 tracking-[-0.025em] text-[#25313A] md:text-[26px] md:leading-9">
+            <div className="grid gap-10 lg:grid-cols-[0.55fr_1fr] lg:items-end">
+              <div>
+                <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-white/42">
+                  <span>06</span>
+                  <span>What Margin Does</span>
+                </div>
+                <h2 className="font-serif-headline mt-9 max-w-[760px] text-[42px] font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-[56px] md:text-[78px]">
+                  From scattered proof to claim-ready evidence packs.
+                </h2>
+              </div>
+
+              <p
+                className="max-w-[660px] text-[16px] leading-8 text-white/72 md:text-[18px] md:leading-9 lg:justify-self-end"
+              >
                 After a discrepancy is identified, Margin finds the records needed to support the claim, links them to the shipment or case, prepares the evidence pack for seller review, and tracks Amazon response through payout or escalation.
               </p>
-              <p className={sectionBodyClass}>
-                Workflow: detect discrepancy -&gt; identify required evidence -&gt; locate matching documents -&gt; link proof to shipment, ASIN, quantity, and cost -&gt; generate evidence pack -&gt; seller approves -&gt; track Amazon response -&gt; reconcile payout.
-              </p>
-              <p className={sectionBodyClass}>
-                Each case stays tied to its evidence, deadline, approval, Amazon response, and payout context.
-              </p>
-            </motion.div>
+            </div>
 
-            <div className="relative mt-10 md:mt-12">
-              <div className="relative z-10 grid gap-3 border-y border-[#D8E3E8] bg-white/36 lg:grid-cols-6 lg:gap-0">
-                {workflowSteps.map((item, index) => (
-                  <motion.div
-                    key={item.step}
-                    {...revealProps}
-                    whileHover={{ y: -3 }}
-                    transition={{ ...revealProps.transition, delay: index * 0.08 }}
-                    className={`group relative min-h-[188px] overflow-hidden bg-white/40 px-5 py-6 outline-none transition-[background-color,box-shadow] duration-500 hover:bg-white/92 hover:shadow-[0_18px_48px_rgba(11,116,222,0.09)] focus-visible:bg-white/92 focus-visible:ring-2 focus-visible:ring-[#0B74DE]/25 md:px-6 lg:min-h-[176px] ${
-                      index > 0 ? 'border-t border-[#D8E3E8] lg:border-l lg:border-t-0' : ''
-                    }`}
-                  >
-                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,116,222,0.06),transparent_42%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus:opacity-100" />
-                    <div className="relative flex h-full flex-col">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#BFD8EA] bg-white text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_10px_24px_rgba(37,49,58,0.06)] transition duration-500 group-hover:border-[#0B74DE] group-hover:bg-[#0B74DE] group-hover:text-white group-focus:border-[#0B74DE] group-focus:bg-[#0B74DE] group-focus:text-white">
-                        {item.step}
-                      </div>
-                      <h3 className="mt-7 text-[18px] font-semibold leading-tight tracking-[-0.025em] text-[#182026] md:text-[20px]">
-                        {item.title}
-                      </h3>
-                      <p className="mt-3 text-[14px] leading-7 text-[#66737F] transition-all duration-500 lg:max-h-0 lg:translate-y-2 lg:overflow-hidden lg:opacity-0 lg:group-hover:max-h-40 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus:max-h-40 lg:group-focus:translate-y-0 lg:group-focus:opacity-100">
-                        {item.detail}
-                      </p>
-                      <div className="mt-auto hidden pt-5 text-[10px] font-semibold uppercase tracking-tight text-[#9AA8B2] transition-colors duration-500 group-hover:text-[#0B74DE] group-focus:text-[#0B74DE] lg:block">
-                        View workflow note
-                      </div>
+            <div className="mt-14 grid border-y border-white/16 md:mt-20 md:grid-cols-3 lg:grid-cols-6">
+              {workflowSteps.map((item, index) => (
+                <div
+                  key={item.step}
+                  className={`min-h-[280px] px-0 py-7 md:min-h-[330px] md:px-5 md:py-8 lg:min-h-[360px] ${
+                    index > 0 ? 'border-t border-white/16' : ''
+                  } ${
+                    index % 3 !== 0 ? 'md:border-l md:border-white/16' : 'md:border-l-0'
+                  } ${
+                    index >= 3 ? 'md:border-t md:border-white/16' : 'md:border-t-0'
+                  } ${
+                    index > 0 ? 'lg:border-l lg:border-white/16' : 'lg:border-l-0'
+                  } lg:border-t-0`}
+                >
+                  <div className="flex h-full flex-col">
+                    <div className="font-mono text-[12px] font-semibold uppercase tracking-[0.18em] text-white/38">
+                      {item.step}
                     </div>
-                  </motion.div>
-                ))}
-              </div>
+                    <h3 className="font-serif-headline mt-8 max-w-[220px] text-[25px] font-bold leading-[1.04] tracking-[-0.025em] text-white md:text-[30px]">
+                      {item.title}
+                    </h3>
+                    <p className="mt-5 max-w-[240px] text-[14px] leading-7 text-white/68 md:text-[15px] md:leading-7">
+                      {item.detail}
+                    </p>
+                    <a
+                      href="#how-margin-works"
+                      className="mt-auto pt-8 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/36 underline-offset-4 transition-colors duration-100 hover:text-white/68 hover:underline"
+                    >
+                      View workflow note
+                    </a>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
