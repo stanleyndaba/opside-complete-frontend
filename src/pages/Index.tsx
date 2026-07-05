@@ -794,8 +794,6 @@ export default function Index() {
           nextBatchHours={capacity?.nextBatchHours}
         />
 
-        <SystemLogMarquee />
-
         <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8">
           <div className={containerClass}>
             <motion.p
@@ -1077,6 +1075,8 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        <SystemLogMarquee />
 
         <section className="relative overflow-hidden py-28 md:py-40">
           <motion.div
