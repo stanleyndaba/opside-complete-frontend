@@ -181,6 +181,49 @@ const systemLogRows = [
   { direction: 'left', duration: '88s', hoverDuration: '120s', items: systemLogEntries.slice(24, 36) }
 ];
 
+function TypewriterPrompt({ text }: { text: string }) {
+  const reduceMotion = useReducedMotion();
+  const [visibleText, setVisibleText] = useState(reduceMotion ? text : '');
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleText(text);
+      return;
+    }
+
+    setVisibleText('');
+    let index = 0;
+    let interval: number | undefined;
+    const startDelay = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setVisibleText(text.slice(0, index));
+
+        if (index >= text.length) {
+          window.clearInterval(interval);
+        }
+      }, 34);
+    }, 520);
+
+    return () => {
+      window.clearTimeout(startDelay);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [reduceMotion, text]);
+
+  return (
+    <span>
+      {visibleText}
+      <motion.span
+        aria-hidden="true"
+        className="ml-1 inline-block h-[0.9em] w-[2px] translate-y-[0.12em] rounded-full bg-[#007AFF]"
+        animate={reduceMotion ? undefined : { opacity: [1, 0.15, 1], boxShadow: ['0 0 0 rgba(0,122,255,0)', '0 0 18px rgba(0,122,255,0.38)', '0 0 0 rgba(0,122,255,0)'] }}
+        transition={{ duration: 0.72, repeat: Infinity, ease: 'easeInOut' }}
+      />
+    </span>
+  );
+}
+
 const marketplaceCountries = [
   { country: 'United States', code: 'US', flagCode: 'us', region: 'Americas' },
   { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'Americas' },
@@ -534,7 +577,7 @@ function SystemLogMarquee() {
             Recovery OS
           </div>
           <div className="mt-4 text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] md:text-[31px]">
-            Show me everything I need to prove this claim.
+            <TypewriterPrompt text="Show me everything I need to prove this claim." />
           </div>
           <div className="mt-5 border-t border-[#D8E3E8] pt-3 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">
             Connected 14 records - Ready for seller review
@@ -562,7 +605,7 @@ function SystemLogMarquee() {
                   <div className="font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#8A98A3]">
                     {entry.label}
                   </div>
-                  <div className="mt-2 text-[14px] font-semibold leading-5 tracking-[-0.025em] text-[#25313A] md:text-[15px]">
+                  <div className="mt-2 text-[14px] font-[350] leading-5 tracking-[-0.025em] text-[#25313A] md:text-[15px]">
                     {entry.text}
                   </div>
                 </div>
