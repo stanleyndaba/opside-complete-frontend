@@ -19,7 +19,7 @@ export const solutionMenuGroups = [
         label: 'E-commerce Marketplaces',
         items: [
             { title: 'Amazon FBA/FBM', description: 'Recovery workflows for fulfillment and merchant-fulfilled sellers.', icon: PackageCheck },
-            { title: 'Walmart WFS Recovery (coming Q2)', description: 'Marketplace recovery coverage planned for WFS operators.', icon: Store },
+            { title: 'Walmart WFS Recovery (coming Q3)', description: 'Marketplace recovery coverage planned for WFS operators.', icon: Store },
             { title: 'TikTok Shop (Beta prep)', description: 'Recovery infrastructure preparing for social commerce operators.', icon: ShoppingBag }
         ]
     }
