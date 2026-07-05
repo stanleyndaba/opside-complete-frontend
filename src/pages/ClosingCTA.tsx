@@ -93,7 +93,7 @@ const ClosingCTA = () => {
           >
             <motion.div initial="hidden" animate="show">
               <motion.div custom={0.1} variants={reveal} className="mx-auto max-w-[560px] text-center text-[15px] font-semibold leading-6 tracking-tight text-blue-600/90 sm:text-[17px]">
-                Professional sellers don't wait until Amazon asks for proof.
+                The discrepancy isn't usually the problem. The evidence trail is.
               </motion.div>
 
               <motion.h1
