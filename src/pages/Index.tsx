@@ -953,13 +953,13 @@ export default function Index() {
 
         <section className="relative bg-[#FAFAF7] py-20 md:py-28" id="how-margin-works">
           <div className={containerClass}>
-            <div className="grid gap-10 lg:grid-cols-[0.62fr_1fr] lg:items-end">
+            <div className="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-end">
               <div>
                 <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A98A3]">
                   <span>06</span>
                   <span>What Margin Does</span>
                 </div>
-                <h2 className="font-serif-headline mt-9 max-w-[780px] text-[42px] font-bold leading-[0.98] tracking-[-0.04em] text-[#182026] sm:text-[56px] md:text-[76px]">
+                <h2 className="font-serif-headline mt-7 max-w-[820px] text-[34px] font-bold leading-[1.02] tracking-[-0.035em] text-[#182026] sm:text-[44px] md:text-[58px] lg:text-[64px]">
                   From scattered proof to claim-ready evidence packs.
                 </h2>
               </div>
@@ -971,31 +971,27 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="mt-14 grid gap-x-6 gap-y-12 md:mt-20 md:grid-cols-3 lg:grid-cols-6">
-              {workflowSteps.map((item, index) => (
-                <div
-                  key={item.step}
-                  className="min-h-[260px] border-t border-[#C9D6DE] pt-5 md:min-h-[300px] lg:min-h-[330px]"
-                >
-                  <div className="flex h-full flex-col">
-                    <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3]">
-                      {item.step}
+            <div className="workflow-scrollbar-hide mt-12 overflow-x-auto overscroll-x-contain pb-2 md:mt-16">
+              <div className="grid w-max grid-cols-6 gap-x-7 pr-5">
+                {workflowSteps.map((item) => (
+                  <div
+                    key={item.step}
+                    className="min-h-[260px] w-[270px] border-t border-[#C9D6DE] pt-5 sm:w-[300px] lg:w-[320px]"
+                  >
+                    <div className="flex h-full flex-col">
+                      <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3]">
+                        {item.step}
+                      </div>
+                      <h3 className="font-serif-headline mt-5 max-w-[260px] text-[25px] font-bold leading-[1.04] tracking-[-0.025em] text-[#182026] md:text-[29px]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-4 max-w-[285px] text-[14px] leading-7 text-[#66737F] md:text-[15px] md:leading-7">
+                        {item.detail}
+                      </p>
                     </div>
-                    <h3 className="font-serif-headline mt-5 max-w-[220px] text-[25px] font-bold leading-[1.04] tracking-[-0.025em] text-[#182026] md:text-[29px]">
-                      {item.title}
-                    </h3>
-                    <p className="mt-4 max-w-[250px] text-[14px] leading-7 text-[#66737F] md:text-[15px] md:leading-7">
-                      {item.detail}
-                    </p>
-                    <a
-                      href="#how-margin-works"
-                      className="mt-auto pt-8 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9AA8B2] underline-offset-4 transition-colors duration-100 hover:text-[#25313A] hover:underline"
-                    >
-                      View workflow note
-                    </a>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>

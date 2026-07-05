@@ -37,6 +37,15 @@
   animation-duration: var(--hover-duration, 64s);
 }
 
+.workflow-scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.workflow-scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .system-log-track {
     animation: none;
