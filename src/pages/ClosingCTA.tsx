@@ -111,7 +111,7 @@ const ClosingCTA = () => {
               <motion.div
                 custom={0.7}
                 variants={reveal}
-                className="mt-7 inline-flex max-w-[520px] flex-col gap-2.5 rounded-2xl border border-blue-100/80 bg-white/72 px-4 py-3.5 text-[15px] font-semibold tracking-tight text-slate-900 shadow-[0_18px_50px_rgba(59,130,246,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] sm:text-base"
+                className="mt-7 inline-flex max-w-[520px] flex-col gap-2.5 text-[15px] font-semibold tracking-tight text-slate-900 sm:text-base"
               >
                 {offerTerms.map((term) => (
                   <span key={term} className="inline-flex items-center gap-2.5">
