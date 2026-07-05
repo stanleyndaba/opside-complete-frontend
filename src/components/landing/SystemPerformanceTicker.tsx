@@ -52,7 +52,7 @@ function TickerItem({ metric, index }: { metric: typeof metrics[0], index: numbe
         transition={{ duration: 0.4, delay: index * 0.15 }}
         className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE] mb-6"
       >
-        [{metric.label}]
+        {metric.label}
       </motion.div>
       
       <div className="flex items-baseline mb-4">

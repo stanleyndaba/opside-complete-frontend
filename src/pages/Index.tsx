@@ -176,9 +176,9 @@ const systemLogEntries = [
 ];
 
 const systemLogRows = [
-  { direction: 'left', duration: '38s', hoverDuration: '58s', items: systemLogEntries.slice(0, 12) },
-  { direction: 'right', duration: '44s', hoverDuration: '66s', items: systemLogEntries.slice(12, 24) },
-  { direction: 'left', duration: '50s', hoverDuration: '74s', items: systemLogEntries.slice(24, 36) }
+  { direction: 'left', duration: '68s', hoverDuration: '96s', items: systemLogEntries.slice(0, 12) },
+  { direction: 'right', duration: '78s', hoverDuration: '108s', items: systemLogEntries.slice(12, 24) },
+  { direction: 'left', duration: '88s', hoverDuration: '120s', items: systemLogEntries.slice(24, 36) }
 ];
 
 const marketplaceCountries = [
@@ -885,8 +885,6 @@ export default function Index() {
           </div>
         </section>
 
-        <SystemPerformanceTicker />
-
         <TechnicalProtocolGrid />
 
         <ProgressiveNarrativeTabs />
@@ -1091,6 +1089,8 @@ export default function Index() {
         </section>
 
         <ScrollytellingCoverage />
+
+        <SystemPerformanceTicker />
 
         <section className="relative py-16 md:py-28">
           <div className={containerClass}>
