@@ -216,9 +216,9 @@ function TypewriterPrompt({ text }: { text: string }) {
       {visibleText}
       <motion.span
         aria-hidden="true"
-        className="ml-1 inline-block h-[0.9em] w-[2px] translate-y-[0.12em] rounded-full bg-[#007AFF]"
-        animate={reduceMotion ? undefined : { opacity: [1, 0.15, 1], boxShadow: ['0 0 0 rgba(0,122,255,0)', '0 0 18px rgba(0,122,255,0.38)', '0 0 0 rgba(0,122,255,0)'] }}
-        transition={{ duration: 0.72, repeat: Infinity, ease: 'easeInOut' }}
+        className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#182026]"
+        animate={reduceMotion ? undefined : { opacity: [1, 0, 1] }}
+        transition={{ duration: 0.86, repeat: Infinity, ease: 'steps(1)' }}
       />
     </span>
   );
