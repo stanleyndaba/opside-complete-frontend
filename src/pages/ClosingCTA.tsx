@@ -14,10 +14,10 @@ const reveal = {
 };
 
 const offerTerms = [
-  'Valid through 31 December 2026',
   'Zero monthly fees',
   'Zero recovery commission',
   'Seller approval before filing',
+  'Founder onboarding',
 ];
 
 const MagneticButton = () => {
@@ -54,7 +54,7 @@ const MagneticButton = () => {
         transition={{ duration: 1.05, repeat: Infinity, repeatDelay: 2.95, ease: 'easeInOut' }}
       />
       <span className="relative z-10 inline-flex items-center leading-none">
-        <span>GET ACCESS</span>
+        <span>CLAIM ACCESS</span>
         <ArrowRight className="ml-2 h-4 w-4" />
       </span>
     </motion.button>
@@ -92,8 +92,8 @@ const ClosingCTA = () => {
             className="relative rounded-[32px] border border-white/60 bg-white/70 p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-2xl sm:p-10 md:p-12"
           >
             <motion.div initial="hidden" animate="show">
-              <motion.div custom={0.1} variants={reveal} className="text-[11px] font-semibold uppercase tracking-tight text-blue-600/80">
-                Founding 500 Early Access
+              <motion.div custom={0.1} variants={reveal} className="mx-auto max-w-[560px] text-center text-[15px] font-semibold leading-6 tracking-tight text-blue-600/90 sm:text-[17px]">
+                Professional sellers don't wait until Amazon asks for proof.
               </motion.div>
 
               <motion.h1
@@ -105,7 +105,7 @@ const ClosingCTA = () => {
               </motion.h1>
 
               <motion.p custom={0.48} variants={reveal} className="mt-6 text-lg font-medium tracking-tight text-slate-500 sm:text-xl">
-                500 sellers only
+                Limited to 500 sellers.
               </motion.p>
 
               <motion.div
@@ -120,6 +120,10 @@ const ClosingCTA = () => {
                   </span>
                 ))}
               </motion.div>
+
+              <motion.p custom={0.92} variants={reveal} className="mt-4 text-[13px] font-medium tracking-tight text-slate-500 sm:text-sm">
+                Valid until 31 December 2026.
+              </motion.p>
 
               <motion.p custom={1.08} variants={reveal} className="mt-6 text-[15px] font-semibold tracking-tight text-rose-500 sm:text-base">
                 Closes 30 July 2026 or when all 500 places are claimed.
