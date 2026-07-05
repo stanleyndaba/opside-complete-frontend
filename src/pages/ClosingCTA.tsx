@@ -101,7 +101,7 @@ const ClosingCTA = () => {
                 variants={reveal}
                 className="mt-5 max-w-[620px] text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl"
               >
-                Founding 500: $99 One-Time
+                Early Access: $99 One-Time
               </motion.h1>
 
               <motion.p custom={0.48} variants={reveal} className="mt-6 text-lg font-medium tracking-tight text-slate-500 sm:text-xl">
