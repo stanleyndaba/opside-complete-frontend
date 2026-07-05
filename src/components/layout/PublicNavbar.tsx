@@ -127,13 +127,13 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
 
                     <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
                         <div className="hidden lg:block">
-                            <ProductsMegaMenu variant={effectiveVariant} />
+                            <ApisMegaMenu variant={effectiveVariant} />
                         </div>
                         <div className="hidden lg:block">
                             <SolutionsMegaMenu variant={effectiveVariant} />
                         </div>
                         <div className="hidden lg:block">
-                            <ApisMegaMenu variant={effectiveVariant} />
+                            <ProductsMegaMenu variant={effectiveVariant} />
                         </div>
                         <Link to="/pricing" className={desktopNavLinkClass}>
                             Pricing
@@ -181,7 +181,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     : "rounded-[8px] border border-white/10 bg-[#080808]/96 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
                             )}>
                                 <Accordion type="single" collapsible className="w-full">
-                                    <AccordionItem value="products" className="border-none">
+                                    <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
                                             mobileMenuItemClass,
                                             isLight
@@ -190,25 +190,27 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                         )}>
                                             Agents
                                         </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
-                                            {productMenuGroups.map((group) => (
-                                                <div key={group.label} className="space-y-3">
-                                                    <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
-                                                        {group.label}
-                                                    </h5>
-                                                    <div className="grid gap-1">
-                                                        {group.items.map((item) => (
-                                                            <ProductServiceItem
-                                                                key={item.title}
-                                                                variant={effectiveVariant}
-                                                                icon={item.icon}
-                                                                title={item.title}
-                                                                description={item.description}
-                                                            />
-                                                        ))}
+                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2">
+                                            <div className="space-y-6">
+                                                {apiMenuGroups.map((group) => (
+                                                    <div key={group.label} className="space-y-3">
+                                                        <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
+                                                            {group.label}
+                                                        </h5>
+                                                        <div className="grid gap-1">
+                                                            {group.items.map((item) => (
+                                                                <ApiServiceItem
+                                                                    key={item.title}
+                                                                    variant={effectiveVariant}
+                                                                    icon={item.icon}
+                                                                    title={item.title}
+                                                                    description={item.description}
+                                                                />
+                                                            ))}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </AccordionContent>
                                     </AccordionItem>
                                     <AccordionItem value="solutions" className="border-none">
@@ -237,7 +239,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
-                                    <AccordionItem value="api" className="border-none">
+                                    <AccordionItem value="products" className="border-none">
                                         <AccordionTrigger className={cn(
                                             mobileMenuItemClass,
                                             isLight
@@ -246,16 +248,15 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                         )}>
                                             Operations
                                         </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2">
-                                            <div className="space-y-6">
-                                                {apiMenuGroups.map((group) => (
+                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
+                                            {productMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-3">
                                                         <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
                                                             {group.items.map((item) => (
-                                                                <ApiServiceItem
+                                                                <ProductServiceItem
                                                                     key={item.title}
                                                                     variant={effectiveVariant}
                                                                     icon={item.icon}
@@ -266,7 +267,6 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                                         </div>
                                                     </div>
                                                 ))}
-                                            </div>
                                         </AccordionContent>
                                     </AccordionItem>
                                 </Accordion>

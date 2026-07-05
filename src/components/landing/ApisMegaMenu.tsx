@@ -62,7 +62,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuTrigger className={triggerClassName}>
-                        Operations
+                        Agents
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[22px] bg-[#FAFAF7] shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[85px] lg:w-[95vw] lg:max-w-[1120px] lg:-translate-x-1/2">
