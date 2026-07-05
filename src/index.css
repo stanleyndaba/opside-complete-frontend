@@ -2,6 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes system-log-marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes system-log-marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.system-log-track {
+  animation: system-log-marquee-left var(--duration, 42s) linear infinite;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.system-log-row[data-direction='right'] .system-log-track {
+  animation-name: system-log-marquee-right;
+}
+
+.system-log-marquee:hover .system-log-track {
+  animation-duration: var(--hover-duration, 64s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .system-log-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @layer utilities {
   .font-heading {
     font-family: 'Inter', system-ui, sans-serif;

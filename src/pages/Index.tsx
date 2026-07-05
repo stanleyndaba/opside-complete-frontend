@@ -136,6 +136,23 @@ const workflowSteps = [
 
 const stateTransitionSources = ['Gmail', 'Drive', 'Seller Central', 'Excel'];
 
+const systemLogEntries = [
+  { label: 'Evidence', text: 'Binding BOL to Inbound #FBA15J' },
+  { label: 'Discrepancy', text: 'SKU-4821: 12 units missing at Site 14' },
+  { label: 'Audit', text: 'Monitoring Case #8821 for Amazon response' },
+  { label: 'Recovery', text: 'Reconciling Payout for Settlement #S-992' },
+  { label: 'Evidence', text: 'Extracting signature from Carrier Log #9921' },
+  { label: 'Discrepancy', text: 'Fee Drift detected on SKU-2954' },
+  { label: 'Audit', text: 'Executing Second Strike Logic on Case #7712' },
+  { label: 'Recovery', text: 'Total Reclaimable Capital: $2,847.20' }
+];
+
+const systemLogRows = [
+  { direction: 'left', duration: '38s', hoverDuration: '58s', items: systemLogEntries },
+  { direction: 'right', duration: '44s', hoverDuration: '66s', items: [...systemLogEntries.slice(3), ...systemLogEntries.slice(0, 3)] },
+  { direction: 'left', duration: '50s', hoverDuration: '74s', items: [...systemLogEntries.slice(5), ...systemLogEntries.slice(0, 5)] }
+];
+
 const marketplaceCountries = [
   { country: 'United States', code: 'US', flagCode: 'us', region: 'Americas' },
   { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'Americas' },
@@ -460,6 +477,46 @@ function KineticHeroSection({
   );
 }
 
+function SystemLogMarquee() {
+  return (
+    <section className="system-log-marquee relative overflow-hidden border-y border-[#D8E3E8] bg-[linear-gradient(180deg,#F7FAFB_0%,#FAFAF7_100%)] py-5 md:py-7">
+      <div className="pointer-events-none absolute inset-0 opacity-[0.55] [background-image:linear-gradient(rgba(201,214,222,0.32)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.26)_1px,transparent_1px)] [background-size:44px_44px]" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#F7FAFB] to-transparent md:w-28" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-28" />
+
+      <div className="relative space-y-2.5 md:space-y-3">
+        {systemLogRows.map((row, rowIndex) => (
+          <div
+            key={`${row.direction}-${rowIndex}`}
+            className="system-log-row"
+            data-direction={row.direction}
+            style={{
+              '--duration': row.duration,
+              '--hover-duration': row.hoverDuration
+            } as React.CSSProperties}
+          >
+            <div className="system-log-track flex w-max gap-3 px-3 md:gap-3.5 md:px-4">
+              {[...row.items, ...row.items].map((entry, index) => (
+                <div
+                  key={`${rowIndex}-${entry.label}-${entry.text}-${index}`}
+                  className="min-w-[270px] rounded-[4px] border border-[#CDD7DE] bg-white/64 px-4 py-3 shadow-[0_16px_36px_rgba(37,49,58,0.045)] backdrop-blur-xl md:min-w-[340px]"
+                >
+                  <div className="text-[9px] font-bold uppercase tracking-tight text-[#8A98A3]">
+                    {entry.label}
+                  </div>
+                  <div className="mt-1.5 text-[13px] font-semibold leading-5 tracking-[-0.015em] text-[#25313A] md:text-[14px]">
+                    {entry.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function EvidenceReadinessBlueprint() {
   const panelRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(panelRef, { amount: 0.45, once: true });
@@ -736,6 +793,8 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />
+
+        <SystemLogMarquee />
 
         <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8">
           <div className={containerClass}>
