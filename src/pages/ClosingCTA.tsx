@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -12,6 +12,13 @@ const reveal = {
     transition: { duration: 0.82, delay, ease },
   }),
 };
+
+const offerTerms = [
+  'Valid through 31 December 2026',
+  'Zero monthly fees',
+  'Zero recovery commission',
+  'Seller approval before filing',
+];
 
 const MagneticButton = () => {
   const reduceMotion = useReducedMotion();
@@ -94,7 +101,7 @@ const ClosingCTA = () => {
                 variants={reveal}
                 className="mt-5 max-w-[620px] text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl"
               >
-                $99 once
+                Founding 500: $99 One-Time
               </motion.h1>
 
               <motion.p custom={0.48} variants={reveal} className="mt-6 text-lg font-medium tracking-tight text-slate-500 sm:text-xl">
@@ -104,12 +111,14 @@ const ClosingCTA = () => {
               <motion.div
                 custom={0.7}
                 variants={reveal}
-                className="mt-7 grid max-w-[520px] gap-3 rounded-2xl border border-blue-100/80 bg-white/72 px-4 py-4 text-[15px] font-semibold tracking-tight text-slate-900 shadow-[0_18px_50px_rgba(59,130,246,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] sm:grid-cols-2 sm:text-base"
+                className="mt-7 inline-flex max-w-[520px] flex-col gap-2.5 rounded-2xl border border-blue-100/80 bg-white/72 px-4 py-3.5 text-[15px] font-semibold tracking-tight text-slate-900 shadow-[0_18px_50px_rgba(59,130,246,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] sm:text-base"
               >
-                <span>Valid through 31 December 2026</span>
-                <span>Zero monthly fees</span>
-                <span>Zero recovery commission</span>
-                <span>Seller approval before filing</span>
+                {offerTerms.map((term) => (
+                  <span key={term} className="inline-flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#007aff]" strokeWidth={2.2} />
+                    <span>{term}</span>
+                  </span>
+                ))}
               </motion.div>
 
               <motion.p custom={1.08} variants={reveal} className="mt-6 text-[15px] font-semibold tracking-tight text-rose-500 sm:text-base">
