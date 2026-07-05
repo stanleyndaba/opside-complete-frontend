@@ -137,42 +137,42 @@ const workflowSteps = [
 const stateTransitionSources = ['Gmail', 'Drive', 'Seller Central', 'Excel'];
 
 const systemLogEntries = [
-  { label: 'SIGNAL', text: 'Inventory variance detected after final FC receiving.' },
-  { label: 'TRACE', text: 'Shipment FBA15J reconstructed across supplier, carrier and Amazon.' },
-  { label: 'EVIDENCE', text: 'Invoice, BOL and POD linked to inbound FBA15J.' },
-  { label: 'VALIDATION', text: 'Carrier quantities reconciled against the shipment manifest.' },
-  { label: 'TIMELINE', text: 'Recovery window closes in 12 days.' },
-  { label: 'LEDGER', text: 'Settlement payout does not reconcile with approved reimbursement.' },
-  { label: 'RISK', text: 'Supplier invoice still missing for inbound discrepancy.' },
-  { label: 'RECOVERY', text: 'Evidence readiness increased from 61% to 94%.' },
-  { label: 'RESPONSE', text: 'Monitoring Amazon Case #8821 for status changes.' },
-  { label: 'AUDIT', text: 'Evidence chain validated before claim submission.' },
-  { label: 'SHIPMENT', text: 'Carrier handoff confirmed using signed Proof of Delivery.' },
-  { label: 'SIGNAL', text: 'New reimbursement candidate detected after inventory reconciliation.' },
-  { label: 'TRACE', text: 'Supplier invoice mapped to ASIN cost basis.' },
-  { label: 'EVIDENCE', text: 'Warehouse receiving log matched to shipment record.' },
-  { label: 'VALIDATION', text: 'Quantity mismatch confirmed against carrier manifest.' },
-  { label: 'TIMELINE', text: '42-day recovery history reconstructed.' },
-  { label: 'LEDGER', text: 'Recoverable variance identified: $2,847.20.' },
-  { label: 'RISK', text: 'Claim filing window expires in 9 days.' },
-  { label: 'RESPONSE', text: 'Amazon response window closes in 11 days.' },
-  { label: 'AUDIT', text: 'Seller approval required before filing action.' },
-  { label: 'SHIPMENT', text: 'FC receiving event diverges from dispatched quantity.' },
-  { label: 'SIGNAL', text: 'Fee drift detected on SKU-2954 after settlement update.' },
-  { label: 'TRACE', text: 'Case history linked to shipment, invoice and payout records.' },
-  { label: 'EVIDENCE', text: 'Signed POD confirms carrier delivery timestamp.' },
-  { label: 'VALIDATION', text: 'Packing list reconciled against shipped unit count.' },
-  { label: 'TIMELINE', text: 'Support trail rebuilt across 7 operational events.' },
-  { label: 'LEDGER', text: 'Approved reimbursement missing from settlement ledger.' },
-  { label: 'RISK', text: 'Missing cost basis blocks claim-ready status.' },
-  { label: 'RECOVERY', text: 'Evidence pack ready for seller review.' },
-  { label: 'RESPONSE', text: 'Amazon Case #7712 moved into pending review.' },
-  { label: 'AUDIT', text: 'Recovery workflow verified against policy requirements.' },
-  { label: 'SHIPMENT', text: 'Inbound FBA82L shows partial receiving pattern.' },
-  { label: 'SIGNAL', text: 'Discrepancy confidence increased after ledger comparison.' },
-  { label: 'TRACE', text: 'Carrier weight log aligned with warehouse dispatch record.' },
-  { label: 'EVIDENCE', text: 'Supplier invoice attached to recovery candidate.' },
-  { label: 'VALIDATION', text: 'Duplicate claim risk cleared before escalation.' }
+  { label: 'SIGNAL', text: 'Which discrepancies appeared today?' },
+  { label: 'TRACE', text: 'Rebuild shipment history for FBA15J.' },
+  { label: 'EVIDENCE', text: 'Show every document behind this claim.' },
+  { label: 'VALIDATION', text: 'Does the carrier manifest match the packing list?' },
+  { label: 'TIMELINE', text: 'Which cases expire this week?' },
+  { label: 'LEDGER', text: 'Explain why this payout does not reconcile.' },
+  { label: 'RISK', text: 'What am I still missing before filing?' },
+  { label: 'RECOVERY', text: 'Which claims are ready for seller review?' },
+  { label: 'RESPONSE', text: 'Why was this reimbursement rejected?' },
+  { label: 'AUDIT', text: 'Show the chain of custody for this claim.' },
+  { label: 'SHIPMENT', text: 'Why was this shipment received short?' },
+  { label: 'EVIDENCE', text: 'Find every missing POD.' },
+  { label: 'TRACE', text: 'Where is this invoice linked?' },
+  { label: 'VALIDATION', text: 'Confirm the shipped units against FC receiving.' },
+  { label: 'TIMELINE', text: 'Show the recovery window for this case.' },
+  { label: 'LEDGER', text: 'Which settlements do not match approvals?' },
+  { label: 'RISK', text: 'Which claims need stronger proof?' },
+  { label: 'RECOVERY', text: 'Prepare this case for Amazon review.' },
+  { label: 'RESPONSE', text: 'Which Amazon cases changed status?' },
+  { label: 'AUDIT', text: 'Verify the evidence chain before submission.' },
+  { label: 'SHIPMENT', text: 'Show every carrier exception for this inbound.' },
+  { label: 'SIGNAL', text: 'Explain this inventory variance.' },
+  { label: 'TRACE', text: 'Map supplier dispatch to Amazon receiving.' },
+  { label: 'EVIDENCE', text: 'Show supplier documentation for this shipment.' },
+  { label: 'VALIDATION', text: 'Check whether the payout matches the approved amount.' },
+  { label: 'TIMELINE', text: 'Reconstruct the last 42 days of recovery history.' },
+  { label: 'LEDGER', text: 'Where did approved reimbursement go?' },
+  { label: 'RISK', text: 'Which cases are blocked by missing cost basis?' },
+  { label: 'RECOVERY', text: 'Which recoveries still need approval?' },
+  { label: 'RESPONSE', text: 'Monitor Case #8821 for Amazon response.' },
+  { label: 'AUDIT', text: 'What proof supports this escalation?' },
+  { label: 'SHIPMENT', text: 'Which cartons diverged from received quantity?' },
+  { label: 'SIGNAL', text: 'Which reimbursement candidates appeared after reconciliation?' },
+  { label: 'TRACE', text: 'Link carrier weight logs to warehouse dispatch.' },
+  { label: 'EVIDENCE', text: 'Find the invoice behind this ASIN cost basis.' },
+  { label: 'VALIDATION', text: 'Clear duplicate claim risk before filing.' }
 ];
 
 const systemLogRows = [
@@ -507,12 +507,42 @@ function KineticHeroSection({
 
 function SystemLogMarquee() {
   return (
-    <section className="system-log-marquee relative overflow-hidden border-y border-[#D8E3E8] bg-[linear-gradient(180deg,#F7FAFB_0%,#FAFAF7_100%)] py-5 md:py-7">
-      <div className="pointer-events-none absolute inset-0 opacity-[0.55] [background-image:linear-gradient(rgba(201,214,222,0.32)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.26)_1px,transparent_1px)] [background-size:44px_44px]" />
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#F7FAFB] to-transparent md:w-28" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-28" />
+    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 md:py-24">
+      <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(201,214,222,0.24)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.18)_1px,transparent_1px)] [background-size:52px_52px]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#FAFAF7] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFAF7] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-32" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-32" />
 
-      <div className="relative space-y-2.5 md:space-y-3">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="relative z-20 max-w-[760px]">
+          <div className={sectionLabelClass}>Recovery Intelligence</div>
+          <h2 className="mt-4 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
+            One discrepancy. Every answer.
+          </h2>
+          <p className="mt-5 max-w-[680px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
+            Margin remembers the records, timelines, case responses, and payout state behind every recovery workflow.
+          </p>
+        </motion.div>
+
+        <motion.div
+          {...revealProps}
+          className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl md:p-7"
+        >
+          <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#7B8A95]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#21B487]" />
+            Recovery OS
+          </div>
+          <div className="mt-4 text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] md:text-[31px]">
+            Show me everything I need to prove this claim.
+          </div>
+          <div className="mt-5 border-t border-[#D8E3E8] pt-3 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">
+            Connected 14 records - Ready for seller review
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="relative mt-12 space-y-2.5 md:mt-14 md:space-y-3">
         {systemLogRows.map((row, rowIndex) => (
           <div
             key={`${row.direction}-${rowIndex}`}
@@ -527,12 +557,12 @@ function SystemLogMarquee() {
               {[...row.items, ...row.items].map((entry, index) => (
                 <div
                   key={`${rowIndex}-${entry.label}-${entry.text}-${index}`}
-                  className="min-w-[270px] rounded-[4px] border border-[#CDD7DE] bg-white/64 px-4 py-3 shadow-[0_16px_36px_rgba(37,49,58,0.045)] backdrop-blur-xl md:min-w-[340px]"
+                  className="min-w-[280px] rounded-[1px] border border-[#C9D6DE] bg-white/62 px-4 py-3 shadow-[0_16px_36px_rgba(37,49,58,0.035)] backdrop-blur-xl md:min-w-[350px]"
                 >
-                  <div className="text-[9px] font-bold uppercase tracking-tight text-[#8A98A3]">
+                  <div className="font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#8A98A3]">
                     {entry.label}
                   </div>
-                  <div className="mt-1.5 text-[13px] font-semibold leading-5 tracking-[-0.015em] text-[#25313A] md:text-[14px]">
+                  <div className="mt-2 text-[14px] font-semibold leading-5 tracking-[-0.025em] text-[#25313A] md:text-[15px]">
                     {entry.text}
                   </div>
                 </div>
