@@ -137,20 +137,48 @@ const workflowSteps = [
 const stateTransitionSources = ['Gmail', 'Drive', 'Seller Central', 'Excel'];
 
 const systemLogEntries = [
-  { label: 'Evidence', text: 'Binding BOL to Inbound #FBA15J' },
-  { label: 'Discrepancy', text: 'SKU-4821: 12 units missing at Site 14' },
-  { label: 'Audit', text: 'Monitoring Case #8821 for Amazon response' },
-  { label: 'Recovery', text: 'Reconciling Payout for Settlement #S-992' },
-  { label: 'Evidence', text: 'Extracting signature from Carrier Log #9921' },
-  { label: 'Discrepancy', text: 'Fee Drift detected on SKU-2954' },
-  { label: 'Audit', text: 'Executing Second Strike Logic on Case #7712' },
-  { label: 'Recovery', text: 'Total Reclaimable Capital: $2,847.20' }
+  { label: 'SIGNAL', text: 'Inventory variance detected after final FC receiving.' },
+  { label: 'TRACE', text: 'Shipment FBA15J reconstructed across supplier, carrier and Amazon.' },
+  { label: 'EVIDENCE', text: 'Invoice, BOL and POD linked to inbound FBA15J.' },
+  { label: 'VALIDATION', text: 'Carrier quantities reconciled against the shipment manifest.' },
+  { label: 'TIMELINE', text: 'Recovery window closes in 12 days.' },
+  { label: 'LEDGER', text: 'Settlement payout does not reconcile with approved reimbursement.' },
+  { label: 'RISK', text: 'Supplier invoice still missing for inbound discrepancy.' },
+  { label: 'RECOVERY', text: 'Evidence readiness increased from 61% to 94%.' },
+  { label: 'RESPONSE', text: 'Monitoring Amazon Case #8821 for status changes.' },
+  { label: 'AUDIT', text: 'Evidence chain validated before claim submission.' },
+  { label: 'SHIPMENT', text: 'Carrier handoff confirmed using signed Proof of Delivery.' },
+  { label: 'SIGNAL', text: 'New reimbursement candidate detected after inventory reconciliation.' },
+  { label: 'TRACE', text: 'Supplier invoice mapped to ASIN cost basis.' },
+  { label: 'EVIDENCE', text: 'Warehouse receiving log matched to shipment record.' },
+  { label: 'VALIDATION', text: 'Quantity mismatch confirmed against carrier manifest.' },
+  { label: 'TIMELINE', text: '42-day recovery history reconstructed.' },
+  { label: 'LEDGER', text: 'Recoverable variance identified: $2,847.20.' },
+  { label: 'RISK', text: 'Claim filing window expires in 9 days.' },
+  { label: 'RESPONSE', text: 'Amazon response window closes in 11 days.' },
+  { label: 'AUDIT', text: 'Seller approval required before filing action.' },
+  { label: 'SHIPMENT', text: 'FC receiving event diverges from dispatched quantity.' },
+  { label: 'SIGNAL', text: 'Fee drift detected on SKU-2954 after settlement update.' },
+  { label: 'TRACE', text: 'Case history linked to shipment, invoice and payout records.' },
+  { label: 'EVIDENCE', text: 'Signed POD confirms carrier delivery timestamp.' },
+  { label: 'VALIDATION', text: 'Packing list reconciled against shipped unit count.' },
+  { label: 'TIMELINE', text: 'Support trail rebuilt across 7 operational events.' },
+  { label: 'LEDGER', text: 'Approved reimbursement missing from settlement ledger.' },
+  { label: 'RISK', text: 'Missing cost basis blocks claim-ready status.' },
+  { label: 'RECOVERY', text: 'Evidence pack ready for seller review.' },
+  { label: 'RESPONSE', text: 'Amazon Case #7712 moved into pending review.' },
+  { label: 'AUDIT', text: 'Recovery workflow verified against policy requirements.' },
+  { label: 'SHIPMENT', text: 'Inbound FBA82L shows partial receiving pattern.' },
+  { label: 'SIGNAL', text: 'Discrepancy confidence increased after ledger comparison.' },
+  { label: 'TRACE', text: 'Carrier weight log aligned with warehouse dispatch record.' },
+  { label: 'EVIDENCE', text: 'Supplier invoice attached to recovery candidate.' },
+  { label: 'VALIDATION', text: 'Duplicate claim risk cleared before escalation.' }
 ];
 
 const systemLogRows = [
-  { direction: 'left', duration: '38s', hoverDuration: '58s', items: systemLogEntries },
-  { direction: 'right', duration: '44s', hoverDuration: '66s', items: [...systemLogEntries.slice(3), ...systemLogEntries.slice(0, 3)] },
-  { direction: 'left', duration: '50s', hoverDuration: '74s', items: [...systemLogEntries.slice(5), ...systemLogEntries.slice(0, 5)] }
+  { direction: 'left', duration: '38s', hoverDuration: '58s', items: systemLogEntries.slice(0, 12) },
+  { direction: 'right', duration: '44s', hoverDuration: '66s', items: systemLogEntries.slice(12, 24) },
+  { direction: 'left', duration: '50s', hoverDuration: '74s', items: systemLogEntries.slice(24, 36) }
 ];
 
 const marketplaceCountries = [
