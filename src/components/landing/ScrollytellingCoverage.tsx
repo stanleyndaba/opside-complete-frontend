@@ -78,7 +78,7 @@ function DiscrepancyDetectionViz() {
   return (
     <div className="flex h-full flex-col justify-between">
       <div>
-        <div className="flex items-center justify-between border-b border-slate-200 pb-2 mb-2">
+        <div className="mb-1.5 flex items-center justify-between border-b border-slate-200 pb-1.5">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             21 Active Transaction Disputes
           </span>
@@ -90,7 +90,7 @@ function DiscrepancyDetectionViz() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col border-b border-slate-100 py-2 first:pt-0 last:border-0 last:pb-0"
+              className="flex flex-col border-b border-slate-100 py-1.5 first:pt-0 last:border-0 last:pb-0"
             >
               {/* Line 1: SKU & Price & Urgency */}
               <div className="flex items-end justify-between leading-none">
@@ -108,7 +108,7 @@ function DiscrepancyDetectionViz() {
               </div>
 
               {/* Line 2: Source ID & Units */}
-              <div className="mt-1 flex items-center">
+              <div className="mt-0.5 flex items-center">
                 <span className="text-[11px] text-slate-500">
                   {cluster.source} &middot; {cluster.units}
                 </span>
@@ -120,7 +120,7 @@ function DiscrepancyDetectionViz() {
               </div>
 
               {/* Line 3: Proof Tags + Progress (right-aligned) */}
-              <div className="mt-1.5 flex items-center justify-between">
+              <div className="mt-1 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   {cluster.tags.map((tag, tagIndex) => (
                     <motion.span
@@ -128,7 +128,7 @@ function DiscrepancyDetectionViz() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.15 + 0.3 + tagIndex * 0.1, duration: 0.4 }}
-                      className="rounded bg-slate-100 px-1.5 py-0.5 font-sans text-[10px] font-semibold text-slate-600"
+                      className="rounded bg-slate-100 px-1.5 py-px font-sans text-[10px] font-semibold text-slate-600"
                     >
                       {tag}
                     </motion.span>
@@ -143,7 +143,7 @@ function DiscrepancyDetectionViz() {
         </div>
       </div>
 
-      <div className="mt-3 flex flex-col gap-2">
+      <div className="mt-2 flex flex-col gap-1.5 border-t border-slate-200 pt-2">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -162,10 +162,10 @@ function DiscrepancyDetectionViz() {
             Reclaimable Capital
           </span>
           <div className="flex items-center gap-2.5">
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 font-sans text-[10px] font-bold text-slate-600">
+            <span className="rounded-full bg-slate-100 px-2 py-px font-sans text-[10px] font-bold text-slate-600">
               4 Active Case Files
             </span>
-            <span className="font-sans text-[20px] font-semibold leading-none tracking-tight text-slate-700">
+            <span className="font-sans text-[18px] font-semibold leading-none tracking-tight text-slate-700">
               {formatCurrency(total)}
             </span>
           </div>
@@ -337,20 +337,43 @@ function RefundMatchingViz() {
   const pairs = [
     { refund: 'RFD-8841', amount: '$67.50', returnId: 'RTN-8841', matched: true },
     { refund: 'RFD-9023', amount: '$112.00', returnId: 'RTN-9023', matched: true },
-    { refund: 'RFD-9156', amount: '$89.99', returnId: '—', matched: false },
+    { refund: 'RFD-9156', amount: '$89.99', returnId: 'RETURN RECORD MISSING', matched: false },
   ];
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
           Refund ↔ Return Matching
         </span>
-        <span className="text-[10px] font-mono text-red-600">1 UNMATCHED</span>
+        <span className="text-[10px] font-mono text-slate-500">3 SCANNED</span>
       </div>
 
-      <div className="mt-4">
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 border-b border-slate-100 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+      <div className="grid grid-cols-3 border-b border-slate-100 py-2.5">
+        {[
+          { label: 'Refunds', value: '3' },
+          { label: 'Matched', value: '2' },
+          { label: 'Held', value: '1' },
+        ].map((metric, i) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08, duration: 0.35 }}
+            className={i > 0 ? 'border-l border-slate-100 pl-3' : ''}
+          >
+            <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+              {metric.label}
+            </div>
+            <div className="mt-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700">
+              {metric.value}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="mt-2">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 border-b border-slate-100 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
           <span>Refund Event</span>
           <span />
           <span className="text-right">Return Record</span>
@@ -362,26 +385,35 @@ function RefundMatchingViz() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: i * 0.15, duration: 0.4 }}
-            className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 border-b border-slate-50 py-3.5"
+            className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 overflow-hidden border-b border-slate-50 py-2.5"
           >
+            {!pair.matched && (
+              <motion.div
+                aria-hidden="true"
+                className="absolute inset-y-1 left-0 w-20 bg-gradient-to-r from-transparent via-slate-200/60 to-transparent"
+                initial={{ x: '-120%' }}
+                animate={{ x: '520%' }}
+                transition={{ duration: 1.25, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            )}
             <div>
               <div className="font-mono text-[12px] text-slate-700">{pair.refund}</div>
               <div className="mt-0.5 text-[11px] text-slate-500">{pair.amount}</div>
             </div>
-            <div className={`text-[14px] ${pair.matched ? 'text-emerald-500' : 'text-red-500'}`}>
+            <div className={`relative text-[14px] ${pair.matched ? 'text-emerald-500' : 'text-red-500'}`}>
               {pair.matched ? '←→' : '←✕'}
             </div>
-            <div className="text-right">
+            <div className="relative text-right">
               <div
-                className={`font-mono text-[12px] ${
+                className={`font-mono text-[11px] ${
                   pair.matched ? 'text-slate-700' : 'text-red-600'
                 }`}
               >
                 {pair.returnId}
               </div>
               {!pair.matched && (
-                <div className="mt-0.5 text-[10px] font-semibold text-red-600 animate-pulse">
-                  HELD
+                <div className="mt-0.5 text-[9px] font-semibold uppercase tracking-wide text-red-600 animate-pulse">
+                  Held before claim advances
                 </div>
               )}
             </div>
@@ -393,11 +425,13 @@ function RefundMatchingViz() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="mt-5 flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-50 p-3"
+        className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2"
       >
-        <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]" />
-        <span className="text-[11px] font-medium text-slate-600">
-          1 unmatched refund held for validation
+        <span className="font-mono text-[9px] tracking-wide text-slate-400">
+          VALIDATION: RETURN PROOF REQUIRED
+        </span>
+        <span className="font-mono text-[9px] tracking-wide text-slate-500">
+          1 UNMATCHED
         </span>
       </motion.div>
     </div>
