@@ -55,6 +55,81 @@ const WORKFLOW: WorkflowEvent[] = [
 
 const spring = { type: 'spring' as const, stiffness: 260, damping: 28 };
 
+/* ── Buzzing platform icons ────────────────────────────── */
+const PLATFORM_ICONS = [
+  {
+    id: 'amazon-badge',
+    icon: '/amazon-logo-transparent-circle.png',
+    alt: 'Amazon',
+    size: 44,
+    buzzDelay: 0,
+  },
+  {
+    id: 'margin-badge',
+    icon: '/logoimagetwo.png',
+    alt: 'Margin',
+    size: 50,
+    buzzDelay: 0.35,
+  },
+  {
+    id: 'gmail-badge',
+    icon: '/gmailicon.png',
+    alt: 'Gmail',
+    size: 44,
+    buzzDelay: 0.7,
+  },
+];
+
+function BuzzingIcons() {
+  return (
+    <div className="flex items-center gap-3">
+      {PLATFORM_ICONS.map((platform) => (
+        <motion.div
+          key={platform.id}
+          initial={{ opacity: 0, scale: 0.5, y: 12 }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            y: [0, -5, 0, -3, 0],
+            rotate: [0, -2, 0, 2, 0],
+          }}
+          transition={{
+            opacity: { delay: 0.3 + platform.buzzDelay, duration: 0.45, ease: 'easeOut' },
+            scale: { delay: 0.3 + platform.buzzDelay, duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+            y: {
+              delay: 1.2 + platform.buzzDelay,
+              duration: 3.2,
+              repeat: Infinity,
+              repeatType: 'loop',
+              ease: 'easeInOut',
+            },
+            rotate: {
+              delay: 1.4 + platform.buzzDelay,
+              duration: 3.8,
+              repeat: Infinity,
+              repeatType: 'loop',
+              ease: 'easeInOut',
+            },
+          }}
+          className="flex items-center justify-center rounded-2xl border border-[#E6E9EE] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
+          style={{
+            width: platform.size,
+            height: platform.size,
+          }}
+        >
+          <img
+            src={platform.icon}
+            alt={platform.alt}
+            className="h-[58%] w-[58%] object-contain"
+            draggable={false}
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Counter animation ─────────────────────────────────── */
 function CountUpCurrency({ start }: { start: boolean }) {
   const [value, setValue] = useState(0);
 
@@ -82,6 +157,7 @@ function CountUpCurrency({ start }: { start: boolean }) {
   );
 }
 
+/* ── Single workflow event card ────────────────────────── */
 function WorkflowItem({
   event,
   isVisible,
@@ -180,6 +256,7 @@ function WorkflowItem({
   );
 }
 
+/* ── Main component ────────────────────────────────────── */
 export default function RejectionLoop() {
   const [visibleCount, setVisibleCount] = useState(0);
   const isSimulating = visibleCount < WORKFLOW.length;
@@ -202,26 +279,47 @@ export default function RejectionLoop() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F6F7F9] p-4 font-sans text-[#242424] sm:p-8">
-      <section className="relative flex h-[min(560px,calc(100vh-32px))] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-[#E6E9EE] bg-white shadow-[0_20px_60px_rgba(17,24,39,0.08)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_18%,rgba(58,170,120,0.05),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.6),transparent_45%)]" />
+      <section className="relative flex h-[min(600px,calc(100vh-32px))] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-[#E6E9EE] bg-white shadow-[0_20px_60px_rgba(17,24,39,0.06),0_4px_16px_rgba(17,24,39,0.03)]">
+        {/* Soft radial overlay – warmer tone */}
+        <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_80%_8%,rgba(66,133,244,0.04),transparent_40%),radial-gradient(circle_at_20%_90%,rgba(58,170,120,0.03),transparent_35%)]" />
 
-        <header className="relative flex items-center justify-between border-b border-[#E6E9EE] px-6 py-4 sm:px-8">
+        {/* ── Header with buzzing icons ── */}
+        <header className="relative flex items-center justify-between border-b border-[#EAECF0] px-6 py-5 sm:px-8">
           <div>
-            <h1 className="text-base font-medium tracking-tight text-[#242424]">Resolution Workflow</h1>
+            <h1 className="text-base font-semibold tracking-tight text-[#1A1D23]">Resolution Workflow</h1>
             <p className="mt-1 text-sm text-[#8B95A5]">Analyzing responses and advancing the case</p>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-[#E6E9EE] bg-[#FAFAFA] px-3 py-1.5">
+
+          {/* Buzzing platform badges */}
+          <BuzzingIcons />
+        </header>
+
+        {/* ── Status pill ── */}
+        <div className="flex items-center gap-3 border-b border-[#EAECF0] px-6 py-3 sm:px-8">
+          <div className="flex items-center gap-2 rounded-full border border-[#E6E9EE] bg-[#FAFBFC] px-3.5 py-1.5">
             <motion.span
               animate={isSimulating ? { opacity: [0.35, 1, 0.35] } : { opacity: 1 }}
               transition={{ duration: 1.2, repeat: isSimulating ? Infinity : 0 }}
-              className="h-1.5 w-1.5 rounded-full bg-[#3aaa78]"
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: isSimulating ? '#4285F4' : '#3aaa78' }}
             />
             <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-[#8B95A5]">
               {isSimulating ? 'Processing' : 'Resolved'}
             </span>
           </div>
-        </header>
+          {!isSimulating && (
+            <motion.span
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              className="text-[10px] font-medium tracking-wide text-[#3aaa78]"
+            >
+              ✓ Recovery Complete
+            </motion.span>
+          )}
+        </div>
 
+        {/* ── Event stream ── */}
         <div ref={scrollRef} className="relative flex-1 overflow-y-auto px-6 py-5 sm:px-8 sm:py-6">
           <div className="relative space-y-6">
             <AnimatePresence initial={false}>
