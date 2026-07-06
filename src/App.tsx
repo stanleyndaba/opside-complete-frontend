@@ -87,6 +87,7 @@ const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const FoundingActivationStatus = lazy(() => import("./pages/FoundingActivationStatus"));
 const DesignSimulate = lazy(() => import("./pages/designsimulate"));
 const PlatformSimulate = lazy(() => import("./pages/platformsimulate"));
+const PlatformFly = lazy(() => import("./pages/platformfly"));
 const ScatterDesign = lazy(() => import("./pages/scatterdesign"));
 const Countdown = lazy(() => import("./pages/Countdown"));
 const Plane = lazy(() => import("./pages/plane"));
@@ -191,7 +192,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/platformfly', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate'].includes(location.pathname);
 
   return (
     <>
@@ -243,6 +244,7 @@ const App = () => (
                         <Route path="/founding-500/status" element={<FoundingActivationStatus />} />
                         <Route path="/designsimulate" element={<DesignSimulate />} />
                         <Route path="/platformsimulate" element={<PlatformSimulate />} />
+                        <Route path="/platformfly" element={<PlatformFly />} />
                         <Route path="/scatterdesign" element={<ScatterDesign />} />
                         <Route path="/countdown" element={<Countdown />} />
                         <Route path="/plane" element={<Plane />} />

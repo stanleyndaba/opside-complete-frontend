@@ -31,6 +31,7 @@ const NOINDEX_PREFIXES = [
 const NOINDEX_EXACT = new Set([
   '/designsimulate',
   '/platformsimulate',
+  '/platformfly',
   '/scatterdesign',
   '/countdown',
   '/plane',
