@@ -19,7 +19,7 @@ const Y_TICKS = [50, 60, 70, 80, 90, 100];
 
 /* ── Chart geometry ────────────────────────────────────── */
 const SVG_W = 640;
-const SVG_H = 160;
+const SVG_H = 190;
 const PAD = { top: 32, right: 32, bottom: 28, left: 40 };
 const CHART_W = SVG_W - PAD.left - PAD.right;
 const CHART_H = SVG_H - PAD.top - PAD.bottom;
@@ -187,12 +187,12 @@ export default function Graph() {
               style={{ clipPath: `inset(0 ${(1 - progress) * 100}% 0 0)` }}
             />
 
-            {/* Animated line — charcoal dark grey */}
+            {/* Animated line — charcoal dark grey, very thin */}
             <motion.path
               d={linePath}
               fill="none"
               stroke="#1A1D23"
-              strokeWidth="2.5"
+              strokeWidth="1.25"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0, opacity: 0 }}
@@ -208,10 +208,6 @@ export default function Graph() {
               const cx = xPos(i);
               const cy = yPos(d.accuracy);
               const visible = i < revealedCount;
-              
-              // Align badge centered right over the dot
-              const badgeX = cx - 22;
-              const badgeY = cy - 26;
 
               return (
                 <g key={`dot-${i}`}>
@@ -222,7 +218,7 @@ export default function Graph() {
                     r="5"
                     fill="white"
                     stroke="#1A1D23"
-                    strokeWidth="1.5"
+                    strokeWidth="1.25"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={visible ? { opacity: 1, scale: 1 } : {}}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -238,21 +234,18 @@ export default function Graph() {
                     transition={{ duration: 0.25, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
                   />
 
-                  {/* Charcoal badge over dot */}
-                  <motion.foreignObject
-                    x={badgeX}
-                    y={badgeY}
-                    width="44"
-                    height="20"
-                    initial={{ opacity: 0, y: badgeY + 6 }}
-                    animate={visible ? { opacity: 1, y: badgeY } : {}}
-                    transition={{ duration: 0.4, delay: 0.12 }}
-                    className="overflow-visible"
+                  {/* Clean text label — no box, no background, charcoal grey */}
+                  <motion.text
+                    x={cx}
+                    y={cy - 12}
+                    textAnchor="middle"
+                    className="fill-[#1A1D23] font-mono text-[11px] font-medium tracking-tight"
+                    initial={{ opacity: 0, y: cy - 6 }}
+                    animate={visible ? { opacity: 1, y: cy - 12 } : {}}
+                    transition={{ duration: 0.35, delay: 0.1 }}
                   >
-                    <div className="flex h-full w-full items-center justify-center rounded bg-[#1A1D23] px-1 text-[11px] font-bold tracking-tight text-white shadow-sm">
-                      <AnimatedValue target={d.accuracy} active={visible} />
-                    </div>
-                  </motion.foreignObject>
+                    <AnimatedValue target={d.accuracy} active={visible} />
+                  </motion.text>
                 </g>
               );
             })}
