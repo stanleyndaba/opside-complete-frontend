@@ -211,7 +211,7 @@ function EvidenceBindingViz() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Inbound Shortage Case
@@ -224,7 +224,7 @@ function EvidenceBindingViz() {
       </div>
 
       {/* Variance strip */}
-      <div className="grid grid-cols-4 border-b border-slate-100 py-3">
+      <div className="grid grid-cols-4 border-b border-slate-100 py-2.5">
         {varianceMetrics.map((metric, i) => (
           <motion.div
             key={metric.label}
@@ -251,7 +251,7 @@ function EvidenceBindingViz() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.15, duration: 0.4 }}
-              className="relative overflow-hidden border-b border-slate-100 py-2.5 last:border-0"
+              className="relative overflow-hidden border-b border-slate-100 py-2 last:border-0"
             >
               {!src.verified && (
                 <motion.div
@@ -303,7 +303,7 @@ function EvidenceBindingViz() {
             {/* Connector line */}
             {i < sources.length - 1 && (
               <motion.div
-                className="ml-[18px] flex h-2 items-center"
+                className="ml-[18px] flex h-1.5 items-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 + i * 0.15 }}
@@ -320,7 +320,7 @@ function EvidenceBindingViz() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
-        className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3"
+        className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2"
       >
         <span className="font-mono text-[9px] tracking-wide text-slate-400">
           ELIGIBILITY: {resolved ? 'READY AFTER EVIDENCE BINDING' : 'HELD UNTIL EVIDENCE BINDING'}
@@ -475,129 +475,131 @@ function FeeDriftViz() {
 
 function PayoutReconciliationViz() {
   const [variance, setVariance] = useState(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const target = 435;
-    const duration = 1200;
-    const startTime = Date.now();
-    
-    const tick = () => {
-      const now = Date.now();
-      const progress = Math.min((now - startTime) / duration, 1);
-      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      setVariance(Math.floor(target * easeProgress));
-      
-      if (progress < 1) {
-        requestAnimationFrame(tick);
-      }
-    };
-    
-    // Slight delay before counting up
-    const timeoutId = setTimeout(() => {
-      requestAnimationFrame(tick);
-    }, 400);
+    if (reduceMotion) {
+      setVariance(target);
+      return;
+    }
 
-    return () => clearTimeout(timeoutId);
-  }, []);
+    const duration = 1100;
+    let frame = 0;
+
+    const startCounting = () => {
+      const startTime = performance.now();
+      const tick = (time: number) => {
+        const progress = Math.min((time - startTime) / duration, 1);
+        const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        setVariance(Math.floor(target * easeProgress));
+
+        if (progress < 1) {
+          frame = requestAnimationFrame(tick);
+        }
+      };
+
+      frame = requestAnimationFrame(tick);
+    };
+
+    const timeoutId = window.setTimeout(startCounting, 320);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [reduceMotion]);
+
+  const varianceValue = `$${variance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  const payoutMetrics = [
+    { label: 'Approved', value: '$1,847' },
+    { label: 'Received', value: '$1,412' },
+    { label: 'Variance', value: varianceValue },
+  ];
+
+  const reconciliationRows = [
+    { label: 'Amazon Approval Record', status: 'APPROVED', meta: 'CASE #8821-X  ·  APPROVED $1,847.00' },
+    { label: 'Settlement Deposit', status: 'SHORT', meta: 'SETTLEMENT #S-992  ·  RECEIVED $1,412.00' },
+    { label: 'Follow-up Dispute', status: 'READY', meta: `UNPAID VARIANCE ${varianceValue}  ·  RE-ENTRY REQUIRED` },
+  ];
 
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          Payout Reconciliation
-        </span>
+      <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
+        <div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            Payout Reconciliation
+          </span>
+          <div className="mt-0.5 font-mono text-[9px] text-slate-400">
+            CASE #8821-X  ·  SETTLEMENT #S-992
+          </div>
+        </div>
+        <span className="text-[10px] font-mono text-slate-500">VARIANCE FOUND</span>
       </div>
 
-      <div className="mt-3 flex flex-col">
-        {/* The Approval */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
-          className="border-b border-slate-100 py-2.5"
-        >
-          <div className="flex items-end justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
-              Approved
-            </span>
-            <span className="font-mono text-[12px] text-slate-700">
-              $1,847.00
-            </span>
-          </div>
-          <div className="mt-1 font-mono text-[9px] tracking-wide text-slate-400">
-            CASE_ID: #8821-X  ·  STATUS: GRANTED
-          </div>
-        </motion.div>
-
-        {/* The Reality */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-          className="border-b border-slate-100 py-2.5"
-        >
-          <div className="flex items-end justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
-              Received
-            </span>
-            <span className="font-mono text-[12px] text-slate-500">
-              $1,412.00
-            </span>
-          </div>
-          <div className="mt-1 font-mono text-[9px] tracking-wide text-slate-400">
-            SETTLEMENT: #S-992  ·  DATE: 2026-06-20
-          </div>
-        </motion.div>
-
-        {/* The Variance */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
-          className="py-3"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                Unreconciled Variance
-              </div>
-              <div className="mt-1.5 flex items-center gap-2">
-                <span className="animate-pulse rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-slate-500">
-                  TRIGGERING_RECONCILIATION_WORKFLOW
-                </span>
-              </div>
+      <div className="grid grid-cols-3 border-b border-slate-100 py-2.5">
+        {payoutMetrics.map((metric, i) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08, duration: 0.35 }}
+            className={i > 0 ? 'border-l border-slate-100 pl-3' : ''}
+          >
+            <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+              {metric.label}
             </div>
-            <div className="font-mono text-[16px] font-semibold tracking-tight text-slate-700">
-              ${variance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            <div className="mt-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700">
+              {metric.value}
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Forensic Audit Log */}
+      <div className="mt-2 flex flex-col">
+        {reconciliationRows.map((row, i) => (
+          <motion.div
+            key={row.label}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 + i * 0.1, duration: 0.35 }}
+            className="relative overflow-hidden border-b border-slate-100 py-2 last:border-0"
+          >
+            {row.status === 'SHORT' && (
+              <motion.div
+                aria-hidden="true"
+                className="absolute inset-y-1 left-0 w-20 bg-gradient-to-r from-transparent via-slate-200/60 to-transparent"
+                initial={{ x: '-120%' }}
+                animate={{ x: '520%' }}
+                transition={{ duration: 1.25, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            )}
+            <div className="relative flex items-center justify-between">
+              <span className="text-[11px] font-medium text-slate-700">{row.label}</span>
+              <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-slate-600">
+                {row.status}
+              </span>
+            </div>
+            <div className="relative mt-1 font-mono text-[9px] tracking-wide text-slate-400">
+              {row.meta}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        className="mt-2 border-t border-slate-200 pt-3"
+        transition={{ delay: 0.58 }}
+        className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2"
       >
-        <div className="flex flex-col gap-1 font-mono text-[9px] tracking-wide text-slate-400">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.2 }}
-          >
-            [09:01] PAYOUT_MISMATCH_DETECTED_($435.00)
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.2 }}
-          >
-            [09:02] DISPUTE_RE-ENTRY_INITIATED
-          </motion.div>
-        </div>
+        <span className="font-mono text-[9px] tracking-wide text-slate-400">
+          RECONCILIATION: FOLLOW-UP READY
+        </span>
+        <span className="font-mono text-[9px] tracking-wide text-slate-500">
+          DELTA CAPTURED
+        </span>
       </motion.div>
     </div>
   );
