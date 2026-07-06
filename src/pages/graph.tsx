@@ -20,7 +20,7 @@ const Y_TICKS = [50, 60, 70, 80, 90, 100];
 /* ── Chart geometry ────────────────────────────────────── */
 const SVG_W = 640;
 const SVG_H = 320;
-const PAD = { top: 28, right: 32, bottom: 44, left: 52 };
+const PAD = { top: 36, right: 32, bottom: 44, left: 52 };
 const CHART_W = SVG_W - PAD.left - PAD.right;
 const CHART_H = SVG_H - PAD.top - PAD.bottom;
 
@@ -76,7 +76,7 @@ export default function Graph() {
   const progress = revealedCount / DATA_POINTS.length;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-white p-4 font-sans text-[#1A1D23] sm:p-8">
+    <main className="flex min-h-screen items-center justify-center bg-white p-4 font-sans text-[#242424] sm:p-8">
       <section
         ref={sectionRef}
         className="w-full max-w-[860px]"
@@ -87,10 +87,10 @@ export default function Graph() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
-          <h1 className="font-serif text-[28px] font-bold leading-[1.08] tracking-[-0.03em] text-[#1A1D23] sm:text-[36px] md:text-[42px]">
+          <h1 className="font-serif text-[28px] font-bold leading-[1.08] tracking-[-0.03em] text-[#242424] sm:text-[36px] md:text-[42px]">
             Evidence Intelligence Accuracy Over Time
           </h1>
-          <p className="mt-4 max-w-[680px] text-[15px] leading-7 text-[#6F7785] md:text-[16px] md:leading-8">
+          <p className="mt-4 max-w-[680px] text-[15px] leading-7 text-[#9CA3AF] md:text-[16px] md:leading-8">
             Margin learns from every approved, rejected, underpaid, and reversed claim to improve how it scores future evidence packs before filing.
           </p>
         </motion.div>
@@ -100,14 +100,14 @@ export default function Graph() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
-          className="mt-10 rounded-2xl border border-[#E8EAED] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] sm:p-8"
+          className="mt-10 rounded-2xl border border-[#EEEFF2] bg-white p-5 sm:p-8"
         >
           {/* Axis labels */}
           <div className="mb-2 flex items-baseline justify-between">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9CA3AF]">
+            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#C5CAD0]">
               Evidence decision accuracy (%)
             </span>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9CA3AF]">
+            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#C5CAD0]">
               Resolved recovery cases learned from
             </span>
           </div>
@@ -127,7 +127,7 @@ export default function Graph() {
                 y1={yPos(tick)}
                 x2={SVG_W - PAD.right}
                 y2={yPos(tick)}
-                stroke="#F0F2F5"
+                stroke="#F3F4F6"
                 strokeWidth="1"
               />
             ))}
@@ -139,7 +139,7 @@ export default function Graph() {
                 x={PAD.left - 10}
                 y={yPos(tick) + 4}
                 textAnchor="end"
-                className="fill-[#9CA3AF] font-mono text-[11px]"
+                className="fill-[#C5CAD0] font-mono text-[11px]"
               >
                 {tick}%
               </text>
@@ -152,7 +152,7 @@ export default function Graph() {
                 x={xPos(i)}
                 y={SVG_H - 8}
                 textAnchor="middle"
-                className="fill-[#9CA3AF] font-mono text-[11px]"
+                className="fill-[#C5CAD0] font-mono text-[11px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: i < revealedCount ? 1 : 0 }}
                 transition={{ duration: 0.35 }}
@@ -161,23 +161,23 @@ export default function Graph() {
               </motion.text>
             ))}
 
-            {/* Area fill */}
+            {/* Area fill — very subtle */}
             <motion.path
               d={areaPath}
-              fill="#1A1D23"
-              fillOpacity={0.025}
+              fill="#9CA3AF"
+              fillOpacity={0.04}
               initial={{ opacity: 0 }}
               animate={{ opacity: isInView ? 1 : 0 }}
               transition={{ duration: 1, delay: 0.4 }}
               style={{ clipPath: `inset(0 ${(1 - progress) * 100}% 0 0)` }}
             />
 
-            {/* Animated line */}
+            {/* Animated line — soft grey, not navy */}
             <motion.path
               d={linePath}
               fill="none"
-              stroke="#1A1D23"
-              strokeWidth="2.5"
+              stroke="#9CA3AF"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0, opacity: 0 }}
@@ -196,42 +196,40 @@ export default function Graph() {
 
               return (
                 <g key={`dot-${i}`}>
-                  {/* Outer ring */}
+                  {/* Clean dot — small, soft */}
                   <motion.circle
                     cx={cx}
                     cy={cy}
-                    r="7"
+                    r="4"
                     fill="white"
                     stroke="#D1D5DB"
-                    strokeWidth="1"
+                    strokeWidth="1.5"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={visible ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   />
-                  {/* Inner dot */}
                   <motion.circle
                     cx={cx}
                     cy={cy}
-                    r="3.5"
-                    fill="#1A1D23"
+                    r="2"
+                    fill="#9CA3AF"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={visible ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 0.3, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.25, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
                   />
-                  {/* Accuracy label above dot */}
-                  <motion.foreignObject
-                    x={cx - 28}
-                    y={cy - 32}
-                    width="56"
-                    height="24"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={visible ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.12 }}
+
+                  {/* Clean text label — no badge, no background */}
+                  <motion.text
+                    x={cx}
+                    y={cy - 14}
+                    textAnchor="middle"
+                    className="fill-[#4B5563] font-mono text-[12px] font-semibold"
+                    initial={{ opacity: 0, y: cy - 8 }}
+                    animate={visible ? { opacity: 1, y: cy - 14 } : {}}
+                    transition={{ duration: 0.35, delay: 0.1 }}
                   >
-                    <div className="flex h-full items-center justify-center rounded-md bg-[#1A1D23] px-2 text-[11px] font-bold text-white">
-                      <AnimatedValue target={d.accuracy} active={visible} />
-                    </div>
-                  </motion.foreignObject>
+                    <AnimatedValue target={d.accuracy} active={visible} />
+                  </motion.text>
                 </g>
               );
             })}
@@ -243,7 +241,7 @@ export default function Graph() {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5, delay: 2.8 }}
-          className="mt-5 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-[#B0B8C1]"
+          className="mt-5 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-[#D1D5DB]"
         >
           Operational memory · Recovery intelligence
         </motion.p>
