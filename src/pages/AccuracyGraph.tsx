@@ -13,16 +13,16 @@ const AccuracyGraph = () => {
     { cases: 5000, accuracy: 96 },
   ];
 
-  // SVG dimensions & padding
+  // SVG dimensions & padding — compact height
   const width = 800;
-  const height = 400;
-  const padding = 60;
+  const height = 200;
+  const padding = 40;
 
   // Scale functions to map data to SVG coordinates
   const xScale = (cases: number) => (cases / 5000) * (width - 2 * padding) + padding;
   const yScale = (accuracy: number) => height - padding - ((accuracy - 50) / 50) * (height - 2 * padding);
 
-  // Generate the SVG Path string
+  // Generate the SVG Path string (straight lines)
   const pathData = dataPoints.reduce((acc, point, i) => {
     const x = xScale(point.cases);
     const y = yScale(point.accuracy);
@@ -30,21 +30,21 @@ const AccuracyGraph = () => {
   }, "");
 
   return (
-    <section className="bg-white py-24 px-6 border-t border-gray-100">
+    <section className="bg-white py-16 px-6 border-t border-gray-100">
       <div className="max-w-5xl mx-auto">
         
-        {/* Institutional Heading */}
-        <div className="mb-16 text-center">
-          <h2 className="text-4xl font-serif font-bold text-gray-900 mb-4 tracking-tight">
+        {/* Institutional Heading — centered, compact */}
+        <div className="mb-10 text-center">
+          <h2 className="text-xl font-serif font-bold text-gray-900 mb-3 tracking-tight sm:text-2xl">
             Evidence Intelligence Accuracy Over Time
           </h2>
-          <p className="text-gray-500 italic text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-500 italic text-sm max-w-2xl mx-auto leading-relaxed">
             Margin learns from every approved, rejected, underpaid, and reversed claim to improve how it scores future evidence packs before filing.
           </p>
         </div>
 
-        {/* The Simulation Canvas */}
-        <div className="relative bg-[#FAFAFA] rounded-xl border border-gray-100 p-8 md:p-12 shadow-sm">
+        {/* The Simulation Canvas — compact */}
+        <div className="relative bg-[#FAFAFA] rounded-xl border border-gray-100 p-5 md:p-8 shadow-sm">
           <svg 
             width="100%" 
             height="100%" 
@@ -63,11 +63,11 @@ const AccuracyGraph = () => {
                   strokeWidth="1"
                 />
                 <text
-                  x={padding - 15}
+                  x={padding - 10}
                   y={yScale(level)}
                   textAnchor="end"
                   alignmentBaseline="middle"
-                  className="fill-gray-400 text-[10px] font-mono font-medium"
+                  className="fill-gray-400 text-[9px] font-mono font-medium"
                 >
                   {level}%
                 </text>
@@ -79,20 +79,20 @@ const AccuracyGraph = () => {
               <text
                 key={val}
                 x={xScale(val)}
-                y={height - padding + 30}
+                y={height - padding + 18}
                 textAnchor="middle"
-                className="fill-gray-400 text-[10px] font-mono font-medium"
+                className="fill-gray-400 text-[9px] font-mono font-medium"
               >
                 {val === 0 ? '0' : `${val / 1000}k`}
               </text>
             ))}
 
-            {/* The Learning Path (The Simulation) */}
+            {/* The Learning Path — thin charcoal line */}
             <motion.path
               d={pathData}
               fill="none"
               stroke="#1A1A1A"
-              strokeWidth="3"
+              strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0 }}
@@ -111,47 +111,61 @@ const AccuracyGraph = () => {
               transition={{ delay: 1.5, duration: 1 }}
             />
 
-            {/* Accuracy Nodes (Data Points) */}
-            {dataPoints.map((point, i) => (
-              <motion.circle
-                key={i}
-                cx={xScale(point.cases)}
-                cy={yScale(point.accuracy)}
-                r="5"
-                fill="#FFFFFF"
-                stroke="#1A1A1A"
-                strokeWidth="2"
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 + 0.5, duration: 0.4 }}
-              />
-            ))}
+            {/* Accuracy Nodes + Percentage Labels */}
+            {dataPoints.map((point, i) => {
+              const cx = xScale(point.cases);
+              const cy = yScale(point.accuracy);
+              return (
+                <g key={i}>
+                  {/* Solid dot — no outer border */}
+                  <motion.circle
+                    cx={cx}
+                    cy={cy}
+                    r="3.5"
+                    fill="#1A1A1A"
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.2 + 0.5, duration: 0.4 }}
+                  />
+                  {/* Percentage label — tight to the dot */}
+                  <motion.text
+                    x={cx}
+                    y={cy - 10}
+                    textAnchor="middle"
+                    className="fill-[#1A1A1A] text-[10px] font-mono font-semibold tracking-tight"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.2 + 0.7, duration: 0.3 }}
+                  >
+                    {point.accuracy}%
+                  </motion.text>
+                </g>
+              );
+            })}
           </svg>
 
-          {/* Axis Labels */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.2em] text-gray-400 font-mono font-bold">
+          {/* Axis Labels — tracking-tight, darker */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[9px] uppercase tracking-tight text-gray-500 font-mono font-bold">
             Resolved recovery cases learned from
-          </div>
-          <div className="absolute top-1/2 -left-8 -rotate-90 -translate-y-1/2 text-[10px] uppercase tracking-[0.2em] text-gray-400 font-mono font-bold">
-            Evidence Accuracy
           </div>
         </div>
 
         {/* Technical Footer */}
-        <div className="mt-12 flex justify-between items-center border-t border-gray-100 pt-8">
+        <div className="mt-8 flex justify-between items-center border-t border-gray-100 pt-6">
           <div className="flex gap-8">
             <div className="flex flex-col">
-              <span className="text-[10px] text-gray-400 font-mono uppercase">Current Learning State</span>
+              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Current Learning State</span>
               <span className="text-sm font-bold text-gray-900">High-Velocity Synthesis</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] text-gray-400 font-mono uppercase">Model Integrity</span>
+              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Model Integrity</span>
               <span className="text-sm font-bold text-gray-900">99.4% Verified</span>
             </div>
           </div>
-          <div className="text-[10px] text-gray-300 font-mono">
-            PROTOCOL: OPERATIONAL_MEMORY_V2.1
+          <div className="text-[10px] text-gray-500 font-mono tracking-tight">
+            Operational memory
           </div>
         </div>
       </div>
