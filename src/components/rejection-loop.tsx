@@ -61,22 +61,22 @@ const PLATFORM_ICONS = [
     id: 'amazon-badge',
     icon: '/amazon-logo-transparent-circle.png',
     alt: 'Amazon',
-    size: 44,
+    size: 52,
     buzzDelay: 0,
   },
   {
     id: 'margin-badge',
     icon: '/logoimagetwo.png',
     alt: 'Margin',
-    size: 50,
-    buzzDelay: 0.35,
+    size: 62,
+    buzzDelay: 0.7,
   },
   {
     id: 'gmail-badge',
     icon: '/gmailicon.png',
     alt: 'Gmail',
-    size: 44,
-    buzzDelay: 0.7,
+    size: 52,
+    buzzDelay: 0.35,
   },
 ];
 
@@ -170,7 +170,7 @@ function WorkflowItem({
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 22, filter: 'blur(8px)' }}
+      initial={{ opacity: 0, y: 14, filter: 'blur(8px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       exit={{ opacity: 0, y: -10 }}
       transition={spring}
@@ -221,7 +221,7 @@ function WorkflowItem({
 
           {event.steps && (
             <motion.ul
-              className="mt-3 space-y-2"
+              className="mt-1.5 space-y-1"
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.45 }}
@@ -279,15 +279,15 @@ export default function RejectionLoop() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F6F7F9] p-4 font-sans text-[#242424] sm:p-8">
-      <section className="relative flex h-[min(600px,calc(100vh-32px))] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-[#E6E9EE] bg-white shadow-[0_20px_60px_rgba(17,24,39,0.06),0_4px_16px_rgba(17,24,39,0.03)]">
+      <section className="relative flex h-[min(420px,calc(100vh-32px))] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-[#E6E9EE] bg-white shadow-[0_20px_60px_rgba(17,24,39,0.06),0_4px_16px_rgba(17,24,39,0.03)]">
         {/* Soft radial overlay – warmer tone */}
         <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_80%_8%,rgba(66,133,244,0.04),transparent_40%),radial-gradient(circle_at_20%_90%,rgba(58,170,120,0.03),transparent_35%)]" />
 
         {/* ── Header with buzzing icons ── */}
-        <header className="relative flex items-center justify-between border-b border-[#EAECF0] px-6 py-5 sm:px-8">
+        <header className="relative flex items-center justify-between border-b border-[#EAECF0] px-6 py-3 sm:px-8 sm:py-4">
           <div>
-            <h1 className="text-base font-semibold tracking-tight text-[#1A1D23]">Resolution Workflow</h1>
-            <p className="mt-1 text-sm text-[#8B95A5]">Analyzing responses and advancing the case</p>
+            <h1 className="text-base font-semibold tracking-tight text-[#1A1D23]">Amazon Response Handling</h1>
+            <p className="mt-0.5 text-sm text-[#8B95A5]">Analyzing responses and advancing the case</p>
           </div>
 
           {/* Buzzing platform badges */}
@@ -295,8 +295,8 @@ export default function RejectionLoop() {
         </header>
 
         {/* ── Status pill ── */}
-        <div className="flex items-center gap-3 border-b border-[#EAECF0] px-6 py-3 sm:px-8">
-          <div className="flex items-center gap-2 rounded-full border border-[#E6E9EE] bg-[#FAFBFC] px-3.5 py-1.5">
+        <div className="flex items-center gap-3 border-b border-[#EAECF0] px-6 py-2 sm:px-8">
+          <div className="flex items-center gap-2 rounded-full border border-[#E6E9EE] bg-[#FAFBFC] px-3.5 py-1">
             <motion.span
               animate={isSimulating ? { opacity: [0.35, 1, 0.35] } : { opacity: 1 }}
               transition={{ duration: 1.2, repeat: isSimulating ? Infinity : 0 }}
@@ -307,21 +307,11 @@ export default function RejectionLoop() {
               {isSimulating ? 'Processing' : 'Resolved'}
             </span>
           </div>
-          {!isSimulating && (
-            <motion.span
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="text-[10px] font-medium tracking-wide text-[#3aaa78]"
-            >
-              ✓ Recovery Complete
-            </motion.span>
-          )}
         </div>
 
         {/* ── Event stream ── */}
-        <div ref={scrollRef} className="relative flex-1 overflow-y-auto px-6 py-5 sm:px-8 sm:py-6">
-          <div className="relative space-y-6">
+        <div ref={scrollRef} className="relative flex-1 overflow-y-auto px-6 py-3 sm:px-8 sm:py-4">
+          <div className="relative space-y-3.5">
             <AnimatePresence initial={false}>
               {visibleEvents.map((event, index) => (
                 <WorkflowItem
