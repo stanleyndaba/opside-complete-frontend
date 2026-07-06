@@ -210,10 +210,10 @@ function WorkflowItem({
                 ],
               }}
               transition={{ delay: 0.18, duration: 0.75, ease: 'easeOut' }}
-              className="mt-2 text-lg font-medium tracking-tight text-[#242424] sm:text-[1.25rem]"
+              className="mt-0.5 text-lg font-bold tracking-tight text-[#242424] sm:text-[1.25rem] leading-none"
             >
               <CountUpCurrency start={isVisible} />
-              <p className="mt-1.5 text-sm font-normal text-[#8B95A5]">{event.body}</p>
+              <p className="mt-0.5 text-sm font-normal text-[#8B95A5]">{event.body}</p>
             </motion.div>
           ) : (
             event.body && <p className="mt-1.5 text-sm leading-6 text-[#6F7785]">{event.body}</p>
@@ -294,20 +294,7 @@ export default function RejectionLoop() {
           <BuzzingIcons />
         </header>
 
-        {/* ── Status pill ── */}
-        <div className="flex items-center gap-3 border-b border-[#EAECF0] px-6 py-2 sm:px-8">
-          <div className="flex items-center gap-2 rounded-full border border-[#E6E9EE] bg-[#FAFBFC] px-3.5 py-1">
-            <motion.span
-              animate={isSimulating ? { opacity: [0.35, 1, 0.35] } : { opacity: 1 }}
-              transition={{ duration: 1.2, repeat: isSimulating ? Infinity : 0 }}
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: isSimulating ? '#4285F4' : '#3aaa78' }}
-            />
-            <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-[#8B95A5]">
-              {isSimulating ? 'Processing' : 'Resolved'}
-            </span>
-          </div>
-        </div>
+
 
         {/* ── Event stream ── */}
         <div ref={scrollRef} className="relative flex-1 overflow-y-auto px-6 py-3 sm:px-8 sm:py-4">
