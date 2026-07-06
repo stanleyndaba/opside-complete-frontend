@@ -105,10 +105,10 @@ export default function Graph() {
         >
           {/* Axis labels */}
           <div className="mb-2 flex items-baseline justify-between">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9CA3AF]">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#6B7280]">
               Evidence decision accuracy (%)
             </span>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9CA3AF]">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#6B7280]">
               Resolved recovery cases learned from
             </span>
           </div>
@@ -208,14 +208,14 @@ export default function Graph() {
                     transition={{ duration: 0.25, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
                   />
 
-                  {/* Clean text label — no box, no background, charcoal grey */}
+                  {/* Clean text label — perfectly positioned just above the dot */}
                   <motion.text
                     x={cx}
                     y={cy - 12}
                     textAnchor="middle"
                     className="fill-[#1A1D23] font-mono text-[11px] font-semibold tracking-tight"
-                    initial={{ opacity: 0, y: cy - 6 }}
-                    animate={visible ? { opacity: 1, y: cy - 12 } : {}}
+                    initial={{ opacity: 0, translateY: 6 }}
+                    animate={visible ? { opacity: 1, translateY: 0 } : {}}
                     transition={{ duration: 0.35, delay: 0.1 }}
                   >
                     <AnimatedValue target={d.accuracy} active={visible} />
@@ -231,9 +231,9 @@ export default function Graph() {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5, delay: 2.8 }}
-          className="mt-5 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-[#D1D5DB]"
+          className="mt-5 text-center font-mono text-[11px] uppercase tracking-tight text-[#6B7280]"
         >
-          Operational memory · Recovery intelligence
+          Operational memory
         </motion.p>
       </section>
     </main>
