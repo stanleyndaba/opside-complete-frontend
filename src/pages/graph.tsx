@@ -19,8 +19,8 @@ const Y_TICKS = [50, 60, 70, 80, 90, 100];
 
 /* ── Chart geometry ────────────────────────────────────── */
 const SVG_W = 640;
-const SVG_H = 320;
-const PAD = { top: 36, right: 32, bottom: 44, left: 52 };
+const SVG_H = 160;
+const PAD = { top: 32, right: 32, bottom: 28, left: 40 };
 const CHART_W = SVG_W - PAD.left - PAD.right;
 const CHART_H = SVG_H - PAD.top - PAD.bottom;
 
@@ -31,8 +31,22 @@ function yPos(val: number) {
   return PAD.top + CHART_H - ((val - Y_MIN) / (Y_MAX - Y_MIN)) * CHART_H;
 }
 
-/* Build the SVG path */
-const linePath = DATA_POINTS.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xPos(i)} ${yPos(d.accuracy)}`).join(' ');
+/* Build the SVG path with smooth cubic bezier curves */
+function buildCurvePath() {
+  if (DATA_POINTS.length === 0) return '';
+  let path = `M ${xPos(0)} ${yPos(DATA_POINTS[0].accuracy)}`;
+  for (let i = 0; i < DATA_POINTS.length - 1; i++) {
+    const x0 = xPos(i);
+    const y0 = yPos(DATA_POINTS[i].accuracy);
+    const x1 = xPos(i + 1);
+    const y1 = yPos(DATA_POINTS[i + 1].accuracy);
+    const cpX = x0 + (x1 - x0) * 0.4;
+    path += ` C ${cpX} ${y0}, ${x1 - (x1 - x0) * 0.4} ${y1}, ${x1} ${y1}`;
+  }
+  return path;
+}
+
+const linePath = buildCurvePath();
 
 /* Build area path (line + close to bottom) */
 const areaPath =
@@ -86,11 +100,12 @@ export default function Graph() {
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="flex flex-col items-center text-center"
         >
-          <h1 className="font-serif text-[28px] font-bold leading-[1.08] tracking-[-0.03em] text-[#242424] sm:text-[36px] md:text-[42px]">
+          <h1 className="font-serif text-[18px] font-bold leading-[1.08] tracking-[-0.03em] text-[#1A1D23] sm:text-[20px] md:text-[24px]">
             Evidence Intelligence Accuracy Over Time
           </h1>
-          <p className="mt-4 max-w-[680px] text-[15px] leading-7 text-[#9CA3AF] md:text-[16px] md:leading-8">
+          <p className="mt-3 max-w-[680px] text-[14px] leading-6 text-[#6F7785] md:text-[15px] md:leading-7">
             Margin learns from every approved, rejected, underpaid, and reversed claim to improve how it scores future evidence packs before filing.
           </p>
         </motion.div>
@@ -161,23 +176,23 @@ export default function Graph() {
               </motion.text>
             ))}
 
-            {/* Area fill — very subtle */}
+            {/* Area fill — very subtle dark tint */}
             <motion.path
               d={areaPath}
-              fill="#9CA3AF"
-              fillOpacity={0.04}
+              fill="#1A1D23"
+              fillOpacity={0.03}
               initial={{ opacity: 0 }}
               animate={{ opacity: isInView ? 1 : 0 }}
               transition={{ duration: 1, delay: 0.4 }}
               style={{ clipPath: `inset(0 ${(1 - progress) * 100}% 0 0)` }}
             />
 
-            {/* Animated line — soft grey, not navy */}
+            {/* Animated line — charcoal dark grey */}
             <motion.path
               d={linePath}
               fill="none"
-              stroke="#9CA3AF"
-              strokeWidth="2"
+              stroke="#1A1D23"
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0, opacity: 0 }}
@@ -185,7 +200,7 @@ export default function Graph() {
                 pathLength: isInView ? progress : 0,
                 opacity: isInView ? 1 : 0,
               }}
-              transition={{ pathLength: { duration: 0.45, ease: 'easeOut' }, opacity: { duration: 0.3 } }}
+              transition={{ pathLength: { duration: 0.6, ease: 'easeOut' }, opacity: { duration: 0.3 } }}
             />
 
             {/* Data-point dots + value labels */}
@@ -193,43 +208,51 @@ export default function Graph() {
               const cx = xPos(i);
               const cy = yPos(d.accuracy);
               const visible = i < revealedCount;
+              
+              // Align badge centered right over the dot
+              const badgeX = cx - 22;
+              const badgeY = cy - 26;
 
               return (
                 <g key={`dot-${i}`}>
-                  {/* Clean dot — small, soft */}
+                  {/* Outer dot */}
                   <motion.circle
                     cx={cx}
                     cy={cy}
-                    r="4"
+                    r="5"
                     fill="white"
-                    stroke="#D1D5DB"
+                    stroke="#1A1D23"
                     strokeWidth="1.5"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={visible ? { opacity: 1, scale: 1 } : {}}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   />
+                  {/* Inner dot */}
                   <motion.circle
                     cx={cx}
                     cy={cy}
-                    r="2"
-                    fill="#9CA3AF"
+                    r="2.5"
+                    fill="#1A1D23"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={visible ? { opacity: 1, scale: 1 } : {}}
                     transition={{ duration: 0.25, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
                   />
 
-                  {/* Clean text label — no badge, no background */}
-                  <motion.text
-                    x={cx}
-                    y={cy - 14}
-                    textAnchor="middle"
-                    className="fill-[#4B5563] font-mono text-[12px] font-semibold"
-                    initial={{ opacity: 0, y: cy - 8 }}
-                    animate={visible ? { opacity: 1, y: cy - 14 } : {}}
-                    transition={{ duration: 0.35, delay: 0.1 }}
+                  {/* Charcoal badge over dot */}
+                  <motion.foreignObject
+                    x={badgeX}
+                    y={badgeY}
+                    width="44"
+                    height="20"
+                    initial={{ opacity: 0, y: badgeY + 6 }}
+                    animate={visible ? { opacity: 1, y: badgeY } : {}}
+                    transition={{ duration: 0.4, delay: 0.12 }}
+                    className="overflow-visible"
                   >
-                    <AnimatedValue target={d.accuracy} active={visible} />
-                  </motion.text>
+                    <div className="flex h-full w-full items-center justify-center rounded bg-[#1A1D23] px-1 text-[11px] font-bold tracking-tight text-white shadow-sm">
+                      <AnimatedValue target={d.accuracy} active={visible} />
+                    </div>
+                  </motion.foreignObject>
                 </g>
               );
             })}
