@@ -41,6 +41,22 @@ const AccuracyGraph = () => {
           <p className="text-gray-500 text-sm max-w-2xl mx-auto leading-relaxed">
             Margin learns from every approved, rejected, underpaid, and reversed claim to improve how it scores future evidence packs before filing.
           </p>
+          <div className="mt-4 flex justify-center items-center gap-6">
+            <div className="flex flex-col items-center">
+              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Current Learning State</span>
+              <span className="text-xs font-bold text-gray-900">High-Velocity Synthesis</span>
+            </div>
+            <div className="h-4 w-px bg-gray-200" />
+            <div className="flex flex-col items-center">
+              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Model Integrity</span>
+              <span className="text-xs font-bold text-gray-900">99.4% Verified</span>
+            </div>
+            <div className="h-4 w-px bg-gray-200" />
+            <div className="flex flex-col items-center">
+              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Protocol</span>
+              <span className="text-xs font-bold text-gray-900">Operational Memory</span>
+            </div>
+          </div>
         </div>
 
         {/* The Simulation Canvas — compact */}
@@ -152,22 +168,6 @@ const AccuracyGraph = () => {
           </div>
         </div>
 
-        {/* Technical Footer */}
-        <div className="mt-8 flex justify-between items-center border-t border-gray-100 pt-6">
-          <div className="flex gap-8">
-            <div className="flex flex-col">
-              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Current Learning State</span>
-              <span className="text-sm font-bold text-gray-900">High-Velocity Synthesis</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Model Integrity</span>
-              <span className="text-sm font-bold text-gray-900">99.4% Verified</span>
-            </div>
-          </div>
-          <div className="text-[10px] text-gray-500 font-mono tracking-tight">
-            Operational memory
-          </div>
-        </div>
       </div>
     </section>
   );
