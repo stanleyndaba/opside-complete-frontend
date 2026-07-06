@@ -772,9 +772,12 @@ export function ScrollytellingCoverage() {
 
             {/* Right: Visual panel */}
             <div className="relative order-1 lg:order-2">
-              <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white/90 shadow-xl backdrop-blur-xl">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/20 to-transparent" />
-                <div className="p-5 sm:p-6 md:p-8">
+              <div className="relative overflow-hidden px-1 py-3 sm:px-3 md:px-6">
+                <div className="pointer-events-none absolute inset-0 bg-white/[0.18] backdrop-blur-[1px]" />
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-slate-300/60 to-transparent" />
+                <div className="pointer-events-none absolute left-0 top-0 hidden h-full w-px bg-gradient-to-b from-transparent via-slate-300/60 to-transparent md:block" />
+                <div className="relative py-3">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`visual-${activeIndex}`}
