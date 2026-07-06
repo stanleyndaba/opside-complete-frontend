@@ -176,10 +176,36 @@ function DiscrepancyDetectionViz() {
 }
 
 function EvidenceBindingViz() {
+  const reduceMotion = useReducedMotion();
+  const [resolved, setResolved] = useState(reduceMotion);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setResolved(true);
+      return;
+    }
+
+    setResolved(false);
+    const timeoutId = window.setTimeout(() => setResolved(true), 1600);
+    return () => window.clearTimeout(timeoutId);
+  }, [reduceMotion]);
+
+  const varianceMetrics = [
+    { label: 'Shipped', value: '500' },
+    { label: 'Received', value: '462' },
+    { label: 'Variance', value: '38' },
+    { label: 'Value', value: '$1,420' },
+  ];
+
   const sources = [
-    { label: 'Shipment Record', status: 'VERIFIED', verified: true, meta: 'REF: #FBA15J2K  ·  CARRIER: UPS  ·  500 UNITS' },
-    { label: 'Supplier Invoice', status: 'VERIFIED', verified: true, meta: 'INV-2024-88  ·  OCR MATCH: 100%  ·  $12,400' },
-    { label: 'Amazon Receiving Report', status: 'ANALYZING', verified: false, meta: 'SCANNING FOR RECEIVED QUANTITY VARIANCE...' },
+    { label: 'Shipment Record', status: 'VERIFIED', verified: true, meta: 'REF: #FBA15J2K  ·  CARRIER: UPS  ·  500 UNITS SHIPPED' },
+    { label: 'Supplier Invoice', status: 'VERIFIED', verified: true, meta: 'INV-2024-88  ·  SKU COST BASIS MATCHED  ·  $12,400' },
+    {
+      label: 'Amazon Receiving Report',
+      status: resolved ? 'VERIFIED' : 'ANALYZING',
+      verified: resolved,
+      meta: resolved ? 'RECEIVED: 462 UNITS  ·  SHORTAGE CONFIRMED: 38 UNITS' : 'SCANNING FOR RECEIVED QUANTITY VARIANCE...',
+    },
   ];
 
   return (
@@ -188,40 +214,77 @@ function EvidenceBindingViz() {
       <div className="flex items-center justify-between border-b border-slate-200 pb-2">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-            Evidence Binding Protocol
+            Inbound Shortage Case
           </span>
           <div className="mt-0.5 font-mono text-[9px] text-slate-400">
-            SESSION_ID: 882-AUDIT
+            SHIPMENT FBA15J2K  ·  UPS  ·  500 UNITS SHIPPED
           </div>
         </div>
-        <span className="text-[10px] font-mono text-slate-500">2/3 BOUND</span>
+        <span className="text-[10px] font-mono text-slate-500">{resolved ? 'READY' : 'BINDING'}</span>
+      </div>
+
+      {/* Variance strip */}
+      <div className="grid grid-cols-4 border-b border-slate-100 py-3">
+        {varianceMetrics.map((metric, i) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08, duration: 0.35 }}
+            className={i > 0 ? 'border-l border-slate-100 pl-3' : ''}
+          >
+            <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+              {metric.label}
+            </div>
+            <div className="mt-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700">
+              {metric.value}
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Evidence Blocks */}
-      <div className="mt-3 flex flex-col">
+      <div className="mt-2 flex flex-col">
         {sources.map((src, i) => (
           <React.Fragment key={src.label}>
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.15, duration: 0.4 }}
-              className="border-b border-slate-100 py-2.5 last:border-0"
+              className="relative overflow-hidden border-b border-slate-100 py-2.5 last:border-0"
             >
+              {!src.verified && (
+                <motion.div
+                  aria-hidden="true"
+                  className="absolute inset-y-1 left-0 w-20 bg-gradient-to-r from-transparent via-[#0B74DE]/10 to-transparent"
+                  initial={{ x: '-120%' }}
+                  animate={{ x: '520%' }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              )}
+
               {/* Row: Label + Status */}
-              <div className="flex items-center justify-between">
+              <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-slate-100 font-mono text-[9px] font-bold text-slate-500">
                     {String(i + 1).padStart(2, '0')}
                   </div>
                   <span className="text-[11px] font-medium text-slate-700">{src.label}</span>
                 </div>
-                <span
-                  className={`rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold ${
-                    src.verified ? 'text-slate-600' : 'text-slate-500 animate-pulse'
-                  }`}
-                >
-                  {src.status}
-                </span>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={src.status}
+                    initial={{ opacity: 0, y: -3 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 3 }}
+                    transition={{ duration: 0.2 }}
+                    className={`rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold ${
+                      src.verified ? 'text-slate-600' : 'text-slate-500 animate-pulse'
+                    }`}
+                  >
+                    {src.status}
+                  </motion.span>
+                </AnimatePresence>
               </div>
 
               {/* Metadata line */}
@@ -229,7 +292,7 @@ function EvidenceBindingViz() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 + i * 0.2, duration: 0.6 }}
-                className={`mt-1 ml-7 font-mono text-[9px] tracking-wide ${
+                className={`relative mt-1 ml-7 font-mono text-[9px] tracking-wide ${
                   src.verified ? 'text-slate-400' : 'text-slate-400 animate-pulse'
                 }`}
               >
@@ -260,10 +323,10 @@ function EvidenceBindingViz() {
         className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3"
       >
         <span className="font-mono text-[9px] tracking-wide text-slate-400">
-          PROTOCOL: HOLD_UNTIL_VALIDATED
+          ELIGIBILITY: {resolved ? 'READY AFTER EVIDENCE BINDING' : 'HELD UNTIL EVIDENCE BINDING'}
         </span>
         <span className="font-mono text-[9px] tracking-wide text-slate-500">
-          INTEGRITY: 66%
+          INTEGRITY: {resolved ? '100%' : '66%'}
         </span>
       </motion.div>
     </div>
