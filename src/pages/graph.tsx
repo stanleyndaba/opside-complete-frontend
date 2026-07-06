@@ -31,22 +31,8 @@ function yPos(val: number) {
   return PAD.top + CHART_H - ((val - Y_MIN) / (Y_MAX - Y_MIN)) * CHART_H;
 }
 
-/* Build the SVG path with smooth cubic bezier curves */
-function buildCurvePath() {
-  if (DATA_POINTS.length === 0) return '';
-  let path = `M ${xPos(0)} ${yPos(DATA_POINTS[0].accuracy)}`;
-  for (let i = 0; i < DATA_POINTS.length - 1; i++) {
-    const x0 = xPos(i);
-    const y0 = yPos(DATA_POINTS[i].accuracy);
-    const x1 = xPos(i + 1);
-    const y1 = yPos(DATA_POINTS[i + 1].accuracy);
-    const cpX = x0 + (x1 - x0) * 0.4;
-    path += ` C ${cpX} ${y0}, ${x1 - (x1 - x0) * 0.4} ${y1}, ${x1} ${y1}`;
-  }
-  return path;
-}
-
-const linePath = buildCurvePath();
+/* Build the SVG path (Straight Lines) */
+const linePath = DATA_POINTS.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xPos(i)} ${yPos(d.accuracy)}`).join(' ');
 
 /* Build area path (line + close to bottom) */
 const areaPath =
@@ -115,14 +101,14 @@ export default function Graph() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
-          className="mt-10 rounded-2xl border border-[#EEEFF2] bg-white p-5 sm:p-8"
+          className="mt-10 rounded-2xl border border-[#EEEFF2] bg-white p-5 sm:p-8 shadow-sm"
         >
           {/* Axis labels */}
           <div className="mb-2 flex items-baseline justify-between">
-            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#C5CAD0]">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9CA3AF]">
               Evidence decision accuracy (%)
             </span>
-            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-[#C5CAD0]">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9CA3AF]">
               Resolved recovery cases learned from
             </span>
           </div>
@@ -142,7 +128,7 @@ export default function Graph() {
                 y1={yPos(tick)}
                 x2={SVG_W - PAD.right}
                 y2={yPos(tick)}
-                stroke="#F3F4F6"
+                stroke="#E5E7EB"
                 strokeWidth="1"
               />
             ))}
@@ -154,7 +140,7 @@ export default function Graph() {
                 x={PAD.left - 10}
                 y={yPos(tick) + 4}
                 textAnchor="end"
-                className="fill-[#C5CAD0] font-mono text-[11px]"
+                className="fill-[#6B7280] font-mono text-[11px]"
               >
                 {tick}%
               </text>
@@ -167,7 +153,7 @@ export default function Graph() {
                 x={xPos(i)}
                 y={SVG_H - 8}
                 textAnchor="middle"
-                className="fill-[#C5CAD0] font-mono text-[11px]"
+                className="fill-[#6B7280] font-mono text-[11px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: i < revealedCount ? 1 : 0 }}
                 transition={{ duration: 0.35 }}
@@ -211,23 +197,11 @@ export default function Graph() {
 
               return (
                 <g key={`dot-${i}`}>
-                  {/* Outer dot */}
+                  {/* Clean inner dot only - NO outer border */}
                   <motion.circle
                     cx={cx}
                     cy={cy}
-                    r="5"
-                    fill="white"
-                    stroke="#1A1D23"
-                    strokeWidth="1.25"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={visible ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  />
-                  {/* Inner dot */}
-                  <motion.circle
-                    cx={cx}
-                    cy={cy}
-                    r="2.5"
+                    r="3.5"
                     fill="#1A1D23"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={visible ? { opacity: 1, scale: 1 } : {}}
@@ -239,7 +213,7 @@ export default function Graph() {
                     x={cx}
                     y={cy - 12}
                     textAnchor="middle"
-                    className="fill-[#1A1D23] font-mono text-[11px] font-medium tracking-tight"
+                    className="fill-[#1A1D23] font-mono text-[11px] font-semibold tracking-tight"
                     initial={{ opacity: 0, y: cy - 6 }}
                     animate={visible ? { opacity: 1, y: cy - 12 } : {}}
                     transition={{ duration: 0.35, delay: 0.1 }}
