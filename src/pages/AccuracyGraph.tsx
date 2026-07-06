@@ -15,7 +15,7 @@ const AccuracyGraph = () => {
 
   // SVG dimensions & padding — compact height
   const width = 800;
-  const height = 200;
+  const height = 260;
   const padding = 40;
 
   // Scale functions to map data to SVG coordinates
@@ -38,7 +38,7 @@ const AccuracyGraph = () => {
           <h2 className="text-xl font-serif font-bold text-gray-900 mb-3 tracking-tight sm:text-2xl">
             Evidence Intelligence Accuracy Over Time
           </h2>
-          <p className="text-gray-500 italic text-sm max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gray-500 text-sm max-w-2xl mx-auto leading-relaxed">
             Margin learns from every approved, rejected, underpaid, and reversed claim to improve how it scores future evidence packs before filing.
           </p>
         </div>
