@@ -109,7 +109,7 @@ const AccuracyGraph = () => {
               d={pathData}
               fill="none"
               stroke="#1A1A1A"
-              strokeWidth="1.5"
+              strokeWidth="1"
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0 }}
