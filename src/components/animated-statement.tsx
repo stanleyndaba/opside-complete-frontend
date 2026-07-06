@@ -34,7 +34,7 @@ export function AnimatedStatement({ lines }: { lines: StatementLine[] }) {
         variants={container}
         initial="hidden"
         animate="visible"
-        className="max-w-5xl text-center text-4xl leading-[1.12] text-[#242424] sm:text-6xl"
+        className="max-w-5xl text-center text-3xl leading-[1.15] text-[#242424] sm:text-4xl md:text-5xl"
       >
         {lines.map((line, lineIndex) => (
           <span

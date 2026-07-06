@@ -6,8 +6,8 @@ export default function LearningRecovery() {
   return (
     <AnimatedStatement
       lines={[
-        { text: 'Learns and improves from every recovery' },
-        { text: 'it completes.', strong: true },
+        { text: 'Managing Amazon follow-ups from evidence requests and rejections to resubmissions' },
+        { text: 'Payout checks, and underpayment recovery until each case is fully resolved.', strong: true },
       ]}
     />
   );
