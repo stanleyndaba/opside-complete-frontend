@@ -6,7 +6,7 @@ export default function LearningRecovery() {
   return (
     <AnimatedStatement
       lines={[
-        { text: 'Learns from every recovery' },
+        { text: 'Learns and improves from every recovery' },
         { text: 'it completes.', strong: true },
       ]}
     />
