@@ -1,13 +1,18 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   Barcode,
+  BookOpen,
   Briefcase,
   Calculator,
+  ClipboardList,
   DollarSign,
+  FileCheck,
   FileText,
   Hash,
   ListChecks,
   PenLine,
+  Receipt,
+  Tag,
   Truck,
   type LucideIcon,
 } from 'lucide-react';
@@ -42,13 +47,13 @@ const evidenceNodesRight: EvidenceNode[] = [
   { id: 'r-case', name: 'Case', Icon: Briefcase, evidence: ['Case #8821', 'Evidence pack', 'Ready'], x: 93, y: 86, delay: 2.55, laneX: 65 },
 ];
 
-const evidenceNodesLeft: EvidenceNode[] = evidenceNodesRight.map((n) => ({
-  ...n,
-  id: n.id.replace('r-', 'l-'),
-  x: 100 - n.x,
-  laneX: 100 - n.laneX,
-  delay: n.delay + 0.15,
-}));
+const evidenceNodesLeft: EvidenceNode[] = [
+  { id: 'l-remittance', name: 'Remittance', Icon: Receipt, evidence: ['Payment', 'Advice', 'Check #'], x: 29, y: 18, delay: 0.95, laneX: 41 },
+  { id: 'l-routing', name: 'Routing Guide', Icon: BookOpen, evidence: ['Compliance', 'SLA', 'Terms'], x: 11, y: 36, delay: 1.2, laneX: 35 },
+  { id: 'l-deduction', name: 'Deduction', Icon: Tag, evidence: ['Code 22', 'Shortage', 'Claim'], x: 25, y: 55, delay: 1.45, laneX: 39 },
+  { id: 'l-carrier-sla', name: 'Carrier SLA', Icon: ClipboardList, evidence: ['Transit', 'Delivery', 'On-time'], x: 7, y: 72, delay: 1.7, laneX: 35 },
+  { id: 'l-supplier-agmt', name: 'Supplier Agmt', Icon: FileCheck, evidence: ['Contract', 'Allowance', 'Promo'], x: 27, y: 86, delay: 2.15, laneX: 41 },
+];
 
 const evidenceNodes = [...evidenceNodesLeft, ...evidenceNodesRight];
 
@@ -226,10 +231,10 @@ const DocumentSimulate = () => {
             );
           })}
 
-          {[trunkXRight, evidenceNodesRight[1].laneX, evidenceNodesRight[3].laneX].map((x) => (
+          {[trunkXRight, 59, 61, 65].map((x) => (
             <circle key={`r-${x}`} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
           ))}
-          {[trunkXLeft, evidenceNodesLeft[1].laneX, evidenceNodesLeft[3].laneX].map((x) => (
+          {[trunkXLeft, 35, 39, 41].map((x) => (
             <circle key={`l-${x}`} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
           ))}
           <circle cx={intakePointRight.x * 10} cy={intakePointRight.y * 6.4} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
