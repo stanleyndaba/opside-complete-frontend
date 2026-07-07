@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import {
   Barcode,
   Briefcase,
+  Calculator,
   DollarSign,
   FileText,
   Hash,
@@ -92,7 +93,7 @@ const evidenceNodes: EvidenceNode[] = [
   {
     id: 'cost-basis',
     name: 'Cost Basis',
-    Icon: DollarSign,
+    Icon: Calculator,
     evidence: ['Unit cost', 'COGS', 'Variance'],
     x: 72,
     y: 79,
