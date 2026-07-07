@@ -41,33 +41,29 @@ const ReadinessSimulate: React.FC = () => {
       <div className="w-full max-w-3xl">
         
         {/* Header: Institutional Authority */}
-        <div className="border-b-2 border-black pb-8 mb-12 flex justify-between items-end">
+        <div className="border-b-2 border-black pb-4 mb-6 flex justify-between items-end">
           <div>
-            <h1 className="text-sm font-mono uppercase tracking-tight text-gray-500 mb-2">
-              Protocol: Evidence_Hardening_v4.2
+            <h1 className="text-sm font-mono uppercase tracking-tight text-gray-500 mb-1">
+              Protocol: Evidence Hardening
             </h1>
-            <h2 className="text-4xl font-bold text-black">
-              Evidence Readiness Scorecard
+            <h2 className="text-2xl font-normal text-black">
+              Evidence Readiness
             </h2>
-          </div>
-          <div className="text-right">
-            <p className="text-sm font-mono text-gray-400 uppercase">Audit Status</p>
-            <p className="text-lg font-bold text-black uppercase tracking-tight">Sovereign</p>
           </div>
         </div>
 
         {/* The Score: Massive & Authoritative */}
-        <div className="flex items-center gap-12 mb-16">
+        <div className="flex items-center gap-6 mb-8">
           <motion.div 
-            className="text-[12rem] font-bold leading-none tracking-tighter text-black"
+            className="text-[4rem] font-bold leading-none tracking-tighter text-black"
             initial={{ opacity: 0.8 }}
             animate={{ opacity: 1 }}
           >
-            {score}<span className="text-6xl ml-2">%</span>
+            {score}<span className="text-2xl ml-1">%</span>
           </motion.div>
           
-          <div className="flex-1 space-y-4">
-            <div className="h-2 w-full bg-gray-100 rounded-[4px] overflow-hidden">
+          <div className="flex-1 space-y-2">
+            <div className="h-[2px] w-full bg-gray-100 overflow-hidden">
               <motion.div 
                 className="h-full bg-black"
                 initial={{ width: '38%' }}
@@ -75,21 +71,21 @@ const ReadinessSimulate: React.FC = () => {
                 transition={{ duration: 2, ease: "circOut" }}
               />
             </div>
-            <p className="text-sm font-mono text-gray-500 uppercase tracking-tight">
-              {score < 92 ? "Hardening Evidence Rails..." : "Audit Ready / Sovereign State"}
+            <p className="text-xs font-mono text-gray-500 uppercase tracking-tight">
+              {score < 92 ? "Hardening Evidence Rails..." : "Audit Ready"}
             </p>
           </div>
         </div>
 
         {/* The Checklist: Operational Infrastructure */}
-        <div className="grid grid-cols-2 gap-16">
+        <div className="grid grid-cols-2 gap-8">
           
           {/* Ready Section */}
-          <div className="space-y-6">
-            <h3 className="text-xs font-mono uppercase tracking-tight text-gray-400 border-b border-gray-100 pb-2">
+          <div className="space-y-4">
+            <h3 className="text-xs font-mono uppercase tracking-tight text-gray-400 border-b border-gray-100 pb-1">
               Ready / Verified
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-2">
               {readyItems.map((item, index) => (
                 <motion.div 
                   key={item}
@@ -99,28 +95,28 @@ const ReadinessSimulate: React.FC = () => {
                     x: isHardening ? 0 : -5
                   }}
                   transition={{ delay: index * 0.1 + 1.5 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-2"
                 >
-                  <div className="w-2 h-2 bg-[#10B981] rounded-[4px]" />
-                  <span className="text-lg font-medium text-black">{item}</span>
+                  <div className="w-1.5 h-1.5 bg-[#10B981] rounded-[2px]" />
+                  <span className="text-base font-medium text-black">{item}</span>
                 </motion.div>
               ))}
             </div>
           </div>
 
           {/* Still Weak Section */}
-          <div className="space-y-6">
-            <h3 className="text-xs font-mono uppercase tracking-tight text-gray-400 border-b border-gray-100 pb-2">
+          <div className="space-y-4">
+            <h3 className="text-xs font-mono uppercase tracking-tight text-gray-400 border-b border-gray-100 pb-1">
               Pending / Weak
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-2">
               {weakItems.map((item) => (
                 <motion.div 
                   key={item}
-                  className="flex items-start gap-3"
+                  className="flex items-start gap-2"
                 >
-                  <div className="w-2 h-2 bg-[#F59E0B] rounded-[4px] mt-2" />
-                  <span className="text-lg font-medium text-gray-400">{item}</span>
+                  <div className="w-1.5 h-1.5 bg-[#F59E0B] rounded-[2px] mt-1.5" />
+                  <span className="text-base font-medium text-gray-400">{item}</span>
                 </motion.div>
               ))}
             </div>
@@ -129,12 +125,12 @@ const ReadinessSimulate: React.FC = () => {
         </div>
 
         {/* Footer: Audit Ready Pulse */}
-        <div className="mt-24 pt-8 border-t border-gray-100 flex justify-between items-center">
-          <div className="flex items-center gap-3">
+        <div className="mt-12 pt-4 border-t border-gray-100 flex justify-between items-center">
+          <div className="flex items-center gap-2">
             <motion.div 
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="w-3 h-3 bg-[#10B981] rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+              className="w-2 h-2 bg-[#10B981] rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]"
             />
             <span className="text-xs font-mono uppercase tracking-tight text-gray-400">
               System Status: Audit Ready
