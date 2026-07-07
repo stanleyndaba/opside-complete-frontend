@@ -25,94 +25,37 @@ type EvidenceNode = {
   laneX: number;
 };
 
-const marginNode: Point = { x: 22, y: 50 };
-const intakePoint: Point = { x: 32, y: 50 };
-const trunkX = 54;
+const marginNode: Point = { x: 50, y: 50 };
+const intakePointRight: Point = { x: 53, y: 50 };
+const intakePointLeft: Point = { x: 47, y: 50 };
+const trunkXRight = 57;
+const trunkXLeft = 43;
 
-const evidenceNodes: EvidenceNode[] = [
-  {
-    id: 'invoice',
-    name: 'Invoice',
-    Icon: FileText,
-    evidence: ['Invoice', 'Supplier', '$12,400'],
-    x: 68,
-    y: 13,
-    delay: 0.8,
-    laneX: 56,
-  },
-  {
-    id: 'shipment-id',
-    name: 'Shipment ID',
-    Icon: Hash,
-    evidence: ['FBA15J2K', 'Inbound', 'FC log'],
-    x: 86,
-    y: 22,
-    delay: 1.05,
-    laneX: 62,
-  },
-  {
-    id: 'asin-fnsku',
-    name: 'ASIN / FNSKU',
-    Icon: Barcode,
-    evidence: ['ASIN', 'FNSKU', 'SKU map'],
-    x: 72,
-    y: 34,
-    delay: 1.3,
-    laneX: 58,
-  },
-  {
-    id: 'quantity',
-    name: 'Quantity',
-    Icon: ListChecks,
-    evidence: ['500 shipped', '462 received', '38 delta'],
-    x: 90,
-    y: 45,
-    delay: 1.55,
-    laneX: 62,
-  },
-  {
-    id: 'bol',
-    name: 'BOL',
-    Icon: Truck,
-    evidence: ['BOL', 'Carrier', 'Cartons'],
-    x: 70,
-    y: 57,
-    delay: 1.8,
-    laneX: 58,
-  },
-  {
-    id: 'pod',
-    name: 'POD',
-    Icon: PenLine,
-    evidence: ['POD', 'Signature', 'Timestamp'],
-    x: 86,
-    y: 67,
-    delay: 2.05,
-    laneX: 62,
-  },
-  {
-    id: 'cost-basis',
-    name: 'Cost Basis',
-    Icon: Calculator,
-    evidence: ['Unit cost', 'COGS', 'Variance'],
-    x: 72,
-    y: 79,
-    delay: 2.3,
-    laneX: 58,
-  },
-  {
-    id: 'case',
-    name: 'Case',
-    Icon: Briefcase,
-    evidence: ['Case #8821', 'Evidence pack', 'Ready'],
-    x: 90,
-    y: 86,
-    delay: 2.55,
-    laneX: 62,
-  },
+const evidenceNodesRight: EvidenceNode[] = [
+  { id: 'r-invoice', name: 'Invoice', Icon: FileText, evidence: ['Invoice', 'Supplier', '$12,400'], x: 71, y: 13, delay: 0.8, laneX: 59 },
+  { id: 'r-shipment-id', name: 'Shipment ID', Icon: Hash, evidence: ['FBA15J2K', 'Inbound', 'FC log'], x: 89, y: 22, delay: 1.05, laneX: 65 },
+  { id: 'r-asin-fnsku', name: 'ASIN / FNSKU', Icon: Barcode, evidence: ['ASIN', 'FNSKU', 'SKU map'], x: 75, y: 34, delay: 1.3, laneX: 61 },
+  { id: 'r-quantity', name: 'Quantity', Icon: ListChecks, evidence: ['500 shipped', '462 received', '38 delta'], x: 93, y: 45, delay: 1.55, laneX: 65 },
+  { id: 'r-bol', name: 'BOL', Icon: Truck, evidence: ['BOL', 'Carrier', 'Cartons'], x: 73, y: 57, delay: 1.8, laneX: 61 },
+  { id: 'r-pod', name: 'POD', Icon: PenLine, evidence: ['POD', 'Signature', 'Timestamp'], x: 89, y: 67, delay: 2.05, laneX: 65 },
+  { id: 'r-cost-basis', name: 'Cost Basis', Icon: Calculator, evidence: ['Unit cost', 'COGS', 'Variance'], x: 75, y: 79, delay: 2.3, laneX: 61 },
+  { id: 'r-case', name: 'Case', Icon: Briefcase, evidence: ['Case #8821', 'Evidence pack', 'Ready'], x: 93, y: 86, delay: 2.55, laneX: 65 },
 ];
 
+const evidenceNodesLeft: EvidenceNode[] = evidenceNodesRight.map((n) => ({
+  ...n,
+  id: n.id.replace('r-', 'l-'),
+  x: 100 - n.x,
+  laneX: 100 - n.laneX,
+  delay: n.delay + 0.15,
+}));
+
+const evidenceNodes = [...evidenceNodesLeft, ...evidenceNodesRight];
+
 function buildRoute(node: EvidenceNode): Point[] {
+  const side = node.x < 50 ? 'left' : 'right';
+  const intakePoint = side === 'right' ? intakePointRight : intakePointLeft;
+  
   return [
     { x: node.x, y: node.y },
     { x: node.laneX, y: node.y },
@@ -206,7 +149,7 @@ const DocumentSimulate = () => {
       />
 
       <section className="relative h-[min(720px,100vh)] w-full max-w-6xl" aria-label="Evidence document graph">
-        <div className="absolute right-[13%] top-[9%] hidden text-[10px] font-medium uppercase tracking-[0.12em] text-gray-400 sm:block">
+        <div className="absolute right-[13%] top-[9%] hidden text-[10px] font-medium uppercase tracking-tight text-gray-400 sm:block">
           Evidence Graph
         </div>
 
@@ -226,11 +169,9 @@ const DocumentSimulate = () => {
             animate={{ pathLength: 1, opacity: 0.9 }}
             transition={{ delay: reduceMotion ? 0 : 0.95, duration: 2.4, ease: 'easeOut' }}
           />
+          {/* Right Trunk */}
           <motion.path
-            d={pathFrom([
-              { x: trunkX, y: 13 },
-              { x: trunkX, y: 87 },
-            ])}
+            d={pathFrom([{ x: trunkXRight, y: 13 }, { x: trunkXRight, y: 87 }])}
             fill="none"
             stroke="#D1D5DB"
             strokeWidth="1"
@@ -239,7 +180,27 @@ const DocumentSimulate = () => {
             transition={{ delay: reduceMotion ? 0 : 2.85, duration: 1, ease: 'easeOut' }}
           />
           <motion.path
-            d={pathFrom([{ x: trunkX, y: marginNode.y }, intakePoint, marginNode])}
+            d={pathFrom([{ x: trunkXRight, y: marginNode.y }, intakePointRight, marginNode])}
+            fill="none"
+            stroke="#B8C0CC"
+            strokeWidth="1.2"
+            initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.85 }}
+            transition={{ delay: reduceMotion ? 0 : 3, duration: 0.9, ease: 'easeOut' }}
+          />
+
+          {/* Left Trunk */}
+          <motion.path
+            d={pathFrom([{ x: trunkXLeft, y: 13 }, { x: trunkXLeft, y: 87 }])}
+            fill="none"
+            stroke="#D1D5DB"
+            strokeWidth="1"
+            initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.65 }}
+            transition={{ delay: reduceMotion ? 0 : 2.85, duration: 1, ease: 'easeOut' }}
+          />
+          <motion.path
+            d={pathFrom([{ x: trunkXLeft, y: marginNode.y }, intakePointLeft, marginNode])}
             fill="none"
             stroke="#B8C0CC"
             strokeWidth="1.2"
@@ -265,10 +226,14 @@ const DocumentSimulate = () => {
             );
           })}
 
-          {[trunkX, evidenceNodes[1].laneX, evidenceNodes[3].laneX].map((x) => (
-            <circle key={x} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
+          {[trunkXRight, evidenceNodesRight[1].laneX, evidenceNodesRight[3].laneX].map((x) => (
+            <circle key={`r-${x}`} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
           ))}
-          <circle cx={intakePoint.x * 10} cy={intakePoint.y * 6.4} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
+          {[trunkXLeft, evidenceNodesLeft[1].laneX, evidenceNodesLeft[3].laneX].map((x) => (
+            <circle key={`l-${x}`} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
+          ))}
+          <circle cx={intakePointRight.x * 10} cy={intakePointRight.y * 6.4} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
+          <circle cx={intakePointLeft.x * 10} cy={intakePointLeft.y * 6.4} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
         </svg>
 
         <div
