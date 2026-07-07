@@ -6,8 +6,8 @@ export default function LearningRecovery() {
   return (
     <AnimatedStatement
       lines={[
-        { text: 'Margin does not just store documents.' },
-        { text: 'It reconstructs the recovery story Amazon needs to understand.', strong: true },
+        { text: 'Margin turns hours of proof-chasing' },
+        { text: 'into one claim-ready evidence pack.', strong: true },
       ]}
     />
   );
