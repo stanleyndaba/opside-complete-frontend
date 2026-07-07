@@ -33,6 +33,7 @@ const NOINDEX_EXACT = new Set([
   '/platformsimulate',
   '/platformfly',
   '/accuracy-graph',
+  '/timeline-simulation',
   '/scatterdesign',
   '/countdown',
   '/plane',
