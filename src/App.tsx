@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -166,29 +166,46 @@ const queryClient = new QueryClient({
   },
 });
 
+const PRELOAD_ROUTES = [
+  () => import("./pages/Index"),
+  () => import("./pages/PricingAdjust"),
+  () => import("./pages/EarlyAccess"),
+  () => import("./pages/AboutMargin"),
+  () => import("./pages/Sales"),
+  () => import("./pages/Research"),
+  () => import("./pages/Docs"),
+  () => import("./pages/Contact"),
+  () => import("./pages/Pricing"),
+  () => import("./pages/Waitlist"),
+  () => import("./pages/ClosingCTA"),
+  () => import("./pages/PaymentSuccess"),
+  () => import("./pages/FoundingActivationStatus"),
+  () => import("./pages/Privacy"),
+  () => import("./pages/Terms"),
+  () => import("./pages/RefundPolicy"),
+] as const;
+
 const RouteSkeleton = () => (
-  <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] p-6 text-[#182026]">
-    <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_50%_0%,rgba(11,116,222,0.13),transparent_38%)]" />
-    <div className="relative z-10 mx-auto flex min-h-[calc(100vh-48px)] max-w-4xl items-center">
-      <div className="w-full space-y-5 rounded-[30px] border border-[#CFE0EA] bg-white p-6 shadow-[0_28px_90px_rgba(37,49,58,0.1)]">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
-          <div>
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">Loading Margin</div>
-            <div className="mt-1 text-sm text-[#66737F]">Preparing the next view.</div>
-          </div>
-        </div>
-        <Skeleton className="h-8 w-1/3 bg-[#E4EDF1]" />
-        <Skeleton className="h-4 w-2/3 bg-[#E4EDF1]" />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Skeleton className="h-40 w-full rounded-[24px] bg-[#E4EDF1]" />
-          <Skeleton className="h-40 w-full rounded-[24px] bg-[#E4EDF1]" />
-        </div>
+  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-white/70 p-4 text-[#182026] backdrop-blur-[2px]">
+    <div className="flex items-center gap-3 rounded-full border border-[#CFE0EA] bg-white px-4 py-3 shadow-[0_18px_48px_rgba(37,49,58,0.08)]">
+      <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
+      <div>
+        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">Loading Margin</div>
+        <div className="text-sm text-[#66737F]">Preparing the next view.</div>
       </div>
     </div>
   </div>
 );
+
+const RoutePreloader = () => {
+  useEffect(() => {
+    PRELOAD_ROUTES.forEach((loadRoute) => {
+      void loadRoute();
+    });
+  }, []);
+
+  return null;
+};
 
 import { SessionProvider } from '@/contexts/SessionContext';
 
@@ -219,6 +236,7 @@ const App = () => (
                   <Toaster />
                   <Sonner />
                   <SmoothScrollProvider>
+                    <RoutePreloader />
                     <RouteErrorBoundary>
                       <Suspense fallback={<RouteSkeleton />}>
                         <AnalyticsRouteTracker />
