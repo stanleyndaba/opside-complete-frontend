@@ -117,7 +117,7 @@ export default function ReportGeneration() {
     const report = new jsPDF();
 
     report.setFontSize(20);
-    report.text('Dispute Investigation Report', 20, 28);
+    report.text('Dispute Claim Report', 20, 28);
     report.setFontSize(11);
     report.text('Amazon FBA Shipment Investigation', 20, 42);
     report.text('Carrier Weight: 45.2lb', 20, 60);
@@ -373,7 +373,7 @@ export default function ReportGeneration() {
                     </div>
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
-                      <h3 className="text-lg font-medium tracking-tight text-[#242424] sm:text-xl">Dispute Investigation Report</h3>
+                      <h3 className="text-lg font-medium tracking-tight text-[#242424] sm:text-xl">Dispute Claim Report</h3>
                       <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[#8A8F98] sm:text-[11px]">
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
                       </p>
@@ -438,7 +438,7 @@ export default function ReportGeneration() {
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-label="Dispute Investigation Report preview"
+              aria-label="Dispute Claim Report preview"
               initial={{ opacity: 0, scale: 0.96, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 16 }}
@@ -455,7 +455,7 @@ export default function ReportGeneration() {
                 <X className="h-5 w-5" />
               </button>
               <p className="text-xs font-semibold uppercase text-[#007AFF]">Margin</p>
-              <h2 className="mt-4 text-2xl font-semibold text-gray-900">Dispute Investigation Report</h2>
+              <h2 className="mt-4 text-2xl font-semibold text-gray-900">Dispute Claim Report</h2>
               <p className="mt-2 text-sm text-gray-400">Created Nov 12, 2025</p>
               <div className="my-6 h-px bg-gray-100" />
               <h3 className="text-sm font-semibold text-gray-900">Verified Evidence</h3>
