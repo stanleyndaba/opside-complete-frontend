@@ -16,6 +16,7 @@ import { FoundingActivationGate } from "@/components/navigation/FoundingActivati
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { RouteErrorBoundary } from "@/components/error/RouteErrorBoundary";
 import { usePrivateRouteRobots } from "@/hooks/usePrivateRouteRobots";
+import { AnalyticsRouteTracker } from "@/components/AnalyticsRouteTracker";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -220,6 +221,7 @@ const App = () => (
                   <SmoothScrollProvider>
                     <RouteErrorBoundary>
                       <Suspense fallback={<RouteSkeleton />}>
+                        <AnalyticsRouteTracker />
                         <Routes>
                         {/* PUBLIC ROUTES - No tenant required */}
                         <Route path="/" element={<Index />} />
