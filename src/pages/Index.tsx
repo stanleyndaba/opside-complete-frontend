@@ -218,7 +218,7 @@ function TypewriterPrompt({ text }: { text: string }) {
         aria-hidden="true"
         className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#182026]"
         animate={reduceMotion ? undefined : { opacity: [1, 0, 1] }}
-        transition={{ duration: 0.86, repeat: Infinity, ease: 'steps(1)' }}
+        transition={{ duration: 0.86, repeat: Infinity, ease: 'linear' }}
       />
     </span>
   );
