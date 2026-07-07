@@ -41,7 +41,7 @@ const ReadinessSimulate: React.FC = () => {
       <div className="w-full max-w-3xl">
         
         {/* Header: Institutional Authority */}
-        <div className="border-b-2 border-black pb-4 mb-6 flex justify-between items-end">
+        <div className="mb-6 flex justify-between items-end">
           <div>
             <h1 className="text-sm font-mono uppercase tracking-tight text-gray-500 mb-1">
               Protocol: Evidence Hardening
@@ -55,17 +55,17 @@ const ReadinessSimulate: React.FC = () => {
         {/* The Score: Massive & Authoritative */}
         <div className="flex items-center gap-6 mb-8">
           <motion.div 
-            className="text-[4rem] font-bold leading-none tracking-tighter text-black"
+            className="text-5xl font-bold leading-none tracking-tighter text-gray-700"
             initial={{ opacity: 0.8 }}
             animate={{ opacity: 1 }}
           >
-            {score}<span className="text-2xl ml-1">%</span>
+            {score}<span className="text-xl ml-1">%</span>
           </motion.div>
           
           <div className="flex-1 space-y-2">
             <div className="h-[2px] w-full bg-gray-100 overflow-hidden">
               <motion.div 
-                className="h-full bg-black"
+                className="h-full bg-[#10B981]"
                 initial={{ width: '38%' }}
                 animate={{ width: `${score}%` }}
                 transition={{ duration: 2, ease: "circOut" }}
@@ -83,7 +83,7 @@ const ReadinessSimulate: React.FC = () => {
           {/* Ready Section */}
           <div className="space-y-4">
             <h3 className="text-xs font-mono uppercase tracking-tight text-gray-400 border-b border-gray-100 pb-1">
-              Ready / Verified
+              Verified
             </h3>
             <div className="space-y-2">
               {readyItems.map((item, index) => (
@@ -107,7 +107,7 @@ const ReadinessSimulate: React.FC = () => {
           {/* Still Weak Section */}
           <div className="space-y-4">
             <h3 className="text-xs font-mono uppercase tracking-tight text-gray-400 border-b border-gray-100 pb-1">
-              Pending / Weak
+              Weak
             </h3>
             <div className="space-y-2">
               {weakItems.map((item) => (
