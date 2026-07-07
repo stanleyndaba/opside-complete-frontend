@@ -6,8 +6,8 @@ export default function LearningRecovery() {
   return (
     <AnimatedStatement
       lines={[
-        { text: 'Managing Amazon follow-ups from evidence requests and rejections to resubmissions' },
-        { text: 'Payout checks, and underpayment recovery until each case is fully resolved.', strong: true },
+        { text: 'Margin does not just store documents.' },
+        { text: 'It reconstructs the recovery story Amazon needs to understand.', strong: true },
       ]}
     />
   );
