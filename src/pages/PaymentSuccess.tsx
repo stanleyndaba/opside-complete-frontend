@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { markFoundingReservationConfirmed } from '@/lib/foundingActivation';
 import { getPendingYocoCheckoutContext, getSafeYocoReturnPath } from '@/lib/yocoCheckout';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 
 function readLocalStorage(key: string): string | null {
   if (typeof window === 'undefined') return null;
@@ -67,6 +69,17 @@ export default function PaymentSuccess() {
 
   useEffect(() => {
     if (isEarlyAccess) {
+      if (typeof window !== 'undefined') {
+        const guardKey = 'margin_ga_payment_success_founding_500';
+        if (!window.sessionStorage.getItem(guardKey)) {
+          window.sessionStorage.setItem(guardKey, '1');
+          trackEvent(ANALYTICS_EVENTS.paymentSuccess, {
+            offer: 'founding_500',
+            value: 99,
+            currency: 'USD',
+          });
+        }
+      }
       markFoundingReservationConfirmed('payment_success');
     }
   }, [isEarlyAccess]);

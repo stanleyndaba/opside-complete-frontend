@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, X } from 'lucide-react';
@@ -14,6 +14,8 @@ import { useTenant } from '@/contexts/TenantContext';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 import { api } from '@/lib/api';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
 type PricingTier = {
@@ -128,15 +130,20 @@ export default function PricingAdjust() {
     navigate('/sales');
   };
 
-  const openPaymentCheckout = (checkoutUrl: string) => {
+  const openPaymentCheckout = useCallback((checkoutUrl: string) => {
     if (typeof window === 'undefined') {
       return;
     }
 
+    trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
+      offer: 'founding_500',
+      value: 99,
+      currency: 'USD',
+    });
     window.location.assign(checkoutUrl);
-  };
+  }, []);
 
-  const startSubscribeIntent = async (plan: SelectablePlan, interval: BillingView) => {
+  const startSubscribeIntent = useCallback(async (plan: SelectablePlan, interval: BillingView) => {
     const selectionKey = `${plan}:${interval}`;
 
     if (!isAuthReady) {
@@ -212,7 +219,7 @@ export default function PricingAdjust() {
     } finally {
       setProcessingSelectionKey(null);
     }
-  };
+  }, [activeSlug, authToken, isAuthReady, isTenantReady, navigate, openPaymentCheckout, toast]);
 
   useEffect(() => {
     const planParam = searchParams.get('plan');
@@ -229,7 +236,7 @@ export default function PricingAdjust() {
 
     setRestoredSelectionKey(selectionKey);
     void startSubscribeIntent(plan, interval);
-  }, [authToken, isAuthReady, isTenantReady, processingSelectionKey, restoredSelectionKey, searchParams]);
+  }, [authToken, isAuthReady, isTenantReady, processingSelectionKey, restoredSelectionKey, searchParams, startSubscribeIntent]);
 
   const closeOverlay = () => {
     if (!isInAppOverlay) {
@@ -316,6 +323,11 @@ export default function PricingAdjust() {
           <div className="mt-auto flex flex-col gap-4">
             <Button
               onClick={() => {
+                trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
+                  location: 'pricing_founding_500',
+                  cta_text: tier.ctaLabel || `Start ${tier.name} Coverage`,
+                  offer: 'founding_500',
+                });
                 if (tier.checkoutUrl) {
                   openPaymentCheckout(tier.checkoutUrl);
                   return;

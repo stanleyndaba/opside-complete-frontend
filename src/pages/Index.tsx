@@ -20,6 +20,8 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 import { ProgressiveNarrativeTabs } from '@/components/landing/ProgressiveNarrativeTabs';
 import { TechnicalProtocolGrid } from '@/components/landing/TechnicalProtocolGrid';
 import { SystemPerformanceTicker } from '@/components/landing/SystemPerformanceTicker';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -870,7 +872,20 @@ export default function Index() {
     navigate('/early-access');
   };
 
+  const handleClaimAccessClick = (location: string) => {
+    trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
+      location,
+      cta_text: primaryCtaLabel,
+      offer: 'founding_500',
+    });
+    handlePrimaryCta();
+  };
+
   const openDemo = () => {
+    trackEvent(ANALYTICS_EVENTS.demoVideoClicked, {
+      location: 'homepage_demo_section',
+      video_name: 'margin_demo',
+    });
     setIsDemoOpen(true);
   };
 
@@ -890,7 +905,7 @@ export default function Index() {
       <main className="relative">
         <KineticHeroSection
           onPrimaryCta={scrollToWorkflow}
-          onEarlyAccessCta={() => navigate('/early-access')}
+          onEarlyAccessCta={() => handleClaimAccessClick('homepage_hero')}
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />
@@ -1192,8 +1207,8 @@ export default function Index() {
                   </p>
                   
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                    <Button
-                      onClick={handlePrimaryCta}
+              <Button
+                      onClick={() => handleClaimAccessClick('homepage_early_access_section')}
                       className="group relative h-14 w-full rounded-full bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] sm:w-auto"
                     >
                       <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-full" />
@@ -1278,7 +1293,7 @@ export default function Index() {
 
               <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
                 <Button
-                  onClick={handlePrimaryCta}
+                  onClick={() => handleClaimAccessClick('homepage_bottom_cta')}
                   className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
                 >
                   {primaryCtaLabel}

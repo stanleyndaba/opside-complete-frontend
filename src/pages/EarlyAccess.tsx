@@ -12,6 +12,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { api } from '@/lib/api';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 
 /* ── constants ─────────────────────────────────────────────────── */
 const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
@@ -43,6 +45,12 @@ const rememberEarlyAccessCheckout = () => {
     successUrl,
     createdAt: new Date().toISOString(),
   }));
+
+  trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
+    offer: 'founding_500',
+    value: 99,
+    currency: 'USD',
+  });
 };
 
 /* ── timeline data ─────────────────────────────────────────────── */
@@ -93,7 +101,7 @@ const reveal = {
 };
 
 /* ── primary cta component ─────────────────────────────────────── */
-function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
+function FounderPassCTA({ subtext, location }: { subtext?: React.ReactNode; location: string }) {
   return (
     <div className="w-full max-w-[520px] mx-auto flex flex-col items-center">
       <div className="mb-4 inline-flex items-center rounded-full border border-[#E9EEF2] bg-white px-3 py-1 shadow-sm">
@@ -106,7 +114,17 @@ function FounderPassCTA({ subtext }: { subtext?: React.ReactNode }) {
         asChild
         className="h-[56px] w-full max-w-[340px] justify-center rounded-full bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
       >
-        <a href={EARLY_ACCESS_CHECKOUT_URL} onClick={rememberEarlyAccessCheckout}>
+        <a
+          href={EARLY_ACCESS_CHECKOUT_URL}
+          onClick={() => {
+            trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
+              location,
+              cta_text: 'Reserve Founding Seat',
+              offer: 'founding_500',
+            });
+            rememberEarlyAccessCheckout();
+          }}
+        >
           Reserve Founding Seat
           <ArrowRight className="ml-2 h-5 w-5" />
         </a>
@@ -223,7 +241,7 @@ export default function EarlyAccess() {
               </p>
 
               <div className="mt-10 w-full">
-                <FounderPassCTA />
+                <FounderPassCTA location="early_access_page" />
               </div>
             </motion.div>
           </div>
@@ -234,7 +252,13 @@ export default function EarlyAccess() {
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <motion.button
               type="button"
-              onClick={() => setIsDemoOpen(true)}
+              onClick={() => {
+                trackEvent(ANALYTICS_EVENTS.demoVideoClicked, {
+                  location: 'early_access_page',
+                  video_name: 'margin_demo',
+                });
+                setIsDemoOpen(true);
+              }}
               {...reveal}
               className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[3px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#FAFAF7]"
               aria-label="Watch the Margin product demo"
@@ -380,7 +404,17 @@ export default function EarlyAccess() {
                   asChild
                   className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
                 >
-                  <a href={EARLY_ACCESS_CHECKOUT_URL} onClick={rememberEarlyAccessCheckout}>
+                  <a
+                    href={EARLY_ACCESS_CHECKOUT_URL}
+                    onClick={() => {
+                      trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
+                        location: 'early_access_page',
+                        cta_text: 'Reserve Founding Seat',
+                        offer: 'founding_500',
+                      });
+                      rememberEarlyAccessCheckout();
+                    }}
+                  >
                     Reserve Founding Seat
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
@@ -455,7 +489,10 @@ export default function EarlyAccess() {
               </p>
 
               <div className="mt-10 w-full">
-                <FounderPassCTA subtext={`${EARLY_ACCESS_PRICE} one-time. Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.`} />
+                <FounderPassCTA
+                  location="early_access_page"
+                  subtext={`${EARLY_ACCESS_PRICE} one-time. Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.`}
+                />
               </div>
 
               <p className="mt-6 max-w-[540px] text-[11px] leading-5 text-[#9AA8B2]">
