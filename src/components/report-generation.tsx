@@ -378,6 +378,20 @@ export default function ReportGeneration() {
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
                       </p>
 
+                      <div className="mt-5 flex flex-wrap gap-1.5 sm:justify-start justify-center">
+                        {[
+                          'Recovery summary', 'Claim type', 'Shipment timeline',
+                          'Required evidence checklist', 'Invoice', 'BOL', 'POD',
+                          'ASIN/FNSKU mapping', 'Quantity comparison', 'Cost basis',
+                          'Case narrative', 'Attachment index', 'Filing deadline', 'Seller approval status'
+                        ].map((item) => (
+                          <span key={item} className="inline-flex items-center gap-1 rounded-md bg-[#F8F9FA] px-2 py-1 text-[10px] font-medium text-[#6F7680] border border-[#E6E9EE]">
+                            <Check className="h-2.5 w-2.5 text-emerald-500" />
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+
                       <div className="mt-7 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
                         <button
                           type="button"
