@@ -138,7 +138,7 @@ const ReconciliationSimulate: React.FC = () => {
               <div className="mb-2 text-[10px] font-semibold uppercase tracking-tight text-gray-600">
                 Terminal
               </div>
-              <div className="space-y-1.5 font-mono text-[10px] uppercase tracking-tight text-emerald-600">
+              <div className="space-y-1.5 font-mono text-[10px] uppercase tracking-tight text-gray-600">
                  <TerminalLine text="> Detecting variance..." delay={0} visible={step >= 2} />
                  <TerminalLine text="> Cross-referencing Settlement_ID: SET-9928-XJ..." delay={0.8} visible={step >= 3} />
                  <TerminalLine text="> Underpayment confirmed: $435.00" delay={1.8} visible={step >= 4} />
