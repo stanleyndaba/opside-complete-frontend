@@ -36,6 +36,7 @@ const NOINDEX_EXACT = new Set([
   '/timeline-simulation',
   '/readiness-simulate',
   '/memory-simulate',
+  '/reconciliation-simulate',
   '/scatterdesign',
   '/countdown',
   '/plane',
