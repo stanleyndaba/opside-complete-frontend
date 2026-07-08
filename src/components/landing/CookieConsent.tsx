@@ -94,7 +94,7 @@ export function CookieConsent() {
                 "fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-in-out transform",
                 isVisible ? "translate-y-0" : "translate-y-full"
             )}>
-            <div className="bg-white/96 backdrop-blur-2xl border-t border-[#DCE8EE] shadow-[0_-10px_40px_rgba(37,49,58,0.12)]">
+            <div className="bg-white/96 backdrop-blur-2xl shadow-[0_-10px_40px_rgba(37,49,58,0.12)]">
 
                 {/* Banner View */}
                 {view === 'banner' && (
