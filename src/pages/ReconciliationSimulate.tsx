@@ -54,7 +54,7 @@ const ReconciliationSimulate: React.FC = () => {
           {/* Row 1: Expected */}
           <div className="flex items-end justify-between border-b border-gray-100 py-3">
              <span className="text-xs font-bold text-gray-500 uppercase tracking-tight">Expected Recovery</span>
-             <span className="font-bold text-[16px] text-gray-900 tracking-tight">$1,847.00</span>
+             <span className="font-bold text-[14px] text-gray-900 tracking-tight">$1,847.00</span>
           </div>
 
           {/* Row 2: Approved */}
@@ -70,7 +70,7 @@ const ReconciliationSimulate: React.FC = () => {
                    <span className="text-[9px] font-mono text-emerald-600 border border-emerald-100 bg-emerald-50 rounded-[4px] px-1.5 py-0.5 uppercase tracking-tight">Verified</span>
                  </div>
                  <div className="relative py-3">
-                   <span className={`font-bold text-[16px] tracking-tight ${step >= 4 ? 'text-gray-400' : 'text-gray-900'}`}>$1,847.00</span>
+                   <span className={`font-bold text-[14px] tracking-tight ${step >= 4 ? 'text-gray-400' : 'text-gray-900'}`}>$1,847.00</span>
                    {step >= 4 && (
                      <motion.div 
                        initial={{ width: 0 }} 
@@ -96,7 +96,7 @@ const ReconciliationSimulate: React.FC = () => {
                    <span className="text-xs font-bold text-gray-900 uppercase tracking-tight block">Actual Settlement Received</span>
                  </div>
                  <div className="py-3">
-                   <span className="font-bold text-[16px] text-gray-900 tracking-tight">$1,412.00</span>
+                   <span className="font-bold text-[14px] text-gray-900 tracking-tight">$1,412.00</span>
                  </div>
               </motion.div>
             )}
@@ -113,7 +113,7 @@ const ReconciliationSimulate: React.FC = () => {
               >
                  <div className="flex justify-between items-end">
                    <span className="text-xs font-bold text-red-700 uppercase tracking-tight">Variance Detected</span>
-                   <span className="font-bold text-[16px] text-red-600 tracking-tight">
+                   <span className="font-bold text-[14px] text-red-600 tracking-tight">
                      {ticker === 0 ? '-$0.00' : `-$${Math.abs(ticker)}.00`}
                    </span>
                  </div>
