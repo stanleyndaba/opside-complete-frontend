@@ -35,12 +35,12 @@ const ReconciliationSimulate: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4 font-sans">
-      <div className="w-full max-w-2xl bg-white border border-gray-100 rounded-[4px] shadow-xl flex flex-col max-h-[520px] overflow-hidden">
+      <div className="w-full max-w-2xl bg-white border border-gray-100 rounded-[4px] shadow-xl flex flex-col max-h-[360px] overflow-hidden">
         
         {/* Ledger Header (Memory Simulate Style) */}
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
+        <div className="px-5 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
            <div>
-             <h2 className="text-base font-bold text-gray-900 tracking-tight">Financial Audit Ledger</h2>
+             <h2 className="text-[15px] font-bold text-gray-900 tracking-tight">Financial Audit Ledger</h2>
              <p className="text-[10px] text-gray-500 font-mono uppercase tracking-tight mt-0.5">SYS.ID: REC-009928</p>
            </div>
            <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
@@ -50,12 +50,12 @@ const ReconciliationSimulate: React.FC = () => {
         </div>
         
         {/* Ledger Body */}
-        <div className="px-6 pb-2 pt-2 flex-1 overflow-y-auto bg-white">
+        <div className="px-5 pb-1 pt-1 flex-1 overflow-y-auto bg-white">
           
           {/* Row 1: Expected */}
-          <div className="flex justify-between items-end py-5 border-b border-gray-100">
+          <div className="flex justify-between items-end py-4 border-b border-gray-100">
              <span className="text-xs font-bold text-gray-500 uppercase tracking-tight">Expected Recovery</span>
-             <span className="font-bold text-2xl text-gray-900 tracking-tight">$1,847.00</span>
+             <span className="font-bold text-[1.45rem] text-gray-900 tracking-tight">$1,847.00</span>
           </div>
 
           {/* Row 2: Approved */}
@@ -66,12 +66,12 @@ const ReconciliationSimulate: React.FC = () => {
                 animate={{ opacity: 1, height: 'auto' }}
                 className="flex justify-between items-end border-b border-gray-100 overflow-hidden"
               >
-                 <div className="flex items-center gap-3 py-5">
+                 <div className="flex items-center gap-3 py-4">
                    <span className="text-xs font-bold text-gray-900 uppercase tracking-tight">Amazon Approved</span>
                    <span className="text-[9px] font-mono text-emerald-600 border border-emerald-100 bg-emerald-50 rounded-[4px] px-1.5 py-0.5 uppercase tracking-tight">Verified</span>
                  </div>
-                 <div className="relative py-5">
-                   <span className={`font-bold text-2xl tracking-tight ${step >= 4 ? 'text-gray-400' : 'text-gray-900'}`}>$1,847.00</span>
+                 <div className="relative py-4">
+                   <span className={`font-bold text-[1.45rem] tracking-tight ${step >= 4 ? 'text-gray-400' : 'text-gray-900'}`}>$1,847.00</span>
                    {step >= 4 && (
                      <motion.div 
                        initial={{ width: 0 }} 
@@ -93,11 +93,11 @@ const ReconciliationSimulate: React.FC = () => {
                 animate={{ opacity: 1, height: 'auto' }}
                 className="flex justify-between items-end border-b border-gray-100 overflow-hidden"
               >
-                 <div className="py-5">
+                 <div className="py-4">
                    <span className="text-xs font-bold text-gray-900 uppercase tracking-tight block">Actual Settlement Received</span>
                  </div>
-                 <div className="py-5">
-                   <span className="font-bold text-3xl text-gray-900 tracking-tight">$1,412.00</span>
+                 <div className="py-4">
+                   <span className="font-bold text-[1.55rem] text-gray-900 tracking-tight">$1,412.00</span>
                  </div>
               </motion.div>
             )}
@@ -110,11 +110,11 @@ const ReconciliationSimulate: React.FC = () => {
                 initial={{ opacity: 0, backgroundColor: '#ffffff' }}
                 animate={{ opacity: 1, backgroundColor: '#fef2f2' }}
                 transition={{ duration: 0.5 }}
-                className="py-5 px-4 -mx-4 border-b border-red-100 overflow-hidden rounded-[4px]"
+                className="py-4 px-4 -mx-4 border-b border-red-100 overflow-hidden rounded-[4px]"
               >
                  <div className="flex justify-between items-end">
                    <span className="text-xs font-bold text-red-700 uppercase tracking-tight">Variance Detected</span>
-                   <span className="font-bold text-3xl text-red-600 tracking-tight">
+                   <span className="font-bold text-[1.55rem] text-red-600 tracking-tight">
                      {ticker === 0 ? '-$0.00' : `-$${Math.abs(ticker)}.00`}
                    </span>
                  </div>
@@ -132,9 +132,9 @@ const ReconciliationSimulate: React.FC = () => {
             <motion.div 
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
-              className="bg-slate-900 p-5 shrink-0"
+              className="bg-[#F8FAFC] border-t border-gray-100 p-4 shrink-0"
             >
-              <div className="font-mono text-[11px] text-emerald-400 space-y-1.5 uppercase tracking-tight">
+              <div className="font-mono text-[10px] text-emerald-600 space-y-1.5 uppercase tracking-tight">
                  <TerminalLine text="> Detecting variance..." delay={0} />
                  <TerminalLine text="> Cross-referencing Settlement_ID: SET-9928-XJ..." delay={0.8} />
                  <TerminalLine text="> Underpayment confirmed: $435.00" delay={1.8} />
@@ -143,7 +143,7 @@ const ReconciliationSimulate: React.FC = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: [0, 1, 0] }}
                     transition={{ repeat: Infinity, duration: 0.8, delay: 3.2 }}
-                    className="w-1.5 h-3 bg-emerald-400 mt-1"
+                    className="w-1.5 h-3 bg-emerald-500 mt-1"
                  />
               </div>
             </motion.div>
