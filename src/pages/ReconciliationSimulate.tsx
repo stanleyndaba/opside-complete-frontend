@@ -10,7 +10,6 @@ const ReconciliationSimulate: React.FC = () => {
       setTimeout(() => setStep(2), 2000), // Show Approval
       setTimeout(() => setStep(3), 4000), // Show Actual Settlement
       setTimeout(() => setStep(4), 6000), // Variance & Strike-through
-      setTimeout(() => setStep(5), 8000), // Neural Terminal Start
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
@@ -55,7 +54,7 @@ const ReconciliationSimulate: React.FC = () => {
           {/* Row 1: Expected */}
           <div className="flex items-end justify-between border-b border-gray-100 py-3">
              <span className="text-xs font-bold text-gray-500 uppercase tracking-tight">Expected Recovery</span>
-             <span className="font-bold text-[1.02rem] text-gray-900 tracking-tight">$1,847.00</span>
+             <span className="font-bold text-[16px] text-gray-900 tracking-tight">$1,847.00</span>
           </div>
 
           {/* Row 2: Approved */}
@@ -71,7 +70,7 @@ const ReconciliationSimulate: React.FC = () => {
                    <span className="text-[9px] font-mono text-emerald-600 border border-emerald-100 bg-emerald-50 rounded-[4px] px-1.5 py-0.5 uppercase tracking-tight">Verified</span>
                  </div>
                  <div className="relative py-3">
-                   <span className={`font-bold text-[1.02rem] tracking-tight ${step >= 4 ? 'text-gray-400' : 'text-gray-900'}`}>$1,847.00</span>
+                   <span className={`font-bold text-[16px] tracking-tight ${step >= 4 ? 'text-gray-400' : 'text-gray-900'}`}>$1,847.00</span>
                    {step >= 4 && (
                      <motion.div 
                        initial={{ width: 0 }} 
@@ -97,7 +96,7 @@ const ReconciliationSimulate: React.FC = () => {
                    <span className="text-xs font-bold text-gray-900 uppercase tracking-tight block">Actual Settlement Received</span>
                  </div>
                  <div className="py-3">
-                   <span className="font-bold text-[1.08rem] text-gray-900 tracking-tight">$1,412.00</span>
+                   <span className="font-bold text-[16px] text-gray-900 tracking-tight">$1,412.00</span>
                  </div>
               </motion.div>
             )}
@@ -114,7 +113,7 @@ const ReconciliationSimulate: React.FC = () => {
               >
                  <div className="flex justify-between items-end">
                    <span className="text-xs font-bold text-red-700 uppercase tracking-tight">Variance Detected</span>
-                   <span className="font-bold text-[1.08rem] text-red-600 tracking-tight">
+                   <span className="font-bold text-[16px] text-red-600 tracking-tight">
                      {ticker === 0 ? '-$0.00' : `-$${Math.abs(ticker)}.00`}
                    </span>
                  </div>
@@ -129,7 +128,7 @@ const ReconciliationSimulate: React.FC = () => {
 
         {/* Neural Terminal (Agent 11) */}
         <AnimatePresence>
-          {step >= 5 && (
+          {step >= 2 && (
             <motion.aside
               initial={{ opacity: 0, x: 14 }}
               animate={{ opacity: 1, x: 0 }}
@@ -140,10 +139,10 @@ const ReconciliationSimulate: React.FC = () => {
                 Terminal
               </div>
               <div className="space-y-1.5 font-mono text-[10px] uppercase tracking-tight text-emerald-600">
-                 <TerminalLine text="> Detecting variance..." delay={0} />
-                 <TerminalLine text="> Cross-referencing Settlement_ID: SET-9928-XJ..." delay={0.8} />
-                 <TerminalLine text="> Underpayment confirmed: $435.00" delay={1.8} />
-                 <TerminalLine text="> Initiating Appeal Protocol..." delay={2.6} />
+                 <TerminalLine text="> Detecting variance..." delay={0} visible={step >= 2} />
+                 <TerminalLine text="> Cross-referencing Settlement_ID: SET-9928-XJ..." delay={0.8} visible={step >= 3} />
+                 <TerminalLine text="> Underpayment confirmed: $435.00" delay={1.8} visible={step >= 4} />
+                 <TerminalLine text="> Initiating Appeal Protocol..." delay={2.6} visible={step >= 4} />
                  <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: [0, 1, 0] }}
@@ -160,10 +159,15 @@ const ReconciliationSimulate: React.FC = () => {
   );
 };
 
-const TerminalLine = ({ text, delay }: { text: string, delay: number }) => {
+const TerminalLine = ({ text, delay, visible }: { text: string; delay: number; visible: boolean }) => {
   const [visibleText, setVisibleText] = useState('');
   
   useEffect(() => {
+    if (!visible) {
+      setVisibleText('');
+      return;
+    }
+
     let timeout: NodeJS.Timeout;
     const startTimeout = setTimeout(() => {
       let i = 0;
@@ -178,7 +182,7 @@ const TerminalLine = ({ text, delay }: { text: string, delay: number }) => {
       clearTimeout(startTimeout);
       clearInterval(timeout);
     };
-  }, [text, delay]);
+  }, [text, delay, visible]);
 
   return <div>{visibleText}</div>;
 };
