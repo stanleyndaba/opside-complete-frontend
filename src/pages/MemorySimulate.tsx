@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Database, History, Zap, CheckCircle2, XCircle, Info, ShieldCheck } from 'lucide-react';
+import { Database, AlertCircle, CheckCircle2, Info } from 'lucide-react';
 
 const MemorySimulate: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -31,7 +31,7 @@ const MemorySimulate: React.FC = () => {
       title: "Underpayment Detected", 
       status: "alert", 
       detail: "Amazon reimbursed R840 instead of R1,247.",
-      icon: Zap,
+      icon: AlertCircle,
       color: "text-blue-500"
     },
     { 
@@ -51,49 +51,46 @@ const MemorySimulate: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 font-sans">
-      <div className="w-full max-w-3xl bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-3xl bg-white rounded-[4px] border border-gray-100 shadow-xl overflow-hidden">
         
         {/* Header: Neural Audit */}
-        <div className="p-8 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-              <Brain className="w-6 h-6 text-blue-400" />
-            </div>
             <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Operational Memory</h2>
-              <p className="text-xs text-slate-500 font-mono uppercase tracking-tight">Neural_Audit_Log // Case_9928</p>
+              <h2 className="text-xl font-bold text-gray-900 tracking-tight">Operational Memory</h2>
+              <p className="text-xs text-gray-500 font-mono uppercase tracking-tight">Neural Audit Log: Case 99288777</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-full">
+          <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-tight">Learning Active</span>
+            <span className="text-[10px] font-bold text-gray-600 uppercase tracking-tight">Learning Active</span>
           </div>
         </div>
 
         {/* Learning Feed */}
-        <div className="p-8 space-y-6">
-          <div className="text-sm text-slate-400 font-medium mb-4">
+        <div className="p-4 space-y-4">
+          <div className="text-sm text-gray-500 font-medium mb-2">
             This case taught Margin:
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             <AnimatePresence>
               {learningNodes.slice(0, activeStep).map((node, index) => (
                 <motion.div
                   key={node.title}
                   initial={{ opacity: 0, x: -20, scale: 0.95 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
-                  className="flex items-start gap-4 bg-slate-800/50 border border-slate-700/50 p-4 rounded-2xl hover:bg-slate-800 transition-colors"
+                  className="flex items-start gap-4 bg-gray-50 border border-gray-100 p-3 rounded-[4px] hover:bg-gray-100/50 transition-colors"
                 >
                   <div className={`mt-1 ${node.color}`}>
                     <node.icon className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-sm font-bold text-white">{node.title}</h3>
-                    <p className="text-xs text-slate-400 mt-1 leading-relaxed">{node.detail}</p>
+                    <h3 className="text-sm font-bold text-gray-900">{node.title}</h3>
+                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">{node.detail}</p>
                   </div>
-                  <div className="text-[10px] font-mono text-slate-600">
+                  <div className="text-[10px] font-mono text-gray-400">
                     {`0${index + 1}`}
                   </div>
                 </motion.div>
@@ -108,16 +105,13 @@ const MemorySimulate: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-8 bg-blue-500/5 border-t border-slate-800"
+              className="p-4 bg-gray-50/50 border-t border-gray-100"
             >
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
-                  <ShieldCheck className="w-5 h-5 text-blue-400" />
-                </div>
                 <div className="flex-1">
-                  <h4 className="text-sm font-bold text-blue-400 uppercase tracking-tight mb-2">Future Optimization</h4>
-                  <p className="text-sm text-slate-300 leading-relaxed italic">
-                    "Future similar claims should require **Quantity Explanation** before filing to ensure 100% recovery rate."
+                  <h4 className="text-sm font-bold text-gray-900 uppercase tracking-tight mb-2">Long-term performance tuning</h4>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    "Effective immediately, a Quantity Explanation is mandatory for all future claims of this type prior to filing to ensure complete reimbursement."
                   </p>
                 </div>
               </div>
@@ -126,20 +120,20 @@ const MemorySimulate: React.FC = () => {
         </AnimatePresence>
 
         {/* Footer: Infrastructure Stats */}
-        <div className="p-6 bg-slate-950/50 flex justify-between items-center border-t border-slate-800">
+        <div className="p-3 bg-white flex justify-between items-center border-t border-gray-100">
           <div className="flex gap-6">
             <div className="flex flex-col">
-              <span className="text-[10px] text-slate-600 uppercase font-bold">Data Points</span>
-              <span className="text-sm text-slate-300 font-mono">1,248</span>
+              <span className="text-[10px] text-gray-400 uppercase font-bold">Data Points</span>
+              <span className="text-sm text-gray-600 font-mono">1,248</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] text-slate-600 uppercase font-bold">Neural Sync</span>
-              <span className="text-sm text-slate-300 font-mono">99.9%</span>
+              <span className="text-[10px] text-gray-400 uppercase font-bold">Neural Sync</span>
+              <span className="text-sm text-gray-600 font-mono">99.9%</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-slate-500">
+          <div className="flex items-center gap-2 text-gray-500">
             <Database className="w-4 h-4" />
-            <span className="text-[10px] font-mono uppercase tracking-tight">Global_Memory_Bank</span>
+            <span className="text-[10px] font-mono uppercase tracking-tight">Global Memory</span>
           </div>
         </div>
 
