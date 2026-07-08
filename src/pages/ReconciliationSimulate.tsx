@@ -1,86 +1,84 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TrendingDown, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 const ReconciliationSimulate: React.FC = () => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setStep(2), 2000),
-      setTimeout(() => setStep(3), 4000),
-      setTimeout(() => setStep(4), 6000),
+      setTimeout(() => setStep(2), 2000), // Show Approval
+      setTimeout(() => setStep(3), 4000), // Show Actual Payout
+      setTimeout(() => setStep(4), 6000), // Show Variance & Alert
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4 font-sans">
-      <div className="w-full max-w-2xl max-h-[520px] flex flex-col bg-white rounded-[4px] shadow-xl border border-gray-100 overflow-hidden">
+      <div className="w-full max-w-2xl bg-white rounded-[4px] shadow-sm border border-gray-100 overflow-hidden">
         
         {/* Header */}
-        <div className="p-3 border-b border-gray-100 flex items-center justify-between shrink-0">
+        <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-gray-900 tracking-tight">Payout Reconciliation</h2>
-            <p className="text-[10px] text-gray-500 font-mono uppercase tracking-tight mt-0.5">Real-Time Revenue Tracking</p>
+            <h2 className="text-sm font-semibold text-gray-900 tracking-tight">Payout Reconciliation</h2>
+            <p className="text-[10px] text-gray-400 font-mono uppercase tracking-tight mt-1">Real-Time Revenue Tracking</p>
           </div>
-          <div className="bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
-            <span className="text-[10px] font-bold text-gray-600 uppercase tracking-tight">Audit Mode</span>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+            <span className="text-[10px] font-medium text-gray-400 uppercase tracking-tight">Audit Mode</span>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="p-3 flex-1 overflow-y-auto space-y-3">
+        <div className="px-8 py-8 space-y-8">
           
           {/* Step 1 & 2: Expected vs Approved */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-8">
             <motion.div 
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              className="bg-gray-50 p-4 rounded-[4px] border border-gray-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-col"
             >
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight mb-1">Expected Recovery</p>
-              <h3 className="text-2xl font-black text-gray-900">$1,847</h3>
+              <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Expected Recovery</p>
+              <h3 className="text-3xl font-medium text-gray-900 tracking-tight">$1,847</h3>
             </motion.div>
 
             <AnimatePresence>
               {step >= 2 && (
                 <motion.div 
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="bg-green-50 p-4 rounded-[4px] border border-green-100 relative overflow-hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col"
                 >
-                  <p className="text-[10px] font-bold text-green-600 uppercase tracking-tight mb-1">Amazon Approved</p>
-                  <h3 className="text-2xl font-black text-green-700">$1,847</h3>
-                  <CheckCircle2 className="absolute -bottom-1 -right-1 w-12 h-12 text-green-200 opacity-50" />
+                  <p className="text-[10px] font-medium text-emerald-500 uppercase tracking-tight mb-2">Amazon Approved</p>
+                  <h3 className="text-3xl font-medium text-emerald-600 tracking-tight">$1,847</h3>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
+          <div className="h-px bg-gray-50 w-full" />
+
           {/* Step 3: Actual Payout Received */}
           <AnimatePresence>
             {step >= 3 && (
               <motion.div 
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                className="bg-gray-50 p-4 rounded-[4px] border border-gray-100 flex items-center justify-between"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col"
               >
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight mb-1">Actual Payout Received</p>
-                  <h3 className="text-3xl font-black text-gray-900">$1,412</h3>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight mb-1">Settlement ID</p>
-                  <p className="text-xs font-mono text-gray-500">SET-9928-XJ</p>
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Actual Payout Received</p>
+                    <h3 className="text-4xl font-medium text-gray-900 tracking-tight">$1,412</h3>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-1">Settlement ID</p>
+                    <p className="text-[10px] font-mono text-gray-400">SET-9928-XJ</p>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -90,52 +88,40 @@ const ReconciliationSimulate: React.FC = () => {
           <AnimatePresence>
             {step >= 4 && (
               <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-red-50 border border-red-200 p-4 rounded-[4px]"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="pt-4"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-red-500 rounded-[4px] flex items-center justify-center">
-                      <TrendingDown className="w-4 h-4 text-white" />
-                    </div>
+                <div className="border border-red-100/50 bg-red-50/30 rounded-[4px] p-6">
+                  <div className="flex items-start justify-between mb-6">
                     <div>
-                      <h4 className="text-sm font-bold text-red-900">Variance Detected</h4>
-                      <p className="text-xs text-red-700">Underpaid — follow-up required</p>
+                      <h4 className="text-xs font-semibold text-red-900 uppercase tracking-tight mb-1">Variance Detected</h4>
+                      <p className="text-[11px] text-red-600/80">Underpaid — follow-up required</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-medium text-red-600 tracking-tight">-$435</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-black text-red-600">-$435</p>
-                  </div>
-                </div>
 
-                <div className="bg-white/50 rounded-[4px] p-3 border border-red-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 text-red-500" />
-                    <span className="text-xs font-medium text-red-900">Agent 11 is appealing the variance...</span>
-                  </div>
-                  <div className="flex gap-1">
-                    {[1, 2, 3].map(i => (
-                      <motion.div 
-                        key={i}
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-                        className="w-1.5 h-1.5 bg-red-500 rounded-full"
-                      />
-                    ))}
+                  <div className="flex items-center justify-between pt-4 border-t border-red-100/50">
+                    <span className="text-[11px] font-medium text-gray-500">Agent 11 is appealing the variance...</span>
+                    <div className="flex gap-1">
+                      {[1, 2, 3].map(i => (
+                        <motion.div 
+                          key={i}
+                          animate={{ opacity: [0.2, 1, 0.2] }}
+                          transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                          className="w-1.5 h-1.5 bg-red-400 rounded-full"
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-        </div>
-
-        {/* Footer */}
-        <div className="p-3 bg-white border-t border-gray-100 text-center shrink-0">
-          <p className="text-xs text-gray-500 font-medium">
-            "Amazon approval is not the same as money received. Margin tracks the case until the recovery is actually reconciled."
-          </p>
         </div>
 
       </div>
