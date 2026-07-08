@@ -35,6 +35,7 @@ const loadGoogleTagManager = () => {
 export function CookieConsent() {
     const [isVisible, setIsVisible] = useState(false);
     const [view, setView] = useState<'banner' | 'settings'>('banner');
+    const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const [preferences, setPreferences] = useState<CookiePreferences>({
         analytics: false,
         marketing: false,
@@ -58,6 +59,31 @@ export function CookieConsent() {
         if (!stored) {
             setTimeout(() => setIsVisible(true), 1000);
         }
+    }, []);
+
+    useEffect(() => {
+        const updateSurfaceTone = () => {
+            if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+            const probeY = Math.max(window.innerHeight - 120, 24);
+            const darkSections = Array.from(document.querySelectorAll<HTMLElement>('[data-navbar-theme="dark"]'));
+
+            setIsOverDarkSurface(
+                darkSections.some((section) => {
+                    const rect = section.getBoundingClientRect();
+                    return rect.top <= probeY && rect.bottom >= probeY;
+                })
+            );
+        };
+
+        updateSurfaceTone();
+        window.addEventListener('scroll', updateSurfaceTone, { passive: true });
+        window.addEventListener('resize', updateSurfaceTone);
+
+        return () => {
+            window.removeEventListener('scroll', updateSurfaceTone);
+            window.removeEventListener('resize', updateSurfaceTone);
+        };
     }, []);
 
     const handleAgreeAll = () => {
@@ -101,7 +127,12 @@ export function CookieConsent() {
                     <div className="container mx-auto px-4 py-4 md:px-6 md:py-8">
                         <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
                             <div className="flex-1 space-y-2 md:space-y-3">
-                                <h3 className="font-sans text-xl font-light tracking-tight text-[#182026] md:text-3xl">Cookie Preferences</h3>
+                                <h3 className={cn(
+                                    "font-sans text-xl font-light tracking-tight md:text-3xl",
+                                    isOverDarkSurface ? "text-white/78" : "text-[#182026]"
+                                )}>
+                                    Cookie Preferences
+                                </h3>
                                 <p className="max-w-2xl font-sans text-[12px] font-light leading-6 tracking-tight text-[#66737F] md:text-sm md:leading-relaxed">
                                     This website uses cookies that provide necessary site functionality and improve your online experience. By continuing to use this website, you agree to the use of cookies. Our Privacy Policy provides more information about what cookies we use and how you can change them.
                                 </p>
