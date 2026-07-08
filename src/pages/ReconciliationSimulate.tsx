@@ -18,7 +18,7 @@ const ReconciliationSimulate: React.FC = () => {
       <div className="w-full max-w-2xl bg-white rounded-[4px] shadow-sm border border-gray-100 overflow-hidden">
         
         {/* Header */}
-        <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
+        <div className="p-4 border-b border-gray-50 flex items-center justify-between">
           <div>
             <h2 className="text-sm font-semibold text-gray-900 tracking-tight">Payout Reconciliation</h2>
             <p className="text-[10px] text-gray-400 font-mono uppercase tracking-tight mt-1">Real-Time Revenue Tracking</p>
@@ -30,10 +30,10 @@ const ReconciliationSimulate: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="px-8 py-8 space-y-8">
+        <div className="p-4 space-y-4">
           
           {/* Step 1 & 2: Expected vs Approved */}
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-4">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -41,7 +41,7 @@ const ReconciliationSimulate: React.FC = () => {
               className="flex flex-col"
             >
               <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Expected Recovery</p>
-              <h3 className="text-3xl font-medium text-gray-900 tracking-tight">$1,847</h3>
+              <h3 className="text-xl font-medium text-gray-900 tracking-tight">$1,847</h3>
             </motion.div>
 
             <AnimatePresence>
@@ -53,7 +53,7 @@ const ReconciliationSimulate: React.FC = () => {
                   className="flex flex-col"
                 >
                   <p className="text-[10px] font-medium text-emerald-500 uppercase tracking-tight mb-2">Amazon Approved</p>
-                  <h3 className="text-3xl font-medium text-emerald-600 tracking-tight">$1,847</h3>
+                  <h3 className="text-xl font-medium text-emerald-600 tracking-tight">$1,847</h3>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -73,7 +73,7 @@ const ReconciliationSimulate: React.FC = () => {
                 <div className="flex items-end justify-between">
                   <div>
                     <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Actual Payout Received</p>
-                    <h3 className="text-4xl font-medium text-gray-900 tracking-tight">$1,412</h3>
+                    <h3 className="text-2xl font-medium text-gray-900 tracking-tight">$1,412</h3>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-1">Settlement ID</p>
@@ -93,14 +93,14 @@ const ReconciliationSimulate: React.FC = () => {
                 transition={{ duration: 0.5 }}
                 className="pt-4"
               >
-                <div className="border border-red-100/50 bg-red-50/30 rounded-[4px] p-6">
-                  <div className="flex items-start justify-between mb-6">
+                <div className="border border-red-100/50 bg-red-50/30 rounded-[4px] p-4">
+                  <div className="flex items-start justify-between mb-4">
                     <div>
                       <h4 className="text-xs font-semibold text-red-900 uppercase tracking-tight mb-1">Variance Detected</h4>
                       <p className="text-[11px] text-red-600/80">Underpaid — follow-up required</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-medium text-red-600 tracking-tight">-$435</p>
+                      <p className="text-lg font-medium text-red-600 tracking-tight">-$435</p>
                     </div>
                   </div>
 
