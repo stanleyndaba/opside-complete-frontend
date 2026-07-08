@@ -1,14 +1,44 @@
 'use client';
 
-import { AnimatedStatement } from './animated-statement';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+
+const firstLine = 'Amazon approval is not the same as money received.';
+const secondLine = 'Margin tracks the case until the recovery is actually reconciled.';
 
 export default function LearningRecovery() {
+  const [showSecondLine, setShowSecondLine] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowSecondLine(true), 1700);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
-    <AnimatedStatement
-      lines={[
-        { text: 'Margin does not blindly fire claims. The seller stays in control.' },
-        { text: 'Incompetent disputes are held until the evidence is strong enough.', strong: true },
-      ]}
-    />
+    <main className="flex min-h-screen items-center justify-center bg-white p-6 font-sans text-[#242424]">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center text-3xl leading-[1.15] text-[#242424] sm:text-4xl md:text-5xl">
+        <motion.p
+          initial={{ opacity: 0, x: -42, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="font-medium"
+        >
+          {firstLine}
+        </motion.p>
+
+        {showSecondLine ? (
+          <motion.p
+            initial={{ opacity: 0, x: 42, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            className="font-bold"
+          >
+            {secondLine}
+          </motion.p>
+        ) : (
+          <div className="h-[1.15em]" aria-hidden="true" />
+        )}
+      </div>
+    </main>
   );
 }
