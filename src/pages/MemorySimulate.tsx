@@ -97,27 +97,27 @@ const MemorySimulate: React.FC = () => {
               ))}
             </AnimatePresence>
           </div>
-        </div>
 
-        {/* Future Optimization: The "Unfair Advantage" */}
-        <AnimatePresence>
-          {activeStep === learningNodes.length && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-3 bg-gray-50/50 border-t border-gray-100 shrink-0"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-1">
-                  <h4 className="text-xs font-bold text-gray-900 uppercase tracking-tight mb-1">Long-term performance tuning</h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    "Effective immediately, a Quantity Explanation is mandatory for all future claims of this type prior to filing to ensure complete reimbursement."
-                  </p>
+          {/* Future Optimization: The "Unfair Advantage" */}
+          <AnimatePresence>
+            {activeStep === learningNodes.length && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-3 p-3 bg-gray-50/50 border border-gray-100 rounded-[4px]"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-1">
+                    <h4 className="text-xs font-bold text-gray-900 uppercase tracking-tight mb-1">Long-term performance tuning</h4>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      "Effective immediately, a Quantity Explanation is mandatory for all future claims of this type prior to filing to ensure complete reimbursement."
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Footer: Infrastructure Stats */}
         <div className="p-3 bg-white flex justify-between items-center border-t border-gray-100 shrink-0">
