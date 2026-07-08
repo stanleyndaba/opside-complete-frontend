@@ -17,30 +17,30 @@ const WORKFLOW: WorkflowEvent[] = [
   {
     id: 'rejection',
     owner: 'amazon',
-    label: 'Amazon Support: Case Rejected',
-    body: 'Insufficient evidence of delivery.',
+    label: 'Amazon Support: Please provide proof of delivery and invoice.',
+    body: 'Case paused until the missing support is returned.',
     delay: 500,
   },
   {
     id: 'analysis',
     owner: 'margin',
-    label: 'Margin: Rejection Pattern Analysis',
-    steps: ['Parsing denial language', 'Mapping rejection to recovery rule set', 'Identifying missing proof threshold'],
+    label: 'Margin: Response Review',
+    steps: ['POD already linked', 'Invoice already linked', 'Quantity variance explanation added'],
     delay: 2100,
   },
   {
     id: 'protocol',
     owner: 'margin',
-    label: 'Margin: Executing Second Strike Protocol',
-    steps: ['Binding carrier metadata', 'Applying digital signature', 'Rebuilding evidence order for review'],
+    label: 'Margin: Evidence Pack Updated',
+    steps: ['Evidence pack updated', 'Response ready', 'Supporting records re-checked against the case'],
     delay: 4000,
     emphasis: 'hero',
   },
   {
     id: 'resubmission',
     owner: 'margin',
-    label: 'Margin: Case Resubmitted',
-    steps: ['Evidence packet locked', 'Case response advanced', 'Seller balance recovery tracked'],
+    label: 'Margin: Resubmission Sent',
+    steps: ['Boilerplate request answered', 'Reply routed back to Amazon', 'Support fatigue avoided'],
     delay: 6100,
   },
   {
@@ -286,7 +286,7 @@ export default function RejectionLoop() {
         {/* ── Header with buzzing icons ── */}
         <header className="relative flex items-center justify-between border-b border-[#EAECF0] px-6 py-3 sm:px-8 sm:py-4">
           <div>
-            <h1 className="text-base font-semibold tracking-tight text-[#1A1D23]">Amazon Response Handling</h1>
+            <h1 className="text-base font-semibold tracking-tight text-[#1A1D23]">Amazon Pushback Loop</h1>
             <p className="mt-0.5 text-sm text-[#8B95A5]">Analyzing responses and advancing the case</p>
           </div>
 
