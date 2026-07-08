@@ -1,77 +1,46 @@
-import { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+'use client';
 
-type StatementStage = 'idle' | 'first' | 'second' | 'done';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
-const StatementSimulate = () => {
-  const [stage, setStage] = useState<StatementStage>('idle');
+const firstLine = 'Margin recovers from Amazon policy changes';
+const secondLine = 'in real-time';
+
+export default function StatementSimulate() {
+  const [showSecondLine, setShowSecondLine] = useState(false);
 
   useEffect(() => {
-    const timers = [
-      window.setTimeout(() => setStage('first'), 700),
-      window.setTimeout(() => setStage('second'), 3100),
-      window.setTimeout(() => setStage('done'), 5600),
-    ];
-
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
+    const timer = window.setTimeout(() => setShowSecondLine(true), 1700);
+    return () => window.clearTimeout(timer);
   }, []);
 
-  const isActive = stage === 'first' || stage === 'second';
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white font-sans p-12">
-      <div className="max-w-3xl text-center">
-        <AnimatePresence mode="wait">
-          {stage === 'first' && (
-            <motion.h1
-              key="policy-changes"
-              initial={{ opacity: 0, filter: 'blur(20px)', y: 18, scale: 0.96 }}
-              animate={{ opacity: 1, filter: 'blur(0px)', y: 0, scale: 1 }}
-              exit={{ opacity: 0, filter: 'blur(18px)', y: -18, scale: 0.98 }}
-              transition={{
-                duration: 1.1,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="text-4xl md:text-5xl font-black text-gray-900 leading-tight"
-            >
-              Adapting from Amazon policy changes
-            </motion.h1>
-          )}
-
-          {stage === 'second' && (
-            <motion.h1
-              key="real-time"
-              initial={{ opacity: 0, filter: 'blur(20px)', y: 18, scale: 0.96 }}
-              animate={{ opacity: 1, filter: 'blur(0px)', y: 0, scale: 1 }}
-              exit={{ opacity: 0, filter: 'blur(18px)', y: -18, scale: 0.98 }}
-              transition={{
-                duration: 1.1,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="text-4xl md:text-5xl font-black text-gray-900 leading-tight"
-            >
-              in{' '}
-              <span className="text-[#007AFF] underline decoration-[#007AFF] decoration-2 underline-offset-[6px]">
-                real-time
-              </span>
-            </motion.h1>
-          )}
-        </AnimatePresence>
-
-        {/* The "Pause" Indicator (Subtle) */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isActive ? { opacity: 0.2 } : { opacity: 0 }}
-          transition={{ delay: isActive ? 1.4 : 0, duration: 0.5 }}
-          className="mt-12 flex justify-center gap-1"
+    <main className="flex min-h-screen items-center justify-center bg-white p-6 font-sans text-[#242424]">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center text-3xl leading-[1.15] text-[#242424] sm:text-4xl md:text-5xl">
+        <motion.p
+          initial={{ opacity: 0, x: -42, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="font-medium"
         >
-          <div className="w-1 h-1 bg-gray-900 rounded-full animate-bounce" />
-          <div className="w-1 h-1 bg-gray-900 rounded-full animate-bounce [animation-delay:0.2s]" />
-          <div className="w-1 h-1 bg-gray-900 rounded-full animate-bounce [animation-delay:0.4s]" />
-        </motion.div>
-      </div>
-    </div>
-  );
-};
+          {firstLine}
+        </motion.p>
 
-export default StatementSimulate;
+        {showSecondLine ? (
+          <motion.p
+            initial={{ opacity: 0, x: 42, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            className="font-bold"
+          >
+            <span className="text-[#007AFF] underline decoration-[#007AFF] decoration-2 underline-offset-[6px]">
+              {secondLine}
+            </span>
+          </motion.p>
+        ) : (
+          <div className="h-[1.15em]" aria-hidden="true" />
+        )}
+      </div>
+    </main>
+  );
+}
