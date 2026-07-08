@@ -41,7 +41,7 @@ const ReconciliationSimulate: React.FC = () => {
               className="flex flex-col"
             >
               <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Expected Recovery</p>
-              <h3 className="text-xl font-medium text-gray-900 tracking-tight">$1,847</h3>
+              <h3 className="text-lg font-bold text-gray-900 tracking-tight">$1,847</h3>
             </motion.div>
 
             <AnimatePresence>
@@ -53,7 +53,7 @@ const ReconciliationSimulate: React.FC = () => {
                   className="flex flex-col"
                 >
                   <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Amazon Approved</p>
-                  <h3 className="text-xl font-medium text-emerald-600 tracking-tight">$1,847</h3>
+                  <h3 className="text-lg font-bold text-emerald-600 tracking-tight">$1,847</h3>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -73,7 +73,7 @@ const ReconciliationSimulate: React.FC = () => {
                 <div className="flex items-end justify-between">
                   <div>
                     <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Actual Payout Received</p>
-                    <h3 className="text-2xl font-medium text-gray-900 tracking-tight">$1,412</h3>
+                    <h3 className="text-xl font-bold text-gray-900 tracking-tight">$1,412</h3>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-1">Settlement ID</p>
@@ -100,7 +100,7 @@ const ReconciliationSimulate: React.FC = () => {
                       <p className="text-[11px] text-red-600/80">Underpaid — follow-up required</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-medium text-red-600 tracking-tight">-$435</p>
+                      <p className="text-base font-bold text-red-600 tracking-tight">-$435</p>
                     </div>
                   </div>
 
