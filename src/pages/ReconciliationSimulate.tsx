@@ -52,7 +52,7 @@ const ReconciliationSimulate: React.FC = () => {
                   transition={{ duration: 0.5 }}
                   className="flex flex-col"
                 >
-                  <p className="text-[10px] font-medium text-emerald-500 uppercase tracking-tight mb-2">Amazon Approved</p>
+                  <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tight mb-2">Amazon Approved</p>
                   <h3 className="text-xl font-medium text-emerald-600 tracking-tight">$1,847</h3>
                 </motion.div>
               )}
