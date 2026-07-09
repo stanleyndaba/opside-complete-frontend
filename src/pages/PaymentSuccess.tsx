@@ -90,39 +90,36 @@ export default function PaymentSuccess() {
   });
 
   return (
-    <PageLayout title={isEarlyAccess ? 'Founding 500 Reservation Confirmed' : 'Payment Submitted'} noPadding hideNavbar hideSidebar hideLogo midnight>
-      <div className="min-h-screen bg-[#060606] text-white">
-        <PublicNavbar />
+    <PageLayout title={isEarlyAccess ? 'Founding 500 Reservation Confirmed' : 'Payment Submitted'} noPadding hideNavbar hideSidebar hideLogo plainBackground>
+      <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+        <PublicNavbar variant="light" />
         <main className="relative overflow-hidden pt-32 md:pt-40">
-          <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
-          }} />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.08),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.025)_0%,rgba(6,6,6,1)_48%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
 
-          <section className="relative mx-auto flex min-h-[calc(100vh-220px)] max-w-4xl flex-col items-center justify-center px-6 pb-24 text-center">
-            <Badge variant="outline" className="mb-6 border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+          <section className="relative mx-auto flex min-h-[calc(100vh-220px)] max-w-5xl flex-col items-center justify-center px-6 pb-24 text-center">
+            <Badge variant="outline" className="mb-5 border-[#DCE8EE] bg-white text-[10px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">
               {badgeLabel}
             </Badge>
-            <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/20 bg-emerald-400/10 text-emerald-200">
+            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#E4EDF1] bg-white text-[#2E7D5B] shadow-[0_12px_30px_rgba(37,49,58,0.08)]">
               <CheckCircle2 className="h-6 w-6" strokeWidth={1.8} />
             </div>
-            <h1 className="max-w-3xl text-4xl font-light leading-tight tracking-tight text-white md:text-6xl">
+            <h1 className="max-w-3xl text-4xl font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] md:text-6xl">
               {heading}
             </h1>
-            <p className="mt-6 max-w-2xl text-sm leading-7 tracking-tight text-white/48 md:text-base">
+            <p className="mt-5 max-w-2xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
               {body}
             </p>
 
-            <div className="mt-10 grid w-full max-w-2xl grid-cols-1 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] text-left md:grid-cols-3">
+            <div className="mt-10 grid w-full max-w-3xl grid-cols-1 overflow-hidden rounded-[24px] border border-[#DCE8EE] bg-white text-left shadow-[0_24px_80px_rgba(37,49,58,0.08)] md:grid-cols-3">
               {[
                 ['Payment path', `Processed by ${isPayPal ? 'PayPal' : 'Yoco'}`],
                 [nextStepLabel, nextStepValue],
                 ['Status', isEarlyAccess ? 'Seat secured' : referenceValue],
               ].map(([label, value]) => (
-                <div key={label} className="border-b border-white/10 p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{label}</div>
-                  <div className="mt-3 text-sm font-semibold leading-6 text-white/82">{value}</div>
+                <div key={label} className="border-b border-[#E4EDF1] p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A98A3]">{label}</div>
+                  <div className="mt-3 text-sm font-semibold leading-6 text-[#182026]">{value}</div>
                 </div>
               ))}
             </div>
@@ -132,7 +129,7 @@ export default function PaymentSuccess() {
                 onClick={() => {
                   navigate(isEarlyAccess ? '/founding-500/status' : returnPath);
                 }}
-                className="h-12 rounded-xl bg-white px-6 text-sm font-sans font-semibold text-black hover:bg-white/90"
+                className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
               >
                 {primaryButtonLabel}
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -140,15 +137,15 @@ export default function PaymentSuccess() {
               <Button
                 asChild
                 variant="outline"
-                className="h-12 rounded-xl border-white/10 bg-transparent px-6 text-sm font-sans font-semibold text-white hover:bg-white/[0.05]"
+                className="h-12 rounded-full border-[#DCE8EE] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F3F6F8]"
               >
                 <Link to={secondaryHref}>{secondaryLabel}</Link>
               </Button>
             </div>
 
-            <div className="mt-10 flex max-w-2xl items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.025] p-5 text-left">
-              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-white/42" strokeWidth={1.8} />
-              <p className="text-xs leading-6 text-white/42">
+            <div className="mt-10 flex max-w-2xl items-start gap-3 rounded-2xl border border-[#DCE8EE] bg-white p-5 text-left shadow-[0_16px_48px_rgba(37,49,58,0.05)]">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#2E7D5B]" strokeWidth={1.8} />
+              <p className="text-xs leading-6 text-[#66737F]">
                 {infoCopy}
                 {isEarlyAccess ? ' Priority onboarding is included. Activation begins after onboarding readiness is confirmed.' : ''}
               </p>
