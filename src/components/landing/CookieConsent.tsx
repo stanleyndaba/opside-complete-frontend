@@ -127,12 +127,6 @@ export function CookieConsent() {
                     <div className="container mx-auto px-4 py-4 md:px-6 md:py-8">
                         <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
                             <div className="flex-1 space-y-2 md:space-y-3">
-                                <h3 className={cn(
-                                    "font-sans text-xl font-light tracking-tight md:text-3xl",
-                                    isOverDarkSurface ? "text-white/78" : "text-[#182026]"
-                                )}>
-                                    Cookie Preferences
-                                </h3>
                                 <p className="max-w-2xl font-sans text-[12px] font-light leading-6 tracking-tight text-[#66737F] md:text-sm md:leading-relaxed">
                                     This website uses cookies that provide necessary site functionality and improve your online experience. By continuing to use this website, you agree to the use of cookies. Our Privacy Policy provides more information about what cookies we use and how you can change them.
                                 </p>
@@ -157,8 +151,7 @@ export function CookieConsent() {
                 {/* Settings View */}
                 {view === 'settings' && (
                     <div className="container mx-auto max-h-[82vh] overflow-y-auto px-4 py-5 animate-in slide-in-from-bottom duration-300 md:px-6 md:py-8">
-                        <div className="mb-5 flex items-center justify-between md:mb-8">
-                            <h3 className="font-sans text-xl font-light tracking-tight text-[#182026] md:text-2xl">Cookie Settings</h3>
+                        <div className="mb-5 flex items-center justify-end md:mb-8">
                             <button
                                 onClick={() => setView('banner')}
                                 className="text-[#8A98A3] transition-colors hover:text-[#182026]"
