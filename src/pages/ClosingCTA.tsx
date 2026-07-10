@@ -2,6 +2,7 @@ import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } fro
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
+const PAYMENT_URL = 'https://paystack.shop/pay/margin-early-access';
 
 const reveal = {
   hidden: { opacity: 0, y: 10, filter: 'blur(14px)' },
@@ -46,6 +47,9 @@ const MagneticButton = () => {
       }}
       whileHover={reduceMotion ? undefined : { scale: 1.025 }}
       whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+      onClick={() => {
+        window.location.href = PAYMENT_URL;
+      }}
     >
       <motion.span
         aria-hidden="true"
@@ -54,7 +58,7 @@ const MagneticButton = () => {
         transition={{ duration: 1.05, repeat: Infinity, repeatDelay: 2.95, ease: 'easeInOut' }}
       />
       <span className="relative z-10 inline-flex items-center leading-none">
-        <span>CLAIM ACCESS</span>
+        <span>GET EARLY ACCESS</span>
         <ArrowRight className="ml-2 h-4 w-4" />
       </span>
     </motion.button>
