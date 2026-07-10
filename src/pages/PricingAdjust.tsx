@@ -37,7 +37,7 @@ type SelectablePlan = 'starter' | 'pro' | 'enterprise';
 
 const pricingTiers: PricingTier[] = [
   {
-    name: 'Founding 500 (Early Access)',
+    name: 'Early Access',
     planKey: 'starter',
     price: '$99',
     priceContext: 'One-time payment. 0% commission through Dec 31, 2026.',
@@ -78,7 +78,7 @@ const pricingTiers: PricingTier[] = [
       'Lower 3% success fee',
       'Priority case processing & filing',
       'Up to 3 marketplaces supported',
-      'Founding 500 members can apply their $99 credit',
+      'Early Access members can apply their $99 credit',
       'Priority email & chat support',
     ],
     ctaLabel: 'Upgrade to Pro',
@@ -94,7 +94,7 @@ const pricingTiers: PricingTier[] = [
     features: [
       '0% commission on recovered funds',
       'Unlimited global marketplace support',
-      'Founding 500 members can apply their $99 credit',
+      'Early Access members can apply their $99 credit',
       'Highest priority processing & 24/7 dedicated support',
       'Advanced analytics & API access',
     ],
@@ -136,9 +136,10 @@ export default function PricingAdjust() {
     }
 
     trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
-      offer: 'founding_500',
-      value: 99,
-      currency: 'USD',
+      offer: 'early_access',
+      value: 1799,
+      currency: 'ZAR',
+      payment_provider: 'paystack_payment_page',
     });
     window.location.assign(checkoutUrl);
   }, []);
@@ -323,11 +324,11 @@ export default function PricingAdjust() {
           <div className="mt-auto flex flex-col gap-4">
             <Button
               onClick={() => {
-                trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
-                  location: 'pricing_founding_500',
-                  cta_text: tier.ctaLabel || `Start ${tier.name} Coverage`,
-                  offer: 'founding_500',
-                });
+              trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
+                location: 'pricing_early_access',
+                cta_text: tier.ctaLabel || `Start ${tier.name} Coverage`,
+                offer: 'early_access',
+              });
                 if (tier.checkoutUrl) {
                   openPaymentCheckout(tier.checkoutUrl);
                   return;
@@ -415,10 +416,10 @@ export default function PricingAdjust() {
                 Finding what Amazon owes you was never the hard part.
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
-                Founding 500 locks founder pricing through 2026 with 0% commission, priority activation, and founder onboarding included. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
+                Early Access locks introductory pricing through 2026 with 0% commission, priority activation, and onboarding included. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
               </p>
               <p className="mx-auto max-w-2xl text-[13px] font-semibold leading-6 text-[#182026] md:text-[15px]">
-                Founding 500 Early Access is now open. Performance, Pro, and Scale plans will become available after the Early Access launch.
+                Early Access is now open. Performance, Pro, and Scale plans will become available after the Early Access launch.
               </p>
             </div>
           </motion.div>

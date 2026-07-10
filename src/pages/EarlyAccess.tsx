@@ -16,11 +16,11 @@ import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 
 /* ── constants ─────────────────────────────────────────────────── */
-const EARLY_ACCESS_CHECKOUT_URL = 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56';
+const EARLY_ACCESS_CHECKOUT_URL = 'https://paystack.shop/pay/margin-early-access';
 const EARLY_ACCESS_PRICE = '$99';
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
-const EARLY_ACCESS_PAYMENT_SUCCESS_PATH = '/payment/success?source=paypal&kind=early_access&offer=Founding%20500&price=%2499';
+const EARLY_ACCESS_PAYMENT_SUCCESS_PATH = '/payment/success?source=paystack_payment_page&kind=early_access&offer=Early%20Access&price=%2499';
 
 const getEarlyAccessSuccessUrl = () => {
   if (typeof window === 'undefined') {
@@ -38,8 +38,8 @@ const rememberEarlyAccessCheckout = () => {
   const successUrl = getEarlyAccessSuccessUrl();
   window.localStorage.setItem('margin_pending_checkout', JSON.stringify({
     kind: 'early_access',
-    source: 'paypal',
-    offer: 'Founding 500',
+    source: 'paystack_payment_page',
+    offer: 'Early Access',
     price: EARLY_ACCESS_PRICE,
     returnPath: '/early-access',
     successUrl,
@@ -47,9 +47,10 @@ const rememberEarlyAccessCheckout = () => {
   }));
 
   trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
-    offer: 'founding_500',
-    value: 99,
-    currency: 'USD',
+    offer: 'early_access',
+    value: 1799,
+    currency: 'ZAR',
+    payment_provider: 'paystack_payment_page',
   });
 };
 
@@ -58,7 +59,7 @@ const timelineSteps = [
   {
     num: '01',
     label: 'Reserve',
-    title: 'Reserve your Founding 500 seat.',
+    title: 'Reserve your Early Access seat.',
     detail:
       'Your reservation locks founder pricing and priority activation. Margin prepares infrastructure and onboarding readiness before platform access begins.',
   },
@@ -119,19 +120,19 @@ function FounderPassCTA({ subtext, location }: { subtext?: React.ReactNode; loca
           onClick={() => {
             trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
               location,
-              cta_text: 'Reserve Founding Seat',
-              offer: 'founding_500',
+              cta_text: 'Get Early Access',
+              offer: 'early_access',
             });
             rememberEarlyAccessCheckout();
           }}
         >
-          Reserve Founding Seat
+          Get Early Access
           <ArrowRight className="ml-2 h-5 w-5" />
         </a>
       </Button>
       <div className="mt-4 text-center">
         <p className="text-[13px] font-medium leading-5 text-[#4D5B66]">
-          {subtext || 'Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.'}
+          {subtext || 'Introductory pricing locked through December 31, 2026. Priority activation and onboarding are included.'}
         </p>
         <p className="mt-1 text-[13px] font-medium leading-5 text-[#4D5B66]">
           <span className="font-semibold text-[#0B74DE]">E2E Recovery Commitment. No recovery left behind.</span>
@@ -229,15 +230,15 @@ export default function EarlyAccess() {
               className="flex flex-col items-center text-center"
             >
               <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#0B74DE] opacity-90">
-                Founding 500: Batch 01 Open
+                Early Access: Batch 01 Open
               </div>
 
               <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
-                Join the Founding 500.
+                Join Early Access.
               </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited. Founding 500 closes July 30, 2026 or when 500 slots are filled.
+                {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited. Early Access closes July 30, 2026 or when 500 slots are filled.
               </p>
 
               <div className="mt-10 w-full">
@@ -300,7 +301,7 @@ export default function EarlyAccess() {
                 One path. Three milestones.
               </h2>
               <p className="mx-auto mt-5 max-w-[620px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                No decision fatigue. Start with Founding Access, then upgrade only when your recovery volume justifies it.
+                No decision fatigue. Start with Early Access, then upgrade only when your recovery volume justifies it.
               </p>
             </motion.div>
 
@@ -369,10 +370,10 @@ export default function EarlyAccess() {
             >
               <div className="text-center">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
-                  Founding 500
+                  Early Access
                 </div>
                 <h2 className="mt-5 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[66px]">
-                  Secure Your Founding Member Slot.
+                  Secure Your Early Access Slot.
                 </h2>
                 <p className="mx-auto mt-5 max-w-[640px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
                   {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. No monthly fees during Early Access, no automatic renewal, and your $99 is credited if you upgrade to Pro or Scale before the period ends.
@@ -409,13 +410,13 @@ export default function EarlyAccess() {
                     onClick={() => {
                       trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
                         location: 'early_access_page',
-                        cta_text: 'Reserve Founding Seat',
-                        offer: 'founding_500',
+                        cta_text: 'Get Early Access',
+                        offer: 'early_access',
                       });
                       rememberEarlyAccessCheckout();
                     }}
                   >
-                    Reserve Founding Seat
+                    Get Early Access
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
@@ -428,7 +429,7 @@ export default function EarlyAccess() {
                   </p>
                 </div>
                 <div className="mt-4 text-[13px] font-medium text-[#4D5B66]">
-                  One payment. {EARLY_ACCESS_PRICE} one-time. Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.
+                  One payment. {EARLY_ACCESS_PRICE} one-time. Introductory pricing locked through December 31, 2026. Priority activation and onboarding are included.
                 </div>
                 <p className="mt-4 max-w-[500px] text-[11px] leading-4 text-[#8A98A3]">
                   After 2026, the service ends unless you choose a Performance, Pro, or Scale plan for 2027.
