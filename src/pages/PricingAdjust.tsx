@@ -48,8 +48,8 @@ const pricingTiers: PricingTier[] = [
       '$99 credited if you upgrade to Pro or Scale',
       'Limited to 500 slots; closes July 30, 2026 or when filled',
     ],
-    ctaLabel: 'Reserve Founding Seat',
-    checkoutUrl: 'https://www.paypal.com/ncp/payment/P4XPE6PAPWT56',
+    ctaLabel: 'Get Early Access',
+    checkoutUrl: 'https://paystack.shop/pay/margin-early-access',
   },
   {
     name: 'Performance',
