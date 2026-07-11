@@ -501,24 +501,16 @@ function KineticHeroSection({
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 grid w-full max-w-[700px] grid-cols-1 gap-3 sm:mt-10 min-[680px]:grid-cols-[1.18fr_1fr]"
+            className="mt-8 flex w-full sm:w-auto sm:mt-10"
           >
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Secure Early Access"
-              className="group relative h-[52px] justify-center overflow-hidden rounded-full bg-[#0B74DE] px-7 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
+              aria-label="Join Early Access"
+              className="group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              Secure Early Access
+              Join Early Access
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={onPrimaryCta}
-              aria-label="See Evidence Workflow"
-              className="h-[52px] justify-center rounded-full border border-white/20 bg-white/[0.04] px-7 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-white/[0.08]"
-            >
-              See Evidence Workflow
             </Button>
           </motion.div>
 
