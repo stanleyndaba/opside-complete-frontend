@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 interface MatchHighlight {
   id: string;
@@ -69,33 +69,62 @@ function MetadataHighlight({
 }
 
 function MatchAnalysisViz() {
-  const [resolved, setResolved] = useState(false);
+  const [activeMatches, setActiveMatches] = useState<Set<string>>(new Set());
+  const [buttonReady, setButtonReady] = useState(false);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => setResolved(true), 1600);
-    return () => window.clearTimeout(timeout);
+    const highlightSequence = [
+      ['r-gap', 520],
+      ['r-summary', 940],
+      ['r-found', 1480],
+      ['r-ship-id', 1960],
+      ['r-received', 2340],
+      ['r-shipped', 2720],
+      ['r-action', 3160],
+      ['r-ont8', 3540],
+      ['r-record', 3920],
+      ['r-sp-api', 4340],
+      ['r-sync', 4760],
+      ['r-candidate', 5140],
+      ['r-deadline', 5520],
+      ['r-case-link', 5900],
+    ] as const;
+
+    const timeouts = highlightSequence.map(([id, delay]) =>
+      window.setTimeout(() => {
+        setActiveMatches((previous) => new Set(previous).add(id));
+      }, delay)
+    );
+    const buttonTimeout = window.setTimeout(() => setButtonReady(true), 6350);
+
+    return () => {
+      timeouts.forEach((timeout) => window.clearTimeout(timeout));
+      window.clearTimeout(buttonTimeout);
+    };
   }, []);
+
+  const isActive = (id: string) => activeMatches.has(id);
 
   return (
     <div className="flex h-full flex-col">
       <div className="space-y-4 text-[13px] leading-7 text-gray-500">
         <p>
           Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
-          <MetadataHighlight active={resolved} tone="yellow">60 shipped, 46 received</MetadataHighlight>{' '}
+          <MetadataHighlight active={isActive('r-summary')} tone="yellow">60 shipped, 46 received</MetadataHighlight>{' '}
           with a{' '}
-          <MetadataHighlight active={resolved} tone="yellow">14-unit gap at ONT8</MetadataHighlight>
+          <MetadataHighlight active={isActive('r-gap')} tone="yellow">14-unit gap at ONT8</MetadataHighlight>
           .
         </p>
 
         <p>
           Inbound discrepancy details are being matched to the evidence trail.{' '}
-          <MetadataHighlight active={resolved} tone="yellow">What Margin found</MetadataHighlight>{' '}
+          <MetadataHighlight active={isActive('r-found')} tone="yellow">What Margin found</MetadataHighlight>{' '}
           confirms the claim path.
         </p>
 
         <p>
           Current filing movement is ready to file when filing gates allow it.{' '}
-          <MetadataHighlight active={resolved} tone="emerald">Next action: Open case.</MetadataHighlight>
+          <MetadataHighlight active={isActive('r-action')} tone="emerald">Next action: Open case.</MetadataHighlight>
         </p>
 
         <p>Margin is comparing shipment, receipt, and reimbursement records to determine whether the gap can move into a case.</p>
@@ -106,44 +135,45 @@ function MatchAnalysisViz() {
           <div className="space-y-1.5 text-[12px] leading-5 text-gray-700">
             <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Shipment</span>{' '}
-              Shipment <MetadataHighlight active={resolved} tone="yellow">FBA17ACME001</MetadataHighlight> ·{' '}
-              <MetadataHighlight active={resolved} tone="yellow">60 shipped</MetadataHighlight>.
+              Shipment <MetadataHighlight active={isActive('r-ship-id')} tone="yellow">FBA17ACME001</MetadataHighlight> ·{' '}
+              <MetadataHighlight active={isActive('r-shipped')} tone="yellow">60 shipped</MetadataHighlight>.
             </p>
             <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Receipt</span>{' '}
-              Amazon received <MetadataHighlight active={resolved} tone="yellow">46 units</MetadataHighlight> at{' '}
-              <MetadataHighlight active={resolved} tone="yellow">ONT8</MetadataHighlight>.
+              Amazon received <MetadataHighlight active={isActive('r-received')} tone="yellow">46 units</MetadataHighlight> at{' '}
+              <MetadataHighlight active={isActive('r-ont8')} tone="yellow">ONT8</MetadataHighlight>.
             </p>
             <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Backend</span>{' '}
-              Record <MetadataHighlight active={resolved} tone="rose">00000000-000</MetadataHighlight> · Source{' '}
-              <MetadataHighlight active={resolved} tone="rose">SP API</MetadataHighlight> · Sync{' '}
-              <MetadataHighlight active={resolved} tone="rose">acme-sync-20260420</MetadataHighlight>
+              Record <MetadataHighlight active={isActive('r-record')} tone="rose">00000000-000</MetadataHighlight> · Source{' '}
+              <MetadataHighlight active={isActive('r-sp-api')} tone="rose">SP API</MetadataHighlight> · Sync{' '}
+              <MetadataHighlight active={isActive('r-sync')} tone="rose">acme-sync-20260420</MetadataHighlight>
             </p>
           </div>
 
           <div className="border-t border-gray-100 pt-2 text-[12px] leading-5 text-gray-700">
             <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Case readiness</span>{' '}
-              <MetadataHighlight active={resolved} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
-              <MetadataHighlight active={resolved} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
-              <MetadataHighlight active={resolved} tone="emerald">ACME-CASE-2001</MetadataHighlight>
+              <MetadataHighlight active={isActive('r-candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
+              <MetadataHighlight active={isActive('r-deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
+              <MetadataHighlight active={isActive('r-case-link')} tone="emerald">ACME-CASE-2001</MetadataHighlight>
             </p>
           </div>
         </div>
 
         <div className="mt-2 flex flex-col gap-2 border-t border-gray-200 pt-3">
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="h-9 w-full rounded-[10px] bg-[#007AFF] text-sm font-medium text-white shadow-md shadow-blue-100"
-            type="button"
-          >
-            Confirm Evidence Match
-            <ArrowRight className="ml-2 inline-block h-3.5 w-3.5" />
-          </motion.button>
+          {buttonReady && (
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="h-9 w-full rounded-[10px] bg-[#007AFF] text-sm font-medium text-white shadow-md shadow-blue-100"
+              type="button"
+            >
+              Confirm Evidence Match
+            </motion.button>
+          )}
         </div>
       </div>
     </div>
@@ -151,6 +181,7 @@ function MatchAnalysisViz() {
 }
 export default function EvidenceMatch() {
   const [scanProgress, setScanProgress] = useState(0);
+  const [documentMatches, setDocumentMatches] = useState<Set<string>>(new Set());
   const activeHighlights = MATCH_HIGHLIGHTS.filter((card) => scanProgress >= card.triggerLine);
 
   useEffect(() => {
@@ -163,10 +194,42 @@ export default function EvidenceMatch() {
     return () => window.clearTimeout(timeout);
   }, [scanProgress]);
 
+  useEffect(() => {
+    const highlightSequence = [
+      ['l-gap', 300],
+      ['l-units', 680],
+      ['l-ont8', 1120],
+      ['l-received', 1580],
+      ['l-policy', 2140],
+      ['l-order', 2620],
+      ['l-shipment', 3080],
+      ['l-sku', 3480],
+      ['l-shortage', 3860],
+      ['l-record', 4320],
+      ['l-sp-api', 4740],
+      ['l-sync', 5120],
+      ['l-case', 5480],
+      ['l-deadline', 5840],
+      ['l-candidate', 6200],
+    ] as const;
+
+    const timeouts = highlightSequence.map(([id, delay]) =>
+      window.setTimeout(() => {
+        setDocumentMatches((previous) => new Set(previous).add(id));
+      }, delay)
+    );
+
+    return () => {
+      timeouts.forEach((timeout) => window.clearTimeout(timeout));
+    };
+  }, []);
+
+  const isDocumentMatch = (id: string) => documentMatches.has(id);
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="grid w-full max-w-6xl gap-5 lg:grid-cols-2">
-        <div className="min-h-[740px] bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
+        <div className="bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
           <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between bg-white z-10">
             <div className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-gray-400" />
@@ -183,22 +246,22 @@ export default function EvidenceMatch() {
             <div className="space-y-4 text-gray-400 text-sm leading-relaxed select-none">
               <p>
                 Inbound shipment record shows{' '}
-                <MetadataHighlight active={scanProgress >= 10} tone="yellow">60 units shipped</MetadataHighlight>{' '}
+                <MetadataHighlight active={isDocumentMatch('l-units')} tone="yellow">60 units shipped</MetadataHighlight>{' '}
                 to{' '}
-                <MetadataHighlight active={scanProgress >= 10} tone="yellow">ONT8</MetadataHighlight>
+                <MetadataHighlight active={isDocumentMatch('l-ont8')} tone="yellow">ONT8</MetadataHighlight>
                 . Amazon receiving records show fewer units than the shipment record.
               </p>
 
               <p>
-                <MetadataHighlight active={scanProgress >= 22} tone="yellow">Amazon received 46 units</MetadataHighlight>
+                <MetadataHighlight active={isDocumentMatch('l-received')} tone="yellow">Amazon received 46 units</MetadataHighlight>
                 , leaving a{' '}
-                <MetadataHighlight active={scanProgress >= 22} tone="yellow">14-unit gap</MetadataHighlight>{' '}
+                <MetadataHighlight active={isDocumentMatch('l-gap')} tone="yellow">14-unit gap</MetadataHighlight>{' '}
                 that must be matched to the evidence trail.
               </p>
 
               <p>
                 Amazon policy basis for{' '}
-                <MetadataHighlight active={scanProgress >= 40} tone="emerald">
+                <MetadataHighlight active={isDocumentMatch('l-policy')} tone="emerald">
                   FBA inventory reimbursement review
                 </MetadataHighlight>{' '}
                 is applied when the affected product, unit movement, and reimbursement outcome reconcile.
@@ -206,29 +269,29 @@ export default function EvidenceMatch() {
 
               <p>
                 Evidence fields include{' '}
-                <MetadataHighlight active={scanProgress >= 58} tone="emerald">Shipment FBA17ACME001</MetadataHighlight>
+                <MetadataHighlight active={isDocumentMatch('l-shipment')} tone="emerald">Shipment FBA17ACME001</MetadataHighlight>
                 , Order{' '}
-                <MetadataHighlight active={scanProgress >= 58} tone="emerald">113-8043372-9097841</MetadataHighlight>
+                <MetadataHighlight active={isDocumentMatch('l-order')} tone="emerald">113-8043372-9097841</MetadataHighlight>
                 , SKU{' '}
-                <MetadataHighlight active={scanProgress >= 58} tone="emerald">ACME-TRAVEL-MUG-BLK</MetadataHighlight>
+                <MetadataHighlight active={isDocumentMatch('l-sku')} tone="emerald">ACME-TRAVEL-MUG-BLK</MetadataHighlight>
                 , and a{' '}
-                <MetadataHighlight active={scanProgress >= 58} tone="emerald">14-unit shortage</MetadataHighlight>.
+                <MetadataHighlight active={isDocumentMatch('l-shortage')} tone="emerald">14-unit shortage</MetadataHighlight>.
               </p>
 
               <p>
                 Backend detection record{' '}
-                <MetadataHighlight active={scanProgress >= 80} tone="rose">00000000-000</MetadataHighlight> from{' '}
-                <MetadataHighlight active={scanProgress >= 80} tone="rose">SP API</MetadataHighlight> sync{' '}
-                <MetadataHighlight active={scanProgress >= 80} tone="rose">acme-sync-20260420</MetadataHighlight>. Case{' '}
-                <MetadataHighlight active={scanProgress >= 80} tone="emerald">ACME-CASE-2001</MetadataHighlight> is a{' '}
-                <MetadataHighlight active={scanProgress >= 80} tone="emerald">claim candidate</MetadataHighlight> before{' '}
-                <MetadataHighlight active={scanProgress >= 80} tone="emerald">Apr 2, 2026</MetadataHighlight>.
+                <MetadataHighlight active={isDocumentMatch('l-record')} tone="rose">00000000-000</MetadataHighlight> from{' '}
+                <MetadataHighlight active={isDocumentMatch('l-sp-api')} tone="rose">SP API</MetadataHighlight> sync{' '}
+                <MetadataHighlight active={isDocumentMatch('l-sync')} tone="rose">acme-sync-20260420</MetadataHighlight>. Case{' '}
+                <MetadataHighlight active={isDocumentMatch('l-case')} tone="emerald">ACME-CASE-2001</MetadataHighlight> is a{' '}
+                <MetadataHighlight active={isDocumentMatch('l-candidate')} tone="emerald">claim candidate</MetadataHighlight> before{' '}
+                <MetadataHighlight active={isDocumentMatch('l-deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight>.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="min-h-[740px] flex flex-col">
+        <div className="flex flex-col">
           <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex flex-col h-full">
             <MatchAnalysisViz />
           </div>
