@@ -267,6 +267,52 @@ const PlatformSimulate = () => {
           >
             <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain sm:h-9" />
           </motion.div>
+
+          <motion.div
+            className="absolute -right-5 -top-5 z-[60]"
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.5 }}
+            animate={{
+              opacity: reduceMotion ? 1 : [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+              scale: reduceMotion ? 1 : [0.5, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.72],
+            }}
+            transition={{
+              delay: reduceMotion ? 0 : 1.05,
+              duration: finalDelay - 1.05,
+              ease: 'easeInOut',
+            }}
+          >
+            <div className="flex h-8 w-6 flex-col items-center justify-center rounded-[3px] bg-[#EA4335] shadow-sm sm:h-10 sm:w-8">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-white sm:h-4 sm:w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              <span className="mt-0.5 text-[5px] font-bold tracking-tight text-white sm:text-[6px]">PDF</span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="absolute -bottom-5 -left-5 z-[60]"
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.5 }}
+            animate={{
+              opacity: reduceMotion ? 1 : [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+              scale: reduceMotion ? 1 : [0.5, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.85, 1, 0.72],
+            }}
+            transition={{
+              delay: reduceMotion ? 0 : 1.25,
+              duration: finalDelay - 1.25,
+              ease: 'easeInOut',
+            }}
+          >
+            <div className="flex h-8 w-6 flex-col items-center justify-center rounded-[3px] bg-[#4285F4] shadow-sm sm:h-10 sm:w-8">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-white sm:h-4 sm:w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+              <span className="mt-0.5 text-[5px] font-bold tracking-tight text-white sm:text-[6px]">DOC</span>
+            </div>
+          </motion.div>
         </div>
 
         {integrations.map((integration) => (
