@@ -682,8 +682,7 @@ export function ScrollytellingCoverage() {
   return (
     <section
       ref={containerRef}
-      className="relative"
-      style={{ height: '350vh' }}
+      className="relative h-auto md:h-[350vh]"
       aria-label="Coverage examples showing Amazon reimbursement workflows"
     >
       {/* ── Light background ── */}
@@ -703,20 +702,20 @@ export function ScrollytellingCoverage() {
       <div className="pointer-events-none absolute right-[10%] top-1/2 h-[600px] w-[600px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.05),transparent_70%)]" />
 
       {/* ── Sticky viewport ── */}
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-        <div className="mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8">
+      <div className="relative flex h-auto flex-col justify-start overflow-hidden py-12 md:sticky md:top-0 md:h-[100svh] md:justify-center md:py-0">
+        <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 md:px-8">
           {/* Section header */}
-          <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
+          <div className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE] sm:text-[11px]">
             Coverage Examples
           </div>
-          <h2 className="mt-3 max-w-[680px] text-[22px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:text-[28px] md:text-[34px]">
+          <h2 className="mt-2 max-w-[680px] text-[19px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:mt-3 sm:text-[28px] md:text-[34px]">
             Amazon reimbursement workflows Margin manages.
           </h2>
 
           {/* ── Split layout ── */}
-          <div className="mt-8 grid gap-8 md:mt-12 lg:mt-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+          <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-8 md:mt-12 lg:mt-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
             {/* Left: Text */}
-            <div className="relative order-2 min-h-[220px] sm:min-h-[260px] md:min-h-[300px] lg:order-1">
+            <div className="relative order-2 min-h-[150px] sm:min-h-[260px] md:min-h-[300px] lg:order-1">
               {/* Large background number */}
               <AnimatePresence mode="wait">
                 <motion.div
@@ -725,7 +724,7 @@ export function ScrollytellingCoverage() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="pointer-events-none absolute -left-2 -top-4 select-none font-serif-headline text-[120px] font-bold leading-none text-[#182026]/[0.04] sm:text-[160px] md:-left-4 md:-top-8 md:text-[200px]"
+                  className="pointer-events-none absolute -left-2 -top-4 hidden select-none font-serif-headline text-[120px] font-bold leading-none text-[#182026]/[0.04] sm:block sm:text-[160px] md:-left-4 md:-top-8 md:text-[200px]"
                   aria-hidden="true"
                 >
                   {workflows[activeIndex].index}
@@ -741,20 +740,20 @@ export function ScrollytellingCoverage() {
                   transition={{ duration: dur, ease }}
                   className="relative"
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]/90">
+                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]/90 sm:text-[12px]">
                     {workflows[activeIndex].label}
                   </div>
-                  <h3 className="mt-4 max-w-[480px] text-[24px] font-bold leading-[1.1] tracking-[-0.035em] text-[#182026] sm:text-[30px] md:text-[38px]">
+                  <h3 className="mt-2 max-w-[480px] text-[18px] font-bold leading-[1.08] tracking-[-0.035em] text-[#182026] sm:mt-4 sm:text-[24px] md:text-[38px]">
                     {workflows[activeIndex].title}
                   </h3>
-                  <p className="mt-5 max-w-[440px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                  <p className="mt-3 max-w-[440px] text-[13px] leading-6 text-[#66737F] sm:mt-5 sm:text-[15px] sm:leading-7 md:text-[17px] md:leading-8">
                     {workflows[activeIndex].detail}
                   </p>
                 </motion.div>
               </AnimatePresence>
 
               {/* Progress dots */}
-              <div className="absolute bottom-0 left-0 flex items-center gap-2">
+              <div className="relative mt-4 flex items-center gap-2 sm:absolute sm:bottom-0 sm:left-0 sm:mt-0">
                 {workflows.map((_, i) => (
                   <div
                     key={i}
@@ -772,12 +771,12 @@ export function ScrollytellingCoverage() {
 
             {/* Right: Visual panel */}
             <div className="relative order-1 lg:order-2">
-              <div className="relative overflow-hidden px-1 py-3 sm:px-3 md:px-6">
+              <div className="relative overflow-hidden px-0 py-2 sm:px-3 md:px-6">
                 <div className="pointer-events-none absolute inset-0 bg-white/[0.18] backdrop-blur-[1px]" />
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent" />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-slate-300/60 to-transparent" />
                 <div className="pointer-events-none absolute left-0 top-0 hidden h-full w-px bg-gradient-to-b from-transparent via-slate-300/60 to-transparent md:block" />
-                <div className="relative py-3">
+                <div className="relative py-2 sm:py-3">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`visual-${activeIndex}`}
