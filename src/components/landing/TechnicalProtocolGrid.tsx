@@ -48,7 +48,7 @@ export function TechnicalProtocolGrid() {
             initial={{ scaleY: 0 }}
             animate={isInView || reduceMotion ? { scaleY: 1 } : { scaleY: 0 }}
             transition={{ duration: reduceMotion ? 0 : 1.45, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute bottom-0 left-16 top-0 w-px origin-top bg-[#C9D6DE] md:left-[260px]"
+            className="hidden md:block absolute bottom-0 left-16 top-0 w-px origin-top bg-[#C9D6DE] md:left-[260px]"
           />
 
           <div className="space-y-28 md:space-y-36">
