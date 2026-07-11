@@ -54,7 +54,7 @@ function MatchDocumentViz() {
   }, [scanProgress]);
 
   return (
-    <div className="flex h-full flex-col justify-between">
+    <div className="flex h-full flex-col">
       <div className="space-y-4 text-[13px] leading-7 text-gray-500">
         <p>
           Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
@@ -203,7 +203,7 @@ function MatchAnalysisViz() {
   }, []);
 
   return (
-    <div className="flex h-full flex-col justify-between">
+    <div className="flex h-full flex-col">
       <div className="space-y-4 text-[13px] leading-7 text-gray-500">
         <p>
           Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
