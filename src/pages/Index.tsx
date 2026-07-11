@@ -452,57 +452,6 @@ function KineticHeroSection({
             animate={reduceMotion ? { opacity: 0.14, scale: 1 } : { opacity: [0, 0.22, 0], scale: [0.2, 1.22, 1.6] }}
             transition={{ duration: pulse.duration, delay: pulse.delay + index * 0.05, repeat: Infinity, repeatDelay: 1.2, ease: 'easeOut' }}
           />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E\")",
-        }}
-      />
-      <motion.div
-        style={{ y: networkY }}
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-        aria-hidden="true"
-      >
-        <motion.div
-          className="absolute left-[-10%] top-[12%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(0,122,255,0.28)_0%,rgba(0,122,255,0.12)_34%,transparent_70%)] blur-3xl"
-          animate={reduceMotion ? undefined : { x: [0, 26, 0], y: [0, -18, 0], opacity: [0.54, 0.82, 0.54] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(96,165,250,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,0.10)_1px,transparent_1px)] [background-size:92px_92px]" />
-        <motion.div
-          className="absolute inset-y-0 left-0 w-[18%] bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.14),transparent)] blur-sm"
-          animate={reduceMotion ? undefined : { x: ['-30vw', '115vw'] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-        />
-        {auditLines.map((line) => (
-          <motion.div
-            key={`${line.left}-${line.top}`}
-            className="absolute h-px origin-left bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.42),rgba(52,211,153,0.24),transparent)]"
-            style={{
-              left: `${line.left}%`,
-              top: `${line.top}%`,
-              width: `${line.width}%`,
-              rotate: `${line.rotate}deg`
-            }}
-            animate={reduceMotion ? { opacity: 0.14 } : { opacity: [0, 0.26, 0] }}
-            transition={{ duration: 4.8, delay: line.delay, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
-          />
-        ))}
-        {auditPulses.map((pulse, index) => (
-          <motion.div
-            key={`${pulse.x}-${pulse.y}`}
-            className={`absolute rounded-full ${pulse.color} shadow-[0_0_30px_currentColor]`}
-            style={{
-              left: `${pulse.x}%`,
-              top: `${pulse.y}%`,
-              width: pulse.size,
-              height: pulse.size,
-              color: pulse.color.includes('emerald') ? 'rgba(52,211,153,0.9)' : 'rgba(96,165,250,0.9)'
-            }}
-            animate={reduceMotion ? { opacity: 0.14, scale: 1 } : { opacity: [0, 0.22, 0], scale: [0.2, 1.22, 1.6] }}
-            transition={{ duration: pulse.duration, delay: pulse.delay + index * 0.05, repeat: Infinity, repeatDelay: 1.2, ease: 'easeOut' }}
-          />
         ))}
       </motion.div>
 
