@@ -461,7 +461,7 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex max-w-full items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl sm:text-[11px]"
+            className="inline-block max-w-full rounded-[5px] bg-white/[0.07] px-4 py-2 text-center text-[10px] font-semibold leading-relaxed uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl sm:px-3 sm:py-1.5 sm:text-[11px]"
           >
             Claim-ready evidence packs for Amazon reimbursement work
           </motion.div>
@@ -1204,9 +1204,9 @@ export default function Index() {
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Button
                       onClick={() => handleClaimAccessClick('homepage_early_access_section')}
-                      className="group relative h-14 w-full rounded-full bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] sm:w-auto"
+                      className="group relative h-14 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] sm:w-auto"
                     >
-                      <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-full" />
+                      <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[5px]" />
                       {primaryCtaLabel}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -1260,7 +1260,7 @@ export default function Index() {
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-full border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#F8FAFC]"
+                    className="rounded-[5px] border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#F8FAFC]"
                   >
                     Show more questions
                   </Button>
@@ -1289,7 +1289,7 @@ export default function Index() {
               <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
                 <Button
                   onClick={() => handleClaimAccessClick('homepage_bottom_cta')}
-                  className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+                  className="h-12 rounded-[5px] bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
                 >
                   {primaryCtaLabel}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -1298,7 +1298,7 @@ export default function Index() {
                 <Button
                   variant="outline"
                   onClick={scrollToWorkflow}
-                  className="h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
+                  className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F8FAFC]"
                 >
                   Review Evidence Workflow
                 </Button>
