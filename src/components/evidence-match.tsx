@@ -171,7 +171,7 @@ function MatchAnalysisViz() {
               className="h-9 w-full rounded-[10px] bg-[#007AFF] text-sm font-medium text-white shadow-md shadow-blue-100"
               type="button"
             >
-              Confirm Evidence Match
+              Evidence Match Confirmed
             </motion.button>
           )}
         </div>
