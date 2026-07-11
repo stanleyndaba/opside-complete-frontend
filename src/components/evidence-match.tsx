@@ -215,106 +215,126 @@ function MatchAnalysisViz() {
     return () => window.clearTimeout(timeout);
   }, []);
 
-  const matchCards = [
-    {
-      title: 'Inbound Shipment Shortage',
-      description: 'Amazon received fewer units than the inbound shipment record shows were shipped.',
-    },
-    {
-      title: '14-unit gap at ONT8',
-      description: 'Shipment, receipt, and reimbursement records are being compared for filing readiness.',
-    },
-    {
-      title: 'Claim candidate',
-      description: 'The finding is linked to a case that can proceed when filing gates allow it.',
-    },
+  const rows = [
+    { label: 'Shipment record', value: 'Shipment FBA17ACME001 · 60 shipped' },
+    { label: 'Receipt record', value: 'Amazon received 46 units at ONT8' },
+    { label: 'Claim signal', value: '14-unit gap matched to the inbound shortage' },
+    { label: 'Policy basis', value: 'FBA inventory reimbursement review' },
+    { label: 'Backend record', value: '00000000-000 · SP API · acme-sync-20260420' },
+    { label: 'Case link', value: 'ACME-CASE-2001 · Ready to file' },
   ];
 
   return (
-    <div>
-      <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
-        <div className="flex items-center gap-2">
-          <Search className="h-[18px] w-[18px] text-slate-600" />
-          <h3 className="text-[15px] font-semibold text-slate-900">Inbound Shipment Shortage</h3>
-        </div>
-        <span className="text-[10px] font-mono text-slate-500">{resolved ? 'READY' : 'MATCHING'}</span>
-      </div>
-
-      <div className="grid grid-cols-3 border-b border-slate-100 py-2.5">
-        {[
-          { label: 'Shipped', value: '60' },
-          { label: 'Received', value: '46' },
-          { label: 'Gap', value: '14' },
-        ].map((metric, i) => (
-          <motion.div
-            key={metric.label}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08, duration: 0.35 }}
-            className={i > 0 ? 'border-l border-slate-100 pl-3' : ''}
+    <div className="flex h-full flex-col justify-between">
+      <div className="space-y-4 text-[13px] leading-7 text-gray-500">
+        <p>
+          Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
+          <motion.span
+            animate={resolved ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
           >
-            <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-400">
-              {metric.label}
-            </div>
-            <div className="mt-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700">
-              {metric.value}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="mt-2 flex flex-col gap-2">
-        {matchCards.map((card, index) => (
-          <motion.div
-            key={card.title}
-            initial={{ opacity: 0, x: 14, scale: 0.98 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ delay: index * 0.14, duration: 0.4 }}
-            className="rounded-[10px] border border-gray-200 bg-gray-50/80 px-3 py-2.5"
+            60 shipped, 46 received
+          </motion.span>{' '}
+          with a{' '}
+          <motion.span
+            animate={resolved ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
           >
-            <div className="flex items-start gap-2.5">
-              <div className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] border-gray-300 bg-emerald-50 text-[#3aaa78]">
-                <Check className="h-3 w-3" strokeWidth={3} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h4 className="text-[13px] font-semibold leading-5 text-gray-800">{card.title}</h4>
-                <p className="mt-0.5 text-[11px] leading-[17px] text-gray-600">{card.description}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            14-unit gap at ONT8
+          </motion.span>
+          .
+        </p>
 
-      <div className="mt-3 rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
-        <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-          <span>Backend detection record</span>
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[9px] tracking-tight text-gray-600">
-            00000000-000
+        <p className="relative">
+          <span className="relative z-10">
+            Inbound discrepancy details are being matched to the evidence trail.{' '}
+            <motion.span
+              animate={resolved ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+            >
+              What Margin found
+            </motion.span>{' '}
+            confirms the claim path.
           </span>
+          <motion.span
+            className="absolute inset-0 -z-0 rounded bg-yellow-100"
+            initial={{ width: 0 }}
+            animate={{ width: resolved ? '100%' : 0 }}
+            transition={{ duration: 1 }}
+          />
+        </p>
+
+        <p className="relative">
+          <span className="relative z-10">
+            Current filing movement is ready to file when filing gates allow it.{' '}
+            <motion.span
+              animate={resolved ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+            >
+              Next action: Open case.
+            </motion.span>
+          </span>
+          <motion.span
+            className="absolute inset-0 -z-0 rounded bg-emerald-100"
+            initial={{ width: 0 }}
+            animate={{ width: resolved ? '100%' : 0 }}
+            transition={{ duration: 1 }}
+          />
+        </p>
+
+        <p>
+          Margin is comparing shipment, receipt, and reimbursement records to determine whether the unresolved inbound gap can move into a case.
+        </p>
+      </div>
+
+      <div className="mt-5 border-t border-gray-200 pt-4">
+        <div className="space-y-2.5">
+          {rows.map((row, index) => (
+            <motion.div
+              key={row.label}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.08, duration: 0.35 }}
+              className="grid grid-cols-[120px_minmax(0,1fr)] gap-4 rounded-[10px] border border-gray-200 bg-gray-50/70 px-3 py-2.5"
+            >
+              <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                {row.label}
+              </div>
+              <div className="text-[13px] font-semibold leading-5 text-gray-800">{row.value}</div>
+            </motion.div>
+          ))}
         </div>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          {[
-            ['Source', 'SP API'],
-            ['Sync', 'acme-sync-20260420'],
-            ['Confidence', 'Not available'],
-            ['Coverage', 'Launch detector'],
-            ['Readiness', 'Claim candidate'],
-            ['Severity', 'High'],
-            ['Deadline', 'Apr 2, 2026'],
-            ['Movement', 'Ready to file'],
-            ['Case link', 'ACME-CASE-2001'],
-          ].map(([label, value]) => (
-            <div key={label} className="rounded-[8px] border border-gray-100 bg-gray-50 px-2.5 py-2">
+
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          {discrepancyFacts.slice(0, 4).map(([label, value]) => (
+            <div key={label} className="rounded-[10px] border border-gray-200 bg-white px-3 py-2.5">
               <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">{label}</div>
               <div className="mt-1 text-[12px] font-semibold leading-5 text-gray-800">{value}</div>
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-2">
-        <span className="font-mono text-[9px] tracking-wide text-slate-400">READINESS: CLAIM CANDIDATE</span>
-        <span className="font-mono text-[9px] tracking-wide text-slate-500">SEVERITY: HIGH</span>
+        <div className="mt-3 rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Evidence used</div>
+          <div className="mt-2 text-[13px] leading-6 text-gray-700">
+            Shipment FBA17ACME001 · Order 113-8043372-9097841 · SKU ACME-TRAVEL-MUG-BLK · 14 units
+          </div>
+        </div>
+
+        <div className="mt-3 rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Current filing movement</div>
+              <div className="mt-1 text-[12px] leading-5 text-gray-700">
+                Ready to file when filing gates allow it.
+              </div>
+            </div>
+            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight text-emerald-700">
+              Open case
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-2">
+          <span className="font-mono text-[9px] tracking-wide text-slate-400">READINESS: CLAIM CANDIDATE</span>
+          <span className="font-mono text-[9px] tracking-wide text-slate-500">SEVERITY: HIGH</span>
+        </div>
       </div>
     </div>
   );
@@ -336,8 +356,8 @@ export default function EvidenceMatch() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl flex items-start gap-5">
-        <div className="flex-1 bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
+      <div className="grid w-full max-w-6xl gap-5 lg:grid-cols-2">
+        <div className="min-h-[740px] bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
           <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between bg-white z-10">
             <div className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-gray-400" />
@@ -446,12 +466,8 @@ export default function EvidenceMatch() {
           </div>
         </div>
 
-        <div className="w-[360px] flex flex-col">
-          <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex flex-col">
-            <div className="flex items-center gap-2 mb-4">
-              <Search className="w-[18px] h-[18px] text-gray-600" />
-              <h3 className="text-[15px] font-semibold text-gray-900">Inbound Shipment Shortage</h3>
-            </div>
+        <div className="min-h-[740px] flex flex-col">
+          <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex flex-col h-full">
             <MatchAnalysisViz />
           </div>
         </div>
