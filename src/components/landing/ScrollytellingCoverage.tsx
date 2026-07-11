@@ -682,7 +682,7 @@ export function ScrollytellingCoverage() {
   return (
     <section
       ref={containerRef}
-      className="relative h-auto md:h-[350vh]"
+      className="relative h-[285vh] md:h-[350vh]"
       aria-label="Coverage examples showing Amazon reimbursement workflows"
     >
       {/* ── Light background ── */}
@@ -702,7 +702,7 @@ export function ScrollytellingCoverage() {
       <div className="pointer-events-none absolute right-[10%] top-1/2 h-[600px] w-[600px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(11,116,222,0.05),transparent_70%)]" />
 
       {/* ── Sticky viewport ── */}
-      <div className="relative flex h-auto flex-col justify-start overflow-hidden py-12 md:sticky md:top-0 md:h-[100svh] md:justify-center md:py-0">
+      <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden py-10 md:py-0">
         <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 md:px-8">
           {/* Section header */}
           <div className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE] sm:text-[11px]">
