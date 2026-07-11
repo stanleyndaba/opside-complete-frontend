@@ -256,9 +256,7 @@ function MatchAnalysisViz() {
           />
         </p>
 
-        <p>
-          Margin is comparing shipment, receipt, and reimbursement records to determine whether the unresolved inbound gap can move into a case.
-        </p>
+        <p>Margin is comparing shipment, receipt, and reimbursement records to determine whether the gap can move into a case.</p>
       </div>
 
       <div className="mt-5 border-t border-gray-200 pt-4">
@@ -273,10 +271,6 @@ function MatchAnalysisViz() {
               Amazon received 46 units at ONT8.
             </p>
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Claim signal</span>{' '}
-              14-unit gap matched to the inbound shortage.
-            </p>
-            <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Policy basis</span>{' '}
               FBA inventory reimbursement review.
             </p>
@@ -287,21 +281,13 @@ function MatchAnalysisViz() {
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Backend</span>{' '}
               Record <span className="font-medium text-gray-900">00000000-000</span> · Source{' '}
               <span className="font-medium text-gray-900">SP API</span> · Sync{' '}
-              <span className="font-medium text-gray-900">acme-sync-20260420</span> · Confidence{' '}
-              <span className="font-medium text-gray-900">Not available</span> · Coverage{' '}
-              <span className="font-medium text-gray-900">Launch detector</span>
+              <span className="font-medium text-gray-900">acme-sync-20260420</span>
             </p>
             <p className="mt-2">
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Case readiness</span>{' '}
-              Readiness <span className="font-medium text-gray-900">Claim candidate</span> · Severity{' '}
-              <span className="font-medium text-gray-900">High</span> · Deadline{' '}
-              <span className="font-medium text-gray-900">Apr 2, 2026</span> · Movement{' '}
-              <span className="font-medium text-gray-900">Ready to file</span> · Case link{' '}
+              Readiness <span className="font-medium text-gray-900">Claim candidate</span> · Deadline{' '}
+              <span className="font-medium text-gray-900">Apr 2, 2026</span> · Case link{' '}
               <span className="font-medium text-gray-900">ACME-CASE-2001</span>
-            </p>
-            <p className="mt-2">
-              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Evidence used</span>{' '}
-              Shipment FBA17ACME001 · Order 113-8043372-9097841 · SKU ACME-TRAVEL-MUG-BLK · 14 units
             </p>
           </div>
         </div>
