@@ -24,20 +24,39 @@ const CHAPTERS = [
 
 export function ProgressiveNarrativeTabs() {
   const [activeChapter, setActiveChapter] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const chapterRefs = useRef<Array<HTMLDivElement | null>>([]);
   const isInView = useInView(containerRef, { amount: 0.3 });
 
   useEffect(() => {
-    if (!isInView || isPaused) return;
+    if (!isInView || typeof window === 'undefined') return;
 
-    const currentTab = CHAPTERS[activeChapter];
-    const timer = setTimeout(() => {
-      setActiveChapter((prev) => (prev + 1) % CHAPTERS.length);
-    }, currentTab.duration);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-    return () => clearTimeout(timer);
-  }, [activeChapter, isInView, isPaused]);
+        if (!visible) return;
+
+        const index = chapterRefs.current.findIndex((node) => node === visible.target);
+        if (index >= 0) {
+          setActiveChapter(index);
+        }
+      },
+      {
+        root: null,
+        threshold: [0.25, 0.4, 0.55, 0.7, 0.85],
+        rootMargin: '-28% 0px -32% 0px',
+      }
+    );
+
+    chapterRefs.current.forEach((node) => {
+      if (node) observer.observe(node);
+    });
+
+    return () => observer.disconnect();
+  }, [isInView]);
 
   return (
     <section ref={containerRef} className="relative bg-white py-32 md:py-48">
@@ -51,9 +70,11 @@ export function ProgressiveNarrativeTabs() {
             {CHAPTERS.map((chapter, idx) => {
               const isActive = idx === activeChapter;
               return (
-                <button
+                <div
                   key={chapter.id}
-                  onClick={() => { setActiveChapter(idx); setIsPaused(true); }}
+                  ref={(node) => {
+                    chapterRefs.current[idx] = node;
+                  }}
                   className="group relative flex flex-col text-left outline-none"
                 >
                   <h3
@@ -79,7 +100,7 @@ export function ProgressiveNarrativeTabs() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </button>
+                </div>
               );
             })}
           </div>
