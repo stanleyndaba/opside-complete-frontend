@@ -261,79 +261,48 @@ function MatchAnalysisViz() {
         </p>
       </div>
 
-      <div className="mt-5 space-y-3 border-t border-gray-200 pt-4">
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            ['Shipment', 'Shipment FBA17ACME001 · 60 shipped'],
-            ['Receipt', 'Amazon received 46 units at ONT8'],
-            ['Claim signal', '14-unit gap matched to the inbound shortage'],
-            ['Policy basis', 'FBA inventory reimbursement review'],
-          ].map(([label, value], index) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.08, duration: 0.35 }}
-              className="rounded-[10px] border border-gray-200 bg-gray-50/70 px-3 py-2.5"
-            >
-              <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">{label}</div>
-              <div className="mt-1 text-[13px] leading-5 text-gray-700">{value}</div>
-            </motion.div>
-          ))}
-        </div>
+      <div className="mt-5 border-t border-gray-200 pt-4">
+        <div className="space-y-3">
+          <div className="space-y-2 text-[13px] leading-6 text-gray-700">
+            <p>
+              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Shipment</span>{' '}
+              Shipment FBA17ACME001 · 60 shipped.
+            </p>
+            <p>
+              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Receipt</span>{' '}
+              Amazon received 46 units at ONT8.
+            </p>
+            <p>
+              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Claim signal</span>{' '}
+              14-unit gap matched to the inbound shortage.
+            </p>
+            <p>
+              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Policy basis</span>{' '}
+              FBA inventory reimbursement review.
+            </p>
+          </div>
 
-        <div className="rounded-[10px] border border-gray-200 bg-gray-50/60 px-3.5 py-3">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Backend</div>
-          <div className="mt-2 space-y-1.5 text-[13px] leading-6 text-gray-700">
+          <div className="border-t border-gray-100 pt-3 text-[13px] leading-6 text-gray-700">
             <p>
-              <span className="font-medium text-gray-500">Record</span>{' '}
-              <span className="font-medium text-gray-900">00000000-000</span>
-            </p>
-            <p>
-              <span className="font-medium text-gray-500">Source</span>{' '}
-              <span className="font-medium text-gray-900">SP API</span>
-              {' · '}
-              <span className="font-medium text-gray-500">Sync</span>{' '}
-              <span className="font-medium text-gray-900">acme-sync-20260420</span>
-            </p>
-            <p>
-              <span className="font-medium text-gray-500">Confidence</span>{' '}
-              <span className="font-medium text-gray-900">Not available</span>
-              {' · '}
-              <span className="font-medium text-gray-500">Coverage</span>{' '}
+              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Backend</span>{' '}
+              Record <span className="font-medium text-gray-900">00000000-000</span> · Source{' '}
+              <span className="font-medium text-gray-900">SP API</span> · Sync{' '}
+              <span className="font-medium text-gray-900">acme-sync-20260420</span> · Confidence{' '}
+              <span className="font-medium text-gray-900">Not available</span> · Coverage{' '}
               <span className="font-medium text-gray-900">Launch detector</span>
             </p>
-          </div>
-        </div>
-
-        <div className="rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Case readiness</div>
-          <div className="mt-2 space-y-1.5 text-[13px] leading-6 text-gray-700">
-            <p>
-              <span className="font-medium text-gray-500">Readiness</span>{' '}
-              <span className="font-medium text-gray-900">Claim candidate</span>
-              {' · '}
-              <span className="font-medium text-gray-500">Severity</span>{' '}
-              <span className="font-medium text-gray-900">High</span>
-            </p>
-            <p>
-              <span className="font-medium text-gray-500">Deadline</span>{' '}
-              <span className="font-medium text-gray-900">Apr 2, 2026</span>
-              {' · '}
-              <span className="font-medium text-gray-500">Movement</span>{' '}
-              <span className="font-medium text-gray-900">Ready to file</span>
-            </p>
-            <p>
-              <span className="font-medium text-gray-500">Case link</span>{' '}
+            <p className="mt-2">
+              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Case readiness</span>{' '}
+              Readiness <span className="font-medium text-gray-900">Claim candidate</span> · Severity{' '}
+              <span className="font-medium text-gray-900">High</span> · Deadline{' '}
+              <span className="font-medium text-gray-900">Apr 2, 2026</span> · Movement{' '}
+              <span className="font-medium text-gray-900">Ready to file</span> · Case link{' '}
               <span className="font-medium text-gray-900">ACME-CASE-2001</span>
             </p>
-          </div>
-        </div>
-
-        <div className="rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Evidence used</div>
-          <div className="mt-2 text-[13px] leading-6 text-gray-700">
-            Shipment FBA17ACME001 · Order 113-8043372-9097841 · SKU ACME-TRAVEL-MUG-BLK · 14 units
+            <p className="mt-2">
+              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Evidence used</span>{' '}
+              Shipment FBA17ACME001 · Order 113-8043372-9097841 · SKU ACME-TRAVEL-MUG-BLK · 14 units
+            </p>
           </div>
         </div>
 
