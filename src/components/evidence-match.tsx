@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, FileText, Search, RefreshCw } from 'lucide-react';
+import { ArrowRight, FileText } from 'lucide-react';
 
 interface MatchHighlight {
   id: string;
@@ -37,19 +37,6 @@ const discrepancyRows = [
   { label: 'Shipped', value: '60 units' },
   { label: 'Received', value: '46 units' },
   { label: 'Gap', value: '14 units at ONT8' },
-];
-
-const discrepancyFacts = [
-  ['Backend record', '00000000-000'],
-  ['Source', 'SP API'],
-  ['Sync', 'acme-sync-20260420'],
-  ['Confidence', 'Not available'],
-  ['Coverage', 'Launch detector'],
-  ['Readiness', 'Claim candidate'],
-  ['Severity', 'High'],
-  ['Deadline', 'Apr 2, 2026'],
-  ['Movement', 'Ready to file'],
-  ['Case link', 'ACME-CASE-2001'],
 ];
 
 function MatchDocumentViz() {
@@ -215,15 +202,6 @@ function MatchAnalysisViz() {
     return () => window.clearTimeout(timeout);
   }, []);
 
-  const rows = [
-    { label: 'Shipment record', value: 'Shipment FBA17ACME001 · 60 shipped' },
-    { label: 'Receipt record', value: 'Amazon received 46 units at ONT8' },
-    { label: 'Claim signal', value: '14-unit gap matched to the inbound shortage' },
-    { label: 'Policy basis', value: 'FBA inventory reimbursement review' },
-    { label: 'Backend record', value: '00000000-000 · SP API · acme-sync-20260420' },
-    { label: 'Case link', value: 'ACME-CASE-2001 · Ready to file' },
-  ];
-
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="space-y-4 text-[13px] leading-7 text-gray-500">
@@ -283,63 +261,107 @@ function MatchAnalysisViz() {
         </p>
       </div>
 
-      <div className="mt-5 border-t border-gray-200 pt-4">
-        <div className="space-y-2.5">
-          {rows.map((row, index) => (
+      <div className="mt-5 space-y-3 border-t border-gray-200 pt-4">
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            ['Shipment', 'Shipment FBA17ACME001 · 60 shipped'],
+            ['Receipt', 'Amazon received 46 units at ONT8'],
+            ['Claim signal', '14-unit gap matched to the inbound shortage'],
+            ['Policy basis', 'FBA inventory reimbursement review'],
+          ].map(([label, value], index) => (
             <motion.div
-              key={row.label}
+              key={label}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08, duration: 0.35 }}
-              className="grid grid-cols-[120px_minmax(0,1fr)] gap-4 rounded-[10px] border border-gray-200 bg-gray-50/70 px-3 py-2.5"
+              className="rounded-[10px] border border-gray-200 bg-gray-50/70 px-3 py-2.5"
             >
-              <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">
-                {row.label}
-              </div>
-              <div className="text-[13px] font-semibold leading-5 text-gray-800">{row.value}</div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">{label}</div>
+              <div className="mt-1 text-[13px] leading-5 text-gray-700">{value}</div>
             </motion.div>
           ))}
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          {discrepancyFacts.slice(0, 4).map(([label, value]) => (
-            <div key={label} className="rounded-[10px] border border-gray-200 bg-white px-3 py-2.5">
-              <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-gray-400">{label}</div>
-              <div className="mt-1 text-[12px] font-semibold leading-5 text-gray-800">{value}</div>
-            </div>
-          ))}
+        <div className="rounded-[10px] border border-gray-200 bg-gray-50/60 px-3.5 py-3">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Backend</div>
+          <div className="mt-2 space-y-1.5 text-[13px] leading-6 text-gray-700">
+            <p>
+              <span className="font-medium text-gray-500">Record</span>{' '}
+              <span className="font-medium text-gray-900">00000000-000</span>
+            </p>
+            <p>
+              <span className="font-medium text-gray-500">Source</span>{' '}
+              <span className="font-medium text-gray-900">SP API</span>
+              {' · '}
+              <span className="font-medium text-gray-500">Sync</span>{' '}
+              <span className="font-medium text-gray-900">acme-sync-20260420</span>
+            </p>
+            <p>
+              <span className="font-medium text-gray-500">Confidence</span>{' '}
+              <span className="font-medium text-gray-900">Not available</span>
+              {' · '}
+              <span className="font-medium text-gray-500">Coverage</span>{' '}
+              <span className="font-medium text-gray-900">Launch detector</span>
+            </p>
+          </div>
         </div>
 
-        <div className="mt-3 rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
+        <div className="rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Case readiness</div>
+          <div className="mt-2 space-y-1.5 text-[13px] leading-6 text-gray-700">
+            <p>
+              <span className="font-medium text-gray-500">Readiness</span>{' '}
+              <span className="font-medium text-gray-900">Claim candidate</span>
+              {' · '}
+              <span className="font-medium text-gray-500">Severity</span>{' '}
+              <span className="font-medium text-gray-900">High</span>
+            </p>
+            <p>
+              <span className="font-medium text-gray-500">Deadline</span>{' '}
+              <span className="font-medium text-gray-900">Apr 2, 2026</span>
+              {' · '}
+              <span className="font-medium text-gray-500">Movement</span>{' '}
+              <span className="font-medium text-gray-900">Ready to file</span>
+            </p>
+            <p>
+              <span className="font-medium text-gray-500">Case link</span>{' '}
+              <span className="font-medium text-gray-900">ACME-CASE-2001</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
           <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Evidence used</div>
           <div className="mt-2 text-[13px] leading-6 text-gray-700">
             Shipment FBA17ACME001 · Order 113-8043372-9097841 · SKU ACME-TRAVEL-MUG-BLK · 14 units
           </div>
         </div>
 
-        <div className="mt-3 rounded-[10px] border border-gray-200 bg-white px-3.5 py-3">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Current filing movement</div>
-              <div className="mt-1 text-[12px] leading-5 text-gray-700">
-                Ready to file when filing gates allow it.
-              </div>
-            </div>
-            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight text-emerald-700">
-              Open case
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-2">
-          <span className="font-mono text-[9px] tracking-wide text-slate-400">READINESS: CLAIM CANDIDATE</span>
-          <span className="font-mono text-[9px] tracking-wide text-slate-500">SEVERITY: HIGH</span>
+        <div className="flex flex-col gap-2 border-t border-gray-200 pt-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="text-[11px] font-medium text-gray-500"
+          >
+            Evidence fields matched against inbound discrepancy.
+          </motion.div>
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="mt-1 h-10 w-full rounded-[10px] bg-[#007AFF] text-sm font-medium text-white shadow-md shadow-blue-100"
+            type="button"
+          >
+            Open case
+            <ArrowRight className="ml-2 inline-block h-3.5 w-3.5" />
+          </motion.button>
         </div>
       </div>
     </div>
   );
 }
-
 export default function EvidenceMatch() {
   const [scanProgress, setScanProgress] = useState(0);
   const activeHighlights = MATCH_HIGHLIGHTS.filter((card) => scanProgress >= card.triggerLine);
