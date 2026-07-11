@@ -1,19 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  Barcode,
-  BookOpen,
-  Briefcase,
-  Calculator,
-  ClipboardList,
-  DollarSign,
-  FileCheck,
   FileText,
-  Hash,
-  ListChecks,
-  PenLine,
-  Receipt,
-  Tag,
-  Truck,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -38,21 +25,21 @@ const trunkXLeft = 43;
 
 const evidenceNodesRight: EvidenceNode[] = [
   { id: 'r-invoice', name: 'Invoice', Icon: FileText, evidence: ['Invoice', 'Supplier', '$12,400'], x: 71, y: 13, delay: 0.8, laneX: 59 },
-  { id: 'r-shipment-id', name: 'Shipment ID', Icon: Hash, evidence: ['FBA15J2K', 'Inbound', 'FC log'], x: 89, y: 22, delay: 1.05, laneX: 65 },
-  { id: 'r-asin-fnsku', name: 'ASIN / FNSKU', Icon: Barcode, evidence: ['ASIN', 'FNSKU', 'SKU map'], x: 75, y: 34, delay: 1.3, laneX: 61 },
-  { id: 'r-quantity', name: 'Quantity', Icon: ListChecks, evidence: ['500 shipped', '462 received', '38 delta'], x: 93, y: 45, delay: 1.55, laneX: 65 },
-  { id: 'r-bol', name: 'BOL', Icon: Truck, evidence: ['BOL', 'Carrier', 'Cartons'], x: 73, y: 57, delay: 1.8, laneX: 61 },
-  { id: 'r-pod', name: 'POD', Icon: PenLine, evidence: ['POD', 'Signature', 'Timestamp'], x: 89, y: 67, delay: 2.05, laneX: 65 },
-  { id: 'r-cost-basis', name: 'Cost Basis', Icon: Calculator, evidence: ['Unit cost', 'COGS', 'Variance'], x: 75, y: 79, delay: 2.3, laneX: 61 },
-  { id: 'r-case', name: 'Case', Icon: Briefcase, evidence: ['Case #8821', 'Evidence pack', 'Ready'], x: 93, y: 86, delay: 2.55, laneX: 65 },
+  { id: 'r-shipment-id', name: 'Shipment ID', Icon: FileText, evidence: ['FBA15J2K', 'Inbound', 'FC log'], x: 89, y: 22, delay: 1.05, laneX: 65 },
+  { id: 'r-asin-fnsku', name: 'ASIN / FNSKU', Icon: FileText, evidence: ['ASIN', 'FNSKU', 'SKU map'], x: 75, y: 34, delay: 1.3, laneX: 61 },
+  { id: 'r-quantity', name: 'Quantity', Icon: FileText, evidence: ['500 shipped', '462 received', '38 delta'], x: 93, y: 45, delay: 1.55, laneX: 65 },
+  { id: 'r-bol', name: 'BOL', Icon: FileText, evidence: ['BOL', 'Carrier', 'Cartons'], x: 73, y: 57, delay: 1.8, laneX: 61 },
+  { id: 'r-pod', name: 'POD', Icon: FileText, evidence: ['POD', 'Signature', 'Timestamp'], x: 89, y: 67, delay: 2.05, laneX: 65 },
+  { id: 'r-cost-basis', name: 'Cost Basis', Icon: FileText, evidence: ['Unit cost', 'COGS', 'Variance'], x: 75, y: 79, delay: 2.3, laneX: 61 },
+  { id: 'r-case', name: 'Case', Icon: FileText, evidence: ['Case #8821', 'Evidence pack', 'Ready'], x: 93, y: 86, delay: 2.55, laneX: 65 },
 ];
 
 const evidenceNodesLeft: EvidenceNode[] = [
-  { id: 'l-remittance', name: 'Remittance', Icon: Receipt, evidence: ['Payment', 'Advice', 'Check #'], x: 29, y: 18, delay: 0.95, laneX: 41 },
-  { id: 'l-routing', name: 'Routing Guide', Icon: BookOpen, evidence: ['Compliance', 'SLA', 'Terms'], x: 11, y: 36, delay: 1.2, laneX: 35 },
-  { id: 'l-deduction', name: 'Deduction', Icon: Tag, evidence: ['Code 22', 'Shortage', 'Claim'], x: 25, y: 55, delay: 1.45, laneX: 39 },
-  { id: 'l-carrier-sla', name: 'Carrier SLA', Icon: ClipboardList, evidence: ['Transit', 'Delivery', 'On-time'], x: 7, y: 72, delay: 1.7, laneX: 35 },
-  { id: 'l-supplier-agmt', name: 'Supplier Agmt', Icon: FileCheck, evidence: ['Contract', 'Allowance', 'Promo'], x: 27, y: 86, delay: 2.15, laneX: 41 },
+  { id: 'l-remittance', name: 'Remittance', Icon: FileText, evidence: ['Payment', 'Advice', 'Check #'], x: 29, y: 18, delay: 0.95, laneX: 41 },
+  { id: 'l-routing', name: 'Routing Guide', Icon: FileText, evidence: ['Compliance', 'SLA', 'Terms'], x: 11, y: 36, delay: 1.2, laneX: 35 },
+  { id: 'l-deduction', name: 'Deduction', Icon: FileText, evidence: ['Code 22', 'Shortage', 'Claim'], x: 25, y: 55, delay: 1.45, laneX: 39 },
+  { id: 'l-carrier-sla', name: 'Carrier SLA', Icon: FileText, evidence: ['Transit', 'Delivery', 'On-time'], x: 7, y: 72, delay: 1.7, laneX: 35 },
+  { id: 'l-supplier-agmt', name: 'Supplier Agmt', Icon: FileText, evidence: ['Contract', 'Allowance', 'Promo'], x: 27, y: 86, delay: 2.15, laneX: 41 },
 ];
 
 const evidenceNodes = [...evidenceNodesLeft, ...evidenceNodesRight];
