@@ -1007,7 +1007,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative bg-[#FAFAF7] py-20 md:py-28" id="how-margin-works">
+        <section className="relative bg-[#FAFAF7] py-16 md:py-28" id="how-margin-works">
           <div className={containerClass}>
             <div className="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-end">
               <div>
@@ -1015,7 +1015,7 @@ export default function Index() {
                   <span>06</span>
                   <span>What Margin Does</span>
                 </div>
-                <h2 className="font-serif-headline mt-7 max-w-[820px] text-[34px] font-bold leading-[1.02] tracking-[-0.035em] text-[#182026] sm:text-[44px] md:text-[58px] lg:text-[64px]">
+                <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] text-[#182026] sm:text-[44px] md:text-[58px] lg:text-[64px]">
                   From scattered proof to claim-ready evidence packs.
                 </h2>
               </div>
@@ -1027,21 +1027,21 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="workflow-scrollbar-hide mt-12 overflow-x-auto overscroll-x-contain pb-2 md:mt-16">
-              <div className="grid w-max grid-cols-6 gap-x-7 pr-5">
+            <div className="workflow-scrollbar-hide mt-10 overflow-x-auto overscroll-x-contain pb-2 md:mt-16">
+              <div className="grid w-max grid-flow-col auto-cols-[260px] gap-x-4 pr-5 md:grid-cols-6 md:auto-cols-auto md:gap-x-7">
                 {workflowSteps.map((item) => (
                   <div
                     key={item.step}
-                    className="min-h-[260px] w-[270px] border-t border-[#C9D6DE] pt-5 sm:w-[300px] lg:w-[320px]"
+                    className="min-h-[220px] w-[260px] border-t border-[#C9D6DE] pt-4 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
                   >
                     <div className="flex h-full flex-col">
-                      <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3]">
+                      <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3] md:text-[11px]">
                         {item.step}
                       </div>
-                      <h3 className="font-serif-headline mt-5 max-w-[260px] text-[25px] font-bold leading-[1.04] tracking-[-0.025em] text-[#182026] md:text-[29px]">
+                      <h3 className="font-serif-headline mt-4 max-w-[240px] text-[22px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] md:mt-5 md:max-w-[260px] md:text-[29px]">
                         {item.title}
                       </h3>
-                      <p className="mt-4 max-w-[285px] text-[14px] leading-7 text-[#66737F] md:text-[15px] md:leading-7">
+                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#66737F] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
                         {item.detail}
                       </p>
                     </div>
