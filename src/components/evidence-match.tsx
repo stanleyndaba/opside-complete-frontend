@@ -259,9 +259,9 @@ function MatchAnalysisViz() {
         <p>Margin is comparing shipment, receipt, and reimbursement records to determine whether the gap can move into a case.</p>
       </div>
 
-      <div className="mt-5 border-t border-gray-200 pt-4">
-        <div className="space-y-3">
-          <div className="space-y-2 text-[13px] leading-6 text-gray-700">
+      <div className="mt-4 border-t border-gray-200 pt-3">
+        <div className="space-y-2">
+          <div className="space-y-1.5 text-[12px] leading-5 text-gray-700">
             <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Shipment</span>{' '}
               Shipment FBA17ACME001 · 60 shipped.
@@ -271,42 +271,29 @@ function MatchAnalysisViz() {
               Amazon received 46 units at ONT8.
             </p>
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Policy basis</span>{' '}
-              FBA inventory reimbursement review.
-            </p>
-          </div>
-
-          <div className="border-t border-gray-100 pt-3 text-[13px] leading-6 text-gray-700">
-            <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Backend</span>{' '}
               Record <span className="font-medium text-gray-900">00000000-000</span> · Source{' '}
               <span className="font-medium text-gray-900">SP API</span> · Sync{' '}
               <span className="font-medium text-gray-900">acme-sync-20260420</span>
             </p>
-            <p className="mt-2">
+          </div>
+
+          <div className="border-t border-gray-100 pt-2 text-[12px] leading-5 text-gray-700">
+            <p>
               <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Case readiness</span>{' '}
-              Readiness <span className="font-medium text-gray-900">Claim candidate</span> · Deadline{' '}
-              <span className="font-medium text-gray-900">Apr 2, 2026</span> · Case link{' '}
+              Claim candidate · Deadline <span className="font-medium text-gray-900">Apr 2, 2026</span> · Case link{' '}
               <span className="font-medium text-gray-900">ACME-CASE-2001</span>
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-gray-200 pt-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="text-[11px] font-medium text-gray-500"
-          >
-            Evidence fields matched against inbound discrepancy.
-          </motion.div>
+        <div className="mt-2 flex flex-col gap-2 border-t border-gray-200 pt-3">
           <motion.button
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-1 h-10 w-full rounded-[10px] bg-[#007AFF] text-sm font-medium text-white shadow-md shadow-blue-100"
+            className="h-9 w-full rounded-[10px] bg-[#007AFF] text-sm font-medium text-white shadow-md shadow-blue-100"
             type="button"
           >
             Open case
