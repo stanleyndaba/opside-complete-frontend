@@ -355,7 +355,7 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
         <motion.div
           className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: isMobileLayout ? 22 : 30, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: isMobileLayout ? 25.3 : 34.5, repeat: Infinity, ease: 'linear' }}
         >
           {[...integrationLogos, ...integrationLogos].map((logo, index) => (
             <div
@@ -570,10 +570,10 @@ function SystemLogMarquee() {
           </p>
         </motion.div>
 
-        <motion.div
-          {...revealProps}
-          className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl md:p-7"
-        >
+          <motion.div
+            {...revealProps}
+            className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl md:p-7"
+          >
           <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#7B8A95]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#21B487]" />
             Recovery OS
@@ -587,18 +587,18 @@ function SystemLogMarquee() {
         </motion.div>
       </div>
 
-      <div className="relative mt-12 space-y-2.5 md:mt-14 md:space-y-3">
-        {systemLogRows.map((row, rowIndex) => (
-          <div
-            key={`${row.direction}-${rowIndex}`}
-            className="system-log-row"
-            data-direction={row.direction}
-            style={{
-              '--duration': row.duration,
-              '--hover-duration': row.hoverDuration
-            } as React.CSSProperties}
-          >
-            <div className="system-log-track flex w-max gap-3 px-3 md:gap-3.5 md:px-4">
+          <div className="relative mt-12 space-y-2.5 md:mt-14 md:space-y-3">
+            {systemLogRows.map((row, rowIndex) => (
+              <div
+                key={`${row.direction}-${rowIndex}`}
+                className="system-log-row"
+                data-direction={row.direction}
+                style={{
+                  '--duration': row.duration,
+                  '--hover-duration': row.hoverDuration
+                } as React.CSSProperties}
+              >
+                <div className="system-log-track flex w-max gap-3 px-3 md:gap-3.5 md:px-4">
               {[...row.items, ...row.items].map((entry, index) => (
                 <div
                   key={`${rowIndex}-${entry.label}-${entry.text}-${index}`}
@@ -1027,12 +1027,15 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="workflow-scrollbar-hide mt-10 overflow-x-auto overscroll-x-contain pb-2 md:mt-16">
-              <div className="grid w-max grid-flow-col auto-cols-[260px] gap-x-4 pr-5 md:grid-cols-6 md:auto-cols-auto md:gap-x-7">
-                {workflowSteps.map((item) => (
+            <div className="workflow-scrollbar-hide mt-10 overflow-hidden pb-2 md:mt-16">
+          <motion.div
+            className="workflow-marquee-track flex w-max items-stretch gap-x-4 pr-5 md:gap-x-7"
+            style={{ ['--duration' as string]: '58s' }}
+          >
+                {[...workflowSteps, ...workflowSteps].map((item, index) => (
                   <div
-                    key={item.step}
-                    className="min-h-[220px] w-[260px] border-t border-[#C9D6DE] pt-4 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
+                    key={`${item.step}-${index}`}
+                    className="min-h-[220px] w-[260px] shrink-0 border-t border-[#C9D6DE] pt-4 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
                   >
                     <div className="flex h-full flex-col">
                       <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3] md:text-[11px]">
@@ -1047,7 +1050,7 @@ export default function Index() {
                     </div>
                   </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -1195,12 +1198,12 @@ export default function Index() {
             className="pointer-events-none absolute left-0 top-1/3 hidden h-[500px] w-full bg-[radial-gradient(circle_at_50%_50%,rgba(11,116,222,0.06),transparent_60%)] md:block"
           />
           <div className={containerClass}>
-            <div className="glass-card relative overflow-hidden rounded-[32px] p-8 md:p-16 lg:p-20 shadow-[0_32px_64px_rgba(0,0,0,0.08)] bg-white/60 backdrop-blur-3xl border border-white/40">
+          <div className="glass-card relative overflow-hidden rounded-[32px] p-8 md:p-16 lg:p-20 shadow-[0_32px_64px_rgba(0,0,0,0.08)] bg-white/60 backdrop-blur-3xl border border-white/40">
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20" />
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
-                    Founding 500 Early Access.
+                    Early Access Open.
                   </h2>
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
                     The first 500 sellers reserve founder pricing and priority activation for a one-time $99 fee. Margin helps prepare, organize, and manage evidence-heavy reimbursement workflows with seller approval before filing. No recovery commissions.

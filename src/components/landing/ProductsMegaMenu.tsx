@@ -17,6 +17,7 @@ import {
     Activity,
     Globe2,
     Network,
+    TrendingUp,
     type LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -26,7 +27,7 @@ export const productMenuGroups = [
         label: 'Recovery Infrastructure',
         badge: 'Core Systems',
         items: [
-            { title: 'Discrepancy Engine', description: 'Continuous monitoring of inbound, inventory, and fee states.', icon: Activity },
+            { title: 'Discrepancy Engine', description: 'Continuous monitoring of inbound, inventory, and fee states.', icon: TrendingUp },
             { title: 'Evidence Vault', description: 'Automated collection of BOLs, invoices, and shipment logs.', icon: Layers },
             { title: 'Surgical Case Builder', description: 'Policy-aligned claim construction for maximum approval rates.', icon: FileText },
             { title: 'Dispute Automation', description: 'Autonomous handling of lowball offers and rejections.', icon: ShieldCheck }

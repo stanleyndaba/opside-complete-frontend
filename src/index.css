@@ -29,6 +29,23 @@
   will-change: transform;
 }
 
+@keyframes workflow-marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.workflow-marquee-track {
+  animation: workflow-marquee-left var(--duration, 54s) linear infinite;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
 .system-log-row[data-direction='right'] .system-log-track {
   animation-name: system-log-marquee-right;
 }
