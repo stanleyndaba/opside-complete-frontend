@@ -476,7 +476,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              Amazon doesn't pay because you found a discrepancy.
+              Everything Amazon asks for already exists.
             </motion.span>
             <motion.span
               className="block text-slate-400"
@@ -484,7 +484,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
-              Amazon pays because you can prove one.
+              It just doesn't exist together.
             </motion.span>
           </h1>
 
@@ -494,7 +494,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[20px]"
           >
-            Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs.
+            Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs. So Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.
           </motion.p>
 
           <motion.div
