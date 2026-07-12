@@ -43,6 +43,16 @@ const ReadinessSimulate: React.FC = () => {
           </div>
         </div>
 
+        <div className="mb-6">
+          <motion.div
+            className="text-5xl font-bold leading-none tracking-tighter text-gray-700"
+            initial={{ opacity: 0.8 }}
+            animate={{ opacity: 1 }}
+          >
+            92<span className="text-xl ml-1">%</span>
+          </motion.div>
+        </div>
+
         {/* The Checklist: Operational Infrastructure */}
         <div className="grid grid-cols-2 gap-6">
           
