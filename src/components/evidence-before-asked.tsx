@@ -23,8 +23,8 @@ const word = {
 };
 
 const lines = [
-  { text: 'Evidence built before', strong: false },
-  { text: 'Amazon asks for it.', strong: true },
+  { text: 'Turns hours of proof-chasing', strong: false },
+  { text: 'into one claim-ready evidence pack.', strong: true },
 ];
 
 export default function EvidenceBeforeAsked() {
