@@ -194,16 +194,12 @@ type WindowWithIdleCallback = Window & {
 };
 
 const RouteSkeleton = () => (
-  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] p-4 text-[#182026]">
-    <div className="flex min-h-[180px] w-full max-w-[320px] flex-col items-center justify-center gap-4 rounded-[28px] border border-[#DCE8EE] bg-white px-6 py-8 text-center shadow-[0_26px_90px_rgba(37,49,58,0.10)]">
-      <img src="/logoimagetwo.png" alt="Margin" className="h-10 w-auto object-contain" />
-      <div className="space-y-1">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">Margin</div>
-        <div className="text-sm text-[#66737F]">Preparing the next view.</div>
-      </div>
-      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-[#EAF2F7]">
-        <div className="h-full w-1/2 animate-pulse rounded-full bg-[#0B74DE]" />
-      </div>
+  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] px-5 text-[#182026]">
+    <div className="inline-flex max-w-full items-center justify-center gap-2.5 sm:gap-3">
+      <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto shrink-0 object-contain sm:h-7" />
+      <span className="brand-wordmark font-merriweather text-xl tracking-tight text-[#182026] sm:text-2xl">
+        Margin
+      </span>
     </div>
   </div>
 );
