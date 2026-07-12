@@ -23,8 +23,8 @@ const word = {
 };
 
 const lines = [
-  { text: 'Turns hours of proof-chasing', strong: false },
-  { text: 'into one claim-ready evidence pack.', strong: true },
+  { text: 'Margin sends', strong: false },
+  { text: 'an Agent', strong: true },
 ];
 
 export default function EvidenceBeforeAsked() {
