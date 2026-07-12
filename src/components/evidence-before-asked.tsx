@@ -19,18 +19,18 @@ export default function EvidenceBeforeAsked() {
       <section className="relative z-10 w-full max-w-[960px]">
         <div className="mx-auto flex flex-col items-center gap-6 text-center text-5xl font-bold leading-[0.96] tracking-tight text-slate-900 sm:text-6xl md:text-7xl lg:text-8xl">
           <motion.p
-            initial={{ opacity: 0, x: 72, filter: 'blur(10px)' }}
+            initial={{ opacity: 0, x: 96, filter: 'blur(12px)' }}
             animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }}
+            transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[14ch]"
           >
-            Most sellers have cited evidence.
+            Most Sellers have the evidence
           </motion.p>
 
           <motion.p
-            initial={{ opacity: 0, x: -72, filter: 'blur(10px)' }}
+            initial={{ opacity: 0, x: -96, filter: 'blur(12px)' }}
             animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.7, delay: 0.22, ease: [0.22, 1, 0.36, 1] as const }}
+            transition={{ duration: 1.05, delay: 0.42, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[14ch]"
           >
             It&apos;s just <span className="text-[#0052FF] underline decoration-[#0052FF] decoration-2 underline-offset-[0.14em]">scattered</span> everywhere.
