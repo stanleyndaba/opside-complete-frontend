@@ -18,7 +18,6 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { ScrollytellingCoverage } from '@/components/landing/ScrollytellingCoverage';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 import { ProgressiveNarrativeTabs } from '@/components/landing/ProgressiveNarrativeTabs';
-import { TechnicalProtocolGrid } from '@/components/landing/TechnicalProtocolGrid';
 import { SystemPerformanceTicker } from '@/components/landing/SystemPerformanceTicker';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
@@ -934,8 +933,6 @@ export default function Index() {
             </div>
           </div>
         </section>
-
-        <TechnicalProtocolGrid />
 
         <ProgressiveNarrativeTabs />
 
