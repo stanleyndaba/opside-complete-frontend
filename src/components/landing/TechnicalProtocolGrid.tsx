@@ -4,27 +4,27 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 const protocols = [
   {
     number: '01',
-    title: 'Claim Deadline Tracking',
-    subtext: 'Every case stays attached to the filing window that controls eligibility.',
-    log: 'Filing window lock',
+    title: 'She discovers a discrepancy',
+    subtext: 'A reimbursement issue surfaces from Amazon operational data.',
+    log: 'Discrepancy surfaced',
   },
   {
     number: '02',
-    title: 'Document Matching',
-    subtext: 'Invoices, BOLs, PODs, shipment records, and support history are linked before filing.',
-    log: 'Evidence link graph',
+    title: 'She learns Amazon needs proof',
+    subtext: 'Margin maps the issue to the invoices, BOLs, PODs, shipment IDs, carrier records, cost data, case history, and payout records Amazon may ask for.',
+    log: 'Proof requirements',
   },
   {
     number: '03',
-    title: 'Seller-Controlled Filing',
-    subtext: 'Margin starts read-only and no filing action advances without seller approval.',
-    log: 'Seller approval gate',
+    title: 'She realizes the proof is scattered',
+    subtext: 'Relevant records are pulled from inboxes, drives, shipment files, reports, and support trails.',
+    log: 'Recovery proof search',
   },
   {
     number: '04',
-    title: 'Payout Reconciliation',
-    subtext: 'Each case is tracked through Amazon response, dispute, payout, underpayment, or blocker.',
-    log: 'Payout state ledger',
+    title: 'Margin connects it',
+    subtext: 'The claim is assembled with linked proof, deadline context, and seller approval before filing.',
+    log: 'Evidence pack assembly',
   },
 ];
 
@@ -51,7 +51,7 @@ export function TechnicalProtocolGrid() {
             className="hidden md:block absolute bottom-0 left-16 top-0 w-px origin-top bg-[#C9D6DE] md:left-[260px]"
           />
 
-          <div className="space-y-28 md:space-y-36">
+          <div className="space-y-24 md:space-y-32">
             {protocols.map((protocol, index) => (
               <motion.article
                 key={protocol.number}
@@ -79,14 +79,13 @@ export function TechnicalProtocolGrid() {
                 </div>
 
                 <div className="max-w-[580px]">
-                  <h3 className="text-[18px] font-bold uppercase leading-snug text-[#182026] md:text-[21px]">
+                  <h3 className="text-[18px] font-bold leading-snug text-[#182026] md:text-[21px]">
                     {protocol.title}
                   </h3>
                   <p className="mt-5 text-[16px] leading-[1.6] text-[#66737F] md:text-[18px]">
                     {protocol.subtext}
                   </p>
                   <p className="mt-6 font-mono text-[11px] leading-none text-[#7A8994]">
-                    <span className="text-[#0B74DE]">Protocol:</span>{' '}
                     {protocol.log}
                   </p>
                 </div>

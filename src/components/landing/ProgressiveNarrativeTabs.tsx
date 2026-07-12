@@ -4,19 +4,19 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 const CHAPTERS = [
   {
     id: 1,
-    title: 'The claim window closes fast.',
+    title: 'The claim window keeps closing.',
     subtext: 'Once a discrepancy is identified, the seller has limited time to gather the right evidence and file correctly.',
     duration: 6000,
   },
   {
     id: 2,
-    title: 'The proof is scattered everywhere.',
+    title: 'Your proof stays scattered.',
     subtext: 'The invoice is in Gmail. The POD is in a carrier portal. The BOL is in Drive. The case ID is in Seller Central. The payout is buried in a settlement report.',
     duration: 6000,
   },
   {
     id: 3,
-    title: 'Delay becomes lost money.',
+    title: 'Recoverable money quietly expires.',
     subtext: 'If the evidence is missing, late, weak, or rejected, a valid recovery opportunity can expire.',
     duration: 6000,
   }

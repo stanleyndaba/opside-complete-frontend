@@ -709,7 +709,7 @@ export function ScrollytellingCoverage() {
             Coverage Examples
           </div>
           <h2 className="mt-2 max-w-[680px] text-[19px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:mt-3 sm:text-[28px] md:text-[34px]">
-            Amazon reimbursement workflows Margin manages.
+            One discrepancy. Every answer.
           </h2>
 
           {/* ── Split layout ── */}

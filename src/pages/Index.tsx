@@ -50,88 +50,88 @@ const auditLines = [
 
 const whyNowItems = [
   {
-    title: 'The claim window closes fast',
+    title: 'The claim window keeps closing',
     detail: 'Amazon reimbursement claims can move on short deadlines. Once a discrepancy is identified, the evidence, filing path, and response work need to move before the window closes.'
   },
   {
-    title: 'The proof is scattered everywhere',
+    title: 'Your proof stays scattered',
     detail: 'The invoice you need for a reimbursement claim is in your email from seven months ago. The shipment log is in a supplier WhatsApp thread. By the time you find both, the claim window is gone. Margin connects those sources before the deadline hits.'
   },
   {
-    title: 'Delay becomes lost money',
+    title: 'Recoverable money quietly expires',
     detail: "Every day a reimbursement claim is not filed is a day closer to losing the case permanently. Margin keeps the workflow moving in minutes, not days."
   }
 ];
 
 const proofItems = [
   {
-    title: 'Claim Deadline Tracking',
-    detail: 'Every reimbursement case stays tied to the filing window that controls eligibility.'
+    title: 'Before Amazon asks...',
+    detail: 'Know what is ready.'
   },
   {
-    title: 'Document Matching',
-    detail: 'Invoices, BOLs, PODs, shipment records, and support history are matched before filing.'
+    title: 'What is missing',
+    detail: 'See the proof gap.'
   },
   {
-    title: 'Read-only First Mode',
-    detail: 'All reimbursement workflows are structured without enabling actions until approval is granted.'
+    title: 'What is about to expire',
+    detail: 'Move before the window closes.'
   },
   {
-    title: 'Payout Reconciliation',
+    title: 'One recovery story',
     detail: 'Each case is tracked from evidence pack to Amazon response, payout, dispute, or blocker.'
   }
 ];
 
 const velocityMetrics = [
   {
-    label: 'Evidence Readiness',
+    label: 'Before Amazon asks...',
     value: 3,
     suffix: 'min',
-    detail: 'Discrepancy is checked against the records Amazon may ask for before filing.'
+    detail: 'Know what is ready.'
   },
   {
-    label: 'Document Matching',
+    label: 'What is missing',
     value: 1,
     suffix: 'min',
-    detail: 'Invoices, shipment records, and support files are linked to the case context.'
+    detail: 'See the proof gap.'
   },
   {
-    label: 'Claim Deadline Tracking',
+    label: 'What is about to expire',
     value: 16,
     suffix: 's',
-    detail: 'Each issue is mapped to a claim window, required proof, and next action.'
+    detail: 'Move before the window closes.'
   }
 ];
 
 const workflowSteps = [
   {
     step: '01',
-    title: 'Detect discrepancy',
-    detail: 'A potential reimbursement issue is identified from Amazon operational data.'
+    title: 'She discovers a discrepancy',
+    detail: 'A reimbursement issue surfaces from Amazon operational data.'
   },
   {
     step: '02',
-    title: 'Identify required evidence',
+    title: 'She learns Amazon needs proof',
     detail: 'Margin maps the issue to the invoices, BOLs, PODs, shipment IDs, carrier records, cost data, case history, and payout records Amazon may ask for.'
   },
   {
     step: '03',
-    title: 'Locate and match documents',
+    title: 'She realizes the proof is scattered',
     detail: 'Relevant records are pulled from inboxes, drives, shipment files, reports, and support trails.'
   },
   {
     step: '04',
-    title: 'Generate evidence pack',
+    title: 'Margin connects it',
     detail: 'The claim is assembled with linked proof, deadline context, and seller approval before filing.'
   },
   {
     step: '05',
-    title: 'Seller approves filing',
+    title: 'She reviews the case',
     detail: 'Seller review controls whether the evidence-backed case advances into filing.'
   },
   {
     step: '06',
-    title: 'Track response and payout',
+    title: 'Amazon responds',
     detail: 'Margin follows the case through Amazon response, rejection recovery, escalation, payout, dispute, or reconciliation.'
   }
 ];
@@ -476,7 +476,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              Finding a discrepancy
+              Amazon doesn't pay because you found a discrepancy.
             </motion.span>
             <motion.span
               className="block text-slate-400"
@@ -484,7 +484,7 @@ function KineticHeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
-              is only the beginning.
+              Amazon pays because you can prove one.
             </motion.span>
           </h1>
 
@@ -494,7 +494,7 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[20px]"
           >
-            Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs. So Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.
+            Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs.
           </motion.p>
 
           <motion.div
@@ -923,8 +923,8 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <motion.div {...revealProps}>
-                <div className={sectionLabelClass}>Evidence Readiness</div>
-                <h2 className={sectionHeadingClass}>Know what is ready, what is missing, and when the claim window closes.</h2>
+                <div className={sectionLabelClass}>Before Amazon asks...</div>
+                <h2 className={sectionHeadingClass}>Know what is ready, what is missing, and what is about to expire.</h2>
                 <p className={sectionBodyClass}>
                   Margin scores each recovery case by evidence readiness so operators can see which cases can move, which need proof, and which are at risk of expiring.
                 </p>
@@ -987,7 +987,7 @@ export default function Index() {
             <div className="max-w-[680px] md:mx-auto md:text-center">
               <div className={sectionLabelClass}>Evidence Sources</div>
               <h2 className="mt-3 text-[28px] font-semibold leading-tight tracking-[-0.04em] text-[#182026] md:text-[42px]">
-                Connect the places where recovery proof already lives.
+                Your proof already exists. It just does not exist together.
               </h2>
               <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 Amazon does not just ask what happened. It asks you to prove it. Margin organizes the records behind reimbursement work - invoices, BOLs, PODs, shipment IDs, ASIN/FNSKU records, carrier documents, cost data, case history, settlement reports, and payout data - into one evidence workflow.
@@ -1008,7 +1008,7 @@ export default function Index() {
                   <span>What Margin Does</span>
                 </div>
                 <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] text-[#182026] sm:text-[44px] md:text-[58px] lg:text-[64px]">
-                  From scattered proof to claim-ready evidence packs.
+                  She already has the evidence. She just cannot assemble it before Amazon asks.
                 </h2>
               </div>
 
@@ -1067,7 +1067,7 @@ export default function Index() {
                     STATUS: CHAOS
                   </div>
                   <h3 className="mt-5 max-w-[440px] text-[26px] font-semibold leading-tight tracking-[-0.04em] text-[#4E5B65] md:text-[34px]">
-                    Proof is scattered across the operation.
+                    Scattered proof.
                   </h3>
 
                   <div className="mt-9 border-y border-[#D8E3E8]">
@@ -1107,7 +1107,7 @@ export default function Index() {
                     transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <h3 className="mt-5 max-w-[460px] text-[28px] font-semibold leading-tight tracking-[-0.045em] text-[#182026] md:text-[38px]">
-                      One claim-ready evidence pack.
+                      One recovery story.
                     </h3>
 
                     <div className="mt-9 border-y border-[#C9D6DE] bg-white/38">
@@ -1279,7 +1279,7 @@ export default function Index() {
               <div className="max-w-[880px]">
 
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  Turn scattered recovery proof into claim-ready evidence.
+                  Recoverable money should not disappear because the proof does not exist together.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
                   Margin helps Amazon sellers organize the documents, deadlines, approvals, case history, and payout records behind reimbursement work - from discrepancy to resolved recovery.

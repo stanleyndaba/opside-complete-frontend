@@ -3,22 +3,22 @@ import { motion, useInView } from 'framer-motion';
 
 const metrics = [
   {
-    label: 'Evidence Readiness',
+    label: 'Before Amazon asks...',
     value: 16,
     unit: 's',
-    subtext: 'Discrepancy mapped to the claim type, proof requirements, and next action.'
+    subtext: 'Know what is ready.'
   },
   {
-    label: 'Document Matching',
+    label: 'What is missing',
     value: 3,
     unit: 'min',
-    subtext: 'Invoices, shipment records, and support files matched to the recovery case.'
+    subtext: 'See the proof gap.'
   },
   {
-    label: 'Case Assembly',
+    label: 'What is about to expire',
     value: 1,
     unit: 'min',
-    subtext: 'Evidence-complete cases prepared for seller approval before filing.'
+    subtext: 'Move before the window closes.'
   }
 ];
 
