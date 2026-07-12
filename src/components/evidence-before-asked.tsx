@@ -24,7 +24,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[14ch]"
           >
-            Most Sellers have the evidence
+            Margin
           </motion.p>
 
           <motion.p
@@ -33,7 +33,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.05, delay: 0.42, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[14ch]"
           >
-            It&apos;s just <span className="text-[#0052FF] underline decoration-[#0052FF] decoration-2 underline-offset-[0.14em]">scattered</span> everywhere.
+            Connects the proof
           </motion.p>
         </div>
       </section>
