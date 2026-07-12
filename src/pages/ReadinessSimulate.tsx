@@ -3,14 +3,30 @@ import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 
 const ReadinessSimulate: React.FC = () => {
+  const [score, setScore] = useState(38);
   const [isHardening, setIsHardening] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    let interval: number | undefined;
+    const timer = window.setTimeout(() => {
       setIsHardening(true);
+      let currentScore = 38;
+      interval = window.setInterval(() => {
+        if (currentScore < 92) {
+          currentScore += 1;
+          setScore(currentScore);
+        } else {
+          window.clearInterval(interval);
+        }
+      }, 40);
     }, 1500);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (interval !== undefined) {
+        window.clearInterval(interval);
+      }
+    };
   }, []);
 
   const readyItems = [
@@ -49,7 +65,7 @@ const ReadinessSimulate: React.FC = () => {
             initial={{ opacity: 0.8 }}
             animate={{ opacity: 1 }}
           >
-            92<span className="text-xl ml-1">%</span>
+            {score}<span className="text-xl ml-1">%</span>
           </motion.div>
         </div>
 
