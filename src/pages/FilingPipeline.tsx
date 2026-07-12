@@ -113,7 +113,7 @@ const ATTENTION_FILING_STATUSES = new Set(['failed', 'blocked', 'payment_require
 const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'under_review', 'in review', 'in_review', 'in_progress', 'processing']);
 const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
-const DEMO_PIPELINE_ROW_COUNT = 10;
+const DEMO_PIPELINE_ROW_COUNT = 11;
 const PIPELINE_EXPLAINER_CLASS = 'mt-1.5 max-w-3xl text-sm font-medium leading-5 text-sky-100/85';
 const PIPELINE_META_CLASS = 'mt-2 text-[11px] font-medium tracking-tight text-sky-100/60';
 const PIPELINE_PROGRESS_LABEL_CLASS = 'mt-1 text-[13px] font-semibold tracking-tight text-sky-50';
@@ -315,6 +315,19 @@ const DEMO_READY_CASE_VARIANTS = [
     matchedDocuments: 4,
     updatedMinutesAgo: 97,
   },
+  {
+    anomalyType: 'inbound_shipment_shortage',
+    caseType: 'inbound_shipment_shortage',
+    storeName: 'Northstar Home Goods',
+    caseNumber: 'RFD-16912-INB',
+    claimNumber: 'CLM-INB-9051',
+    orderId: 'FBA17ZK9Q3M1',
+    sku: 'NS-HOME-ORGANIZER-4PK',
+    asin: 'B0C7N2Q9NN',
+    amount: 569.5,
+    matchedDocuments: 4,
+    updatedMinutesAgo: 111,
+  },
 ];
 
 const DEMO_READY_DECISION_VARIANTS: ReadyFilingPreview[] = [
@@ -447,6 +460,19 @@ const DEMO_READY_DECISION_VARIANTS: ReadyFilingPreview[] = [
     unitsAffected: 3,
     recommendedAction: 'Review packet, then approve',
     checks: ['Disposal reason eligible', 'SKU matched', 'Overclaim check passed'],
+  },
+  {
+    whyFile: 'Inbound shipment shortage shows 60 shipped against 46 received, and the receipt pack traces the 14-unit gap back to Amazon.',
+    evidencePacket: 'Invoice, BOL, shipment plan, receive delta',
+    evidenceDocs: ['INV-INB-9051.pdf', 'BOL-FBA17ZK9Q3M1.pdf', 'shipment-plan.csv', 'receive-delta.csv'],
+    amazonRoute: 'Seller Central / FBA inventory reimbursement / Inbound shortage',
+    safety: 'Low risk - duplicate reimbursement check passed',
+    priority: 'High priority',
+    confidence: 93,
+    daysLeft: 19,
+    unitsAffected: 14,
+    recommendedAction: 'Approve filing now',
+    checks: ['Policy window valid', 'Unit cost verified', 'No prior reimbursement found'],
   },
 ];
 
@@ -611,6 +637,22 @@ const DEMO_FILED_CASE_VARIANTS = [
     status: 'in_review',
     submittedMinutesAgo: 382,
   },
+  {
+    anomalyType: 'inbound_shipment_shortage',
+    caseType: 'inbound_shipment_shortage',
+    storeName: 'Northstar Home Goods',
+    orderId: 'FBA17ZK9Q3M1',
+    sku: 'NS-HOME-ORGANIZER-4PK',
+    asin: 'B0C7N2Q9NN',
+    amount: 569.5,
+    matchedDocuments: 4,
+    attachments: 3,
+    amazonCaseId: '16912090511',
+    proofReference: 'AMZ-INB-90511',
+    externalReference: 'SC-INB-9051',
+    status: 'submitted',
+    submittedMinutesAgo: 418,
+  },
 ];
 
 const DEMO_FILED_REVIEW_VARIANTS: FiledFilingPreview[] = [
@@ -753,6 +795,20 @@ const DEMO_FILED_REVIEW_VARIANTS: FiledFilingPreview[] = [
     confidence: 'Solid proof - category wording reviewed',
     receiptDocs: ['disposal-error-19833.pdf', 'disposal-event.csv', 'inventory-ledger.csv'],
     checks: ['Disposal reason eligible', 'Overclaim check passed', 'Thread watcher active'],
+  },
+  {
+    amazonStatus: 'Submitted to Amazon',
+    submissionSummary: 'The inbound-shortage claim is now with Amazon with the invoice, BOL, and receiving delta attached.',
+    proofPacket: 'Invoice, BOL, shipment plan, receiving delta, unit cost proof',
+    trackerStage: 'Waiting for Amazon queue pickup',
+    progress: 56,
+    responseWindow: 'Amazon intake usually responds within 24-48 hours',
+    nextWatch: 'Watch for request to re-upload BOL or carton-count proof',
+    nextCheck: 'Next automated check in 24 min',
+    payoutSignal: 'Settlement report clean - no duplicate payout',
+    confidence: 'High confidence - shipped vs received delta is clean',
+    receiptDocs: ['seller-central-submit-90511.pdf', 'FBA17ZK9Q3M1-bol.pdf', 'receive-delta.csv'],
+    checks: ['Shipment ID verified', 'Duplicate claim blocked', 'Evidence hash stored'],
   },
 ];
 
@@ -1007,6 +1063,31 @@ const DEMO_ACTIVE_FILING_VARIANTS = [
     policyWindow: 'Reply window still open',
     activity: ['Parsed Amazon rejection reason', 'Found stamped POD gap', 'Attaching reply evidence'],
   },
+  {
+    anomalyType: 'inbound_shipment_shortage',
+    caseType: 'inbound_shipment_shortage',
+    storeName: 'Acme Operations US FBA',
+    orderId: 'FBA17ACME012',
+    sku: 'ACME-TRAVEL-MUG-GRN',
+    asin: 'B0ACME0012',
+    amount: 569.5,
+    unitsAffected: 11,
+    matchedDocuments: 4,
+    currentAction: 'Validating claim amount against unit-cost proof',
+    stageLabel: 'Amount validation',
+    progress: 54,
+    step: 3,
+    totalSteps: 6,
+    amazonRoute: 'Seller Central / FBA inventory reimbursement / Inbound received short',
+    evidencePacket: 'Invoice, shipment plan, receive delta, SKU cost proof',
+    evidenceDocs: ['INV-ACME-2012.pdf', 'FBA17ACME012-plan.csv', 'receive-delta.csv', 'unit-cost-proof.pdf'],
+    eta: '~2 min',
+    retries: 0,
+    health: 'Healthy - amount tolerance passed',
+    nextProof: 'Final Amazon message + receipt',
+    policyWindow: 'Shipment close date verified',
+    activity: ['Calculated recoverable amount', 'Checked Amazon tolerance', 'Preparing final message'],
+  },
 ];
 
 const DEMO_COMPLETED_RECOVERY_VARIANTS = [
@@ -1170,6 +1251,22 @@ const DEMO_COMPLETED_RECOVERY_VARIANTS = [
     submittedMinutesAgo: 2798,
     updatedMinutesAgo: 734,
   },
+  {
+    caseNumber: '791-67392051',
+    providerCaseId: '16912090511',
+    merchantReference: 'Northstar Home Goods · Inbound shipment shortage',
+    proofReference: 'AMZ-PAID-INB-90511',
+    externalReference: 'REC-INB-9051',
+    approvedAmount: 569.5,
+    paidAmount: 569.5,
+    status: 'approved',
+    reconciliationStatus: 'reconciled',
+    reconciliationSource: 'amazon_settlement_report',
+    payoutStatus: 'paid',
+    operatorState: 'reconciled',
+    submittedMinutesAgo: 2925,
+    updatedMinutesAgo: 801,
+  },
 ];
 
 const DEMO_COMPLETED_PROOF_VARIANTS: CompletedRecoveryPreview[] = [
@@ -1312,6 +1409,20 @@ const DEMO_COMPLETED_PROOF_VARIANTS: CompletedRecoveryPreview[] = [
     recoveredSignal: 'Disposal error recovered',
     proofDocs: ['disposal-reimbursement-3702.csv', 'settlement-credit.pdf', 'disposal-event-proof.pdf'],
     checks: ['Disposal event linked', 'Payout matched', 'Closeout archived'],
+  },
+  {
+    recoverySummary: 'Inbound shipment shortage reimbursement landed in settlement and was matched back to the original Amazon case.',
+    closureStage: 'Paid and reconciled',
+    progress: 100,
+    payoutProof: 'Settlement credit matched',
+    reconciliationSource: 'Amazon settlement report',
+    depositTrail: 'Settlement batch -> reimbursement row -> recovery ledger',
+    variance: '$0.00 variance',
+    closeoutAction: 'Closed with receipt archived',
+    daysToRecover: 6,
+    recoveredSignal: 'Cash recovered and ledger closed',
+    proofDocs: ['settlement-credit-90511.pdf', 'reimbursement-row.csv', 'case-closeout.pdf'],
+    checks: ['Payout amount matched', 'Amazon case reconciled', 'Receipt archived'],
   },
 ];
 
@@ -1586,12 +1697,39 @@ const DEMO_AWAITING_PAYOUT_VARIANTS = [
       ledgerChecks: ['Disposal event linked', 'Credit event posted', 'Deposit still pending'],
     },
   },
+  {
+    caseNumber: '784-721151',
+    providerCaseId: '16922090511',
+    merchantReference: 'Acme Operations US FBA · Inbound shipment shortage',
+    proofReference: 'AMZ-APP-INB-90511',
+    externalReference: 'REC-INB-WATCH-9051',
+    approvedAmount: 569.5,
+    reconciliationSource: 'amazon_approval_thread',
+    payoutStatus: 'not_paid',
+    operatorState: 'waiting_for_payout',
+    submittedMinutesAgo: 2199,
+    updatedMinutesAgo: 201,
+    preview: {
+      approvalSummary: 'Amazon approved the inbound shortage. Margin is now watching settlement reports until the exact credit lands.',
+      settlementStage: 'Approved, not deposited',
+      progress: 69,
+      expectedDeposit: 'Expected in next settlement close',
+      nextReconciliation: 'Next settlement scan in 38 min',
+      payoutRisk: 'Low risk - approval amount and claim amount match',
+      reconciliationSource: 'Amazon approval thread + settlement report',
+      variance: '$0.00 variance expected',
+      daysWaiting: 1,
+      cashAction: 'Hold as receivable until deposit appears',
+      watchedReports: ['settlement-v2-report.csv', 'reimbursements.csv', 'payment-events.json'],
+      ledgerChecks: ['Approval reference captured', 'No payment event yet', 'Amount watcher armed'],
+    },
+  },
 ];
 
 function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', index: number, baseMs: number): DisputeRow {
   const entryNumber = index + 1;
   const padded = String(entryNumber).padStart(2, '0');
-  const amount = 140 + entryNumber * 17;
+  const canonicalVariant = DEMO_READY_CASE_VARIANTS[index % DEMO_READY_CASE_VARIANTS.length];
   const updatedAt = demoTimestamp(baseMs, index * 11 + (stage === 'ready' ? 9 : stage === 'filing' ? 21 : stage === 'filed' ? 34 : 47));
 
   if (stage === 'filed') {
@@ -1609,14 +1747,14 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
       filing_status: 'filed',
       status: variant.status,
       can_file: false,
-      anomaly_type: variant.anomalyType,
-      case_type: variant.caseType,
+      anomaly_type: canonicalVariant.anomalyType,
+      case_type: canonicalVariant.caseType,
       store_name: variant.storeName,
       order_id: variant.orderId,
       sku: variant.sku,
       asin: variant.asin,
-      expected_payout_amount: variant.amount,
-      requested_amount: variant.amount,
+      expected_payout_amount: canonicalVariant.amount,
+      requested_amount: canonicalVariant.amount,
       approved_amount: null,
       actual_payout_amount: null,
       recovery_status: null,
@@ -1655,14 +1793,14 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
       filing_status: 'submitting',
       status: 'pending',
       can_file: false,
-      anomaly_type: variant.anomalyType,
-      case_type: variant.caseType,
+      anomaly_type: canonicalVariant.anomalyType,
+      case_type: canonicalVariant.caseType,
       store_name: variant.storeName,
       order_id: variant.orderId,
       sku: variant.sku,
       asin: variant.asin,
-      expected_payout_amount: variant.amount,
-      requested_amount: variant.amount,
+      expected_payout_amount: canonicalVariant.amount,
+      requested_amount: canonicalVariant.amount,
       approved_amount: null,
       actual_payout_amount: null,
       recovery_status: null,
@@ -1710,14 +1848,14 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
       filing_status: approvalHold ? 'pending_approval' : 'blocked',
       status: 'pending',
       can_file: false,
-      anomaly_type: approvalHold ? 'fee_discrepancy' : 'inbound_shipment_shortage',
-      case_type: approvalHold ? 'fee_discrepancy' : 'inbound_shipment_shortage',
+      anomaly_type: canonicalVariant.anomalyType,
+      case_type: canonicalVariant.caseType,
       store_name: 'Margin Demo Store',
       order_id: `114-55124${padded}-3388${padded}`,
       sku: `MARGIN-ATTN-${padded}`,
       asin: `B0MATTEN${padded}`,
-      expected_payout_amount: amount,
-      requested_amount: amount,
+      expected_payout_amount: canonicalVariant.amount,
+      requested_amount: canonicalVariant.amount,
       approved_amount: null,
       actual_payout_amount: null,
       recovery_status: null,
@@ -1748,14 +1886,14 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
     filing_status: 'pending',
     status: 'pending',
     can_file: true,
-    anomaly_type: readyVariant.anomalyType,
-    case_type: readyVariant.caseType,
+    anomaly_type: canonicalVariant.anomalyType,
+    case_type: canonicalVariant.caseType,
     store_name: readyVariant.storeName,
     order_id: readyVariant.orderId,
     sku: readyVariant.sku,
     asin: readyVariant.asin,
-    expected_payout_amount: readyVariant.amount,
-    requested_amount: readyVariant.amount,
+    expected_payout_amount: canonicalVariant.amount,
+    requested_amount: canonicalVariant.amount,
     approved_amount: null,
     actual_payout_amount: null,
     recovery_status: null,
@@ -1777,7 +1915,7 @@ function buildDemoDisputeRow(stage: 'ready' | 'filing' | 'filed' | 'attention', 
 function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs: number): LedgerRow {
   const entryNumber = index + 1;
   const padded = String(entryNumber).padStart(2, '0');
-  const amount = 210 + entryNumber * 23;
+  const canonicalVariant = DEMO_READY_CASE_VARIANTS[index % DEMO_READY_CASE_VARIANTS.length];
   const payoutVariant = stage === 'payout'
     ? DEMO_AWAITING_PAYOUT_VARIANTS[index % DEMO_AWAITING_PAYOUT_VARIANTS.length]
     : null;
@@ -1794,8 +1932,11 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
       : demoTimestamp(baseMs, index * 13 + 58);
   const providerReference = payoutVariant?.providerCaseId ?? (stage === 'payout' ? `784-66${padded}10` : `791-48${padded}24`);
   const internalReference = payoutVariant?.caseNumber ?? (stage === 'payout' ? `784-72${padded}41` : `791-55${padded}38`);
-  const resolvedAmount = completedVariant?.approvedAmount ?? payoutVariant?.approvedAmount ?? amount;
-  const paidAmount = completedVariant?.paidAmount ?? null;
+  const resolvedAmount = canonicalVariant.amount;
+  const paidAmount = stage === 'completed' ? canonicalVariant.amount : null;
+  const merchantBase = completedVariant?.merchantReference ?? payoutVariant?.merchantReference ?? 'Margin Merchant';
+  const merchantPrefix = merchantBase.includes(' · ') ? merchantBase.split(' · ')[0] : merchantBase;
+  const merchantReference = `${merchantPrefix} · ${humanize(canonicalVariant.caseType)}`;
 
   return {
     row_type: 'dispute_case_projection',
@@ -1808,7 +1949,7 @@ function buildDemoLedgerRow(stage: 'payout' | 'completed', index: number, baseMs
     detection_result_id: `demo-${stage}-detection-${padded}`,
     case_number: completedVariant?.caseNumber ?? internalReference,
     provider_case_id: completedVariant?.providerCaseId ?? providerReference,
-    merchant_reference: completedVariant?.merchantReference ?? payoutVariant?.merchantReference ?? 'Margin Merchant',
+    merchant_reference: merchantReference,
     status: completedVariant?.status ?? 'approved',
     filing_status: 'filed',
     submission_proof: {
