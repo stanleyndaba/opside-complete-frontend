@@ -106,17 +106,17 @@ const velocityMetrics = [
 const workflowSteps = [
   {
     step: '01',
-    title: 'She discovers a discrepancy',
+    title: 'A discrepancy appears',
     detail: 'A reimbursement issue surfaces from Amazon operational data.'
   },
   {
     step: '02',
-    title: 'She learns Amazon needs proof',
+    title: 'Amazon needs proof',
     detail: 'Margin maps the issue to the invoices, BOLs, PODs, shipment IDs, carrier records, cost data, case history, and payout records Amazon may ask for.'
   },
   {
     step: '03',
-    title: 'She realizes the proof is scattered',
+    title: 'The proof is scattered',
     detail: 'Relevant records are pulled from inboxes, drives, shipment files, reports, and support trails.'
   },
   {
@@ -126,7 +126,7 @@ const workflowSteps = [
   },
   {
     step: '05',
-    title: 'She reviews the case',
+    title: 'The case is reviewed',
     detail: 'Seller review controls whether the evidence-backed case advances into filing.'
   },
   {
@@ -1008,7 +1008,7 @@ export default function Index() {
                   <span>What Margin Does</span>
                 </div>
                 <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] text-[#182026] sm:text-[44px] md:text-[58px] lg:text-[64px]">
-                  She already has the evidence. She just cannot assemble it before Amazon asks.
+                  The evidence already exists. It just cannot be assembled before Amazon asks.
                 </h2>
               </div>
 

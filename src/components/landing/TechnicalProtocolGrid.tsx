@@ -4,19 +4,19 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 const protocols = [
   {
     number: '01',
-    title: 'She discovers a discrepancy',
+    title: 'A discrepancy appears',
     subtext: 'A reimbursement issue surfaces from Amazon operational data.',
     log: 'Discrepancy surfaced',
   },
   {
     number: '02',
-    title: 'She learns Amazon needs proof',
+    title: 'Amazon needs proof',
     subtext: 'Margin maps the issue to the invoices, BOLs, PODs, shipment IDs, carrier records, cost data, case history, and payout records Amazon may ask for.',
     log: 'Proof requirements',
   },
   {
     number: '03',
-    title: 'She realizes the proof is scattered',
+    title: 'The proof is scattered',
     subtext: 'Relevant records are pulled from inboxes, drives, shipment files, reports, and support trails.',
     log: 'Recovery proof search',
   },
