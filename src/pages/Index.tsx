@@ -468,7 +468,7 @@ function KineticHeroSection({
 
           <h1
             id="margin-hero-title"
-            className="mt-6 font-serif-headline max-w-[1040px] text-[38px] font-bold leading-[0.98] tracking-[-0.045em] min-[390px]:text-[44px] sm:mt-7 sm:text-[64px] sm:tracking-[-0.055em] md:text-[88px] lg:text-[112px]"
+            className="mt-6 font-serif-headline max-w-[960px] text-[38px] font-bold leading-[0.98] tracking-[-0.045em] min-[390px]:text-[44px] sm:mt-7 sm:text-[60px] sm:tracking-[-0.055em] md:text-[76px] lg:text-[96px]"
           >
             <motion.span
               className="block text-white"
@@ -492,7 +492,7 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[20px]"
+            className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
           >
             Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs. So Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.
           </motion.p>
