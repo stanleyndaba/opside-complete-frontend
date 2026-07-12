@@ -190,12 +190,15 @@ const PRELOAD_ROUTES = [
 ] as const;
 
 const RouteSkeleton = () => (
-  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-white/70 p-4 text-[#182026] backdrop-blur-[2px]">
-    <div className="flex items-center gap-3 rounded-full border border-[#CFE0EA] bg-white px-4 py-3 shadow-[0_18px_48px_rgba(37,49,58,0.08)]">
-      <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
-      <div>
-        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">Loading Margin</div>
+  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] p-4 text-[#182026]">
+    <div className="flex min-h-[180px] w-full max-w-[320px] flex-col items-center justify-center gap-4 rounded-[28px] border border-[#DCE8EE] bg-white px-6 py-8 text-center shadow-[0_26px_90px_rgba(37,49,58,0.10)]">
+      <img src="/logoimagetwo.png" alt="Margin" className="h-10 w-auto object-contain" />
+      <div className="space-y-1">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">Margin</div>
         <div className="text-sm text-[#66737F]">Preparing the next view.</div>
+      </div>
+      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-[#EAF2F7]">
+        <div className="h-full w-1/2 animate-pulse rounded-full bg-[#0B74DE]" />
       </div>
     </div>
   </div>

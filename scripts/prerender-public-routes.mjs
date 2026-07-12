@@ -1164,9 +1164,15 @@ ${section.contextualSentence ? `          <p>${renderInlineSegments(section.cont
   return `  <div id="root">
     <main class="seo-shell" aria-label="${htmlEscape(route.title)}">
       <div class="seo-shell__inner">
-        <p><strong>${htmlEscape(route.shell?.label || 'Margin')}</strong></p>
-        <h1>${htmlEscape(route.shell?.h1 || route.title)}</h1>
-        <p>${htmlEscape(route.shell?.intro || route.description)}</p>
+        <div class="seo-shell__brand">
+          <img src="/logoimagetwo.png" alt="Margin" width="28" height="28" />
+          <span>Margin</span>
+        </div>
+        <div class="seo-shell__hero">
+          <p class="seo-shell__eyebrow"><strong>${htmlEscape(route.shell?.label || 'Margin')}</strong></p>
+          <h1>${htmlEscape(route.shell?.h1 || route.title)}</h1>
+          <p>${htmlEscape(route.shell?.intro || route.description)}</p>
+        </div>
 ${sections}
 ${renderLinks(route)}
       </div>

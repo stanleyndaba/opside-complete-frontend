@@ -19,6 +19,12 @@
 /payment/*
   X-Robots-Tag: noindex, nofollow
 
+/pricing-adjust
+  X-Robots-Tag: noindex, nofollow
+
+/founding-500/status
+  X-Robots-Tag: noindex, nofollow
+
 /admin/*
   X-Robots-Tag: noindex, nofollow
 
