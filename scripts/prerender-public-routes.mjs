@@ -603,9 +603,9 @@ const routes = [
       'Amazon FBA reimbursement workflow management after discrepancies are identified, from evidence collection and filing to disputes and payout reconciliation.',
     shell: {
       label: 'Always-on reimbursement workflow management for Amazon sellers',
-      h1: 'Finding what Amazon owes you was never the hard part.',
+      h1: 'Finding a discrepancy is only the beginning.',
       intro:
-        'Margin helps Amazon FBA sellers manage the work that begins after a discrepancy is identified: evidence collection, evidence matching, filing workflows, rejection handling, dispute handling, and payout reconciliation. Sellers start read-only, review evidence before action, approve before filing, and keep approved recoveries without recovery commissions.',
+        'Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs so Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.',
       sections: [
         {
           heading: 'What Margin does',
@@ -622,10 +622,10 @@ const routes = [
   },
   {
     path: '/pricing',
-    title: 'Margin Pricing | Finding What Amazon Owes You Was Never the Hard Part',
+    title: 'Margin Pricing | Evidence-Ready Amazon Reimbursement Workflows',
     description:
       'Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.',
-    ogTitle: 'Margin Pricing | Finding What Amazon Owes You Was Never the Hard Part',
+    ogTitle: 'Margin Pricing | Evidence-Ready Amazon Reimbursement Workflows',
     ogDescription:
       'Keep your approved recoveries with Margin pricing built around recovery management, evidence workflow, and seller-controlled filing.',
     shell: {
@@ -1150,6 +1150,15 @@ ${links.map((link, index) => `          <a href="${htmlEscape(link.href)}">${htm
         </p>`;
 };
 
+const renderLoadingRoot = () => `  <div id="root">
+    <main class="route-loading-shell" aria-label="Margin loading">
+      <div class="route-loading-shell__brand">
+        <img src="/logoimagetwo.png" alt="Margin" width="28" height="28" />
+        <span>Margin</span>
+      </div>
+    </main>
+  </div>`;
+
 const renderShell = (route) => {
   const sections = (route.shell?.sections || [])
     .map(
@@ -1251,7 +1260,9 @@ const applyMeta = (html, route) => {
   );
   next = replaceStructuredData(next, route.structuredData);
 
-  next = next.replace(/<div id="root">[\s\S]*?<\/div>\s*<script>/i, `${renderShell(route)}\n  <script>`);
+  const rootMarkup = renderLoadingRoot();
+
+  next = next.replace(/<div id="root">[\s\S]*?<\/div>\s*<script>/i, `${rootMarkup}\n  <script>`);
 
   return next;
 };

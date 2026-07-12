@@ -117,7 +117,7 @@ export default function PricingAdjust() {
   const isInAppOverlay = Boolean(tenantSlug);
 
   usePageMeta({
-    title: 'Margin Pricing | Finding What Amazon Owes You Was Never the Hard Part',
+    title: 'Margin Pricing | Evidence-Ready Amazon Reimbursement Workflows',
     description:
       'Keep your approved recoveries. Pay for the system, not a percentage of every reimbursement. Choose the tier that fits your operational scale.',
     url: `${SITE_META.url}/pricing`,
@@ -413,7 +413,7 @@ export default function PricingAdjust() {
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl font-semibold leading-tight tracking-[-0.055em] text-[#182026] md:text-6xl">
-                Finding what Amazon owes you was never the hard part.
+                Evidence-ready Amazon reimbursement workflows.
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
                 Early Access locks introductory pricing through 2026 with 0% commission, priority activation, and onboarding included. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.

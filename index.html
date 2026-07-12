@@ -91,6 +91,47 @@
       color: #0b74de;
       font-weight: 700;
     }
+
+    .route-loading-shell {
+      box-sizing: border-box;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      background: #fafaf7;
+      color: #182026;
+    }
+
+    .route-loading-shell__brand {
+      display: inline-flex;
+      max-width: 100%;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: Merriweather, Georgia, "Times New Roman", serif;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .route-loading-shell__brand img {
+      display: block;
+      width: auto;
+      height: 24px;
+      flex: 0 0 auto;
+    }
+
+    @media (min-width: 640px) {
+      .route-loading-shell__brand {
+        gap: 12px;
+        font-size: 24px;
+      }
+
+      .route-loading-shell__brand img {
+        height: 28px;
+      }
+    }
   </style>
   <script type="application/ld+json">
     {
@@ -142,47 +183,10 @@
 
 <body>
   <div id="root">
-    <main class="seo-shell" aria-label="Margin overview">
-      <div class="seo-shell__inner">
-        <p><strong>Always-on reimbursement workflow management for Amazon sellers</strong></p>
-        <h1>Finding what Amazon owes you was never the hard part.</h1>
-        <p>
-          Margin helps Amazon FBA sellers manage the work that begins after a discrepancy is identified: evidence
-          collection, evidence matching, filing workflows, rejection handling, dispute handling, and payout
-          reconciliation. Sellers start read-only, review evidence before action, approve before filing, and keep
-          approved recoveries without recovery commissions.
-        </p>
-        <section>
-          <h2>What Margin does</h2>
-          <p>
-            Every Amazon reimbursement claim has a clock. Margin keeps that clock visible while it organizes invoices,
-            shipment records, Amazon reports, support files, reference IDs, sourcing costs, and payout activity into a
-            reimbursement workflow. Cases move through clear states such as identified, validated, evidence-linked,
-            approved, filed, in-review, reconciled, disputed, blocked, or expired.
-          </p>
-        </section>
-        <section>
-          <h2>Why timing matters</h2>
-          <p>
-            Manual and quarterly reimbursement audits can leave sellers with too little time to act. Lost inventory,
-            damaged units, inbound shortages, refund-without-return activity, fee drift, reimbursement reversals, and
-            payout discrepancies can expire before evidence is ready. Margin connects the claim type, evidence
-            checklist, deadline, approval state, dispute status, and payout trail in one controlled workflow.
-          </p>
-        </section>
-        <section>
-          <h2>Why sellers trust the workflow</h2>
-          <p>
-            Margin starts read-only, keeps seller approval before filing, and does not take a percentage of approved
-            recoveries. It is monthly reimbursement workflow management for Amazon operators who want stronger evidence,
-            clearer deadlines, dispute handling, and better payout visibility. Amazon makes final reimbursement
-            decisions; Margin prepares, organizes, and tracks evidence-backed reimbursement work.
-          </p>
-        </section>
-        <p>
-          <a href="/early-access">Start Founding Recovery Audit</a> ·
-          <a href="/pricing">View pricing</a>
-        </p>
+    <main class="route-loading-shell" aria-label="Margin loading">
+      <div class="route-loading-shell__brand">
+        <img src="/logoimagetwo.png" alt="Margin" width="28" height="28" />
+        <span>Margin</span>
       </div>
     </main>
   </div>
