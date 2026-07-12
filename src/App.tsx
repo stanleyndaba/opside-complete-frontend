@@ -2,7 +2,6 @@ import React, { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Skeleton } from "@/components/ui/skeleton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NotificationsProvider from '@/components/providers/NotificationsProvider';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -189,6 +188,11 @@ const PRELOAD_ROUTES = [
   () => import("./pages/RefundPolicy"),
 ] as const;
 
+type WindowWithIdleCallback = Window & {
+  requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
+  cancelIdleCallback?: (handle: number) => void;
+};
+
 const RouteSkeleton = () => (
   <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] p-4 text-[#182026]">
     <div className="flex min-h-[180px] w-full max-w-[320px] flex-col items-center justify-center gap-4 rounded-[28px] border border-[#DCE8EE] bg-white px-6 py-8 text-center shadow-[0_26px_90px_rgba(37,49,58,0.10)]">
@@ -206,9 +210,19 @@ const RouteSkeleton = () => (
 
 const RoutePreloader = () => {
   useEffect(() => {
-    PRELOAD_ROUTES.forEach((loadRoute) => {
+    const preloadRoutes = () => PRELOAD_ROUTES.forEach((loadRoute) => {
       void loadRoute();
     });
+
+    const win = window as WindowWithIdleCallback;
+
+    if (typeof win.requestIdleCallback === "function") {
+      const idleId = win.requestIdleCallback(preloadRoutes, { timeout: 5000 });
+      return () => win.cancelIdleCallback?.(idleId);
+    }
+
+    const fallbackId = window.setTimeout(preloadRoutes, 3000);
+    return () => window.clearTimeout(fallbackId);
   }, []);
 
   return null;
@@ -245,8 +259,8 @@ const App = () => (
                   <SmoothScrollProvider>
                     <RoutePreloader />
                     <RouteErrorBoundary>
+                      <AnalyticsRouteTracker />
                       <Suspense fallback={<RouteSkeleton />}>
-                        <AnalyticsRouteTracker />
                         <Routes>
                         {/* PUBLIC ROUTES - No tenant required */}
                         <Route path="/" element={<Index />} />

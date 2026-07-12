@@ -64,6 +64,7 @@ const NOINDEX_EXACT = new Set([
   '/action-simulate',
   '/rejection-screen',
   '/card-review',
+  '/founding-500/status',
   '/AppealSimulate',
   '/appealsimulate',
 ]);

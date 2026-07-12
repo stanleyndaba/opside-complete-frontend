@@ -6,6 +6,7 @@ import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
+import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const statusItems = [
@@ -23,6 +24,8 @@ export default function FoundingActivationStatus() {
   usePageMeta({
     title: 'Founding 500 Activation Status | Margin',
     description: 'Your Founding 500 seat is secured. Founder pricing is locked and priority activation is queued.',
+    url: `${SITE_META.url}/founding-500/status`,
+    robots: 'noindex, nofollow',
   });
 
   return (
