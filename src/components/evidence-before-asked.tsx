@@ -24,7 +24,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[14ch]"
           >
-            Margin finds the gaps
+            Finds the gaps
           </motion.p>
 
           <motion.p
