@@ -23,8 +23,8 @@ const word = {
 };
 
 const lines = [
-  { text: 'Margin sends', strong: false },
-  { text: 'an Agent', strong: true },
+  { text: 'Audits evidence', strong: false },
+  { text: 'amazon asks for', strong: true },
 ];
 
 export default function EvidenceBeforeAsked() {
