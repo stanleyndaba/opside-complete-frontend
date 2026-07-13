@@ -1,91 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
-
 const metrics = [
   {
-    label: 'Before Amazon asks...',
-    value: 16,
-    unit: 's',
-    subtext: 'Know what is ready.'
+    value: '26',
+    description: 'Recovery algorithms continuously auditing your account.',
   },
   {
-    label: 'What is missing',
-    value: 3,
-    unit: 'min',
-    subtext: 'See the proof gap.'
+    value: '11',
+    description: 'Specialized recovery agents coordinating every case.',
   },
   {
-    label: 'What is about to expire',
-    value: 1,
-    unit: 'min',
-    subtext: 'Move before the window closes.'
-  }
+    value: '12',
+    description: 'Evidence workflows connecting the proof Amazon actually asks for.',
+  },
+  {
+    value: '100%',
+    description: 'Seller approval before any claim is submitted.',
+  },
 ];
-
-function TickerItem({ metric, index }: { metric: typeof metrics[0], index: number }) {
-  const ref = React.useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
-  const [currentValue, setCurrentValue] = useState(0);
-
-  useEffect(() => {
-    if (isInView) {
-      let start = 0;
-      const end = metric.value;
-      const duration = 1500; // ms
-      const incrementTime = Math.abs(Math.floor(duration / end));
-
-      const timer = setInterval(() => {
-        start += 1;
-        setCurrentValue(start);
-        if (start === end) clearInterval(timer);
-      }, incrementTime);
-
-      return () => clearInterval(timer);
-    }
-  }, [isInView, metric.value]);
-
-  return (
-    <div ref={ref} className="flex flex-col relative px-8 py-10 max-md:px-0 md:py-16 group">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: [0, 1, 0, 1, 0.5, 1] } : {}}
-        transition={{ duration: 0.4, delay: index * 0.15 }}
-        className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE] mb-6"
-      >
-        {metric.label}
-      </motion.div>
-      
-      <div className="flex items-baseline mb-4">
-        <div className="text-[64px] sm:text-[72px] md:text-[88px] font-bold leading-none tracking-tighter text-[#182026] tabular-nums">
-          {currentValue}
-        </div>
-        <div className="text-[18px] sm:text-[20px] font-medium text-[#8A98A3] ml-3 mb-2">
-          {metric.unit}
-        </div>
-      </div>
-
-      <p className="text-[14px] leading-relaxed text-[#66737F] max-w-[280px]">
-        {metric.subtext}
-      </p>
-
-      {/* Right vertical divider for desktop, bottom horizontal for mobile */}
-      {index !== metrics.length - 1 && (
-        <>
-          <div className="absolute right-0 top-12 bottom-12 w-px bg-[#DCE8EE] hidden md:block" />
-          <div className="absolute bottom-0 left-8 right-8 h-px bg-[#DCE8EE] md:hidden" />
-        </>
-      )}
-    </div>
-  );
-}
 
 export function SystemPerformanceTicker() {
   return (
-    <section className="relative bg-[#FAFAF7] border-y border-[#E4EDF1] max-md:bg-white">
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 divide-[#DCE8EE] md:divide-x-0">
+    <section className="relative border-y border-[#E5E7EB] bg-white py-16 md:py-24">
+      <div className="mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8">
+        <h2 className="mx-auto max-w-[760px] text-center font-serif-headline text-[32px] font-bold leading-[1.04] tracking-[-0.035em] text-[#182026] sm:text-[42px] md:text-[56px]">
+          Built for evidence-heavy Amazon recoveries
+        </h2>
+
+        <div className="mt-12 grid grid-cols-2 border-y border-[#E5E7EB] md:mt-16 lg:grid-cols-4">
           {metrics.map((metric, index) => (
-            <TickerItem key={metric.label} metric={metric} index={index} />
+            <div
+              key={metric.value}
+              className={`min-h-[176px] px-4 py-8 sm:px-6 md:min-h-[220px] md:px-8 md:py-10 ${
+                index % 2 === 1 ? 'border-l border-[#E5E7EB]' : ''
+              } ${
+                index >= 2 ? 'border-t border-[#E5E7EB] lg:border-t-0' : ''
+              } ${
+                index > 0 ? 'lg:border-l lg:border-[#E5E7EB]' : ''
+              }`}
+            >
+              <div className="font-mono text-[52px] font-semibold leading-none tracking-[-0.06em] text-[#182026] sm:text-[64px] md:text-[76px]">
+                {metric.value}
+              </div>
+              <p className="mt-5 max-w-[230px] text-[13px] leading-6 text-[#66737F] sm:text-[14px] md:text-[15px] md:leading-7">
+                {metric.description}
+              </p>
+            </div>
           ))}
         </div>
       </div>
