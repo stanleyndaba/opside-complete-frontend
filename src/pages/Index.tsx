@@ -593,7 +593,7 @@ function SystemLogMarquee() {
               {[...row.items, ...row.items].map((entry, index) => (
                 <div
                   key={`${rowIndex}-${entry.label}-${entry.text}-${index}`}
-                  className="min-w-[280px] rounded-[1px] border border-[#C9D6DE] bg-white/62 px-4 py-3 shadow-[0_16px_36px_rgba(37,49,58,0.035)] backdrop-blur-xl md:min-w-[350px]"
+                  className="min-w-[280px] rounded-[1px] border border-[#C9D6DE] bg-white/62 px-3 py-[9px] shadow-[0_16px_36px_rgba(37,49,58,0.035)] backdrop-blur-xl md:min-w-[350px]"
                 >
                   <div className="font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#8A98A3]">
                     {entry.label}
