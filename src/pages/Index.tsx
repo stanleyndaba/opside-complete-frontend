@@ -333,6 +333,35 @@ const revealProps = {
 };
 
 function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
+  if (isMobileLayout) {
+    return (
+      <motion.div {...revealProps} className="border-t border-[#E5E7EB]">
+        {integrationLogos.map((logo, index) => (
+          <div
+            key={logo.name}
+            className={`flex items-center justify-between gap-4 py-4 ${
+              index > 0 ? 'border-t border-[#E5E7EB]' : ''
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <img
+                src={logo.src}
+                alt={logo.name}
+                className={`${logo.className} object-contain`}
+              />
+              <span className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">
+                {logo.name}
+              </span>
+            </div>
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
+              source
+            </span>
+          </div>
+        ))}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div {...revealProps}>
       <div className="relative flex items-center justify-center py-1 md:py-2">
@@ -543,7 +572,7 @@ function KineticHeroSection({
 
 function SystemLogMarquee() {
   return (
-    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 md:py-24">
+    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
       <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(201,214,222,0.24)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.18)_1px,transparent_1px)] [background-size:52px_52px]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#FAFAF7] to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFAF7] to-transparent" />
@@ -563,7 +592,7 @@ function SystemLogMarquee() {
 
           <motion.div
             {...revealProps}
-            className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl md:p-7"
+            className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl max-md:mx-0 max-md:border-y max-md:border-x-0 max-md:border-[#E5E7EB] max-md:bg-transparent max-md:p-0 max-md:py-6 max-md:shadow-none max-md:backdrop-blur-0 md:p-7"
           >
           <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#7B8A95]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#21B487]" />
@@ -576,9 +605,25 @@ function SystemLogMarquee() {
             Connected 14 records - Ready for seller review
           </div>
         </motion.div>
+
+        <div className="relative z-20 mt-7 border-t border-[#E5E7EB] md:hidden">
+          {systemLogEntries.slice(0, 5).map((entry, index) => (
+            <div
+              key={`${entry.label}-${entry.text}`}
+              className={`py-4 ${index > 0 ? 'border-t border-[#E5E7EB]' : ''}`}
+            >
+              <div className="font-mono text-[9px] font-bold uppercase tracking-tight text-[#8A98A3]">
+                {entry.label}
+              </div>
+              <div className="mt-1 text-[14px] font-medium leading-6 tracking-[-0.02em] text-[#25313A]">
+                {entry.text}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-          <div className="relative mt-12 space-y-2.5 md:mt-14 md:space-y-3">
+          <div className="relative mt-12 space-y-2.5 max-md:hidden md:mt-14 md:space-y-3">
             {systemLogRows.map((row, rowIndex) => (
               <div
                 key={`${row.direction}-${rowIndex}`}
@@ -635,34 +680,48 @@ function EvidenceReadinessBlueprint() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[28px] border border-[#D8E3E8] bg-[linear-gradient(135deg,#FFFFFF_0%,#FAFAF7_52%,#F2F7F8_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] md:p-9"
+      className="relative overflow-hidden rounded-[28px] border border-[#D8E3E8] bg-[linear-gradient(135deg,#FFFFFF_0%,#FAFAF7_52%,#F2F7F8_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-9"
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.38]"
+        className="pointer-events-none absolute inset-0 opacity-[0.38] max-md:hidden"
         style={{
           backgroundImage:
             'linear-gradient(rgba(122,137,148,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(122,137,148,0.11) 1px, transparent 1px)',
           backgroundSize: '56px 56px',
         }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_14%,rgba(11,116,222,0.08),transparent_34%),radial-gradient(circle_at_12%_92%,rgba(46,125,91,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.82),transparent_54%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_14%,rgba(11,116,222,0.08),transparent_34%),radial-gradient(circle_at_12%_92%,rgba(46,125,91,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.82),transparent_54%)] max-md:hidden" />
 
       <div className="relative">
         <div className="text-[10px] font-semibold uppercase text-[#7A8994]">
           System readiness score
         </div>
-        <div className="mt-3 flex items-end gap-2">
+        <div className="mt-4 md:hidden">
+          <div className="flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-tight text-[#182026]">
+            <span>Evidence maturity</span>
+            <span>{score}%</span>
+          </div>
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-[1px] bg-[#E5E7EB]">
+            <motion.div
+              className="h-full rounded-[1px] bg-[#0B74DE]"
+              initial={{ width: '0%' }}
+              animate={isInView ? { width: `${score}%` } : { width: '0%' }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            />
+          </div>
+        </div>
+        <div className="mt-3 flex items-end gap-2 max-md:hidden">
           <span className="text-[78px] font-bold leading-none tracking-[-0.06em] text-[#182026] md:text-[104px]">
             {score}
           </span>
           <span className="mb-2 text-[28px] font-bold leading-none text-[#182026] md:mb-3 md:text-[38px]">%</span>
         </div>
-        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#66737F] md:text-[16px]">
+        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#66737F] max-md:mt-5 md:text-[16px]">
           Inbound shortage claim is close to ready, with two diagnostic items controlling review risk.
         </p>
       </div>
 
-      <div className="relative mt-9 grid gap-0 md:mt-11 md:grid-cols-2">
+      <div className="relative mt-9 grid gap-0 max-md:mt-7 md:mt-11 md:grid-cols-2">
         <motion.div
           aria-hidden="true"
           initial={{ scaleX: 0 }}
@@ -901,24 +960,24 @@ export default function Index() {
           nextBatchHours={capacity?.nextBatchHours}
         />
 
-        <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8">
+        <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 max-md:bg-white max-md:py-14">
           <div className={containerClass}>
             <motion.p
               {...revealProps}
-              className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] text-[#182026] md:text-[28px] md:leading-9"
+              className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] text-[#182026] max-md:text-left md:text-[28px] md:leading-9"
             >
               Most tools help you find or file reimbursement claims. Margin helps you prove them.
             </motion.p>
             <motion.p
               {...revealProps}
-              className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8"
+              className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[#66737F] max-md:text-left md:text-[18px] md:leading-8"
             >
               We organize the evidence Amazon asks for - invoices, proof of delivery, bills of lading, shipment records, cost data, support history, and payout records - into deadline-aware recovery workflows.
             </motion.p>
           </div>
         </section>
 
-        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
+        <section className="relative border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <motion.div {...revealProps}>
@@ -979,7 +1038,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-12 md:py-18">
+        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-12 max-md:bg-white max-md:py-16 md:py-18">
           <div className={containerClass}>
             <div className="max-w-[680px] md:mx-auto md:text-center">
               <div className={sectionLabelClass}>Evidence Sources</div>
@@ -996,7 +1055,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative bg-[#FAFAF7] py-16 md:py-28" id="how-margin-works">
+        <section className="relative bg-[#FAFAF7] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28" id="how-margin-works">
           <div className={containerClass}>
             <div className="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-end">
               <div>
@@ -1016,24 +1075,24 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="workflow-scrollbar-hide mt-10 overflow-hidden pb-2 md:mt-16">
+            <div className="workflow-scrollbar-hide mt-10 overflow-hidden pb-2 max-md:overflow-visible max-md:pb-0 md:mt-16">
           <motion.div
-            className="workflow-marquee-track flex w-max items-stretch gap-x-4 pr-5 md:gap-x-7"
+            className="workflow-marquee-track flex w-max items-stretch gap-x-4 pr-5 max-md:w-full max-md:flex-col max-md:gap-0 max-md:pr-0 md:gap-x-7"
             style={{ ['--duration' as string]: '58s' }}
           >
-                {[...workflowSteps, ...workflowSteps].map((item, index) => (
+                {(isMobileLayout ? workflowSteps : [...workflowSteps, ...workflowSteps]).map((item, index) => (
                   <div
                     key={`${item.step}-${index}`}
-                    className="min-h-[220px] w-[260px] shrink-0 border-t border-[#C9D6DE] pt-4 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
+                    className="min-h-[220px] w-[260px] shrink-0 border-t border-[#C9D6DE] pt-4 max-md:relative max-md:min-h-0 max-md:w-full max-md:border-l max-md:border-t-0 max-md:border-[#E5E7EB] max-md:pb-9 max-md:pl-7 max-md:pt-0 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
                   >
                     <div className="flex h-full flex-col">
-                      <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3] md:text-[11px]">
+                      <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3] max-md:absolute max-md:-left-[14px] max-md:top-0 max-md:flex max-md:h-7 max-md:w-7 max-md:items-center max-md:justify-center max-md:rounded-[1px] max-md:border max-md:border-[#E5E7EB] max-md:bg-white max-md:text-[9px] md:text-[11px]">
                         {item.step}
                       </div>
-                      <h3 className="font-serif-headline mt-4 max-w-[240px] text-[22px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] md:mt-5 md:max-w-[260px] md:text-[29px]">
+                      <h3 className="font-serif-headline mt-4 max-w-[240px] text-[22px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] max-md:mt-0 max-md:max-w-none max-md:text-[24px] md:mt-5 md:max-w-[260px] md:text-[29px]">
                         {item.title}
                       </h3>
-                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#66737F] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
+                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#66737F] max-md:max-w-none max-md:text-[14px] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
                         {item.detail}
                       </p>
                     </div>
@@ -1044,7 +1103,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative bg-[#F3F6F8] py-16 md:py-28">
+        <section className="relative bg-[#F3F6F8] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28">
           <div className={containerClass}>
             <motion.div {...revealProps} className="max-w-[780px]">
               <div className={sectionLabelClass}>Before and After Margin</div>
@@ -1056,18 +1115,18 @@ export default function Index() {
 
             <motion.div
               {...revealProps}
-              className="mt-12 overflow-hidden border-y border-[#CBD7DE] bg-white/28"
+              className="mt-12 overflow-hidden border-y border-[#CBD7DE] bg-white/28 max-md:mt-8 max-md:bg-transparent"
             >
               <div className="grid lg:grid-cols-2">
-                <div className="px-1 py-8 md:px-8 md:py-11 lg:pr-12">
-                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
-                    STATUS: CHAOS
+                <div className="px-1 py-8 max-md:px-0 md:px-8 md:py-11 lg:pr-12">
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#DC2626] md:text-[#8A98A3]">
+                    Chaos
                   </div>
-                  <h3 className="mt-5 max-w-[440px] text-[26px] font-semibold leading-tight tracking-[-0.04em] text-[#4E5B65] md:text-[34px]">
+                  <h3 className="mt-5 max-w-[440px] text-[26px] font-semibold leading-tight tracking-[-0.04em] text-[#4E5B65] max-md:mt-3 max-md:text-[24px] md:text-[34px]">
                     Scattered proof.
                   </h3>
 
-                  <div className="mt-9 border-y border-[#D8E3E8]">
+                  <div className="mt-9 border-y border-[#D8E3E8] max-md:mt-6">
                     {stateTransitionSources.map((source, index) => (
                       <motion.div
                         key={source}
@@ -1093,9 +1152,9 @@ export default function Index() {
                   </div>
                 </div>
 
-                <div className="border-t border-[#CBD7DE] px-1 py-8 md:px-8 md:py-11 lg:border-l lg:border-t-0 lg:pl-12">
-                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5F6D77]">
-                    STATUS: RECOVERY_OS
+                <div className="border-t border-[#CBD7DE] px-1 py-8 max-md:px-0 md:px-8 md:py-11 lg:border-l lg:border-t-0 lg:pl-12">
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#21B487] md:text-[#5F6D77]">
+                    Verified
                   </div>
                   <motion.div
                     initial={{ opacity: 0, x: 30 }}
@@ -1103,11 +1162,11 @@ export default function Index() {
                     viewport={{ once: true, amount: 0.38 }}
                     transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <h3 className="mt-5 max-w-[460px] text-[28px] font-semibold leading-tight tracking-[-0.045em] text-[#182026] md:text-[38px]">
+                    <h3 className="mt-5 max-w-[460px] text-[28px] font-semibold leading-tight tracking-[-0.045em] text-[#182026] max-md:mt-3 max-md:text-[24px] md:text-[38px]">
                       One recovery story.
                     </h3>
 
-                    <div className="mt-9 border-y border-[#C9D6DE] bg-white/38">
+                    <div className="mt-9 border-y border-[#C9D6DE] bg-white/38 max-md:mt-6 max-md:bg-transparent">
                       {stateTransitionSources.map((source, index) => (
                         <motion.div
                           key={source}
@@ -1142,7 +1201,7 @@ export default function Index() {
 
         <SystemPerformanceTicker />
 
-        <section className="relative py-16 md:py-28">
+        <section className="relative py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-28">
           <div className={containerClass}>
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <motion.div {...revealProps}>
@@ -1181,14 +1240,14 @@ export default function Index() {
 
         <SystemLogMarquee />
 
-        <section className="relative overflow-hidden py-28 md:py-40">
+        <section className="relative overflow-hidden py-28 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-40">
           <motion.div
             aria-hidden="true"
             className="pointer-events-none absolute left-0 top-1/3 hidden h-[500px] w-full bg-[radial-gradient(circle_at_50%_50%,rgba(11,116,222,0.06),transparent_60%)] md:block"
           />
           <div className={containerClass}>
-          <div className="glass-card relative overflow-hidden rounded-[32px] p-8 md:p-16 lg:p-20 shadow-[0_32px_64px_rgba(0,0,0,0.08)] bg-white/60 backdrop-blur-3xl border border-white/40">
-              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20" />
+          <div className="glass-card relative overflow-hidden rounded-[32px] p-8 md:p-16 lg:p-20 shadow-[0_32px_64px_rgba(0,0,0,0.08)] bg-white/60 backdrop-blur-3xl border border-white/40 max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:backdrop-blur-0">
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20 max-md:hidden" />
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
@@ -1201,7 +1260,7 @@ export default function Index() {
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Button
                       onClick={() => handleClaimAccessClick('homepage_early_access_section')}
-                      className="group relative h-14 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] sm:w-auto"
+                      className="group relative h-14 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] max-md:rounded-[2px] max-md:shadow-none sm:w-auto"
                     >
                       <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[5px]" />
                       {primaryCtaLabel}
@@ -1214,7 +1273,7 @@ export default function Index() {
                   {earlyAccessItems.map((item, index) => (
                     <div
                       key={item}
-                      className="group relative flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/60 hover:shadow-sm"
+                      className="group relative flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/60 hover:shadow-sm max-md:rounded-none max-md:border-t max-md:border-[#E5E7EB] max-md:px-0 max-md:py-4 max-md:hover:bg-transparent max-md:hover:shadow-none"
                     >
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0B74DE]/10 text-[#0B74DE]">
                         <Check className="h-4 w-4" strokeWidth={3} />
@@ -1230,7 +1289,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-[#E4EDF1] bg-white py-14 md:py-24">
+        <section className="relative border-t border-[#E4EDF1] bg-white py-14 max-md:py-16 md:py-24">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] text-[#050607] sm:text-[42px] md:text-[46px]">
@@ -1267,11 +1326,11 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative bg-[#F3F6F8] py-16 md:py-28">
+        <section className="relative bg-[#F3F6F8] py-16 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28">
           <div className={containerClass}>
             <motion.div
               {...revealProps}
-              className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:p-12"
+              className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-12"
             >
               <div className="max-w-[880px]">
 
@@ -1286,7 +1345,7 @@ export default function Index() {
               <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
                 <Button
                   onClick={() => handleClaimAccessClick('homepage_bottom_cta')}
-                  className="h-12 w-full sm:w-auto rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+                  className="h-12 w-full sm:w-auto rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] max-md:rounded-[2px] max-md:shadow-none"
                 >
                   {primaryCtaLabel}
                   <ArrowRight className="ml-2 h-4 w-4" />

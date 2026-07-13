@@ -45,7 +45,7 @@ function TickerItem({ metric, index }: { metric: typeof metrics[0], index: numbe
   }, [isInView, metric.value]);
 
   return (
-    <div ref={ref} className="flex flex-col relative px-8 py-10 md:py-16 group">
+    <div ref={ref} className="flex flex-col relative px-8 py-10 max-md:px-0 md:py-16 group">
       <motion.div
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: [0, 1, 0, 1, 0.5, 1] } : {}}
@@ -81,7 +81,7 @@ function TickerItem({ metric, index }: { metric: typeof metrics[0], index: numbe
 
 export function SystemPerformanceTicker() {
   return (
-    <section className="relative bg-[#FAFAF7] border-y border-[#E4EDF1]">
+    <section className="relative bg-[#FAFAF7] border-y border-[#E4EDF1] max-md:bg-white">
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 divide-[#DCE8EE] md:divide-x-0">
           {metrics.map((metric, index) => (

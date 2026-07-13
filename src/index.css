@@ -70,6 +70,14 @@
   }
 }
 
+@media (max-width: 767px) {
+  .workflow-marquee-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+    will-change: auto;
+  }
+}
+
 @layer utilities {
   .font-heading {
     font-family: 'Inter', system-ui, sans-serif;
