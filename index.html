@@ -115,6 +115,14 @@
       letter-spacing: -0.02em;
     }
 
+    .route-loading-shell__brand span {
+      visibility: hidden;
+    }
+
+    .margin-brand-font-ready .route-loading-shell__brand span {
+      visibility: visible;
+    }
+
     .route-loading-shell__brand img {
       display: block;
       width: auto;
@@ -133,6 +141,18 @@
       }
     }
   </style>
+  <script>
+    (function () {
+      if (!('fonts' in document)) {
+        document.documentElement.classList.add('margin-brand-font-ready');
+        return;
+      }
+
+      document.fonts.load('700 20px Merriweather').then(function () {
+        document.documentElement.classList.add('margin-brand-font-ready');
+      });
+    })();
+  </script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",

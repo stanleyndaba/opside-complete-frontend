@@ -690,6 +690,14 @@ footer .brand-wordmark,
   letter-spacing: -0.025em;
 }
 
+.route-loading-brand-text {
+  visibility: hidden;
+}
+
+.margin-brand-font-ready .route-loading-brand-text {
+  visibility: visible;
+}
+
 /* Landing Premium Redesign Scope */
 .landing-premium {
   --section-y-mobile: 60px;

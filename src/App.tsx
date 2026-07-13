@@ -197,7 +197,7 @@ const RouteSkeleton = () => (
   <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] px-5 text-[#182026]">
     <div className="inline-flex max-w-full items-center justify-center gap-2.5 sm:gap-3">
       <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto shrink-0 object-contain sm:h-7" />
-      <span className="brand-wordmark font-merriweather text-xl tracking-tight text-[#182026] sm:text-2xl">
+      <span className="route-loading-brand-text brand-wordmark font-merriweather text-xl tracking-tight text-[#182026] sm:text-2xl">
         Margin
       </span>
     </div>
