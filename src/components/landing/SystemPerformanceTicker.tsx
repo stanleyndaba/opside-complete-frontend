@@ -19,28 +19,30 @@ const metrics = [
 
 export function SystemPerformanceTicker() {
   return (
-    <section className="relative border-y border-[#E5E7EB] bg-white py-16 md:py-24">
-      <div className="mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8">
-        <h2 className="mx-auto max-w-[760px] text-center font-serif-headline text-[32px] font-bold leading-[1.04] tracking-[-0.035em] text-[#182026] sm:text-[42px] md:text-[56px]">
-          Built for evidence-heavy Amazon recoveries
-        </h2>
+    <section className="relative border-y border-[#DCE8EE] bg-[#F8FAFC]">
+      <div className="mx-auto w-full max-w-[1280px] border-x border-[#DCE8EE] bg-white/42">
+        <div className="flex min-h-[240px] items-center justify-center px-5 py-16 sm:px-8 md:min-h-[310px] md:py-24">
+          <h2 className="mx-auto max-w-[860px] text-center text-[38px] font-semibold leading-[1.05] tracking-[-0.055em] text-[#182026] sm:text-[48px] md:text-[64px] lg:text-[72px]">
+            Built for evidence-heavy Amazon recoveries
+          </h2>
+        </div>
 
-        <div className="mt-12 grid grid-cols-2 border-y border-[#E5E7EB] md:mt-16 lg:grid-cols-4">
+        <div className="grid grid-cols-2 border-t border-[#DCE8EE] lg:grid-cols-4">
           {metrics.map((metric, index) => (
             <div
               key={metric.value}
-              className={`min-h-[176px] px-4 py-8 sm:px-6 md:min-h-[220px] md:px-8 md:py-10 ${
+              className={`flex min-h-[190px] flex-col items-center justify-center px-4 py-8 text-center sm:px-6 md:min-h-[210px] md:px-8 md:py-10 ${
                 index % 2 === 1 ? 'border-l border-[#E5E7EB]' : ''
               } ${
                 index >= 2 ? 'border-t border-[#E5E7EB] lg:border-t-0' : ''
               } ${
-                index > 0 ? 'lg:border-l lg:border-[#E5E7EB]' : ''
+                index > 0 ? 'lg:border-l lg:border-[#DCE8EE]' : ''
               }`}
             >
-              <div className="font-mono text-[52px] font-semibold leading-none tracking-[-0.06em] text-[#182026] sm:text-[64px] md:text-[76px]">
+              <div className="text-[52px] font-medium leading-none tracking-[-0.06em] text-[#182026] sm:text-[64px] md:text-[68px] lg:text-[76px]">
                 {metric.value}
               </div>
-              <p className="mt-5 max-w-[230px] text-[13px] leading-6 text-[#66737F] sm:text-[14px] md:text-[15px] md:leading-7">
+              <p className="mt-4 max-w-[230px] text-[13px] leading-6 text-[#66737F] sm:text-[14px] md:mt-5 md:text-[15px] md:leading-7">
                 {metric.description}
               </p>
             </div>
