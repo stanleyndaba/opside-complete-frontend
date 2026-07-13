@@ -333,35 +333,6 @@ const revealProps = {
 };
 
 function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
-  if (isMobileLayout) {
-    return (
-      <motion.div {...revealProps} className="border-t border-[#E5E7EB]">
-        {integrationLogos.map((logo, index) => (
-          <div
-            key={logo.name}
-            className={`flex items-center justify-between gap-4 py-4 ${
-              index > 0 ? 'border-t border-[#E5E7EB]' : ''
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <img
-                src={logo.src}
-                alt={logo.name}
-                className={`${logo.className} object-contain`}
-              />
-              <span className="text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">
-                {logo.name}
-              </span>
-            </div>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
-              source
-            </span>
-          </div>
-        ))}
-      </motion.div>
-    );
-  }
-
   return (
     <motion.div {...revealProps}>
       <div className="relative flex items-center justify-center py-1 md:py-2">
@@ -572,7 +543,7 @@ function KineticHeroSection({
 
 function SystemLogMarquee() {
   return (
-    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
+    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 md:py-24">
       <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(201,214,222,0.24)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.18)_1px,transparent_1px)] [background-size:52px_52px]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#FAFAF7] to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFAF7] to-transparent" />
@@ -592,7 +563,7 @@ function SystemLogMarquee() {
 
           <motion.div
             {...revealProps}
-            className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl max-md:mx-0 max-md:border-y max-md:border-x-0 max-md:border-[#E5E7EB] max-md:bg-transparent max-md:p-0 max-md:py-6 max-md:shadow-none max-md:backdrop-blur-0 md:p-7"
+            className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl md:p-7"
           >
           <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#7B8A95]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#21B487]" />
@@ -605,25 +576,9 @@ function SystemLogMarquee() {
             Connected 14 records - Ready for seller review
           </div>
         </motion.div>
-
-        <div className="relative z-20 mt-7 border-t border-[#E5E7EB] md:hidden">
-          {systemLogEntries.slice(0, 5).map((entry, index) => (
-            <div
-              key={`${entry.label}-${entry.text}`}
-              className={`py-4 ${index > 0 ? 'border-t border-[#E5E7EB]' : ''}`}
-            >
-              <div className="font-mono text-[9px] font-bold uppercase tracking-tight text-[#8A98A3]">
-                {entry.label}
-              </div>
-              <div className="mt-1 text-[14px] font-medium leading-6 tracking-[-0.02em] text-[#25313A]">
-                {entry.text}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
-          <div className="relative mt-12 space-y-2.5 max-md:hidden md:mt-14 md:space-y-3">
+          <div className="relative mt-12 space-y-2.5 md:mt-14 md:space-y-3">
             {systemLogRows.map((row, rowIndex) => (
               <div
                 key={`${row.direction}-${rowIndex}`}
@@ -1038,7 +993,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-12 max-md:bg-white max-md:py-16 md:py-18">
+        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-12 md:py-18">
           <div className={containerClass}>
             <div className="max-w-[680px] md:mx-auto md:text-center">
               <div className={sectionLabelClass}>Evidence Sources</div>
