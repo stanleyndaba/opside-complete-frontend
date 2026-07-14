@@ -22,18 +22,9 @@ export default function EvidenceBeforeAsked() {
             initial={{ opacity: 0, x: 96, filter: 'blur(12px)' }}
             animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
-            className="max-w-[18ch]"
+            className="max-w-[22ch]"
           >
-            Margin defends the case
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, x: -96, filter: 'blur(12px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.25, delay: 0.56, ease: [0.22, 1, 0.36, 1] as const }}
-            className="max-w-[18ch]"
-          >
-            With competent evidence
+            Then resubmits a bolstered dispute
           </motion.p>
         </div>
       </section>
