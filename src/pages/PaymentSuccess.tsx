@@ -41,19 +41,20 @@ export default function PaymentSuccess() {
   const price = searchParams.get('price') || pending.price || null;
   const returnPath = resolveReturnPath(searchParams, tenantSlug);
   const isEarlyAccess = checkoutKind.includes('early_access');
-  const isPayPal = source === 'paypal' || isEarlyAccess;
+  const isPayPal = source === 'paypal' && !isEarlyAccess;
+  const paymentProviderLabel = isEarlyAccess || source === 'paystack_payment_page' ? 'Paystack' : isPayPal ? 'PayPal' : 'Paystack';
 
-  const pageTitle = isEarlyAccess ? 'Founding 500 Reservation Confirmed | Margin' : 'Payment Submitted | Margin';
+  const pageTitle = isEarlyAccess ? 'Early Access Reservation Confirmed | Margin' : 'Payment Submitted | Margin';
   const pageDescription = isEarlyAccess
-    ? 'Your Founding 500 reservation is confirmed. Founder pricing is locked and priority activation is reserved.'
-    : `Your ${isPayPal ? 'PayPal' : 'Paystack'} payment return page for Margin. Continue setup while payment confirmation is verified.`;
+    ? 'Your Early Access reservation is confirmed. Founder pricing is locked and priority activation is reserved.'
+    : `Your ${paymentProviderLabel} payment return page for Margin. Continue setup while payment confirmation is verified.`;
   const heading = isEarlyAccess
-    ? 'Founding 500 reservation confirmed.'
+    ? 'Early Access reservation confirmed.'
     : 'Payment submitted. Continue into Margin.';
   const body = isEarlyAccess
-    ? `You are back from PayPal for ${offer}${price ? ` (${price})` : ''}. Your seat is secured, founder pricing is locked, and priority activation is reserved. A founder or team member will contact you with the next setup step.`
-    : `You are back from ${isPayPal ? 'PayPal' : 'Paystack'} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
-  const primaryButtonLabel = isEarlyAccess ? 'Back to Founding 500' : 'Continue to Margin';
+    ? `You are back from Paystack for ${offer}${price ? ` (${price})` : ''}. Your seat is secured, founder pricing is locked, and priority activation is reserved. A founder or team member will contact you with the next setup step.`
+    : `You are back from ${paymentProviderLabel} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
+  const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
 
   useEffect(() => {
     if (isEarlyAccess) {
@@ -61,10 +62,12 @@ export default function PaymentSuccess() {
         const guardKey = 'margin_ga_payment_success_founding_500';
         if (!window.sessionStorage.getItem(guardKey)) {
           window.sessionStorage.setItem(guardKey, '1');
+          // Paystack dashboard remains the source of truth until full Paystack API/webhook integration exists.
           trackEvent(ANALYTICS_EVENTS.paymentSuccess, {
-            offer: 'founding_500',
-            value: 99,
-            currency: 'USD',
+            offer: 'early_access',
+            value: 1799,
+            currency: 'ZAR',
+            payment_provider: 'paystack_payment_page',
           });
         }
       }
@@ -78,7 +81,7 @@ export default function PaymentSuccess() {
   });
 
   return (
-    <PageLayout title={isEarlyAccess ? 'Founding 500 Reservation Confirmed' : 'Payment Submitted'} noPadding hideNavbar hideSidebar hideLogo plainBackground>
+    <PageLayout title={isEarlyAccess ? 'Early Access Reservation Confirmed' : 'Payment Submitted'} noPadding hideNavbar hideSidebar hideLogo plainBackground>
       <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         <PublicNavbar variant="light" />
         <main className="relative overflow-hidden pt-32 md:pt-40">

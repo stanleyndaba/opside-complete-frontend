@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ExternalLink } from 'lucide-react';
 
 import {
@@ -7,6 +7,8 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { trackEvent } from '@/lib/analytics';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 
 interface DemoVideoModalProps {
   open: boolean;
@@ -14,6 +16,8 @@ interface DemoVideoModalProps {
   videoUrl: string;
   title?: string;
   description?: string;
+  analyticsLocation?: string;
+  videoName?: string;
 }
 
 function getYouTubeId(videoUrl: string): string | null {
@@ -63,8 +67,59 @@ export function DemoVideoModal({
   videoUrl,
   title = 'Margin product demo',
   description = 'Watch how Margin turns Amazon loss events into claim-ready recovery work.',
+  analyticsLocation = 'demo_modal',
+  videoName = 'margin_demo',
 }: DemoVideoModalProps) {
   const embedUrl = buildYouTubeEmbedUrl(videoUrl);
+  const embedRef = useRef<HTMLDivElement>(null);
+  const modalOpenedTrackedRef = useRef(false);
+  const embedVisibleTrackedRef = useRef(false);
+
+  useEffect(() => {
+    if (!open) {
+      modalOpenedTrackedRef.current = false;
+      embedVisibleTrackedRef.current = false;
+      return;
+    }
+
+    if (modalOpenedTrackedRef.current) return;
+    modalOpenedTrackedRef.current = true;
+    trackEvent(ANALYTICS_EVENTS.demoModalOpened, {
+      cta_location: analyticsLocation,
+      video_name: videoName,
+    });
+  }, [analyticsLocation, open, videoName]);
+
+  useEffect(() => {
+    if (!open || !embedRef.current) return;
+
+    const trackEmbedVisible = () => {
+      if (embedVisibleTrackedRef.current) return;
+      embedVisibleTrackedRef.current = true;
+      trackEvent(ANALYTICS_EVENTS.demoEmbedVisible, {
+        cta_location: analyticsLocation,
+        video_name: videoName,
+      });
+    };
+
+    if (typeof IntersectionObserver === 'undefined') {
+      trackEmbedVisible();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          trackEmbedVisible();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(embedRef.current);
+    return () => observer.disconnect();
+  }, [analyticsLocation, open, videoName]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -85,8 +140,9 @@ export function DemoVideoModal({
         </div>
 
         <div className="bg-[#FBFCFD] px-3 pb-3 sm:px-4 sm:pb-4">
-          <div className="relative mx-auto aspect-video max-h-[52dvh] w-full overflow-hidden rounded-[14px] border border-[#DCE6EC] bg-[#0B1117] shadow-[0_18px_50px_rgba(24,32,38,0.16)] sm:rounded-[18px]">
+          <div ref={embedRef} className="relative mx-auto aspect-video max-h-[52dvh] w-full overflow-hidden rounded-[14px] border border-[#DCE6EC] bg-[#0B1117] shadow-[0_18px_50px_rgba(24,32,38,0.16)] sm:rounded-[18px]">
             {open ? (
+              // TODO: Exact YouTube start/progress/completion analytics requires the YouTube IFrame API.
               <iframe
                 title={title}
                 src={embedUrl}

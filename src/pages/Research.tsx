@@ -7,6 +7,7 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { getPublicRouteMeta } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+import { trackEarlyAccessCtaClicked } from '@/lib/analytics';
 
 const sectionLinks = [
   { href: '#automation', label: 'Automation' },
@@ -159,6 +160,11 @@ export default function Research() {
       return;
     }
 
+    trackEarlyAccessCtaClicked({
+      cta_location: 'research',
+      cta_text: 'Reserve Early Access',
+      destination: '/early-access',
+    });
     navigate('/early-access');
   };
 

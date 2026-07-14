@@ -11,6 +11,7 @@ import { getPublicRouteMeta } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useStructuredData } from '@/hooks/useStructuredData';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+import { trackEarlyAccessCtaClicked } from '@/lib/analytics';
 
 const comparisonRows = [
   {
@@ -211,6 +212,11 @@ export default function GetidaAlternative() {
       return;
     }
 
+    trackEarlyAccessCtaClicked({
+      cta_location: 'getida_alternative',
+      cta_text: 'Secure Early Access',
+      destination: '/early-access',
+    });
     navigate('/early-access');
   };
 
@@ -436,7 +442,15 @@ export default function GetidaAlternative() {
                     <Check className="h-4 w-4" />
                     FBA reimbursement research
                   </Link>
-                  <Link to="/early-access" className="inline-flex items-center gap-2 text-[#0B74DE] hover:text-[#0869C9]">
+                  <Link
+                    to="/early-access"
+                    onClick={() => trackEarlyAccessCtaClicked({
+                      cta_location: 'getida_alternative_inline_link',
+                      cta_text: 'Start Early Access',
+                      destination: '/early-access',
+                    })}
+                    className="inline-flex items-center gap-2 text-[#0B74DE] hover:text-[#0869C9]"
+                  >
                     <Check className="h-4 w-4" />
                     Early access
                   </Link>

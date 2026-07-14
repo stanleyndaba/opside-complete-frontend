@@ -7,6 +7,7 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+import { trackEarlyAccessCtaClicked } from '@/lib/analytics';
 
 const sectionLinks = [
   { href: '#system', label: 'System' },
@@ -105,6 +106,11 @@ export default function AboutMargin() {
       return;
     }
 
+    trackEarlyAccessCtaClicked({
+      cta_location: 'about_margin',
+      cta_text: 'Reserve Early Access',
+      destination: '/early-access',
+    });
     navigate('/early-access');
   };
 

@@ -20,7 +20,7 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 import { ProgressiveNarrativeTabs } from '@/components/landing/ProgressiveNarrativeTabs';
 import { SystemPerformanceTicker } from '@/components/landing/SystemPerformanceTicker';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
-import { trackEvent } from '@/lib/analytics';
+import { trackEarlyAccessCtaClicked, trackEvent } from '@/lib/analytics';
 
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -878,17 +878,18 @@ export default function Index() {
   };
 
   const handleClaimAccessClick = (location: string) => {
-    trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
-      location,
+    trackEarlyAccessCtaClicked({
+      cta_location: location,
       cta_text: primaryCtaLabel,
-      offer: 'founding_500',
+      destination: '/early-access',
     });
     handlePrimaryCta();
   };
 
   const openDemo = () => {
-    trackEvent(ANALYTICS_EVENTS.demoVideoClicked, {
-      location: 'homepage_demo_section',
+    trackEvent(ANALYTICS_EVENTS.demoCtaClicked, {
+      cta_location: 'homepage_demo_section',
+      cta_text: 'Watch the Margin product demo',
       video_name: 'margin_demo',
     });
     setIsDemoOpen(true);
@@ -1370,6 +1371,8 @@ export default function Index() {
         videoUrl={DEMO_VIDEO_URL}
         title="Margin recovery walkthrough"
         description="Watch how Margin manages Amazon reimbursement workflows after discrepancies are identified, from claim deadline review and evidence matching to filing, disputes, and payout reconciliation."
+        analyticsLocation="homepage_demo_section"
+        videoName="margin_demo"
       />
       <BrandFooter />
       <CookieConsent />

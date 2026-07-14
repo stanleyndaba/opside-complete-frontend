@@ -14,8 +14,11 @@ import { useTenant } from '@/contexts/TenantContext';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 import { api } from '@/lib/api';
-import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
-import { trackEvent } from '@/lib/analytics';
+import {
+  trackCheckoutStarted,
+  trackClaimAccessClicked,
+  trackOutboundPaymentClicked,
+} from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
 type PricingTier = {
@@ -130,18 +133,22 @@ export default function PricingAdjust() {
     navigate('/sales');
   };
 
-  const openPaymentCheckout = useCallback((checkoutUrl: string) => {
+  const openPaymentCheckout = useCallback((checkoutUrl: string, analyticsParams: Record<string, unknown> = {}) => {
     if (typeof window === 'undefined') {
       return;
     }
 
-    trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
-      offer: 'early_access',
-      value: 1799,
-      currency: 'ZAR',
-      payment_provider: 'paystack_payment_page',
+    trackOutboundPaymentClicked({
+      destination: checkoutUrl,
+      ...analyticsParams,
     });
-    window.location.assign(checkoutUrl);
+    trackCheckoutStarted({
+      destination: checkoutUrl,
+      ...analyticsParams,
+    });
+    window.setTimeout(() => {
+      window.location.assign(checkoutUrl);
+    }, 180);
   }, []);
 
   const startSubscribeIntent = useCallback(async (plan: SelectablePlan, interval: BillingView) => {
@@ -324,13 +331,17 @@ export default function PricingAdjust() {
           <div className="mt-auto flex flex-col gap-4">
             <Button
               onClick={() => {
-              trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
-                location: 'pricing_early_access',
-                cta_text: tier.ctaLabel || `Start ${tier.name} Coverage`,
-                offer: 'early_access',
-              });
+                const ctaText = tier.ctaLabel || `Start ${tier.name} Coverage`;
+                const ctaLocation = tier.name === 'Early Access' ? 'pricing_early_access' : `pricing_${tier.name.toLowerCase()}`;
+                trackClaimAccessClicked({
+                  cta_location: ctaLocation,
+                  cta_text: ctaText,
+                });
                 if (tier.checkoutUrl) {
-                  openPaymentCheckout(tier.checkoutUrl);
+                  openPaymentCheckout(tier.checkoutUrl, {
+                    cta_location: ctaLocation,
+                    cta_text: ctaText,
+                  });
                   return;
                 }
                 if (tier.salesLed || !tier.planKey) {

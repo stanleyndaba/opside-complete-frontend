@@ -16,6 +16,7 @@ import { getPublicRouteMeta } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useStructuredData } from '@/hooks/useStructuredData';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+import { trackEarlyAccessCtaClicked } from '@/lib/analytics';
 
 const revealProps = {
   initial: { opacity: 0, y: 18 },
@@ -52,6 +53,7 @@ export default function ReimbursementAcquisitionPage() {
   const pageMeta = getPublicRouteMeta(page.path)!;
 
   const structuredData = useMemo(() => buildAcquisitionStructuredData(pageMeta, page), [pageMeta, page]);
+  const analyticsLocation = page.path.replace(/^\//, '').replace(/-/g, '_') || 'reimbursement_acquisition';
 
   usePageMeta(pageMeta);
   useStructuredData(structuredData);
@@ -62,6 +64,11 @@ export default function ReimbursementAcquisitionPage() {
       return;
     }
 
+    trackEarlyAccessCtaClicked({
+      cta_location: analyticsLocation,
+      cta_text: 'Secure Early Access',
+      destination: '/early-access',
+    });
     navigate('/early-access');
   };
 
@@ -248,7 +255,22 @@ export default function ReimbursementAcquisitionPage() {
 
                 <div className="flex flex-col gap-3 text-[14px] font-semibold text-[#25313A] md:flex-row md:items-center md:gap-5">
                   {page.internalLinks.map((link) => (
-                    <Link key={link.href} to={link.href} className="inline-flex items-center gap-2 text-[#0B74DE] hover:text-[#0869C9]">
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className="inline-flex items-center gap-2 text-[#0B74DE] hover:text-[#0869C9]"
+                      onClick={
+                        link.href === '/early-access'
+                          ? () => {
+                              trackEarlyAccessCtaClicked({
+                                cta_location: `${analyticsLocation}_internal_link`,
+                                cta_text: link.label,
+                                destination: '/early-access',
+                              });
+                            }
+                          : undefined
+                      }
+                    >
                       <Check className="h-4 w-4" />
                       {link.label}
                     </Link>

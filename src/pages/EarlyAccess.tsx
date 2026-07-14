@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, PlayCircle } from 'lucide-react';
 
@@ -13,10 +13,20 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { api } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
-import { trackEvent } from '@/lib/analytics';
+import {
+  EARLY_ACCESS_CURRENCY,
+  EARLY_ACCESS_OFFER,
+  EARLY_ACCESS_VALUE_ZAR,
+  PAYSTACK_EARLY_ACCESS_URL,
+  PAYSTACK_PAYMENT_PROVIDER,
+  trackCheckoutStarted,
+  trackClaimAccessClicked,
+  trackEvent,
+  trackOutboundPaymentClicked,
+} from '@/lib/analytics';
 
 /* ── constants ─────────────────────────────────────────────────── */
-const EARLY_ACCESS_CHECKOUT_URL = 'https://paystack.shop/pay/margin-early-access';
+const EARLY_ACCESS_CHECKOUT_URL = PAYSTACK_EARLY_ACCESS_URL;
 const EARLY_ACCESS_PRICE = '$99';
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
@@ -45,13 +55,6 @@ const rememberEarlyAccessCheckout = () => {
     successUrl,
     createdAt: new Date().toISOString(),
   }));
-
-  trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
-    offer: 'early_access',
-    value: 1799,
-    currency: 'ZAR',
-    payment_provider: 'paystack_payment_page',
-  });
 };
 
 /* ── timeline data ─────────────────────────────────────────────── */
@@ -102,7 +105,15 @@ const reveal = {
 };
 
 /* ── primary cta component ─────────────────────────────────────── */
-function FounderPassCTA({ subtext, location }: { subtext?: React.ReactNode; location: string }) {
+function FounderPassCTA({
+  subtext,
+  location,
+  onCheckoutClick,
+}: {
+  subtext?: React.ReactNode;
+  location: string;
+  onCheckoutClick: (event: React.MouseEvent<HTMLAnchorElement>, location: string, ctaText: string) => void;
+}) {
   return (
     <div className="w-full max-w-[520px] mx-auto flex flex-col items-center">
       <div className="mb-4 inline-flex items-center rounded-full border border-[#E9EEF2] bg-white px-3 py-1 shadow-sm">
@@ -117,14 +128,7 @@ function FounderPassCTA({ subtext, location }: { subtext?: React.ReactNode; loca
       >
         <a
           href={EARLY_ACCESS_CHECKOUT_URL}
-          onClick={() => {
-            trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
-              location,
-              cta_text: 'Get Early Access',
-              offer: 'early_access',
-            });
-            rememberEarlyAccessCheckout();
-          }}
+          onClick={(event) => onCheckoutClick(event, location, 'Get Early Access')}
         >
           Get Early Access
           <ArrowRight className="ml-2 h-5 w-5" />
@@ -153,11 +157,200 @@ export default function EarlyAccess() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   const timelineRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const mainCtaRef = useRef<HTMLDivElement>(null);
+  const offerRef = useRef<HTMLElement>(null);
+  const offerCtaRef = useRef<HTMLDivElement>(null);
+  const bottomCtaRef = useRef<HTMLDivElement>(null);
+  const firedAnalyticsRef = useRef<Set<string>>(new Set());
   const { scrollYProgress } = useScroll({
     target: timelineRef,
     offset: ['start end', 'end start'],
   });
   const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+
+  const fireOnce = useCallback((eventName: string, params: Record<string, unknown> = {}) => {
+    if (firedAnalyticsRef.current.has(eventName)) return;
+    firedAnalyticsRef.current.add(eventName);
+    trackEvent(eventName, {
+      offer: EARLY_ACCESS_OFFER,
+      ...params,
+    });
+  }, []);
+
+  useEffect(() => {
+    fireOnce(ANALYTICS_EVENTS.earlyAccessViewed, {
+      cta_location: 'early_access_page',
+    });
+  }, [fireOnce]);
+
+  useEffect(() => {
+    const tenSecondTimer = window.setTimeout(() => {
+      fireOnce(ANALYTICS_EVENTS.earlyAccess10sEngaged, {
+        cta_location: 'early_access_page',
+      });
+    }, 10000);
+    const thirtySecondTimer = window.setTimeout(() => {
+      fireOnce(ANALYTICS_EVENTS.earlyAccess30sEngaged, {
+        cta_location: 'early_access_page',
+      });
+    }, 30000);
+
+    return () => {
+      window.clearTimeout(tenSecondTimer);
+      window.clearTimeout(thirtySecondTimer);
+    };
+  }, [fireOnce]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let ticking = false;
+    const checkScrollDepth = () => {
+      ticking = false;
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+
+      const depth = (window.scrollY / scrollable) * 100;
+      if (depth >= 50) {
+        fireOnce(ANALYTICS_EVENTS.earlyAccessScroll50, {
+          cta_location: 'early_access_page',
+        });
+      }
+      if (depth >= 75) {
+        fireOnce(ANALYTICS_EVENTS.earlyAccessScroll75, {
+          cta_location: 'early_access_page',
+        });
+      }
+    };
+
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(checkScrollDepth);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    checkScrollDepth();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [fireOnce]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+
+    const targets = [
+      {
+        ref: heroRef,
+        eventName: ANALYTICS_EVENTS.earlyAccessHeroSeen,
+        params: { cta_location: 'early_access_hero' },
+      },
+      {
+        ref: offerRef,
+        eventName: ANALYTICS_EVENTS.earlyAccessOfferSeen,
+        params: { cta_location: 'early_access_offer_section' },
+      },
+      {
+        ref: mainCtaRef,
+        eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
+        params: { cta_location: 'early_access_hero', cta_text: 'Get Early Access' },
+      },
+      {
+        ref: mainCtaRef,
+        eventName: ANALYTICS_EVENTS.paystackCtaSeen,
+        params: {
+          cta_location: 'early_access_hero',
+          cta_text: 'Get Early Access',
+          value: EARLY_ACCESS_VALUE_ZAR,
+          currency: EARLY_ACCESS_CURRENCY,
+          payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+        },
+      },
+      {
+        ref: offerCtaRef,
+        eventName: ANALYTICS_EVENTS.paystackCtaSeen,
+        params: {
+          cta_location: 'early_access_offer_section',
+          cta_text: 'Get Early Access',
+          value: EARLY_ACCESS_VALUE_ZAR,
+          currency: EARLY_ACCESS_CURRENCY,
+          payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+        },
+      },
+      {
+        ref: bottomCtaRef,
+        eventName: ANALYTICS_EVENTS.paystackCtaSeen,
+        params: {
+          cta_location: 'early_access_bottom_cta',
+          cta_text: 'Get Early Access',
+          value: EARLY_ACCESS_VALUE_ZAR,
+          currency: EARLY_ACCESS_CURRENCY,
+          payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+        },
+      },
+    ];
+
+    const observedTargets: Array<{
+      element: Element;
+      eventName: string;
+      params: Record<string, unknown>;
+    }> = [];
+
+    targets.forEach((target) => {
+      const element = target.ref.current;
+      if (!element) return;
+      observedTargets.push({
+        element,
+        eventName: target.eventName,
+        params: target.params,
+      });
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          observedTargets
+            .filter((target) => target.element === entry.target)
+            .forEach((target) => fireOnce(target.eventName, target.params));
+        });
+      },
+      { threshold: 0.35 }
+    );
+
+    observedTargets.forEach((target) => observer.observe(target.element));
+    return () => observer.disconnect();
+  }, [fireOnce]);
+
+  const handleCheckoutClick = useCallback((
+    event: React.MouseEvent<HTMLAnchorElement>,
+    ctaLocation: string,
+    ctaText: string
+  ) => {
+    rememberEarlyAccessCheckout();
+    trackClaimAccessClicked({
+      cta_location: ctaLocation,
+      cta_text: ctaText,
+    });
+    trackOutboundPaymentClicked({
+      cta_location: ctaLocation,
+      cta_text: ctaText,
+      destination: EARLY_ACCESS_CHECKOUT_URL,
+    });
+    trackCheckoutStarted({
+      cta_location: ctaLocation,
+      cta_text: ctaText,
+      destination: EARLY_ACCESS_CHECKOUT_URL,
+    });
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    window.setTimeout(() => {
+      window.location.assign(EARLY_ACCESS_CHECKOUT_URL);
+    }, 180);
+  }, []);
 
   usePageMeta({
     title: 'Free Amazon FBA Evidence Scan | Margin',
@@ -218,7 +411,7 @@ export default function EarlyAccess() {
         <div className="pointer-events-none fixed inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(11,116,222,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.04)_1px,transparent_1px)] [background-size:72px_72px]" />
 
         {/* ═══ HERO ═══ */}
-        <section className="relative pb-20 pt-32 md:pb-28 md:pt-44">
+        <section ref={heroRef} className="relative pb-20 pt-32 md:pb-28 md:pt-44">
           {/* ambient glow */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-[820px] bg-[radial-gradient(circle_at_50%_0%,rgba(11,116,222,0.10),transparent_46%)]" />
 
@@ -241,8 +434,8 @@ export default function EarlyAccess() {
                 {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited. Early Access closes July 30, 2026 or when 500 slots are filled.
               </p>
 
-              <div className="mt-10 w-full">
-                <FounderPassCTA location="early_access_page" />
+              <div ref={mainCtaRef} className="mt-10 w-full">
+                <FounderPassCTA location="early_access_hero" onCheckoutClick={handleCheckoutClick} />
               </div>
             </motion.div>
           </div>
@@ -254,8 +447,9 @@ export default function EarlyAccess() {
             <motion.button
               type="button"
               onClick={() => {
-                trackEvent(ANALYTICS_EVENTS.demoVideoClicked, {
-                  location: 'early_access_page',
+                trackEvent(ANALYTICS_EVENTS.demoCtaClicked, {
+                  cta_location: 'early_access_demo_section',
+                  cta_text: 'Watch the Margin product demo',
                   video_name: 'margin_demo',
                 });
                 setIsDemoOpen(true);
@@ -362,7 +556,7 @@ export default function EarlyAccess() {
         </section>
 
         {/* ═══ FOUNDER'S PASS ═══ */}
-        <section className="relative border-t border-[#E4EDF1] py-20 md:py-32">
+        <section ref={offerRef} className="relative border-t border-[#E4EDF1] py-20 md:py-32">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <motion.div
               {...reveal}
@@ -400,21 +594,14 @@ export default function EarlyAccess() {
                 ))}
               </div>
 
-              <div className="mt-10 text-center flex flex-col items-center">
+              <div ref={offerCtaRef} className="mt-10 text-center flex flex-col items-center">
                 <Button
                   asChild
                   className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
                 >
                   <a
                     href={EARLY_ACCESS_CHECKOUT_URL}
-                    onClick={() => {
-                      trackEvent(ANALYTICS_EVENTS.claimAccessClicked, {
-                        location: 'early_access_page',
-                        cta_text: 'Get Early Access',
-                        offer: 'early_access',
-                      });
-                      rememberEarlyAccessCheckout();
-                    }}
+                    onClick={(event) => handleCheckoutClick(event, 'early_access_offer_section', 'Get Early Access')}
                   >
                     Get Early Access
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -489,9 +676,10 @@ export default function EarlyAccess() {
                 Secure your Founding Pass before July 30, 2026 or before the first 500 slots are gone.
               </p>
 
-              <div className="mt-10 w-full">
+              <div ref={bottomCtaRef} className="mt-10 w-full">
                 <FounderPassCTA
-                  location="early_access_page"
+                  location="early_access_bottom_cta"
+                  onCheckoutClick={handleCheckoutClick}
                   subtext={`${EARLY_ACCESS_PRICE} one-time. Founder pricing locked through December 31, 2026. Priority activation and founder onboarding are included.`}
                 />
               </div>
@@ -511,6 +699,8 @@ export default function EarlyAccess() {
         videoUrl={DEMO_VIDEO_URL}
         title="Margin evidence-first recovery walkthrough"
         description="Watch Margin retrieve evidence, match it to loss events, and file winning cases."
+        analyticsLocation="early_access_page"
+        videoName="margin_demo"
       />
       <BrandFooter />
     </div>

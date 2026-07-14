@@ -1,6 +1,8 @@
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
+import { trackCheckoutStarted, trackClaimAccessClicked, trackOutboundPaymentClicked } from '@/lib/analytics';
+
 const ease = [0.16, 1, 0.3, 1] as const;
 const PAYMENT_URL = 'https://paystack.shop/pay/margin-early-access';
 
@@ -48,7 +50,19 @@ const MagneticButton = () => {
       whileHover={reduceMotion ? undefined : { scale: 1.025 }}
       whileTap={reduceMotion ? undefined : { scale: 0.985 }}
       onClick={() => {
-        window.location.href = PAYMENT_URL;
+        const ctaParams = {
+          cta_location: 'closing_cta',
+          cta_text: 'GET EARLY ACCESS',
+          destination: PAYMENT_URL,
+        };
+
+        trackClaimAccessClicked(ctaParams);
+        trackOutboundPaymentClicked(ctaParams);
+        trackCheckoutStarted(ctaParams);
+
+        window.setTimeout(() => {
+          window.location.href = PAYMENT_URL;
+        }, 180);
       }}
     >
       <motion.span

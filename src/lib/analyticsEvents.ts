@@ -1,11 +1,30 @@
 export const ANALYTICS_EVENTS = {
-  demoVideoClicked: 'demo_video_clicked',
-  demoVideoStarted: 'demo_video_started',
-  demoVideoCompleted: 'demo_video_completed',
+  earlyAccessViewed: 'early_access_viewed',
+  earlyAccessHeroSeen: 'early_access_hero_seen',
+  earlyAccessOfferSeen: 'early_access_offer_seen',
+  earlyAccessCtaSeen: 'early_access_cta_seen',
+  paystackCtaSeen: 'paystack_cta_seen',
+  earlyAccessFaqSeen: 'early_access_faq_seen',
+  earlyAccess10sEngaged: 'early_access_10s_engaged',
+  earlyAccess30sEngaged: 'early_access_30s_engaged',
+  earlyAccessScroll50: 'early_access_scroll_50',
+  earlyAccessScroll75: 'early_access_scroll_75',
+  earlyAccessCtaClicked: 'early_access_cta_clicked',
   claimAccessClicked: 'claim_access_clicked',
+  demoCtaClicked: 'demo_cta_clicked',
+  demoModalOpened: 'demo_modal_opened',
+  demoEmbedVisible: 'demo_embed_visible',
+  demoVideoStarted: 'demo_video_started',
+  demoVideoProgress25: 'demo_video_progress_25',
+  demoVideoProgress50: 'demo_video_progress_50',
+  demoVideoProgress75: 'demo_video_progress_75',
+  demoVideoCompleted: 'demo_video_completed',
   checkoutStarted: 'checkout_started',
   paymentSuccess: 'payment_success',
   paymentFailed: 'payment_failed',
+  outboundPaymentClicked: 'outbound_payment_clicked',
+  // Legacy event retained for continuity in historical GA4 reports.
+  demoVideoClicked: 'demo_video_clicked',
 } as const;
 
 export type AnalyticsEventName = typeof ANALYTICS_EVENTS[keyof typeof ANALYTICS_EVENTS];

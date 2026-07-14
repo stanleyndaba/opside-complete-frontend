@@ -10,6 +10,7 @@ import { getPublicRouteMeta } from '@/config/seo';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useStructuredData } from '@/hooks/useStructuredData';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+import { trackEarlyAccessCtaClicked } from '@/lib/analytics';
 
 const issueTypes = [
   {
@@ -181,6 +182,11 @@ export default function AmazonFbaReimbursement() {
       return;
     }
 
+    trackEarlyAccessCtaClicked({
+      cta_location: 'amazon_fba_reimbursement',
+      cta_text: 'Secure Early Access',
+      destination: '/early-access',
+    });
     navigate('/early-access');
   };
 
@@ -395,7 +401,15 @@ export default function AmazonFbaReimbursement() {
                 </Button>
 
                 <div className="flex flex-col gap-3 text-[14px] font-semibold text-[#25313A] md:flex-row md:items-center md:gap-5">
-                  <Link to="/early-access" className="inline-flex items-center gap-2 text-[#0B74DE] hover:text-[#0869C9]">
+                  <Link
+                    to="/early-access"
+                    onClick={() => trackEarlyAccessCtaClicked({
+                      cta_location: 'amazon_fba_reimbursement_inline_link',
+                      cta_text: 'Start Early Access',
+                      destination: '/early-access',
+                    })}
+                    className="inline-flex items-center gap-2 text-[#0B74DE] hover:text-[#0869C9]"
+                  >
                     <Check className="h-4 w-4" />
                     Early access
                   </Link>
