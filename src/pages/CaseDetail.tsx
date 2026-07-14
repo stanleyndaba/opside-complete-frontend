@@ -684,21 +684,62 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
     caseData.actual_payout_amount ?? caseData.recovered_amount ?? caseData.approved_amount ?? caseData.requested_amount,
     1284.66
   );
+  const demoThreadAmount = caseReference === 'ACME-CASE-2005' ? 569.50 : Number(reimbursementAmount);
   const normalizedState = String(caseData.case_state || caseData.recovery_status || '').toLowerCase();
   const isRejected = normalizedState.includes('reject') || isRejectedDemoCaseReference(caseReference);
   const isFilingReceipt = hasDemoFilingReceiptThread(caseData, caseReference);
   const isApprovedDemo = !isRejected && !isFilingReceipt && isApprovedDemoCaseReference(caseReference);
   const isPaid = !isRejected && (normalizedState.includes('paid') || normalizedState.includes('payout') || caseReference === 'ACME-CASE-2005');
-  const approvedBody = `Hello,\n\nWe have completed our review of the reimbursement request for the FBA inbound shipment discrepancy listed below. Based on the shipment reconciliation, receiving records, and inventory ledger information available to us, this request has been APPROVED.\n\nWe have issued a reimbursement of ${formatDemoCurrency(Number(reimbursementAmount), currency)} for the affected units. The reimbursement will appear in your seller account payments reporting after normal settlement processing completes.\n\nCase ID: ${threadCaseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\nApproved amount: ${formatDemoCurrency(Number(reimbursementAmount), currency)}\nStatus: APPROVED\n\nThank you,\nAmazon Selling Partner Support`;
+  const approvedBody = `Hello,\n\nWe have completed our review of the reimbursement request for the FBA inbound shipment discrepancy listed below. Based on the shipment reconciliation, receiving records, and inventory ledger information available to us, this request has been APPROVED.\n\nWe have issued a reimbursement of ${formatDemoCurrency(demoThreadAmount, currency)} for the affected units. The reimbursement will appear in your seller account payments reporting after normal settlement processing completes.\n\nCase ID: ${threadCaseReference}\nShipment ID: ${shipmentReference}\nReason: Inbound received quantity discrepancy\nApproved amount: ${formatDemoCurrency(demoThreadAmount, currency)}\nStatus: APPROVED\n\nThank you,\nAmazon Selling Partner Support`;
 
   if (isApprovedDemo) {
+    if (caseReference === 'ACME-CASE-2005') {
+      return [
+        {
+          id: `demo-amazon-followup-${caseId || 'case'}`,
+          direction: 'inbound',
+          sender: 'seller.service05@amazon.com',
+          subject: '[Case ID:19822888381] Your Help Needed - Inventory lost in FBA warehouse',
+          body_text: `Inbox\n\nseller.service05@amazon.com <seller.service05@amazon.com>\n31 Mar 2026, 18:31\n\nto me\n\nThis is a reminder to let you know that we need more information to resolve your case. If you still need assistance, respond to this message and provide the details we’ve requested below.\n\nIf we’ve resolved your issue, no further action is needed, and we’ll close your case.\n\nAmazon Support\n\n-- Original Message --\n\nHello from Amazon Selling Partner Support,\n\nWe are following up on your reimbursement request for lost units in FBA warehouse processing.\n\nTo proceed, please provide the following:\n• ASIN or FNSKU associated with the lost units.\n• Transaction ID.\n• Any supporting documents that further support our investigation.\n\nPlease use the Contact Us form in Seller Central to continue this case.\n\nCase ID: 19822888381\nShipment ID: ${shipmentReference}\nStatus: Waiting for more evidence\n\nThank you,\nAmazon Selling Partner Support`,
+          received_at: '2026-03-31T18:31:00Z',
+          state_signal: 'pending',
+          attachments: [],
+        },
+        {
+          id: `demo-margin-response-${caseId || 'case'}`,
+          direction: 'outbound',
+          recipients: ['Amazon Selling Partner Support'],
+          subject: `Re: [Case ID:19822888381] Your Help Needed - Inventory lost in FBA warehouse`,
+          body_text: `Hello Amazon Selling Partner Support,\n\nMargin has updated the evidence pack for this case and attached the requested materials below.\n\nShipment ID: ${shipmentReference}\nCase reference: ${threadCaseReference}\nASIN/FNSKU: ${fallbackIfMissing(caseData.evidence?.asin || caseData.sku, 'ACME-YOGA-MAT-SAGE')}\nTransaction ID: ${fallbackIfMissing(caseData.evidence?.transaction_id || caseData.transaction_id, 'TXN-19822888381')}\nClaimed amount: ${formatDemoCurrency(demoThreadAmount, currency)}\n\nThe response is now aligned to the shipment, receipt, and supporting records requested in your message. Please review the updated evidence package and continue the investigation.\n\nThank you,\nMargin`,
+          sent_at: '2026-03-31T19:04:00Z',
+          state_signal: 'submitted',
+          attachments: [
+            { filename: 'Supplier invoice INV-2026-1842.pdf' },
+            { filename: 'FBA shipment reconciliation FBA17XJ4K2.pdf' },
+            { filename: 'Amazon inventory ledger excerpt.csv' },
+            { filename: 'ASIN-FNSKU evidence note.txt' },
+          ],
+        },
+        {
+          id: `demo-amazon-approved-${caseId || 'case'}`,
+          direction: 'inbound',
+          sender: 'Amazon Selling Partner Support',
+          subject: `APPROVED: Reimbursement issued for shipment ${shipmentReference}`,
+          body_text: approvedBody,
+          received_at: '2026-05-08T14:37:00Z',
+          state_signal: isPaid ? 'paid' : 'approved',
+          attachments: [],
+        },
+      ];
+    }
+
     return [
       {
         id: `demo-amazon-filing-${caseId || 'case'}`,
         direction: 'outbound',
         recipients: ['Amazon Selling Partner Support'],
         subject: `Reimbursement request for shipment ${shipmentReference}`,
-        body_text: `Hello Amazon Selling Partner Support,\n\nWe are requesting reimbursement review for an inbound shipment discrepancy identified during reconciliation.\n\nShipment ID: ${shipmentReference}\nCase reference: ${threadCaseReference}\nSKU: ${fallbackIfMissing(caseData.sku || caseData.evidence?.sku, 'MGRN-BTL-18')}\nUnits affected: ${fallbackIfMissing(caseData.units_lost || caseData.evidence?.quantity, 18)}\nClaimed amount: ${formatDemoCurrency(Number(reimbursementAmount), currency)}\n\nAttached evidence includes the shipment reconciliation, supplier invoice, and inventory ledger excerpt supporting the missing quantity.\n\nThank you,\nDemo Workspace Store`,
+        body_text: `Hello Amazon Selling Partner Support,\n\nWe are requesting reimbursement review for an inbound shipment discrepancy identified during reconciliation.\n\nShipment ID: ${shipmentReference}\nCase reference: ${threadCaseReference}\nSKU: ${fallbackIfMissing(caseData.sku || caseData.evidence?.sku, 'MGRN-BTL-18')}\nUnits affected: ${fallbackIfMissing(caseData.units_lost || caseData.evidence?.quantity, 18)}\nClaimed amount: ${formatDemoCurrency(demoThreadAmount, currency)}\n\nAttached evidence includes the shipment reconciliation, supplier invoice, and inventory ledger excerpt supporting the missing quantity.\n\nThank you,\nDemo Workspace Store`,
         sent_at: '2026-05-07T10:14:00Z',
         state_signal: 'submitted',
         attachments: [
