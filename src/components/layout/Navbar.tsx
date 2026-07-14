@@ -265,6 +265,12 @@ export function Navbar({
         return;
       }
 
+      const normalizedTenantSlug = normalizeTenantSlug(activeTenantSlug);
+      if (normalizedTenantSlug === 'demo-workspace' || normalizedTenantSlug === 'acme-corp') {
+        setConnectedPlatformsCount(3);
+        return;
+      }
+
       try {
         const [statusRes, sourcesRes] = await Promise.all([
           api.getIntegrationsStatus(activeTenantSlug),
