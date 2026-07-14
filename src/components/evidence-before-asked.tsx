@@ -24,7 +24,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            Algorithms trained on your data
+            When Amazon asks for proof
           </motion.p>
 
           <motion.p
@@ -33,7 +33,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, delay: 0.56, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            improving the next case
+            Margin already knows where it is
           </motion.p>
         </div>
       </section>
