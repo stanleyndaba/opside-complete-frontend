@@ -15,7 +15,10 @@ export const PAYSTACK_CHECKOUT_URL_TYPE = 'external_paystack_payment_page';
 export const PAYSTACK_EARLY_ACCESS_URL = 'https://paystack.shop/pay/margin-early-access';
 
 const INTERNAL_TEST_STORAGE_KEY = 'margin_analytics_internal_test';
+const ANALYTICS_DEBUG_STORAGE_KEY = 'margin_analytics_debug';
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'] as const;
+const MAX_GTAG_RETRIES = 8;
+const GTAG_RETRY_DELAY_MS = 250;
 
 declare global {
   interface Window {
@@ -39,13 +42,23 @@ function syncInternalTestFlagFromLocation() {
 
   try {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('test') === '1' || params.get('debug_analytics') === '1') {
+    const testFlag = params.get('test');
+    const debugFlag = params.get('debug_analytics');
+
+    if (testFlag === '0' || debugFlag === '0') {
+      window.localStorage.removeItem(INTERNAL_TEST_STORAGE_KEY);
+      window.localStorage.removeItem(ANALYTICS_DEBUG_STORAGE_KEY);
+      return;
+    }
+
+    if (testFlag === '1') {
       window.localStorage.setItem(INTERNAL_TEST_STORAGE_KEY, '1');
       return;
     }
 
-    if (params.get('test') === '0') {
-      window.localStorage.removeItem(INTERNAL_TEST_STORAGE_KEY);
+    if (debugFlag === '1') {
+      window.localStorage.setItem(INTERNAL_TEST_STORAGE_KEY, '1');
+      window.localStorage.setItem(ANALYTICS_DEBUG_STORAGE_KEY, '1');
     }
   } catch {
     // Analytics must never interrupt the page.
@@ -57,6 +70,17 @@ export function isInternalAnalyticsTest() {
 
   try {
     return window.localStorage.getItem(INTERNAL_TEST_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function isAnalyticsDebugEnabled() {
+  if (import.meta.env?.DEV) return true;
+  if (typeof window === 'undefined') return false;
+
+  try {
+    return window.localStorage.getItem(ANALYTICS_DEBUG_STORAGE_KEY) === '1';
   } catch {
     return false;
   }
@@ -113,9 +137,31 @@ export function buildAnalyticsContext(params: AnalyticsParams = {}) {
 }
 
 function logAnalyticsDebug(kind: 'page_view' | 'event', name: string, params: AnalyticsParams) {
-  if (typeof import.meta === 'undefined' || !import.meta.env?.DEV) return;
-  // Dev-only logging keeps production quiet while making ?debug_analytics=1 easy to inspect locally.
-  console.debug(`[analytics:${kind}]`, name, params);
+  if (!isAnalyticsDebugEnabled()) return;
+
+  if (kind === 'page_view') {
+    console.info('[GA4] page_view sent', params);
+    return;
+  }
+
+  console.info(`[GA4] event sent: ${name}`, params);
+}
+
+function sendGa4Event(eventName: string, params: AnalyticsParams, attempt = 0) {
+  if (typeof window === 'undefined') return;
+
+  const gtag = getGtag();
+  if (gtag) {
+    gtag('event', eventName, params);
+    logAnalyticsDebug(eventName === 'page_view' ? 'page_view' : 'event', eventName, params);
+    return;
+  }
+
+  if (attempt >= MAX_GTAG_RETRIES) return;
+
+  window.setTimeout(() => {
+    sendGa4Event(eventName, params, attempt + 1);
+  }, GTAG_RETRY_DELAY_MS);
 }
 
 export function trackPageView(path: string) {
@@ -124,9 +170,6 @@ export function trackPageView(path: string) {
 
   syncInternalTestFlagFromLocation();
 
-  const gtag = getGtag();
-  if (!gtag) return;
-
   const params = buildAnalyticsContext({
     page_path: path,
     page_title: document.title,
@@ -134,20 +177,14 @@ export function trackPageView(path: string) {
   });
 
   lastTrackedPageView = path;
-  logAnalyticsDebug('page_view', path, params);
-  gtag('config', GA4_MEASUREMENT_ID, params);
+  sendGa4Event('page_view', params);
 }
 
 export function trackEvent(eventName: AnalyticsEventName | string, params: AnalyticsParams = {}) {
   if (typeof window === 'undefined') return;
 
   const eventParams = buildAnalyticsContext(params);
-
-  const gtag = getGtag();
-  logAnalyticsDebug('event', eventName, eventParams);
-  if (!gtag) return;
-
-  gtag('event', eventName, eventParams);
+  sendGa4Event(eventName, eventParams);
 }
 
 export function trackEarlyAccessCtaClicked(params: AnalyticsParams = {}) {
