@@ -95,6 +95,9 @@ const appealReason = (row: QueueRow, state: AppealCandidate['appealState']) => {
   if (state === 'underpaid') {
     return 'Amazon approval is recorded below the requested claim value.';
   }
+  if (state === 'denied') {
+    return row.rejection_reason || 'Rejected because the shipment and inventory records do not confirm an eligible inbound discrepancy.';
+  }
   if (row.rejection_reason) return row.rejection_reason;
   if (row.rejection_category) return label(row.rejection_category);
   return 'Amazon rejection is recorded for this submitted case, but no detailed response text is stored yet.';
