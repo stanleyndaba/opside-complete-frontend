@@ -91,9 +91,11 @@ const appealState = (row: QueueRow): AppealCandidate['appealState'] | null => {
   return null;
 };
 
-const appealReason = (row: QueueRow, state: AppealCandidate['appealState']) => {
+const appealReason = (row: QueueRow, state: AppealCandidate['appealState'], isDemoTenant = false) => {
   if (state === 'underpaid') {
-    return 'Amazon approval is recorded below the requested claim value.';
+    return isDemoTenant
+      ? 'Rejected because the shipment and inventory records do not confirm an eligible inbound discrepancy.'
+      : 'Amazon approval is recorded below the requested claim value.';
   }
   if (state === 'denied') {
     return row.rejection_reason || 'Rejected because the shipment and inventory records do not confirm an eligible inbound discrepancy.';
@@ -395,6 +397,10 @@ export default function Appeals() {
     };
   }, [activeTenantSlug, isReady, refreshKey]);
 
+  const isDemoTenant =
+    normalizeTenantSlug(activeTenantSlug) === 'demo-workspace' ||
+    normalizeTenantSlug(activeTenantSlug) === 'acme-corp';
+
   const candidates = useMemo(() => {
     return rows.flatMap((row) => {
       const state = appealState(row);
@@ -404,7 +410,7 @@ export default function Appeals() {
         ...row,
         appealGap: appealGap(row),
         appealState: state,
-        appealReasonText: appealReason(row, state),
+        appealReasonText: appealReason(row, state, isDemoTenant),
         policyAngle: policyAngle(row, state),
         strengthScore: appeal.score,
         strengthTone: appeal.tone,
@@ -412,7 +418,7 @@ export default function Appeals() {
         nextStep: appeal.nextStep
       }];
     });
-  }, [rows]);
+  }, [rows, isDemoTenant]);
 
   const rejectionCategories = useMemo(() => {
     return Array.from(new Set(candidates.map((row) => row.rejection_category).filter((value): value is string => Boolean(value)))).sort();
