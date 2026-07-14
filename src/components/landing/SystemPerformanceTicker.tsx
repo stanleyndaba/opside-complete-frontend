@@ -1,19 +1,19 @@
 const metrics = [
   {
     value: '26',
-    description: 'Recovery algorithms continuously auditing your account.',
+    description: 'Amazon recovery checks watching for proof gaps.',
   },
   {
     value: '11',
-    description: 'Specialized recovery agents coordinating every case.',
+    description: 'Recovery specialists reviewing evidence-heavy cases.',
   },
   {
     value: '12',
-    description: 'Evidence workflows connecting the proof Amazon actually asks for.',
+    description: 'Proof paths connecting what Amazon actually asks for.',
   },
   {
     value: '100%',
-    description: 'Seller approval before any claim is submitted.',
+    description: 'Seller approval before any claim is filed.',
   },
 ];
 

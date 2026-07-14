@@ -5,19 +5,19 @@ const CHAPTERS = [
   {
     id: 1,
     title: 'The claim window keeps closing.',
-    subtext: 'Once a discrepancy is identified, the seller has limited time to gather the right evidence and file correctly.',
+    subtext: 'Once a discrepancy is found, the seller still has to prove the shipment, quantity, cost, case history, and payout before Amazon closes the window.',
     duration: 6000,
   },
   {
     id: 2,
     title: 'Your proof stays scattered.',
-    subtext: 'The invoice is in Gmail. The POD is in a carrier portal. The BOL is in Drive. The case ID is in Seller Central. The payout is buried in a settlement report.',
+    subtext: 'The invoice is in Gmail. The POD is in a carrier portal. The BOL is in Drive. The case ID is in Seller Central. None of it helps until it belongs to the same claim.',
     duration: 6000,
   },
   {
     id: 3,
     title: 'Recoverable money quietly expires.',
-    subtext: 'If the evidence is missing, late, weak, or rejected, a valid recovery opportunity can expire.',
+    subtext: 'A valid recovery can die because proof arrived late, Amazon asked again, or the payout never matched the approval.',
     duration: 6000,
   }
 ];

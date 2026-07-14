@@ -4,26 +4,26 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 const protocols = [
   {
     number: '01',
-    title: 'A discrepancy appears',
-    subtext: 'A reimbursement issue surfaces from Amazon operational data.',
+    title: 'The discrepancy is found',
+    subtext: 'The money may be there, but a detected issue is not a recoverable case yet.',
     log: 'Discrepancy surfaced',
   },
   {
     number: '02',
     title: 'Amazon needs proof',
-    subtext: 'Margin maps the issue to the invoices, BOLs, PODs, shipment IDs, carrier records, cost data, case history, and payout records Amazon may ask for.',
+    subtext: 'The invoice, BOL, POD, shipment ID, carrier record, cost basis, case history, and payout record all have to line up.',
     log: 'Proof requirements',
   },
   {
     number: '03',
-    title: 'The proof is scattered',
-    subtext: 'Relevant records are pulled from inboxes, drives, shipment files, reports, and support trails.',
+    title: 'The proof is everywhere',
+    subtext: 'One record sits in Gmail, another in Drive, another in Seller Central, another in a carrier portal.',
     log: 'Recovery proof search',
   },
   {
     number: '04',
-    title: 'Margin connects it',
-    subtext: 'The claim is assembled with linked proof, deadline context, and seller approval before filing.',
+    title: 'The case becomes defensible',
+    subtext: 'The records are connected to the shipment, deadline, claim amount, and seller approval before filing.',
     log: 'Evidence pack assembly',
   },
 ];

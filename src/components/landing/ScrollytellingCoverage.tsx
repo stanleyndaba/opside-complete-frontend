@@ -9,35 +9,35 @@ const workflows = [
     label: 'Lost inventory discrepancy',
     title: 'Shipment mismatch → claim clock activated',
     detail:
-      'Lost inventory reimbursement work is converted from inventory variance into a timed workflow with evidence requirements and filing deadlines.',
+      'A received quantity gap is not enough. The shipment, cost basis, proof, and filing deadline all have to support the same claim.',
   },
   {
     index: '02',
     label: 'Inbound shortage',
     title: 'Received quantity variance → evidence required before eligibility',
     detail:
-      'Inbound discrepancies are held until shipment data and supporting records validate eligibility before any claim advances.',
+      'Amazon may show fewer units received, but the case cannot move until the shipment record, invoice, and receiving report reconcile.',
   },
   {
     index: '03',
     label: 'Refund without return',
     title: 'Refund event unmatched to return record → held for validation',
     detail:
-      'Refund activity is separated from return proof before a case advances. Unmatched refunds are flagged and held.',
+      'A refund event without matching return proof can become a weak claim fast. The case stays held until the return trail is clear.',
   },
   {
     index: '04',
     label: 'Fee drift',
     title: 'Measurement or fee adjustment variance → recalculation required',
     detail:
-      'Fee changes are mapped to the records required before reimbursement workflow execution. Measurement and category drift are tracked.',
+      'A fee change only matters when the product measurement, category, charge, and Amazon record can be tied back to the same item.',
   },
   {
     index: '05',
     label: 'Payout mismatch',
     title: 'Approved value differs from received payout → reconciliation triggered',
     detail:
-      'Amazon approval is not the same as money received. Margin separates approved value from actual payout and flags any difference that needs follow-up.',
+      'Amazon approval is not payment. The approved amount still has to reconcile to what actually reached the seller balance.',
   },
 ];
 
@@ -683,7 +683,7 @@ export function ScrollytellingCoverage() {
     <section
       ref={containerRef}
       className="relative h-[285vh] md:h-[350vh]"
-      aria-label="Coverage examples showing Amazon reimbursement workflows"
+      aria-label="Coverage examples showing Amazon reimbursement proof paths"
     >
       {/* ── Light background ── */}
       <div className="absolute inset-0 bg-[#F3F6F8]" />
