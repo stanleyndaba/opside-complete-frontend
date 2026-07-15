@@ -934,7 +934,7 @@ export default function Index() {
   };
 
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = 'Join Early Access';
+  const primaryCtaLabel = 'Get Started';
 
 
   return (
@@ -1250,9 +1250,9 @@ export default function Index() {
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20 max-md:hidden" />
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
-                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
-                    Early Access Open.
-                  </h2>
+                    <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
+                    Every seller needs Margin.
+                    </h2>
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
                     You&apos;re already doing the work. Finding invoices. Downloading PODs. Checking settlements. Searching case history. Stop rebuilding the same recovery every time Amazon asks.
                   </p>
