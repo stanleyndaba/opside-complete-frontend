@@ -107,7 +107,7 @@ const ClosingCTA = () => {
             }}
           />
           <motion.div
-            className="relative rounded-[32px] border border-white/60 bg-white/70 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-2xl sm:p-9 md:p-11"
+            className="relative rounded-[32px] border border-white/60 bg-white/70 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-2xl sm:p-8 md:p-10"
           >
             <motion.div initial="hidden" animate="show">
               <motion.div custom={0.1} variants={reveal} className="mx-auto max-w-[560px] text-center text-[15px] font-semibold leading-6 tracking-tight text-blue-600/90 sm:text-[17px]" />
