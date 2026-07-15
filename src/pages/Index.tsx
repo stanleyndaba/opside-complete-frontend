@@ -268,11 +268,12 @@ const trustControls = [
 
 const earlyAccessItems = [
   'Founder onboarding before filing',
-  'Read-only setup first',
+  'Autonomous Evidence Linking',
   'Claim deadline and proof readiness check',
-  'Seller approval before filing',
+  'Auto-Filing with Opt-Out Control',
   'Accounting-ready QuickBooks/Xero reconciliation layer included in the rollout',
-  'No recovery commissions'
+  '0% Commission Through 2026',
+  'Built for Hard-to-Prove Claims'
 ];
 
 const faqs = [
@@ -537,13 +538,13 @@ function KineticHeroSection({
             transition={{ duration: 0.6, delay: 1 }}
             className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-medium text-slate-400 sm:mt-8"
           >
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Read-only setup</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Autonomous Evidence Linking</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Seller approval before filing</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Auto-Filing with Opt-Out Control</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No recovery commissions</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> 0% Commission Through 2026</span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Built for Amazon proof loops</span>
+            <span className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Built for Hard-to-Prove Claims</span>
           </motion.div>
 
           {isFull ? (
