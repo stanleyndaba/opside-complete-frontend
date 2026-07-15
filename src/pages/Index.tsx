@@ -481,8 +481,8 @@ function KineticHeroSection({
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="inline-block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis rounded-[5px] bg-white/[0.07] px-4 py-2 text-left text-[9px] font-semibold leading-relaxed uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl sm:px-3 sm:py-1.5 sm:text-[11px]"
           >
-            Amazon reimbursement proof before the window closes
-          </motion.div>
+              BUILT FOR AMAZON'S REVIEW
+            </motion.div>
 
           <h1
             id="margin-hero-title"
