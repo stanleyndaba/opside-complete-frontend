@@ -74,7 +74,6 @@ const AmazonFbaReimbursement = lazy(() => import("./pages/AmazonFbaReimbursement
 const ReimbursementAcquisitionPage = lazy(() => import("./pages/ReimbursementAcquisitionPage"));
 const GetidaAlternative = lazy(() => import("./pages/GetidaAlternative"));
 const SellerboardAlternative = lazy(() => import("./pages/SellerboardAlternative"));
-const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
@@ -179,7 +178,6 @@ const PRELOAD_ROUTES = [
   () => import("./pages/Research"),
   () => import("./pages/Docs"),
   () => import("./pages/Contact"),
-  () => import("./pages/Pricing"),
   () => import("./pages/Waitlist"),
   () => import("./pages/ClosingCTA"),
   () => import("./pages/PaymentSuccess"),
@@ -281,7 +279,7 @@ const App = () => (
                         <Route path="/about-margin" element={<AboutMargin />} />
                         <Route path="/research" element={<Research />} />
                         <Route path="/fba-reimbursement-research" element={<Research />} />
-                        <Route path="/pricing" element={<PricingAdjust />} />
+                        <Route path="/pricing" element={<Navigate to="/early-access" replace />} />
                         <Route path="/payment/success" element={<PaymentSuccess />} />
                         <Route path="/founding-500/status" element={<FoundingActivationStatus />} />
                         <Route path="/designsimulate" element={<DesignSimulate />} />
