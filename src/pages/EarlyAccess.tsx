@@ -124,7 +124,7 @@ function FounderPassCTA({
       </div>
       <Button
         asChild
-        className="h-[56px] w-full max-w-[340px] justify-center rounded-full bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
+        className="h-[56px] w-full max-w-[340px] justify-center rounded-[5px] bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
       >
         <a
           href={EARLY_ACCESS_CHECKOUT_URL}
@@ -640,7 +640,7 @@ export default function EarlyAccess() {
 
             <motion.div
               {...reveal}
-              className="mx-auto max-w-[860px] border-y border-[#D8E3E8]"
+              className="mx-auto max-w-[860px]"
             >
               {marketplaceCountries.map((mp, i) => (
                 <motion.div
