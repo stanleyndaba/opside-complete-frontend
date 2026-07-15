@@ -89,6 +89,26 @@ const integrations: Integration[] = [
     laneX: 62,
   },
   {
+    id: 'quickbooks',
+    name: 'QuickBooks',
+    icon: '/quickbooks.png',
+    evidence: ['Invoice', 'Books', 'Reconcile'],
+    x: 79,
+    y: 80,
+    delay: 2.55,
+    laneX: 60,
+  },
+  {
+    id: 'xero',
+    name: 'Xero',
+    icon: '/xero.png',
+    evidence: ['Payout', 'Ledger', 'Export'],
+    x: 65,
+    y: 88,
+    delay: 2.8,
+    laneX: 54,
+  },
+  {
     id: 'adobe-sign',
     name: 'Adobe Sign',
     icon: '/dobe.png',
@@ -241,7 +261,7 @@ const PlatformSimulate = () => {
             );
           })}
 
-          {[trunkX, integrations[0].laneX, integrations[2].laneX].map((x) => (
+          {Array.from(new Set([trunkX, ...integrations.map((integration) => integration.laneX)])).map((x) => (
             <circle key={x} cx={x * 10} cy={marginNode.y * 6.4} r="3.5" fill="white" stroke="#B8C0CC" strokeWidth="1" />
           ))}
           <circle cx={intakePoint.x * 10} cy={intakePoint.y * 6.4} r="4" fill="white" stroke="#9CA3AF" strokeWidth="1" />
