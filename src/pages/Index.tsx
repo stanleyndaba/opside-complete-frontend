@@ -242,20 +242,20 @@ const marketplaceCountries = [
 
 const trustControls = [
   {
-    title: 'Read-only by default',
-    detail: 'Your account is inspected before any filing action.'
+    title: 'Margin maps your recovery operation before touching a case.',
+    detail: 'We connect evidence, shipments, deadlines, and recovery history before any workflow begins.'
   },
   {
-    title: 'Seller approval before filing',
-    detail: 'The seller decides when a case is strong enough to continue.'
+    title: 'Margin prepares every case. You approve the decision.',
+    detail: 'Evidence is assembled, validated, and made filing-ready before you decide whether it moves.'
   },
   {
-    title: 'Evidence validation before action',
-    detail: 'Weak, duplicate, expired, or unsupported cases stay held.'
+    title: 'Margin keeps strengthening cases until they are ready.',
+    detail: 'It finds missing proof, follows Amazon responses, updates evidence, prepares follow-ups, and rebuilds rejected cases.'
   },
   {
-    title: 'No reimbursement guarantee',
-    detail: 'Amazon decides outcomes. Margin keeps the proof trail honest.'
+    title: "Amazon decides reimbursements. Margin doesn't stop working.",
+    detail: 'We continue organizing evidence, handling follow-up requests, tracking responses, and reconciling payouts until the recovery reaches its natural conclusion.'
   }
 ];
 
@@ -1164,9 +1164,9 @@ export default function Index() {
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <motion.div {...revealProps}>
                 <div className={sectionLabelClass}>Trust & Control</div>
-                <h2 className={sectionHeadingClass}>Control matters when Amazon can reject the case.</h2>
+                <h2 className={sectionHeadingClass}>Recovery is an operation, not a submission.</h2>
                 <p className={sectionBodyClass}>
-                  Margin starts read-only. A case does not move because automation says so; it moves when proof is matched, risk is visible, and the seller approves filing.
+                  Amazon can ask again, reject, approve partially, underpay, or delay payment. Margin keeps preparing evidence, managing follow-up, tracking responses, and reconciling payout state while the seller stays in control.
                 </p>
               </motion.div>
 
