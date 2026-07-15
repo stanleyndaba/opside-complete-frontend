@@ -317,6 +317,8 @@ const integrationLogos = [
   { name: 'Google Drive', src: '/gd.png', className: 'h-5 w-auto md:h-6' },
   { name: 'Dropbox', src: '/Dropbox_Icon.svg.png', className: 'h-5 w-auto md:h-6' },
   { name: 'OneDrive', src: '/onedriive.png', className: 'h-5 w-auto md:h-6' },
+  { name: 'QuickBooks', src: '/quickbooks.png', className: 'h-5 w-auto md:h-6' },
+  { name: 'Xero', src: '/xero.png', className: 'h-5 w-auto md:h-6' },
   { name: 'Adobe Sign', src: '/dobe.png', className: 'h-5 w-auto md:h-6' },
   { name: 'Slack', src: '/slack-icon-2019.png', className: 'h-5 w-auto md:h-6' }
 ];
