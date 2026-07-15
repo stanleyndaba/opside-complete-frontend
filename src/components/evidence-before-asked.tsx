@@ -1,5 +1,3 @@
-"use client";
-
 import { motion } from 'framer-motion';
 
 export default function EvidenceBeforeAsked() {
@@ -24,7 +22,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[22ch]"
           >
-            If a case is rejected
+            Every resolved case helps Margin get better at knowing which evidence actually wins claims.
           </motion.p>
 
           <motion.p
@@ -33,7 +31,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, delay: 0.56, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[28ch]"
           >
-            Margin finds What's blocking the case
+            The better the case resolves, the better Margin gets at connecting the proof that matters.
           </motion.p>
         </div>
       </section>
