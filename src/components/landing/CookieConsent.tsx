@@ -135,7 +135,7 @@ export function CookieConsent() {
                                 <Button
                                     onClick={() => setView('settings')}
                                     variant="outline"
-                                    className="h-11 rounded-[6px] border-[#DCE8EE] bg-transparent px-6 text-[10px] font-bold uppercase tracking-tight text-[#66737F] hover:bg-[#F3F6F8] hover:text-[#182026] md:h-10">
+                                    className="h-11 rounded-[6px] border-transparent bg-transparent px-6 text-[10px] font-bold uppercase tracking-tight text-[#66737F] hover:bg-[#F3F6F8] hover:text-[#182026] md:h-10">
                                     Manage Settings
                                 </Button>
                                 <Button
