@@ -1706,8 +1706,7 @@ export default function CaseDetail() {
     ? Number((claimRecordUnitValue * claimRecordUnitCount).toFixed(2))
     : null;
   const claimRecordDemoAmount = caseId === 'ACME-CASE-2005' ? 569.50 : null;
-  const claimRecordBaseAmount = firstPositiveAmount(
-    claimRecordDemoAmount,
+  const claimRecordBaseAmount = claimRecordDemoAmount ?? firstPositiveAmount(
     requestedAmount,
     estimatedClaimValue,
     approvedAmount,
@@ -1721,12 +1720,12 @@ export default function CaseDetail() {
     claimRecordUnitDerivedAmount,
     1284.66
   ) ?? 1284.66;
-  const claimRecordRequestedAmount = firstPositiveAmount(requestedAmount, effectiveCase?.requested_amount, effectiveCase?.claim_amount, claimRecordBaseAmount) ?? claimRecordBaseAmount;
-  const claimRecordEstimatedClaimValue = firstPositiveAmount(estimatedClaimValue, effectiveCase?.estimated_claim_value, effectiveCase?.estimated_recovery_amount, claimRecordRequestedAmount) ?? claimRecordRequestedAmount;
-  const claimRecordApprovedAmount = firstPositiveAmount(trustedApprovedAmount, approvedAmount, effectiveCase?.approved_amount, claimRecordRequestedAmount) ?? claimRecordRequestedAmount;
-  const claimRecordRecoveredAmount = firstPositiveAmount(trustedRecoveredAmount, recoveredAmount, effectiveCase?.actual_payout_amount, effectiveCase?.recovered_amount, claimRecordApprovedAmount) ?? claimRecordApprovedAmount;
-  const claimRecordLegacyBilledAmount = firstPositiveAmount(trustedBilledAmount, billedAmount, effectiveCase?.billed_amount);
-  const claimRecordDisplayBilledAmount = claimRecordLegacyBilledAmount ?? Number((claimRecordRecoveredAmount * 0.15).toFixed(2));
+  const claimRecordRequestedAmount = claimRecordDemoAmount ?? (firstPositiveAmount(requestedAmount, effectiveCase?.requested_amount, effectiveCase?.claim_amount, claimRecordBaseAmount) ?? claimRecordBaseAmount);
+  const claimRecordEstimatedClaimValue = claimRecordDemoAmount ?? (firstPositiveAmount(estimatedClaimValue, effectiveCase?.estimated_claim_value, effectiveCase?.estimated_recovery_amount, claimRecordRequestedAmount) ?? claimRecordRequestedAmount);
+  const claimRecordApprovedAmount = claimRecordDemoAmount ?? (firstPositiveAmount(trustedApprovedAmount, approvedAmount, effectiveCase?.approved_amount, claimRecordRequestedAmount) ?? claimRecordRequestedAmount);
+  const claimRecordRecoveredAmount = claimRecordDemoAmount ?? (firstPositiveAmount(trustedRecoveredAmount, recoveredAmount, effectiveCase?.actual_payout_amount, effectiveCase?.recovered_amount, claimRecordApprovedAmount) ?? claimRecordApprovedAmount);
+  const claimRecordLegacyBilledAmount = claimRecordDemoAmount ?? firstPositiveAmount(trustedBilledAmount, billedAmount, effectiveCase?.billed_amount);
+  const claimRecordDisplayBilledAmount = claimRecordDemoAmount ?? (claimRecordLegacyBilledAmount ?? Number((claimRecordRecoveredAmount * 0.15).toFixed(2)));
   const resolvedClaimType = effectiveCase?.anomaly_type ? String(effectiveCase.anomaly_type).replace(/_/g, ' ') : NOT_AVAILABLE;
   const resolvedMatchMethod = effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type
     ? String(effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type).replace(/_/g, ' ')
@@ -1752,7 +1751,7 @@ export default function CaseDetail() {
     : isReviewOnlyFinding
       ? 'Review only'
       : 'Claim candidate';
-  const findingAmount = firstPositiveAmount(requestedAmount, estimatedClaimValue, effectiveCase?.guaranteedAmount, claimRecordRequestedAmount);
+  const findingAmount = claimRecordDemoAmount ?? firstPositiveAmount(requestedAmount, estimatedClaimValue, effectiveCase?.guaranteedAmount, claimRecordRequestedAmount);
   const findingAmountCopy = !hasFindingTruth
     ? (typeof findingAmount === 'number'
       ? `Current recorded case value is ${formatCurrencyOrDash(findingAmount, effectiveCase?.currency || 'USD')}.`
