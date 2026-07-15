@@ -1277,25 +1277,25 @@ function ClaimRecordMetric({
   value,
   detail,
   tone = 'default',
+  className,
+  valueClassName,
+  detailClassName,
 }: {
   label: string;
   value: React.ReactNode;
   detail?: React.ReactNode;
   tone?: 'default' | 'money' | 'safe' | 'warning';
+  className?: string;
+  valueClassName?: string;
+  detailClassName?: string;
 }) {
-  const toneClass = tone === 'money'
-    ? 'text-emerald-200'
-    : tone === 'safe'
-      ? 'text-blue-200'
-      : tone === 'warning'
-        ? 'text-amber-100'
-        : 'text-white';
+  const toneClass = 'text-[#111827]';
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/[0.32]">{label}</p>
-      <div className={cn('mt-2 text-[18px] font-sans font-bold tracking-tight tabular-nums', toneClass)}>{value}</div>
-      {detail ? <div className="mt-2 text-[11px] font-sans font-medium leading-4 tracking-tight text-white/[0.46]">{detail}</div> : null}
+    <div className={cn('rounded-xl border border-[#E5E7EB] bg-white p-3.5', className)}>
+      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">{label}</p>
+      <div className={cn('mt-2 text-[14px] font-sans font-semibold tracking-tight tabular-nums', toneClass, valueClassName)}>{value}</div>
+      {detail ? <div className={cn('mt-1 text-[9px] font-sans font-medium leading-4 tracking-tight text-[#9CA3AF]', detailClassName)}>{detail}</div> : null}
     </div>
   );
 }
@@ -2525,48 +2525,56 @@ export default function CaseDetail() {
                 </ClaimRecordSection>
 
                 <ClaimRecordSection title="Recovery Ledger" eyebrow="Financial Controls">
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    <ClaimRecordMetric label="Estimated claim value" value={formatCurrencyOrDash(claimRecordEstimatedClaimValue, effectiveCase?.currency || 'USD')} tone="money" />
-                    <ClaimRecordMetric label="Approved amount" value={formatCurrencyOrDash(claimRecordApprovedAmount, effectiveCase?.currency || 'USD')} tone="money" />
-                    <ClaimRecordMetric label="Recovered amount" value={formatCurrencyOrDash(claimRecordRecoveredAmount, effectiveCase?.currency || 'USD')} tone="money" />
-                    <ClaimRecordMetric label="Legacy billed amount" value={formatCurrencyOrDash(claimRecordDisplayBilledAmount, effectiveCase?.currency || 'USD')} />
+                  <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+                    <ClaimRecordMetric label="Estimated claim value" value={formatCurrencyOrDash(claimRecordEstimatedClaimValue, effectiveCase?.currency || 'USD')} className="p-3" />
+                    <ClaimRecordMetric label="Approved amount" value={formatCurrencyOrDash(claimRecordApprovedAmount, effectiveCase?.currency || 'USD')} className="p-3" />
+                    <ClaimRecordMetric label="Recovered amount" value={formatCurrencyOrDash(claimRecordRecoveredAmount, effectiveCase?.currency || 'USD')} className="p-3" />
+                    <ClaimRecordMetric label="Legacy billed amount" value={formatCurrencyOrDash(claimRecordDisplayBilledAmount, effectiveCase?.currency || 'USD')} className="p-3" />
                   </div>
-                  <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.44fr)]">
-                    <dl className="grid gap-3 sm:grid-cols-2">
-                      <ClaimRecordField label="Requested Claim Amount">{formatCurrencyOrDash(claimRecordRequestedAmount, effectiveCase?.currency || 'USD')}</ClaimRecordField>
+                  <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,0.34fr)]">
+                    <dl className="grid gap-2.5 sm:grid-cols-2">
+                      <ClaimRecordField label="Requested Claim Amount" className="pb-2">
+                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">{formatCurrencyOrDash(claimRecordRequestedAmount, effectiveCase?.currency || 'USD')}</span>
+                      </ClaimRecordField>
                       <ClaimRecordField label="Units Affected">
-                        <span className="inline-flex items-center gap-2">
-                          {typeof resolvedUnitsAffected === 'number' ? resolvedUnitsAffected : <span className="text-white/20">-</span>}
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-tight text-[#111827]">
+                          {typeof resolvedUnitsAffected === 'number' ? resolvedUnitsAffected : <span className="text-[#9CA3AF]">-</span>}
                           {typeof resolvedUnitsAffected === 'number' && effectiveCase.units_is_verified ? (
-                            <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Verified</Badge>
+                            <Badge className="bg-[#111827]/5 text-[#111827] border-[#E5E7EB] text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Verified</Badge>
                           ) : typeof resolvedUnitsAffected === 'number' ? (
-                            <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Estimated</Badge>
+                            <Badge className="bg-[#111827]/5 text-[#111827] border-[#E5E7EB] text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Estimated</Badge>
                           ) : null}
                         </span>
                       </ClaimRecordField>
                       <ClaimRecordField label="Value Per Unit">
-                        {explicitValuePerUnit === null
-                          ? NOT_AVAILABLE
-                          : `$${explicitValuePerUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">
+                          {explicitValuePerUnit === null
+                            ? NOT_AVAILABLE
+                            : `$${explicitValuePerUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                        </span>
                       </ClaimRecordField>
-                      <ClaimRecordField label="Confidence Score">{backendConfidencePct !== null ? `${backendConfidencePct}%` : NOT_AVAILABLE}</ClaimRecordField>
+                      <ClaimRecordField label="Confidence Score">
+                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">{backendConfidencePct !== null ? `${backendConfidencePct}%` : NOT_AVAILABLE}</span>
+                      </ClaimRecordField>
                       {typeof trustedRecoveredAmount === 'number' && (
                         <ClaimRecordField label="Actual Payout">
-                          <span className="text-blue-300">{formatCurrencyOrDash(trustedRecoveredAmount, effectiveCase?.currency || 'USD')}</span>
-                          <span className="ml-2 inline-flex items-center gap-1.5 text-[10px] text-emerald-400">
+                          <span className="text-[11px] font-medium tracking-tight text-[#111827]">{formatCurrencyOrDash(trustedRecoveredAmount, effectiveCase?.currency || 'USD')}</span>
+                          <span className="ml-2 inline-flex items-center gap-1.5 text-[9px] text-[#111827]/70">
                             <CheckCircle className="h-3 w-3" /> {toStatusLabel(effectiveCase.recovery_status || 'reconciled')}
                           </span>
                         </ClaimRecordField>
                       )}
-                      <ClaimRecordField label="What may be owed">{findingAmountCopy}</ClaimRecordField>
+                      <ClaimRecordField label="What may be owed">
+                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">{findingAmountCopy}</span>
+                      </ClaimRecordField>
                     </dl>
-                    <div className="border border-white/10 bg-white/[0.03]">
-                      <div className="px-4 pt-4 border-b border-white/5">
+                    <div className="border border-[#E5E7EB] bg-white">
+                      <div className="px-3 pt-3 border-b border-[#E5E7EB]">
                         <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] font-bold text-white/40 focus:ring-0 shadow-none tracking-tight">
+                          <SelectTrigger className="h-6 w-full border-0 bg-transparent p-0 text-[9px] font-bold text-[#6B7280] focus:ring-0 shadow-none tracking-tight">
                             <SelectValue placeholder="Metric View" />
                           </SelectTrigger>
-                          <SelectContent className="platform-vitality-page rounded-lg border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
+                          <SelectContent className="platform-vitality-page rounded-lg border-[#E5E7EB] bg-white text-[#111827] shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
                             <SelectItem value="payout" className="text-xs text-[#111827]">Expected Payout</SelectItem>
                             <SelectItem value="confidence" className="text-xs text-[#111827]">Confidence Score</SelectItem>
                             <SelectItem value="units" className="text-xs text-[#111827]">Units Affected</SelectItem>
@@ -2575,8 +2583,8 @@ export default function CaseDetail() {
                         </Select>
                       </div>
 
-                      <div className="p-6">
-                        <div className="text-lg font-bold text-white tabular-nums font-sans tracking-tight">
+                      <div className="p-4">
+                        <div className="text-[18px] font-semibold text-[#111827] tabular-nums font-sans tracking-tight">
                           {selectedMetric === 'payout' && (
                             effectiveCase.expectedPayoutDate ? (
                               (() => {
@@ -2593,7 +2601,7 @@ export default function CaseDetail() {
                             typeof backendUnitCost === 'number' ? `$${backendUnitCost.toFixed(2)}` : NOT_AVAILABLE
                           )}
                         </div>
-                        <div className="text-[10px] text-white/30 mt-2 font-bold tracking-tight">
+                        <div className="text-[9px] text-[#9CA3AF] mt-1.5 font-bold tracking-tight">
                           {selectedMetric === 'payout' && 'Expected Payout Date'}
                           {selectedMetric === 'confidence' && 'Analysis Precision'}
                           {selectedMetric === 'units' && 'Inventory Units'}
