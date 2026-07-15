@@ -128,9 +128,9 @@ function FounderPassCTA({
       >
         <a
           href={EARLY_ACCESS_CHECKOUT_URL}
-          onClick={(event) => onCheckoutClick(event, location, 'Get Early Access')}
+          onClick={(event) => onCheckoutClick(event, location, 'Get Started')}
         >
-          Get Early Access
+          Get Started
           <ArrowRight className="ml-2 h-5 w-5" />
         </a>
       </Button>
@@ -252,14 +252,14 @@ export default function EarlyAccess() {
       {
         ref: mainCtaRef,
         eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
-        params: { cta_location: 'early_access_hero', cta_text: 'Get Early Access' },
+        params: { cta_location: 'early_access_hero', cta_text: 'Get Started' },
       },
       {
         ref: mainCtaRef,
         eventName: ANALYTICS_EVENTS.paystackCtaSeen,
         params: {
           cta_location: 'early_access_hero',
-          cta_text: 'Get Early Access',
+          cta_text: 'Get Started',
           value: EARLY_ACCESS_VALUE_ZAR,
           currency: EARLY_ACCESS_CURRENCY,
           payment_provider: PAYSTACK_PAYMENT_PROVIDER,
@@ -270,7 +270,7 @@ export default function EarlyAccess() {
         eventName: ANALYTICS_EVENTS.paystackCtaSeen,
         params: {
           cta_location: 'early_access_offer_section',
-          cta_text: 'Get Early Access',
+          cta_text: 'Get Started',
           value: EARLY_ACCESS_VALUE_ZAR,
           currency: EARLY_ACCESS_CURRENCY,
           payment_provider: PAYSTACK_PAYMENT_PROVIDER,
@@ -281,7 +281,7 @@ export default function EarlyAccess() {
         eventName: ANALYTICS_EVENTS.paystackCtaSeen,
         params: {
           cta_location: 'early_access_bottom_cta',
-          cta_text: 'Get Early Access',
+          cta_text: 'Get Started',
           value: EARLY_ACCESS_VALUE_ZAR,
           currency: EARLY_ACCESS_CURRENCY,
           payment_provider: PAYSTACK_PAYMENT_PROVIDER,
@@ -601,9 +601,9 @@ export default function EarlyAccess() {
                 >
                   <a
                     href={EARLY_ACCESS_CHECKOUT_URL}
-                    onClick={(event) => handleCheckoutClick(event, 'early_access_offer_section', 'Get Early Access')}
+                    onClick={(event) => handleCheckoutClick(event, 'early_access_offer_section', 'Get Started')}
                   >
-                    Get Early Access
+                    Get Started
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
@@ -640,21 +640,24 @@ export default function EarlyAccess() {
 
             <motion.div
               {...reveal}
-              className="mx-auto grid max-w-[860px] gap-4 sm:grid-cols-2 md:grid-cols-5"
+              className="mx-auto max-w-[860px] border-y border-[#D8E3E8]"
             >
               {marketplaceCountries.map((mp, i) => (
                 <motion.div
                   key={mp.code}
                   {...reveal}
                   transition={{ ...reveal.transition, delay: i * 0.03 }}
-                  className="flex items-center gap-3 rounded-xl border border-[#E4EDF1] bg-[#FAFAF7] px-4 py-3"
+                  className={`flex items-center gap-3 py-4 ${i > 0 ? 'border-t border-[#D8E3E8]' : ''}`}
                 >
                   <span
-                    className={`fi fi-${mp.flagCode} h-4 w-6 shrink-0 rounded-[3px] shadow-[0_6px_14px_rgba(37,49,58,0.10)]`}
+                    className={`fi fi-${mp.flagCode} h-4 w-6 shrink-0 rounded-[2px]`}
                     aria-hidden="true"
                   />
                   <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#182026]">
                     {mp.code}
+                  </span>
+                  <span className="text-[12px] text-[#66737F]">
+                    {mp.country}
                   </span>
                 </motion.div>
               ))}
