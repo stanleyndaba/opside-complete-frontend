@@ -20,18 +20,9 @@ export default function EvidenceBeforeAsked() {
             initial={{ opacity: 0, x: 96, filter: 'blur(12px)' }}
             animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
-            className="max-w-[22ch]"
+            className="max-w-[18ch]"
           >
-            Every resolved case helps Margin get better at knowing which evidence actually wins claims.
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, x: -96, filter: 'blur(12px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.25, delay: 0.56, ease: [0.22, 1, 0.36, 1] as const }}
-            className="max-w-[28ch]"
-          >
-            The better the case resolves, the better Margin gets at connecting the proof that matters.
+            Every resolved case sharpens the proof behind the next.
           </motion.p>
         </div>
       </section>
