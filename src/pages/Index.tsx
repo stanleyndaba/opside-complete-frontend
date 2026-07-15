@@ -132,6 +132,11 @@ const workflowSteps = [
     step: '06',
     title: 'Amazon responds',
     detail: 'If Amazon asks again, rejects, underpays, or pays late, the case keeps its evidence trail attached.'
+  },
+  {
+    step: '07',
+    title: 'The payout has to reconcile',
+    detail: 'Amazon approval is not the end. Margin tracks whether the approved amount actually reaches the seller balance and prepares the recovery trail for accounting review.'
   }
 ];
 
@@ -144,6 +149,7 @@ const systemLogEntries = [
   { label: 'VALIDATION', text: 'Does the carrier manifest match the packing list?' },
   { label: 'TIMELINE', text: 'Which cases expire this week?' },
   { label: 'LEDGER', text: 'Explain why this payout does not reconcile.' },
+  { label: 'LEDGER', text: 'Prepare this recovered payout for QuickBooks.' },
   { label: 'RISK', text: 'What am I still missing before filing?' },
   { label: 'RECOVERY', text: 'Which claims are ready for seller review?' },
   { label: 'RESPONSE', text: 'Why was this reimbursement rejected?' },
@@ -154,6 +160,7 @@ const systemLogEntries = [
   { label: 'VALIDATION', text: 'Confirm the shipped units against FC receiving.' },
   { label: 'TIMELINE', text: 'Show the recovery window for this case.' },
   { label: 'LEDGER', text: 'Which settlements do not match approvals?' },
+  { label: 'LEDGER', text: 'Show which reimbursements are ready for Xero export.' },
   { label: 'RISK', text: 'Which claims need stronger proof?' },
   { label: 'RECOVERY', text: 'Prepare this case for Amazon review.' },
   { label: 'RESPONSE', text: 'Which Amazon cases changed status?' },
@@ -179,7 +186,7 @@ const systemLogEntries = [
 const systemLogRows = [
   { direction: 'left', duration: '68s', hoverDuration: '96s', items: systemLogEntries.slice(0, 12) },
   { direction: 'right', duration: '78s', hoverDuration: '108s', items: systemLogEntries.slice(12, 24) },
-  { direction: 'left', duration: '88s', hoverDuration: '120s', items: systemLogEntries.slice(24, 36) }
+  { direction: 'left', duration: '88s', hoverDuration: '120s', items: systemLogEntries.slice(24) }
 ];
 
 function TypewriterPrompt({ text }: { text: string }) {
@@ -264,6 +271,7 @@ const earlyAccessItems = [
   'Read-only setup first',
   'Claim deadline and proof readiness check',
   'Seller approval before filing',
+  'Accounting-ready QuickBooks/Xero reconciliation layer included in the rollout',
   'No recovery commissions'
 ];
 
@@ -307,6 +315,14 @@ const faqs = [
   {
     question: 'What happens if my invoice, POD, or BOL is missing?',
     answer: 'Margin flags the missing proof before filing so the case can be completed, held, or reviewed instead of submitting weak evidence and risking rejection.'
+  },
+  {
+    question: 'Does Margin connect to QuickBooks or Xero?',
+    answer: 'Yes. Margin is adding QuickBooks and Xero support so recovered reimbursements can be tied back to payout records and prepared for accounting review. The goal is to keep the recovery trail clean from Amazon case evidence to settlement reconciliation to accounting export.'
+  },
+  {
+    question: 'Will Margin change my accounting records automatically?',
+    answer: "No. Margin's accounting workflow is designed around visibility, reconciliation, and seller approval. Accounting exports or synced records should only move when the seller approves the action."
   }
 ];
 
@@ -1010,6 +1026,9 @@ export default function Index() {
             <div className="mt-7 md:mt-9">
               <IntegrationsCarousel isMobileLayout={isMobileLayout} />
             </div>
+            <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
+              Margin does not only connect claim evidence. It also links payout records and accounting context so recovered value can be reconciled cleanly after Amazon responds.
+            </p>
           </div>
         </section>
 
@@ -1166,7 +1185,7 @@ export default function Index() {
                 <div className={sectionLabelClass}>Trust & Control</div>
                 <h2 className={sectionHeadingClass}>Recovery is an operation, not a submission.</h2>
                 <p className={sectionBodyClass}>
-                  Amazon can ask again, reject, approve partially, underpay, or delay payment. Margin keeps preparing evidence, managing follow-up, tracking responses, and reconciling payout state while the seller stays in control.
+                  Amazon can ask again, reject, approve partially, underpay, or delay payment. Margin keeps preparing evidence, managing follow-up, tracking responses, and reconciling payout state while the seller stays in control. QuickBooks and Xero connections are used to support reconciliation and export workflows. Margin does not change accounting records without seller approval.
                 </p>
               </motion.div>
 

@@ -635,6 +635,25 @@ function PayoutReconciliationViz() {
           DELTA CAPTURED
         </span>
       </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.68, duration: 0.35 }}
+        className="mt-2 border-t border-slate-200 pt-2"
+      >
+        <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-500">
+          Accounting-ready reconciliation
+        </div>
+        <p className="mt-1 text-[10px] leading-5 text-slate-500">
+          When Amazon approves a reimbursement, Margin tracks whether the payout actually arrived, whether the amount matches the approval, and whether the recovery record is ready for QuickBooks or Xero review.
+        </p>
+        <div className="mt-2 grid gap-1.5 font-mono text-[8px] uppercase tracking-wide text-slate-500">
+          <span>Match Amazon approvals to settlement deposits</span>
+          <span>Flag underpaid or missing reimbursement amounts</span>
+          <span>Prepare recovery records for QuickBooks/Xero export</span>
+        </div>
+      </motion.div>
     </div>
   );
 }
