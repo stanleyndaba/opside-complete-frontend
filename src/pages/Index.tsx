@@ -311,16 +311,16 @@ const faqs = [
 ];
 
 const integrationLogos = [
-  { name: 'Amazon', src: '/Amazon-logo.png', className: 'h-4 w-auto md:h-5' },
-  { name: 'Gmail', src: '/gmailicon.png', className: 'h-5 w-auto md:h-6' },
-  { name: 'Outlook', src: '/outlookicon.webp', className: 'h-5 w-auto md:h-6' },
-  { name: 'Google Drive', src: '/gd.png', className: 'h-5 w-auto md:h-6' },
-  { name: 'Dropbox', src: '/Dropbox_Icon.svg.png', className: 'h-5 w-auto md:h-6' },
-  { name: 'OneDrive', src: '/onedriive.png', className: 'h-5 w-auto md:h-6' },
-  { name: 'QuickBooks', src: '/quickbooks.png', className: 'h-5 w-auto md:h-6' },
-  { name: 'Xero', src: '/xero.png', className: 'h-5 w-auto md:h-6' },
-  { name: 'Adobe Sign', src: '/dobe.png', className: 'h-5 w-auto md:h-6' },
-  { name: 'Slack', src: '/slack-icon-2019.png', className: 'h-5 w-auto md:h-6' }
+  { name: 'Amazon', src: '/Amazon-logo.png', className: 'h-6 w-auto md:h-7' },
+  { name: 'Gmail', src: '/gmailicon.png', className: 'h-7 w-auto md:h-8' },
+  { name: 'Outlook', src: '/outlookicon.webp', className: 'h-7 w-auto md:h-8' },
+  { name: 'Google Drive', src: '/gd.png', className: 'h-7 w-auto md:h-8' },
+  { name: 'Dropbox', src: '/Dropbox_Icon.svg.png', className: 'h-7 w-auto md:h-8' },
+  { name: 'OneDrive', src: '/onedriive.png', className: 'h-7 w-auto md:h-8' },
+  { name: 'QuickBooks', src: '/quickbooks.png', className: 'h-7 w-auto md:h-8' },
+  { name: 'Xero', src: '/xero.png', className: 'h-7 w-auto md:h-8' },
+  { name: 'Adobe Sign', src: '/dobe.png', className: 'h-7 w-auto md:h-8' },
+  { name: 'Slack', src: '/slack-icon-2019.png', className: 'h-7 w-auto md:h-8' }
 ];
 
 const containerClass = 'mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8';
