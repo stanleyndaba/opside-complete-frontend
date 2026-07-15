@@ -512,10 +512,10 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
           >
-            By the time everything finally lines up, Amazon is already asking for more proof or the claim window is closing.
-            <br />
-            Margin turns scattered invoices, BOLs, PODs, shipment records, cost data, case history, and payout records into one claim-ready evidence trail that can survive Amazon&apos;s review.
-          </motion.p>
+            By the time your evidence is finally together, Amazon is already asking for something else—or your claim window is closing.
+              <br />
+            Margin turns scattered proof into one claim-ready evidence trail that stands up to Amazon&apos;s review.
+            </motion.p>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
