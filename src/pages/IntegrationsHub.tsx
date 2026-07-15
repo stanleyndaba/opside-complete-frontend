@@ -28,7 +28,7 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 // ... (existing constants)
 
-type ProviderKey = 'amazon' | 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive';
+type ProviderKey = 'amazon' | 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive' | 'quickbooks' | 'xero';
 type SecondaryProviderKey = Exclude<ProviderKey, 'amazon'>;
 
 type IntegrationProviderStatus = {
@@ -116,7 +116,7 @@ type EvidenceSourcesDTO = {
   skippedProviders: SkippedProvider[];
 };
 
-const ACTIVE_SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['gmail', 'slack', 'dropbox', 'gdrive'];
+const ACTIVE_SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['gmail', 'slack', 'dropbox', 'gdrive', 'quickbooks', 'xero'];
 const PARKED_SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['outlook', 'adobe_sign', 'onedrive'];
 const SECONDARY_PROVIDERS: SecondaryProviderKey[] = [...ACTIVE_SECONDARY_PROVIDERS, ...PARKED_SECONDARY_PROVIDERS];
 const PARKED_PROVIDER_AVAILABLE_DATE = 'May 20th, 2026';
@@ -129,6 +129,8 @@ const DEMO_PROVIDER_ACCOUNTS: Record<SecondaryProviderKey, string> = {
   outlook: 'finance@acme-operations.test',
   adobe_sign: 'contracts@acme-operations.test',
   onedrive: 'records@acme-operations.test',
+  quickbooks: 'books@acme-operations.test',
+  xero: 'ledger@acme-operations.test',
 };
 const DEMO_PROVIDER_LAST_INGEST = '2026-04-21T08:54:21.000Z';
 
@@ -1511,6 +1513,8 @@ export default function IntegrationsHub() {
                   slack: { name: 'Slack', icon: '/slack-icon-2019.png' },
                   adobe_sign: { name: 'Adobe Sign', icon: '/dobe.png' },
                   onedrive: { name: 'OneDrive', icon: '/onedriive.png' },
+                  quickbooks: { name: 'QuickBooks', icon: '/quickbooks.png' },
+                  xero: { name: 'Xero', icon: '/xero.png' },
                 } as const;
 
                 const providerState = getProviderDisplayState(p);
