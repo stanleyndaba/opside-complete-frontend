@@ -121,17 +121,17 @@ const workflowSteps = [
   {
     step: '04',
     title: 'The case becomes defensible',
-    detail: 'The records are connected to the shipment, deadline, claim amount, and seller approval before filing.'
+    detail: 'The evidence becomes one recovery story Amazon can verify.'
   },
   {
     step: '05',
     title: 'The seller stays in control',
-    detail: 'A case moves only when the proof is strong enough and the seller approves the next step.'
+    detail: 'Nothing moves until the seller approves it.'
   },
   {
     step: '06',
     title: 'Amazon responds',
-    detail: 'If Amazon asks again, rejects, underpays, or pays late, the case keeps its evidence trail attached.'
+    detail: 'Amazon asks again. Rejects. Approves less. Or requests more proof.'
   },
   {
     step: '07',
@@ -249,7 +249,7 @@ const marketplaceCountries = [
 
 const trustControls = [
   {
-    title: 'Margin maps your recovery operation before touching a case.',
+    title: 'Margin maps your recovery operation before touching a single case.',
     detail: 'We connect evidence, shipments, deadlines, and recovery history before any workflow begins.'
   },
   {
@@ -278,36 +278,36 @@ const earlyAccessItems = [
 
 const faqs = [
   {
+    question: 'What if Amazon rejects my claim?',
+    answer: 'Margin keeps the proof, timeline, and response trail attached so the case can be rebuilt instead of starting from scratch.'
+  },
+  {
+    question: 'What if Amazon asks for more proof?',
+    answer: 'Margin flags the missing proof, links the right records, and keeps the case moving until the response can be answered.'
+  },
+  {
+    question: 'What if I already submitted the claim?',
+    answer: 'Margin tracks the case after filing, follows Amazon responses, and keeps the evidence trail attached through the recovery.'
+  },
+  {
+    question: 'What if Amazon approves less than expected?',
+    answer: 'Margin keeps the payout in view so the approved amount can be compared against what actually reached the seller balance.'
+  },
+  {
+    question: 'What if the reimbursement never reaches my settlement?',
+    answer: 'Margin keeps following the recovery until the approved amount and the settlement record reconcile.'
+  },
+  {
+    question: 'Can Margin work alongside GETIDA or Sellerboard?',
+    answer: 'Yes. Margin is built around evidence control and payout reconciliation, so it can sit alongside other recovery workflows.'
+  },
+  {
+    question: 'Can I approve every case before anything is submitted?',
+    answer: 'Yes. Margin keeps seller approval in the loop before filing or other actions move forward.'
+  },
+  {
     question: 'What does Margin do after I connect my Amazon account?',
-    answer: 'Margin starts in read-only mode. Once a discrepancy is found, it ties the required proof to the claim window, shipment, case, and payout record so the seller can review a stronger case before filing.'
-  },
-  {
-    question: 'Does Margin guarantee reimbursements?',
-    answer: 'No. Amazon makes the final reimbursement decision. The proof, deadline, approval, response, and payout trail should not be scattered when Amazon reviews the case.'
-  },
-  {
-    question: 'Can Margin change my Amazon account?',
-    answer: 'Margin starts read-only. Filing or account-changing actions require seller approval unless the seller later chooses a trusted filing mode.'
-  },
-  {
-    question: 'Why does recovery timing matter more now?',
-    answer: 'A valid recovery can expire while the invoice, POD, BOL, shipment record, and Amazon case history are still being chased. Margin keeps the case tied to its deadline and missing proof.'
-  },
-  {
-    question: 'Does Margin file every reimbursement issue?',
-    answer: 'No. Weak, duplicate, unsupported, expired, or low-confidence issues stay held. Only evidence-supported cases should move toward seller review and filing.'
-  },
-  {
-    question: 'How is this different from commission-based services?',
-    answer: 'Margin does not take a percentage of recoveries. The work is proof control: deadlines, invoices, BOLs, PODs, case responses, seller approval, and payout reconciliation.'
-  },
-  {
-    question: 'Why no recovery commissions?',
-    answer: 'Because the seller already earned the money. Early Access gives sellers a way to keep Amazon reimbursement proof tied to the case without giving up a percentage of approved recoveries.'
-  },
-  {
-    question: 'What happens after I start Founding 500 Early Access?',
-    answer: 'Your activation starts with read-only setup, founder onboarding, claim deadline review, proof readiness checks, and seller approval before filing.'
+    answer: 'Margin starts by tying the proof, shipment, case, and payout trail together so the recovery is ready for review.'
   },
   {
     question: 'What is an evidence pack?',
@@ -512,7 +512,9 @@ function KineticHeroSection({
             transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
           >
-            The invoice, BOL, POD, shipment record, case history, and payout data already exist across your operation. Margin connects them into the evidence trail Amazon needs before the claim window closes.
+            By the time everything finally lines up, Amazon is already asking for more proof or the claim window is closing.
+            <br />
+            Margin turns scattered invoices, BOLs, PODs, shipment records, cost data, case history, and payout records into one claim-ready evidence trail that can survive Amazon&apos;s review.
           </motion.p>
 
           <motion.div
@@ -668,11 +670,11 @@ function EvidenceReadinessBlueprint() {
 
       <div className="relative">
         <div className="text-[10px] font-semibold uppercase text-[#7A8994]">
-          System readiness score
+          Amazon can still ask for
         </div>
         <div className="mt-4 md:hidden">
           <div className="flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-tight text-[#182026]">
-            <span>Evidence maturity</span>
+            <span>Amazon can still ask for</span>
             <span>{score}%</span>
           </div>
           <div className="mt-3 h-1.5 w-full overflow-hidden rounded-[1px] bg-[#E5E7EB]">
@@ -691,7 +693,7 @@ function EvidenceReadinessBlueprint() {
           <span className="mb-2 text-[28px] font-bold leading-none text-[#182026] md:mb-3 md:text-[38px]">%</span>
         </div>
         <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#66737F] max-md:mt-5 md:text-[16px]">
-          Inbound shortage claim is close to ready, with two diagnostic items controlling review risk.
+          Amazon can still ask for an invoice, shipment proof, carrier record, signed POD, or cost breakdown before the case is ready to survive another response.
         </p>
       </div>
 
@@ -720,18 +722,26 @@ function EvidenceReadinessBlueprint() {
 
         <div className="min-h-[148px] py-7 pr-0 md:pr-8">
           <div className="text-[11px] font-bold uppercase text-[#182026]">
-            Missing evidence
+            Amazon can still ask for
           </div>
           <p className="mt-4 max-w-[260px] text-[15px] leading-7 text-[#66737F]">
-            Signed POD and supplier invoice cost breakdown.
+            Invoice
+            <br />
+            Shipment proof
+            <br />
+            Carrier record
+            <br />
+            Signed POD
+            <br />
+            Cost breakdown
           </p>
         </div>
         <div className="min-h-[148px] py-7 md:pl-8">
           <div className="text-[11px] font-bold uppercase text-[#182026]">
-            T-minus 12d
+            Current status
           </div>
           <p className="mt-4 max-w-[280px] text-[15px] leading-7 text-[#66737F]">
-            Review risk increases as the claim window closes.
+            Not ready to survive another Amazon response.
           </p>
         </div>
       </div>
@@ -1028,7 +1038,15 @@ export default function Index() {
               <IntegrationsCarousel isMobileLayout={isMobileLayout} />
             </div>
             <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
-              Margin does not only connect claim evidence. It also links payout records and accounting context so recovered value can be reconciled cleanly after Amazon responds.
+              Amazon never reviews your Gmail.
+              <br />
+              Or your Drive.
+              <br />
+              Or your carrier portal.
+              <br />
+              It reviews one reimbursement case.
+              <br />
+              Everything has to point to the same recovery before Amazon accepts it.
             </p>
           </div>
         </section>
@@ -1098,7 +1116,7 @@ export default function Index() {
               <div className="grid lg:grid-cols-2">
                 <div className="px-1 py-8 max-md:px-0 md:px-8 md:py-11 lg:pr-12">
                   <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#DC2626] md:text-[#8A98A3]">
-                    Chaos
+                    Scattered Recovery
                   </div>
                   <h3 className="mt-5 max-w-[440px] text-[26px] font-semibold leading-tight tracking-[-0.04em] text-[#4E5B65] max-md:mt-3 max-md:text-[24px] md:text-[34px]">
                     Scattered proof dies slowly.
@@ -1132,7 +1150,7 @@ export default function Index() {
 
                 <div className="border-t border-[#CBD7DE] px-1 py-8 max-md:px-0 md:px-8 md:py-11 lg:border-l lg:border-t-0 lg:pl-12">
                   <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#21B487] md:text-[#5F6D77]">
-                    Verified
+                    Defensible Recovery
                   </div>
                   <motion.div
                     initial={{ opacity: 0, x: 30 }}
@@ -1184,9 +1202,9 @@ export default function Index() {
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <motion.div {...revealProps}>
                 <div className={sectionLabelClass}>Trust & Control</div>
-                <h2 className={sectionHeadingClass}>Recovery is an operation, not a submission.</h2>
+                <h2 className={sectionHeadingClass}>Amazon doesn&apos;t stop after you submit. Neither does Margin.</h2>
                 <p className={sectionBodyClass}>
-                  Amazon can ask again, reject, approve partially, underpay, or delay payment. Margin keeps preparing evidence, managing follow-up, tracking responses, and reconciling payout state while the seller stays in control. QuickBooks and Xero connections are used to support reconciliation and export workflows. Margin does not change accounting records without seller approval.
+                  Amazon can reject. Ask for more proof. Approve less than expected. Or approve everything and still pay the wrong amount. Margin keeps the recovery moving until the evidence, the response, and the payout all agree. QuickBooks and Xero connections are used to support reconciliation and export workflows. Margin does not change accounting records without seller approval.
                 </p>
               </motion.div>
 
@@ -1232,7 +1250,7 @@ export default function Index() {
                     Early Access Open.
                   </h2>
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
-                    For sellers who are tired of rebuilding reimbursement proof by hand. The first 500 sellers get founder pricing, priority activation, seller approval before filing, and no recovery commissions.
+                    You&apos;re already doing the work. Finding invoices. Downloading PODs. Checking settlements. Searching case history. Stop rebuilding the same recovery every time Amazon asks.
                   </p>
                   
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -1313,10 +1331,10 @@ export default function Index() {
               <div className="max-w-[880px]">
 
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  Stop rebuilding the same reimbursement proof every time Amazon asks.
+                  Every recovery starts with &quot;I know Amazon owes me.&quot; Too many end with &quot;I couldn&apos;t prove it.&quot; Don&apos;t let yours.
                 </h2>
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                  Keep the invoice, BOL, POD, shipment record, case history, deadline, and payout trail tied to the recovery from discovery through payout reconciliation.
+                  Margin keeps every invoice, shipment record, POD, deadline, response, and payout attached to the same recovery until the money is actually reconciled.
                 </p>
               </div>
 

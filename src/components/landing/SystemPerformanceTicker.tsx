@@ -1,19 +1,19 @@
 const metrics = [
   {
     value: '26',
-    description: 'Amazon recovery checks watching for proof gaps.',
+    description: 'Recovery algorithms continuously auditing your account.',
   },
   {
     value: '11',
-    description: 'Recovery specialists reviewing evidence-heavy cases.',
+    description: 'Specialized recovery agents coordinating every case.',
   },
   {
     value: '12',
-    description: 'Proof paths connecting what Amazon actually asks for.',
+    description: 'Evidence workflows connecting the proof Amazon actually asks for.',
   },
   {
     value: '100%',
-    description: 'Seller approval before any claim is filed.',
+    description: 'Seller approval before any claim is submitted.',
   },
 ];
 
@@ -23,7 +23,7 @@ export function SystemPerformanceTicker() {
       <div className="mx-auto w-full max-w-[1280px] border-x border-[#DCE8EE] bg-white/42 max-md:border-x-0">
         <div className="flex min-h-[210px] items-center justify-center px-5 py-12 sm:px-8 md:min-h-[310px] md:py-24">
           <h2 className="mx-auto max-w-[860px] text-center text-[34px] font-semibold leading-[1.06] tracking-[-0.055em] text-[#182026] sm:text-[48px] md:text-[64px] lg:text-[72px]">
-            Built for evidence-heavy Amazon recoveries
+            Built for recoveries Amazon rarely makes easy.
           </h2>
         </div>
 
