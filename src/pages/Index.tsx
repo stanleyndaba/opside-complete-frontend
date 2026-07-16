@@ -529,11 +529,11 @@ function KineticHeroSection({
           >
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Join Early Access"
+              aria-label="Get Started"
               className="group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              Join Early Access
+              Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>

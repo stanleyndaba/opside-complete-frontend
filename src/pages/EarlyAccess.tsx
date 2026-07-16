@@ -426,9 +426,9 @@ export default function EarlyAccess() {
                 Early Access: Batch 01 Open
               </div>
 
-              <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
-                Join Early Access.
-              </h1>
+                <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
+                  Every seller needs Margin.
+                </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
                 {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited. Early Access closes July 30, 2026 or when 500 slots are filled.
