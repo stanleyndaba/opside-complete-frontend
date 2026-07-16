@@ -78,6 +78,7 @@ const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
+const CurrencyMargin = lazy(() => import("./pages/CurrencyMargin"));
 const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
 const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
 const AboutMargin = lazy(() => import("./pages/AboutMargin"));
@@ -230,7 +231,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/documentsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/documentsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin'].includes(location.pathname);
 
   return (
     <>
@@ -280,6 +281,7 @@ const App = () => (
                         <Route path="/research" element={<Research />} />
                         <Route path="/fba-reimbursement-research" element={<Research />} />
                         <Route path="/pricing" element={<Navigate to="/early-access" replace />} />
+                        <Route path="/currency-margin" element={<CurrencyMargin />} />
                         <Route path="/payment/success" element={<PaymentSuccess />} />
                         <Route path="/founding-500/status" element={<FoundingActivationStatus />} />
                         <Route path="/designsimulate" element={<DesignSimulate />} />

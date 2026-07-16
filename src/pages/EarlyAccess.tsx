@@ -574,6 +574,36 @@ export default function EarlyAccess() {
                 </p>
               </div>
 
+              <div className="mx-auto mt-12 max-w-[860px] text-center">
+                <h3 className="text-[19px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:text-[22px] md:text-[26px]">
+                  The difference isn&apos;t what gets recovered. It&apos;s what you keep.
+                </h3>
+              </div>
+
+              <div className="mx-auto mt-8 max-w-[860px] overflow-hidden rounded-[20px] border border-[#E4EDF1] bg-white">
+                <div className="grid grid-cols-[1.3fr_1fr_1fr] border-b border-[#E4EDF1] bg-[#FAFBFC] px-5 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#7A8794]">
+                  <div />
+                  <div className="text-center">Traditional Recovery Service</div>
+                  <div className="text-center">With Margin</div>
+                </div>
+
+                {[
+                  ['Upfront cost', '$0', '$99 once'],
+                  ['Commission', '15–25%', '0% through 2027'],
+                  ['Amazon approves $10,000', 'You keep ~$7,500–8,500', 'You keep $10,000'],
+                  ['Risk', 'Ongoing commission', '90-day refund guarantee'],
+                ].map(([label, traditional, margin]) => (
+                  <div
+                    key={label}
+                    className="grid grid-cols-[1.3fr_1fr_1fr] border-b border-[#E4EDF1] last:border-b-0 px-5 py-4 text-[14px] leading-6 text-[#182026] md:text-[15px]"
+                  >
+                    <div className="pr-4 font-medium text-[#51606B]">{label}</div>
+                    <div className="px-3 text-center text-[#182026]">{traditional}</div>
+                    <div className="px-3 text-center font-medium text-[#182026]">{margin}</div>
+                  </div>
+                ))}
+              </div>
+
               <div className="mx-auto mt-12 grid max-w-[720px] gap-px overflow-hidden rounded-[20px] border border-[#E4EDF1] bg-[#E4EDF1] md:grid-cols-3">
                 {[
                   { metric: '0%', label: 'Recovery commission' },
