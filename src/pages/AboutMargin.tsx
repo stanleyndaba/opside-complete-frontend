@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
@@ -108,7 +108,7 @@ export default function AboutMargin() {
 
     trackEarlyAccessCtaClicked({
       cta_location: 'about_margin',
-      cta_text: 'Reserve Early Access',
+      cta_text: 'Get Started',
       destination: '/early-access',
     });
     navigate('/early-access');
@@ -150,28 +150,21 @@ export default function AboutMargin() {
                   <button
                     type="button"
                     onClick={handlePrimaryCta}
-                    className="hidden inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="hidden inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                   >
-                    Join Waitlist
+                    Get Started
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={handlePrimaryCta}
-                    className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                   >
-                    Reserve Early Access
+                    Get Started
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
                 )}
-
-                <Link
-                  to="/research"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
-                >
-                  Research Hub
-                </Link>
               </div>
             </motion.div>
           </div>
@@ -185,7 +178,7 @@ export default function AboutMargin() {
                   <a
                     key={item.href}
                     href={item.href}
-                    className="rounded-full border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
+                    className="rounded-[5px] border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
                   >
                     {item.label}
                   </a>
@@ -311,7 +304,7 @@ export default function AboutMargin() {
           <div className={containerClass}>
             <motion.div
               {...revealProps}
-              className="overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] px-6 py-8 shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:px-10 md:py-12"
+              className="border-t border-[#D8E3E8] pt-10 md:pt-12"
             >
               <div className="max-w-[860px]">
                 <div className={labelClass}>Direction</div>
@@ -328,28 +321,21 @@ export default function AboutMargin() {
                   <button
                     type="button"
                     onClick={handlePrimaryCta}
-                    className="hidden inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="hidden inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                   >
-                    Join Waitlist
+                    Get Started
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={handlePrimaryCta}
-                    className="inline-flex h-11 items-center justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                    className="inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
                   >
-                    Reserve Early Access
+                    Get Started
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </button>
                 )}
-
-                <Link
-                  to="/pricing"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold text-[#25313A] transition-colors hover:bg-[#F8FAFC] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
-                >
-                  View Pricing
-                </Link>
               </div>
             </motion.div>
           </div>
