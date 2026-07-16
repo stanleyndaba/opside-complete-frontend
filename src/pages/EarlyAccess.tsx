@@ -83,18 +83,18 @@ const timelineSteps = [
 ];
 
 /* ── marketplace flags ─────────────────────────────────────────── */
-const marketplaceCountries = [
-  { country: 'United States', code: 'US', flagCode: 'us' },
-  { country: 'Canada', code: 'CA', flagCode: 'ca' },
-  { country: 'Mexico', code: 'MX', flagCode: 'mx' },
-  { country: 'Germany', code: 'DE', flagCode: 'de' },
-  { country: 'United Kingdom', code: 'UK', flagCode: 'gb' },
-  { country: 'Italy', code: 'IT', flagCode: 'it' },
-  { country: 'France', code: 'FR', flagCode: 'fr' },
-  { country: 'South Africa', code: 'ZA', flagCode: 'za' },
-  { country: 'Japan', code: 'JP', flagCode: 'jp' },
-  { country: 'Australia', code: 'AU', flagCode: 'au' },
-];
+  const marketplaceCountries = [
+    { country: 'United States', code: 'US', flagCode: 'us', region: 'AMERICAS' },
+    { country: 'Canada', code: 'CA', flagCode: 'ca', region: 'AMERICAS' },
+    { country: 'Mexico', code: 'MX', flagCode: 'mx', region: 'AMERICAS' },
+    { country: 'Germany', code: 'DE', flagCode: 'de', region: 'EUROPE' },
+    { country: 'United Kingdom', code: 'UK', flagCode: 'gb', region: 'EUROPE' },
+    { country: 'Italy', code: 'IT', flagCode: 'it', region: 'EUROPE' },
+    { country: 'France', code: 'FR', flagCode: 'fr', region: 'EUROPE' },
+    { country: 'South Africa', code: 'ZA', flagCode: 'za', region: 'AFRICA' },
+    { country: 'Japan', code: 'JP', flagCode: 'jp', region: 'ASIA PACIFIC' },
+    { country: 'Australia', code: 'AU', flagCode: 'au', region: 'ASIA PACIFIC' },
+  ];
 
 /* ── animation presets ─────────────────────────────────────────── */
 const reveal = {
@@ -659,39 +659,46 @@ export default function EarlyAccess() {
         {/* ═══ MARKETPLACE FLAGS ═══ */}
         <section className="relative border-t border-[#E4EDF1] bg-white py-16 md:py-24">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
-            <motion.div {...reveal} className="mb-10 text-center md:mb-14">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
-                Marketplace Coverage
-              </div>
-              <h2 className="mt-4 text-[28px] font-semibold leading-[1.06] tracking-[-0.04em] text-[#182026] sm:text-[34px] md:text-[48px]">
-                Built for the marketplaces you sell in.
-              </h2>
-            </motion.div>
+            <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+              <motion.div {...reveal} className="hidden max-w-[560px] sm:block">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
+                  Marketplace Scope
+                </div>
+                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
+                  Supported FBA marketplaces
+                </h2>
+                <p className="mt-5 max-w-[500px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
+                  Margin is built for Amazon FBA reimbursement work across supported marketplaces. Marketplace availability may vary during Early Access.
+                </p>
+              </motion.div>
 
-            <motion.div
-              {...reveal}
-              className="mx-auto max-w-[860px]"
-            >
-              {marketplaceCountries.map((mp, i) => (
-                <motion.div
-                  key={mp.code}
-                  {...reveal}
-                  transition={{ ...reveal.transition, delay: i * 0.03 }}
-                  className={`flex items-center gap-3 py-4 ${i > 0 ? 'border-t border-[#D8E3E8]' : ''}`}
-                >
-                  <span
-                    className={`fi fi-${mp.flagCode} h-4 w-6 shrink-0 rounded-[2px]`}
-                    aria-hidden="true"
-                  />
-                  <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#182026]">
-                    {mp.code}
-                  </span>
-                  <span className="text-[12px] text-[#66737F]">
-                    {mp.country}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
+              <motion.div
+                {...reveal}
+                className="grid gap-0 overflow-hidden border-t border-l border-[#D8E3E8] sm:grid-cols-2 lg:grid-cols-3"
+              >
+                {marketplaceCountries.map((mp, i) => (
+                  <motion.div
+                    key={mp.code}
+                    {...reveal}
+                    transition={{ ...reveal.transition, delay: i * 0.03 }}
+                    className="flex items-center gap-4 border-r border-b border-[#D8E3E8] bg-white px-5 py-5"
+                  >
+                    <span
+                      className={`fi fi-${mp.flagCode} h-5 w-7 shrink-0 rounded-[4px] shadow-[0_8px_18px_rgba(37,49,58,0.12)]`}
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">
+                        {mp.country}
+                      </div>
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
+                        {mp.region} · {mp.code}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
           </div>
         </section>
 
