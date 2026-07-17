@@ -572,6 +572,15 @@ export const api = {
     company_name?: string;
     monthly_volume?: string;
     referral_source?: string;
+    amazon_marketplace?: string;
+    monthly_revenue?: string;
+    recovery_challenge?: string;
+    seller_central_email?: string;
+    priority_onboarding?: string;
+    notes?: string;
+    source_page?: string;
+    intent?: string;
+    reason?: string;
   }) => requestJson<{
     success: boolean;
     message: string;
