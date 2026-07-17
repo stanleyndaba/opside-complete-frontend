@@ -418,12 +418,6 @@ export default function Waitlist() {
                                         </div>
                                     </div>
 
-                                    <div className="mt-8">
-                                        <p className="mx-auto max-w-[460px] text-[15px] leading-7 text-[#66737F]">
-                                            {successBody}
-                                        </p>
-                                    </div>
-
                                     <div className="mt-8 rounded-[12px] border border-[#E4EDF1] bg-[#F8FAFC] px-5 py-5 text-left">
                                         <div className="text-[11px] font-semibold tracking-tight text-[#66737F]">Email confirmation</div>
                                         <p className="mt-4 text-[14px] leading-6 text-[#4D5B66]">
