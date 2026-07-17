@@ -25,6 +25,11 @@ const faqItems = [
     answer:
       'Your access is reserved and the onboarding flow continues inside Margin once the payment is confirmed.',
   },
+  {
+    question: 'What is an Access ID?',
+    answer:
+      'Your Access ID is a private 6-digit code you choose at checkout. Think of it like a unique PIN Margin can use to reference your purchase and onboarding. It should be exactly 6 digits, kept secret, and unique to you.',
+  },
 ] as const;
 
 export default function CurrencyMargin() {
