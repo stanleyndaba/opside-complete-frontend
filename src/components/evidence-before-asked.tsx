@@ -22,7 +22,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            Margin deploys a Recovery Agent.
+            Margin rebuilds the case Amazon expects to see.
           </motion.p>
         </div>
       </section>
