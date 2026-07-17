@@ -48,10 +48,6 @@ export default function CurrencyMargin() {
         <section className="relative py-16 md:py-20">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <div className="mx-auto max-w-[920px]">
-              <h2 className="text-center text-[20px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:text-[24px] md:text-[28px]">
-                The difference isn&apos;t what gets recovered. It&apos;s what you keep.
-              </h2>
-
               <div className="mt-8 overflow-hidden rounded-[16px] border border-[#E4EDF1] bg-white">
                 <div className="grid grid-cols-[1.2fr_1fr_1fr] border-b border-[#E4EDF1] bg-[#FAFBFC] px-5 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#7A8794]">
                   <div />
@@ -77,18 +73,6 @@ export default function CurrencyMargin() {
         <section className="relative border-t border-[#E4EDF1] py-16 md:py-20">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <div className="mx-auto max-w-[860px]">
-              <div className="text-center">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
-                  FAQ
-                </div>
-                <h2 className="mt-4 text-[28px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[48px]">
-                  Get Started — $99
-                </h2>
-                <p className="mx-auto mt-4 max-w-[760px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
-                  Price shown in ZAR for international processing. Your card will be charged the equivalent of $99 USD at today&apos;s exchange rate.
-                </p>
-              </div>
-
               <div className="mt-8 space-y-4">
                 <div className="rounded-[14px] border border-[#E4EDF1] bg-white px-5 py-4">
                   <div className="text-[15px] font-semibold text-[#182026]">
