@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
@@ -166,13 +166,12 @@ export default function Waitlist() {
     };
 
     const alreadyRegistered = submissionResult?.alreadyRegistered === true;
-    const successBadge = alreadyRegistered ? 'Waitlist already active' : 'Waitlist request received';
     const successHeading = alreadyRegistered
-        ? 'This address is already on the waitlist.'
-        : 'You are in the next access review queue.';
+        ? "You're already on the waitlist."
+        : "You're on the waitlist.";
     const successBody = alreadyRegistered
         ? 'We recognized this email as an existing waitlist entry and kept your original place in line.'
-        : 'Your answers are secured and will help us prioritize the right onboarding path.';
+        : 'Your place has been reserved for the next Margin onboarding wave.';
     const emailConfirmationBody = submissionResult?.confirmationEmailStatus === 'failed'
         ? 'We secured your place, but the confirmation email is taking a little longer than expected.'
         : alreadyRegistered
@@ -207,10 +206,12 @@ export default function Waitlist() {
 
                             <div className="space-y-5">
                                 <h1 className="max-w-[720px] text-[42px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] md:text-[68px]">
-                                    Join the next Margin onboarding wave.
+                                    {isSuccess ? successHeading : 'Join the next Margin onboarding wave.'}
                                 </h1>
                                 <p className="max-w-[600px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
-                                    Tell us where you sell, what recovery work is breaking down, and whether you want priority onboarding. We use this to place you in the right access queue.
+                                    {isSuccess
+                                        ? successBody
+                                        : 'Tell us where you sell, what recovery work is breaking down, and whether you want priority onboarding. We use this to place you in the right access queue.'}
                                 </p>
                             </div>
                         </div>
@@ -418,10 +419,6 @@ export default function Waitlist() {
                                     </div>
 
                                     <div className="mt-8 space-y-4">
-                                        <div className="inline-flex items-center gap-2 rounded-[5px] border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE]">
-                                            <Sparkles className="h-3.5 w-3.5" />
-                                            {successBadge}
-                                        </div>
                                         <h3 className="text-[32px] font-semibold leading-tight tracking-[-0.045em] text-[#182026] md:text-[42px]">
                                             {successHeading}
                                         </h3>
