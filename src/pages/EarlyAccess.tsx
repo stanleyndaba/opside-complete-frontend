@@ -95,7 +95,7 @@ function FounderPassCTA({
       </div>
       <Button
         asChild
-        className="h-[56px] w-full max-w-[340px] justify-center rounded-[5px] bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
+        className="h-14 w-full max-w-[340px] justify-center rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#0B74DE] max-md:rounded-[2px] max-md:shadow-none md:text-[16px]"
       >
         <a
           href={EARLY_ACCESS_INFO_URL}
@@ -587,7 +587,7 @@ export default function EarlyAccess() {
               <div ref={offerCtaRef} className="mt-10 text-center flex flex-col items-center">
                 <Button
                   asChild
-                  className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
+                  className="h-14 w-full max-w-[340px] justify-center rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#0B74DE] max-md:rounded-[2px] max-md:shadow-none md:text-[16px]"
                 >
                   <a
                     href={EARLY_ACCESS_INFO_URL}
