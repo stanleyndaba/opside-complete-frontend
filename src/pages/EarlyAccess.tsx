@@ -549,7 +549,7 @@ export default function EarlyAccess() {
 
                 {[
                   ['Upfront cost', '$0', '$99 once'],
-                  ['Commission', '15–25%', '0% through 2027'],
+                  ['Commission', '15–25%', '0% through 2026'],
                   ['Amazon approves $10,000', 'You keep ~$7,500–8,500', 'You keep $10,000'],
                   ['Risk', 'Ongoing commission', '90-day refund guarantee'],
                 ].map(([label, traditional, margin]) => (
@@ -609,7 +609,7 @@ export default function EarlyAccess() {
                   One payment. {EARLY_ACCESS_PRICE} one-time. Introductory pricing locked through December 31, 2026. Priority activation and onboarding are included.
                 </div>
                 <p className="mt-4 max-w-[500px] text-[11px] leading-4 text-[#8A98A3]">
-                  After 2026, the service ends unless you choose a Performance, Pro, or Scale plan for 2027.
+                  After 2026, the service ends unless you choose a Performance, Pro, or Scale plan for 2026.
                 </p>
               </div>
             </motion.div>

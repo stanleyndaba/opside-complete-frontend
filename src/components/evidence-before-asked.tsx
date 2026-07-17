@@ -22,7 +22,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            Every resolved case sharpens the proof behind the next.
+            Margin gets to work.
           </motion.p>
         </div>
       </section>
