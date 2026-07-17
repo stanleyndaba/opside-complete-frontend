@@ -418,10 +418,7 @@ export default function Waitlist() {
                                         </div>
                                     </div>
 
-                                    <div className="mt-8 space-y-4">
-                                        <h3 className="text-[32px] font-semibold leading-tight tracking-[-0.045em] text-[#182026] md:text-[42px]">
-                                            {successHeading}
-                                        </h3>
+                                    <div className="mt-8">
                                         <p className="mx-auto max-w-[460px] text-[15px] leading-7 text-[#66737F]">
                                             {successBody}
                                         </p>
