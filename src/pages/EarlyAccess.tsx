@@ -17,45 +17,16 @@ import {
   EARLY_ACCESS_CURRENCY,
   EARLY_ACCESS_OFFER,
   EARLY_ACCESS_VALUE_ZAR,
-  PAYSTACK_EARLY_ACCESS_URL,
   PAYSTACK_PAYMENT_PROVIDER,
-  trackCheckoutStarted,
   trackClaimAccessClicked,
   trackEvent,
-  trackOutboundPaymentClicked,
 } from '@/lib/analytics';
 
 /* ── constants ─────────────────────────────────────────────────── */
-const EARLY_ACCESS_CHECKOUT_URL = PAYSTACK_EARLY_ACCESS_URL;
+const EARLY_ACCESS_INFO_URL = '/currency-margin';
 const EARLY_ACCESS_PRICE = '$99';
 const DEMO_VIDEO_URL = 'https://youtu.be/B0ksWTlYbRo';
 const DEMO_VIDEO_THUMBNAIL_URL = '/margin-logo-reveal.gif';
-const EARLY_ACCESS_PAYMENT_SUCCESS_PATH = '/payment/success?source=paystack_payment_page&kind=early_access&offer=Early%20Access&price=%2499';
-
-const getEarlyAccessSuccessUrl = () => {
-  if (typeof window === 'undefined') {
-    return EARLY_ACCESS_PAYMENT_SUCCESS_PATH;
-  }
-
-  return `${window.location.origin}${EARLY_ACCESS_PAYMENT_SUCCESS_PATH}`;
-};
-
-const rememberEarlyAccessCheckout = () => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  const successUrl = getEarlyAccessSuccessUrl();
-  window.localStorage.setItem('margin_pending_checkout', JSON.stringify({
-    kind: 'early_access',
-    source: 'paystack_payment_page',
-    offer: 'Early Access',
-    price: EARLY_ACCESS_PRICE,
-    returnPath: '/early-access',
-    successUrl,
-    createdAt: new Date().toISOString(),
-  }));
-};
 
 /* ── timeline data ─────────────────────────────────────────────── */
 const timelineSteps = [
@@ -127,7 +98,7 @@ function FounderPassCTA({
         className="h-[56px] w-full max-w-[340px] justify-center rounded-[5px] bg-[#0B74DE] px-6 text-[15px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)] md:text-[16px]"
       >
         <a
-          href={EARLY_ACCESS_CHECKOUT_URL}
+          href={EARLY_ACCESS_INFO_URL}
           onClick={(event) => onCheckoutClick(event, location, 'Get Started')}
         >
           Get Started
@@ -326,20 +297,9 @@ export default function EarlyAccess() {
     ctaLocation: string,
     ctaText: string
   ) => {
-    rememberEarlyAccessCheckout();
     trackClaimAccessClicked({
       cta_location: ctaLocation,
       cta_text: ctaText,
-    });
-    trackOutboundPaymentClicked({
-      cta_location: ctaLocation,
-      cta_text: ctaText,
-      destination: EARLY_ACCESS_CHECKOUT_URL,
-    });
-    trackCheckoutStarted({
-      cta_location: ctaLocation,
-      cta_text: ctaText,
-      destination: EARLY_ACCESS_CHECKOUT_URL,
     });
 
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
@@ -348,7 +308,7 @@ export default function EarlyAccess() {
 
     event.preventDefault();
     window.setTimeout(() => {
-      window.location.assign(EARLY_ACCESS_CHECKOUT_URL);
+      window.location.assign(EARLY_ACCESS_INFO_URL);
     }, 180);
   }, []);
 
@@ -422,9 +382,9 @@ export default function EarlyAccess() {
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#0B74DE] opacity-90">
-                Early Access: Batch 01 Open
-              </div>
+                <div className="text-[12px] font-bold uppercase tracking-tight text-[#0B74DE] opacity-90">
+                  Early Access: Batch 01 Open
+                </div>
 
                 <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
                   Every seller needs Margin.
@@ -488,7 +448,7 @@ export default function EarlyAccess() {
         <section className="relative border-t border-[#E4EDF1] bg-white py-20 md:py-32">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <motion.div {...reveal} className="text-center">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
+              <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                 The Path to Recovery
               </div>
               <h2 className="mx-auto mt-5 max-w-[800px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[66px]">
@@ -563,7 +523,7 @@ export default function EarlyAccess() {
               className="mx-auto max-w-[900px]"
             >
               <div className="text-center">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
+                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                   Early Access
                 </div>
                 <h2 className="mt-5 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[66px]">
@@ -581,9 +541,9 @@ export default function EarlyAccess() {
               </div>
 
               <div className="mx-auto mt-8 max-w-[860px] overflow-hidden rounded-[20px] border border-[#E4EDF1] bg-white">
-                <div className="grid grid-cols-[1.3fr_1fr_1fr] border-b border-[#E4EDF1] bg-[#FAFBFC] px-5 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#7A8794]">
+                <div className="grid grid-cols-[1.3fr_1fr_1fr] border-b border-[#E4EDF1] bg-[#FAFBFC] px-5 py-4 text-[12px] font-semibold uppercase tracking-tight text-[#7A8794]">
                   <div />
-                  <div className="text-center">Traditional Recovery Service</div>
+                  <div className="text-center">Recovery Service</div>
                   <div className="text-center">With Margin</div>
                 </div>
 
@@ -630,7 +590,7 @@ export default function EarlyAccess() {
                   className="h-[52px] rounded-full border border-[#CFE0EA] bg-white px-7 text-[14px] font-semibold text-[#25313A] shadow-[0_14px_40px_rgba(37,49,58,0.08)] transition-all hover:bg-[#F8FAFC] hover:shadow-[0_18px_50px_rgba(37,49,58,0.12)]"
                 >
                   <a
-                    href={EARLY_ACCESS_CHECKOUT_URL}
+                    href={EARLY_ACCESS_INFO_URL}
                     onClick={(event) => handleCheckoutClick(event, 'early_access_offer_section', 'Get Started')}
                   >
                     Get Started
@@ -661,7 +621,7 @@ export default function EarlyAccess() {
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
               <motion.div {...reveal} className="hidden max-w-[560px] sm:block">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
+                <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                   Marketplace Scope
                 </div>
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
@@ -706,7 +666,7 @@ export default function EarlyAccess() {
         <section className="relative border-t border-[#E4EDF1] bg-[#FAFAF7] py-20 md:py-32">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <motion.div {...reveal} className="flex flex-col items-center text-center">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0B74DE]">
+              <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                 Start Here
               </div>
               <h2 className="mt-5 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[68px]">
