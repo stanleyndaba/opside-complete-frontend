@@ -166,7 +166,7 @@ export default function ReportGeneration() {
                 {phase === 'extracting' ? <FileSearch className="h-5 w-5" /> : <Layers className="h-5 w-5" />}
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">Report Generation</p>
+                <p className="text-sm font-semibold text-gray-900">Evidence Pack Assembly</p>
                 <p className="text-xs text-gray-400">Dispute evidence pipeline</p>
               </div>
             </div>
@@ -338,7 +338,7 @@ export default function ReportGeneration() {
               >
                 <div className="mx-auto max-w-4xl pt-1 sm:pt-2">
                   <div className="mb-8">
-                    <h2 className="text-base font-medium tracking-tight text-[#242424]">Generated Report</h2>
+                    <h2 className="text-base font-medium tracking-tight text-[#242424]">Claim Package Ready</h2>
                     <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
