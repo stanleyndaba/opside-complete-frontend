@@ -131,7 +131,7 @@ export default function ReportGeneration() {
     <main className="font-apple-system flex min-h-screen items-center justify-center bg-gray-50 p-4 sm:p-8">
       <section
         className={`flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl ${
-          phase === 'output' ? 'h-[min(480px,calc(100vh-32px))]' : 'h-[min(580px,calc(100vh-32px))]'
+          phase === 'output' ? 'h-[min(420px,calc(100vh-32px))]' : 'h-[min(580px,calc(100vh-32px))]'
         }`}
       >
         <header className="flex min-h-16 items-center justify-between border-b border-gray-100 bg-white px-5 sm:px-7">
@@ -334,16 +334,16 @@ export default function ReportGeneration() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={spring}
-                className="absolute inset-0 overflow-y-auto p-6 sm:p-8"
+                className="absolute inset-0 overflow-y-auto p-5 sm:p-6"
               >
-                <div className="mx-auto max-w-4xl pt-1 sm:pt-2">
-                  <div className="mb-8">
+                <div className="mx-auto max-w-4xl">
+                  <div className="mb-5">
                     <h2 className="text-base font-medium tracking-tight text-[#242424]">Claim Package Ready</h2>
                     <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
-                  <article className="flex flex-col items-center gap-8 sm:flex-row sm:items-center">
-                    <div className="relative h-48 w-36 shrink-0">
+                  <article className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
+                    <div className="relative h-40 w-[120px] shrink-0">
                       <div className="absolute inset-0 translate-x-4 -rotate-3 rounded-xl border border-white/70 bg-white/35 backdrop-blur-md" />
                       <div className="absolute inset-0 translate-x-2 rotate-2 rounded-xl border border-white/80 bg-white/55 backdrop-blur-md" />
                       <div className="absolute inset-0 rounded-xl border border-white/90 bg-white/75 p-4 shadow-[0_24px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl">
@@ -373,12 +373,12 @@ export default function ReportGeneration() {
                     </div>
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
-                      <h3 className="text-lg font-medium tracking-tight text-[#242424] sm:text-xl">Dispute Claim Report</h3>
-                      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[#8A8F98] sm:text-[11px]">
+                      <h3 className="text-base font-bold tracking-tight text-[#242424] sm:text-lg">Claim Submission Package</h3>
+                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#8A8F98] sm:text-[11px]">
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
                       </p>
 
-                      <div className="mt-5 flex flex-wrap gap-1.5 sm:justify-start justify-center">
+                      <div className="mt-3 flex flex-wrap gap-1.5 sm:justify-start justify-center">
                         {[
                           'Recovery summary', 'Claim type', 'Shipment timeline',
                           'Required evidence checklist', 'Invoice', 'BOL', 'POD',
@@ -392,11 +392,11 @@ export default function ReportGeneration() {
                         ))}
                       </div>
 
-                      <div className="mt-7 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
+                      <div className="mt-5 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
-                          className="flex h-9 items-center rounded-full border border-[#242424]/25 bg-white/20 px-5 text-sm font-medium text-[#242424] backdrop-blur-sm transition-colors hover:border-[#242424] hover:bg-white/50"
+                          className="flex h-9 items-center rounded-[2px] border border-[#101820] bg-[#101820] px-5 text-sm font-medium text-white transition-colors hover:border-[#0B1117] hover:bg-[#0B1117]"
                         >
                           View
                         </button>
