@@ -11,7 +11,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { useSession } from '@/contexts/SessionContext';
-import { DEMO_TENANT, DEMO_TENANT_SLUG, ensureDemoSessionForDemoWorkspace, isDemoSessionActive } from '@/lib/demoSession';
+import { DEMO_TENANT, DEMO_TENANT_SLUG, isDemoSessionActive, isReservedDemoTenantSlug } from '@/lib/demoSession';
 
 /**
  * Get the stored tenant slug from localStorage
@@ -158,8 +158,19 @@ export function TenantProvider({ children }: TenantProviderProps) {
             return;
         }
 
-        if ((ensureDemoSessionForDemoWorkspace() || isDemoSessionActive()) && (!tenantSlug || tenantSlug === DEMO_TENANT_SLUG)) {
+        if (isDemoSessionActive() && (!tenantSlug || tenantSlug === DEMO_TENANT_SLUG)) {
             applyDemoTenantContext();
+            return;
+        }
+
+        if (isReservedDemoTenantSlug(tenantSlug)) {
+            setTenant(null);
+            setTenants([]);
+            setPlanLimits(DEFAULT_LIMITS);
+            setError(null);
+            setIsThrottled(false);
+            setIsLoading(false);
+            setIsReady(true);
             return;
         }
 
@@ -262,8 +273,15 @@ export function TenantProvider({ children }: TenantProviderProps) {
      * Switch to a different tenant
      */
     const switchTenant = useCallback(async (tenantIdOrSlug: string) => {
-        if ((ensureDemoSessionForDemoWorkspace() || isDemoSessionActive()) && normalizeTenantSlug(tenantIdOrSlug) === DEMO_TENANT_SLUG) {
+        if (isDemoSessionActive() && normalizeTenantSlug(tenantIdOrSlug) === DEMO_TENANT_SLUG) {
             applyDemoTenantContext();
+            return;
+        }
+
+        if (isReservedDemoTenantSlug(tenantIdOrSlug)) {
+            setError('This workspace requires reviewer access.');
+            setIsLoading(false);
+            setIsReady(true);
             return;
         }
 

@@ -7,7 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { SESSION_RECOVERY_EVENT, attemptSilentSessionRefresh, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
-import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, ensureDemoSessionForDemoWorkspace, isDemoSessionActive } from '@/lib/demoSession';
+import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -89,7 +89,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const ensureActiveDemoSession = useCallback(() => {
-        return ensureDemoSessionForDemoWorkspace() || isDemoSessionActive();
+        return isDemoSessionActive();
     }, []);
 
     const clearStoredAuthContext = useCallback(() => {

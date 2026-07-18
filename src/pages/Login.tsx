@@ -148,7 +148,7 @@ const formatLoginError = (error: unknown, step: LoginStep) => {
   }
 
   if (step === 'workspace' && normalized.includes('unable to resolve a workspace')) {
-    return 'Your account sign-in succeeded, but Margin could not finish opening the workspace for this account. Retry workspace routing in a moment.';
+    return 'Your account sign-in succeeded, but this account is not assigned to active Margin access yet. Use the reviewer credentials Margin supplied, or request Early Access.';
   }
 
   const retryableAuthIssue =
@@ -164,12 +164,12 @@ const formatLoginError = (error: unknown, step: LoginStep) => {
   if (retryableAuthIssue) {
     return step === 'account'
       ? 'Supabase Auth did not return a readable response while checking the account. Please try again in a moment.'
-      : 'Your account sign-in looks okay, but Margin could not finish opening the workspace. Please retry workspace routing in a moment.';
+      : 'Your account sign-in looks okay, but Margin could not finish access setup. Please retry in a moment.';
   }
 
   return rawMessage || (step === 'account'
     ? 'Unable to log in with those credentials.'
-    : 'Unable to open the workspace after sign-in.');
+    : 'Unable to finish access setup after sign-in.');
 };
 
 const Login = () => {
@@ -895,7 +895,7 @@ const Login = () => {
                   <p>{error}</p>
                   {loginStep ? (
                     <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-red-500">
-                      Failed step: {loginStep === 'account' ? 'Account sign-in' : 'Workspace opening'}
+                      Failed step: {loginStep === 'account' ? 'Account sign-in' : 'Access setup'}
                     </p>
                   ) : null}
                   {workspaceRetryAvailable && mode === 'login' ? (
@@ -905,7 +905,7 @@ const Login = () => {
                       disabled={loading}
                       className="mt-3 h-9 rounded-full bg-[#0B74DE] px-3 text-[11px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                     >
-                      Retry workspace routing
+                      Retry access setup
                       <ArrowRight className="ml-2 h-3.5 w-3.5" />
                     </Button>
                   ) : null}

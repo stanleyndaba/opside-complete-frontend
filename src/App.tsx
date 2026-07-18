@@ -7,6 +7,7 @@ import NotificationsProvider from '@/components/providers/NotificationsProvider'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
+import AppAccessGate from "@/components/routes/AppAccessGate";
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { TenantProvider } from '@/contexts/TenantContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -197,11 +198,15 @@ const RouteSkeleton = () => (
   <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] px-5 text-[#182026]">
     <div className="inline-flex max-w-full items-center justify-center gap-2.5 sm:gap-3">
       <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto shrink-0 object-contain sm:h-7" />
-      <span className="route-loading-brand-text brand-wordmark font-merriweather text-xl tracking-tight text-[#182026] sm:text-2xl">
+      <span className="route-loading-brand-text brand-wordmark font-merriweather text-xl tracking-normal text-[#182026] sm:text-2xl">
         Margin
       </span>
     </div>
   </div>
+);
+
+const appRoute = (element: React.ReactNode) => (
+  <AppAccessGate>{element}</AppAccessGate>
 );
 
 const RoutePreloader = () => {
@@ -359,54 +364,54 @@ const App = () => (
                         <Route path="/amazon-sandbox" element={<AmazonSandbox />} />
                         <Route path="/analyzing" element={<AnalyzingScreen />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
-                        <Route path="/app" element={<TenantRedirect />} />
+                        <Route path="/app" element={appRoute(<TenantRedirect />)} />
                         <Route path="/app/redirect" element={<EmailActionRedirect />} />
-                        <Route path="/app/:tenantSlug" element={<FoundingActivationGate><Dashboard /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/dashboard" element={<FoundingActivationGate><Dashboard /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/reports" element={<Navigate to="../dashboard" replace />} />
-                        <Route path="/app/:tenantSlug/export" element={<ExportCenter />} />
-                        <Route path="/app/:tenantSlug/learning-insights" element={<LearningInsights />} />
-                        <Route path="/app/:tenantSlug/sync" element={<Sync />} />
-                        <Route path="/app/:tenantSlug/auth/callback" element={<FoundingActivationGate><OAuthCallback /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/auth/success" element={<FoundingActivationGate><OAuthSuccess /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/integrations-hub" element={<FoundingActivationGate><IntegrationsHub /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
-                        <Route path="/app/:tenantSlug/filing-pipeline" element={<FilingPipeline />} />
-                        <Route path="/app/:tenantSlug/approved-reimbursements" element={<ApprovedReimbursements />} />
-                        <Route path="/app/:tenantSlug/dispute-cases" element={<DisputeCases />} />
-                        <Route path="/app/:tenantSlug/appeals" element={<Appeals />} />
-                        <Route path="/app/:tenantSlug/cases/:caseId" element={<CaseDetail />} />
-                        <Route path="/app/:tenantSlug/recoveries/:caseId" element={<CaseDetail />} />
-                        <Route path="/app/:tenantSlug/resolve/:id" element={<ResolveCase />} />
-                        <Route path="/app/:tenantSlug/history" element={<Navigate to="../billing" replace />} />
-                        <Route path="/app/:tenantSlug/documents" element={<EvidenceLocker />} />
-                        <Route path="/app/:tenantSlug/evidence-locker" element={<EvidenceLocker />} />
-                        <Route path="/app/:tenantSlug/documents/:id" element={<DocumentDetail />} />
-                        <Route path="/app/:tenantSlug/notifications" element={<NotificationHub />} />
-                        <Route path="/app/:tenantSlug/settings" element={<Settings />} />
-                        <Route path="/app/:tenantSlug/upcoming-payments" element={<Navigate to="../billing" replace />} />
-                        <Route path="/app/:tenantSlug/reconnect-amazon" element={<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/connect-amazon" element={<FoundingActivationGate><ConnectAmazonAccount /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/billing" element={<FoundingActivationGate><Billing /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/api-access" element={<ApiAccess />} />
-                        <Route path="/app/:tenantSlug/help" element={<Help />} />
-                        <Route path="/app/:tenantSlug/whats-new" element={<WhatsNew />} />
-                        <Route path="/app/:tenantSlug/evidence-onboarding" element={<FoundingActivationGate><EvidenceOnboarding /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/evidence-search" element={<EvidenceSearch />} />
-                        <Route path="/app/:tenantSlug/margin-board" element={<MarginBoard />} />
-                        <Route path="/app/:tenantSlug/data-upload" element={<FoundingActivationGate><DataUpload /></FoundingActivationGate>} />
-                        <Route path="/app/:tenantSlug/pricing/standard-agreement" element={<StandardAgreement />} />
-                        <Route path="/app/:tenantSlug/pricing-adjust" element={<PricingAdjust />} />
-                        <Route path="/app/:tenantSlug/admin" element={<Admin />} />
-                        <Route path="/app/:tenantSlug/admin/users-integrations" element={<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>} />
-                        <Route path="/app/:tenantSlug/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
-                        <Route path="/app/:tenantSlug/test/agent1" element={<Agent1Test />} />
-                        <Route path="/app/:tenantSlug/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
-                        <Route path="/app/:tenantSlug/admin/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
-                        <Route path="/app/:tenantSlug/admin/revenue" element={<AdminOnly><AdminRevenue /></AdminOnly>} />
-                        <Route path="/app/:tenantSlug/admin/queue" element={<AdminOnly><QueueDashboard /></AdminOnly>} />
-                        <Route path="/app/:tenantSlug/admin/team" element={<AdminOnly><TeamManagement /></AdminOnly>} />
+                        <Route path="/app/:tenantSlug" element={appRoute(<FoundingActivationGate><Dashboard /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/dashboard" element={appRoute(<FoundingActivationGate><Dashboard /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/reports" element={appRoute(<Navigate to="../dashboard" replace />)} />
+                        <Route path="/app/:tenantSlug/export" element={appRoute(<ExportCenter />)} />
+                        <Route path="/app/:tenantSlug/learning-insights" element={appRoute(<LearningInsights />)} />
+                        <Route path="/app/:tenantSlug/sync" element={appRoute(<Sync />)} />
+                        <Route path="/app/:tenantSlug/auth/callback" element={appRoute(<FoundingActivationGate><OAuthCallback /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/auth/success" element={appRoute(<FoundingActivationGate><OAuthSuccess /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/integrations-hub" element={appRoute(<FoundingActivationGate><IntegrationsHub /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/recoveries" element={appRoute(<Recoveries />)} />
+                        <Route path="/app/:tenantSlug/filing-pipeline" element={appRoute(<FilingPipeline />)} />
+                        <Route path="/app/:tenantSlug/approved-reimbursements" element={appRoute(<ApprovedReimbursements />)} />
+                        <Route path="/app/:tenantSlug/dispute-cases" element={appRoute(<DisputeCases />)} />
+                        <Route path="/app/:tenantSlug/appeals" element={appRoute(<Appeals />)} />
+                        <Route path="/app/:tenantSlug/cases/:caseId" element={appRoute(<CaseDetail />)} />
+                        <Route path="/app/:tenantSlug/recoveries/:caseId" element={appRoute(<CaseDetail />)} />
+                        <Route path="/app/:tenantSlug/resolve/:id" element={appRoute(<ResolveCase />)} />
+                        <Route path="/app/:tenantSlug/history" element={appRoute(<Navigate to="../billing" replace />)} />
+                        <Route path="/app/:tenantSlug/documents" element={appRoute(<EvidenceLocker />)} />
+                        <Route path="/app/:tenantSlug/evidence-locker" element={appRoute(<EvidenceLocker />)} />
+                        <Route path="/app/:tenantSlug/documents/:id" element={appRoute(<DocumentDetail />)} />
+                        <Route path="/app/:tenantSlug/notifications" element={appRoute(<NotificationHub />)} />
+                        <Route path="/app/:tenantSlug/settings" element={appRoute(<Settings />)} />
+                        <Route path="/app/:tenantSlug/upcoming-payments" element={appRoute(<Navigate to="../billing" replace />)} />
+                        <Route path="/app/:tenantSlug/reconnect-amazon" element={appRoute(<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/connect-amazon" element={appRoute(<FoundingActivationGate><ConnectAmazonAccount /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={appRoute(<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/billing" element={appRoute(<FoundingActivationGate><Billing /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/api-access" element={appRoute(<ApiAccess />)} />
+                        <Route path="/app/:tenantSlug/help" element={appRoute(<Help />)} />
+                        <Route path="/app/:tenantSlug/whats-new" element={appRoute(<WhatsNew />)} />
+                        <Route path="/app/:tenantSlug/evidence-onboarding" element={appRoute(<FoundingActivationGate><EvidenceOnboarding /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/evidence-search" element={appRoute(<EvidenceSearch />)} />
+                        <Route path="/app/:tenantSlug/margin-board" element={appRoute(<MarginBoard />)} />
+                        <Route path="/app/:tenantSlug/data-upload" element={appRoute(<FoundingActivationGate><DataUpload /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/pricing/standard-agreement" element={appRoute(<StandardAgreement />)} />
+                        <Route path="/app/:tenantSlug/pricing-adjust" element={appRoute(<PricingAdjust />)} />
+                        <Route path="/app/:tenantSlug/admin" element={appRoute(<Admin />)} />
+                        <Route path="/app/:tenantSlug/admin/users-integrations" element={appRoute(<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>)} />
+                        <Route path="/app/:tenantSlug/admin/amazon-auth-test" element={appRoute(<AdminOnly><AmazonAuthTest /></AdminOnly>)} />
+                        <Route path="/app/:tenantSlug/test/agent1" element={appRoute(<Agent1Test />)} />
+                        <Route path="/app/:tenantSlug/revenue-model" element={appRoute(<AdminOnly><RevenueModel /></AdminOnly>)} />
+                        <Route path="/app/:tenantSlug/admin/revenue-model" element={appRoute(<AdminOnly><RevenueModel /></AdminOnly>)} />
+                        <Route path="/app/:tenantSlug/admin/revenue" element={appRoute(<AdminOnly><AdminRevenue /></AdminOnly>)} />
+                        <Route path="/app/:tenantSlug/admin/queue" element={appRoute(<AdminOnly><QueueDashboard /></AdminOnly>)} />
+                        <Route path="/app/:tenantSlug/admin/team" element={appRoute(<AdminOnly><TeamManagement /></AdminOnly>)} />
                         {/* LEGACY REDIRECTS */}
                         <Route path="/integrations-hub" element={<TenantRedirect />} />
                         <Route path="/cases/:caseId" element={<TenantRedirect preservePath />} />
