@@ -272,6 +272,20 @@ export function NotificationBell({
   const { tenant } = useTenant();
   const activeSlug = tenant?.slug || 'beta';
   const [isOpen, setIsOpen] = useState(false);
+  const isAcmeDemoTenant = activeSlug === 'demo-workspace' || activeSlug === 'acme-corp';
+  const demoFilingApprovalNotification = isAcmeDemoTenant
+    ? {
+        id: 'demo-rfd-16874-inb-filing-approval',
+        eyebrow: 'High priority',
+        header: 'Ref RFD-16874-INB · Inbound Shipment Shortage',
+        message: '$184.72 is waiting for filing approval.',
+        timestamp: 'Just now',
+        href: tenantRoute(activeSlug, '/filing-pipeline'),
+        read: false,
+        type: 'case_filed',
+        tone: 'warning' as NotificationTone,
+      }
+    : null;
 
   const isTransparentNavbar = (
     location.pathname === '/' ||
@@ -297,7 +311,7 @@ export function NotificationBell({
     return tenantRoute(activeSlug, '/notifications');
   };
 
-  const displayNotifications = notifications.slice(0, 10).map(n => {
+  const liveDisplayNotifications = notifications.slice(0, demoFilingApprovalNotification ? 9 : 10).map(n => {
     const preview = getNotificationPreview(n);
 
     return {
@@ -312,13 +326,19 @@ export function NotificationBell({
       tone: preview.tone,
     };
   });
+  const displayNotifications = demoFilingApprovalNotification
+    ? [demoFilingApprovalNotification, ...liveDisplayNotifications]
+    : liveDisplayNotifications;
+  const displayUnreadCount = unreadCount + (demoFilingApprovalNotification && !demoFilingApprovalNotification.read ? 1 : 0);
 
   const IconComponent = iconOverride ?? Mail;
   const isSidebarStyle = forceCountStyle === 'sidebar';
   const shouldShowLabel = isSidebarStyle && showLabel;
 
   const handleNotificationClick = (id: string) => {
-    markAsRead(id);
+    if (id !== demoFilingApprovalNotification?.id) {
+      markAsRead(id);
+    }
     setIsOpen(false);
   };
 
@@ -352,12 +372,12 @@ export function NotificationBell({
             iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-white/20' : 'text-white/40')
           )} />
           {shouldShowLabel && <span className="text-xs font-sans font-bold uppercase tracking-tight">{label}</span>}
-          {unreadCount > 0 && (
+          {displayUnreadCount > 0 && (
             <span className={cn(
               "pointer-events-none absolute z-10 flex h-4 min-w-4 select-none items-center justify-center rounded-full border border-white bg-[#0052FF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-[0_8px_18px_rgba(0,82,255,0.22)]",
               isSidebarStyle ? "right-2 top-1" : "right-0 top-0 translate-x-1/4 -translate-y-1/4"
             )}>
-              {unreadCount > 9 ? '9+' : unreadCount}
+              {displayUnreadCount > 9 ? '9+' : displayUnreadCount}
             </span>
           )}
         </Button>
@@ -379,7 +399,7 @@ export function NotificationBell({
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-3">
-              {unreadCount > 0 && (
+              {displayUnreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
                   className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] transition-colors hover:text-[#0052FF]">
@@ -387,7 +407,7 @@ export function NotificationBell({
                 </button>
               )}
               <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF]">
-                {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
+                {displayUnreadCount > 0 ? `${displayUnreadCount} unread` : 'All caught up'}
               </div>
             </div>
           </div>
