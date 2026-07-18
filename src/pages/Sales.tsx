@@ -194,7 +194,7 @@ export default function Sales() {
 
                         {/* Inquiry Form */}
                         <div className="lg:col-start-3 lg:col-span-8">
-                            <div className="relative overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-6 shadow-[0_34px_100px_rgba(37,49,58,0.1)] sm:p-10">
+                            <div className="relative overflow-hidden rounded-[18px] border border-[#CFE0EA] bg-white p-6 shadow-[0_34px_100px_rgba(37,49,58,0.1)] sm:p-10">
                                 <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
                                 <div className="pointer-events-none absolute -right-12 top-10 h-28 w-28 rounded-full bg-[#0B74DE]/10 blur-3xl" />
                                 {isSubmitted ? (
@@ -211,7 +211,7 @@ export default function Sales() {
                                         <Button
                                             onClick={() => setIsSubmitted(false)}
                                             variant="outline"
-                                            className="h-12 rounded-full border-[#CFE0EA] bg-white px-6 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F8FAFC] hover:text-[#182026]">
+                                            className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-6 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F8FAFC] hover:text-[#182026]">
                                             Start Another Inquiry
                                         </Button>
                                     </div>
@@ -234,7 +234,7 @@ export default function Sales() {
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                                     placeholder="Full name"
-                                                    className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                                                     required
                                                 />
                                             </div>
@@ -247,7 +247,7 @@ export default function Sales() {
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                                     placeholder="partner@company.com"
-                                                    className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                                                     required
                                                 />
                                             </div>
@@ -262,7 +262,7 @@ export default function Sales() {
                                                 value={form.company}
                                                 onChange={(e) => setForm({ ...form, company: e.target.value })}
                                                 placeholder="Legal entity or brand group"
-                                                className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                                                 required
                                             />
                                         </div>
@@ -273,10 +273,10 @@ export default function Sales() {
                                                     Annual Portfolio GMV
                                                 </label>
                                                 <Select value={form.revenue} onValueChange={(value) => setForm({ ...form, revenue: value })}>
-                                                    <SelectTrigger className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/20">
+                                                    <SelectTrigger className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/20">
                                                         <SelectValue placeholder="Select range" />
                                                     </SelectTrigger>
-                                                    <SelectContent className="rounded-[16px] border-[#CFE0EA] bg-white text-xs font-sans text-[#182026] shadow-[0_22px_70px_rgba(37,49,58,0.14)]">
+                                                    <SelectContent className="rounded-[10px] border-[#CFE0EA] bg-white text-xs font-sans text-[#182026] shadow-[0_22px_70px_rgba(37,49,58,0.14)]">
                                                         <SelectItem value="$1M - $5M">$1M - $5M</SelectItem>
                                                         <SelectItem value="$5M - $10M">$5M - $10M</SelectItem>
                                                         <SelectItem value="$10M - $25M">$10M - $25M</SelectItem>
@@ -294,7 +294,7 @@ export default function Sales() {
                                                     value={form.sellerId}
                                                     onChange={(e) => setForm({ ...form, sellerId: e.target.value })}
                                                     placeholder="Optional"
-                                                    className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                                                 />
                                             </div>
                                         </div>
@@ -307,14 +307,14 @@ export default function Sales() {
                                                 value={form.message}
                                                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                                                 placeholder="Tell us about marketplace coverage, SKU volume, current reimbursement workflow, or operational leakage concerns."
-                                                className="min-h-[120px] rounded-[22px] border-[#CFE0EA] bg-white px-4 py-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20 resize-none"
+                                                className="min-h-[120px] rounded-[5px] border-[#CFE0EA] bg-white px-4 py-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20 resize-none"
                                             />
                                         </div>
 
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="w-full h-12 rounded-full bg-[#0B74DE] text-white text-[13px] font-semibold font-sans tracking-tight transition-all hover:bg-[#0869C9] shadow-[0_18px_40px_rgba(11,116,222,0.2)]">
+                                            className="w-full h-12 rounded-[5px] bg-[#0B74DE] text-white text-[13px] font-semibold font-sans tracking-tight transition-all hover:bg-[#0869C9] shadow-[0_18px_40px_rgba(11,116,222,0.2)]">
                                             {isSubmitting ? (
                                                 <>Preparing Inquiry...</>
                                             ) : (

@@ -734,7 +734,7 @@ const Login = () => {
             </div>
           </section>
 
-          <section className="relative overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
+          <section className="relative overflow-hidden rounded-[18px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
             <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
             <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#0B74DE]/10 blur-3xl" />
 
@@ -759,7 +759,7 @@ const Login = () => {
               </div>
 
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                <div className="mb-5 rounded-[22px] border border-[#DCE8EE] bg-[#F8FAFC] px-4 py-4">
+                <div className="mb-5 rounded-[12px] border border-[#DCE8EE] bg-[#F8FAFC] px-4 py-4">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">
                     Active session found
                   </p>
@@ -771,7 +771,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-11 justify-between rounded-full bg-[#0B74DE] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
+                      className="h-11 justify-between rounded-[5px] bg-[#0B74DE] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                     >
                       Continue with this account
                       <ArrowRight className="h-4 w-4" />
@@ -781,7 +781,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void handleUseDifferentAccount()}
                       disabled={loading}
-                      className="h-11 rounded-full border-[#CFE0EA] bg-white px-4 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
+                      className="h-11 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
                     >
                       Use different account
                     </Button>
@@ -807,7 +807,7 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder="you@company.com"
-                    className="h-14 rounded-[20px] border-[#CFE0EA] bg-white pl-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20 disabled:opacity-50"
+                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20 disabled:opacity-50"
                   />
                 </div>
               </div>
@@ -828,7 +828,7 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder={mode === 'recovery' ? 'Enter your new password' : 'Enter your password'}
-                    className="h-14 rounded-[20px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                   />
                   <button
                     type="button"
@@ -858,7 +858,7 @@ const Login = () => {
                         resetLocalAuthError();
                       }}
                       placeholder="Confirm your new password"
-                      className="h-14 rounded-[20px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                      className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
                     />
                     <button
                       type="button"
@@ -873,7 +873,7 @@ const Login = () => {
               ) : null}
 
               {error && error === '__SERVICE_PREPARING__' ? (
-                <div className="rounded-[22px] border border-[#CFE0EA] bg-[#F8FAFC] px-5 py-6 text-center">
+                <div className="rounded-[12px] border border-[#CFE0EA] bg-[#F8FAFC] px-5 py-6 text-center">
                   <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#182026] md:text-[26px]">
                     We're preparing your account.
                   </h3>
@@ -882,7 +882,7 @@ const Login = () => {
                   </p>
                   <Button
                     asChild
-                    className="mt-5 h-11 rounded-full bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+                    className="mt-5 h-11 rounded-[5px] bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
                   >
                     <Link to="/early-access">
                       Join the Founding 500
@@ -891,7 +891,7 @@ const Login = () => {
                   </Button>
                 </div>
               ) : error ? (
-                <div className="rounded-[18px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   <p>{error}</p>
                   {loginStep ? (
                     <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-red-500">
@@ -903,7 +903,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleRetryWorkspaceRouting()}
                       disabled={loading}
-                      className="mt-3 h-9 rounded-full bg-[#0B74DE] px-3 text-[11px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
+                      className="mt-3 h-9 rounded-[5px] bg-[#0B74DE] px-3 text-[11px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                     >
                       Retry access setup
                       <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -915,7 +915,7 @@ const Login = () => {
                       onClick={() => void handleClearBrowserSession()}
                       disabled={loading}
                       variant="outline"
-                      className="mt-3 h-9 rounded-full border-red-200 bg-white px-3 text-[11px] font-semibold tracking-tight text-red-700 hover:bg-red-100"
+                      className="mt-3 h-9 rounded-[5px] border-red-200 bg-white px-3 text-[11px] font-semibold tracking-tight text-red-700 hover:bg-red-100"
                     >
                       Clear browser session
                     </Button>
@@ -929,7 +929,7 @@ const Login = () => {
                   onClick={handleDemoWorkspaceSignIn}
                   disabled={loading}
                   variant="outline"
-                  className="h-11 w-full justify-between rounded-full border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
+                  className="h-11 w-full justify-between rounded-[5px] border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
                 >
                   Open demo workspace
                   <ArrowRight className="h-4 w-4" />
@@ -940,7 +940,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-12 flex-1 justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
+                  className="h-12 flex-1 justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
                 >
                   {loading ? (
                     mode === 'signup'
@@ -957,7 +957,7 @@ const Login = () => {
                   )}
                   {!loading ? <ArrowRight className="h-4 w-4" /> : null}
                 </Button>
-                <Button asChild variant="outline" className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]">
+                <Button asChild variant="outline" className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]">
                   <Link to="/">
                     Back Home
                   </Link>
