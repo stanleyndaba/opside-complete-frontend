@@ -20,14 +20,14 @@ export function TenantRedirect({ targetPath = '/dashboard', preservePath = false
     useEffect(() => {
         if (!resolvedSlug) {
             if (isReady) {
-                navigate('/', { replace: true });
+                navigate(`/${location.search}${location.hash}`, { replace: true });
             }
             return;
         }
 
         const redirectPath = preservePath
             ? `${location.pathname}${location.search}${location.hash}`
-            : (targetPath.startsWith('/') ? targetPath : `/${targetPath}`);
+            : `${targetPath.startsWith('/') ? targetPath : `/${targetPath}`}${location.search}${location.hash}`;
 
         navigate(`/app/${resolvedSlug}${redirectPath}`, { replace: true });
     }, [isReady, location.hash, location.pathname, location.search, navigate, preservePath, resolvedSlug, targetPath]);
