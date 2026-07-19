@@ -774,12 +774,12 @@ export default function Appeals() {
             <SheetContent side="right" className="platform-vitality-page w-full border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] sm:max-w-[760px]">
               {selectedRow ? (
                 <div className="flex h-full flex-col">
-                  <SheetHeader className="border-b border-white/8 px-5 py-4 pr-12">
+                  <SheetHeader className="border-b border-white/8 px-5 py-3 pr-12">
                     <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/28">Response detail</div>
-                    <SheetTitle className="mt-1.5 text-[22px] font-sans font-bold tracking-tight text-white">
+                    <SheetTitle className="mt-1 text-[12px] font-sans font-medium leading-4 tracking-tight text-white">
                       {selectedRow.case_number || selectedRow.claim_number || selectedRow.amazon_case_id || 'Response case'}
                     </SheetTitle>
-                    <SheetDescription className="text-[11px] font-sans leading-5 text-white/46">
+                    <SheetDescription className="text-[10px] font-sans leading-4 text-white/46">
                       {selectedRow.store_name || 'Store unavailable'}
                       {selectedRow.updated_at ? ` - Updated ${formatDistanceToNow(new Date(selectedRow.updated_at), { addSuffix: true })}` : ''}
                     </SheetDescription>
