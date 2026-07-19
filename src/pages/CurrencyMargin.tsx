@@ -6,6 +6,12 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import {
+  PAYSTACK_EARLY_ACCESS_URL,
+  trackCheckoutStarted,
+  trackClaimAccessClicked,
+  trackOutboundPaymentClicked,
+} from '@/lib/analytics';
 
 const comparisonRows = [
   ['Upfront cost', '$0', '$99 once'],
@@ -33,6 +39,31 @@ const faqItems = [
 
 export default function CurrencyMargin() {
   const pageUrl = typeof window === 'undefined' ? '/currency-margin' : `${window.location.origin}/currency-margin`;
+
+  const handleCheckoutClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    ctaLocation: string,
+    ctaText: string
+  ) => {
+    const analyticsParams = {
+      cta_location: ctaLocation,
+      cta_text: ctaText,
+      destination: PAYSTACK_EARLY_ACCESS_URL,
+    };
+
+    trackClaimAccessClicked(analyticsParams);
+    trackOutboundPaymentClicked(analyticsParams);
+    trackCheckoutStarted(analyticsParams);
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    window.setTimeout(() => {
+      window.location.assign(PAYSTACK_EARLY_ACCESS_URL);
+    }, 220);
+  };
 
   usePageMeta({
     title: 'Currency Margin | Margin',
@@ -66,7 +97,10 @@ export default function CurrencyMargin() {
                   asChild
                   className="h-[52px] rounded-[5px] bg-[#0B74DE] px-7 text-[14px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)]"
                 >
-                  <a href="https://paystack.shop/pay/margin-early-access">
+                  <a
+                    href={PAYSTACK_EARLY_ACCESS_URL}
+                    onClick={(event) => handleCheckoutClick(event, 'currency_margin_hero', 'Checkout')}
+                  >
                     Checkout
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
@@ -145,7 +179,10 @@ export default function CurrencyMargin() {
                   asChild
                   className="h-[52px] rounded-[5px] bg-[#0B74DE] px-7 text-[14px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)]"
                 >
-                  <a href="https://paystack.shop/pay/margin-early-access">
+                  <a
+                    href={PAYSTACK_EARLY_ACCESS_URL}
+                    onClick={(event) => handleCheckoutClick(event, 'currency_margin_bottom_cta', 'Get Started')}
+                  >
                     Get Started
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>

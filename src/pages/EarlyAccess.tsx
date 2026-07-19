@@ -141,8 +141,9 @@ export default function EarlyAccess() {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   const fireOnce = useCallback((eventName: string, params: Record<string, unknown> = {}) => {
-    if (firedAnalyticsRef.current.has(eventName)) return;
-    firedAnalyticsRef.current.add(eventName);
+    const dedupeKey = `${eventName}:${String(params.cta_location || params.section || 'page')}`;
+    if (firedAnalyticsRef.current.has(dedupeKey)) return;
+    firedAnalyticsRef.current.add(dedupeKey);
     trackEvent(eventName, {
       offer: EARLY_ACCESS_OFFER,
       ...params,
@@ -332,6 +333,11 @@ export default function EarlyAccess() {
       return;
     }
     setIsSubmitting(true);
+    trackEvent(ANALYTICS_EVENTS.freeEvidenceScanSubmitted, {
+      cta_location: 'early_access_scan_form',
+      offer: 'free_evidence_scan',
+    });
+
     try {
       const res = await api.reserveEarlyAccess({
         email: trimmed,
@@ -341,6 +347,12 @@ export default function EarlyAccess() {
         intent: 'request_free_evidence_scan',
       });
       if (!res.ok) {
+        trackEvent(ANALYTICS_EVENTS.freeEvidenceScanFailed, {
+          cta_location: 'early_access_scan_form',
+          offer: 'free_evidence_scan',
+          failure_status: res.status,
+          failure_type: 'api_error',
+        });
         toast({
           title: 'Could not request scan',
           description: res.error || 'Please try again.',
@@ -349,8 +361,17 @@ export default function EarlyAccess() {
         return;
       }
       setSubmitted(true);
+      trackEvent(ANALYTICS_EVENTS.freeEvidenceScanSuccess, {
+        cta_location: 'early_access_scan_form',
+        offer: 'free_evidence_scan',
+      });
       toast({ title: 'Scan requested', description: "We'll email results within 48 hours." });
     } catch {
+      trackEvent(ANALYTICS_EVENTS.freeEvidenceScanFailed, {
+        cta_location: 'early_access_scan_form',
+        offer: 'free_evidence_scan',
+        failure_type: 'network_or_timeout',
+      });
       toast({
         title: 'Network issue',
         description: 'Please try again in a moment.',

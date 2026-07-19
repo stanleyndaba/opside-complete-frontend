@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRight, LockKeyhole, LogIn, ShieldCheck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { useSession } from '@/contexts/SessionContext';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 import { DEMO_SESSION_TOKEN, isDemoSessionActive, isDemoWorkspacePath } from '@/lib/demoSession';
 
 type AppAccessGateProps = {
@@ -27,6 +29,24 @@ function AppAccessGateway() {
   const location = useLocation();
   const nextPath = `${location.pathname}${location.search}${location.hash}`;
   const loginPath = `/login?next=${encodeURIComponent(nextPath)}`;
+  const isDemoWorkspaceRoute = isDemoWorkspacePath(location.pathname);
+  const trackedViewRef = useRef(false);
+
+  useEffect(() => {
+    if (trackedViewRef.current) return;
+    trackedViewRef.current = true;
+
+    trackEvent(ANALYTICS_EVENTS.appGateViewed, {
+      attempted_path_type: isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route',
+      is_demo_workspace_route: isDemoWorkspaceRoute,
+    });
+
+    if (isDemoWorkspaceRoute) {
+      trackEvent(ANALYTICS_EVENTS.reservedDemoSlugBlocked, {
+        attempted_path_type: 'reserved_demo_workspace',
+      });
+    }
+  }, [isDemoWorkspaceRoute]);
 
   return (
     <main className="min-h-screen bg-[#FAFAF7] px-5 py-6 text-[#182026] sm:px-8 sm:py-8">
@@ -54,13 +74,27 @@ function AppAccessGateway() {
 
               <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <Button asChild className="h-12 rounded-[5px] bg-[#0B74DE] px-6 text-sm font-bold text-white hover:bg-[#0869C9]">
-                  <Link to="/early-access">
+                  <Link
+                    to="/early-access"
+                    onClick={() => trackEvent(ANALYTICS_EVENTS.appGateEarlyAccessClicked, {
+                      cta_location: 'app_access_gate',
+                      cta_text: 'Join Early Access',
+                      attempted_path_type: isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route',
+                    })}
+                  >
                     Join Early Access
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-6 text-sm font-bold text-[#182026] hover:bg-[#F4F8FB]">
-                  <Link to={loginPath}>
+                  <Link
+                    to={loginPath}
+                    onClick={() => trackEvent(ANALYTICS_EVENTS.appGateLoginClicked, {
+                      cta_location: 'app_access_gate',
+                      cta_text: 'Log in',
+                      attempted_path_type: isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route',
+                    })}
+                  >
                     <LogIn className="mr-2 h-4 w-4" />
                     Log in
                   </Link>
@@ -84,7 +118,15 @@ function AppAccessGateway() {
                   <p className="mt-2 text-sm leading-6 text-[#66737F]">
                     Public pages remain open. Full app routes now require a real session, reviewer login, or an explicitly seeded demo session.
                   </p>
-                  <Link to="/sales" className="mt-5 inline-flex items-center text-sm font-bold text-[#0B74DE] hover:text-[#0869C9]">
+                  <Link
+                    to="/sales"
+                    onClick={() => trackEvent(ANALYTICS_EVENTS.appGateDemoRequestClicked, {
+                      cta_location: 'app_access_gate',
+                      cta_text: 'Request a founder-led demo',
+                      attempted_path_type: isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route',
+                    })}
+                    className="mt-5 inline-flex items-center text-sm font-bold text-[#0B74DE] hover:text-[#0869C9]"
+                  >
                     Request a founder-led demo
                     <ArrowRight className="ml-1.5 h-4 w-4" />
                   </Link>

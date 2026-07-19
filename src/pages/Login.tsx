@@ -12,6 +12,8 @@ import { normalizeTenantSlug } from '@/lib/routes';
 import { api } from '@/lib/api';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 import { clearDemoSession, DEMO_TENANT_SLUG, isDemoBypassAvailable, seedDemoSession } from '@/lib/demoSession';
 import { applyFoundingActivationState, hasFoundingReservationContext, markFoundingReservationConfirmed } from '@/lib/foundingActivation';
 
@@ -66,6 +68,10 @@ const isPaystackReviewerEmail = (value: string) => {
   return value.trim().toLowerCase() === PAYSTACK_REVIEW_EMAIL;
 };
 
+const getEmailDomain = (value: string) => {
+  return value.trim().toLowerCase().split('@')[1] || undefined;
+};
+
 const extractLoginErrorMessage = (value: unknown): string => {
   if (!value) {
     return '';
@@ -110,6 +116,19 @@ const extractLoginErrorMessage = (value: unknown): string => {
   }
 
   return String(value || '').trim();
+};
+
+const classifyLoginErrorForAnalytics = (error: unknown) => {
+  const normalized = extractLoginErrorMessage(error).toLowerCase();
+
+  if (!normalized || normalized === '{}' || normalized.includes('authretryablefetcherror')) return 'opaque_auth_error';
+  if (normalized.includes('invalid login credentials') || normalized.includes('invalid credentials')) return 'invalid_credentials';
+  if (normalized.includes('unable to resolve a workspace')) return 'workspace_unassigned';
+  if (normalized.includes('email not confirmed')) return 'email_not_confirmed';
+  if (normalized.includes('rate limit') || normalized.includes('too many')) return 'rate_limited';
+  if (normalized.includes('failed to fetch') || normalized.includes('network') || normalized.includes('timeout')) return 'network_or_timeout';
+  if (normalized.includes('reviewer')) return 'reviewer_access_error';
+  return 'other';
 };
 
 const isOpaqueLoginError = (message: string) => {
@@ -311,6 +330,25 @@ const Login = () => {
     localStorage.removeItem('user_email');
     clearDemoSession();
     clearStoredTenantContext();
+  };
+
+  const buildLoginAnalyticsParams = (extra: Record<string, unknown> = {}) => ({
+    auth_mode: mode,
+    email_domain: getEmailDomain(email),
+    is_reviewer_email: isPaystackReviewerEmail(email),
+    has_next_path: nextPath !== '/app',
+    requested_app_route: nextPath.startsWith('/app'),
+    requested_reserved_demo_route: nextPath.startsWith(`/app/${DEMO_TENANT_SLUG}`) || nextPath.startsWith('/app/acme-corp'),
+    intent: intent || undefined,
+    ...extra,
+  });
+
+  const trackLoginFailure = (step: LoginStep, error: unknown, extra: Record<string, unknown> = {}) => {
+    trackEvent(ANALYTICS_EVENTS.loginFailed, buildLoginAnalyticsParams({
+      failure_step: step,
+      error_category: classifyLoginErrorForAnalytics(error),
+      ...extra,
+    }));
   };
 
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
@@ -520,6 +558,9 @@ const Login = () => {
     setError('');
     setLoginStep('account');
     setWorkspaceRetryAvailable(false);
+    trackEvent(ANALYTICS_EVENTS.loginAttempt, buildLoginAnalyticsParams({
+      login_step: 'account',
+    }));
 
     try {
       if (mode === 'signup') {
@@ -534,6 +575,7 @@ const Login = () => {
 
         if (authError) {
           setLoginStep('account');
+          trackLoginFailure('account', authError);
           setError(formatLoginError(authError, 'account'));
           setLoading(false);
           return;
@@ -541,6 +583,10 @@ const Login = () => {
 
         persistSession(data.session?.access_token, data.user?.id, data.user?.email);
         setActiveSessionEmail(data.user?.email || email.trim() || null);
+        trackEvent(ANALYTICS_EVENTS.loginSuccess, buildLoginAnalyticsParams({
+          auth_mode: 'signup',
+          access_outcome: data.session ? 'session_started' : 'email_confirmation_required',
+        }));
 
         toast({
           title: data.session ? 'Account created' : 'Check your inbox',
@@ -572,10 +618,15 @@ const Login = () => {
 
         if (updateError) {
           setLoginStep('account');
+          trackLoginFailure('account', updateError, { auth_mode: 'recovery' });
           setError(formatLoginError(updateError, 'account'));
           setLoading(false);
           return;
         }
+        trackEvent(ANALYTICS_EVENTS.loginSuccess, buildLoginAnalyticsParams({
+          auth_mode: 'recovery',
+          access_outcome: 'password_updated',
+        }));
 
         toast({
           title: 'Password updated',
@@ -607,12 +658,19 @@ const Login = () => {
             : reviewerResponse.status === 503
               ? 'Reviewer access is not available right now.'
               : reviewerResponse.error || 'Reviewer access is not available right now.';
+          trackLoginFailure('account', reviewerError, {
+            reviewer_status: reviewerResponse.status,
+          });
           setError(reviewerError);
           return;
         }
 
         seedDemoSession({ userEmail: reviewerResponse.data.user?.email || email.trim() });
         setActiveSessionEmail(reviewerResponse.data.user?.email || email.trim());
+        trackEvent(ANALYTICS_EVENTS.reviewerLoginSuccess, buildLoginAnalyticsParams({
+          tenant_slug: reviewerResponse.data.tenant?.slug || DEMO_TENANT_SLUG,
+          access_outcome: 'reviewer_demo_workspace_opened',
+        }));
 
         toast({
           title: 'Reviewer workspace ready',
@@ -631,6 +689,7 @@ const Login = () => {
 
       if (authError) {
         setLoginStep('account');
+        trackLoginFailure('account', authError);
         setError(formatLoginError(authError, 'account'));
         setLoading(false);
         return;
@@ -638,6 +697,10 @@ const Login = () => {
 
       persistSession(data.session?.access_token, data.user?.id, data.user?.email);
       setActiveSessionEmail(data.user?.email || email.trim() || null);
+      trackEvent(ANALYTICS_EVENTS.loginSuccess, buildLoginAnalyticsParams({
+        auth_mode: 'login',
+        access_outcome: 'account_signed_in',
+      }));
 
       toast({
         title: 'Logged in',
@@ -653,6 +716,7 @@ const Login = () => {
       await routeWithCapacityGate(targetPath);
     } catch (loginError: unknown) {
       setWorkspaceRetryAvailable(failureStep === 'workspace');
+      trackLoginFailure(failureStep, loginError);
       setError(formatLoginError(loginError, failureStep));
     } finally {
       setLoading(false);

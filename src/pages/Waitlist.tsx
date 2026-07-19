@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
+import { trackEvent } from '@/lib/analytics';
 
 const marketplaceOptions = [
     'USA',
@@ -94,11 +96,15 @@ export default function Waitlist() {
         !formData.recovery_challenge ||
         !formData.priority_onboarding;
 
-    const requestContext = {
+    const requestContext = useMemo(() => ({
         source_page: '/waitlist',
         intent: new URLSearchParams(location.search).get('intent') || undefined,
         reason: new URLSearchParams(location.search).get('reason') || undefined,
-    };
+    }), [location.search]);
+
+    useEffect(() => {
+        trackEvent(ANALYTICS_EVENTS.waitlistViewed, requestContext);
+    }, [requestContext]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -113,6 +119,14 @@ export default function Waitlist() {
         }
 
         setIsSubmitting(true);
+        trackEvent(ANALYTICS_EVENTS.waitlistSignupSubmitted, {
+            ...requestContext,
+            amazon_marketplace: formData.amazon_marketplace,
+            monthly_revenue: formData.monthly_revenue,
+            recovery_challenge: formData.recovery_challenge,
+            priority_onboarding: formData.priority_onboarding,
+        });
+
         try {
             const response = await api.joinWaitlist({
                 email: formData.email.trim(),
@@ -143,11 +157,29 @@ export default function Waitlist() {
                     confirmationEmailStatus,
                 });
                 setIsSuccess(true);
+                trackEvent(ANALYTICS_EVENTS.waitlistSignupSuccess, {
+                    ...requestContext,
+                    already_registered: alreadyRegistered,
+                    confirmation_email_status: confirmationEmailStatus || undefined,
+                    amazon_marketplace: formData.amazon_marketplace,
+                    monthly_revenue: formData.monthly_revenue,
+                    recovery_challenge: formData.recovery_challenge,
+                    priority_onboarding: formData.priority_onboarding,
+                });
                 toast({
                     title: alreadyRegistered ? 'Already on waitlist' : 'Waitlist confirmed',
                     description: message,
                 });
             } else {
+                trackEvent(ANALYTICS_EVENTS.waitlistSignupFailed, {
+                    ...requestContext,
+                    failure_status: response.status,
+                    failure_type: 'api_error',
+                    amazon_marketplace: formData.amazon_marketplace,
+                    monthly_revenue: formData.monthly_revenue,
+                    recovery_challenge: formData.recovery_challenge,
+                    priority_onboarding: formData.priority_onboarding,
+                });
                 toast({
                     title: 'Unable to submit',
                     description: response.error || 'We could not save your waitlist request.',
@@ -155,6 +187,14 @@ export default function Waitlist() {
                 });
             }
         } catch (_error) {
+            trackEvent(ANALYTICS_EVENTS.waitlistSignupFailed, {
+                ...requestContext,
+                failure_type: 'network_or_timeout',
+                amazon_marketplace: formData.amazon_marketplace,
+                monthly_revenue: formData.monthly_revenue,
+                recovery_challenge: formData.recovery_challenge,
+                priority_onboarding: formData.priority_onboarding,
+            });
             toast({
                 title: 'Network issue',
                 description: 'The request took too long or the connection was interrupted.',
