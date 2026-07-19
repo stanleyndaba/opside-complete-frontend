@@ -15,7 +15,7 @@ type ApprovedReimbursement = {
 
 const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
   {
-    caseNumber: '791-50384216',
+    caseNumber: 'REC-2034-XFER',
     amazonCaseId: '16874192034',
     seller: 'Northstar Home Goods',
     disputeName: 'Inbound shipment shortage',
@@ -25,7 +25,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-67392051',
+    caseNumber: 'REC-9051-INB',
     amazonCaseId: '16912090511',
     seller: 'Northstar Home Goods',
     disputeName: 'Inbound shipment shortage',
@@ -35,7 +35,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 18, 2026',
   },
   {
-    caseNumber: '791-61427803',
+    caseNumber: 'REC-7162-XFER',
     amazonCaseId: '16882957162',
     seller: 'Blue Ridge Supply',
     disputeName: 'Warehouse transfer loss',
@@ -45,7 +45,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-77260491',
+    caseNumber: 'REC-3418-DMG',
     amazonCaseId: '16865503418',
     seller: 'Atlas Pet Co',
     disputeName: 'Damaged FBA inventory',
@@ -55,7 +55,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-84013577',
+    caseNumber: 'REC-7440-RWR',
     amazonCaseId: '16890187440',
     seller: 'Cedar Peak Brands',
     disputeName: 'Refund without return',
@@ -65,7 +65,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-92467118',
+    caseNumber: 'REC-6329-FEE',
     amazonCaseId: '16877846329',
     seller: 'Sierra Wellness',
     disputeName: 'FBA fee overcharge',
@@ -75,7 +75,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-10758294',
+    caseNumber: 'REC-0551-LOST',
     amazonCaseId: '16899730551',
     seller: 'Mason Outdoor',
     disputeName: 'Lost inventory adjustment',
@@ -85,7 +85,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-23641708',
+    caseNumber: 'REC-6690-RET',
     amazonCaseId: '16884276690',
     seller: 'Harbor Kids',
     disputeName: 'Customer return not received',
@@ -95,7 +95,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-34809512',
+    caseNumber: 'REC-0427-REM',
     amazonCaseId: '16871960427',
     seller: 'Pioneer Tools',
     disputeName: 'Removal order damage',
@@ -105,7 +105,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-45970326',
+    caseNumber: 'REC-8273-SET',
     amazonCaseId: '16900418273',
     seller: 'Orion Baby',
     disputeName: 'Settlement reimbursement gap',
@@ -115,7 +115,7 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
     updated: 'Jul 19, 2026',
   },
   {
-    caseNumber: '791-56281044',
+    caseNumber: 'REC-3702-DISP',
     amazonCaseId: '16869453702',
     seller: 'Luma Beauty',
     disputeName: 'Inventory disposal error',
@@ -174,7 +174,7 @@ export default function ApprovedReimbursements() {
             <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(410px,0.52fr)] lg:items-end">
               <div>
                 <h1 className="max-w-3xl text-[34px] font-semibold leading-[0.98] tracking-[-0.055em] text-[#182026] sm:text-[46px] lg:text-[58px]">
-                  Cash Recovered & Reconciled
+                  Reimbursement Outcomes
                 </h1>
                 <p className="mt-4 max-w-3xl text-[15px] leading-7 tracking-tight text-[#66737F] sm:text-[16px]">
                   Completed reimbursement outcomes from the filing pipeline. Every row is approved, payout-confirmed, reconciled, and tied back to an Amazon case reference.
@@ -244,7 +244,7 @@ export default function ApprovedReimbursements() {
                       {item.caseNumber}
                     </td>
                     <td className="px-5 py-3.5 align-middle text-[12px] font-medium tracking-tight text-[#66737F]">
-                      Amazon {item.amazonCaseId}
+                      {item.amazonCaseId}
                     </td>
                     <td className="px-5 py-3.5 text-right align-middle text-[16px] font-semibold tabular-nums tracking-[-0.035em] text-[#050607]">
                       {formatMoney(item.amount)}
