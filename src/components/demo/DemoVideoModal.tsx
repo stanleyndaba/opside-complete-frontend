@@ -10,6 +10,69 @@ import {
 import { trackEvent } from '@/lib/analytics';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 
+declare global {
+  interface Window {
+    YT?: {
+      Player: new (
+        element: HTMLElement,
+        options: {
+          videoId: string;
+          playerVars?: Record<string, string | number>;
+          events?: {
+            onReady?: (event: YouTubePlayerEvent) => void;
+            onStateChange?: (event: YouTubePlayerEvent) => void;
+          };
+        }
+      ) => YouTubePlayer;
+      PlayerState?: {
+        ENDED: number;
+        PLAYING: number;
+      };
+    };
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+type YouTubePlayer = {
+  destroy: () => void;
+  playVideo: () => void;
+  getCurrentTime: () => number;
+  getDuration: () => number;
+};
+
+type YouTubePlayerEvent = {
+  data: number;
+  target: YouTubePlayer;
+};
+
+let youTubeApiPromise: Promise<void> | null = null;
+
+function loadYouTubeIframeApi() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return Promise.resolve();
+  }
+
+  if (window.YT?.Player) return Promise.resolve();
+  if (youTubeApiPromise) return youTubeApiPromise;
+
+  youTubeApiPromise = new Promise<void>((resolve) => {
+    const existingCallback = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      existingCallback?.();
+      resolve();
+    };
+
+    if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://www.youtube.com/iframe_api';
+      script.async = true;
+      document.head.appendChild(script);
+    }
+  });
+
+  return youTubeApiPromise;
+}
+
 interface DemoVideoModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -49,6 +112,7 @@ function buildYouTubeEmbedUrl(videoUrl: string): string {
 
   const params = new URLSearchParams({
     autoplay: '1',
+    enablejsapi: '1',
     playsinline: '1',
     rel: '0',
     modestbranding: '1',
@@ -71,14 +135,21 @@ export function DemoVideoModal({
   videoName = 'margin_demo',
 }: DemoVideoModalProps) {
   const embedUrl = buildYouTubeEmbedUrl(videoUrl);
+  const videoId = getYouTubeId(videoUrl);
   const embedRef = useRef<HTMLDivElement>(null);
+  const playerMountRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
   const modalOpenedTrackedRef = useRef(false);
   const embedVisibleTrackedRef = useRef(false);
+  const videoStartedTrackedRef = useRef(false);
+  const videoProgressTrackedRef = useRef<Set<number>>(new Set());
 
   useEffect(() => {
     if (!open) {
       modalOpenedTrackedRef.current = false;
       embedVisibleTrackedRef.current = false;
+      videoStartedTrackedRef.current = false;
+      videoProgressTrackedRef.current = new Set();
       return;
     }
 
@@ -121,6 +192,96 @@ export function DemoVideoModal({
     return () => observer.disconnect();
   }, [analyticsLocation, open, videoName]);
 
+  useEffect(() => {
+    if (!open || !videoId || !playerMountRef.current) return;
+
+    let cancelled = false;
+    let progressInterval: number | undefined;
+
+    const trackProgress = () => {
+      const player = playerRef.current;
+      if (!player) return;
+
+      const duration = Number(player.getDuration?.() || 0);
+      const currentTime = Number(player.getCurrentTime?.() || 0);
+      if (!duration || !currentTime) return;
+
+      const progress = (currentTime / duration) * 100;
+      const milestones = [
+        { percent: 25, eventName: ANALYTICS_EVENTS.demoVideoProgress25 },
+        { percent: 50, eventName: ANALYTICS_EVENTS.demoVideoProgress50 },
+        { percent: 75, eventName: ANALYTICS_EVENTS.demoVideoProgress75 },
+      ];
+
+      milestones.forEach((milestone) => {
+        if (progress < milestone.percent || videoProgressTrackedRef.current.has(milestone.percent)) return;
+        videoProgressTrackedRef.current.add(milestone.percent);
+        trackEvent(milestone.eventName, {
+          cta_location: analyticsLocation,
+          video_name: videoName,
+          progress_percent: milestone.percent,
+        });
+      });
+    };
+
+    loadYouTubeIframeApi().then(() => {
+      if (cancelled || !playerMountRef.current || !window.YT?.Player) return;
+
+      playerRef.current = new window.YT.Player(playerMountRef.current, {
+        videoId,
+        playerVars: {
+          autoplay: 1,
+          playsinline: 1,
+          rel: 0,
+          modestbranding: 1,
+          origin: window.location.origin,
+        },
+        events: {
+          onReady: (event) => {
+            try {
+              event.target.playVideo();
+            } catch {
+              // Browser autoplay policy may block play; player state remains the source of truth.
+            }
+          },
+          onStateChange: (event) => {
+            if (event.data === window.YT?.PlayerState?.PLAYING) {
+              if (!videoStartedTrackedRef.current) {
+                videoStartedTrackedRef.current = true;
+                trackEvent(ANALYTICS_EVENTS.demoVideoStarted, {
+                  cta_location: analyticsLocation,
+                  video_name: videoName,
+                });
+              }
+              if (!progressInterval) {
+                progressInterval = window.setInterval(trackProgress, 1000);
+              }
+            }
+
+            if (event.data === window.YT?.PlayerState?.ENDED) {
+              trackEvent(ANALYTICS_EVENTS.demoVideoCompleted, {
+                cta_location: analyticsLocation,
+                video_name: videoName,
+                progress_percent: 100,
+              });
+              if (progressInterval) {
+                window.clearInterval(progressInterval);
+                progressInterval = undefined;
+              }
+            }
+          },
+        },
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      if (progressInterval) window.clearInterval(progressInterval);
+      playerRef.current?.destroy();
+      playerRef.current = null;
+    };
+  }, [analyticsLocation, open, videoId, videoName]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[92dvh] w-[calc(100vw-24px)] max-w-[760px] gap-0 overflow-hidden rounded-[18px] border border-[#DCE6EC] bg-[#FBFCFD] p-0 text-[#182026] shadow-[0_28px_90px_rgba(24,32,38,0.2)] sm:rounded-[22px] [&>button]:right-4 [&>button]:top-4 [&>button]:rounded-full [&>button]:bg-white [&>button]:p-2 [&>button]:text-[#25313A] [&>button]:opacity-100 [&>button]:shadow-[0_10px_30px_rgba(24,32,38,0.12)] [&>button:hover]:bg-[#F3F6F8]">
@@ -141,8 +302,10 @@ export function DemoVideoModal({
 
         <div className="bg-[#FBFCFD] px-3 pb-3 sm:px-4 sm:pb-4">
           <div ref={embedRef} className="relative mx-auto aspect-video max-h-[52dvh] w-full overflow-hidden rounded-[14px] border border-[#DCE6EC] bg-[#0B1117] shadow-[0_18px_50px_rgba(24,32,38,0.16)] sm:rounded-[18px]">
-            {open ? (
-              // TODO: Exact YouTube start/progress/completion analytics requires the YouTube IFrame API.
+            {open && videoId ? (
+              <div ref={playerMountRef} className="absolute inset-0 h-full w-full [&_iframe]:h-full [&_iframe]:w-full" />
+            ) : null}
+            {open && !videoId ? (
               <iframe
                 title={title}
                 src={embedUrl}
@@ -161,6 +324,11 @@ export function DemoVideoModal({
             href={videoUrl}
             target="_blank"
             rel="noreferrer"
+            onClick={() => trackEvent(ANALYTICS_EVENTS.demoVideoClicked, {
+              cta_location: analyticsLocation,
+              video_name: videoName,
+              destination: videoUrl,
+            })}
             className="inline-flex items-center gap-1.5 font-semibold text-[#0B74DE] transition hover:text-[#0869C9]"
           >
             Open on YouTube

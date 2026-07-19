@@ -17,6 +17,7 @@ import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvide
 import { RouteErrorBoundary } from "@/components/error/RouteErrorBoundary";
 import { usePrivateRouteRobots } from "@/hooks/usePrivateRouteRobots";
 import { AnalyticsRouteTracker } from "@/components/AnalyticsRouteTracker";
+import { PublicSiteInstrumentation } from "@/components/analytics/PublicSiteInstrumentation";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -259,8 +260,9 @@ const App = () => (
                   <Sonner />
                   <SmoothScrollProvider>
                     <RoutePreloader />
-                    <RouteErrorBoundary>
+                      <RouteErrorBoundary>
                       <AnalyticsRouteTracker />
+                      <PublicSiteInstrumentation />
                       <Suspense fallback={<RouteSkeleton />}>
                         <Routes>
                         {/* PUBLIC ROUTES - No tenant required */}

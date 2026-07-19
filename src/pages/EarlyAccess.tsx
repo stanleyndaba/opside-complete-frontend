@@ -14,10 +14,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { api } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import {
-  EARLY_ACCESS_CURRENCY,
   EARLY_ACCESS_OFFER,
-  EARLY_ACCESS_VALUE_ZAR,
-  PAYSTACK_PAYMENT_PROVIDER,
   trackClaimAccessClicked,
   trackEvent,
 } from '@/lib/analytics';
@@ -224,39 +221,28 @@ export default function EarlyAccess() {
       {
         ref: mainCtaRef,
         eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
-        params: { cta_location: 'early_access_hero', cta_text: 'Get Started' },
-      },
-      {
-        ref: mainCtaRef,
-        eventName: ANALYTICS_EVENTS.paystackCtaSeen,
         params: {
           cta_location: 'early_access_hero',
           cta_text: 'Get Started',
-          value: EARLY_ACCESS_VALUE_ZAR,
-          currency: EARLY_ACCESS_CURRENCY,
-          payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+          destination: EARLY_ACCESS_INFO_URL,
         },
       },
       {
         ref: offerCtaRef,
-        eventName: ANALYTICS_EVENTS.paystackCtaSeen,
+        eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
         params: {
           cta_location: 'early_access_offer_section',
           cta_text: 'Get Started',
-          value: EARLY_ACCESS_VALUE_ZAR,
-          currency: EARLY_ACCESS_CURRENCY,
-          payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+          destination: EARLY_ACCESS_INFO_URL,
         },
       },
       {
         ref: bottomCtaRef,
-        eventName: ANALYTICS_EVENTS.paystackCtaSeen,
+        eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
         params: {
           cta_location: 'early_access_bottom_cta',
           cta_text: 'Get Started',
-          value: EARLY_ACCESS_VALUE_ZAR,
-          currency: EARLY_ACCESS_CURRENCY,
-          payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+          destination: EARLY_ACCESS_INFO_URL,
         },
       },
     ];
@@ -301,6 +287,7 @@ export default function EarlyAccess() {
     trackClaimAccessClicked({
       cta_location: ctaLocation,
       cta_text: ctaText,
+      destination: EARLY_ACCESS_INFO_URL,
     });
 
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {

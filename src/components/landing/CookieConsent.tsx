@@ -11,26 +11,6 @@ interface CookiePreferences {
 }
 
 const STORAGE_KEY = 'Margin.cookieConsent';
-const GTM_ID = 'GTM-N7LDFQTN';
-
-const loadGoogleTagManager = () => {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
-    const win = window as typeof window & { dataLayer?: unknown[] };
-
-    if (document.querySelector(`script[src*="googletagmanager.com/gtm.js?id=${GTM_ID}"]`)) return;
-
-    win.dataLayer = win.dataLayer || [];
-    win.dataLayer.push({
-        'gtm.start': new Date().getTime(),
-        event: 'gtm.js',
-    });
-
-    const firstScript = document.getElementsByTagName('script')[0];
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
-    firstScript.parentNode?.insertBefore(script, firstScript);
-};
 
 export function CookieConsent() {
     const [isVisible, setIsVisible] = useState(false);
@@ -45,10 +25,7 @@ export function CookieConsent() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
             try {
-                const parsed = JSON.parse(stored) as CookiePreferences;
-                if (parsed.analytics || parsed.marketing) {
-                    loadGoogleTagManager();
-                }
+                JSON.parse(stored) as CookiePreferences;
             } catch {
                 localStorage.removeItem(STORAGE_KEY);
                 setTimeout(() => setIsVisible(true), 1000);
@@ -104,9 +81,6 @@ export function CookieConsent() {
 
     const savePreferences = (prefs: CookiePreferences) => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-        if (prefs.analytics || prefs.marketing) {
-            loadGoogleTagManager();
-        }
         setIsVisible(false);
     };
 

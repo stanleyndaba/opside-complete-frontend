@@ -10,7 +10,12 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { markFoundingReservationConfirmed } from '@/lib/foundingActivation';
 import { getPendingYocoCheckoutContext, getSafeYocoReturnPath } from '@/lib/yocoCheckout';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
-import { trackEvent } from '@/lib/analytics';
+import {
+  EARLY_ACCESS_CURRENCY,
+  EARLY_ACCESS_VALUE_ZAR,
+  PAYSTACK_PAYMENT_PROVIDER,
+  trackEvent,
+} from '@/lib/analytics';
 
 function readLocalStorage(key: string): string | null {
   if (typeof window === 'undefined') return null;
@@ -37,10 +42,13 @@ export default function PaymentSuccess() {
   const tenantSlug = searchParams.get('tenant') || pending.tenantSlug || readLocalStorage('active_tenant_slug');
   const checkoutKind = String(searchParams.get('kind') || pending.kind || '');
   const source = String(searchParams.get('source') || '').toLowerCase();
+  const paymentStatus = String(searchParams.get('status') || searchParams.get('payment_status') || '').toLowerCase();
   const offer = searchParams.get('offer') || pending.offer || 'Margin checkout';
   const price = searchParams.get('price') || pending.price || null;
   const returnPath = resolveReturnPath(searchParams, tenantSlug);
   const isEarlyAccess = checkoutKind.includes('early_access');
+  const isCancelled = ['cancelled', 'canceled', 'cancel'].includes(paymentStatus);
+  const isFailed = ['failed', 'failure', 'declined', 'error'].includes(paymentStatus);
   const isPayPal = source === 'paypal' && !isEarlyAccess;
   const paymentProviderLabel = isEarlyAccess || source === 'paystack_payment_page' ? 'Paystack' : isPayPal ? 'PayPal' : 'Paystack';
 
@@ -57,6 +65,28 @@ export default function PaymentSuccess() {
   const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
 
   useEffect(() => {
+    if (isCancelled) {
+      trackEvent(ANALYTICS_EVENTS.checkoutCancelled, {
+        offer: 'early_access',
+        value: EARLY_ACCESS_VALUE_ZAR,
+        currency: EARLY_ACCESS_CURRENCY,
+        payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+        payment_status: paymentStatus,
+      });
+      return;
+    }
+
+    if (isFailed) {
+      trackEvent(ANALYTICS_EVENTS.paymentFailed, {
+        offer: 'early_access',
+        value: EARLY_ACCESS_VALUE_ZAR,
+        currency: EARLY_ACCESS_CURRENCY,
+        payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+        payment_status: paymentStatus,
+      });
+      return;
+    }
+
     if (isEarlyAccess) {
       if (typeof window !== 'undefined') {
         const guardKey = 'margin_ga_payment_success_founding_500';
@@ -65,15 +95,15 @@ export default function PaymentSuccess() {
           // Paystack dashboard remains the source of truth until full Paystack API/webhook integration exists.
           trackEvent(ANALYTICS_EVENTS.paymentSuccess, {
             offer: 'early_access',
-            value: 1799,
-            currency: 'ZAR',
-            payment_provider: 'paystack_payment_page',
+            value: EARLY_ACCESS_VALUE_ZAR,
+            currency: EARLY_ACCESS_CURRENCY,
+            payment_provider: PAYSTACK_PAYMENT_PROVIDER,
           });
         }
       }
       markFoundingReservationConfirmed('payment_success');
     }
-  }, [isEarlyAccess]);
+  }, [isCancelled, isEarlyAccess, isFailed, paymentProviderLabel, paymentStatus]);
 
   usePageMeta({
     title: pageTitle,

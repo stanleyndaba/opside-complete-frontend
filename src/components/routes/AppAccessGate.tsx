@@ -45,6 +45,9 @@ function AppAccessGateway() {
       trackEvent(ANALYTICS_EVENTS.reservedDemoSlugBlocked, {
         attempted_path_type: 'reserved_demo_workspace',
       });
+      trackEvent(ANALYTICS_EVENTS.blockedDemoAttempt, {
+        attempted_path_type: 'reserved_demo_workspace',
+      });
     }
   }, [isDemoWorkspaceRoute]);
 

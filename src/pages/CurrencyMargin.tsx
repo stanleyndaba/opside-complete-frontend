@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
@@ -7,11 +7,16 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import {
+  EARLY_ACCESS_CURRENCY,
+  EARLY_ACCESS_VALUE_ZAR,
   PAYSTACK_EARLY_ACCESS_URL,
+  PAYSTACK_PAYMENT_PROVIDER,
   trackCheckoutStarted,
   trackClaimAccessClicked,
+  trackEvent,
   trackOutboundPaymentClicked,
 } from '@/lib/analytics';
+import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 
 const comparisonRows = [
   ['Upfront cost', '$0', '$99 once'],
@@ -39,6 +44,9 @@ const faqItems = [
 
 export default function CurrencyMargin() {
   const pageUrl = typeof window === 'undefined' ? '/currency-margin' : `${window.location.origin}/currency-margin`;
+  const heroCtaRef = useRef<HTMLDivElement>(null);
+  const bottomCtaRef = useRef<HTMLDivElement>(null);
+  const seenPaystackCtasRef = useRef<Set<string>>(new Set());
 
   const handleCheckoutClick = (
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -64,6 +72,38 @@ export default function CurrencyMargin() {
       window.location.assign(PAYSTACK_EARLY_ACCESS_URL);
     }, 220);
   };
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+
+    const targets = [
+      { ref: heroCtaRef, cta_location: 'currency_margin_hero', cta_text: 'Checkout' },
+      { ref: bottomCtaRef, cta_location: 'currency_margin_bottom_cta', cta_text: 'Get Started' },
+    ];
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const target = targets.find((item) => item.ref.current === entry.target);
+        if (!target || seenPaystackCtasRef.current.has(target.cta_location)) return;
+        seenPaystackCtasRef.current.add(target.cta_location);
+        trackEvent(ANALYTICS_EVENTS.paystackCtaSeen, {
+          cta_location: target.cta_location,
+          cta_text: target.cta_text,
+          destination: PAYSTACK_EARLY_ACCESS_URL,
+          value: EARLY_ACCESS_VALUE_ZAR,
+          currency: EARLY_ACCESS_CURRENCY,
+          payment_provider: PAYSTACK_PAYMENT_PROVIDER,
+        });
+      });
+    }, { threshold: 0.35 });
+
+    targets.forEach((target) => {
+      if (target.ref.current) observer.observe(target.ref.current);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   usePageMeta({
     title: 'Currency Margin | Margin',
@@ -92,7 +132,7 @@ export default function CurrencyMargin() {
               <p className="mx-auto mt-6 max-w-[760px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
                 Price shown in ZAR for international processing. Your card will be charged the equivalent of $99 USD at today&apos;s exchange rate.
               </p>
-              <div className="mt-8 flex justify-center">
+              <div ref={heroCtaRef} className="mt-8 flex justify-center">
                 <Button
                   asChild
                   className="h-[52px] rounded-[5px] bg-[#0B74DE] px-7 text-[14px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)]"
@@ -174,7 +214,7 @@ export default function CurrencyMargin() {
               <div className="mt-6 text-[15px] font-medium leading-7 text-[#4D5B66]">
                 Secure your Founding Pass before July 30, 2026 or before the first 500 slots are gone.
               </div>
-              <div className="mt-4">
+              <div ref={bottomCtaRef} className="mt-4">
                 <Button
                   asChild
                   className="h-[52px] rounded-[5px] bg-[#0B74DE] px-7 text-[14px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-all hover:bg-[#0962bf] hover:shadow-[0_22px_50px_rgba(11,116,222,0.30)]"
