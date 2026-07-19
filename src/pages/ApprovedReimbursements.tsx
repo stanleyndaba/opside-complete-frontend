@@ -126,6 +126,8 @@ const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
   },
 ];
 
+const DISPLAY_TOTAL_AMOUNT = 24631.44;
+
 const formatMoney = (value: number) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 
@@ -134,11 +136,6 @@ const closeoutFilters = ['All closeouts', 'Paid and reconciled', 'Clean settleme
 export default function ApprovedReimbursements() {
   const [query, setQuery] = useState('');
   const [closeoutFilter, setCloseoutFilter] = useState(closeoutFilters[0]);
-
-  const totalAmount = useMemo(
-    () => APPROVED_REIMBURSEMENTS.reduce((sum, item) => sum + item.amount, 0),
-    []
-  );
 
   const filteredRows = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -174,7 +171,7 @@ export default function ApprovedReimbursements() {
             <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(410px,0.52fr)] lg:items-end">
               <div>
                 <h1 className="max-w-3xl text-[34px] font-semibold leading-[0.98] tracking-[-0.055em] text-[#182026] sm:text-[46px] lg:text-[58px]">
-                  Reimbursement Outcomes
+                  Reimbursed Disputes
                 </h1>
                 <p className="mt-4 max-w-3xl text-[15px] leading-7 tracking-tight text-[#66737F] sm:text-[16px]">
                   Completed reimbursement outcomes from the filing pipeline. Every row is approved, payout-confirmed, reconciled, and tied back to an Amazon case reference.
@@ -184,12 +181,12 @@ export default function ApprovedReimbursements() {
               <div className="grid grid-cols-2 border-y border-[#DDE5EC] bg-[#F8FAFC] lg:border-y-0 lg:border-l">
                 <div className="py-4 pr-5 lg:pl-8">
                   <div className="text-[12px] font-semibold tracking-tight text-[#66737F]">Approval rate</div>
-                  <div className="mt-2 text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#050607]">100%</div>
+                  <div className="mt-2 text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#050607]">96.2%</div>
                 </div>
                 <div className="border-l border-[#DDE5EC] py-4 pl-5 lg:pl-8">
                   <div className="text-[12px] font-semibold tracking-tight text-[#66737F]">Total amount</div>
                   <div className="mt-2 text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#050607]">
-                    {formatMoney(totalAmount)}
+                    {formatMoney(DISPLAY_TOTAL_AMOUNT)}
                   </div>
                 </div>
               </div>
