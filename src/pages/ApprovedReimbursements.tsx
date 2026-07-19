@@ -168,7 +168,7 @@ export default function ApprovedReimbursements() {
               <CircleCheck className="h-4 w-4" />
               Approved reimbursements
             </div>
-            <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(410px,0.52fr)] lg:items-end">
+            <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.48fr)] lg:items-end">
               <div>
                 <h1 className="max-w-3xl text-[34px] font-semibold leading-[0.98] tracking-[-0.055em] text-[#182026] sm:text-[46px] lg:text-[58px]">
                   Reimbursed Disputes
@@ -178,14 +178,14 @@ export default function ApprovedReimbursements() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 border-y border-[#DDE5EC] bg-[#F8FAFC] lg:border-y-0 lg:border-l">
-                <div className="py-4 pr-5 lg:pl-8">
+              <div className="grid min-w-0 grid-cols-[0.82fr_1.18fr] border-y border-[#DDE5EC] bg-[#F8FAFC] lg:border-y-0 lg:border-l">
+                <div className="min-w-0 py-4 pr-4 lg:pl-7">
                   <div className="text-[12px] font-semibold tracking-tight text-[#66737F]">Approval rate</div>
-                  <div className="mt-2 text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#050607]">96.2%</div>
+                  <div className="mt-2 text-[36px] font-semibold leading-none tracking-[-0.055em] text-[#050607] xl:text-[39px]">96.2%</div>
                 </div>
-                <div className="border-l border-[#DDE5EC] py-4 pl-5 lg:pl-8">
+                <div className="min-w-0 border-l border-[#DDE5EC] py-4 pl-4 lg:pl-7">
                   <div className="text-[12px] font-semibold tracking-tight text-[#66737F]">Total amount</div>
-                  <div className="mt-2 text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#050607]">
+                  <div className="mt-2 whitespace-nowrap text-[36px] font-semibold leading-none tracking-[-0.055em] text-[#050607] xl:text-[39px]">
                     {formatMoney(DISPLAY_TOTAL_AMOUNT)}
                   </div>
                 </div>
