@@ -731,10 +731,10 @@ export function ScrollytellingCoverage() {
             One discrepancy. Every answer.
           </h2>
 
-          {/* ── Split layout ── */}
-          <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-8 md:mt-12 lg:mt-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+          {/* ── Narrative ── */}
+          <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-14">
             {/* Left: Text */}
-            <div className="relative order-2 min-h-[150px] sm:min-h-[260px] md:min-h-[300px] lg:order-1">
+            <div className="relative min-h-[150px] sm:min-h-[260px] md:min-h-[300px]">
               {/* Large background number */}
               <AnimatePresence mode="wait">
                 <motion.div
@@ -785,29 +785,6 @@ export function ScrollytellingCoverage() {
                     }`}
                   />
                 ))}
-              </div>
-            </div>
-
-            {/* Right: Visual panel */}
-            <div className="relative order-1 lg:order-2">
-              <div className="relative overflow-hidden px-0 py-2 sm:px-3 md:px-6">
-                <div className="pointer-events-none absolute inset-0 bg-white/[0.18] backdrop-blur-[1px]" />
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent" />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-slate-300/60 to-transparent" />
-                <div className="pointer-events-none absolute left-0 top-0 hidden h-full w-px bg-gradient-to-b from-transparent via-slate-300/60 to-transparent md:block" />
-                <div className="relative py-2 sm:py-3">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={`visual-${activeIndex}`}
-                      initial={reduceMotion ? false : { opacity: 0, scale: 0.97 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.55, ease }}
-                    >
-                      <WorkflowVisual index={activeIndex} />
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
               </div>
             </div>
           </div>
