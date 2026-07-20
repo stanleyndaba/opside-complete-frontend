@@ -125,6 +125,7 @@ export interface ManualUserBroadcastRecord extends ManualUserBroadcastInput {
 }
 
 import { getFrontendAuthContext } from './authSession';
+import { buildFirstPartyAnalyticsPayload } from './analytics';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
 import { getGentleRequestErrorMessage, isLikelyCorsTransportError } from './requestMessaging';
 
@@ -1149,8 +1150,11 @@ export const api = {
       message?: string;
     }>(`/api/sync/start?tenantSlug=${tenantSlug}`, { method: 'POST' });
   },
-  trackEvent: (name: string, payload?: Record<string, any>) =>
-    requestJson<any>('/api/metrics/track', { method: 'POST', body: JSON.stringify({ name, payload }) }),
+  trackEvent: (name: string, payload?: Record<string, unknown>) =>
+    requestJson<unknown>('/api/metrics/track', {
+      method: 'POST',
+      body: JSON.stringify(buildFirstPartyAnalyticsPayload(name, payload || {})),
+    }),
 
   getDashboardAggregates: (window?: '7d' | '30d' | '90d', tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getDashboardAggregates");

@@ -244,6 +244,10 @@ function buildFirstPartyPayload(eventName: string, params: AnalyticsParams) {
   };
 }
 
+export function buildFirstPartyAnalyticsPayload(eventName: string, params: AnalyticsParams = {}) {
+  return buildFirstPartyPayload(eventName, buildAnalyticsContext(params));
+}
+
 function readFirstPartyQueue() {
   if (typeof window === 'undefined') return [];
 
