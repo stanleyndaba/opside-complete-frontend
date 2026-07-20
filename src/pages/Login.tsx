@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useAuth, useSignIn } from '@clerk/react';
+import { useAuth, useClerk, useSignIn } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -246,7 +246,8 @@ const Login = () => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { getToken: getClerkToken, isLoaded: clerkAuthLoaded, userId: clerkUserId } = useAuth();
-  const { isLoaded: clerkSignInLoaded, signIn, setActive } = useSignIn();
+  const { setActive } = useClerk();
+  const { signIn } = useSignIn();
   usePageMeta({
     title: 'Log In | Margin',
     description: 'Access your Margin workspace with your account credentials.',
@@ -274,6 +275,9 @@ const Login = () => {
   const [clerkVerificationStep, setClerkVerificationStep] = useState<ClerkVerificationStep | null>(null);
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
   const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
+  const clerkLoginLoading = mode === 'login'
+    && !isPaystackReviewerEmail(email)
+    && (!clerkAuthLoaded || !signIn || typeof setActive !== 'function');
 
   const enterDemoWorkspace = useCallback(() => {
     seedDemoSession();
@@ -514,7 +518,7 @@ const Login = () => {
   };
 
   const authenticateNormalLoginWithClerk = async (): Promise<ClerkLoginResult> => {
-    if (!clerkAuthLoaded || !clerkSignInLoaded || !signIn || !setActive) {
+    if (!clerkAuthLoaded || !signIn || typeof setActive !== 'function') {
       throw new Error('Authentication is still loading. Please try again in a moment.');
     }
 
@@ -665,20 +669,6 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoWorkspaceSignIn = () => {
-    setLoading(true);
-    setError('');
-    setLoginStep(null);
-    setWorkspaceRetryAvailable(false);
-
-    toast({
-      title: 'Demo workspace ready',
-      description: 'Opening the local demo workspace without Supabase Auth.',
-    });
-
-    enterDemoWorkspace();
   };
 
   const handleUseDifferentAccount = async () => {
@@ -1211,23 +1201,10 @@ const Login = () => {
                 </div>
               ) : null}
 
-              {demoBypassAvailable && mode === 'login' ? (
-                <Button
-                  type="button"
-                  onClick={handleDemoWorkspaceSignIn}
-                  disabled={loading}
-                  variant="outline"
-                  className="h-11 w-full justify-between rounded-[5px] border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
-                >
-                  Open demo workspace
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              ) : null}
-
               <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                 <Button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || clerkLoginLoading}
                   className="h-12 flex-1 justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
                 >
                   {loading ? (
