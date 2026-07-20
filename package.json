@@ -12,6 +12,7 @@
     "analyze": "vite build && rollup-plugin-visualizer --template treemap --sourcemap false --gzipSize true --brotliSize true dist/*.js --filename dist/bundle-report.html"
   },
   "dependencies": {
+    "@clerk/react": "^6.12.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^3.9.0",

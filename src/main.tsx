@@ -1,5 +1,6 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import { ClerkProvider } from '@clerk/react'
 import App from './App.tsx'
 import './index.css'
 
@@ -24,9 +25,11 @@ if ((import.meta as any).env?.VITE_SENTRY_DSN) {
 import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary';
 
 createRoot(document.getElementById("root")!).render(
-  <GlobalErrorBoundary>
-    <App />
-  </GlobalErrorBoundary>
+  <ClerkProvider>
+    <GlobalErrorBoundary>
+      <App />
+    </GlobalErrorBoundary>
+  </ClerkProvider>
 );
 
 const report = (name: string, metric: any) => {
