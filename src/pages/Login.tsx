@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useAuth, useClerk, useSignIn } from '@clerk/react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useAuth, useSignIn } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -41,14 +41,7 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
 
 type AuthMode = 'login' | 'signup' | 'recovery';
 type LoginStep = 'account' | 'workspace';
-type ClerkVerificationStep = 'first_factor' | 'second_factor';
-
-type ClerkSignInAttempt = {
-  status: string | null;
-  createdSessionId: string | null;
-  supportedFirstFactors?: Array<Record<string, unknown>> | null;
-  supportedSecondFactors?: Array<Record<string, unknown>> | null;
-};
+type ClerkVerificationStep = 'client_trust_email_code';
 
 type ClerkLoginResult =
   | { status: 'complete'; token: string; userId?: string | null; email: string }
@@ -73,6 +66,14 @@ type DemoReviewerLoginResponse = {
   redirectPath: string;
 };
 
+type AuthBootstrapResponse = {
+  success: boolean;
+  user?: { id: string; email: string };
+  tenant?: { id: string; slug: string; foundingReservation?: boolean; foundingActivationReady?: boolean };
+  error?: string;
+  message?: string;
+};
+
 const PAYSTACK_REVIEW_EMAIL = String(
   import.meta.env.VITE_PAYSTACK_REVIEW_EMAIL || 'paystack-review@margin-finance.com'
 ).trim().toLowerCase();
@@ -88,10 +89,6 @@ const getEmailDomain = (value: string) => {
 
 const getEmailCodeFactor = (factors?: Array<Record<string, unknown>> | null) => {
   return factors?.find((factor) => factor.strategy === 'email_code') || null;
-};
-
-const getEmailAddressId = (factor: Record<string, unknown> | null) => {
-  return typeof factor?.emailAddressId === 'string' ? factor.emailAddressId : undefined;
 };
 
 const extractLoginErrorMessage = (value: unknown): string => {
@@ -246,8 +243,11 @@ const Login = () => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { getToken: getClerkToken, isLoaded: clerkAuthLoaded, userId: clerkUserId } = useAuth();
-  const { setActive } = useClerk();
-  const { signIn } = useSignIn();
+  const {
+    signIn,
+    errors: clerkSignInErrors,
+    fetchStatus: clerkSignInFetchStatus,
+  } = useSignIn();
   usePageMeta({
     title: 'Log In | Margin',
     description: 'Access your Margin workspace with your account credentials.',
@@ -275,9 +275,10 @@ const Login = () => {
   const [clerkVerificationStep, setClerkVerificationStep] = useState<ClerkVerificationStep | null>(null);
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
   const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
+  const clerkFinalizeBootstrapRef = useRef<Promise<ClerkLoginResult> | null>(null);
   const clerkLoginLoading = mode === 'login'
     && !isPaystackReviewerEmail(email)
-    && (!clerkAuthLoaded || !signIn || typeof setActive !== 'function');
+    && (!clerkAuthLoaded || !signIn || clerkSignInFetchStatus === 'fetching');
 
   const enterDemoWorkspace = useCallback(() => {
     seedDemoSession();
@@ -416,6 +417,40 @@ const Login = () => {
     }));
   };
 
+  const logClerkLoginDiagnostic = (eventName: string, details: Record<string, unknown>) => {
+    if (import.meta.env.DEV) {
+      console.info('[Clerk login]', eventName, details);
+    }
+  };
+
+  const extractClerkSignalErrorMessage = (value: unknown): string => {
+    if (!value || typeof value !== 'object') {
+      return extractLoginErrorMessage(value);
+    }
+
+    const record = value as Record<string, unknown>;
+    const fields = record.fields && typeof record.fields === 'object'
+      ? Object.values(record.fields as Record<string, unknown>)
+      : [];
+    const globalErrors = Array.isArray(record.global) ? record.global : [];
+    const rawErrors = Array.isArray(record.raw) ? record.raw : [];
+
+    for (const candidate of [...fields, ...globalErrors, ...rawErrors, value]) {
+      const message = extractLoginErrorMessage(candidate);
+      if (message) {
+        return message;
+      }
+    }
+
+    return '';
+  };
+
+  const getClerkErrorMessage = (operationError?: unknown) => {
+    return extractClerkSignalErrorMessage(operationError)
+      || extractClerkSignalErrorMessage(clerkSignInErrors)
+      || 'Unable to finish Clerk sign-in. Please check your details and try again.';
+  };
+
   const waitForClerkSessionToken = async () => {
     const readToken = async () => {
       try {
@@ -425,102 +460,169 @@ const Login = () => {
       }
     };
 
-    const immediateToken = await readToken();
-    if (immediateToken) {
-      return immediateToken;
-    }
-
-    await new Promise((resolve) => window.setTimeout(resolve, 80));
-    return readToken();
-  };
-
-  const prepareClerkVerification = async (attempt: ClerkSignInAttempt): Promise<ClerkLoginResult | null> => {
-    if (!signIn) {
-      throw new Error('Authentication is still loading. Please try again in a moment.');
-    }
-
-    if (attempt.status === 'needs_first_factor' || attempt.status === 'needs_client_trust') {
-      const emailFactor = getEmailCodeFactor(attempt.supportedFirstFactors);
-      const emailAddressId = getEmailAddressId(emailFactor);
-      if (emailAddressId) {
-        await signIn.prepareFirstFactor({
-          strategy: 'email_code',
-          emailAddressId,
-        });
-        setClerkVerificationStep('first_factor');
-        setClerkVerificationCode('');
-        setClerkVerificationMessage('Enter the verification code sent to your email to finish sign-in.');
-        setError('Enter the verification code sent to your email to finish sign-in.');
-        return { status: 'verification_required' };
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const token = await readToken();
+      if (token) {
+        return token;
       }
-    }
 
-    if (attempt.status === 'needs_second_factor' || attempt.status === 'needs_client_trust') {
-      const emailFactor = getEmailCodeFactor(attempt.supportedSecondFactors);
-      const emailAddressId = getEmailAddressId(emailFactor);
-      if (emailFactor) {
-        await signIn.prepareSecondFactor({
-          strategy: 'email_code',
-          ...(emailAddressId ? { emailAddressId } : {}),
-        });
-        setClerkVerificationStep('second_factor');
-        setClerkVerificationCode('');
-        setClerkVerificationMessage('Enter the verification code sent to your email to finish sign-in.');
-        setError('Enter the verification code sent to your email to finish sign-in.');
-        return { status: 'verification_required' };
-      }
-    }
-
-    if (attempt.status === 'needs_new_password') {
-      throw new Error('This account needs a password reset before it can sign in.');
-    }
-
-    if (attempt.status === 'needs_protect_check') {
-      throw new Error('This sign-in needs an additional security check. Refresh and try again, or contact Margin if it continues.');
-    }
-
-    if (attempt.status === 'needs_client_trust') {
-      throw new Error('This sign-in needs additional verification before Margin can open the workspace.');
+      await new Promise((resolve) => window.setTimeout(resolve, 100));
     }
 
     return null;
   };
 
-  const completeClerkSignIn = async (attempt: ClerkSignInAttempt): Promise<ClerkLoginResult> => {
-    if (attempt.status === 'complete') {
-      if (!attempt.createdSessionId || !setActive) {
-        throw new Error('No active Clerk session was created after sign-in.');
+  const bootstrapWorkspaceWithClerkToken = async (emailAddress: string, sessionToken: string) => {
+    clearStoredTenantContext();
+
+    const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
+    const bootstrapResponse = await fetch(api.buildApiUrl('/api/auth/bootstrap'), {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionToken}`,
+      },
+      body: JSON.stringify({
+        workspaceName,
+        preferredTenantSlug: normalizeTenantSlug(localStorage.getItem('active_tenant_slug')),
+        foundingReservation: intent === 'onboarding' || hasFoundingReservationContext(),
+      }),
+    });
+
+    const payload = await bootstrapResponse.json().catch(() => null) as AuthBootstrapResponse | null;
+    if (!bootstrapResponse.ok || !payload?.success) {
+      throw new Error(payload?.error || payload?.message || 'Unable to resolve a workspace for this account.');
+    }
+
+    applyFoundingActivationState({
+      reserved: payload.tenant?.foundingReservation,
+      activationReady: payload.tenant?.foundingActivationReady,
+    });
+
+    const resolvedTenantSlug = normalizeTenantSlug(payload.tenant?.slug);
+    if (resolvedTenantSlug && payload.tenant?.id) {
+      persistSession(sessionToken, payload.user?.id, payload.user?.email || emailAddress);
+      localStorage.setItem('active_tenant_id', payload.tenant.id);
+      localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
+      return resolvedTenantSlug;
+    }
+
+    throw new Error('Unable to resolve a workspace for this account.');
+  };
+
+  const finalizeClerkSignIn = async (emailAddress: string): Promise<ClerkLoginResult> => {
+    if (!signIn || signIn.status !== 'complete') {
+      throw new Error('Clerk sign-in is not complete yet.');
+    }
+
+    const runBootstrapOnce = () => {
+      if (!clerkFinalizeBootstrapRef.current) {
+        clerkFinalizeBootstrapRef.current = (async () => {
+          const sessionToken = await waitForClerkSessionToken();
+          if (!sessionToken) {
+            throw new Error('No active Clerk session token was available after sign-in.');
+          }
+
+          persistSession(sessionToken, clerkUserId, emailAddress);
+          setActiveSessionEmail(emailAddress);
+
+          const resolvedTenantSlug = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
+          const targetPath = nextPath !== '/app'
+            ? bindPathToTenant(nextPath, resolvedTenantSlug)
+            : `/app/${resolvedTenantSlug}/connect-amazon`;
+          await routeWithCapacityGate(targetPath);
+
+          return {
+            status: 'complete',
+            token: sessionToken,
+            userId: clerkUserId,
+            email: emailAddress,
+          };
+        })();
       }
 
-      await setActive({ session: attempt.createdSessionId });
-      const sessionToken = await waitForClerkSessionToken();
-      if (!sessionToken) {
-        throw new Error('No active Clerk session token was available after sign-in.');
+      return clerkFinalizeBootstrapRef.current;
+    };
+
+    const finalizeResult = await signIn.finalize({
+      navigate: async ({ session }) => {
+        if (!session) {
+          throw new Error('No active Clerk session was created after sign-in.');
+        }
+        await runBootstrapOnce();
+      },
+    });
+
+    if (finalizeResult.error) {
+      throw new Error(getClerkErrorMessage(finalizeResult.error));
+    }
+
+    const result = await runBootstrapOnce();
+    setClerkVerificationStep(null);
+    setClerkVerificationCode('');
+    setClerkVerificationMessage('');
+    return result;
+  };
+
+  const handleClerkSignInStatus = async (emailAddress: string): Promise<ClerkLoginResult> => {
+    if (!signIn) {
+      throw new Error('Authentication is still loading. Please try again in a moment.');
+    }
+
+    const currentStatus = signIn.status;
+    logClerkLoginDiagnostic('status_after_sign_in_step', {
+      status: currentStatus,
+      fetchStatus: clerkSignInFetchStatus,
+      hasError: Boolean(extractClerkSignalErrorMessage(clerkSignInErrors)),
+    });
+
+    if (currentStatus === 'complete') {
+      return finalizeClerkSignIn(emailAddress);
+    }
+
+    if (currentStatus === 'needs_client_trust') {
+      const emailFactor = getEmailCodeFactor(signIn.supportedSecondFactors as Array<Record<string, unknown>>);
+      if (!emailFactor) {
+        throw new Error('This sign-in needs device verification, but no email-code verification option is available.');
       }
 
-      setClerkVerificationStep(null);
+      const emailCodeResult = await signIn.mfa.sendEmailCode();
+      if (emailCodeResult.error) {
+        throw new Error(getClerkErrorMessage(emailCodeResult.error));
+      }
+
+      setClerkVerificationStep('client_trust_email_code');
       setClerkVerificationCode('');
-      setClerkVerificationMessage('');
-      return {
-        status: 'complete',
-        token: sessionToken,
-        userId: clerkUserId,
-        email: email.trim(),
-      };
+      setClerkVerificationMessage('Enter the verification code sent to your email to finish sign-in.');
+      setError('Enter the verification code sent to your email to finish sign-in.');
+      return { status: 'verification_required' };
     }
 
-    const verificationResult = await prepareClerkVerification(attempt);
-    if (verificationResult) {
-      return verificationResult;
+    if (currentStatus === 'needs_second_factor') {
+      throw new Error('This account requires multi-factor authentication. Margin does not support that sign-in step on this form yet.');
     }
 
-    throw new Error('Clerk sign-in could not be completed with this login method.');
+    if (currentStatus === 'needs_new_password') {
+      throw new Error('This account needs a password reset before it can sign in.');
+    }
+
+    if (currentStatus === 'needs_protect_check') {
+      throw new Error('This sign-in needs an additional security check. Refresh and try again, or contact Margin if it continues.');
+    }
+
+    throw new Error(import.meta.env.DEV
+      ? `Clerk sign-in stopped at unsupported status: ${currentStatus || 'unknown'}.`
+      : 'This sign-in needs an additional authentication step Margin does not support yet.');
   };
 
   const authenticateNormalLoginWithClerk = async (): Promise<ClerkLoginResult> => {
-    if (!clerkAuthLoaded || !signIn || typeof setActive !== 'function') {
+    if (!clerkAuthLoaded || !signIn) {
       throw new Error('Authentication is still loading. Please try again in a moment.');
     }
+
+    const normalizedEmail = email.trim().toLowerCase();
 
     if (clerkVerificationStep) {
       const code = clerkVerificationCode.trim();
@@ -528,18 +630,30 @@ const Login = () => {
         throw new Error('Enter the verification code sent to your email.');
       }
 
-      const verificationAttempt = clerkVerificationStep === 'first_factor'
-        ? await signIn.attemptFirstFactor({ strategy: 'email_code', code })
-        : await signIn.attemptSecondFactor({ strategy: 'email_code', code });
-      return completeClerkSignIn(verificationAttempt as ClerkSignInAttempt);
+      const verificationResult = await signIn.mfa.verifyEmailCode({ code });
+      if (verificationResult.error) {
+        throw new Error(getClerkErrorMessage(verificationResult.error));
+      }
+
+      return handleClerkSignInStatus(normalizedEmail);
     }
 
-    const signInAttempt = await signIn.create({
-      strategy: 'password',
-      identifier: email.trim(),
+    clerkFinalizeBootstrapRef.current = null;
+    const passwordResult = await signIn.password({
+      emailAddress: normalizedEmail,
       password,
     });
-    return completeClerkSignIn(signInAttempt as ClerkSignInAttempt);
+
+    if (passwordResult.error) {
+      logClerkLoginDiagnostic('password_result_error', {
+        status: signIn.status,
+        fetchStatus: clerkSignInFetchStatus,
+        hasError: true,
+      });
+      throw new Error(getClerkErrorMessage(passwordResult.error));
+    }
+
+    return handleClerkSignInStatus(normalizedEmail);
   };
 
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
@@ -881,8 +995,6 @@ const Login = () => {
         return;
       }
 
-      persistSession(clerkLoginResult.token, clerkLoginResult.userId, clerkLoginResult.email);
-      setActiveSessionEmail(clerkLoginResult.email);
       trackEvent(ANALYTICS_EVENTS.loginSuccess, buildLoginAnalyticsParams({
         auth_mode: 'login',
         access_outcome: 'account_signed_in',
@@ -893,14 +1005,6 @@ const Login = () => {
         title: 'Logged in',
         description: 'Redirecting you into your workspace now.',
       });
-
-      failureStep = 'workspace';
-      setLoginStep('workspace');
-      const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
-      const targetPath = nextPath !== '/app'
-        ? bindPathToTenant(nextPath, resolvedTenantSlug)
-        : `/app/${resolvedTenantSlug}/connect-amazon`;
-      await routeWithCapacityGate(targetPath);
     } catch (loginError: unknown) {
       setWorkspaceRetryAvailable(failureStep === 'workspace');
       trackLoginFailure(failureStep, loginError);
