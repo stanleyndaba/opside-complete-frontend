@@ -1553,7 +1553,7 @@ export default function Index() {
             </motion.div>{" "}
           </div>{" "}
         </section>{" "}
-        {/* <ScrollytellingCoverage /> */} <SystemPerformanceTicker />{" "}
+        {/* <ScrollytellingCoverage /> */} {/* <SystemPerformanceTicker /> */}{" "}
         <section className="relative py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-28">
           {" "}
           <div className={containerClass}>
