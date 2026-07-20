@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAuth, useSignIn } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,18 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
 
 type AuthMode = 'login' | 'signup' | 'recovery';
 type LoginStep = 'account' | 'workspace';
+type ClerkVerificationStep = 'first_factor' | 'second_factor';
+
+type ClerkSignInAttempt = {
+  status: string | null;
+  createdSessionId: string | null;
+  supportedFirstFactors?: Array<Record<string, unknown>> | null;
+  supportedSecondFactors?: Array<Record<string, unknown>> | null;
+};
+
+type ClerkLoginResult =
+  | { status: 'complete'; token: string; userId?: string | null; email: string }
+  | { status: 'verification_required' };
 
 type DemoReviewerLoginResponse = {
   success: boolean;
@@ -63,6 +76,7 @@ type DemoReviewerLoginResponse = {
 const PAYSTACK_REVIEW_EMAIL = String(
   import.meta.env.VITE_PAYSTACK_REVIEW_EMAIL || 'paystack-review@margin-finance.com'
 ).trim().toLowerCase();
+const MARGIN_SESSION_UPDATED_EVENT = 'margin:session-updated';
 
 const isPaystackReviewerEmail = (value: string) => {
   return value.trim().toLowerCase() === PAYSTACK_REVIEW_EMAIL;
@@ -70,6 +84,14 @@ const isPaystackReviewerEmail = (value: string) => {
 
 const getEmailDomain = (value: string) => {
   return value.trim().toLowerCase().split('@')[1] || undefined;
+};
+
+const getEmailCodeFactor = (factors?: Array<Record<string, unknown>> | null) => {
+  return factors?.find((factor) => factor.strategy === 'email_code') || null;
+};
+
+const getEmailAddressId = (factor: Record<string, unknown> | null) => {
+  return typeof factor?.emailAddressId === 'string' ? factor.emailAddressId : undefined;
 };
 
 const extractLoginErrorMessage = (value: unknown): string => {
@@ -90,8 +112,12 @@ const extractLoginErrorMessage = (value: unknown): string => {
     const nestedError = typeof record.error === 'object' && record.error !== null
       ? record.error as Record<string, unknown>
       : null;
+    const clerkErrors = Array.isArray(record.errors)
+      ? record.errors.filter((item): item is Record<string, unknown> => typeof item === 'object' && item !== null)
+      : [];
     const candidates = [
       record.message,
+      record.longMessage,
       record.error_description,
       record.error,
       record.details,
@@ -99,6 +125,11 @@ const extractLoginErrorMessage = (value: unknown): string => {
       record.name,
       nestedError?.message,
       nestedError?.code,
+      ...clerkErrors.flatMap((clerkError) => [
+        clerkError.longMessage,
+        clerkError.message,
+        clerkError.code,
+      ]),
     ];
 
     for (const candidate of candidates) {
@@ -122,9 +153,17 @@ const classifyLoginErrorForAnalytics = (error: unknown) => {
   const normalized = extractLoginErrorMessage(error).toLowerCase();
 
   if (!normalized || normalized === '{}' || normalized.includes('authretryablefetcherror')) return 'opaque_auth_error';
-  if (normalized.includes('invalid login credentials') || normalized.includes('invalid credentials')) return 'invalid_credentials';
+  if (
+    normalized.includes('invalid login credentials') ||
+    normalized.includes('invalid credentials') ||
+    normalized.includes('form_password_incorrect') ||
+    normalized.includes('form_identifier_not_found') ||
+    normalized.includes('couldn\'t find your account') ||
+    (normalized.includes('password') && normalized.includes('incorrect'))
+  ) return 'invalid_credentials';
   if (normalized.includes('unable to resolve a workspace')) return 'workspace_unassigned';
   if (normalized.includes('email not confirmed')) return 'email_not_confirmed';
+  if (normalized.includes('verification') || normalized.includes('client trust')) return 'verification_required';
   if (normalized.includes('rate limit') || normalized.includes('too many')) return 'rate_limited';
   if (normalized.includes('failed to fetch') || normalized.includes('network') || normalized.includes('timeout')) return 'network_or_timeout';
   if (normalized.includes('reviewer')) return 'reviewer_access_error';
@@ -154,8 +193,19 @@ const formatLoginError = (error: unknown, step: LoginStep) => {
     return '__SERVICE_PREPARING__';
   }
 
-  if (normalized.includes('invalid login credentials') || normalized.includes('invalid credentials')) {
+  if (
+    normalized.includes('invalid login credentials') ||
+    normalized.includes('invalid credentials') ||
+    normalized.includes('form_password_incorrect') ||
+    normalized.includes('form_identifier_not_found') ||
+    normalized.includes('couldn\'t find your account') ||
+    (normalized.includes('password') && normalized.includes('incorrect'))
+  ) {
     return 'The email or password is incorrect. Please check the account details and try again.';
+  }
+
+  if (normalized.includes('verification code') || normalized.includes('client trust')) {
+    return 'Enter the verification code to finish secure sign-in.';
   }
 
   if (normalized.includes('email not confirmed')) {
@@ -182,7 +232,7 @@ const formatLoginError = (error: unknown, step: LoginStep) => {
 
   if (retryableAuthIssue) {
     return step === 'account'
-      ? 'Supabase Auth did not return a readable response while checking the account. Please try again in a moment.'
+      ? 'Authentication did not return a readable response while checking the account. Please try again in a moment.'
       : 'Your account sign-in looks okay, but Margin could not finish access setup. Please retry in a moment.';
   }
 
@@ -195,6 +245,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const { getToken: getClerkToken, isLoaded: clerkAuthLoaded, userId: clerkUserId } = useAuth();
+  const { isLoaded: clerkSignInLoaded, signIn, setActive } = useSignIn();
   usePageMeta({
     title: 'Log In | Margin',
     description: 'Access your Margin workspace with your account credentials.',
@@ -219,6 +271,9 @@ const Login = () => {
   const [workspaceRetryAvailable, setWorkspaceRetryAvailable] = useState(false);
   const [sessionChecked, setSessionChecked] = useState(false);
   const [activeSessionEmail, setActiveSessionEmail] = useState<string | null>(null);
+  const [clerkVerificationStep, setClerkVerificationStep] = useState<ClerkVerificationStep | null>(null);
+  const [clerkVerificationCode, setClerkVerificationCode] = useState('');
+  const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
 
   const enterDemoWorkspace = useCallback(() => {
     seedDemoSession();
@@ -305,6 +360,9 @@ const Login = () => {
     setError('');
     setLoginStep(null);
     setWorkspaceRetryAvailable(false);
+    setClerkVerificationStep(null);
+    setClerkVerificationCode('');
+    setClerkVerificationMessage('');
   };
 
   const persistSession = (accessToken?: string | null, userId?: string | null, userEmail?: string | null) => {
@@ -316,6 +374,9 @@ const Login = () => {
     }
     if (userEmail) {
       localStorage.setItem('user_email', userEmail);
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event(MARGIN_SESSION_UPDATED_EVENT));
     }
   };
 
@@ -349,6 +410,132 @@ const Login = () => {
       error_category: classifyLoginErrorForAnalytics(error),
       ...extra,
     }));
+  };
+
+  const waitForClerkSessionToken = async () => {
+    const readToken = async () => {
+      try {
+        return await getClerkToken();
+      } catch {
+        return null;
+      }
+    };
+
+    const immediateToken = await readToken();
+    if (immediateToken) {
+      return immediateToken;
+    }
+
+    await new Promise((resolve) => window.setTimeout(resolve, 80));
+    return readToken();
+  };
+
+  const prepareClerkVerification = async (attempt: ClerkSignInAttempt): Promise<ClerkLoginResult | null> => {
+    if (!signIn) {
+      throw new Error('Authentication is still loading. Please try again in a moment.');
+    }
+
+    if (attempt.status === 'needs_first_factor' || attempt.status === 'needs_client_trust') {
+      const emailFactor = getEmailCodeFactor(attempt.supportedFirstFactors);
+      const emailAddressId = getEmailAddressId(emailFactor);
+      if (emailAddressId) {
+        await signIn.prepareFirstFactor({
+          strategy: 'email_code',
+          emailAddressId,
+        });
+        setClerkVerificationStep('first_factor');
+        setClerkVerificationCode('');
+        setClerkVerificationMessage('Enter the verification code sent to your email to finish sign-in.');
+        setError('Enter the verification code sent to your email to finish sign-in.');
+        return { status: 'verification_required' };
+      }
+    }
+
+    if (attempt.status === 'needs_second_factor' || attempt.status === 'needs_client_trust') {
+      const emailFactor = getEmailCodeFactor(attempt.supportedSecondFactors);
+      const emailAddressId = getEmailAddressId(emailFactor);
+      if (emailFactor) {
+        await signIn.prepareSecondFactor({
+          strategy: 'email_code',
+          ...(emailAddressId ? { emailAddressId } : {}),
+        });
+        setClerkVerificationStep('second_factor');
+        setClerkVerificationCode('');
+        setClerkVerificationMessage('Enter the verification code sent to your email to finish sign-in.');
+        setError('Enter the verification code sent to your email to finish sign-in.');
+        return { status: 'verification_required' };
+      }
+    }
+
+    if (attempt.status === 'needs_new_password') {
+      throw new Error('This account needs a password reset before it can sign in.');
+    }
+
+    if (attempt.status === 'needs_protect_check') {
+      throw new Error('This sign-in needs an additional security check. Refresh and try again, or contact Margin if it continues.');
+    }
+
+    if (attempt.status === 'needs_client_trust') {
+      throw new Error('This sign-in needs additional verification before Margin can open the workspace.');
+    }
+
+    return null;
+  };
+
+  const completeClerkSignIn = async (attempt: ClerkSignInAttempt): Promise<ClerkLoginResult> => {
+    if (attempt.status === 'complete') {
+      if (!attempt.createdSessionId || !setActive) {
+        throw new Error('No active Clerk session was created after sign-in.');
+      }
+
+      await setActive({ session: attempt.createdSessionId });
+      const sessionToken = await waitForClerkSessionToken();
+      if (!sessionToken) {
+        throw new Error('No active Clerk session token was available after sign-in.');
+      }
+
+      setClerkVerificationStep(null);
+      setClerkVerificationCode('');
+      setClerkVerificationMessage('');
+      return {
+        status: 'complete',
+        token: sessionToken,
+        userId: clerkUserId,
+        email: email.trim(),
+      };
+    }
+
+    const verificationResult = await prepareClerkVerification(attempt);
+    if (verificationResult) {
+      return verificationResult;
+    }
+
+    throw new Error('Clerk sign-in could not be completed with this login method.');
+  };
+
+  const authenticateNormalLoginWithClerk = async (): Promise<ClerkLoginResult> => {
+    if (!clerkAuthLoaded || !clerkSignInLoaded || !signIn || !setActive) {
+      throw new Error('Authentication is still loading. Please try again in a moment.');
+    }
+
+    if (clerkVerificationStep) {
+      const code = clerkVerificationCode.trim();
+      if (!code) {
+        throw new Error('Enter the verification code sent to your email.');
+      }
+
+      const verificationAttempt = clerkVerificationStep === 'first_factor'
+        ? await signIn.attemptFirstFactor({ strategy: 'email_code', code })
+        : await signIn.attemptSecondFactor({ strategy: 'email_code', code });
+      return completeClerkSignIn(verificationAttempt as ClerkSignInAttempt);
+    }
+
+    const signInAttempt = await signIn.create({
+      strategy: 'password',
+      identifier: email.trim(),
+      password,
+    });
+    return completeClerkSignIn(signInAttempt as ClerkSignInAttempt);
   };
 
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
@@ -397,6 +584,7 @@ const Login = () => {
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
     const bootstrapResponse = await api.post<{
       success: boolean;
+      user?: { id: string; email: string };
       tenant?: { id: string; slug: string; foundingReservation?: boolean; foundingActivationReady?: boolean };
     }>('/api/auth/bootstrap', {
       workspaceName,
@@ -411,6 +599,11 @@ const Login = () => {
 
     const resolvedTenantSlug = normalizeTenantSlug(bootstrapResponse.data?.tenant?.slug);
     if (bootstrapResponse.ok && resolvedTenantSlug && bootstrapResponse.data?.tenant?.id) {
+      persistSession(
+        localStorage.getItem('session_token'),
+        bootstrapResponse.data.user?.id,
+        bootstrapResponse.data.user?.email || emailAddress,
+      );
       localStorage.setItem('active_tenant_id', bootstrapResponse.data.tenant.id);
       localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
       return resolvedTenantSlug;
@@ -452,12 +645,13 @@ const Login = () => {
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
+      const storedToken = localStorage.getItem('session_token');
+      if (!session?.access_token && !storedToken) {
         throw new Error('No active session is available for workspace routing.');
       }
 
       const sessionEmail = session.user?.email || email.trim() || localStorage.getItem('user_email') || '';
-      persistSession(session.access_token, session.user?.id, sessionEmail);
+      persistSession(session?.access_token || storedToken, session?.user?.id || localStorage.getItem('user_id'), sessionEmail);
       setActiveSessionEmail(sessionEmail || null);
 
       const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
@@ -503,6 +697,9 @@ const Login = () => {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+      setClerkVerificationStep(null);
+      setClerkVerificationCode('');
+      setClerkVerificationMessage('');
       setLoading(false);
     }
   };
@@ -530,6 +727,9 @@ const Login = () => {
       setEmail(currentEmail);
       setPassword('');
       setConfirmPassword('');
+      setClerkVerificationStep(null);
+      setClerkVerificationCode('');
+      setClerkVerificationMessage('');
       setError('Browser session cleared. Enter your password and log in again.');
     } finally {
       setLoading(false);
@@ -551,6 +751,10 @@ const Login = () => {
       }
     } else if (!email.trim() || !password.trim()) {
       setError(mode === 'signup' ? 'Enter your email and create a password.' : 'Enter both your email and password.');
+      return;
+    }
+    if (mode === 'login' && clerkVerificationStep && !clerkVerificationCode.trim()) {
+      setError('Enter the verification code sent to your email.');
       return;
     }
 
@@ -682,24 +886,17 @@ const Login = () => {
       }
 
       await resetBrowserAuthForFreshLogin();
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
-
-      if (authError) {
-        setLoginStep('account');
-        trackLoginFailure('account', authError);
-        setError(formatLoginError(authError, 'account'));
-        setLoading(false);
+      const clerkLoginResult = await authenticateNormalLoginWithClerk();
+      if (clerkLoginResult.status === 'verification_required') {
         return;
       }
 
-      persistSession(data.session?.access_token, data.user?.id, data.user?.email);
-      setActiveSessionEmail(data.user?.email || email.trim() || null);
+      persistSession(clerkLoginResult.token, clerkLoginResult.userId, clerkLoginResult.email);
+      setActiveSessionEmail(clerkLoginResult.email);
       trackEvent(ANALYTICS_EVENTS.loginSuccess, buildLoginAnalyticsParams({
         auth_mode: 'login',
         access_outcome: 'account_signed_in',
+        auth_provider: 'clerk',
       }));
 
       toast({
@@ -905,6 +1102,33 @@ const Login = () => {
                 </div>
               </div>
 
+              {mode === 'login' && clerkVerificationStep ? (
+                <div className="space-y-2">
+                  <Label htmlFor="clerkVerificationCode" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
+                    Verification Code
+                  </Label>
+                  <div className="relative">
+                    <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
+                    <Input
+                      id="clerkVerificationCode"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      value={clerkVerificationCode}
+                      onChange={(event) => {
+                        setClerkVerificationCode(event.target.value);
+                        setError('');
+                      }}
+                      placeholder="Enter verification code"
+                      className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                    />
+                  </div>
+                  {clerkVerificationMessage ? (
+                    <p className="text-xs leading-5 text-[#66737F]">{clerkVerificationMessage}</p>
+                  ) : null}
+                </div>
+              ) : null}
+
               {mode === 'recovery' ? (
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
@@ -1011,13 +1235,17 @@ const Login = () => {
                       ? 'Creating account...'
                       : mode === 'recovery'
                         ? 'Updating password...'
-                        : 'Signing in...'
+                        : clerkVerificationStep
+                          ? 'Verifying...'
+                          : 'Signing in...'
                   ) : (
                     mode === 'signup'
                       ? 'Create Account'
                       : mode === 'recovery'
                         ? 'Save New Password'
-                        : 'Log In'
+                        : clerkVerificationStep
+                          ? 'Verify Code'
+                          : 'Log In'
                   )}
                   {!loading ? <ArrowRight className="h-4 w-4" /> : null}
                 </Button>
@@ -1037,6 +1265,9 @@ const Login = () => {
                       setPassword('');
                       setConfirmPassword('');
                       setError('');
+                      setClerkVerificationStep(null);
+                      setClerkVerificationCode('');
+                      setClerkVerificationMessage('');
                       return nextMode;
                     });
                   }}
@@ -1061,6 +1292,9 @@ const Login = () => {
                       setPassword('');
                       setConfirmPassword('');
                       setError('');
+                      setClerkVerificationStep(null);
+                      setClerkVerificationCode('');
+                      setClerkVerificationMessage('');
                     }}
                     className="text-left transition-colors hover:text-[#182026]"
                   >

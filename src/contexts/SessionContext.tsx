@@ -9,6 +9,8 @@ import { supabase } from '@/lib/supabaseClient';
 import { SESSION_RECOVERY_EVENT, attemptSilentSessionRefresh, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
 import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
 
+const MARGIN_SESSION_UPDATED_EVENT = 'margin:session-updated';
+
 interface SessionContextType {
     isSessionValid: boolean;
     isAuthReady: boolean;
@@ -102,6 +104,28 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('active_tenant_slug');
         clearDemoSession();
     }, []);
+
+    const applyStoredSession = useCallback(() => {
+        if (typeof window === 'undefined') return false;
+        if (ensureActiveDemoSession()) {
+            applyDemoSession();
+            return true;
+        }
+
+        const storedToken = localStorage.getItem('session_token');
+        if (!storedToken) {
+            return false;
+        }
+
+        setIsSessionValid(true);
+        setAuthToken(storedToken);
+        setUserId(localStorage.getItem('user_id'));
+        setUserEmail(localStorage.getItem('user_email'));
+        setIsAuthReady(true);
+        clearSessionRecoveryPending();
+        clearSessionRecoverySuppression();
+        return true;
+    }, [applyDemoSession, ensureActiveDemoSession]);
 
     const expireSessionLocally = useCallback(() => {
         if (ensureActiveDemoSession()) {
@@ -210,6 +234,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             }
 
             if (event === 'SIGNED_OUT') {
+                if (applyStoredSession()) {
+                    return;
+                }
                 setIsSessionValid(false);
                 clearSessionRecoveryPending();
                 localStorage.removeItem('user_id');
@@ -266,7 +293,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 }
                 setIsAuthReady(true);
             } else if (event === 'INITIAL_SESSION') {
-                const accessToken = session?.access_token || null;
+                const storedToken = localStorage.getItem('session_token');
+                const accessToken = session?.access_token || storedToken || null;
                 setIsSessionValid(Boolean(accessToken));
                 setAuthToken(accessToken);
                 if (accessToken) {
@@ -279,17 +307,19 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                     localStorage.removeItem('session_token');
                 }
 
-                if (session?.user?.email) {
-                    setUserEmail(session.user.email);
-                    localStorage.setItem('user_email', session.user.email);
+                const resolvedEmail = session?.user?.email || localStorage.getItem('user_email');
+                if (resolvedEmail) {
+                    setUserEmail(resolvedEmail);
+                    localStorage.setItem('user_email', resolvedEmail);
                 } else {
                     setUserEmail(null);
                     localStorage.removeItem('user_email');
                 }
 
-                if (session?.user?.id) {
-                    setUserId(session.user.id);
-                    localStorage.setItem('user_id', session.user.id);
+                const resolvedUserId = session?.user?.id || localStorage.getItem('user_id');
+                if (resolvedUserId) {
+                    setUserId(resolvedUserId);
+                    localStorage.setItem('user_id', resolvedUserId);
                 } else {
                     setUserId(null);
                     localStorage.removeItem('user_id');
@@ -302,7 +332,20 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         });
 
         return () => subscription.unsubscribe();
-    }, [applyDemoSession, ensureActiveDemoSession]);
+    }, [applyDemoSession, applyStoredSession, ensureActiveDemoSession]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const handleStoredSessionUpdated = () => {
+            applyStoredSession();
+        };
+
+        window.addEventListener(MARGIN_SESSION_UPDATED_EVENT, handleStoredSessionUpdated as EventListener);
+        return () => {
+            window.removeEventListener(MARGIN_SESSION_UPDATED_EVENT, handleStoredSessionUpdated as EventListener);
+        };
+    }, [applyStoredSession]);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
