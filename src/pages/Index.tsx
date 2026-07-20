@@ -653,15 +653,6 @@ function KineticHeroSection({
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
               Get Started <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
-            <Button
-              onClick={() => navigate("/waitlist")}
-              aria-label="Join waitlist"
-              variant="outline"
-              className="h-[52px] w-full justify-center rounded-[5px] border border-white/25 bg-transparent px-8 text-sm font-semibold text-white/82 shadow-none backdrop-blur-sm transition-all duration-300 hover:scale-[1.03] hover:border-[#0B74DE]/60 hover:bg-white/8 hover:text-white sm:w-auto"
-            >
-              {" "}
-              Join waitlist{" "}
-            </Button>{" "}
           </motion.div>{" "}
           <motion.div
             initial={{ opacity: 0 }}
