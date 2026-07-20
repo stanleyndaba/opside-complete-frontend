@@ -17,7 +17,6 @@ import {
     Activity,
     Globe2,
     Network,
-    TrendingUp,
     type LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
