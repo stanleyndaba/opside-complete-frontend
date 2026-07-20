@@ -590,7 +590,7 @@ function KineticHeroSection({
           </motion.div>{" "}
           <h1
             id="margin-hero-title"
-            className="mt-6 font-serif-headline max-w-[960px] text-[38px] font-bold leading-[0.98] tracking-[-0.045em] min-[390px]:text-[44px] sm:mt-7 sm:text-[60px] sm:tracking-[-0.055em] md:text-[76px] lg:text-[96px]"
+            className="mt-6 font-serif-headline max-w-[960px] text-[34px] font-bold leading-[1.02] tracking-[-0.045em] min-[390px]:text-[40px] sm:mt-7 sm:text-[52px] sm:tracking-[-0.055em] md:text-[64px] lg:text-[80px]"
           >
             {" "}
             <motion.span
@@ -603,8 +603,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              {" "}
-              Amazon may owe you money.{" "}
+              Recover your Amazon refunds.
             </motion.span>{" "}
             <motion.span
               className="block text-slate-400"
@@ -616,8 +615,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              {" "}
-              The proof is never in one place.{" "}
+              Bulletproof evidence. Seller-approved. Defensible claims.
             </motion.span>{" "}
           </h1>{" "}
           <motion.p
