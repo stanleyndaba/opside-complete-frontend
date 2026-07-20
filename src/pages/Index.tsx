@@ -629,10 +629,9 @@ function KineticHeroSection({
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
           >
             {" "}
-            By the time your evidence is finally together, Amazon is already
-            asking for something else, or your claim window is closing. Margin
-            turns scattered proof into one claim-ready evidence trail that
-            stands up to Amazon&apos;s review.{" "}
+            Margin prepares reimbursement cases the way Amazon expects to review
+            them—connecting evidence, organizing documentation, reconciling every
+            claim, while keeping every submission under your approval.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
