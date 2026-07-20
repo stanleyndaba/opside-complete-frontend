@@ -46,6 +46,9 @@ const Terms = () => {
                 <p>
                   These Terms of Service govern your access to and use of Margin, a SaaS platform that automates the identification and auditing of Amazon FBA discrepancies. By creating an account or using the Service, you agree to be bound by these Terms.
                 </p>
+                <p>
+                  Margin is a trading name of K2026125019 (SOUTH AFRICA) PTY LTD, registration number 2026/125019/07.
+                </p>
               </div>
             </section>
 
@@ -83,7 +86,7 @@ const Terms = () => {
                   <span className="text-gray-900">Automated Audits</span> — We scan your transaction logs to find potential claims.
                 </p>
                 <p>
-                  <span className="text-gray-900">No Guarantee</span> — Margin identifies potential discrepancies. We do not guarantee that Amazon will approve any reimbursement claim, that any particular amount will be recovered, or that recoveries will occur within any specific timeframe. Final reimbursement decisions rest solely with Amazon.
+                  <span className="text-gray-900">No Guarantee</span> — Recovery estimates are projections based on available Amazon activity and supporting records, not guarantees of reimbursement. Amazon makes the final reimbursement decision. We do not guarantee that any particular amount will be recovered, or that recoveries will occur within any specific timeframe.
                 </p>
                 <p>
                   <span className="text-gray-900">Fair Use</span> — You agree not to use Margin to submit false, misleading, or duplicative claims to Amazon.
