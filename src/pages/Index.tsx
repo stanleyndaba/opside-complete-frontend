@@ -667,24 +667,21 @@ function KineticHeroSection({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-medium text-slate-400 sm:mt-8"
+            className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12px] font-medium text-slate-400 sm:mt-8"
           >
             {" "}
             <span className="flex items-center gap-1.5">
               <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Autonomous
               Evidence Linking
             </span>{" "}
-            <span className="h-1 w-1 rounded-full bg-slate-700" />{" "}
             <span className="flex items-center gap-1.5">
               <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Auto-Filing with
               Opt-Out Control
             </span>{" "}
-            <span className="h-1 w-1 rounded-full bg-slate-700" />{" "}
             <span className="flex items-center gap-1.5">
               <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> 0% Commission
               Through 2026
             </span>{" "}
-            <span className="h-1 w-1 rounded-full bg-slate-700" />{" "}
             <span className="flex items-center gap-1.5">
               <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Built for
               Hard-to-Prove Claims
