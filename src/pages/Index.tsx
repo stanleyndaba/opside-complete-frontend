@@ -719,9 +719,8 @@ function SystemLogMarquee() {
         <motion.div {...revealProps} className="relative z-20 max-w-[760px]">
           {" "}
           <div className={sectionLabelClass}>Recovery Intelligence</div>{" "}
-          <h2 className="mt-4 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[62px]">
-            {" "}
-            One rejected case. Every missing answer.{" "}
+          <h2 className="mt-4 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] sm:text-[42px] md:text-[62px]">
+            <span className="text-[#182026]">One rejected case.</span> <span className="text-[#8A98A3]">Every missing answer.</span>
           </h2>{" "}
           <p className="mt-5 max-w-[680px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
             {" "}
@@ -924,9 +923,8 @@ function MobileMarketplaceHub() {
     >
       {" "}
       <div className={sectionLabelClass}>Marketplace Scope</div>{" "}
-      <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026]">
-        {" "}
-        Supported FBA marketplaces{" "}
+      <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em]">
+        <span className="text-[#182026]">Supported</span> <span className="text-[#8A98A3]">FBA marketplaces</span>
       </h2>{" "}
       <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#66737F]">
         {" "}
@@ -1158,11 +1156,9 @@ export default function Index() {
             {" "}
             <motion.p
               {...revealProps}
-              className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] text-[#182026] max-md:text-left md:text-[28px] md:leading-9"
+              className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] max-md:text-left md:text-[28px] md:leading-9"
             >
-              {" "}
-              Most sellers find the discrepancy. The recovery dies when Amazon
-              asks for proof.{" "}
+              <span className="text-[#182026]">Most sellers find the discrepancy.</span> <span className="text-[#8A98A3]">The recovery dies when Amazon asks for proof.</span>
             </motion.p>{" "}
             <motion.p
               {...revealProps}
@@ -1187,7 +1183,7 @@ export default function Index() {
                   Before Amazon asks again
                 </div>{" "}
                 <h2 className={sectionHeadingClass}>
-                  Know which claims can survive Amazon review.
+                  <span className="text-[#182026]">Know which claims</span> <span className="text-[#8A98A3]">can survive Amazon review.</span>
                 </h2>{" "}
                 <p className={sectionBodyClass}>
                   A claim is not ready because a document exists. It is ready
@@ -1272,10 +1268,8 @@ export default function Index() {
             >
               {" "}
               <div className={sectionLabelClass}>See Demo</div>{" "}
-              <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] text-[#182026] sm:text-[40px] md:text-[58px]">
-                {" "}
-                See how a discovered discrepancy becomes a case Amazon can
-                review.{" "}
+              <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] sm:text-[40px] md:text-[58px]">
+                <span className="text-[#182026]">See how a discovered discrepancy</span> <span className="text-[#8A98A3]">becomes a case Amazon can review.</span>
               </h2>{" "}
               <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
                 {" "}
@@ -1333,9 +1327,8 @@ export default function Index() {
             <div className="max-w-[680px] md:mx-auto md:text-center">
               {" "}
               <div className={sectionLabelClass}>Evidence Sources</div>{" "}
-              <h2 className="mt-3 text-[28px] font-semibold leading-tight tracking-[-0.04em] text-[#182026] md:text-[42px]">
-                {" "}
-                The proof exists. Amazon just will not accept it scattered.{" "}
+              <h2 className="mt-3 text-[28px] font-semibold leading-tight tracking-[-0.04em] md:text-[42px]">
+                <span className="text-[#182026]">The proof exists.</span> <span className="text-[#8A98A3]">Amazon just will not accept it scattered.</span>
               </h2>{" "}
               <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                 {" "}
@@ -1373,10 +1366,8 @@ export default function Index() {
                   {" "}
                   <span>06</span> <span>What Happens After Detection</span>{" "}
                 </div>{" "}
-                <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] text-[#182026] sm:text-[44px] md:text-[58px] lg:text-[64px]">
-                  {" "}
-                  Finding the discrepancy is not the hard part. Proving it
-                  is.{" "}
+                <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[44px] md:text-[58px] lg:text-[64px]">
+                  <span className="text-[#182026]">Finding the discrepancy is not the hard part.</span> <span className="text-[#8A98A3]">Proving it is.</span>
                 </h2>{" "}
               </div>{" "}
               <p className="max-w-[660px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9 lg:justify-self-end">
@@ -1434,7 +1425,7 @@ export default function Index() {
                 Before and After Proof
               </div>{" "}
               <h2 className={sectionHeadingClass}>
-                The same evidence can either stay scattered or become a case.
+                <span className="text-[#182026]">The same evidence</span> <span className="text-[#8A98A3]">can either stay scattered or become a case.</span>
               </h2>{" "}
               <p className={sectionBodyClass}>
                 {" "}
@@ -1559,8 +1550,7 @@ export default function Index() {
                 {" "}
                 <div className={sectionLabelClass}>Trust & Control</div>{" "}
                 <h2 className={sectionHeadingClass}>
-                  Amazon doesn&apos;t stop after you submit. Neither does
-                  Margin.
+                  <span className="text-[#182026]">Amazon doesn&apos;t stop after you submit.</span> <span className="text-[#8A98A3]">Neither does Margin.</span>
                 </h2>{" "}
                 <p className={sectionBodyClass}>
                   {" "}
@@ -1624,9 +1614,8 @@ export default function Index() {
                 {" "}
                 <motion.div {...revealProps}>
                   {" "}
-                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight text-[#182026] sm:text-[48px] md:text-[64px]">
-                    {" "}
-                    Every seller needs Margin.{" "}
+                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight sm:text-[48px] md:text-[64px]">
+                    <span className="text-[#182026]">Every seller</span> <span className="text-[#8A98A3]">needs Margin.</span>
                   </h2>{" "}
                   <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
                     {" "}
@@ -1679,9 +1668,8 @@ export default function Index() {
             {" "}
             <motion.div {...revealProps}>
               {" "}
-              <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] text-[#050607] sm:text-[42px] md:text-[46px]">
-                {" "}
-                Frequently asked questions{" "}
+              <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]">
+                <span className="text-[#050607]">Frequently asked</span> <span className="text-[#8A98A3]">questions</span>
               </h2>{" "}
             </motion.div>{" "}
             <div className="mt-10 md:mt-14">
@@ -1737,11 +1725,8 @@ export default function Index() {
               {" "}
               <div className="max-w-[880px]">
                 {" "}
-                <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] sm:text-[42px] md:text-[68px]">
-                  {" "}
-                  Every recovery starts with &quot;I know Amazon owes me.&quot;
-                  Too many end with &quot;I couldn&apos;t prove it.&quot;
-                  Don&apos;t let yours.{" "}
+                <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[42px] md:text-[68px]">
+                  <span className="text-[#182026]">Every recovery starts with &quot;I know Amazon owes me.&quot;</span> <span className="text-[#8A98A3]">Too many end with &quot;I couldn&apos;t prove it.&quot; Don&apos;t let yours.</span>
                 </h2>{" "}
                 <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
                   {" "}
