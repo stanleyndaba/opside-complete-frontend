@@ -1135,27 +1135,27 @@ export default function Index() {
                   className="flex items-start gap-3"
                 >
                   <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#182026]" />
-                  <div className="text-[#182026]">
-                    Secure Amazon OAuth authentication
-                  </div>
+                  <div className="text-[#182026]">Amazon OAuth secured</div>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.85, originX: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ margin: "-10%" }}
                   transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className="pl-4.5 text-[#66737F] sm:pl-[18px]"
+                  className="flex items-start gap-3 text-[#66737F] md:block md:pl-[18px]"
                 >
-                  Connected through Amazon's official Selling Partner API
+                  <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F] md:hidden" />
+                  <div className="md:inline-block">Amazon SP-API connected</div>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.85, originX: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ margin: "-10%" }}
                   transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="pl-4.5 text-[#66737F] sm:pl-[18px]"
+                  className="flex items-start gap-3 text-[#66737F] md:block md:pl-[18px]"
                 >
-                  You stay in control. Nothing is filed without your approval.
+                  <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F] md:hidden" />
+                  <div className="md:inline-block">Your approval, every time</div>
                 </motion.div>
               </div>
               <div className="font-serif-headline w-full text-[32px] font-bold leading-[1.1] tracking-[-0.04em] md:w-[72%] md:text-[48px] lg:text-[54px] lg:leading-[1.05]">
