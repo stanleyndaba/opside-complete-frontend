@@ -1128,20 +1128,38 @@ export default function Index() {
           <div className={containerClass}>
             <div className="mx-auto flex max-w-[1080px] flex-col-reverse gap-10 md:flex-row md:items-start md:gap-16 lg:gap-24">
               <div className="flex w-full flex-col gap-3 text-[14px] font-medium md:w-[28%] md:gap-4 md:pt-2 md:text-[15px]">
-                <div className="flex items-start gap-3">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.85, originX: 0 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ margin: "-10%" }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-start gap-3"
+                >
                   <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#182026]" />
                   <div className="text-[#182026]">
                     Secure Amazon OAuth authentication
                   </div>
-                </div>
-                <div className="pl-4.5 text-[#66737F] sm:pl-[18px]">
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.85, originX: 0 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ margin: "-10%" }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  className="pl-4.5 text-[#66737F] sm:pl-[18px]"
+                >
                   Connected through Amazon's official Selling Partner API
-                </div>
-                <div className="pl-4.5 text-[#66737F] sm:pl-[18px]">
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.85, originX: 0 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ margin: "-10%" }}
+                  transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  className="pl-4.5 text-[#66737F] sm:pl-[18px]"
+                >
                   You stay in control. Nothing is filed without your approval.
-                </div>
+                </motion.div>
               </div>
-              <div className="w-full text-[32px] font-medium leading-[1.15] tracking-[-0.03em] md:w-[72%] md:text-[48px] lg:text-[54px] lg:leading-[1.1]">
+              <div className="font-serif-headline w-full text-[32px] font-bold leading-[1.1] tracking-[-0.04em] md:w-[72%] md:text-[48px] lg:text-[54px] lg:leading-[1.05]">
                 <span className="text-[#182026]">Trusted by design.</span>{" "}
                 <span className="text-[#8A98A3]">
                   Built around Amazon's official seller infrastructure.
