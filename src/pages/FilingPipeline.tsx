@@ -3583,8 +3583,8 @@ export default function FilingPipeline() {
   const pipelineTabs = [
     {
       value: 'ready' as const,
-      label: 'Ready to file',
-      title: 'Ready to File',
+      label: 'Awaiting approval',
+      title: 'Awaiting Approval',
       detail: 'Seller-approved filing queue. Review proof, risk, route, and upside before anything is sent.',
       amount: formatMoney(readyTotal),
       countLabel: `${readyRows.length} seller decision${readyRows.length === 1 ? '' : 's'} waiting`,
@@ -3614,8 +3614,8 @@ export default function FilingPipeline() {
     },
     {
       value: 'filing' as const,
-      label: 'Being filed',
-      title: 'Being Filed',
+      label: 'Filing in progress',
+      title: 'Filing In Progress',
       detail: 'Live Amazon submissions with packet status, route, evidence, ETA, and proof capture.',
       amount: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))),
       countLabel: `${beingFiledRows.length} active Amazon handoff${beingFiledRows.length === 1 ? '' : 's'}`,
@@ -3731,8 +3731,8 @@ export default function FilingPipeline() {
     },
     {
       value: 'completed' as const,
-      label: 'Completed',
-      title: 'Completed',
+      label: 'Resolved Cases',
+      title: 'Resolved Cases',
       detail: 'Recovered cash confirmed, reconciled, and archived with payout proof.',
       amount: formatMoney(recoveredTotal),
       countLabel: `${completedRows.length} recovery item${completedRows.length === 1 ? '' : 's'} completed`,
