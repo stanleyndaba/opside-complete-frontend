@@ -22,7 +22,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            Submission isn't the finish
+            Across a scale of different Multi-cases
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
@@ -30,7 +30,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch] text-slate-400"
           >
-            Margin follows every case until it's resolved.
+            Concurrently
           </motion.p>
         </div>
       </section>
