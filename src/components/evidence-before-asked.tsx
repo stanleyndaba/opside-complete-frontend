@@ -22,7 +22,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            Replacing hours of hunting for proof with one claim-ready evidence pack.
+            Only your strongest, evidence-backed cases reach Amazon.
           </motion.p>
         </div>
       </section>
