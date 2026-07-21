@@ -15,14 +15,22 @@ export default function EvidenceBeforeAsked() {
       />
 
       <section className="relative z-10 w-full max-w-[960px]">
-        <div className="mx-auto flex flex-col items-center gap-6 text-center text-5xl font-bold leading-[0.96] tracking-tight text-slate-900 sm:text-6xl md:text-7xl lg:text-8xl">
+        <div className="mx-auto flex flex-col items-center gap-4 text-center text-5xl font-bold leading-[1.02] tracking-tight text-slate-900 sm:text-6xl md:text-7xl lg:text-8xl">
           <motion.p
             initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            Where awaiting approval
+            providing you real-time case filing
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
+            className="max-w-[18ch] text-slate-400"
+          >
+            under your filing in progress tab
           </motion.p>
         </div>
       </section>
