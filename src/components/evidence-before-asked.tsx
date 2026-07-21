@@ -22,7 +22,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch]"
           >
-            providing you real-time case filing
+            Submission isn't the finish
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
@@ -30,7 +30,7 @@ export default function EvidenceBeforeAsked() {
             transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
             className="max-w-[18ch] text-slate-400"
           >
-            under your filing in progress tab
+            Margin follows every case until it's resolved.
           </motion.p>
         </div>
       </section>
