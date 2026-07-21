@@ -62,7 +62,7 @@ const ResultsScrollSimulate = () => {
                 </motion.div>
 
                 <div className="space-y-4">
-                  <h2 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em]">
+                  <h2 className="text-xs font-black text-gray-400 uppercase tracking-tight">
                     847 Results Scanned
                   </h2>
                   <h1 className="text-4xl font-black text-gray-900 tracking-tighter leading-tight">
@@ -75,7 +75,7 @@ const ResultsScrollSimulate = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1 }}
-                  className="mt-8 flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+                  className="mt-8 flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-tight"
                 >
                   <AlertCircle size={14} /> Claim Closing in 48h
                 </motion.div>

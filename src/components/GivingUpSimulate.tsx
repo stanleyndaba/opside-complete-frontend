@@ -64,7 +64,7 @@ const GivingUpSimulate = () => {
                 initial={{ opacity: 0 }} 
                 animate={{ opacity: 1 }} 
                 transition={{ delay: 2 }}
-                className="text-red-500 font-black uppercase tracking-widest text-xs"
+                className="text-red-500 font-black uppercase tracking-tight text-xs"
               >
                 Same templated response.
               </motion.div>

@@ -212,7 +212,7 @@ const PlatformSimulate = () => {
       />
 
       <section className="relative h-[min(720px,100vh)] w-full max-w-6xl" aria-label="Platform source intake">
-        <div className="absolute right-[13%] top-[9%] hidden text-[10px] font-medium uppercase tracking-[0.12em] text-gray-400 sm:block">
+        <div className="absolute right-[13%] top-[9%] hidden text-[10px] font-medium uppercase tracking-tight text-gray-400 sm:block">
           Platform Sources
         </div>
 

@@ -59,7 +59,7 @@ class RouteErrorBoundaryInner extends Component<BoundaryProps, BoundaryState> {
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                <p className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                   Updating Margin
                 </p>
                 <p className="mt-1 text-sm text-[#66737F]">
@@ -81,7 +81,7 @@ class RouteErrorBoundaryInner extends Component<BoundaryProps, BoundaryState> {
               <div className="rounded-[16px] border border-[#F1C8C8] bg-[#FFF5F5] p-2 text-[#B74A4A]">
                 <AlertTriangle className="h-5 w-5" />
               </div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+              <p className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                 Page Recovery
               </p>
             </div>

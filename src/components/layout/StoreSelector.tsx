@@ -86,10 +86,10 @@ export function StoreSelector() {
                         <Store className="h-4 w-4" />
                     </div>
                     <div className="flex flex-col items-start min-w-[100px]">
-                        <span className="text-[11px] font-serif font-medium text-white tracking-wide uppercase">
+                        <span className="text-[11px] font-serif font-medium text-white tracking-tight uppercase">
                             {activeStore?.name || 'SELECT_NODE'}
                         </span>
-                        <span className="text-[9px] font-mono text-emerald-500/50 flex items-center gap-1 uppercase tracking-[0.2em]">
+                        <span className="text-[9px] font-mono text-emerald-500/50 flex items-center gap-1 uppercase tracking-tight">
                             <Globe className="h-2 w-2" />
                             {activeStore?.marketplace?.replace('amazon_', '') || 'REGION_LOCKED'}
                         </span>
@@ -98,7 +98,7 @@ export function StoreSelector() {
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-64 p-1.5 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl">
-                <DropdownMenuLabel className="px-3 py-2.5 text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">
+                <DropdownMenuLabel className="px-3 py-2.5 text-[10px] font-mono font-bold text-white/20 uppercase tracking-tight">
                     Control_Plane_Nodes
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-white/5 mx-2" />
@@ -123,7 +123,7 @@ export function StoreSelector() {
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-[12px] font-serif font-medium tracking-tight uppercase">{store.name}</span>
-                                        <span className="text-[9px] font-mono opacity-50 uppercase tracking-widest">{store.marketplace}</span>
+                                        <span className="text-[9px] font-mono opacity-50 uppercase tracking-tight">{store.marketplace}</span>
                                     </div>
                                 </div>
                                 {activeStoreId === store.id && (
@@ -139,7 +139,7 @@ export function StoreSelector() {
                 <DropdownMenuSeparator className="bg-white/5 mx-2" />
                 <DropdownMenuItem
                     onClick={() => navigate(tenantRoute(currentTenantSlug, '/integrations-hub'))}
-                    className="px-3 py-3 rounded-lg cursor-pointer text-white/60 hover:bg-emerald-500/10 hover:text-emerald-500 font-serif font-medium text-[12px] flex items-center gap-3 uppercase tracking-widest transition-all"
+                    className="px-3 py-3 rounded-lg cursor-pointer text-white/60 hover:bg-emerald-500/10 hover:text-emerald-500 font-serif font-medium text-[12px] flex items-center gap-3 uppercase tracking-tight transition-all"
                 >
                     <div className="h-9 w-9 rounded-lg bg-white/5 flex items-center justify-center text-white/20 group-hover:text-emerald-500">
                         <Plus className="h-4 w-4" />
@@ -149,7 +149,7 @@ export function StoreSelector() {
 
                 <div className="px-4 py-2.5 mt-1 bg-white/[0.02] rounded-lg flex items-center gap-2 border border-white/5 mx-1">
                     <ShieldCheck className="h-3 w-3 text-emerald-500/50" />
-                    <span className="text-[9px] text-white/20 font-mono uppercase tracking-widest">
+                    <span className="text-[9px] text-white/20 font-mono uppercase tracking-tight">
                         EXECUTION_BOUNDARY: SECURE
                     </span>
                 </div>

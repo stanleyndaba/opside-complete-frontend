@@ -31,7 +31,7 @@ const RejectionScreenSimulate = () => {
               </div>
               <div className="flex-1 mt-1">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Amazon Support</span>
+                  <span className="text-xs font-black text-gray-400 uppercase tracking-tight">Amazon Support</span>
                   <span className="text-xs text-gray-400">Now</span>
                 </div>
                 <div className="text-2xl font-bold text-gray-900 tracking-tight">Claim Rejected</div>
@@ -51,7 +51,7 @@ const RejectionScreenSimulate = () => {
               </div>
               <div className="flex-1 mt-1">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-black text-gray-400 uppercase tracking-widest">System</span>
+                  <span className="text-xs font-black text-gray-400 uppercase tracking-tight">System</span>
                   <span className="text-xs text-gray-400">1m ago</span>
                 </div>
                 <div className="text-2xl font-bold text-gray-900 tracking-tight">Case #50013020607: Resolved</div>

@@ -62,7 +62,7 @@ export function ProgressiveNarrativeTabs() {
     <section ref={containerRef} className="relative bg-white py-32 max-md:border-b max-md:border-[#E5E7EB] max-md:py-20 md:py-48">
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8">
         <div className="max-w-[880px]">
-          <div className="mb-16 text-[11px] font-bold uppercase tracking-widest text-[#0B74DE] md:mb-24">
+          <div className="mb-16 text-[11px] font-bold uppercase tracking-tight text-[#0B74DE] md:mb-24">
             Why timing matters
           </div>
 

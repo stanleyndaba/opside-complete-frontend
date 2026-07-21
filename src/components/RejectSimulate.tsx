@@ -28,7 +28,7 @@ const RejectSimulate = () => {
               color: status === 'rejected' ? '#EF4444' : '#6B7280',
               backgroundColor: status === 'rejected' ? '#FEE2E2' : '#F3F4F6'
             }}
-            className="text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest"
+            className="text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tight"
           >
             {status === 'pending' ? 'Under Review' : 'Rejected'}
           </motion.span>
@@ -37,7 +37,7 @@ const RejectSimulate = () => {
         {/* Claim Content */}
         <div className="p-8 space-y-6">
           <div className="text-center space-y-2">
-            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Claim Amount</label>
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Claim Amount</label>
             <div className="text-5xl font-black text-gray-900 tracking-tighter">$1,247.50</div>
           </div>
 
@@ -84,7 +84,7 @@ const RejectSimulate = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1 }}
-                  className="pt-4 flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest"
+                  className="pt-4 flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-tight"
                 >
                   <RefreshCcw size={14} />
                   Awaiting Manual Fix...

@@ -67,7 +67,7 @@ const DocumentIcon = ({ type, isSmall }: { type: DocumentType; isSmall: boolean 
           <div className="absolute left-2 top-2 h-px w-6 bg-[#cbd5df]" />
           <div className="absolute left-2 top-8 h-px w-8 bg-[#d7dde4]" />
           <div className="absolute left-2 top-12 h-px w-8 bg-[#d7dde4]" />
-          <div className="absolute bottom-4 left-[-4px] right-[-4px] flex h-7 items-center justify-center bg-[#e30012] text-[19px] font-black tracking-[0.12em] text-white shadow-[0_5px_10px_rgba(227,0,18,0.24)]">
+          <div className="absolute bottom-4 left-[-4px] right-[-4px] flex h-7 items-center justify-center bg-[#e30012] text-[19px] font-black tracking-tight text-white shadow-[0_5px_10px_rgba(227,0,18,0.24)]">
             PDF
           </div>
         </div>
@@ -79,7 +79,7 @@ const DocumentIcon = ({ type, isSmall }: { type: DocumentType; isSmall: boolean 
     <div className={`relative h-[72px] w-[58px] ${iconScale}`}>
       <div className="absolute inset-x-1 top-0 h-[68px] rounded-[7px] border border-[#b8dfca] bg-[#f8fffb] shadow-[0_8px_18px_rgba(15,23,42,0.1)]">
         <div className="absolute right-0 top-0 h-4 w-4 rounded-bl-[5px] border-b border-l border-[#b8dfca] bg-[#ecfdf5]" />
-        <div className="absolute left-2 right-2 top-7 rounded-[5px] bg-[#12a66a] py-1 text-center text-[14px] font-black tracking-[0.08em] text-white">
+        <div className="absolute left-2 right-2 top-7 rounded-[5px] bg-[#12a66a] py-1 text-center text-[14px] font-black tracking-tight text-white">
           TSX
         </div>
         <div className="absolute left-3 top-4 h-px w-7 bg-[#8bd8b2]" />

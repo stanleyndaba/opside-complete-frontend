@@ -6,18 +6,36 @@ import './index.css'
 
 // Core Web Vitals reporting (LCP, FID/INP, CLS, TTFB, FCP)
 import { onLCP, onFID, onCLS, onTTFB, onFCP, onINP } from 'web-vitals'
-import { api } from '@/lib/api'
+import type { MetricType } from 'web-vitals'
+import { trackEvent } from '@/lib/analytics'
+
+type SentryBrowserRuntime = {
+  init: (options: {
+    dsn: string;
+    integrations?: unknown[];
+    tracesSampleRate: number;
+    replaysSessionSampleRate: number;
+  }) => void;
+  BrowserTracing?: new (options?: { routingInstrumentation?: unknown }) => unknown;
+  browserTracingIntegration?: { routingInstrumentation?: unknown };
+};
+
 // Sentry RUM (lazy init)
-if ((import.meta as any).env?.VITE_SENTRY_DSN) {
+if (import.meta.env.VITE_SENTRY_DSN) {
   // Lazy load Sentry to avoid impact on TTI
   import('@sentry/browser').then((Sentry) => {
-    Sentry.init({
-      dsn: (import.meta as any).env?.VITE_SENTRY_DSN,
-      integrations: [
-        new (Sentry as any).BrowserTracing({ routingInstrumentation: (Sentry as any).browserTracingIntegration?.routingInstrumentation })
-      ],
-      tracesSampleRate: Number((import.meta as any).env?.VITE_SENTRY_TRACES_RATE || 0.1),
-      replaysSessionSampleRate: Number((import.meta as any).env?.VITE_SENTRY_REPLAYS_RATE || 0.1),
+    const sentryRuntime = Sentry as unknown as SentryBrowserRuntime;
+    const integrations = sentryRuntime.BrowserTracing
+      ? [new sentryRuntime.BrowserTracing({
+        routingInstrumentation: sentryRuntime.browserTracingIntegration?.routingInstrumentation,
+      })]
+      : [];
+
+    sentryRuntime.init({
+      dsn: import.meta.env.VITE_SENTRY_DSN,
+      integrations,
+      tracesSampleRate: Number(import.meta.env.VITE_SENTRY_TRACES_RATE || 0.1),
+      replaysSessionSampleRate: Number(import.meta.env.VITE_SENTRY_REPLAYS_RATE || 0.1),
     });
   }).catch(() => { });
 }
@@ -32,13 +50,13 @@ createRoot(document.getElementById("root")!).render(
   </ClerkProvider>
 );
 
-const report = (name: string, metric: any) => {
-  api.trackEvent('web_vital', {
+const report = (name: string, metric: MetricType) => {
+  trackEvent('web_vital', {
     name,
     value: metric.value,
-    rating: (metric as any).rating,
+    rating: metric.rating,
     id: metric.id,
-    navigationType: (performance.getEntriesByType('navigation')[0] as any)?.type,
+    navigationType: metric.navigationType || performance.getEntriesByType('navigation')[0]?.type,
   });
 };
 

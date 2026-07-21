@@ -30,7 +30,7 @@ const ComparisonSimulate = () => {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="absolute space-y-2"
             >
-              <h2 className="text-2xl font-bold text-gray-400 uppercase tracking-[0.2em]">Most tools were built</h2>
+              <h2 className="text-2xl font-bold text-gray-400 uppercase tracking-tight">Most tools were built</h2>
               <h1 className="text-5xl font-black text-gray-300 tracking-tighter italic">to find the money.</h1>
             </motion.div>
           )}
@@ -50,7 +50,7 @@ const ComparisonSimulate = () => {
               }}
               className="absolute space-y-2 z-10"
             >
-              <h2 className="text-2xl font-bold text-gray-900 uppercase tracking-[0.2em]">Very few were built</h2>
+              <h2 className="text-2xl font-bold text-gray-900 uppercase tracking-tight">Very few were built</h2>
               <h1 className="text-6xl font-black text-[#007aff] tracking-tighter">
                 to <span className="underline decoration-4 underline-offset-8">win it back.</span>
               </h1>

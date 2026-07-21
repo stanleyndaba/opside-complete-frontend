@@ -84,7 +84,7 @@ const revealProps = {
 };
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const labelClass = 'text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]';
 const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
 
@@ -178,7 +178,7 @@ export default function AboutMargin() {
                   <a
                     key={item.href}
                     href={item.href}
-                    className="rounded-[5px] border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
+                    className="rounded-[5px] border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
                   >
                     {item.label}
                   </a>
@@ -208,7 +208,7 @@ export default function AboutMargin() {
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
                   className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.label}</div>
                   <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
@@ -240,7 +240,7 @@ export default function AboutMargin() {
                     index > 0 ? 'border-t border-[#D8E3E8]' : ''
                   }`}
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.label}</div>
                   <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>
@@ -290,7 +290,7 @@ export default function AboutMargin() {
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
                   className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.label}</div>
                   <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
                     {item.detail}
                   </p>

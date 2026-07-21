@@ -207,7 +207,7 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between px-2">
         <div className="space-y-1">
-          <h2 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-widest">Dispute Queue Preview</h2>
+          <h2 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">Dispute Queue Preview</h2>
           <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
             Showing {rows.length} of {filteredResults} {source === 'legacy' ? 'legacy dispute cases' : 'backend-filtered cases'}
           </p>

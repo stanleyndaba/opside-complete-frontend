@@ -199,7 +199,7 @@ export default function ConnectAmazonAccount() {
             <div className="relative">
               <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                     Activation preparation
                   </div>
                   <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">

@@ -81,7 +81,7 @@ export default function StandardAgreement() {
                       <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                       <div className="space-y-1">
                         <p className="text-sm font-bold text-white tracking-tight">Selected Plan Terms</p>
-                        <p className="text-[11px] text-white/30 uppercase tracking-wider font-light">
+                        <p className="text-[11px] text-white/30 uppercase tracking-tight font-light">
                           Your checkout controls the monthly fee, success fee, or Early Access credit that applies
                         </p>
                       </div>
@@ -91,7 +91,7 @@ export default function StandardAgreement() {
                       <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                       <div className="space-y-1">
                         <p className="text-sm font-bold text-white tracking-tight">Founding 500 Credit</p>
-                        <p className="text-[11px] text-white/30 uppercase tracking-wider font-light">
+                        <p className="text-[11px] text-white/30 uppercase tracking-tight font-light">
                           Early Access members keep 100% through 2026 and can credit $99 toward Pro or Scale
                         </p>
                       </div>
@@ -129,7 +129,7 @@ export default function StandardAgreement() {
                 <div className="absolute inset-0 bg-white/[0.01] rounded-[32px] border border-emerald-500/10 backdrop-blur-xl" />
                 <div className="relative p-12 flex flex-col items-center text-center space-y-6 z-10">
                   <div className="flex flex-col items-center gap-4">
-                    <Badge variant="outline" className="text-[10px] font-bold uppercase border-emerald-500/20 text-emerald-400 px-5 py-1.5 bg-emerald-500/5 backdrop-blur-sm tracking-widest">
+                    <Badge variant="outline" className="text-[10px] font-bold uppercase border-emerald-500/20 text-emerald-400 px-5 py-1.5 bg-emerald-500/5 backdrop-blur-sm tracking-tight">
                       Confirmed
                     </Badge>
                     <div className="h-px w-12 bg-emerald-500/10" />
@@ -156,7 +156,7 @@ export default function StandardAgreement() {
                 <div className="absolute inset-0 bg-white/[0.01] rounded-[32px] border border-red-500/10 backdrop-blur-xl" />
                 <div className="relative p-12 flex flex-col items-center text-center space-y-8 z-10">
                   <div className="flex flex-col items-center gap-4">
-                    <Badge variant="outline" className="text-[10px] font-bold uppercase border-red-500/20 text-red-400 px-5 py-1.5 bg-red-500/5 backdrop-blur-sm tracking-widest">
+                    <Badge variant="outline" className="text-[10px] font-bold uppercase border-red-500/20 text-red-400 px-5 py-1.5 bg-red-500/5 backdrop-blur-sm tracking-tight">
                       Notice
                     </Badge>
                     <div className="h-px w-12 bg-red-500/10" />
@@ -170,7 +170,7 @@ export default function StandardAgreement() {
                   </div>
 
                   <div className="pt-4 border-t border-white/5 w-full">
-                    <p className="text-[10px] text-white/20 uppercase tracking-widest font-sans">Redirecting to home...</p>
+                    <p className="text-[10px] text-white/20 uppercase tracking-tight font-sans">Redirecting to home...</p>
                   </div>
                 </div>
               </motion.div>

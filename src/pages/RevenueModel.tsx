@@ -145,7 +145,7 @@ export default function RevenueModel() {
               <CardHeader className="border-b border-white/5 pb-4 bg-white/[0.02]">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-mono tracking-[0.2em] uppercase text-emerald-500/80">Model Inputs</CardTitle>
+                    <CardTitle className="text-sm font-mono tracking-tight uppercase text-emerald-500/80">Model Inputs</CardTitle>
                     <CardDescription className="text-xs text-white/40 mt-1 font-serif italic">Adjust funnel and economics</CardDescription>
                   </div>
                   <Button variant="outline" size="icon" onClick={reset} title="Reset to defaults" className="h-8 w-8 border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/50 hover:text-emerald-400">
@@ -157,20 +157,20 @@ export default function RevenueModel() {
               <CardContent className="pt-6 space-y-6 relative z-10">
                 <Tabs defaultValue="growth" className="w-full">
                   <TabsList className="grid w-full grid-cols-3 mb-6 bg-white/[0.02] border border-white/5 rounded-lg p-1 h-10">
-                    <TabsTrigger value="growth" className="text-[10px] uppercase tracking-widest font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Growth</TabsTrigger>
-                    <TabsTrigger value="funnel" className="text-[10px] uppercase tracking-widest font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Funnel</TabsTrigger>
-                    <TabsTrigger value="economics" className="text-[10px] uppercase tracking-widest font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Economics</TabsTrigger>
+                    <TabsTrigger value="growth" className="text-[10px] uppercase tracking-tight font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Growth</TabsTrigger>
+                    <TabsTrigger value="funnel" className="text-[10px] uppercase tracking-tight font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Funnel</TabsTrigger>
+                    <TabsTrigger value="economics" className="text-[10px] uppercase tracking-tight font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Economics</TabsTrigger>
                   </TabsList>
                   <TabsContent value="growth" className="space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono text-emerald-500/80 flex items-center gap-2 mb-4">
+                      <h3 className="text-[10px] uppercase tracking-tight font-mono text-emerald-500/80 flex items-center gap-2 mb-4">
                         <Users className="h-3.5 w-3.5" />
                         Market Dynamics
                       </h3>
 
                       <div className="grid gap-6">
                         <div className="space-y-2">
-                          <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Start Active Sellers</Label>
+                          <Label className="text-[10px] font-mono uppercase tracking-tight text-white/50">Start Active Sellers</Label>
                           <Input
                             type="number"
                             value={startActiveSellers}
@@ -181,7 +181,7 @@ export default function RevenueModel() {
 
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Monthly Retention</Label>
+                            <Label className="text-[10px] font-mono uppercase tracking-tight text-white/50">Monthly Retention</Label>
                             <span className="text-xs font-mono text-emerald-400">{monthlyRetentionPct}%</span>
                           </div>
                           <Slider
@@ -194,7 +194,7 @@ export default function RevenueModel() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Monthly Sessions</Label>
+                          <Label className="text-[10px] font-mono uppercase tracking-tight text-white/50">Monthly Sessions</Label>
                           <Input
                             type="number"
                             value={monthlySessions}
@@ -205,7 +205,7 @@ export default function RevenueModel() {
 
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Mo. Growth Rate</Label>
+                            <Label className="text-[10px] font-mono uppercase tracking-tight text-white/50">Mo. Growth Rate</Label>
                             <span className="text-xs font-mono text-emerald-400">{monthlySessionsGrowthPct}%</span>
                           </div>
                           <Slider
@@ -224,11 +224,11 @@ export default function RevenueModel() {
                   <TabsContent value="funnel" className="space-y-4">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono text-emerald-500/80 flex items-center gap-2">
+                        <h3 className="text-[10px] uppercase tracking-tight font-mono text-emerald-500/80 flex items-center gap-2">
                           <TrendingUp className="h-3.5 w-3.5" />
                           Conversion Steps
                         </h3>
-                        <span className="text-[9px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
+                        <span className="text-[9px] font-mono uppercase tracking-tight text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
                           Total: <span className="text-white ml-1">{(conversionFactor * 100).toFixed(2)}%</span>
                         </span>
                       </div>
@@ -243,7 +243,7 @@ export default function RevenueModel() {
                         ].map((item, idx) => (
                           <div key={idx} className="space-y-3">
                             <div className="flex justify-between items-center">
-                              <span className="text-[10px] font-mono uppercase tracking-widest text-white/50">{item.l}</span>
+                              <span className="text-[10px] font-mono uppercase tracking-tight text-white/50">{item.l}</span>
                               <span className="text-xs font-mono text-emerald-400 w-10 text-right">{item.v}%</span>
                             </div>
                             <Slider
@@ -262,13 +262,13 @@ export default function RevenueModel() {
                   {/* TAB 3: ECONOMICS */}
                   <TabsContent value="economics" className="space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono text-emerald-500/80 mb-4">
+                      <h3 className="text-[10px] uppercase tracking-tight font-mono text-emerald-500/80 mb-4">
                         Unit Economics
                       </h3>
 
                       <div className="grid gap-6">
                         <div className="space-y-2">
-                          <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Recovered / Seller / Mo ($)</Label>
+                          <Label className="text-[10px] font-mono uppercase tracking-tight text-white/50">Recovered / Seller / Mo ($)</Label>
                           <Input
                             type="number"
                             value={avgRecoveredPerSeller}
@@ -279,7 +279,7 @@ export default function RevenueModel() {
 
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Take Rate</Label>
+                            <Label className="text-[10px] font-mono uppercase tracking-tight text-white/50">Take Rate</Label>
                             <span className="text-xs font-mono text-emerald-400">{takeRatePct}%</span>
                           </div>
                           <Slider
@@ -295,7 +295,7 @@ export default function RevenueModel() {
 
                         <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-[10px] font-mono uppercase tracking-widest text-white/60">ARPS (Rev/Seller/Mo)</span>
+                            <span className="text-[10px] font-mono uppercase tracking-tight text-white/60">ARPS (Rev/Seller/Mo)</span>
                             <span className="font-serif text-2xl text-emerald-400">${arps.toFixed(2)}</span>
                           </div>
                           <p className="text-xs text-white/30 font-serif italic">Average Revenue Per Seller based on recovery and take rate.</p>
@@ -314,10 +314,10 @@ export default function RevenueModel() {
 
               <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 pb-4 bg-white/[0.02]">
                 <div>
-                  <CardTitle className="text-sm font-mono tracking-[0.2em] uppercase text-emerald-500/80">Revenue Projection (2026)</CardTitle>
+                  <CardTitle className="text-sm font-mono tracking-tight uppercase text-emerald-500/80">Revenue Projection (2026)</CardTitle>
                   <CardDescription className="text-xs text-white/40 mt-1 font-serif italic">Based on current inputs</CardDescription>
                 </div>
-                <Button variant="outline" size="sm" onClick={exportCsv} className="gap-2 text-white/50 border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 hover:text-emerald-400 font-mono text-[9px] uppercase tracking-widest h-8 transition-all">
+                <Button variant="outline" size="sm" onClick={exportCsv} className="gap-2 text-white/50 border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 hover:text-emerald-400 font-mono text-[9px] uppercase tracking-tight h-8 transition-all">
                   <Download className="h-3.5 w-3.5" />
                   Export Data
                 </Button>
@@ -327,17 +327,17 @@ export default function RevenueModel() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-white/5 bg-white/[0.02]">
-                        <th className="py-3 px-4 text-left text-[10px] font-mono tracking-widest uppercase text-white/40">Month</th>
-                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">Traffic</th>
-                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">New Paid</th>
-                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">Active</th>
-                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">Revenue (USD)</th>
+                        <th className="py-3 px-4 text-left text-[10px] font-mono tracking-tight uppercase text-white/40">Month</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-tight uppercase text-white/40">Traffic</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-tight uppercase text-white/40">New Paid</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-tight uppercase text-white/40">Active</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-tight uppercase text-white/40">Revenue (USD)</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                       {rows.map((r, i) => (
                         <tr key={r.month} className="hover:bg-white/[0.02] transition-colors">
-                          <td className="py-3 px-4 text-xs text-white/70 font-mono tracking-widest uppercase">{r.month}</td>
+                          <td className="py-3 px-4 text-xs text-white/70 font-mono tracking-tight uppercase">{r.month}</td>
                           <td className="py-3 px-4 text-right text-xs text-white/50 font-mono">{r.sessions.toLocaleString()}</td>
                           <td className="py-3 px-4 text-right text-xs text-emerald-500/80 font-mono">+{r.newPaid.toLocaleString()}</td>
                           <td className="py-3 px-4 text-right text-xs text-white/70 font-mono">{r.activeSellers.toLocaleString()}</td>
@@ -349,7 +349,7 @@ export default function RevenueModel() {
                     </tbody>
                     <tfoot className="bg-white/[0.02] border-t border-white/10">
                       <tr>
-                        <td className="py-4 px-4 text-[10px] font-mono tracking-widest uppercase text-white/50" colSpan={4}>Total Projected Revenue</td>
+                        <td className="py-4 px-4 text-[10px] font-mono tracking-tight uppercase text-white/50" colSpan={4}>Total Projected Revenue</td>
                         <td className="py-4 px-4 text-right text-xl font-serif text-emerald-400">
                           ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </td>
@@ -360,17 +360,17 @@ export default function RevenueModel() {
 
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5 text-center">
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-white/50 mb-2">Total Active Sellers (Dec)</div>
+                    <div className="text-[10px] font-mono uppercase tracking-tight text-white/50 mb-2">Total Active Sellers (Dec)</div>
                     <div className="text-2xl font-serif text-white/90">{rows[11].activeSellers.toLocaleString()}</div>
                   </div>
                   <div className="bg-[#0c0c0c] rounded-xl p-4 border border-emerald-500/20 text-center shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]">
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-500/70 mb-2">Annual Revenue (USD)</div>
+                    <div className="text-[10px] font-mono uppercase tracking-tight text-emerald-500/70 mb-2">Annual Revenue (USD)</div>
                     <div className="text-2xl font-serif text-emerald-400">
                       ${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </div>
                   </div>
                   <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5 text-center">
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-500/70 mb-2">Annual Revenue (ZAR)</div>
+                    <div className="text-[10px] font-mono uppercase tracking-tight text-emerald-500/70 mb-2">Annual Revenue (ZAR)</div>
                     <div className="text-2xl font-serif text-white/90">
                       R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </div>
@@ -384,9 +384,9 @@ export default function RevenueModel() {
           <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between opacity-50 px-2 max-w-7xl mx-auto">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] font-mono tracking-[0.3em] text-white uppercase">Margin Internal System // Authorized access only</span>
+              <span className="text-[9px] font-mono tracking-tight text-white uppercase">Margin Internal System // Authorized access only</span>
             </div>
-            <span className="text-[9px] font-mono tracking-widest text-emerald-500">v2.0.4-STABLE</span>
+            <span className="text-[9px] font-mono tracking-tight text-emerald-500">v2.0.4-STABLE</span>
           </div>
 
         </div>

@@ -134,17 +134,17 @@ function MatchAnalysisViz() {
         <div className="space-y-2">
           <div className="space-y-1.5 text-[12px] leading-5 text-gray-700">
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Shipment</span>{' '}
+              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Shipment</span>{' '}
               Shipment <MetadataHighlight active={isActive('r-ship-id')} tone="yellow">FBA17ACME001</MetadataHighlight> ·{' '}
               <MetadataHighlight active={isActive('r-shipped')} tone="yellow">60 shipped</MetadataHighlight>.
             </p>
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Receipt</span>{' '}
+              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Receipt</span>{' '}
               Amazon received <MetadataHighlight active={isActive('r-received')} tone="yellow">46 units</MetadataHighlight> at{' '}
               <MetadataHighlight active={isActive('r-ont8')} tone="yellow">ONT8</MetadataHighlight>.
             </p>
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Backend</span>{' '}
+              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Backend</span>{' '}
               Record <MetadataHighlight active={isActive('r-record')} tone="rose">00000000-000</MetadataHighlight> · Source{' '}
               <MetadataHighlight active={isActive('r-sp-api')} tone="rose">SP API</MetadataHighlight> · Sync{' '}
               <MetadataHighlight active={isActive('r-sync')} tone="rose">acme-sync-20260420</MetadataHighlight>
@@ -153,7 +153,7 @@ function MatchAnalysisViz() {
 
           <div className="border-t border-gray-100 pt-2 text-[12px] leading-5 text-gray-700">
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-[0.14em] text-[10px]">Case readiness</span>{' '}
+              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Case readiness</span>{' '}
               <MetadataHighlight active={isActive('r-candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
               <MetadataHighlight active={isActive('r-deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
               <MetadataHighlight active={isActive('r-case-link')} tone="emerald">ACME-CASE-2001</MetadataHighlight>

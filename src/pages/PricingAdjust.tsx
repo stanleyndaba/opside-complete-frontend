@@ -281,7 +281,7 @@ export default function PricingAdjust() {
         <div className="relative z-10 flex h-full flex-col">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+              <div className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                 {tier.salesLed ? 'Offer' : 'Coverage'}
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[#182026]">{tier.name}</h2>
@@ -293,7 +293,7 @@ export default function PricingAdjust() {
                   "text-[9px] uppercase",
                   tier.badgeLabel?.includes('Coming Soon')
                     ? "font-medium tracking-tight bg-[#007AFF] text-white border-transparent shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
-                    : "font-semibold tracking-[0.14em] border-[#BFD8EA] bg-white text-[#0B74DE]"
+                    : "font-semibold tracking-tight border-[#BFD8EA] bg-white text-[#0B74DE]"
                 )}
               >
                 {tier.badgeLabel || 'Most Popular'}
@@ -302,7 +302,7 @@ export default function PricingAdjust() {
           </div>
 
           <div className="mb-6 rounded-[24px] border border-[#E4EDF1] bg-[#F8FAFC] p-5">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Price</div>
+            <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Price</div>
             <div className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-[#182026]">
               {tier.price}
             </div>
@@ -312,12 +312,12 @@ export default function PricingAdjust() {
           </div>
 
           <div className="mb-6 rounded-[22px] border border-[#E4EDF1] bg-white p-4">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Purpose</div>
+            <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Purpose</div>
             <div className="mt-3 text-sm font-semibold text-[#25313A]">{tier.purpose}</div>
           </div>
 
           <div className="mb-8 flex-grow rounded-[24px] border border-[#E4EDF1] bg-white p-5">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Key Differentiators</div>
+            <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Key Differentiators</div>
             <div className="mt-4 space-y-3">
               {tier.features.map((feature) => (
                 <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-[#4D5B66]">
@@ -378,7 +378,7 @@ export default function PricingAdjust() {
           <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-5 md:px-8">
             <Link
               to="/"
-              className="inline-flex items-center rounded-full border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
+              className="inline-flex items-center rounded-full border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
             >
               Landing Page
             </Link>
@@ -417,7 +417,7 @@ export default function PricingAdjust() {
             className="mb-12 flex flex-col items-center text-center"
           >
             <div className="flex flex-col items-center gap-3">
-              <Badge variant="outline" className="border-[#DCE8EE] bg-white text-[10px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">
+              <Badge variant="outline" className="border-[#DCE8EE] bg-white text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                 Tiered Revenue Recovery Infrastructure
               </Badge>
               <h1 className="text-2xl font-semibold tracking-[-0.035em] text-[#182026]">Pricing</h1>

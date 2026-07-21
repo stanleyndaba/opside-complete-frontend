@@ -80,7 +80,7 @@ const LaunchCountdownSimulate = () => {
                 className="flex flex-col items-center gap-6"
               >
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-bold text-gray-400 uppercase tracking-[0.3em]">Launch Imminent</h2>
+                  <h2 className="text-2xl font-bold text-gray-400 uppercase tracking-tight">Launch Imminent</h2>
                   <h1 className="text-6xl md:text-7xl font-black text-[#007aff] tracking-tighter">
                     Launching in 2 days.
                   </h1>
@@ -99,7 +99,7 @@ const LaunchCountdownSimulate = () => {
                 <motion.div 
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ repeat: Infinity, duration: 2 }}
-                  className="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+                  className="text-[10px] font-black text-gray-400 uppercase tracking-tight"
                 >
                   Finalizing Recovery Infrastructure
                 </motion.div>

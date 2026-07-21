@@ -16,7 +16,7 @@ export default function InvoiceDetail() {
 
         <div className="relative container mx-auto px-6">
           <div className="mb-8">
-            <Button asChild variant="ghost" className="text-white/40 hover:text-white hover:bg-white/5 -ml-4 px-4 font-mono text-[10px] uppercase tracking-widest">
+            <Button asChild variant="ghost" className="text-white/40 hover:text-white hover:bg-white/5 -ml-4 px-4 font-mono text-[10px] uppercase tracking-tight">
               <Link to={`/app/${tenantSlug || 'default'}/billing`}>
                 <ArrowLeft className="h-3.5 w-3.5 mr-2" />
                 Return to Ledger
@@ -28,7 +28,7 @@ export default function InvoiceDetail() {
             <CardHeader className="p-8 border-b border-white/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-[0.4em] mb-2">Transmission Record</p>
+                  <p className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-tight mb-2">Transmission Record</p>
                   <CardTitle className="text-3xl font-serif tracking-tighter">Record {id}</CardTitle>
                 </div>
                 <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] px-3 font-mono">SETTLED</Badge>
@@ -40,18 +40,18 @@ export default function InvoiceDetail() {
               </p>
 
               <div className="p-6 bg-white/[0.02] border border-white/5 rounded-xl space-y-4">
-                <div className="flex justify-between text-[11px] font-mono uppercase tracking-widest text-white/30">
+                <div className="flex justify-between text-[11px] font-mono uppercase tracking-tight text-white/30">
                   <span>Protocol Stage</span>
                   <span className="text-white">VERIFIED // FINAL</span>
                 </div>
-                <div className="flex justify-between text-[11px] font-mono uppercase tracking-widest text-white/30">
+                <div className="flex justify-between text-[11px] font-mono uppercase tracking-tight text-white/30">
                   <span>Node Cluster</span>
                   <span className="text-white">FIN_CORE_04</span>
                 </div>
               </div>
 
               <div className="flex gap-4 pt-4">
-                <Button className="flex-1 bg-white text-black hover:bg-white/90 rounded-xl font-serif font-bold uppercase tracking-widest text-[10px] h-12 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                <Button className="flex-1 bg-white text-black hover:bg-white/90 rounded-xl font-serif font-bold uppercase tracking-tight text-[10px] h-12 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
                   <Download className="h-4 w-4 mr-2" /> Download PDF Artifact
                 </Button>
               </div>

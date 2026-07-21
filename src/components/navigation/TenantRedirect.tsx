@@ -39,7 +39,7 @@ export function TenantRedirect({ targetPath = '/dashboard', preservePath = false
             <div className="relative flex flex-col items-center gap-5 rounded-[30px] border border-[#CFE0EA] bg-white px-8 py-7 text-center shadow-[0_28px_90px_rgba(37,49,58,0.1)]">
                 <div className="h-9 w-9 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
                 <div className="space-y-2">
-                    <span className="block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                    <span className="block text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                         Preparing workspace
                     </span>
                     <span className="block text-sm font-medium tracking-tight text-[#66737F]">

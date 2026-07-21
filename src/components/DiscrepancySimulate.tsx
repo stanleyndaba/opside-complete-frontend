@@ -39,7 +39,7 @@ const DiscrepancySimulate = () => {
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Audit Found</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Audit Found</span>
                   </div>
                   <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md uppercase">Fee Mismatch</span>
                 </div>
@@ -65,7 +65,7 @@ const DiscrepancySimulate = () => {
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Audit</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Live Audit</span>
                   </div>
                   <div className="flex items-center gap-1 text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md uppercase">
                     <Clock size={10} /> 45 Days Left
@@ -106,7 +106,7 @@ const DiscrepancySimulate = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.4 }}
                   transition={{ delay: 0.5 }}
-                  className="text-xs font-bold uppercase tracking-[0.3em] text-gray-900"
+                  className="text-xs font-bold uppercase tracking-tight text-gray-900"
                 >
                   [ Tap to continue ]
                 </motion.p>

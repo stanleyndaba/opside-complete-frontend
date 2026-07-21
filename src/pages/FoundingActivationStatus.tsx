@@ -38,7 +38,7 @@ export default function FoundingActivationStatus() {
           <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_50%_0%,rgba(11,116,222,0.10),transparent_48%)]" />
 
           <section className="relative mx-auto flex min-h-[calc(100vh-180px)] w-full max-w-[960px] flex-col items-center px-5 pb-24 text-center sm:px-6 md:px-8 md:pb-32">
-            <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#0B74DE]">
+            <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">
               <span className="h-2 w-2 rounded-full bg-[#2EAD7B]" />
               Founding member confirmed
             </div>
@@ -56,7 +56,7 @@ export default function FoundingActivationStatus() {
                   <h2 className="text-[18px] font-semibold tracking-[-0.025em] text-[#182026]">Activation status</h2>
                   <p className="mt-1 text-[13px] text-[#8896A1]">Your place in the Founding 500 onboarding flow.</p>
                 </div>
-                <div className="flex w-fit items-center gap-2 rounded-full border border-[#CFE0EA] bg-[#F8FBFD] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#0B74DE]">
+                <div className="flex w-fit items-center gap-2 rounded-full border border-[#CFE0EA] bg-[#F8FBFD] px-3 py-1.5 text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                   Priority queue
                 </div>
@@ -81,7 +81,7 @@ export default function FoundingActivationStatus() {
                         <Icon className="h-4 w-4" strokeWidth={1.8} />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8896A1]">{label}</div>
+                        <div className="text-[11px] font-semibold uppercase tracking-tight text-[#8896A1]">{label}</div>
                         <div className="mt-0.5 text-[14px] font-semibold tracking-[-0.01em] text-[#25313A] sm:text-[15px]">{text}</div>
                       </div>
                       <div className={`hidden text-[11px] font-semibold sm:block ${isComplete ? 'text-[#2E7D5B]' : isCurrent ? 'text-[#0B74DE]' : 'text-[#A1ADB6]'}`}>

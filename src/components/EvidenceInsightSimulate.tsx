@@ -41,7 +41,7 @@ const EvidenceInsightSimulate = () => {
                   <span className="text-4xl font-black text-gray-900 tracking-tighter italic">
                     from seven months ago
                   </span>
-                  <span className="text-sm font-bold text-red-500 uppercase tracking-widest flex items-center gap-2">
+                  <span className="text-sm font-bold text-red-500 uppercase tracking-tight flex items-center gap-2">
                     <Clock size={14} /> fast enough to save the case.
                   </span>
                 </motion.div>
@@ -59,7 +59,7 @@ const EvidenceInsightSimulate = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex flex-col items-center gap-2"
               >
-                <div className="flex items-center gap-2 text-gray-400 font-bold uppercase text-xs tracking-[0.2em]">
+                <div className="flex items-center gap-2 text-gray-400 font-bold uppercase text-xs tracking-tight">
                   <Search size={16} /> Detection finds the discrepancy.
                 </div>
               </motion.div>

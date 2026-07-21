@@ -123,7 +123,7 @@ export default function CurrencyMargin() {
         <section className="relative pt-28 md:pt-40">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <div className="mx-auto max-w-[940px] text-center">
-              <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#0B74DE] opacity-90">
+              <div className="text-[12px] font-bold uppercase tracking-tight text-[#0B74DE] opacity-90">
                 Currency Margin
               </div>
               <h1 className="mt-6 text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
@@ -178,7 +178,7 @@ export default function CurrencyMargin() {
         <section className="relative border-t border-[#E4EDF1] py-16 md:py-20">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <div className="mx-auto max-w-[860px]">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">
+              <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                 FAQ
               </div>
               <div className="mt-8 border-t border-[#DADFE3]">

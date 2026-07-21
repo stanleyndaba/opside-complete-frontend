@@ -276,10 +276,6 @@ const Login = () => {
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
   const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
   const clerkFinalizeBootstrapRef = useRef<Promise<ClerkLoginResult> | null>(null);
-  const clerkLoginLoading = mode === 'login'
-    && !isPaystackReviewerEmail(email)
-    && (!clerkAuthLoaded || !signIn || clerkSignInFetchStatus === 'fetching');
-
   const enterDemoWorkspace = useCallback(() => {
     seedDemoSession();
     navigate(`/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
@@ -1096,7 +1092,7 @@ const Login = () => {
             <div className="relative">
               <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                     {mode === 'signup' ? 'New account' : mode === 'recovery' ? 'Password recovery' : 'Existing account'}
                   </div>
                   <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
@@ -1115,7 +1111,7 @@ const Login = () => {
 
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
                 <div className="mb-5 rounded-[12px] border border-[#DCE8EE] bg-[#F8FAFC] px-4 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">
+                  <p className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
                     Active session found
                   </p>
                   <p className="mt-2 text-sm leading-6 text-[#4D5B66]">
@@ -1276,7 +1272,7 @@ const Login = () => {
                 <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   <p>{error}</p>
                   {loginStep ? (
-                    <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-red-500">
+                    <p className="mt-2 text-[11px] font-semibold uppercase tracking-tight text-red-500">
                       Failed step: {loginStep === 'account' ? 'Account sign-in' : 'Access setup'}
                     </p>
                   ) : null}
@@ -1308,7 +1304,7 @@ const Login = () => {
               <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                 <Button
                   type="submit"
-                  disabled={loading || clerkLoginLoading}
+                  disabled={loading}
                   className="h-12 flex-1 justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
                 >
                   {loading ? (

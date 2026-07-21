@@ -2792,7 +2792,7 @@ export default function Recoveries() {
                               <div className="sticky top-[0px] z-10 bg-[#0c0c0c]/90 backdrop-blur-xl px-8 py-4 border-y border-white/5 flex items-center justify-between group/header">
                                 <div className="flex items-center gap-4">
                                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                                  <span className="text-xs font-sans font-bold text-white uppercase tracking-[0.3em]">
+                                  <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">
                                     {monthGroup.month} {monthGroup.year}
                                   </span>
                                 </div>

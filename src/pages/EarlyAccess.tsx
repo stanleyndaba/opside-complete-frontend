@@ -86,7 +86,7 @@ function FounderPassCTA({
     <div className="w-full max-w-[520px] mx-auto flex flex-col items-center">
       <div className="mb-4 inline-flex items-center rounded-full border border-[#E9EEF2] bg-white px-3 py-1 shadow-sm">
         <span className="flex h-2 w-2 rounded-full bg-[#E05B52] mr-2 animate-pulse" />
-        <span className="text-[12px] font-semibold tracking-wide text-[#182026] uppercase">
+        <span className="text-[12px] font-semibold tracking-tight text-[#182026] uppercase">
           Closes July 30
         </span>
       </div>
@@ -440,7 +440,7 @@ export default function EarlyAccess() {
                   </div>
                 </div>
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/78 md:text-[11px]">
+                  <div className="text-[10px] font-semibold uppercase tracking-tight text-white/78 md:text-[11px]">
                     Evidence-first walkthrough
                   </div>
                   <div className="mt-2 max-w-[760px] text-[20px] font-semibold leading-tight tracking-[-0.035em] text-white md:text-[34px]">
@@ -500,13 +500,13 @@ export default function EarlyAccess() {
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-[#0B74DE] bg-white text-[13px] font-bold text-[#0B74DE]">
                         {step.num}
                       </div>
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]">
+                      <span className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                         {step.label}
                       </span>
                     </div>
 
                     <div>
-                      <div className="mb-2 hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE] md:block">
+                      <div className="mb-2 hidden text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE] md:block">
                         {step.label}
                       </div>
                       <h3 className="text-[24px] font-semibold leading-[1.08] tracking-[-0.035em] text-[#182026] md:text-[34px]">
@@ -584,7 +584,7 @@ export default function EarlyAccess() {
                     <div className="text-[32px] font-semibold tracking-[-0.04em] text-[#182026]">
                       {stat.metric}
                     </div>
-                    <div className="mt-1 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#8896A1]">
+                    <div className="mt-1 text-[12px] font-semibold uppercase tracking-tight text-[#8896A1]">
                       {stat.label}
                     </div>
                   </div>

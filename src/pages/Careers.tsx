@@ -190,19 +190,19 @@ export default function Careers() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-emerald-500/50" />
-                  <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Careers at Opside</span>
+                  <span className="text-[10px] font-mono uppercase tracking-tight text-emerald-500/80">Careers at Opside</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 leading-tight italic">
                   Join the <span className="text-white/40 not-italic">Team</span>
                 </h1>
                 <p className="text-gray-400 max-w-xl text-lg leading-relaxed font-light">
-                  We're hiring talented individuals to build the world's most advanced FBA recovery platform. Join us in solving complex problems with <span className="text-emerald-500/60 font-mono text-sm uppercase tracking-wider">high_impact</span> results.
+                  We're hiring talented individuals to build the world's most advanced FBA recovery platform. Join us in solving complex problems with <span className="text-emerald-500/60 font-mono text-sm uppercase tracking-tight">high_impact</span> results.
                 </p>
               </div>
 
               <div className="flex items-center gap-8">
                 <div className="flex flex-col items-end">
-                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Open Roles</span>
+                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-tight mb-1">Open Roles</span>
                   <div className="flex items-center gap-2">
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-2xl font-mono font-bold text-white tracking-tighter">{positions.length}</span>
@@ -238,14 +238,14 @@ export default function Careers() {
                 >
                   <div className="relative z-10 flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-[0.2em]">{position.jobId}</span>
+                      <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-tight">{position.jobId}</span>
                       <div className="h-1 w-1 rounded-full bg-emerald-500" />
                     </div>
                     <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-3">
                       <h3 className="text-xl font-medium text-white tracking-tight">{position.title}</h3>
                       <div className="flex items-center gap-3">
-                        <span className="px-2 py-0.5 bg-white/[0.03] border border-white/5 rounded text-[9px] font-mono text-gray-400 uppercase tracking-wider">{position.location}</span>
-                        <span className="px-2 py-0.5 bg-white/[0.03] border border-white/5 rounded text-[9px] font-mono text-gray-400 uppercase tracking-wider">{position.type}</span>
+                        <span className="px-2 py-0.5 bg-white/[0.03] border border-white/5 rounded text-[9px] font-mono text-gray-400 uppercase tracking-tight">{position.location}</span>
+                        <span className="px-2 py-0.5 bg-white/[0.03] border border-white/5 rounded text-[9px] font-mono text-gray-400 uppercase tracking-tight">{position.type}</span>
                       </div>
                     </div>
                     <p className="text-sm text-gray-500 leading-relaxed font-light max-w-2xl">
@@ -256,20 +256,20 @@ export default function Careers() {
                   <div className="relative z-10 flex flex-col items-start md:items-end gap-4 min-w-[200px]">
                     <div className="flex flex-wrap gap-2 md:justify-end">
                       {position.tags.map(tag => (
-                        <span key={tag} className="px-2 py-0.5 bg-white/[0.01] border border-white/5 rounded text-[8px] font-mono text-gray-600 uppercase tracking-wider">
+                        <span key={tag} className="px-2 py-0.5 bg-white/[0.01] border border-white/5 rounded text-[8px] font-mono text-gray-600 uppercase tracking-tight">
                           {tag}
                         </span>
                       ))}
                     </div>
                     <div className="flex items-center gap-6 w-full md:w-auto">
                       <div className="flex flex-col md:items-end">
-                        <span className="text-[9px] font-mono text-gray-600 uppercase tracking-widest">Range</span>
+                        <span className="text-[9px] font-mono text-gray-600 uppercase tracking-tight">Range</span>
                         <span className="text-xs font-mono text-white/80">{position.salary}</span>
                       </div>
                       <Button
                         onClick={() => handleApplyClick(position.title)}
                         variant="ghost"
-                        className="h-10 px-6 bg-white/[0.03] hover:bg-emerald-500 hover:text-black border border-white/5 hover:border-emerald-500 text-[10px] font-mono uppercase tracking-widest transition-all duration-300"
+                        className="h-10 px-6 bg-white/[0.03] hover:bg-emerald-500 hover:text-black border border-white/5 hover:border-emerald-500 text-[10px] font-mono uppercase tracking-tight transition-all duration-300"
                       >
                         Apply <ArrowRight className="ml-1.5 h-3 w-3" />
                       </Button>
@@ -288,7 +288,7 @@ export default function Careers() {
           >
             <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 bg-white/[0.02] border border-white/5 rounded-full">
               <Sparkles className="h-3 w-3 text-emerald-500" />
-              <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest">Open Invitations</span>
+              <span className="text-[9px] font-mono text-gray-500 uppercase tracking-tight">Open Invitations</span>
             </div>
             <h3 className="text-xl font-light text-white mb-4 italic">
               Don't see the right role?
@@ -298,7 +298,7 @@ export default function Careers() {
             </p>
             <a
               href="mailto:careers@margin.io"
-              className="inline-block px-8 py-3 bg-white text-black hover:bg-emerald-500 transition-all duration-300 font-mono text-xs uppercase tracking-[0.2em] font-bold"
+              className="inline-block px-8 py-3 bg-white text-black hover:bg-emerald-500 transition-all duration-300 font-mono text-xs uppercase tracking-tight font-bold"
             >
               Get in Touch
             </a>
@@ -318,7 +318,7 @@ export default function Careers() {
               <p className="text-sm text-gray-500 mb-8 max-w-xs font-light leading-relaxed">
                 Thank you for applying for the <span className="text-emerald-400 font-mono uppercase text-xs">{selectedJob}</span> role. Our team will review your application soon.
               </p>
-              <Button onClick={closeApplication} className="w-full h-12 bg-white text-black hover:bg-emerald-500 font-mono uppercase tracking-[0.2em] text-[10px] font-bold">
+              <Button onClick={closeApplication} className="w-full h-12 bg-white text-black hover:bg-emerald-500 font-mono uppercase tracking-tight text-[10px] font-bold">
                 Close
               </Button>
             </div>
@@ -333,7 +333,7 @@ export default function Careers() {
                     <DialogTitle className="text-xl font-light tracking-tight">Apply for Role</DialogTitle>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                      <p className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Role: {selectedJob}</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-tight font-mono">Role: {selectedJob}</p>
                     </div>
                   </div>
                 </div>
@@ -342,22 +342,22 @@ export default function Careers() {
               <div className="p-8 space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">First Name</Label>
+                    <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-tight">First Name</Label>
                     <Input className="h-11 bg-white/[0.03] border-white/10 focus:border-emerald-500/50 text-white font-mono text-xs" placeholder="First Name" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Last Name</Label>
+                    <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-tight">Last Name</Label>
                     <Input className="h-11 bg-white/[0.03] border-white/10 focus:border-emerald-500/50 text-white font-mono text-xs" placeholder="Last Name" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Email Address</Label>
+                  <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-tight">Email Address</Label>
                   <Input className="h-11 bg-white/[0.03] border-white/10 focus:border-emerald-500/50 text-white font-mono text-xs" placeholder="email@example.com" />
                 </div>
 
                 <div className="space-y-3">
-                  <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Resume (PDF/DOCX)</Label>
+                  <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-tight">Resume (PDF/DOCX)</Label>
 
                   {!resumeFile ? (
                     <div
@@ -379,7 +379,7 @@ export default function Careers() {
                       />
                       <Upload className="h-8 w-8 text-gray-600 mb-4 group-hover:text-emerald-500 transition-colors" />
                       <p className="text-xs font-mono text-gray-400 mb-1">Drop file here or click to upload</p>
-                      <p className="text-[9px] text-gray-600 uppercase tracking-widest">Max file size: 5MB</p>
+                      <p className="text-[9px] text-gray-600 uppercase tracking-tight">Max file size: 5MB</p>
                     </div>
                   ) : (
                     <div className="border border-emerald-500/30 rounded-xl p-5 flex items-center justify-between bg-emerald-500/5 backdrop-blur-sm">
@@ -399,7 +399,7 @@ export default function Careers() {
                   )}
 
                   {uploadStatus === 'error' && (
-                    <div className="flex items-center gap-3 text-[10px] font-mono text-rose-500 bg-rose-500/5 p-3 border border-rose-500/20 uppercase tracking-widest">
+                    <div className="flex items-center gap-3 text-[10px] font-mono text-rose-500 bg-rose-500/5 p-3 border border-rose-500/20 uppercase tracking-tight">
                       <AlertCircle className="h-4 w-4" />
                       <span>Upload Failed. Please try again.</span>
                     </div>
@@ -408,13 +408,13 @@ export default function Careers() {
               </div>
 
               <div className="p-8 border-t border-white/5 bg-white/[0.02] flex gap-4">
-                <Button variant="ghost" onClick={closeApplication} className="flex-1 h-12 bg-transparent border border-white/10 text-gray-500 hover:text-white font-mono uppercase text-[10px] tracking-widest">
+                <Button variant="ghost" onClick={closeApplication} className="flex-1 h-12 bg-transparent border border-white/10 text-gray-500 hover:text-white font-mono uppercase text-[10px] tracking-tight">
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSubmitApplication}
                   disabled={!resumeFile || uploadStatus === 'uploading'}
-                  className="flex-1 h-12 bg-white text-black hover:bg-emerald-500 disabled:opacity-50 font-mono uppercase text-[10px] font-bold tracking-[0.2em] shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all"
+                  className="flex-1 h-12 bg-white text-black hover:bg-emerald-500 disabled:opacity-50 font-mono uppercase text-[10px] font-bold tracking-tight shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all"
                 >
                   {uploadStatus === 'uploading' ? (
                     <div className="flex items-center gap-2">

@@ -26,7 +26,7 @@ const Docs = () => {
         <article className="max-w-2xl mx-auto">
           {/* Document Header */}
           <header className="mb-16">
-            <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+            <p className="text-xs text-gray-400 uppercase tracking-tight mb-4">
               Effective January 13, 2026
             </p>
             <h1 className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight leading-tight">
@@ -42,7 +42,7 @@ const Docs = () => {
 
             {/* Section 1 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 01 — Permitted Use
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -60,7 +60,7 @@ const Docs = () => {
 
             {/* Section 2 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 02 — Prohibited Conduct
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -92,7 +92,7 @@ const Docs = () => {
 
             {/* Section 3 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 03 — Monitoring and Enforcement
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -110,7 +110,7 @@ const Docs = () => {
 
             {/* Section 4 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 04 — Indemnification
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -125,7 +125,7 @@ const Docs = () => {
 
             {/* Section 5 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 05 — Contact
               </h2>
               <div className="space-y-2 text-gray-700">

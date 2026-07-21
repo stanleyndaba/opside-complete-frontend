@@ -79,7 +79,7 @@ function DiscrepancyDetectionViz() {
     <div className="flex h-full flex-col justify-between">
       <div>
         <div className="mb-1.5 flex items-center justify-between border-b border-slate-200 pb-1.5">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-tight text-slate-500">
             21 Active Transaction Disputes
           </span>
         </div>
@@ -213,7 +213,7 @@ function EvidenceBindingViz() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-tight text-slate-500">
             Inbound Shortage Case
           </span>
           <div className="mt-0.5 font-mono text-[9px] text-slate-400">
@@ -233,7 +233,7 @@ function EvidenceBindingViz() {
             transition={{ delay: i * 0.08, duration: 0.35 }}
             className={i > 0 ? 'border-l border-slate-100 pl-3' : ''}
           >
-            <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+            <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-slate-400">
               {metric.label}
             </div>
             <div className="mt-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700">
@@ -292,7 +292,7 @@ function EvidenceBindingViz() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 + i * 0.2, duration: 0.6 }}
-                className={`relative mt-1 ml-7 font-mono text-[9px] tracking-wide ${
+                className={`relative mt-1 ml-7 font-mono text-[9px] tracking-tight ${
                   src.verified ? 'text-slate-400' : 'text-slate-400 animate-pulse'
                 }`}
               >
@@ -322,10 +322,10 @@ function EvidenceBindingViz() {
         transition={{ delay: 0.7 }}
         className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2"
       >
-        <span className="font-mono text-[9px] tracking-wide text-slate-400">
+        <span className="font-mono text-[9px] tracking-tight text-slate-400">
           ELIGIBILITY: {resolved ? 'READY AFTER EVIDENCE BINDING' : 'HELD UNTIL EVIDENCE BINDING'}
         </span>
-        <span className="font-mono text-[9px] tracking-wide text-slate-500">
+        <span className="font-mono text-[9px] tracking-tight text-slate-500">
           INTEGRITY: {resolved ? '100%' : '66%'}
         </span>
       </motion.div>
@@ -343,7 +343,7 @@ function RefundMatchingViz() {
   return (
     <div>
       <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <span className="text-[10px] font-bold uppercase tracking-tight text-slate-500">
           Refund ↔ Return Matching
         </span>
         <span className="text-[10px] font-mono text-slate-500">3 SCANNED</span>
@@ -362,7 +362,7 @@ function RefundMatchingViz() {
             transition={{ delay: i * 0.08, duration: 0.35 }}
             className={i > 0 ? 'border-l border-slate-100 pl-3' : ''}
           >
-            <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+            <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-slate-400">
               {metric.label}
             </div>
             <div className="mt-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700">
@@ -373,7 +373,7 @@ function RefundMatchingViz() {
       </div>
 
       <div className="mt-2">
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 border-b border-slate-100 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-x-3 border-b border-slate-100 pb-1.5 text-[10px] font-bold uppercase tracking-tight text-slate-400">
           <span>Refund Event</span>
           <span />
           <span className="text-right">Return Record</span>
@@ -412,7 +412,7 @@ function RefundMatchingViz() {
                 {pair.returnId}
               </div>
               {!pair.matched && (
-                <div className="mt-0.5 text-[9px] font-semibold uppercase tracking-wide text-red-600 animate-pulse">
+                <div className="mt-0.5 text-[9px] font-semibold uppercase tracking-tight text-red-600 animate-pulse">
                   Held before claim advances
                 </div>
               )}
@@ -427,10 +427,10 @@ function RefundMatchingViz() {
         transition={{ delay: 0.6 }}
         className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2"
       >
-        <span className="font-mono text-[9px] tracking-wide text-slate-400">
+        <span className="font-mono text-[9px] tracking-tight text-slate-400">
           VALIDATION: RETURN PROOF REQUIRED
         </span>
-        <span className="font-mono text-[9px] tracking-wide text-slate-500">
+        <span className="font-mono text-[9px] tracking-tight text-slate-500">
           1 UNMATCHED
         </span>
       </motion.div>
@@ -448,14 +448,14 @@ function FeeDriftViz() {
   return (
     <div>
       <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <span className="text-[10px] font-bold uppercase tracking-tight text-slate-500">
           Fee Recalculation
         </span>
         <span className="text-[10px] font-mono text-amber-600">DRIFT DETECTED</span>
       </div>
 
       {/* Column headers */}
-      <div className="mt-3 grid grid-cols-[1fr_auto_auto_auto] gap-x-4 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+      <div className="mt-3 grid grid-cols-[1fr_auto_auto_auto] gap-x-4 pb-1.5 text-[10px] font-bold uppercase tracking-tight text-slate-400">
         <span>Fee Type</span>
         <span className="text-right">Listed</span>
         <span className="text-right">Actual</span>
@@ -495,7 +495,7 @@ function FeeDriftViz() {
       >
         <div className="flex items-end justify-between">
           <div>
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            <div className="text-[10px] font-semibold uppercase tracking-tight text-slate-500">
               Cumulative Impact
             </div>
             <div className="mt-0.5 text-[11px] text-slate-500">$0.88/unit × 847 units</div>
@@ -562,7 +562,7 @@ function PayoutReconciliationViz() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="text-[10px] font-bold uppercase tracking-tight text-slate-500">
             Payout Reconciliation
           </span>
           <div className="mt-0.5 font-mono text-[9px] text-slate-400">
@@ -581,7 +581,7 @@ function PayoutReconciliationViz() {
             transition={{ delay: i * 0.08, duration: 0.35 }}
             className={i > 0 ? 'border-l border-slate-100 pl-3' : ''}
           >
-            <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+            <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-slate-400">
               {metric.label}
             </div>
             <div className="mt-1 font-mono text-[13px] font-semibold tracking-tight text-slate-700">
@@ -615,7 +615,7 @@ function PayoutReconciliationViz() {
                 {row.status}
               </span>
             </div>
-            <div className="relative mt-1 font-mono text-[9px] tracking-wide text-slate-400">
+            <div className="relative mt-1 font-mono text-[9px] tracking-tight text-slate-400">
               {row.meta}
             </div>
           </motion.div>
@@ -628,10 +628,10 @@ function PayoutReconciliationViz() {
         transition={{ delay: 0.58 }}
         className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2"
       >
-        <span className="font-mono text-[9px] tracking-wide text-slate-400">
+        <span className="font-mono text-[9px] tracking-tight text-slate-400">
           RECONCILIATION: FOLLOW-UP READY
         </span>
-        <span className="font-mono text-[9px] tracking-wide text-slate-500">
+        <span className="font-mono text-[9px] tracking-tight text-slate-500">
           DELTA CAPTURED
         </span>
       </motion.div>
@@ -642,13 +642,13 @@ function PayoutReconciliationViz() {
         transition={{ delay: 0.68, duration: 0.35 }}
         className="mt-2 border-t border-slate-200 pt-2"
       >
-        <div className="font-mono text-[9px] font-semibold uppercase tracking-wide text-slate-500">
+        <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-slate-500">
           Accounting-ready reconciliation
         </div>
         <p className="mt-1 text-[10px] leading-5 text-slate-500">
           When Amazon approves a reimbursement, Margin tracks whether the payout actually arrived, whether the amount matches the approval, and whether the recovery record is ready for QuickBooks or Xero review.
         </p>
-        <div className="mt-2 grid gap-1.5 font-mono text-[8px] uppercase tracking-wide text-slate-500">
+        <div className="mt-2 grid gap-1.5 font-mono text-[8px] uppercase tracking-tight text-slate-500">
           <span>Match Amazon approvals to settlement deposits</span>
           <span>Flag underpaid or missing reimbursement amounts</span>
           <span>Prepare recovery records for QuickBooks/Xero export</span>
@@ -680,6 +680,8 @@ function WorkflowVisual({ index }: { index: number }) {
 /* ── Main Component ───────────────────────────────────────────── */
 
 export function ScrollytellingCoverage() {
+  return null;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

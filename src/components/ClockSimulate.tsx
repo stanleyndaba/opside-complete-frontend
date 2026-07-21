@@ -83,7 +83,7 @@ const ClockSimulate = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.4 }}
-            className="text-sm font-bold text-gray-500 tracking-[0.2em] uppercase"
+            className="text-sm font-bold text-gray-500 tracking-tight uppercase"
           >
             {isRotating ? 'The Uncertainty Phase' : 'The Wait is Over'}
           </motion.div>

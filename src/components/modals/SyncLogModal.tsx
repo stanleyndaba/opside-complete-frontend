@@ -212,7 +212,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                     "bg-red-500 shadow-red-500/50"
                         )} />
                         <div>
-                            <h2 className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">FORENSIC_INGEST_LOG</h2>
+                            <h2 className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">FORENSIC_INGEST_LOG</h2>
                             <p className="text-[9px] font-mono text-white/30 truncate mt-0.5">STATUS_CODE: {status.toUpperCase()}</p>
                         </div>
                     </div>
@@ -221,7 +221,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                             <button
                                 onClick={handleCancelSync}
                                 disabled={isCancelling}
-                                className="px-4 py-1.5 text-[10px] font-mono font-bold text-white/30 border border-white/10 hover:border-red-500/30 hover:text-red-500 transition-all uppercase tracking-widest disabled:opacity-50">
+                                className="px-4 py-1.5 text-[10px] font-mono font-bold text-white/30 border border-white/10 hover:border-red-500/30 hover:text-red-500 transition-all uppercase tracking-tight disabled:opacity-50">
                                 {isCancelling ? 'TERMINATING...' : 'ABORT_LINK'}
                             </button>
                         )}
@@ -267,14 +267,14 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                             {status === 'syncing' && (
                                 <div className="flex items-center gap-3 text-[10px] text-emerald-500/40 mt-6 animate-pulse">
                                     <Loader2 className="h-3 w-3 animate-spin" />
-                                    <span className="font-bold uppercase tracking-widest">INGESTION_ACTIVE_WAITING_FOR_DATA_NODES...</span>
+                                    <span className="font-bold uppercase tracking-tight">INGESTION_ACTIVE_WAITING_FOR_DATA_NODES...</span>
                                 </div>
                             )}
                         </>
                     ) : (
                         <div className="flex flex-col items-center justify-center h-48 gap-4">
                             <RefreshCw className="h-5 w-5 text-emerald-500/20 animate-spin" />
-                            <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.4em]">INITIATING_AUDIT_ENGINE</span>
+                            <span className="text-[10px] font-mono text-white/20 uppercase tracking-tight">INITIATING_AUDIT_ENGINE</span>
                         </div>
                     )}
                 </div>
@@ -283,7 +283,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                     <div className="px-8 py-8 border-t border-white/5 bg-emerald-500/[0.02]">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
-                                <div className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">RECONCILIATION_SUMMARY</div>
+                                <div className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-tight">RECONCILIATION_SUMMARY</div>
                                 <div className="flex items-center gap-4">
                                     <span className="text-xl font-mono font-bold text-white tracking-tighter">
                                         {detectionCount} <span className="text-[10px] font-bold text-emerald-500/60 uppercase">Anomalies_Indexed</span>
@@ -299,7 +299,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                     onClose();
                                     navigate('/recoveries');
                                 }}
-                                className="bg-emerald-500 hover:bg-emerald-600 text-black text-[10px] font-mono font-bold uppercase tracking-widest px-8 h-12 rounded-lg shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all"
+                                className="bg-emerald-500 hover:bg-emerald-600 text-black text-[10px] font-mono font-bold uppercase tracking-tight px-8 h-12 rounded-lg shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all"
                             >
                                 EXECUTE_CLAIMS
                             </Button>

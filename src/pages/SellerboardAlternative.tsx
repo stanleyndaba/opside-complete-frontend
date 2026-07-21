@@ -147,7 +147,7 @@ const revealProps = {
 };
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const labelClass = 'text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]';
 const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
 const inlineLinkClass = 'font-semibold text-[#0B74DE] underline-offset-4 transition-colors hover:text-[#0869C9] hover:underline';
@@ -295,7 +295,7 @@ export default function SellerboardAlternative() {
               className="mt-10 overflow-x-auto rounded-[30px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:mt-16"
             >
               <div className="min-w-[780px]">
-                <div className="grid grid-cols-[230px_minmax(240px,1fr)_minmax(280px,1.15fr)] border-b border-[#D8E3E8] bg-[#F8FAFC] px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#66737F] md:px-8">
+                <div className="grid grid-cols-[230px_minmax(240px,1fr)_minmax(280px,1.15fr)] border-b border-[#D8E3E8] bg-[#F8FAFC] px-5 py-4 text-[11px] font-semibold uppercase tracking-tight text-[#66737F] md:px-8">
                   <div>Workflow Topic</div>
                   <div>Sellerboard</div>
                   <div>Margin</div>
@@ -376,7 +376,7 @@ export default function SellerboardAlternative() {
                   transition={{ ...revealProps.transition, delay: index * 0.06 }}
                   className="border-t border-[#D8E3E8] pt-5"
                 >
-                  <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">{item.label}</div>
+                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.label}</div>
                   <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">{item.detail}</p>
                 </motion.div>
               ))}

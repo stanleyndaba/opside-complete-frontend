@@ -131,7 +131,7 @@ export default function ReconnectProvider() {
         >
           {/* Back Navigation */}
           <div className="mb-12">
-            <Link to={tenantRoute(activeTenantSlug, '/integrations-hub')} className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-mono text-white/30 hover:text-white transition-all cursor-pointer">
+            <Link to={tenantRoute(activeTenantSlug, '/integrations-hub')} className="group flex items-center gap-3 text-[10px] uppercase tracking-tight font-mono text-white/30 hover:text-white transition-all cursor-pointer">
               <div className="p-2 border border-white/10 group-hover:border-white/30 transition-all rounded-sm">
                 <ArrowLeft className="h-3 w-3" />
               </div>
@@ -143,7 +143,7 @@ export default function ReconnectProvider() {
           <div className="space-y-8 mb-12">
             <div className="inline-flex items-center gap-3 px-3 py-1 bg-white/5 border border-white/10 rounded-sm">
               <ShieldCheck className="h-3 w-3 text-emerald-500" />
-              <span className="text-[10px] font-bold text-white/60 font-mono tracking-widest uppercase">Institutional Connection</span>
+              <span className="text-[10px] font-bold text-white/60 font-mono tracking-tight uppercase">Institutional Connection</span>
             </div>
 
             <div className="flex items-center gap-6">
@@ -174,7 +174,7 @@ export default function ReconnectProvider() {
               </div>
 
               <div className="space-y-6 relative z-10">
-                <h3 className="text-xs font-bold text-white/40 font-mono tracking-[0.2em] uppercase">Required Authorizations</h3>
+                <h3 className="text-xs font-bold text-white/40 font-mono tracking-tight uppercase">Required Authorizations</h3>
 
                 <div className="grid gap-4">
                   {scopes.map((s, idx) => {
@@ -204,7 +204,7 @@ export default function ReconnectProvider() {
                 <Button
                   onClick={begin}
                   disabled={loading}
-                  className="w-full sm:w-auto h-14 px-10 bg-white text-black hover:bg-white/90 rounded-sm font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
+                  className="w-full sm:w-auto h-14 px-10 bg-white text-black hover:bg-white/90 rounded-sm font-bold text-[10px] uppercase tracking-tight transition-all"
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : <Zap className="h-4 w-4 mr-3 fill-current" />}
                   Establish Terminal Connection
@@ -212,7 +212,7 @@ export default function ReconnectProvider() {
                 <Button
                   variant="ghost"
                   onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                  className="w-full sm:w-auto h-14 px-8 text-white/40 hover:text-white hover:bg-white/5 rounded-sm font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
+                  className="w-full sm:w-auto h-14 px-8 text-white/40 hover:text-white hover:bg-white/5 rounded-sm font-bold text-[10px] uppercase tracking-tight transition-all"
                 >
                   Terminate
                 </Button>
@@ -228,12 +228,12 @@ export default function ReconnectProvider() {
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3 px-4 py-3 bg-white/5 border border-white/5 rounded-sm">
                   <div className="text-white/20">{item.icon}</div>
-                  <span className="text-[9px] font-bold text-white/40 font-mono tracking-widest uppercase">{item.label}</span>
+                  <span className="text-[9px] font-bold text-white/40 font-mono tracking-tight uppercase">{item.label}</span>
                 </div>
               ))}
             </div>
 
-            <p className="text-[10px] text-center text-white/20 font-mono tracking-widest uppercase pt-12">
+            <p className="text-[10px] text-center text-white/20 font-mono tracking-tight uppercase pt-12">
               Margin Nodes Utilize Bank-Grade Key Exchange Protocols. Access can be revoked in real-time.
             </p>
           </div>

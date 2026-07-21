@@ -28,7 +28,7 @@ const DiscoverySimulate = () => {
           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
             <User size={32} className="text-gray-400" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Auditor</span>
+          <span className="text-[10px] font-black uppercase tracking-tight text-gray-400">Auditor</span>
         </motion.div>
 
         {/* The Document (Sliding from Left) */}

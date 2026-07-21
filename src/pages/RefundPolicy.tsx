@@ -26,7 +26,7 @@ const RefundPolicy = () => {
                 <article className="max-w-2xl mx-auto">
                     {/* Document Header */}
                     <header className="mb-16">
-                        <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                        <p className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                             Last Updated 25 June 2027
                         </p>
                         <h1 className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight leading-tight">
@@ -39,7 +39,7 @@ const RefundPolicy = () => {
 
                         {/* Section 1 */}
                         <section>
-                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                            <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                                 01 — Overview
                             </h2>
                             <div className="space-y-4 text-gray-700">
@@ -57,7 +57,7 @@ const RefundPolicy = () => {
 
                         {/* Section 2 */}
                         <section>
-                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                            <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                                 02 — Founding 500 Early Access
                             </h2>
                             <div className="space-y-4 text-gray-700">
@@ -78,7 +78,7 @@ const RefundPolicy = () => {
 
                         {/* Section 3 */}
                         <section>
-                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                            <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                                 03 — Refund Policy
                             </h2>
                             <div className="space-y-4 text-gray-700">
@@ -105,7 +105,7 @@ const RefundPolicy = () => {
 
                         {/* Section 4 */}
                         <section>
-                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                            <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                                 04 — Cancellation Policy
                             </h2>
                             <div className="space-y-4 text-gray-700">
@@ -128,7 +128,7 @@ const RefundPolicy = () => {
 
                         {/* Section 5 */}
                         <section>
-                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                            <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                                 05 — Billing Disputes & Chargebacks
                             </h2>
                             <div className="space-y-4 text-gray-700">
@@ -152,7 +152,7 @@ const RefundPolicy = () => {
 
                         {/* Section 6 */}
                         <section>
-                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                            <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                                 06 — Refund Processing
                             </h2>
                             <div className="space-y-4 text-gray-700">
@@ -167,7 +167,7 @@ const RefundPolicy = () => {
 
                         {/* Section 7 */}
                         <section>
-                            <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                            <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                                 07 — Contact Us
                             </h2>
                             <div className="space-y-4 text-gray-700">

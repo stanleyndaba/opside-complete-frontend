@@ -26,7 +26,7 @@ const Privacy = () => {
         <article className="max-w-2xl mx-auto">
           {/* Document Header */}
           <header className="mb-16">
-            <p className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+            <p className="text-xs text-gray-400 uppercase tracking-tight mb-4">
               Last Updated December 22, 2025
             </p>
             <h1 className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight leading-tight">
@@ -42,7 +42,7 @@ const Privacy = () => {
 
             {/* Section 1 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 01 — Definitions
               </h2>
               <div className="space-y-3 text-gray-700">
@@ -63,7 +63,7 @@ const Privacy = () => {
 
             {/* Section 2 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 02 — Data Collection
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -78,7 +78,7 @@ const Privacy = () => {
 
             {/* Section 3 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 03 — Data Use
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -93,7 +93,7 @@ const Privacy = () => {
 
             {/* Section 4 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 04 — Security
               </h2>
               <div className="space-y-3 text-gray-700">
@@ -117,7 +117,7 @@ const Privacy = () => {
 
             {/* Section 5 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 05 — Data Retention
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -129,7 +129,7 @@ const Privacy = () => {
 
             {/* Section 6 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 06 — POPIA Compliance
               </h2>
               <div className="space-y-3 text-gray-700">
@@ -147,7 +147,7 @@ const Privacy = () => {
 
             {/* Section 7 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 07 — Google API Services Usage Disclosure
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -162,7 +162,7 @@ const Privacy = () => {
 
             {/* Section 8 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 08 — Changes
               </h2>
               <div className="space-y-4 text-gray-700">
@@ -174,7 +174,7 @@ const Privacy = () => {
 
             {/* Section 9 */}
             <section>
-              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+              <h2 className="text-xs text-gray-400 uppercase tracking-tight mb-4">
                 09 — Contact
               </h2>
               <div className="space-y-2 text-gray-700">

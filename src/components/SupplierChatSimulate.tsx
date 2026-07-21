@@ -27,7 +27,7 @@ const SupplierChatSimulate = () => {
           </div>
           <div>
             <div className="text-sm font-black text-gray-900">Factory Supplier</div>
-            <div className="text-[10px] font-bold text-green-500 uppercase tracking-widest">Online</div>
+            <div className="text-[10px] font-bold text-green-500 uppercase tracking-tight">Online</div>
           </div>
         </div>
 
@@ -109,7 +109,7 @@ const SupplierChatSimulate = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="mt-8 text-gray-400 font-bold uppercase tracking-[0.3em] text-xs"
+        className="mt-8 text-gray-400 font-bold uppercase tracking-tight text-xs"
       >
         You messaged your supplier.
       </motion.p>

@@ -134,7 +134,7 @@ export function Timeline({
         return (
           <div key={evt.id} className="flex flex-col gap-1 text-[11px] border-l-2 border-[#BFD7FF] pl-4 py-1.5 transition-colors hover:border-[#0052FF]">
             <div className="flex items-center gap-2">
-              <div className="font-bold text-[#111827] uppercase tracking-wider">
+              <div className="font-bold text-[#111827] uppercase tracking-tight">
                 {formatTimelineToken(evt.type)} • {formatTimelineToken(evt.status)}
               </div>
             </div>
@@ -143,7 +143,7 @@ export function Timeline({
             {money && <div className="text-emerald-500 font-bold font-mono">Amount: {money}</div>}
             {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (
               <div className="mt-1 flex items-center gap-2 text-[#4B5563]">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280]">Docs:</span>
+                <span className="text-[10px] font-bold uppercase tracking-tight text-[#6B7280]">Docs:</span>
                 <div className="flex gap-2">
                   {evt.docIds.slice(0, 3).map((id) => (
                     <Link key={id} to={`/app/${activeSlug}/documents/${encodeURIComponent(id)}`} className="text-[#0052FF] underline transition-colors hover:text-[#003DB8]">

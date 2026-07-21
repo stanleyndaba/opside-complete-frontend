@@ -717,7 +717,7 @@ function SystemLogMarquee() {
           className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl md:p-7"
         >
           {" "}
-          <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#7B8A95]">
+          <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-tight text-[#7B8A95]">
             {" "}
             <span className="h-1.5 w-1.5 rounded-full bg-[#21B487]" /> Recovery
             OS{" "}
@@ -726,7 +726,7 @@ function SystemLogMarquee() {
             {" "}
             <TypewriterPrompt text="Show me what Amazon still needs for this claim." />{" "}
           </div>{" "}
-          <div className="mt-5 border-t border-[#D8E3E8] pt-3 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">
+          <div className="mt-5 border-t border-[#D8E3E8] pt-3 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
             {" "}
             Missing proof found - Ready for seller review{" "}
           </div>{" "}
@@ -755,7 +755,7 @@ function SystemLogMarquee() {
                   className="min-w-[280px] rounded-[1px] border border-[#C9D6DE] bg-white/62 px-3 py-[9px] shadow-[0_16px_36px_rgba(37,49,58,0.035)] backdrop-blur-xl md:min-w-[350px]"
                 >
                   {" "}
-                  <div className="font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#8A98A3]">
+                  <div className="font-mono text-[8px] font-bold uppercase tracking-tight text-[#8A98A3]">
                     {" "}
                     {entry.label}{" "}
                   </div>{" "}
@@ -1015,7 +1015,7 @@ function MinimalMetric({
           ease: "easeInOut",
           delay: index * 0.35,
         }}
-        className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#0B74DE] md:text-xs"
+        className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE] md:text-xs"
       >
         {" "}
         {label}{" "}
@@ -1352,7 +1352,7 @@ export default function Index() {
               {" "}
               <div>
                 {" "}
-                <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A98A3]">
+                <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
                   {" "}
                   <span>06</span> <span>What Happens After Detection</span>{" "}
                 </div>{" "}
@@ -1386,7 +1386,7 @@ export default function Index() {
                     {" "}
                     <div className="flex h-full flex-col">
                       {" "}
-                      <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8A98A3] max-md:absolute max-md:-left-[14px] max-md:top-0 max-md:flex max-md:h-7 max-md:w-7 max-md:items-center max-md:justify-center max-md:rounded-[1px] max-md:border max-md:border-[#E5E7EB] max-md:bg-white max-md:text-[9px] md:text-[11px]">
+                      <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3] max-md:absolute max-md:-left-[14px] max-md:top-0 max-md:flex max-md:h-7 max-md:w-7 max-md:items-center max-md:justify-center max-md:rounded-[1px] max-md:border max-md:border-[#E5E7EB] max-md:bg-white max-md:text-[9px] md:text-[11px]">
                         {" "}
                         {item.step}{" "}
                       </div>{" "}

@@ -2334,7 +2334,7 @@ export default function DataUpload() {
                         <div className="flex items-start gap-3 mb-4">
                             <Info className="h-4 w-4 text-white/20 mt-0.5" />
                             <div>
-                                <h3 className="text-xs font-medium text-white/40 uppercase tracking-wide mb-1">How It Works</h3>
+                                <h3 className="text-xs font-medium text-white/40 uppercase tracking-tight mb-1">How It Works</h3>
                                 <p className="text-xs text-white/25 leading-relaxed">
                                     Upload CSV exports from Amazon Seller Central. The system auto-detects the report type,
                                     maps columns to the internal schema, and inserts data into the database.

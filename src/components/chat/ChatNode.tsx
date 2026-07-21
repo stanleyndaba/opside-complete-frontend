@@ -111,7 +111,7 @@ export function ChatNode() {
                             <div>
                                 <h3 className="flex items-center gap-2 text-sm font-semibold tracking-[-0.02em] text-[#182026]">
                                     Margin guide
-                                    <span className="rounded-full border border-[#BFD8EA] bg-[#EAF4FF] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">beta</span>
+                                    <span className="rounded-full border border-[#BFD8EA] bg-[#EAF4FF] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-tight text-[#0B74DE]">beta</span>
                                 </h3>
                                 <p className="mt-0.5 text-[11px] leading-5 text-[#66737F]">Ask about setup, safety, evidence, and Early Access.</p>
                             </div>

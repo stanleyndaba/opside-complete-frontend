@@ -137,14 +137,14 @@ export default function ReportGeneration() {
         <header className="flex min-h-16 items-center justify-between border-b border-gray-100 bg-white px-5 sm:px-7">
           {phase === 'output' ? (
             <div className="flex min-w-0 items-center gap-4 sm:gap-6">
-              <span className="hidden text-[11px] font-medium uppercase tracking-[0.08em] text-[#6F7680] sm:block">Run Output</span>
+              <span className="hidden text-[11px] font-medium uppercase tracking-tight text-[#6F7680] sm:block">Run Output</span>
               <div className="hidden h-5 w-px bg-gray-200 sm:block" />
               <nav className="flex min-w-0 gap-5" aria-label="Report output">
                 {TABS.map((tab) => (
                   <button
                     key={tab}
                     type="button"
-                    className={`relative py-3 text-[11px] font-medium uppercase tracking-[0.08em] transition-colors ${
+                    className={`relative py-3 text-[11px] font-medium uppercase tracking-tight transition-colors ${
                       tab === 'Output' ? 'text-[#242424]' : 'text-[#A0A6AE] hover:text-[#6F7680]'
                     }`}
                   >
@@ -348,8 +348,8 @@ export default function ReportGeneration() {
                       <div className="absolute inset-0 translate-x-2 rotate-2 rounded-xl border border-white/80 bg-white/55 backdrop-blur-md" />
                       <div className="absolute inset-0 rounded-xl border border-white/90 bg-white/75 p-4 shadow-[0_24px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl">
                         <div className="flex items-center justify-between border-b border-[#D8DDE3] pb-2">
-                          <span className="text-[8px] font-medium uppercase tracking-[0.06em] text-[#242424]">Margin</span>
-                          <span className="text-[6px] uppercase tracking-[0.08em] text-[#A0A6AE]">Dossier</span>
+                          <span className="text-[8px] font-medium uppercase tracking-tight text-[#242424]">Margin</span>
+                          <span className="text-[6px] uppercase tracking-tight text-[#A0A6AE]">Dossier</span>
                         </div>
                         <div className="mt-4 space-y-1">
                           <div className="h-1.5 w-20 rounded-full bg-[#242424]/70" />
@@ -374,7 +374,7 @@ export default function ReportGeneration() {
 
                     <div className="min-w-0 flex-1 text-center sm:text-left">
                       <h3 className="text-base font-bold tracking-tight text-[#242424] sm:text-lg">Claim Submission Package</h3>
-                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#8A8F98] sm:text-[11px]">
+                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-tight text-[#8A8F98] sm:text-[11px]">
                         FILE_TYPE: PDF&nbsp;&nbsp; SIZE: 2.4MB&nbsp;&nbsp; PAGES: 14&nbsp;&nbsp; CREATED: NOV 12 2025&nbsp;&nbsp; VERIFIED
                       </p>
 

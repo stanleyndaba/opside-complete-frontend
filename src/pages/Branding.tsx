@@ -52,7 +52,7 @@ const Branding = () => {
 
                     {/* Metadata / Tagline */}
                     <div className="space-y-4">
-                        <p className="text-white/20 font-mono text-[10px] uppercase tracking-[0.5em] font-bold">
+                        <p className="text-white/20 font-mono text-[10px] uppercase tracking-tight font-bold">
                             High Fidelity Capital Protection
                         </p>
                     </div>
@@ -65,7 +65,7 @@ const Branding = () => {
             <div className="absolute bottom-12 right-12 w-24 h-[1px] bg-white/5 text-right" />
             <div className="absolute bottom-12 right-12 w-[1px] h-24 bg-white/5" />
 
-            <div className="absolute bottom-12 left-12 font-mono text-[8px] text-white/10 uppercase tracking-[0.5em]">
+            <div className="absolute bottom-12 left-12 font-mono text-[8px] text-white/10 uppercase tracking-tight">
                 Margin.Group // Global Dominance
             </div>
         </div>

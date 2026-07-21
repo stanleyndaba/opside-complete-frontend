@@ -46,7 +46,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                             <div className="flex items-center gap-3">
                                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
                                 <div>
-                                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                                    <p className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                                         Updating Margin
                                     </p>
                                     <p className="mt-1 text-sm text-[#66737F]">
@@ -79,7 +79,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                                     <div className="rounded-[16px] border border-[#F1C8C8] bg-[#FFF5F5] p-2 text-[#B74A4A]">
                                         <AlertTriangle className="h-5 w-5" />
                                     </div>
-                                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                                    <p className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                                         Something Went Wrong
                                     </p>
                                 </div>
@@ -94,7 +94,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                             <div className="grid gap-8 pt-8 lg:grid-cols-[1.2fr_0.8fr]">
                                 <div className="space-y-6">
                                     <div className="rounded-[28px] border border-[#CFE0EA] bg-white px-5 py-5 shadow-[0_24px_80px_rgba(37,49,58,0.08)]">
-                                        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">
+                                        <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
                                             Quick Fix
                                         </p>
                                         <p className="mt-3 text-base font-semibold tracking-[-0.02em] text-[#182026]">
@@ -107,7 +107,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
                                     {process.env.NODE_ENV === 'development' && this.state.error && (
                                         <div className="overflow-hidden rounded-[28px] border border-[#F1C8C8] bg-[#FFF8F8] px-5 py-5 text-left">
-                                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B74A4A]">
+                                            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#B74A4A]">
                                                 Error Details
                                             </p>
                                             <pre className="mt-3 whitespace-pre-wrap break-all text-[11px] font-mono leading-relaxed text-[#7A5555]">
@@ -118,7 +118,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                                 </div>
 
                                 <div className="border-t border-[#D8E3E8] pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-                                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">
+                                    <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
                                         Try Again
                                     </p>
                                     <div className="mt-4">

@@ -80,9 +80,9 @@ export default function Sales() {
                         className="space-y-8"
                     >
                         <div className="inline-flex items-center gap-4 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
-                            <span className="text-[10px] font-semibold text-[#0B74DE] tracking-[0.14em] uppercase">Institutional Access</span>
+                            <span className="text-[10px] font-semibold text-[#0B74DE] tracking-tight uppercase">Institutional Access</span>
                             <div className="h-3 w-px bg-[#D8E3E8]" />
-                            <span className="text-[10px] font-semibold text-[#66737F] tracking-[0.14em] uppercase">High Volume Gateway</span>
+                            <span className="text-[10px] font-semibold text-[#66737F] tracking-tight uppercase">High Volume Gateway</span>
                         </div>
 
                         <h1 className="text-4xl md:text-7xl font-semibold leading-[1.04] tracking-[-0.06em] text-[#182026]">
@@ -103,7 +103,7 @@ export default function Sales() {
                     <div className="container mx-auto px-6 max-w-5xl">
                         <div className="grid md:grid-cols-2 gap-12 md:gap-24 font-sans tracking-tight">
                             <div>
-                                <h2 className="text-[11px] font-semibold text-[#0B74DE] tracking-[0.18em] uppercase mb-12">System Requirement</h2>
+                                <h2 className="text-[11px] font-semibold text-[#0B74DE] tracking-tight uppercase mb-12">System Requirement</h2>
                                 <h3 className="text-3xl font-semibold tracking-[-0.045em] mb-8 text-[#182026]">
                                     Is Your Infrastructure <br />
                                     Ready for Scale?
@@ -131,7 +131,7 @@ export default function Sales() {
                                     }
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-6 pb-8 border-b border-[#D8E3E8] last:border-0">
-                                        <div className="text-[10px] font-semibold text-[#9AA8B2] mt-1 tracking-[0.14em]">{`0${i + 1}`}</div>
+                                        <div className="text-[10px] font-semibold text-[#9AA8B2] mt-1 tracking-tight">{`0${i + 1}`}</div>
                                         <div className="space-y-2">
                                             <div className="font-semibold text-[#182026] uppercase tracking-tight text-sm">{item.title}</div>
                                             <div className="text-sm text-[#66737F] tracking-tight">{item.desc}</div>
@@ -166,7 +166,7 @@ export default function Sales() {
                             <div key={i} className="space-y-6">
                                 <div className="h-px w-12 bg-[#0B74DE]/60" />
                                 <div className="space-y-2">
-                                    <div className="text-[10px] font-semibold text-[#0B74DE] tracking-[0.16em] uppercase">{feature.label}</div>
+                                    <div className="text-[10px] font-semibold text-[#0B74DE] tracking-tight uppercase">{feature.label}</div>
                                     <h4 className="text-xl font-semibold tracking-[-0.025em] text-[#182026]">{feature.title}</h4>
                                 </div>
                                 <p className="text-sm text-[#66737F] leading-loose">
@@ -186,7 +186,7 @@ export default function Sales() {
                                 <p className="text-2xl font-medium tracking-[-0.035em] text-[#25313A] leading-relaxed mb-6 italic">
                                     "We personally review every institutional inquiry. If you're managing serious scale, our team will build a dedicated audit engine for your SKU architecture."
                                 </p>
-                                <p className="text-sm font-semibold text-[#66737F] uppercase tracking-[0.14em]">
+                                <p className="text-sm font-semibold text-[#66737F] uppercase tracking-tight">
                                     — Founder & CEO, Margin
                                 </p>
                             </div>
@@ -218,7 +218,7 @@ export default function Sales() {
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-10">
                                         <div className="space-y-2">
-                                            <h3 className="text-[10px] font-semibold text-[#0B74DE] font-sans tracking-[0.16em] uppercase">
+                                            <h3 className="text-[10px] font-semibold text-[#0B74DE] font-sans tracking-tight uppercase">
                                                 Enterprise Recovery Briefing
                                             </h3>
                                             <p className="text-xs text-[#66737F] font-sans tracking-tight">Priority onboarding capacity is reviewed manually for larger recovery operations.</p>
@@ -226,7 +226,7 @@ export default function Sales() {
 
                                         <div className="grid md:grid-cols-2 gap-10">
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-[0.14em] uppercase block">
+                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
                                                     Contact Name
                                                 </label>
                                                 <Input
@@ -239,7 +239,7 @@ export default function Sales() {
                                                 />
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-[0.14em] uppercase block">
+                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
                                                     Work Email
                                                 </label>
                                                 <Input
@@ -254,7 +254,7 @@ export default function Sales() {
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-[0.14em] uppercase block">
+                                            <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
                                                 Company
                                             </label>
                                             <Input
@@ -269,7 +269,7 @@ export default function Sales() {
 
                                         <div className="grid md:grid-cols-2 gap-10">
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-[0.14em] uppercase block">
+                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
                                                     Annual Portfolio GMV
                                                 </label>
                                                 <Select value={form.revenue} onValueChange={(value) => setForm({ ...form, revenue: value })}>
@@ -286,7 +286,7 @@ export default function Sales() {
                                                 </Select>
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-[0.14em] uppercase block">
+                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
                                                     Amazon Seller ID
                                                 </label>
                                                 <Input
@@ -300,7 +300,7 @@ export default function Sales() {
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-[0.14em] uppercase block">
+                                            <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
                                                 Recovery Operation Notes
                                             </label>
                                             <Textarea

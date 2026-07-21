@@ -120,7 +120,7 @@ const ApiAccess = () => {
               className="text-center space-y-6"
             >
               <div className="flex justify-center">
-                <Badge variant="outline" className="px-4 py-1.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-mono text-[10px] tracking-[0.3em] uppercase">
+                <Badge variant="outline" className="px-4 py-1.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-mono text-[10px] tracking-tight uppercase">
                   v1.0.0 // ENTERPRISE_GATEWAY
                 </Badge>
               </div>
@@ -132,7 +132,7 @@ const ApiAccess = () => {
               </p>
               <div className="pt-8">
                 <Button
-                  className="bg-white text-black hover:bg-emerald-500 transition-all rounded-xl h-14 px-10 font-serif font-bold uppercase tracking-widest text-sm shadow-[0_0_40px_rgba(255,255,255,0.1)]"
+                  className="bg-white text-black hover:bg-emerald-500 transition-all rounded-xl h-14 px-10 font-serif font-bold uppercase tracking-tight text-sm shadow-[0_0_40px_rgba(255,255,255,0.1)]"
                   onClick={() => window.location.href = 'mailto:enterprise@margin.io'}
                 >
                   Request Dedicated Tunnel
@@ -155,23 +155,23 @@ const ApiAccess = () => {
                       <pillar.icon className="h-32 w-32 text-emerald-500 rotate-12" />
                     </div>
                     <CardHeader className="p-8 pb-4">
-                      <p className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-[0.4em] mb-2">{pillar.subtitle}</p>
+                      <p className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-tight mb-2">{pillar.subtitle}</p>
                       <CardTitle className="text-2xl font-serif tracking-tight">{pillar.title}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-8 pt-0 space-y-6">
                       <div className="space-y-4">
                         <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl">
-                          <p className="text-[10px] font-mono text-white/20 uppercase tracking-widest mb-1">Issue</p>
+                          <p className="text-[10px] font-mono text-white/20 uppercase tracking-tight mb-1">Issue</p>
                           <p className="text-xs text-white/60 leading-relaxed italic">"{pillar.problem}"</p>
                         </div>
                         <div className="p-4 border border-emerald-500/10 bg-emerald-500/[0.02] rounded-xl">
-                          <p className="text-[10px] font-mono text-emerald-500/40 uppercase tracking-widest mb-1">Tunnel Purpose</p>
+                          <p className="text-[10px] font-mono text-emerald-500/40 uppercase tracking-tight mb-1">Tunnel Purpose</p>
                           <p className="text-xs text-white/80 leading-relaxed font-serif">{pillar.purpose}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 text-emerald-500">
                         <Zap className="h-4 w-4" />
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-widest">Yield: {pillar.win}</span>
+                        <span className="text-[11px] font-mono font-bold uppercase tracking-tight">Yield: {pillar.win}</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -200,9 +200,9 @@ const ApiAccess = () => {
                       <div className="bg-white/[0.02] border-b border-white/10 p-6 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <Code2 className="h-5 w-5 text-emerald-500" />
-                          <h3 className="text-sm font-mono font-bold uppercase tracking-widest">{feature.title}</h3>
+                          <h3 className="text-sm font-mono font-bold uppercase tracking-tight">{feature.title}</h3>
                         </div>
-                        <Badge variant="outline" className="text-[9px] font-mono px-3 py-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20 tracking-widest">
+                        <Badge variant="outline" className="text-[9px] font-mono px-3 py-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20 tracking-tight">
                           {feature.status} // {feature.type}
                         </Badge>
                       </div>
@@ -253,12 +253,12 @@ const ApiAccess = () => {
                   "When you acquisition a new $10M brand on Tuesday, your IT team runs a script on Wednesday, and by Thursday, that brand is generating yield in our engine. We are the invisible automation that scales with your fleet."
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
-                  <Button className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-black font-serif font-bold uppercase tracking-widest h-14 px-12 rounded-xl transition-all shadow-[0_0_50px_rgba(16,185,129,0.2)]">
+                  <Button className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-black font-serif font-bold uppercase tracking-tight h-14 px-12 rounded-xl transition-all shadow-[0_0_50px_rgba(16,185,129,0.2)]">
                     Enterprise Onboarding
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto border-white/10 hover:border-emerald-500/50 text-white font-mono uppercase tracking-widest text-xs h-14 px-10 rounded-xl"
+                    className="w-full sm:w-auto border-white/10 hover:border-emerald-500/50 text-white font-mono uppercase tracking-tight text-xs h-14 px-10 rounded-xl"
                   >
                     View API Spec
                   </Button>
@@ -270,10 +270,10 @@ const ApiAccess = () => {
             <div className="pt-20 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-white/20">
               <div className="flex items-center gap-4">
                 <Lock className="h-4 w-4" />
-                <span className="text-[10px] font-mono tracking-widest uppercase">Encryption: AES-256 // TLS 1.3</span>
+                <span className="text-[10px] font-mono tracking-tight uppercase">Encryption: AES-256 // TLS 1.3</span>
               </div>
               <div className="flex items-center gap-12">
-                <span className="text-[10px] font-mono tracking-widest uppercase">Architecture: Serverless TUNNEL</span>
+                <span className="text-[10px] font-mono tracking-tight uppercase">Architecture: Serverless TUNNEL</span>
                 <span className="font-serif italic text-xs">"Yield focused. Data sovereign."</span>
               </div>
             </div>

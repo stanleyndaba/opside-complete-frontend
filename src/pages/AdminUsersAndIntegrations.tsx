@@ -172,7 +172,7 @@ export default function AdminUsersAndIntegrations() {
             <div className="flex flex-col mb-8">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-px w-8 bg-emerald-500/50" />
-                <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">CORE_SYSTEM // TERMINAL_ACCESS</span>
+                <span className="text-[10px] font-mono uppercase tracking-tight text-emerald-500/80">CORE_SYSTEM // TERMINAL_ACCESS</span>
               </div>
               <div className="flex items-center justify-between">
                 <div>
@@ -187,7 +187,7 @@ export default function AdminUsersAndIntegrations() {
                   onClick={() => window.location.reload()}
                   variant="outline"
                   size="sm"
-                  className="border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-500 h-9 px-4 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all"
+                  className="border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-500 h-9 px-4 font-mono uppercase tracking-tight text-[9px] rounded-lg transition-all"
                 >
                   <RefreshCw className={`h-3 w-3 mr-2 ${(usersLoading || waitlistLoading) ? 'animate-spin' : ''}`} />
                   Sync Directory
@@ -199,12 +199,12 @@ export default function AdminUsersAndIntegrations() {
               <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-[0.3em]">Access Requests Directory</CardTitle>
+                    <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-tight">Access Requests Directory</CardTitle>
                     <CardDescription className="text-xs text-white/40 pt-1 font-serif italic">
                       {waitlistTotal} signups • Priority leads authenticated
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-widest">
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-tight">
                     <Mail className="h-3 w-3 mr-2" />
                     INCOMING PINGS
                   </Badge>
@@ -212,7 +212,7 @@ export default function AdminUsersAndIntegrations() {
               </CardHeader>
               <CardContent className="p-0">
                 <div className="p-6 border-b border-white/5">
-                  <Label htmlFor="waitlistFilter" className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 mb-2 block">Search Directory</Label>
+                  <Label htmlFor="waitlistFilter" className="text-[10px] font-mono uppercase tracking-tight text-white/40 mb-2 block">Search Directory</Label>
                   <Input
                     id="waitlistFilter"
                     placeholder="Search by email or signature..."
@@ -224,23 +224,23 @@ export default function AdminUsersAndIntegrations() {
                 {waitlistLoading ? (
                   <div className="py-16 text-center text-white/30">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto mb-4 text-emerald-500/50" />
-                    <p className="font-mono text-xs uppercase tracking-widest">Compiling Directory...</p>
+                    <p className="font-mono text-xs uppercase tracking-tight">Compiling Directory...</p>
                   </div>
                 ) : filteredWaitlist.length === 0 ? (
                   <div className="py-16 text-center text-white/30">
-                    <p className="font-mono text-xs uppercase tracking-widest">No access requests detected.</p>
+                    <p className="font-mono text-xs uppercase tracking-tight">No access requests detected.</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto select-none">
                     <Table>
                       <TableHeader>
                         <TableRow className="border-b border-white/5 hover:bg-transparent bg-transparent">
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Email</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Type</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Revenue</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Contact</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Ident</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Priority</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Email</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Type</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Revenue</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Contact</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Ident</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Priority</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -258,7 +258,7 @@ export default function AdminUsersAndIntegrations() {
                             <TableCell className="px-8 py-4 font-sans text-sm text-white/70">
                               {entry.contact_handle || '—'}
                             </TableCell>
-                            <TableCell className="px-8 py-4 text-[10px] font-mono text-white/30 tracking-widest">
+                            <TableCell className="px-8 py-4 text-[10px] font-mono text-white/30 tracking-tight">
                               <div className="flex flex-col gap-1">
                                 <span>{formatDate(entry.created_at)}</span>
                                 <span>{entry.id.substring(0, 8)}...</span>
@@ -266,12 +266,12 @@ export default function AdminUsersAndIntegrations() {
                             </TableCell>
                             <TableCell className="px-8 py-4">
                               {entry.metadata?.is_whale ? (
-                                <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20 font-mono text-[9px] uppercase tracking-widest">
+                                <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20 font-mono text-[9px] uppercase tracking-tight">
                                   <Star className="h-3 w-3 mr-1" />
                                   WHALE_PRIORITY
                                 </Badge>
                               ) : (
-                                <Badge variant="outline" className="bg-white/5 text-white/40 border-white/10 font-mono text-[9px] uppercase tracking-widest">
+                                <Badge variant="outline" className="bg-white/5 text-white/40 border-white/10 font-mono text-[9px] uppercase tracking-tight">
                                   STANDARD
                                 </Badge>
                               )}
@@ -289,12 +289,12 @@ export default function AdminUsersAndIntegrations() {
               <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-[0.3em]">Active Terminals & Roles</CardTitle>
+                    <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-tight">Active Terminals & Roles</CardTitle>
                     <CardDescription className="text-xs text-white/40 pt-1 font-serif italic">
                       {filtered.length} active nodes • Manage authorization and telemetry access
                     </CardDescription>
                   </div>
-                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-widest">
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-tight">
                     <Users className="h-3 w-3 mr-2" />
                     ROSTER
                   </Badge>
@@ -302,7 +302,7 @@ export default function AdminUsersAndIntegrations() {
               </CardHeader>
               <CardContent className="p-0">
                 <div className="p-6 border-b border-white/5">
-                  <Label htmlFor="userFilter" className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 mb-2 block">Trace Identity</Label>
+                  <Label htmlFor="userFilter" className="text-[10px] font-mono uppercase tracking-tight text-white/40 mb-2 block">Trace Identity</Label>
                   <Input
                     id="userFilter"
                     placeholder="target@company.com"
@@ -314,24 +314,24 @@ export default function AdminUsersAndIntegrations() {
                 {usersLoading ? (
                   <div className="py-16 text-center text-white/30">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto mb-4 text-emerald-500/50" />
-                    <p className="font-mono text-xs uppercase tracking-widest">Establishing Handshake...</p>
+                    <p className="font-mono text-xs uppercase tracking-tight">Establishing Handshake...</p>
                   </div>
                 ) : filtered.length === 0 ? (
                   <div className="py-16 text-center text-white/30">
-                    <p className="font-mono text-xs uppercase tracking-widest">No matching identities found.</p>
+                    <p className="font-mono text-xs uppercase tracking-tight">No matching identities found.</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto select-none">
                     <Table>
                       <TableHeader>
                         <TableRow className="border-b border-white/5 hover:bg-transparent bg-transparent">
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Terminal/Email</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Connections</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Active Cases</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Net Recovered</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Access Level</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Protocol State</TableHead>
-                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8 text-right">Root Commands</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Terminal/Email</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Connections</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Active Cases</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Net Recovered</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Access Level</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8">Protocol State</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-tight font-mono text-white/40 h-10 px-8 text-right">Root Commands</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -339,7 +339,7 @@ export default function AdminUsersAndIntegrations() {
                           <TableRow key={u.id} className="border-b border-white/5 border-dashed hover:bg-white/[0.02] transition-colors">
                             <TableCell className="px-8 py-5">
                               <div className="font-sans font-medium text-white/90">{u.email}</div>
-                              <div className="text-[10px] font-mono text-white/40 mt-1 uppercase tracking-wider">
+                              <div className="text-[10px] font-mono text-white/40 mt-1 uppercase tracking-tight">
                                 {u.last_login ? `LAST_SYNC: ${formatDate(u.last_login)}` : 'NOD_SYNC'} | IDENT: {u.id.substring(0, 8)}...
                               </div>
                             </TableCell>
@@ -362,7 +362,7 @@ export default function AdminUsersAndIntegrations() {
                             </TableCell>
                             <TableCell className="px-8 py-5">
                               <select
-                                className="bg-[#0c0c0c] border border-white/10 text-white/80 rounded-lg px-3 py-1 text-xs font-mono tracking-widest uppercase outline-none focus:border-emerald-500/50 transition-colors"
+                                className="bg-[#0c0c0c] border border-white/10 text-white/80 rounded-lg px-3 py-1 text-xs font-mono tracking-tight uppercase outline-none focus:border-emerald-500/50 transition-colors"
                                 value={u.role}
                                 onChange={e => updateUser(u.id, { role: e.target.value as UserRow['role'] })}
                               >
@@ -375,8 +375,8 @@ export default function AdminUsersAndIntegrations() {
                                 variant="outline"
                                 className={
                                   u.status === 'active'
-                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-widest'
-                                    : 'bg-red-500/10 text-red-500 border-red-500/20 font-mono text-[9px] uppercase tracking-widest'
+                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-tight'
+                                    : 'bg-red-500/10 text-red-500 border-red-500/20 font-mono text-[9px] uppercase tracking-tight'
                                 }
                               >
                                 {u.status === 'active' ? 'NOMINAL' : 'LOCKED'}
@@ -386,7 +386,7 @@ export default function AdminUsersAndIntegrations() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-400 h-8 px-3 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all"
+                                className="border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-400 h-8 px-3 font-mono uppercase tracking-tight text-[9px] rounded-lg transition-all"
                                 onClick={() => handleImpersonate(u.id)}
                               >
                                 Infiltrate
@@ -396,8 +396,8 @@ export default function AdminUsersAndIntegrations() {
                                 variant="outline"
                                 className={
                                   u.status === 'active'
-                                    ? 'border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 text-red-500 h-8 px-3 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all'
-                                    : 'border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-500 h-8 px-3 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all'
+                                    ? 'border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 text-red-500 h-8 px-3 font-mono uppercase tracking-tight text-[9px] rounded-lg transition-all'
+                                    : 'border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-500 h-8 px-3 font-mono uppercase tracking-tight text-[9px] rounded-lg transition-all'
                                 }
                                 onClick={() => toggleUserStatus(u)}
                               >
@@ -416,7 +416,7 @@ export default function AdminUsersAndIntegrations() {
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-8">
               <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden">
                 <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
-                  <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-[0.3em]">Document Ingestion Protocols</CardTitle>
+                  <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-tight">Document Ingestion Protocols</CardTitle>
                   <CardDescription className="text-xs text-white/40 pt-1 font-serif italic">Global connection telemetrics and autonomous pipeline settings.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-8 space-y-8">
@@ -426,26 +426,26 @@ export default function AdminUsersAndIntegrations() {
                       return (
                         <div key={p} className="rounded-xl border border-white/5 bg-white/[0.01] p-5 hover:border-white/10 transition-colors">
                           <div className="flex items-center justify-between mb-3">
-                            <div className="text-white/80 font-mono tracking-widest uppercase text-xs">{p}</div>
+                            <div className="text-white/80 font-mono tracking-tight uppercase text-xs">{p}</div>
                             <Badge variant="outline" className={ps.connected ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px]' : 'bg-white/5 text-white/30 border-white/10 text-[9px]'}>
                               {ps.connected ? 'ESTABLISHED' : 'SEVERED'}
                             </Badge>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <div className="text-[9px] font-mono text-white/30 tracking-widest uppercase">Last Sync Ping</div>
+                              <div className="text-[9px] font-mono text-white/30 tracking-tight uppercase">Last Sync Ping</div>
                               <div className="text-xs text-white/60 font-serif mt-1">{ps.lastSync || 'NO_DATA'}</div>
                             </div>
                             <div>
-                              <div className="text-[9px] font-mono text-white/30 tracking-widest uppercase">Key Age (Days)</div>
+                              <div className="text-[9px] font-mono text-white/30 tracking-tight uppercase">Key Age (Days)</div>
                               <div className="text-xs text-white/60 font-serif mt-1">{ps.tokenAgeDays ?? 'UNKNOWN'}</div>
                             </div>
                           </div>
                           <div className="mt-5 flex gap-3">
-                            <Button size="sm" variant="outline" className="border-white/10 hover:border-white/30 hover:bg-white/5 text-white h-8 px-4 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all" onClick={() => reconnect(p)}>
+                            <Button size="sm" variant="outline" className="border-white/10 hover:border-white/30 hover:bg-white/5 text-white h-8 px-4 font-mono uppercase tracking-tight text-[9px] rounded-lg transition-all" onClick={() => reconnect(p)}>
                               Re-Establish
                             </Button>
-                            <Button size="sm" variant="outline" className="border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 text-red-500 h-8 px-4 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all" onClick={async () => { await api.disconnectIntegration(p, true); window.location.reload(); }}>
+                            <Button size="sm" variant="outline" className="border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 text-red-500 h-8 px-4 font-mono uppercase tracking-tight text-[9px] rounded-lg transition-all" onClick={async () => { await api.disconnectIntegration(p, true); window.location.reload(); }}>
                               Terminate Trace
                             </Button>
                           </div>
@@ -463,7 +463,7 @@ export default function AdminUsersAndIntegrations() {
                       <Switch checked={autoCollect} onCheckedChange={async (v) => { setAutoCollect(v); await api.setEvidenceAutoCollect(v); }} className="data-[state=checked]:bg-emerald-500" />
                     </div>
                     <div>
-                      <Label htmlFor="sched" className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 mb-2 block">Cron Schedule</Label>
+                      <Label htmlFor="sched" className="text-[10px] font-mono uppercase tracking-tight text-white/40 mb-2 block">Cron Schedule</Label>
                       <Input
                         id="sched"
                         value={schedule}
@@ -481,7 +481,7 @@ export default function AdminUsersAndIntegrations() {
                 <Button
                   onClick={() => navigate(`/app/${tenantSlug}/admin/revenue`)}
                   variant="outline"
-                  className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-widest text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
+                  className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-tight text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
                 >
                   <DollarSign className="w-4 h-4 mr-3 text-emerald-500/70" />
                   Revenue Analytics Terminal
@@ -489,7 +489,7 @@ export default function AdminUsersAndIntegrations() {
                 <Button
                   onClick={() => navigate(`/app/${tenantSlug}/admin/revenue-model`)}
                   variant="outline"
-                  className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-widest text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
+                  className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-tight text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
                 >
                   <TrendingUp className="w-4 h-4 mr-3 text-emerald-500/70" />
                   Revenue Model Projection Builder

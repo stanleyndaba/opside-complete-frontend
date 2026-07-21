@@ -22,7 +22,7 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[10px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]';
+const labelClass = 'text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]';
 const headingClass = 'mt-4 max-w-[920px] text-[34px] font-semibold leading-[1.02] tracking-[-0.055em] text-[#182026] sm:text-[42px] md:text-[64px]';
 const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
 const codeFontFamily = "'Fira Code', 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace";
@@ -139,7 +139,7 @@ function ApiCodePreview() {
           <span className="h-2 w-2 rounded-full bg-[#D9B45C]/70" />
           <span className="h-2 w-2 rounded-full bg-[#2E7D5B]/70" />
         </div>
-        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F]">Margin API Preview</div>
+        <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Margin API Preview</div>
       </div>
       <pre className="overflow-x-auto bg-[#101820] p-5 text-[12px] leading-6 text-[#DCEBFF] md:p-6 md:text-[13px]" style={{ fontFamily: codeFontFamily }}>
         <code style={{ fontFamily: codeFontFamily }}>
@@ -190,7 +190,7 @@ export default function ApiLanding() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
+                <div className="inline-flex items-center rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
                   Margin API
                 </div>
                 <h1 className="mt-5 max-w-[900px] text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[#182026] sm:text-[52px] md:text-[78px]">
@@ -251,7 +251,7 @@ export default function ApiLanding() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-[#EAF4FF] text-[#0B74DE]">
                       <item.icon className="h-4 w-4" />
                     </div>
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#182026]">{item.label}</div>
+                    <div className="text-[11px] font-semibold uppercase tracking-tight text-[#182026]">{item.label}</div>
                   </div>
                   <p className="mt-3 max-w-[340px] text-[13px] leading-6 text-[#66737F]">{item.detail}</p>
                 </div>
@@ -305,7 +305,7 @@ export default function ApiLanding() {
               </motion.div>
 
               <motion.div {...revealProps} className="overflow-hidden rounded-[28px] border border-[#CFE0EA] bg-white shadow-[0_24px_80px_rgba(37,49,58,0.08)]">
-                <div className="grid grid-cols-[76px_minmax(0,1fr)] border-b border-[#E4EDF1] bg-[#F8FAFC] px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#66737F] md:grid-cols-[96px_minmax(0,1fr)_220px]">
+                <div className="grid grid-cols-[76px_minmax(0,1fr)] border-b border-[#E4EDF1] bg-[#F8FAFC] px-4 py-3 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] md:grid-cols-[96px_minmax(0,1fr)_220px]">
                   <span>Method</span>
                   <span>Path</span>
                   <span className="hidden md:block">Purpose</span>
@@ -342,7 +342,7 @@ export default function ApiLanding() {
                   transition={{ ...revealProps.transition, delay: index * 0.04 }}
                   className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[260px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <div className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0B74DE]">
+                  <div className="flex items-center gap-3 text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                     <CheckCircle2 className="h-4 w-4" />
                     {item.label}
                   </div>

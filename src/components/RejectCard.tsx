@@ -31,7 +31,7 @@ const RejectCard = () => {
               </div>
 
               <div className="py-8 bg-gray-50 rounded-2xl border border-gray-100 relative overflow-hidden">
-                <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Loss Amount</div>
+                <div className="text-[10px] font-black text-gray-400 uppercase tracking-tight mb-2">Loss Amount</div>
                 <motion.div 
                   className="text-6xl font-black text-red-600 tracking-tighter relative inline-block"
                 >
@@ -59,7 +59,7 @@ const RejectCard = () => {
               </div>
 
               <div className="text-left p-4 border border-dashed border-gray-200 rounded-xl">
-                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Reason</div>
+                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-tight mb-1">Reason</div>
                 <p className="text-xs text-gray-600 leading-relaxed">
                   The documentation provided does not meet the policy requirements for inbound reconciliation.
                 </p>

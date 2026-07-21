@@ -3668,7 +3668,7 @@ export function Dashboard() {
                       <div className="px-5 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full transition-all group">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h3 className="text-[12px] font-medium text-white tracking-wide">Your Notifications</h3>
+                            <h3 className="text-[12px] font-medium text-white tracking-tight">Your Notifications</h3>
                             <p className="text-[10px] font-sans font-bold text-white/25 uppercase tracking-tight mt-1">
                               User-scoped activity
                             </p>
@@ -3685,7 +3685,7 @@ export function Dashboard() {
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/25 opacity-20"></span>
                                   <span className="relative inline-flex rounded-full h-3 w-3 bg-white/35"></span>
                                 </div>
-                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">No recent notifications</p>
+                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-tight">No recent notifications</p>
                               </div>
                             ) : (
                               <div className="flex flex-col">
@@ -3800,7 +3800,7 @@ export function Dashboard() {
                               variant="ghost"
                               size="sm"
                               onClick={() => navigate(tenantRoute(activeSlug, '/notifications'))}
-                              className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-widest transition-colors"
+                              className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-tight transition-colors"
                             >
                               All Notifications
                             </Button>
@@ -4226,8 +4226,8 @@ export function Dashboard() {
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
         <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
           <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
-            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">CONFIGURE_TERMINAL_OVERRIDE</DialogTitle>
-            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Select active operational modules for the command grid.</DialogDescription>
+            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">CONFIGURE_TERMINAL_OVERRIDE</DialogTitle>
+            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-tight">Select active operational modules for the command grid.</DialogDescription>
           </DialogHeader>
           <div className="p-6 max-h-[400px] overflow-y-auto space-y-2">
             {QUICK_ActionS.map((a) => (
@@ -4245,7 +4245,7 @@ export function Dashboard() {
                 />
                 <div className="flex flex-col">
                   <span className="text-[11px] font-mono font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">{a.label.replace('_', ' ')}</span>
-                  <span className="text-[9px] text-white/20 font-mono uppercase tracking-widest">{a.subtitle.replace('_', ' ')}</span>
+                  <span className="text-[9px] text-white/20 font-mono uppercase tracking-tight">{a.subtitle.replace('_', ' ')}</span>
                 </div>
               </label>
             ))}
@@ -4253,12 +4253,12 @@ export function Dashboard() {
           <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-end gap-3">
             <button
               onClick={() => setQuickActionsEditOpen(false)}
-              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-widest transition-colors"
+              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-tight transition-colors"
             >
               ABORT_CHANGES
             </button>
             <button
-              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
+              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
               onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'PROTOCOL_UPDATED_SECURELY' }); } catch { } setQuickActionsEditOpen(false); }}
             >
               SAVE_CONFIGURATION
@@ -4346,8 +4346,8 @@ export function Dashboard() {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="max-w-sm bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
           <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
-            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">PROVISION_ACCESS_INVITE</DialogTitle>
-            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Authorize read-only access for internal personnel.</DialogDescription>
+            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">PROVISION_ACCESS_INVITE</DialogTitle>
+            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-tight">Authorize read-only access for internal personnel.</DialogDescription>
           </DialogHeader>
           <div className="p-6">
             <Input
@@ -4361,12 +4361,12 @@ export function Dashboard() {
           <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-end gap-3">
             <button
               onClick={() => setInviteOpen(false)}
-              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-widest transition-colors"
+              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-tight transition-colors"
             >
               CANCEL_AUTHORIZATION
             </button>
             <button
-              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
+              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
               onClick={async () => { if (!inviteEmail) return; try { await api.post(`/api/team/invite?tenantSlug=${activeSlug}`, { email: inviteEmail }); toast({ title: 'INVITATION_PROTOCOL_INITIATED' }); } catch (e: any) { toast({ title: 'INVITE_FAILURE', description: e?.message || 'Access provision failed.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}
             >
               SEND_CREDENTIALS
@@ -4895,7 +4895,7 @@ export function Dashboard() {
             <Button
               variant="outline"
               onClick={() => setCaseIdModalOpen(false)}
-              className="px-4 py-2 bg-white/5 border-white/10 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-widest h-10"
+              className="px-4 py-2 bg-white/5 border-white/10 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-tight h-10"
               disabled={isLinkingCase}
             >
               Cancel
@@ -4903,7 +4903,7 @@ export function Dashboard() {
             <Button
               onClick={handleCaseIdUpdate}
               disabled={!caseIdInput.trim() || isLinkingCase}
-              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-widest rounded-lg flex items-center h-10"
+              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg flex items-center h-10"
             >
               {isLinkingCase ? (
                 <>
