@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ArrowRight, ExternalLink } from 'lucide-react';
 
 import {
   Dialog,
@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { trackEvent } from '@/lib/analytics';
+import { trackClaimAccessClicked, trackEvent } from '@/lib/analytics';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 
 declare global {
@@ -81,6 +81,9 @@ interface DemoVideoModalProps {
   description?: string;
   analyticsLocation?: string;
   videoName?: string;
+  primaryCtaHref?: string;
+  primaryCtaLabel?: string;
+  primaryCtaLocation?: string;
 }
 
 function getYouTubeId(videoUrl: string): string | null {
@@ -133,6 +136,9 @@ export function DemoVideoModal({
   description = 'Watch how Margin turns Amazon loss events into claim-ready recovery work.',
   analyticsLocation = 'demo_modal',
   videoName = 'margin_demo',
+  primaryCtaHref,
+  primaryCtaLabel,
+  primaryCtaLocation,
 }: DemoVideoModalProps) {
   const embedUrl = buildYouTubeEmbedUrl(videoUrl);
   const videoId = getYouTubeId(videoUrl);
@@ -318,22 +324,39 @@ export function DemoVideoModal({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-[#E4EDF1] bg-white px-4 py-3 text-[11px] leading-4 text-[#66737F] sm:flex-row sm:items-center sm:justify-between sm:px-5">
-          <span>Playback stays inside Margin. Close this window to return to the page.</span>
-          <a
-            href={videoUrl}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => trackEvent(ANALYTICS_EVENTS.demoVideoClicked, {
-              cta_location: analyticsLocation,
-              video_name: videoName,
-              destination: videoUrl,
-            })}
-            className="inline-flex items-center gap-1.5 font-semibold text-[#0B74DE] transition hover:text-[#0869C9]"
-          >
-            Open on YouTube
-            <ExternalLink className="h-3.5 w-3.5" />
-          </a>
+        <div className="flex flex-col gap-3 border-t border-[#E4EDF1] bg-white px-4 py-3 text-[11px] leading-4 text-[#66737F] sm:flex-row sm:items-center sm:justify-between sm:px-5">
+          <span>Watch the walkthrough, then continue to Early Access when you are ready.</span>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            {primaryCtaHref && primaryCtaLabel ? (
+              <a
+                href={primaryCtaHref}
+                onClick={() => trackClaimAccessClicked({
+                  cta_location: primaryCtaLocation || analyticsLocation,
+                  cta_text: primaryCtaLabel,
+                  destination: primaryCtaHref,
+                  video_name: videoName,
+                })}
+                className="inline-flex h-10 items-center justify-center rounded-[5px] bg-[#0B74DE] px-4 text-[12px] font-bold text-white transition hover:bg-[#0869C9]"
+              >
+                {primaryCtaLabel}
+                <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+              </a>
+            ) : null}
+            <a
+              href={videoUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackEvent(ANALYTICS_EVENTS.demoVideoClicked, {
+                cta_location: analyticsLocation,
+                video_name: videoName,
+                destination: videoUrl,
+              })}
+              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-[5px] px-2 font-semibold text-[#0B74DE] transition hover:text-[#0869C9]"
+            >
+              Open on YouTube
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

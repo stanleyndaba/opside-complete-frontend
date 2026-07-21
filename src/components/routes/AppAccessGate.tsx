@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useSession } from '@/contexts/SessionContext';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
-import { trackEvent } from '@/lib/analytics';
+import { trackClaimAccessClicked, trackEvent } from '@/lib/analytics';
 import { DEMO_SESSION_TOKEN, isDemoSessionActive, isDemoWorkspacePath } from '@/lib/demoSession';
 
 type AppAccessGateProps = {
@@ -51,6 +51,22 @@ function AppAccessGateway() {
     }
   }, [isDemoWorkspaceRoute]);
 
+  const attemptedPathType = isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route';
+
+  const trackStartAudit = (ctaText = 'Preview Recovery Audit', ctaLocation = 'app_access_gate') => {
+    trackClaimAccessClicked({
+      cta_location: ctaLocation,
+      cta_text: ctaText,
+      destination: '/early-access',
+      attempted_path_type: attemptedPathType,
+    });
+    trackEvent(ANALYTICS_EVENTS.appGateEarlyAccessClicked, {
+      cta_location: ctaLocation,
+      cta_text: ctaText,
+      attempted_path_type: attemptedPathType,
+    });
+  };
+
   return (
     <main className="min-h-screen bg-[#FAFAF7] px-5 py-6 text-[#182026] sm:px-8 sm:py-8">
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-5xl flex-col">
@@ -66,46 +82,41 @@ function AppAccessGateway() {
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#CFE0EA] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-normal text-[#0B74DE] shadow-[0_12px_30px_rgba(37,49,58,0.06)]">
                 <LockKeyhole className="h-3.5 w-3.5" />
-                Private workspace
+                Margin workspace
               </div>
               <h1 className="mt-7 max-w-3xl text-[42px] font-semibold leading-[0.98] tracking-normal text-[#182026] sm:text-[58px] lg:text-[74px]">
-                Margin workspaces are protected during Early Access.
+                Recover Amazon reimbursements. Bulletproof evidence. Seller-approved claims.
               </h1>
               <p className="mt-6 max-w-2xl text-[16px] leading-7 text-[#5F6D77] sm:text-[18px] sm:leading-8">
-                The recovery workspace is available through approved reviewer credentials or founder-led onboarding. This keeps seller workflows, evidence logic, and account data out of anonymous access.
+                You found the workspace. Preview the Early Access recovery path before Margin prepares your evidence-backed reimbursement workflow.
               </p>
 
               <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <Button asChild className="h-12 rounded-[5px] bg-[#0B74DE] px-6 text-sm font-bold text-white hover:bg-[#0869C9]">
+                <Button asChild className="h-12 w-full justify-center rounded-[5px] bg-[#0B74DE] px-6 text-sm font-bold text-white hover:bg-[#0869C9] sm:w-auto">
                   <Link
                     to="/early-access"
-                    onClick={() => trackEvent(ANALYTICS_EVENTS.appGateEarlyAccessClicked, {
-                      cta_location: 'app_access_gate',
-                      cta_text: 'Join Early Access',
-                      attempted_path_type: isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route',
-                    })}
+                    onClick={() => trackStartAudit()}
                   >
-                    Join Early Access
+                    Preview Recovery Audit
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-6 text-sm font-bold text-[#182026] hover:bg-[#F4F8FB]">
-                  <Link
-                    to={loginPath}
-                    onClick={() => trackEvent(ANALYTICS_EVENTS.appGateLoginClicked, {
-                      cta_location: 'app_access_gate',
-                      cta_text: 'Log in',
-                      attempted_path_type: isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route',
-                    })}
-                  >
-                    <LogIn className="mr-2 h-4 w-4" />
-                    Log in
                   </Link>
                 </Button>
               </div>
 
               <p className="mt-5 text-sm leading-6 text-[#6B7883]">
-                Paystack and partner reviewers should use the test credentials supplied by Margin.
+                Already approved or reviewing Margin? Use the login details supplied to you.
+                <Link
+                  to={loginPath}
+                  onClick={() => trackEvent(ANALYTICS_EVENTS.appGateLoginClicked, {
+                    cta_location: 'app_access_gate',
+                    cta_text: 'Already have access? Log in',
+                    attempted_path_type: attemptedPathType,
+                  })}
+                  className="ml-2 inline-flex items-center font-bold text-[#0B74DE] hover:text-[#0869C9]"
+                >
+                  <LogIn className="mr-1.5 h-3.5 w-3.5" />
+                  Log in
+                </Link>
               </p>
             </div>
 
@@ -116,21 +127,17 @@ function AppAccessGateway() {
                 </div>
                 <div>
                   <h2 className="text-[17px] font-semibold tracking-normal text-[#182026]">
-                    Access stays intentional
+                    Early Access is open
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-[#66737F]">
-                    Public pages remain open. Full app routes now require a real session, reviewer login, or an explicitly seeded demo session.
+                    Reserve the audit path now. Margin keeps seller approval, evidence review, and reimbursement workflow access controlled while onboarding opens.
                   </p>
                   <Link
-                    to="/sales"
-                    onClick={() => trackEvent(ANALYTICS_EVENTS.appGateDemoRequestClicked, {
-                      cta_location: 'app_access_gate',
-                      cta_text: 'Request a founder-led demo',
-                      attempted_path_type: isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route',
-                    })}
+                    to="/early-access"
+                    onClick={() => trackStartAudit('Continue to Early Access', 'app_access_gate_sidebar')}
                     className="mt-5 inline-flex items-center text-sm font-bold text-[#0B74DE] hover:text-[#0869C9]"
                   >
-                    Request a founder-led demo
+                    Continue to Early Access
                     <ArrowRight className="ml-1.5 h-4 w-4" />
                   </Link>
                 </div>

@@ -9,7 +9,6 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
@@ -469,17 +468,14 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   );
 }
 function KineticHeroSection({
-  onPrimaryCta,
   onEarlyAccessCta,
   isFull,
   nextBatchHours,
 }: {
-  onPrimaryCta: () => void;
   onEarlyAccessCta: () => void;
   isFull: boolean;
   nextBatchHours?: number;
 }) {
-  const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
@@ -646,12 +642,12 @@ function KineticHeroSection({
             {" "}
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Get Started"
+              aria-label="Preview Recovery Audit"
               className="group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
             >
               {" "}
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-              Get Started <ArrowRight className="ml-2 h-4 w-4" />{" "}
+              Preview Recovery Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
           </motion.div>{" "}
           <motion.div
@@ -1046,7 +1042,6 @@ function MinimalMetric({
   );
 }
 export default function Index() {
-  const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
@@ -1064,20 +1059,17 @@ export default function Index() {
     mediaQuery.addListener(sync);
     return () => mediaQuery.removeListener(sync);
   }, []);
-  const handlePrimaryCta = () => {
-    if (isFull) {
-      navigate("/waitlist?reason=capacity");
-      return;
-    }
-    navigate("/early-access");
-  };
   const handleClaimAccessClick = (location: string) => {
     trackEarlyAccessCtaClicked({
       cta_location: location,
       cta_text: primaryCtaLabel,
       destination: "/early-access",
     });
-    handlePrimaryCta();
+    if (isFull) {
+      window.location.assign("/waitlist?reason=capacity");
+      return;
+    }
+    window.location.assign("/early-access");
   };
   const openDemo = () => {
     trackEvent(ANALYTICS_EVENTS.demoCtaClicked, {
@@ -1087,14 +1079,8 @@ export default function Index() {
     });
     setIsDemoOpen(true);
   };
-  const scrollToWorkflow = () => {
-    if (typeof document === "undefined") return;
-    document
-      .getElementById("how-margin-works")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = "Get Started";
+  const primaryCtaLabel = "Preview Recovery Audit";
   return (
     <div className="min-h-screen overflow-x-clip bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       {" "}
@@ -1106,7 +1092,6 @@ export default function Index() {
       <main className="relative">
         {" "}
         <KineticHeroSection
-          onPrimaryCta={scrollToWorkflow}
           onEarlyAccessCta={() => handleClaimAccessClick("homepage_hero")}
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}

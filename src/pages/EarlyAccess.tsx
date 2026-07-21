@@ -96,9 +96,9 @@ function FounderPassCTA({
       >
         <a
           href={EARLY_ACCESS_INFO_URL}
-          onClick={(event) => onCheckoutClick(event, location, 'Get Started')}
+          onClick={(event) => onCheckoutClick(event, location, 'Continue to Checkout')}
         >
-          Get Started
+          Continue to Checkout
           <ArrowRight className="ml-2 h-5 w-5" />
         </a>
       </Button>
@@ -223,7 +223,7 @@ export default function EarlyAccess() {
         eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
         params: {
           cta_location: 'early_access_hero',
-          cta_text: 'Get Started',
+          cta_text: 'Continue to Checkout',
           destination: EARLY_ACCESS_INFO_URL,
         },
       },
@@ -232,7 +232,7 @@ export default function EarlyAccess() {
         eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
         params: {
           cta_location: 'early_access_offer_section',
-          cta_text: 'Get Started',
+          cta_text: 'Continue to Checkout',
           destination: EARLY_ACCESS_INFO_URL,
         },
       },
@@ -241,7 +241,7 @@ export default function EarlyAccess() {
         eventName: ANALYTICS_EVENTS.earlyAccessCtaSeen,
         params: {
           cta_location: 'early_access_bottom_cta',
-          cta_text: 'Get Started',
+          cta_text: 'Continue to Checkout',
           destination: EARLY_ACCESS_INFO_URL,
         },
       },
@@ -395,11 +395,11 @@ export default function EarlyAccess() {
                 </div>
 
                 <h1 className="mt-6 max-w-[920px] text-[40px] font-semibold leading-[0.96] tracking-[-0.06em] text-[#182026] sm:text-[52px] md:text-[82px]">
-                  Every seller needs Margin.
+                  A $99 path to recover Amazon money before it expires.
                 </h1>
 
               <p className="mx-auto mt-6 max-w-[680px] text-[17px] leading-8 text-[#4D5B66] md:mt-8 md:text-[21px] md:leading-9">
-                {EARLY_ACCESS_PRICE} one-time. Keep 100% of every recovery through December 31, 2026. Upgrade to Pro or Scale anytime and your $99 is credited. Early Access closes July 30, 2026 or when 500 slots are filled.
+                Reserve Early Access for {EARLY_ACCESS_PRICE} one-time. Margin prepares the reimbursement workflow, keeps filings seller-approved, and lets you keep 100% of every recovery through December 31, 2026.
               </p>
 
               <div ref={mainCtaRef} className="mt-10 w-full">
@@ -598,9 +598,9 @@ export default function EarlyAccess() {
                 >
                   <a
                     href={EARLY_ACCESS_INFO_URL}
-                    onClick={(event) => handleCheckoutClick(event, 'early_access_offer_section', 'Get Started')}
+                    onClick={(event) => handleCheckoutClick(event, 'early_access_offer_section', 'Continue to Checkout')}
                   >
-                    Get Started
+                    Continue to Checkout
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
