@@ -3120,17 +3120,17 @@ export function Dashboard() {
   );
   const overviewHeroMetrics = useMemo(() => ([
     {
-      label: 'In motion',
+      label: 'With Amazon',
       value: overviewInMotionValueLabel,
       detail: inMotionClaimsCount > 0
-        ? `${pluralize(inMotionClaimsCount, 'case')} already with Amazon or waiting for payout`
+        ? `${pluralize(inMotionClaimsCount, 'case')} filed, under review, or awaiting payout`
         : 'Nothing is moving with Amazon yet'
     },
     {
-      label: 'Paid back',
+      label: 'Recovered',
       value: overviewPaidBackValueLabel,
       detail: recoveredCashTotal > 0
-        ? `${pluralize(recoveredClaimsCount, 'case')} already confirmed back to this account`
+        ? `${pluralize(recoveredClaimsCount, 'case')} confirmed back to this account`
         : 'No payout has been confirmed yet'
     }
   ]), [
@@ -3510,7 +3510,7 @@ export function Dashboard() {
                         {overviewHeroMetrics.map((item, index) => (
                           <div
                             key={item.label}
-                            className="relative min-h-[220px] overflow-hidden rounded-[24px] border border-white/75 bg-white/72 p-6 shadow-[0_16px_52px_rgba(17,24,39,0.07)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#0052FF]/25 hover:shadow-[0_26px_64px_rgba(0,82,255,0.12)] group-hover/pipeline-grid:opacity-85 hover:opacity-100"
+                            className="relative min-h-[156px] overflow-hidden rounded-[24px] border border-white/75 bg-white/72 p-5 shadow-[0_16px_52px_rgba(17,24,39,0.07)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#0052FF]/25 hover:shadow-[0_26px_64px_rgba(0,82,255,0.12)] group-hover/pipeline-grid:opacity-85 hover:opacity-100 xl:min-h-[172px]"
                           >
                             <div className={cn(
                               "pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl",
