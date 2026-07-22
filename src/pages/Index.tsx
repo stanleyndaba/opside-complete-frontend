@@ -1468,7 +1468,7 @@ export default function Index() {
 
             <div className="mt-16 grid gap-6 md:grid-cols-3 lg:gap-8">
               {/* Column 1 */}
-              <motion.div {...revealProps} transition={{ delay: 0.1 }} className="relative flex h-full flex-col overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
+              <motion.div {...revealProps} transition={{ delay: 0.1 }} className="relative flex h-full flex-col overflow-hidden rounded-[4px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
                 <h3 className="mb-6 text-[22px] font-semibold tracking-[-0.03em] text-[#182026]">Self-managed</h3>
                 <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
                   <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> You gather invoices.</li>
@@ -1483,7 +1483,7 @@ export default function Index() {
               </motion.div>
 
               {/* Column 2 */}
-              <motion.div {...revealProps} transition={{ delay: 0.2 }} className="relative flex h-full flex-col overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
+              <motion.div {...revealProps} transition={{ delay: 0.2 }} className="relative flex h-full flex-col overflow-hidden rounded-[4px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
                 <h3 className="mb-6 text-[22px] font-semibold tracking-[-0.03em] text-[#182026]">Managed service</h3>
                 <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
                   <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Specialists prepare documents.</li>
@@ -1497,15 +1497,15 @@ export default function Index() {
               </motion.div>
 
               {/* Column 3 (Margin) */}
-              <motion.div {...revealProps} transition={{ delay: 0.3 }} className="relative flex h-full flex-col overflow-hidden rounded-[34px] border border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
+              <motion.div {...revealProps} transition={{ delay: 0.3 }} className="relative flex h-full flex-col overflow-hidden rounded-[4px] border border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(11,116,222,0.1),_transparent_60%)]" />
                 
                 <div className="relative z-10">
                   <div className="mb-6 flex items-start justify-between gap-4">
                     <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#0B74DE]">Margin</h3>
                     <Badge 
-                      variant="outline" 
-                      className="border-[#BFD8EA] bg-white text-[9px] font-semibold uppercase tracking-tight text-[#0B74DE]"
+                      variant="default" 
+                      className="border-transparent bg-[#0B74DE] text-[9px] font-semibold uppercase tracking-tight text-white shadow-[0_4px_14px_rgba(11,116,222,0.25)] hover:bg-[#0B74DE]"
                     >
                       Margin Way
                     </Badge>
