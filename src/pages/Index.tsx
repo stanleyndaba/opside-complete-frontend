@@ -16,7 +16,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Check, PlayCircle } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -320,6 +319,54 @@ const securityFeatures = [
   "Seller Approval Before Filing",
   "Read-only Recovery Audit",
   "Built on Enterprise Cloud Infrastructure",
+];
+const outperformanceCards = [
+  {
+    title: "Built around Amazon reimbursement truth",
+    points: [
+      "Designed for shortages, lost or damaged inventory, settlement gaps, and evidence requests.",
+      "Maps every signal back to the claim Amazon actually needs to review.",
+    ],
+    logos: [
+      { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+      { src: "/logoimagetwo.png", alt: "Margin" },
+    ],
+  },
+  {
+    title: "Evidence graph before filing",
+    points: [
+      "Connects invoices, BOLs, PODs, carrier records, Gmail, Drive, and Seller Central.",
+      "Shows what is ready, missing, risky, or waiting for seller approval.",
+    ],
+    logos: [
+      { src: "/gmailicon.png", alt: "Gmail" },
+      { src: "/gd.png", alt: "Google Drive" },
+      { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+    ],
+  },
+  {
+    title: "Seller-approved recovery control",
+    points: [
+      "Prepares the case without removing the seller from the decision.",
+      "Keeps filing, replies, resubmissions, and follow-ups visible.",
+    ],
+    logos: [
+      { src: "/logoimagetwo.png", alt: "Margin" },
+      { src: "/amazon-logo-transparent-circle.png", alt: "Amazon" },
+    ],
+  },
+  {
+    title: "Reconciliation beyond approval",
+    points: [
+      "Tracks whether the approved amount actually lands in settlement.",
+      "Leaves an accounting-ready trail for QuickBooks and Xero review.",
+    ],
+    logos: [
+      { src: "/quickbooks.png", alt: "QuickBooks" },
+      { src: "/xero.png", alt: "Xero" },
+      { src: "/logoimagetwo.png", alt: "Margin" },
+    ],
+  },
 ];
 const faqs = [
   {
@@ -1087,25 +1134,19 @@ function TrustedConnectionGraphic() {
         </defs>
         <path
           d="M126 140H394"
-          className="stroke-[#CFE0EA]"
+          className="stroke-transparent"
           strokeWidth="1.5"
           strokeLinecap="round"
-        />
-        <path
-          d="M126 148H394"
-          className="stroke-[#E4EDF1]"
-          strokeWidth="1"
-          strokeLinecap="round"
-          strokeDasharray="2 9"
         />
         <motion.path
           d="M126 140H394"
           stroke="url(#trusted-logo-connection-flow)"
-          strokeWidth="2.5"
+          strokeWidth="2"
           strokeLinecap="round"
-          strokeDasharray="34 150"
-          animate={reduceMotion ? undefined : { strokeDashoffset: [184, 0, -184] }}
-          transition={{ duration: 3.1, repeat: Infinity, ease: "linear" }}
+          strokeDasharray="2 14"
+          animate={reduceMotion ? undefined : { strokeDashoffset: [120, 0, -120] }}
+          transition={{ duration: 4.8, repeat: Infinity, ease: "linear" }}
+          opacity="0.16"
           filter="url(#trusted-logo-connection-glow)"
         />
         <motion.g
@@ -1117,9 +1158,9 @@ function TrustedConnectionGraphic() {
             cx="260"
             cy="140"
             r="32"
-            className="stroke-[#BFD8EA]"
-            strokeWidth="1.4"
-            strokeDasharray="2 8"
+            className="stroke-[#0B74DE]/55"
+            strokeWidth="1.8"
+            strokeDasharray="3 8"
           />
         </motion.g>
         <motion.g
@@ -1131,11 +1172,55 @@ function TrustedConnectionGraphic() {
             cx="260"
             cy="140"
             r="45"
-            className="stroke-[#0B74DE]/35"
-            strokeWidth="1.6"
+            className="stroke-[#0B74DE]/60"
+            strokeWidth="1.9"
             strokeDasharray="10 14"
           />
         </motion.g>
+        <motion.circle
+          cx="132"
+          cy="137"
+          r="4"
+          className="fill-[#0B74DE]"
+          filter="url(#trusted-logo-connection-glow)"
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  cx: [132, 260, 260, 132, 260, 260, 132],
+                  scale: [1, 1.75, 1.75, 1, 1.75, 1.75, 1],
+                  opacity: [0.5, 1, 1, 0.55, 1, 1, 0.5],
+                }
+          }
+          transition={{
+            duration: 6.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            times: [0, 0.27, 0.42, 0.57, 0.78, 0.9, 1],
+          }}
+        />
+        <motion.circle
+          cx="388"
+          cy="143"
+          r="4"
+          className="fill-[#0B74DE]"
+          filter="url(#trusted-logo-connection-glow)"
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  cx: [388, 260, 260, 388, 260, 260, 388],
+                  scale: [1, 1.75, 1.75, 1, 1.75, 1.75, 1],
+                  opacity: [0.5, 1, 1, 0.55, 1, 1, 0.5],
+                }
+          }
+          transition={{
+            duration: 6.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            times: [0, 0.27, 0.42, 0.57, 0.78, 0.9, 1],
+          }}
+        />
       </svg>
 
       <div className="relative z-10 grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4 px-3 sm:gap-8 sm:px-6">
@@ -1566,138 +1651,81 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="relative border-t border-[#E4EDF1] bg-[#F9FBFC] py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28" id="why-margin-exists">
+        <section
+          className="relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28"
+          id="why-margin-outperforms"
+        >
           <div className={containerClass}>
-            <motion.div {...revealProps} className="mx-auto max-w-[840px] text-center">
-              <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-[#CBD7DE] bg-white px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-tight text-[#8A98A3]">
-                Why Margin Exists
+            <motion.div
+              {...revealProps}
+              className="mx-auto max-w-[880px] text-center"
+            >
+              <div className="mx-auto mb-5 inline-flex items-center rounded-full border border-[#CBD7DE] bg-[#F9FBFC] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-tight text-[#66737F]">
+                Why Margin Outperforms
               </div>
-              <h2 className="font-serif-headline text-[32px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] sm:text-[42px] md:text-[54px] lg:text-[60px]">
-                There are three ways to approach Amazon recovery operations.
+              <h2 className="text-[38px] font-bold leading-[0.98] tracking-[-0.055em] text-[#182026] sm:text-[54px] md:text-[68px] lg:text-[76px]">
+                Why Margin outperforms
               </h2>
-              <p className="mx-auto mt-6 max-w-[680px] text-[18px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
-                Recover it yourself. Hire a service. Or let Margin organize the recovery operation.
+              <p className="mx-auto mt-6 max-w-[700px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
+                Margin is not another claims checklist. It turns fragmented
+                reimbursement signals into a controlled recovery system sellers
+                can actually trust.
               </p>
             </motion.div>
 
-            <motion.div {...revealProps} className="mx-auto mt-12 max-w-[760px] text-center">
-              <p className="text-[16px] font-medium leading-7 text-[#182026] md:text-[18px] md:leading-8">
-                Every recovery starts with a discrepancy.<br className="max-md:hidden" />
-                Most recoveries fail somewhere between finding the problem and proving it.<br className="max-md:hidden" />
-                That's where Margin operates.
-              </p>
-            </motion.div>
-
-            <div className="mt-16 grid gap-6 md:grid-cols-3 lg:gap-8">
-              {/* Column 1 */}
-              <motion.div {...revealProps} transition={{ delay: 0.1 }} className="relative flex h-full flex-col overflow-hidden rounded-[4px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
-                <h3 className="mb-6 text-[22px] font-semibold tracking-[-0.03em] text-[#182026]">Self-managed</h3>
-                <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> You gather invoices.</li>
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Search old emails.</li>
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Find shipment records.</li>
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Answer Amazon.</li>
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Track settlements.</li>
-                </ul>
-                <div className="mt-auto border-t border-[#E4EDF1] pt-5 text-[14px] font-medium leading-6 text-[#4D5B66]">
-                  Everything depends on you remembering where the evidence lives.
-                </div>
-              </motion.div>
-
-              {/* Column 2 */}
-              <motion.div {...revealProps} transition={{ delay: 0.2 }} className="relative flex h-full flex-col overflow-hidden rounded-[4px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
-                <h3 className="mb-6 text-[22px] font-semibold tracking-[-0.03em] text-[#182026]">Managed service</h3>
-                <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Specialists prepare documents.</li>
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> File claims.</li>
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Respond to Amazon.</li>
-                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Track recoveries.</li>
-                </ul>
-                <div className="mt-auto border-t border-[#E4EDF1] pt-5 text-[14px] font-medium leading-6 text-[#4D5B66]">
-                  The work is done for you—but much of the recovery process remains hidden behind the service.
-                </div>
-              </motion.div>
-
-              {/* Column 3 (Margin) */}
-              <motion.div {...revealProps} transition={{ delay: 0.3 }} className="relative flex h-full flex-col overflow-hidden rounded-[4px] border border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(11,116,222,0.1),_transparent_60%)]" />
-                
-                <div className="relative z-10">
-                  <div className="mb-6 flex items-start justify-between gap-4">
-                    <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#0B74DE]">Margin</h3>
-                    <Badge 
-                      variant="default" 
-                      className="border-transparent bg-[#0B74DE] text-[9px] font-semibold uppercase tracking-tight text-white shadow-[0_4px_14px_rgba(11,116,222,0.25)] hover:bg-[#0B74DE]"
-                    >
-                      Margin Way
-                    </Badge>
+            <div className="mt-12 grid gap-3 md:mt-16 md:grid-cols-2">
+              {outperformanceCards.map((card, index) => (
+                <motion.div
+                  key={card.title}
+                  {...revealProps}
+                  transition={{
+                    ...revealProps.transition,
+                    delay: index * 0.06,
+                  }}
+                  className="grid min-h-[168px] grid-cols-[58px_1px_minmax(0,1fr)] gap-5 rounded-[2px] border border-[#E4EDF1] bg-white px-5 py-6 shadow-[0_20px_60px_rgba(37,49,58,0.04)] sm:grid-cols-[76px_1px_minmax(0,1fr)_auto] sm:px-6 md:min-h-[188px] md:gap-6 lg:px-7"
+                >
+                  <div className="flex items-center text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#D7DDE2] sm:text-[50px] md:text-[56px]">
+                    {String(index + 1).padStart(2, "0")}
                   </div>
-                  <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#182026]">
-                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Margin connects the evidence.</li>
-                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Builds the recovery record.</li>
-                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Shows what's missing.</li>
-                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Keeps you in control before filing.</li>
-                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Learns from every completed case.</li>
-                  </ul>
-                </div>
-              </motion.div>
+                  <div className="h-full w-px bg-[#E4EDF1]" />
+                  <div className="min-w-0 self-center">
+                    <h3 className="text-[20px] font-semibold leading-tight tracking-[-0.04em] text-[#182026] md:text-[24px]">
+                      {card.title}
+                    </h3>
+                    <ul className="mt-4 space-y-2">
+                      {card.points.map((point, pointIndex) => (
+                        <li
+                          key={point}
+                          className="flex items-start gap-2 text-[14px] leading-6 text-[#66737F] md:text-[15px]"
+                        >
+                          <span
+                            className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-[1px] ${
+                              pointIndex === 0 ? "bg-[#0B74DE]" : "bg-[#21B487]"
+                            }`}
+                          />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="col-span-3 flex items-center gap-2 self-center justify-self-start sm:col-span-1 sm:grid sm:grid-cols-2 sm:justify-self-end">
+                    {card.logos.map((logo) => (
+                      <div
+                        key={`${card.title}-${logo.alt}`}
+                        className="flex h-8 w-8 items-center justify-center sm:h-9 sm:w-9"
+                      >
+                        <img
+                          src={logo.src}
+                          alt={logo.alt}
+                          className="max-h-7 max-w-7 object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
             </div>
-
-            <motion.div {...revealProps} className="mx-auto mt-20 max-w-[800px] text-center">
-              <h3 className="font-serif-headline text-[24px] font-bold leading-[1.2] tracking-[-0.02em] text-[#182026] md:text-[32px]">
-                Finding a discrepancy creates an opportunity. <br className="max-md:hidden" />
-                Building the right evidence operation turns it into recovered margin.
-              </h3>
-            </motion.div>
-
-            {/* The Table */}
-            <motion.div {...revealProps} className="mx-auto mt-16 max-w-[960px] overflow-hidden rounded-2xl border border-[#E4EDF1] bg-white shadow-sm">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[600px] text-left text-[15px]">
-                  <thead>
-                    <tr className="border-b border-[#E4EDF1] bg-[#F9FBFC]">
-                      <th className="p-5 font-semibold text-[#182026]">Feature</th>
-                      <th className="p-5 font-semibold text-[#182026]">Self-managed</th>
-                      <th className="p-5 font-semibold text-[#182026]">Managed service</th>
-                      <th className="p-5 font-semibold text-[#0B74DE]">Margin</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#E4EDF1]">
-                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
-                      <td className="p-5 font-medium text-[#182026]">Evidence linked automatically</td>
-                      <td className="p-5 text-[#66737F]">No</td>
-                      <td className="p-5 text-[#66737F]">Internal only</td>
-                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
-                    </tr>
-                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
-                      <td className="p-5 font-medium text-[#182026]">Claim timeline</td>
-                      <td className="p-5 text-[#66737F]">Manual</td>
-                      <td className="p-5 text-[#66737F]">Internal only</td>
-                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
-                    </tr>
-                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
-                      <td className="p-5 font-medium text-[#182026]">Recovery history</td>
-                      <td className="p-5 text-[#66737F]">Manual</td>
-                      <td className="p-5 text-[#66737F]">Internal only</td>
-                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
-                    </tr>
-                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
-                      <td className="p-5 font-medium text-[#182026]">Approval before filing</td>
-                      <td className="p-5 text-[#66737F]">Yes</td>
-                      <td className="p-5 text-[#66737F]">Usually No</td>
-                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
-                    </tr>
-                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
-                      <td className="p-5 font-medium text-[#182026]">Payout reconciliation</td>
-                      <td className="p-5 text-[#66737F]">Manual</td>
-                      <td className="p-5 text-[#66737F]">Varies</td>
-                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </motion.div>
-
           </div>
         </section>
         <section className="relative bg-[#F3F6F8] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28">

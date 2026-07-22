@@ -274,16 +274,19 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     About
                                 </Link>
                                 <Link
-                                    to="/login"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
-                                    LOGIN
-                                </Link>
-                                <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={mobileMenuItemClass}>
                                     Enterprise
+                                </Link>
+                                <Link
+                                    to="/login"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={cn(
+                                        "mt-2 flex w-full items-center justify-between rounded-[6px] border border-[#DCE8EE] bg-white px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] shadow-[0_12px_30px_rgba(37,49,58,0.08)] transition-colors hover:bg-[#F3F6F8]",
+                                        !isLight && "border-white/10"
+                                    )}>
+                                    LOGIN
                                 </Link>
                             </div>
                         </motion.div>
