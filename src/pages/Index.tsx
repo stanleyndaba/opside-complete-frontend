@@ -110,6 +110,48 @@ const velocityMetrics = [
     detail: "Move before the window closes.",
   },
 ];
+const workflowSteps = [
+  {
+    step: "01",
+    title: "The discrepancy is found",
+    detail:
+      "The money may be there, but a detected issue is not a recoverable case yet.",
+  },
+  {
+    step: "02",
+    title: "Amazon needs proof",
+    detail:
+      "The invoice, BOL, POD, shipment ID, carrier record, cost basis, case history, and payout record all have to line up.",
+  },
+  {
+    step: "03",
+    title: "The proof is everywhere",
+    detail:
+      "One record sits in Gmail, another in Drive, another in Seller Central, another in a carrier portal.",
+  },
+  {
+    step: "04",
+    title: "The case becomes defensible",
+    detail: "The evidence becomes one recovery story Amazon can verify.",
+  },
+  {
+    step: "05",
+    title: "The seller stays in control",
+    detail: "Nothing moves until the seller approves it.",
+  },
+  {
+    step: "06",
+    title: "Amazon responds",
+    detail:
+      "Amazon asks again. Rejects. Approves less. Or requests more proof.",
+  },
+  {
+    step: "07",
+    title: "The payout has to reconcile",
+    detail:
+      "Amazon approval is not the end. Margin tracks whether the approved amount actually reaches the seller balance and prepares the recovery trail for accounting review.",
+  },
+];
 const stateTransitionSources = ["Gmail", "Drive", "Seller Central", "Excel"];
 const systemLogEntries = [
   { label: "SIGNAL", text: "Which discrepancies appeared today?" },
@@ -1011,49 +1053,110 @@ function TrustedConnectionGraphic() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="relative mx-auto w-full max-w-[500px]" aria-label="Amazon connection to Margin">
-      <div className="relative grid min-h-[240px] grid-cols-[1fr_auto_1fr] items-center gap-3 overflow-hidden rounded-[2px] border border-[#DCE8EE] bg-[#F9FBFC] px-5 py-8 md:min-h-[280px] md:px-8">
-        <div className="absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(191,216,234,0.35)_1px,transparent_1px),linear-gradient(90deg,rgba(191,216,234,0.28)_1px,transparent_1px)] [background-size:42px_42px]" />
-        <div className="relative z-10 flex flex-col items-center gap-3">
-          <div className="flex h-20 w-20 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-white shadow-[0_18px_42px_rgba(37,49,58,0.08)] md:h-24 md:w-24">
-            <img
-              src="/amazon-logo-transparent-circle.png"
-              alt="Amazon"
-              className="h-14 w-14 object-contain md:h-16 md:w-16"
-              loading="lazy"
-            />
-          </div>
-          <span className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
-            Amazon
-          </span>
+    <div
+      className="relative mx-auto h-[210px] w-full max-w-[520px] overflow-hidden sm:h-[240px] md:h-[280px]"
+      aria-label="Amazon connection to Margin"
+    >
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 520 280"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <defs>
+          <filter id="trusted-logo-connection-glow" x="-25%" y="-75%" width="150%" height="250%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <linearGradient
+            id="trusted-logo-connection-flow"
+            x1="128"
+            y1="140"
+            x2="392"
+            y2="140"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#0B74DE" stopOpacity="0.08" />
+            <stop offset="0.5" stopColor="#0B74DE" />
+            <stop offset="1" stopColor="#2E7D5B" stopOpacity="0.38" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M126 140H394"
+          className="stroke-[#CFE0EA]"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M126 148H394"
+          className="stroke-[#E4EDF1]"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeDasharray="2 9"
+        />
+        <motion.path
+          d="M126 140H394"
+          stroke="url(#trusted-logo-connection-flow)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray="34 150"
+          animate={reduceMotion ? undefined : { strokeDashoffset: [184, 0, -184] }}
+          transition={{ duration: 3.1, repeat: Infinity, ease: "linear" }}
+          filter="url(#trusted-logo-connection-glow)"
+        />
+        <motion.g
+          animate={reduceMotion ? undefined : { rotate: 360 }}
+          transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+          style={{ transformOrigin: "260px 140px" }}
+        >
+          <circle
+            cx="260"
+            cy="140"
+            r="32"
+            className="stroke-[#BFD8EA]"
+            strokeWidth="1.4"
+            strokeDasharray="2 8"
+          />
+        </motion.g>
+        <motion.g
+          animate={reduceMotion ? undefined : { rotate: -360, scale: [0.92, 1.06, 0.92] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          style={{ transformOrigin: "260px 140px" }}
+        >
+          <circle
+            cx="260"
+            cy="140"
+            r="45"
+            className="stroke-[#0B74DE]/35"
+            strokeWidth="1.6"
+            strokeDasharray="10 14"
+          />
+        </motion.g>
+      </svg>
+
+      <div className="relative z-10 grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4 px-3 sm:gap-8 sm:px-6">
+        <div className="flex justify-center">
+          <img
+            src="/amazon-logo-transparent-circle.png"
+            alt="Amazon"
+            className="h-20 w-20 object-contain drop-shadow-[0_18px_34px_rgba(37,49,58,0.14)] sm:h-24 sm:w-24 md:h-28 md:w-28"
+            loading="lazy"
+          />
         </div>
 
-        <div className="relative z-10 flex w-28 items-center justify-center md:w-40">
-          <div className="absolute h-px w-full bg-[#CFE0EA]" />
-          <motion.div
-            className="h-1.5 w-1.5 rounded-full bg-[#0B74DE] shadow-[0_0_18px_rgba(11,116,222,0.7)]"
-            animate={reduceMotion ? undefined : { x: [-58, 58], opacity: [0.1, 1, 0.1] }}
-            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute h-1.5 w-1.5 rounded-full bg-[#2E7D5B] shadow-[0_0_18px_rgba(46,125,91,0.55)]"
-            animate={reduceMotion ? undefined : { x: [58, -58], opacity: [0.1, 0.9, 0.1] }}
-            transition={{ duration: 3.1, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
-          />
-        </div>
+        <div className="h-px w-24 sm:w-36 md:w-44" aria-hidden="true" />
 
-        <div className="relative z-10 flex flex-col items-center gap-3">
-          <div className="flex h-20 w-20 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-white shadow-[0_18px_42px_rgba(37,49,58,0.08)] md:h-24 md:w-24">
-            <img
-              src="/logoimagetwo.png"
-              alt="Margin"
-              className="h-11 w-auto object-contain md:h-12"
-              loading="lazy"
-            />
-          </div>
-          <span className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
-            Margin
-          </span>
+        <div className="flex justify-center">
+          <img
+            src="/logoimagetwo.png"
+            alt="Margin"
+            className="h-14 w-auto object-contain drop-shadow-[0_18px_34px_rgba(37,49,58,0.12)] sm:h-16 md:h-20"
+            loading="lazy"
+          />
         </div>
       </div>
     </div>
@@ -1364,6 +1467,72 @@ export default function Index() {
               <br /> Everything has to point to the same recovery before Amazon
               accepts it.{" "}
             </p>{" "}
+          </div>{" "}
+        </section>{" "}
+        <section
+          className="relative bg-[#F4FAFF] py-16 max-md:border-b max-md:border-[#E5E7EB] md:py-28"
+          id="how-margin-works"
+        >
+          {" "}
+          <div className={containerClass}>
+            {" "}
+            <div className="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-end">
+              {" "}
+              <div>
+                {" "}
+                <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
+                  {" "}
+                  <span>06</span> <span>What Happens After Detection</span>{" "}
+                </div>{" "}
+                <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[44px] md:text-[58px] lg:text-[64px]">
+                  <span className="text-[#182026]">
+                    Finding the discrepancy is not the hard part.
+                  </span>{" "}
+                  <span className="text-[#8A98A3]">Proving it is.</span>
+                </h2>{" "}
+              </div>{" "}
+              <p className="max-w-[660px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9 lg:justify-self-end">
+                {" "}
+                Once the issue is found, the work becomes proof: deadline,
+                invoice, BOL, POD, shipment ID, quantity, cost basis, Amazon
+                response, and seller approval all have to support the same
+                case.{" "}
+              </p>{" "}
+            </div>{" "}
+            <div className="workflow-scrollbar-hide mt-10 overflow-x-auto overflow-y-hidden pb-2 md:mt-16 md:overflow-hidden">
+              <motion.div
+                className="workflow-marquee-track flex w-max snap-x snap-mandatory items-stretch gap-x-4 pr-5 md:gap-x-7"
+                style={{ ["--duration" as string]: "58s" }}
+              >
+                {" "}
+                {(isMobileLayout
+                  ? workflowSteps
+                  : [...workflowSteps, ...workflowSteps]
+                ).map((item, index) => (
+                  <div
+                    key={`${item.step}-${index}`}
+                    className="min-h-[230px] w-[260px] shrink-0 snap-start border-t border-[#C9D6DE] pt-4 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
+                  >
+                    {" "}
+                    <div className="flex h-full flex-col">
+                      {" "}
+                      <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3] md:text-[11px]">
+                        {" "}
+                        {item.step}{" "}
+                      </div>{" "}
+                      <h3 className="font-serif-headline mt-4 max-w-[240px] text-[22px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] md:mt-5 md:max-w-[260px] md:text-[29px]">
+                        {" "}
+                        {item.title}{" "}
+                      </h3>{" "}
+                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#66737F] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
+                        {" "}
+                        {item.detail}{" "}
+                      </p>{" "}
+                    </div>{" "}
+                  </div>
+                ))}{" "}
+              </motion.div>{" "}
+            </div>{" "}
           </div>{" "}
         </section>{" "}
         <section className="relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28">
