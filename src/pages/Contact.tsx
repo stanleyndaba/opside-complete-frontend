@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Mail, Send } from 'lucide-react';
+import { Building2, CheckCircle2, Mail, MessageSquareText, Send, UserRound } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -12,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 
 const fieldLabelClass = 'text-[11px] font-semibold tracking-tight text-[#66737F]';
-const inputClass = 'h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20';
+const inputClass = 'h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20';
 
 export default function Contact() {
   usePageMeta({
@@ -65,10 +67,11 @@ export default function Contact() {
         title: 'Support request sent',
         description: `Your message was routed to ${response.data.email_sent_to}.`,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Please email support@margin-finance.com directly.';
       toast({
         title: 'Support request failed',
-        description: err?.message || 'Please email support@margin-finance.com directly.',
+        description: message,
         variant: 'destructive',
       });
     } finally {
@@ -88,16 +91,7 @@ export default function Contact() {
         <div className="absolute inset-x-0 bottom-0 h-[720px] bg-[radial-gradient(circle_at_18%_100%,rgba(191,216,234,0.24),transparent_44%),radial-gradient(circle_at_76%_88%,rgba(255,255,255,0.7),transparent_48%)]" />
       </div>
 
-      <header className="fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent">
-        <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
-          <div className="relative flex items-center justify-between rounded-[22px] border border-[#DCE8EE] bg-white/94 px-4 py-3 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-2xl md:px-6">
-            <Link to="/" className="inline-flex items-center gap-2 rounded-full px-1 py-1 transition-colors hover:bg-[#F3F6F8] md:gap-2.5 md:px-2 md:py-1.5">
-              <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-4 w-auto object-contain md:h-5" />
-              <span className="brand-wordmark font-merriweather text-base tracking-tight text-[#182026] md:text-lg">Margin</span>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicNavbar variant="light" />
 
       <main className="relative z-10 px-4 pb-24 pt-28 md:px-6 md:pb-28 md:pt-32">
         <div className="mx-auto max-w-[860px] space-y-8">
@@ -118,7 +112,7 @@ export default function Contact() {
             </div>
           </section>
 
-          <section className="relative overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
+          <section className="relative overflow-hidden rounded-[18px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
             <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
             <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#0B74DE]/10 blur-3xl" />
 
@@ -142,8 +136,8 @@ export default function Contact() {
               </div>
 
               {isSubmitted ? (
-                <div className="flex min-h-[420px] flex-col items-center justify-center rounded-[22px] border border-[#DCE8EE] bg-[#F8FAFC] px-5 py-10 text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-600">
+                <div className="flex min-h-[420px] flex-col items-center justify-center rounded-[12px] border border-[#DCE8EE] bg-[#F8FAFC] px-5 py-10 text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-[5px] border border-emerald-200 bg-emerald-50 text-emerald-600">
                     <CheckCircle2 className="h-8 w-8" />
                   </div>
                   <h2 className="mt-7 text-[28px] font-semibold tracking-tight text-[#182026]">Message sent.</h2>
@@ -153,7 +147,7 @@ export default function Contact() {
                   <Button
                     type="button"
                     onClick={() => setIsSubmitted(false)}
-                    className="mt-8 h-11 rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
+                    className="mt-8 h-11 rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                   >
                     Start Another Request
                   </Button>
@@ -162,73 +156,96 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid gap-5 md:grid-cols-2">
                     <div className="space-y-2">
-                      <label className={fieldLabelClass}>Name</label>
-                      <Input
-                        type="text"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        placeholder="Your name"
-                        className={inputClass}
-                        required
-                      />
+                      <Label htmlFor="contact-name" className={fieldLabelClass}>Name</Label>
+                      <div className="relative">
+                        <UserRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
+                        <Input
+                          id="contact-name"
+                          type="text"
+                          autoComplete="name"
+                          value={form.name}
+                          onChange={(e) => setForm({ ...form, name: e.target.value })}
+                          placeholder="Your name"
+                          className={inputClass}
+                          required
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <label className={fieldLabelClass}>Email</label>
-                      <Input
-                        type="email"
-                        value={form.email}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        placeholder="you@company.com"
-                        className={inputClass}
-                        required
-                      />
+                      <Label htmlFor="contact-email" className={fieldLabelClass}>Email</Label>
+                      <div className="relative">
+                        <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
+                        <Input
+                          id="contact-email"
+                          type="email"
+                          autoComplete="email"
+                          value={form.email}
+                          onChange={(e) => setForm({ ...form, email: e.target.value })}
+                          placeholder="you@company.com"
+                          className={inputClass}
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
 
                   <div className="grid gap-5 md:grid-cols-2">
                     <div className="space-y-2">
-                      <label className={fieldLabelClass}>Company</label>
-                      <Input
-                        type="text"
-                        value={form.company}
-                        onChange={(e) => setForm({ ...form, company: e.target.value })}
-                        placeholder="Company or store"
-                        className={inputClass}
-                      />
+                      <Label htmlFor="contact-company" className={fieldLabelClass}>Company</Label>
+                      <div className="relative">
+                        <Building2 className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
+                        <Input
+                          id="contact-company"
+                          type="text"
+                          autoComplete="organization"
+                          value={form.company}
+                          onChange={(e) => setForm({ ...form, company: e.target.value })}
+                          placeholder="Company or store"
+                          className={inputClass}
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <label className={fieldLabelClass}>Topic</label>
-                      <Input
-                        type="text"
-                        value={form.subject}
-                        onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                        placeholder="Onboarding, API, billing, case help"
-                        className={inputClass}
-                      />
+                      <Label htmlFor="contact-topic" className={fieldLabelClass}>Topic</Label>
+                      <div className="relative">
+                        <MessageSquareText className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
+                        <Input
+                          id="contact-topic"
+                          type="text"
+                          value={form.subject}
+                          onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                          placeholder="Onboarding, API, billing, case help"
+                          className={inputClass}
+                        />
+                      </div>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className={fieldLabelClass}>Message</label>
-                    <Textarea
-                      value={form.message}
-                      onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      placeholder="Tell us what you need help with."
-                      className="min-h-[156px] resize-none rounded-[20px] border-[#CFE0EA] bg-white px-4 py-4 text-[14px] leading-6 tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
-                      required
-                    />
+                    <Label htmlFor="contact-message" className={fieldLabelClass}>Message</Label>
+                    <div className="relative">
+                      <MessageSquareText className="pointer-events-none absolute left-4 top-4 h-4 w-4 text-[#8A99A4]" />
+                      <Textarea
+                        id="contact-message"
+                        value={form.message}
+                        onChange={(e) => setForm({ ...form, message: e.target.value })}
+                        placeholder="Tell us what you need help with."
+                        className="min-h-[156px] resize-none rounded-[5px] border-[#CFE0EA] bg-white py-4 pl-11 pr-4 text-[14px] leading-6 tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="h-12 flex-1 justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
+                      className="h-12 flex-1 justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
                     >
                       {isSubmitting ? 'Preparing message...' : 'Send Support Request'}
                       {!isSubmitting ? <Send className="h-4 w-4" /> : null}
                     </Button>
-                    <Button asChild variant="outline" className="h-12 rounded-full border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]">
+                    <Button asChild variant="outline" className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]">
                       <Link to="/">
                         Back Home
                       </Link>
@@ -240,13 +257,13 @@ export default function Contact() {
           </section>
 
           <section className="grid gap-3 text-[14px] leading-6 text-[#66737F] md:grid-cols-3">
-            <div className="rounded-[22px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
+            <div className="rounded-[12px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
               Most launch support requests are reviewed within one business day.
             </div>
-            <div className="rounded-[22px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
+            <div className="rounded-[12px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
               Workspace, case, or integration IDs help us route the request cleanly.
             </div>
-            <div className="rounded-[22px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
+            <div className="rounded-[12px] border border-[#DCE8EE] bg-white/70 px-4 py-4">
               API access questions can use this same support route.
             </div>
           </section>
