@@ -1146,8 +1146,7 @@ function TrustedConnectionGraphic() {
           strokeDasharray="2 14"
           animate={reduceMotion ? undefined : { strokeDashoffset: [120, 0, -120] }}
           transition={{ duration: 4.8, repeat: Infinity, ease: "linear" }}
-          opacity="0.16"
-          filter="url(#trusted-logo-connection-glow)"
+          opacity="0"
         />
         <motion.g
           animate={reduceMotion ? undefined : { rotate: 360 }}
@@ -1179,46 +1178,44 @@ function TrustedConnectionGraphic() {
         </motion.g>
         <motion.circle
           cx="132"
-          cy="137"
-          r="4"
+          cy="140"
+          r="4.5"
           className="fill-[#0B74DE]"
-          filter="url(#trusted-logo-connection-glow)"
           animate={
             reduceMotion
               ? undefined
               : {
-                  cx: [132, 260, 260, 132, 260, 260, 132],
-                  scale: [1, 1.75, 1.75, 1, 1.75, 1.75, 1],
-                  opacity: [0.5, 1, 1, 0.55, 1, 1, 0.5],
+                  cx: [132, 252, 260, 268, 132, 252, 260, 268, 132],
+                  scale: [1, 1.08, 2.35, 1.08, 1, 1.08, 2.35, 1.08, 1],
+                  opacity: [0.62, 1, 1, 1, 0.66, 1, 1, 1, 0.62],
                 }
           }
           transition={{
-            duration: 6.2,
+            duration: 6.8,
             repeat: Infinity,
             ease: "easeInOut",
-            times: [0, 0.27, 0.42, 0.57, 0.78, 0.9, 1],
+            times: [0, 0.26, 0.34, 0.42, 0.56, 0.74, 0.82, 0.9, 1],
           }}
         />
         <motion.circle
           cx="388"
-          cy="143"
-          r="4"
+          cy="140"
+          r="4.5"
           className="fill-[#0B74DE]"
-          filter="url(#trusted-logo-connection-glow)"
           animate={
             reduceMotion
               ? undefined
               : {
-                  cx: [388, 260, 260, 388, 260, 260, 388],
-                  scale: [1, 1.75, 1.75, 1, 1.75, 1.75, 1],
-                  opacity: [0.5, 1, 1, 0.55, 1, 1, 0.5],
+                  cx: [388, 268, 260, 252, 388, 268, 260, 252, 388],
+                  scale: [1, 1.08, 2.35, 1.08, 1, 1.08, 2.35, 1.08, 1],
+                  opacity: [0.62, 1, 1, 1, 0.66, 1, 1, 1, 0.62],
                 }
           }
           transition={{
-            duration: 6.2,
+            duration: 6.8,
             repeat: Infinity,
             ease: "easeInOut",
-            times: [0, 0.27, 0.42, 0.57, 0.78, 0.9, 1],
+            times: [0, 0.26, 0.34, 0.42, 0.56, 0.74, 0.82, 0.9, 1],
           }}
         />
       </svg>
@@ -1920,7 +1917,7 @@ export default function Index() {
           />{" "}
           <div className={containerClass}>
             {" "}
-            <div className="glass-card relative overflow-hidden rounded-[32px] p-8 md:p-16 lg:p-20 shadow-[0_32px_64px_rgba(0,0,0,0.08)] bg-white/60 backdrop-blur-3xl border border-white/40 max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:backdrop-blur-0">
+            <div className="glass-card relative overflow-hidden rounded-[32px] border border-[#E4EDF1] bg-white p-8 shadow-[0_32px_64px_rgba(0,0,0,0.08)] md:p-16 lg:p-20 max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none">
               {" "}
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20 max-md:hidden" />{" "}
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
