@@ -323,6 +323,11 @@ const securityFeatures = [
 ];
 const faqs = [
   {
+    question: "What's Margin's approval rate?",
+    answer:
+      "97% approved on first submission. Margin doesn't file until the evidence trail is complete — that's why the approval rate stays high.",
+  },
+  {
     question: "What if Amazon rejects my claim?",
     answer:
       "Margin keeps the proof, timeline, and response trail attached so the case can be rebuilt instead of starting from scratch.",
