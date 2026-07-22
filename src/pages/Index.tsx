@@ -1450,7 +1450,7 @@ export default function Index() {
                 Why Margin Exists
               </div>
               <h2 className="font-serif-headline text-[32px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] sm:text-[42px] md:text-[54px] lg:text-[60px]">
-                There are three ways to recover money Amazon owes you.
+                There are three ways to recover what Amazon owes you.
               </h2>
               <p className="mx-auto mt-6 max-w-[680px] text-[18px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
                 Recover it yourself. Hire a service. Or let Margin organize the recovery operation.
@@ -1512,7 +1512,7 @@ export default function Index() {
             <motion.div {...revealProps} className="mx-auto mt-20 max-w-[800px] text-center">
               <h3 className="font-serif-headline text-[24px] font-bold leading-[1.2] tracking-[-0.02em] text-[#182026] md:text-[32px]">
                 Finding a discrepancy creates an opportunity. <br className="max-md:hidden" />
-                Building the right evidence operation turns it into recovered cash.
+                Building the right evidence operation turns it into recovered margin.
               </h3>
             </motion.div>
 
