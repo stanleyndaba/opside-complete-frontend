@@ -388,30 +388,6 @@ const faqs = [
       "No. Margin's accounting workflow is designed around visibility, reconciliation, and seller approval. Accounting exports or synced records should only move when the seller approves the action.",
   },
 ];
-const integrationLogos = [
-  { name: "Amazon", src: "/Amazon-logo.png", className: "h-6 w-auto md:h-7" },
-  { name: "Gmail", src: "/gmailicon.png", className: "h-7 w-auto md:h-8" },
-  { name: "Outlook", src: "/outlookicon.webp", className: "h-7 w-auto md:h-8" },
-  { name: "Google Drive", src: "/gd.png", className: "h-7 w-auto md:h-8" },
-  {
-    name: "Dropbox",
-    src: "/Dropbox_Icon.svg.png",
-    className: "h-7 w-auto md:h-8",
-  },
-  { name: "OneDrive", src: "/onedriive.png", className: "h-7 w-auto md:h-8" },
-  {
-    name: "QuickBooks",
-    src: "/quickbooks.png",
-    className: "h-7 w-auto md:h-8",
-  },
-  { name: "Xero", src: "/xero.png", className: "h-7 w-auto md:h-8" },
-  { name: "Adobe Sign", src: "/dobe.png", className: "h-7 w-auto md:h-8" },
-  {
-    name: "Slack",
-    src: "/slack-icon-2019.png",
-    className: "h-7 w-auto md:h-8",
-  },
-];
 const containerClass = "mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8";
 const sectionLabelClass =
   "text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]";
@@ -428,58 +404,6 @@ const revealProps = {
     ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
   },
 };
-function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
-  return (
-    <motion.div {...revealProps}>
-      {" "}
-      <div className="relative flex items-center justify-center py-1 md:py-2">
-        {" "}
-        <motion.div
-          className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-[#CFE0EA] to-transparent"
-          initial={{ scaleX: 0.55, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, amount: 0.45 }}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-        />{" "}
-        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
-          {" "}
-          Proof sources sellers already have{" "}
-        </div>{" "}
-      </div>{" "}
-      <div className="relative mt-5 overflow-hidden md:mt-7">
-        {" "}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#F3F6F8] to-transparent md:w-28" />{" "}
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#F3F6F8] to-transparent md:w-28" />{" "}
-        <motion.div
-          className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            duration: isMobileLayout ? 25.3 : 34.5,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        >
-          {" "}
-          {[...integrationLogos, ...integrationLogos].map((logo, index) => (
-            <div
-              key={`${logo.name}-${index}`}
-              className="flex h-12 w-[78px] shrink-0 items-center justify-center rounded-2xl border border-[#E4EDF1] bg-white/82 shadow-[0_12px_28px_rgba(37,49,58,0.04)] md:h-16 md:w-[116px]"
-              aria-label={logo.name}
-              title={logo.name}
-            >
-              {" "}
-              <img
-                src={logo.src}
-                alt={logo.name}
-                className={`${logo.className} object-contain`}
-              />{" "}
-            </div>
-          ))}{" "}
-        </motion.div>{" "}
-      </div>{" "}
-    </motion.div>
-  );
-}
 function KineticHeroSection({
   onEarlyAccessCta,
   isFull,
@@ -1056,114 +980,189 @@ function MinimalMetric({
 }
 
 function AbstractDataConvergence() {
+  const reduceMotion = useReducedMotion();
+  const nodes = [
+    { x: 86, y: 58, r: 9, path: "M86 58 C154 52 212 82 263 128" },
+    { x: 70, y: 220, r: 8, path: "M70 220 C154 222 208 194 263 154" },
+    { x: 202, y: 42, r: 7, path: "M202 42 C232 62 250 86 278 113" },
+    { x: 398, y: 42, r: 7, path: "M398 42 C368 62 350 86 322 113" },
+    { x: 530, y: 220, r: 8, path: "M530 220 C446 222 392 194 337 154" },
+    { x: 514, y: 58, r: 9, path: "M514 58 C446 52 388 82 337 128" },
+  ];
+
   return (
-    <div className="relative mx-auto mt-8 h-[200px] w-full max-w-[600px] md:h-[280px]">
-      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 600 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <motion.div
+      {...revealProps}
+      className="relative mx-auto mt-8 h-[220px] w-full max-w-[720px] overflow-hidden md:mt-10 md:h-[320px]"
+      aria-hidden="true"
+    >
+      <div className="absolute inset-x-6 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-[#CFE0EA] to-transparent" />
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 600 280"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
-          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          <filter id="data-convergence-glow" x="-35%" y="-35%" width="170%" height="170%">
+            <feGaussianBlur stdDeviation="10" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
+          <linearGradient id="data-convergence-flow" x1="70" y1="140" x2="530" y2="140" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#BFD8EA" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#0B74DE" />
+            <stop offset="1" stopColor="#2E7D5B" stopOpacity="0.7" />
+          </linearGradient>
         </defs>
 
-        {/* Central Core */}
-        <rect x="260" y="100" width="80" height="80" rx="16" className="fill-white stroke-[#CFE0EA] shadow-[0_0_40px_rgba(11,116,222,0.1)]" strokeWidth="2" />
-        <rect x="270" y="110" width="60" height="60" rx="12" className="fill-[#F4FAFF] stroke-[#0B74DE]/20" strokeWidth="1" />
-        <circle cx="300" cy="140" r="6" className="fill-[#0B74DE]" filter="url(#glow)" />
-        <motion.circle
-          cx="300" cy="140" r="16" className="stroke-[#0B74DE]/30" strokeWidth="2" fill="none"
-          animate={{ scale: [1, 2], opacity: [1, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeOut" }}
-        />
+        <rect x="66" y="34" width="468" height="210" rx="2" className="fill-white/35 stroke-[#D8E3E8]/70" />
+        <path d="M120 98H480M120 182H480M204 58V222M396 58V222" className="stroke-[#E4EDF1]/80" strokeWidth="1" strokeDasharray="3 10" />
 
-        {/* Outer Nodes and connecting lines */}
-        {[
-          { cx: 80, cy: 60, path: "M80 60 Q 200 60 260 140" },
-          { cx: 60, cy: 220, path: "M60 220 Q 180 220 260 140" },
-          { cx: 520, cy: 60, path: "M520 60 Q 400 60 340 140" },
-          { cx: 540, cy: 220, path: "M540 220 Q 420 220 340 140" },
-          { cx: 300, cy: 30, path: "M300 30 L 300 100" },
-        ].map((node, i) => (
-          <g key={i}>
-            {/* Background track */}
-            <path d={node.path} className="stroke-[#E4EDF1]" strokeWidth="2" fill="none" strokeDasharray="4 4" />
-            {/* Animated flow line */}
+        {nodes.map((node, index) => (
+          <g key={node.path}>
+            <path d={node.path} className="stroke-[#CFE0EA]" strokeWidth="1.5" fill="none" />
             <motion.path
               d={node.path}
-              className="stroke-[#0B74DE]"
-              strokeWidth="2"
+              stroke="url(#data-convergence-flow)"
+              strokeWidth="2.5"
               fill="none"
-              strokeDasharray="100"
-              initial={{ strokeDashoffset: 100, opacity: 0 }}
-              animate={{ strokeDashoffset: -100, opacity: [0, 1, 0] }}
-              transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.4, ease: "linear" }}
+              strokeLinecap="round"
+              strokeDasharray="44 220"
+              animate={reduceMotion ? undefined : { strokeDashoffset: [240, 0, -240], opacity: [0.2, 0.95, 0.2] }}
+              transition={{ repeat: Infinity, duration: 3.4, delay: index * 0.28, ease: "linear" }}
             />
-            {/* Node */}
-            <motion.circle
-              cx={node.cx} cy={node.cy} r="8"
-              className="fill-white stroke-[#CFE0EA]" strokeWidth="2"
-              animate={{ y: [-3, 3, -3] }}
-              transition={{ repeat: Infinity, duration: 4, delay: i * 0.2, ease: "easeInOut" }}
-            />
-            <motion.circle
-              cx={node.cx} cy={node.cy} r="3"
-              className="fill-[#8A98A3]"
-              animate={{ y: [-3, 3, -3] }}
-              transition={{ repeat: Infinity, duration: 4, delay: i * 0.2, ease: "easeInOut" }}
-            />
+            <motion.g
+              animate={reduceMotion ? undefined : { y: [-4, 4, -4] }}
+              transition={{ repeat: Infinity, duration: 4.8, delay: index * 0.18, ease: "easeInOut" }}
+            >
+              {index % 2 === 0 ? (
+                <rect
+                  x={node.x - node.r}
+                  y={node.y - node.r}
+                  width={node.r * 2}
+                  height={node.r * 2}
+                  rx="2"
+                  className="fill-white stroke-[#BFD8EA]"
+                  strokeWidth="2"
+                  transform={`rotate(45 ${node.x} ${node.y})`}
+                />
+              ) : (
+                <circle cx={node.x} cy={node.y} r={node.r} className="fill-white stroke-[#BFD8EA]" strokeWidth="2" />
+              )}
+              <circle cx={node.x} cy={node.y} r="3" className="fill-[#8A98A3]" />
+            </motion.g>
           </g>
         ))}
+
+        <motion.g
+          filter="url(#data-convergence-glow)"
+          animate={reduceMotion ? undefined : { scale: [1, 1.035, 1] }}
+          transition={{ repeat: Infinity, duration: 3.8, ease: "easeInOut" }}
+          style={{ transformOrigin: "300px 140px" }}
+        >
+          <rect x="254" y="94" width="92" height="92" rx="2" className="fill-white stroke-[#CFE0EA]" strokeWidth="2" />
+          <rect x="269" y="109" width="62" height="62" rx="2" className="fill-[#F4FAFF] stroke-[#0B74DE]/30" strokeWidth="1.5" />
+          <path d="M286 140H314M300 126V154" className="stroke-[#0B74DE]" strokeWidth="2" strokeLinecap="round" />
+        </motion.g>
+        <motion.circle
+          cx="300"
+          cy="140"
+          r="26"
+          className="stroke-[#0B74DE]/30"
+          strokeWidth="2"
+          fill="none"
+          animate={reduceMotion ? undefined : { r: [20, 38], opacity: [0.7, 0] }}
+          transition={{ repeat: Infinity, duration: 2.4, ease: "easeOut" }}
+        />
       </svg>
-    </div>
+    </motion.div>
   );
 }
 
 function AbstractSecureConnection() {
+  const reduceMotion = useReducedMotion();
+
   return (
-    <div className="relative mx-auto h-[240px] w-full max-w-[400px]">
-      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div className="relative mx-auto h-[230px] w-full max-w-[460px] md:h-[280px]" aria-hidden="true">
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 460 280"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
-          <filter id="glow-secure" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          <filter id="secure-connection-glow" x="-35%" y="-35%" width="170%" height="170%">
+            <feGaussianBlur stdDeviation="9" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
+          <linearGradient id="secure-connection-flow" x1="88" y1="140" x2="372" y2="140" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#0B74DE" stopOpacity="0.18" />
+            <stop offset="0.5" stopColor="#0B74DE" />
+            <stop offset="1" stopColor="#2E7D5B" stopOpacity="0.75" />
+          </linearGradient>
         </defs>
 
-        {/* Amazon Node */}
-        <rect x="40" y="80" width="80" height="80" rx="16" className="fill-[#F3F6F8] stroke-[#D8E3E8]" strokeWidth="2" />
-        <circle cx="80" cy="120" r="24" className="fill-white stroke-[#CFE0EA]" strokeWidth="2" />
-        <path d="M72 120 L 88 120 M 80 112 L 80 128" className="stroke-[#8A98A3]" strokeWidth="2" strokeLinecap="round" />
+        <path d="M94 140H366" className="stroke-[#D8E3E8]" strokeWidth="12" strokeLinecap="round" />
+        <motion.path
+          d="M94 140H366"
+          stroke="url(#secure-connection-flow)"
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeDasharray="58 240"
+          animate={reduceMotion ? undefined : { strokeDashoffset: [320, 0, -320], opacity: [0.4, 1, 0.4] }}
+          transition={{ repeat: Infinity, duration: 3.2, ease: "linear" }}
+          filter="url(#secure-connection-glow)"
+        />
 
-        {/* Margin Node */}
-        <rect x="280" y="80" width="80" height="80" rx="16" className="fill-[#F4FAFF] stroke-[#BFD8EA]" strokeWidth="2" />
-        <circle cx="320" cy="120" r="24" className="fill-white stroke-[#0B74DE]/20" strokeWidth="2" />
-        <circle cx="320" cy="120" r="8" className="fill-[#0B74DE]" filter="url(#glow-secure)" />
+        <rect x="38" y="86" width="96" height="108" rx="2" className="fill-white stroke-[#D8E3E8]" strokeWidth="2" />
+        <path d="M62 112H110M62 136H102M62 160H94" className="stroke-[#8A98A3]" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="86" cy="86" r="6" className="fill-[#BFD8EA]" />
 
-        {/* Connection Line */}
-        <path d="M120 120 L 280 120" className="stroke-[#E4EDF1]" strokeWidth="4" />
+        <rect x="326" y="86" width="96" height="108" rx="2" className="fill-[#F4FAFF] stroke-[#BFD8EA]" strokeWidth="2" />
+        <path d="M350 112H398M350 136H390M350 160H404" className="stroke-[#0B74DE]/70" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="374" cy="86" r="6" className="fill-[#0B74DE]" filter="url(#secure-connection-glow)" />
 
-        {/* Animated Security Rings in the middle */}
-        <g transform="translate(200, 120)">
+        <g transform="translate(230, 140)">
+          <path d="M-11 0v-10a11 11 0 0 1 22 0V0" className="stroke-[#182026]" strokeWidth="3" strokeLinecap="round" />
+          <rect x="-18" y="-1" width="36" height="28" rx="2" className="fill-white stroke-[#182026]" strokeWidth="3" />
+          <circle cx="0" cy="13" r="3" className="fill-[#0B74DE]" />
           <motion.circle
-            r="32" className="stroke-[#CFE0EA]" strokeWidth="2" fill="none" strokeDasharray="8 8"
-            animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+            r="43"
+            className="stroke-[#BFD8EA]"
+            strokeWidth="1.5"
+            fill="none"
+            strokeDasharray="14 12"
+            animate={reduceMotion ? undefined : { rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 22, ease: "linear" }}
+            style={{ transformOrigin: "0px 0px" }}
           />
           <motion.circle
-            r="22" className="stroke-[#0B74DE]/40" strokeWidth="3" fill="none" strokeDasharray="16 16"
-            animate={{ rotate: -360 }} transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+            r="30"
+            className="stroke-[#0B74DE]/45"
+            strokeWidth="2"
+            fill="none"
+            strokeDasharray="22 16"
+            animate={reduceMotion ? undefined : { rotate: -360 }}
+            transition={{ repeat: Infinity, duration: 16, ease: "linear" }}
+            style={{ transformOrigin: "0px 0px" }}
           />
-          <circle r="6" className="fill-[#0B74DE]" filter="url(#glow-secure)" />
         </g>
 
-        {/* Animated Data Packets */}
-        {[0, 1, 2].map((i) => (
+        {[0, 1, 2, 3].map((index) => (
           <motion.circle
-            key={i}
-            cx="120" cy="120" r="4"
+            key={index}
+            cx="94"
+            cy="140"
+            r="4"
             className="fill-[#0B74DE]"
-            initial={{ x: 0, opacity: 0 }}
-            animate={{ x: 160, opacity: [0, 1, 1, 0] }}
-            transition={{ repeat: Infinity, duration: 2, delay: i * 0.6, ease: "linear" }}
+            animate={reduceMotion ? undefined : { cx: [94, 366], opacity: [0, 1, 1, 0] }}
+            transition={{ repeat: Infinity, duration: 2.6, delay: index * 0.48, ease: "linear" }}
           />
         ))}
       </svg>
@@ -1172,21 +1171,57 @@ function AbstractSecureConnection() {
 }
 
 function AbstractWorkflowPipeline() {
+  const reduceMotion = useReducedMotion();
+  const nodes = [84, 348, 612, 876];
+
   return (
-    <div className="relative mb-8 h-[2px] w-full bg-[#E4EDF1]">
-      <motion.div
-        className="absolute top-0 h-full bg-[#0B74DE] shadow-[0_0_12px_rgba(11,116,222,0.8)]"
-        initial={{ left: "0%", width: "0%", opacity: 0 }}
-        animate={{ left: ["0%", "100%"], width: ["0%", "20%", "0%"], opacity: [0, 1, 0] }}
-        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-      />
-      {/* Pipeline Nodes */}
-      <div className="absolute inset-0 flex justify-between px-10">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="relative -top-1 h-3 w-3 rounded-full border-2 border-[#0B74DE] bg-white" />
+    <motion.div
+      {...revealProps}
+      className="relative mb-8 h-[72px] w-full overflow-hidden md:mb-10 md:h-[92px]"
+      aria-hidden="true"
+    >
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 960 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="workflow-pipeline-glow" x="-10%" y="-80%" width="120%" height="260%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <linearGradient id="workflow-pipeline-flow" x1="0" y1="46" x2="960" y2="46" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#0B74DE" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#0B74DE" />
+            <stop offset="1" stopColor="#2E7D5B" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M38 46H922" className="stroke-[#CFE0EA]" strokeWidth="2" strokeLinecap="round" />
+        <path d="M38 46H922" className="stroke-white/80" strokeWidth="9" strokeLinecap="round" />
+        <motion.path
+          d="M38 46H922"
+          stroke="url(#workflow-pipeline-flow)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray="88 820"
+          animate={reduceMotion ? undefined : { strokeDashoffset: [920, 0, -920], opacity: [0.2, 1, 0.2] }}
+          transition={{ repeat: Infinity, duration: 4.6, ease: "easeInOut" }}
+          filter="url(#workflow-pipeline-glow)"
+        />
+        {nodes.map((x, index) => (
+          <g key={x}>
+            <circle cx={x} cy="46" r="12" className="fill-[#F4FAFF] stroke-[#BFD8EA]" strokeWidth="2" />
+            <motion.circle
+              cx={x}
+              cy="46"
+              r="4"
+              className="fill-[#0B74DE]"
+              animate={reduceMotion ? undefined : { opacity: [0.35, 1, 0.35] }}
+              transition={{ repeat: Infinity, duration: 2.6, delay: index * 0.36, ease: "easeInOut" }}
+            />
+          </g>
         ))}
-      </div>
-    </div>
+      </svg>
+    </motion.div>
   );
 }
 
@@ -1490,7 +1525,6 @@ export default function Index() {
             </div>{" "}
             <div className="mt-7 md:mt-9">
               <AbstractDataConvergence />
-              <IntegrationsCarousel isMobileLayout={isMobileLayout} />{" "}
             </div>{" "}
             <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
               {" "}
