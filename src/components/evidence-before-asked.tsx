@@ -14,6 +14,19 @@ const TEXT_SEQUENCE = [
   "The evidence trail was."
 ];
 
+// Helper to format specific words with the blue underline
+const formatText = (text: string) => {
+  if (text.includes("denied")) {
+    const parts = text.split("denied");
+    return <>{parts[0]}<span className="text-[#0B74DE] underline decoration-[#0B74DE] underline-offset-4">denied</span>{parts[1]}</>;
+  }
+  if (text.includes("couldn't validate")) {
+    const parts = text.split("couldn't validate");
+    return <>{parts[0]}<span className="text-[#0B74DE] underline decoration-[#0B74DE] underline-offset-4">couldn't validate</span>{parts[1]}</>;
+  }
+  return text;
+};
+
 export default function EvidenceBeforeAsked() {
   const [index, setIndex] = useState(0);
 
@@ -49,7 +62,7 @@ export default function EvidenceBeforeAsked() {
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="max-w-[18ch]"
             >
-              {TEXT_SEQUENCE[index]}
+              {formatText(TEXT_SEQUENCE[index])}
             </motion.p>
           </AnimatePresence>
         </div>
