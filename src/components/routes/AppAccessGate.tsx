@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useSession } from '@/contexts/SessionContext';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackClaimAccessClicked, trackEvent } from '@/lib/analytics';
-import { DEMO_SESSION_TOKEN, isDemoSessionActive, isDemoWorkspacePath } from '@/lib/demoSession';
+import { DEMO_SESSION_TOKEN, isDemoSessionActive, isDemoWorkspacePath, isInternalDemoAccessEmail, seedDemoSession } from '@/lib/demoSession';
 
 type AppAccessGateProps = {
   children: React.ReactNode;
@@ -152,12 +152,23 @@ function AppAccessGateway() {
 
 export function AppAccessGate({ children }: AppAccessGateProps) {
   const location = useLocation();
-  const { authToken, isAuthReady, isSessionValid } = useSession();
+  const { authToken, isAuthReady, isSessionValid, userEmail } = useSession();
   const hasDemoSession = isDemoSessionActive();
   const hasAuthenticatedSession = isSessionValid && Boolean(authToken) && authToken !== DEMO_SESSION_TOKEN;
   const isDemoWorkspaceRoute = isDemoWorkspacePath(location.pathname);
+  const canOpenInternalDemoWorkspace = hasAuthenticatedSession && isInternalDemoAccessEmail(userEmail);
+
+  useEffect(() => {
+    if (isDemoWorkspaceRoute && canOpenInternalDemoWorkspace && !hasDemoSession) {
+      seedDemoSession({ userEmail });
+    }
+  }, [canOpenInternalDemoWorkspace, hasDemoSession, isDemoWorkspaceRoute, userEmail]);
 
   if (!isAuthReady) {
+    return <AppAccessLoader />;
+  }
+
+  if (isDemoWorkspaceRoute && canOpenInternalDemoWorkspace && !hasDemoSession) {
     return <AppAccessLoader />;
   }
 

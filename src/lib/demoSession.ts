@@ -20,13 +20,15 @@ export const DEMO_TENANT = {
 const DEMO_SESSION_FLAG = 'demo_session_active';
 const DEMO_SESSION_SOURCE = 'demo_session_source';
 const DEMO_SESSION_EXPLICIT_SOURCE = 'explicit';
+const DEFAULT_INTERNAL_DEMO_ACCESS_EMAILS = ['mvelo@margin-finance.com'];
+const DEFAULT_PAYSTACK_REVIEW_EMAIL = 'paystack-review@margin-finance.com';
 
 type DemoSessionOptions = {
   userEmail?: string | null;
 };
 
 function isEnvDemoBypassEnabled() {
-  return import.meta.env.VITE_ENABLE_DEMO_BYPASS === 'true';
+  return import.meta.env.DEV === true && import.meta.env.VITE_ENABLE_DEMO_BYPASS === 'true';
 }
 
 function isDevQueryDemoEnabled() {
@@ -36,6 +38,32 @@ function isDevQueryDemoEnabled() {
 
 export function isDemoBypassAvailable() {
   return isEnvDemoBypassEnabled() || isDevQueryDemoEnabled();
+}
+
+export function isInternalDemoAccessEmail(value?: string | null) {
+  const email = String(value || '').trim().toLowerCase();
+  if (!email) return false;
+
+  const configuredEmails = String(import.meta.env.VITE_INTERNAL_DEMO_ACCESS_EMAILS || '')
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+
+  const allowedEmails = configuredEmails.length ? configuredEmails : DEFAULT_INTERNAL_DEMO_ACCESS_EMAILS;
+  return allowedEmails.includes(email);
+}
+
+export function isPaystackReviewerDemoAccessEmail(value?: string | null) {
+  const email = String(value || '').trim().toLowerCase();
+  const paystackReviewEmail = String(import.meta.env.VITE_PAYSTACK_REVIEW_EMAIL || DEFAULT_PAYSTACK_REVIEW_EMAIL)
+    .trim()
+    .toLowerCase();
+
+  return Boolean(email && paystackReviewEmail && email === paystackReviewEmail);
+}
+
+export function isAuthorizedDemoSessionEmail(value?: string | null) {
+  return isInternalDemoAccessEmail(value) || isPaystackReviewerDemoAccessEmail(value);
 }
 
 export function isDemoWorkspacePath(pathname: string) {
@@ -64,10 +92,13 @@ export function isDemoWorkspaceRequested() {
 
 export function isDemoSessionActive() {
   if (typeof window === 'undefined') return false;
+  const storedEmail = localStorage.getItem('user_email');
+
   return localStorage.getItem(DEMO_SESSION_FLAG) === 'true' &&
     localStorage.getItem(DEMO_SESSION_SOURCE) === DEMO_SESSION_EXPLICIT_SOURCE &&
     localStorage.getItem('session_token') === DEMO_SESSION_TOKEN &&
-    normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) === DEMO_TENANT_SLUG;
+    normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) === DEMO_TENANT_SLUG &&
+    isAuthorizedDemoSessionEmail(storedEmail);
 }
 
 export function seedDemoSession(options: DemoSessionOptions = {}) {

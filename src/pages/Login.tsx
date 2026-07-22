@@ -15,7 +15,7 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
-import { clearDemoSession, DEMO_TENANT_SLUG, isDemoBypassAvailable, seedDemoSession } from '@/lib/demoSession';
+import { clearDemoSession, DEMO_TENANT_SLUG, isDemoBypassAvailable, isInternalDemoAccessEmail, seedDemoSession } from '@/lib/demoSession';
 import { applyFoundingActivationState, hasFoundingReservationContext, markFoundingReservationConfirmed } from '@/lib/foundingActivation';
 
 const sanitizeNextPath = (value: string | null, intent: string | null) => {
@@ -524,10 +524,22 @@ const Login = () => {
           persistSession(sessionToken, clerkUserId, emailAddress);
           setActiveSessionEmail(emailAddress);
 
+          if (isInternalDemoAccessEmail(emailAddress)) {
+            seedDemoSession({ userEmail: emailAddress });
+            navigate(`/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
+
+            return {
+              status: 'complete',
+              token: sessionToken,
+              userId: clerkUserId,
+              email: emailAddress,
+            };
+          }
+
           const resolvedTenantSlug = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
           const targetPath = nextPath !== '/app'
             ? bindPathToTenant(nextPath, resolvedTenantSlug)
-            : `/app/${resolvedTenantSlug}/connect-amazon`;
+            : getDefaultWorkspaceLanding(resolvedTenantSlug);
           await routeWithCapacityGate(targetPath);
 
           return {
@@ -681,6 +693,12 @@ const Login = () => {
     return path.replace(/^\/app\/[^/]+/, `/app/${tenantSlug}`);
   };
 
+  const getDefaultWorkspaceLanding = (tenantSlug: string) => {
+    return tenantSlug === DEMO_TENANT_SLUG
+      ? `/app/${DEMO_TENANT_SLUG}/dashboard`
+      : `/app/${tenantSlug}/connect-amazon`;
+  };
+
   const deriveWorkspaceNameFromEmail = (value: string) => {
     const trimmed = value.trim().toLowerCase();
     const domain = trimmed.split('@')[1] || '';
@@ -694,6 +712,12 @@ const Login = () => {
 
   const resolveTenantSlugForAuthenticatedUser = async (emailAddress: string, preferredTenantSlug?: string | null) => {
     clearStoredTenantContext();
+
+    if (isInternalDemoAccessEmail(emailAddress)) {
+      seedDemoSession({ userEmail: emailAddress });
+      setActiveSessionEmail(emailAddress);
+      return DEMO_TENANT_SLUG;
+    }
 
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
     const bootstrapResponse = await api.post<{
@@ -731,7 +755,7 @@ const Login = () => {
     const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
     const targetPath = nextPath !== '/app'
       ? bindPathToTenant(nextPath, resolvedTenantSlug)
-      : `/app/${resolvedTenantSlug}/connect-amazon`;
+      : getDefaultWorkspaceLanding(resolvedTenantSlug);
     await routeWithCapacityGate(targetPath);
   };
 
@@ -771,7 +795,7 @@ const Login = () => {
       const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
       const targetPath = nextPath !== '/app'
         ? bindPathToTenant(nextPath, resolvedTenantSlug)
-        : `/app/${resolvedTenantSlug}/connect-amazon`;
+        : getDefaultWorkspaceLanding(resolvedTenantSlug);
       await routeWithCapacityGate(targetPath);
     } catch (retryError) {
       setWorkspaceRetryAvailable(true);
