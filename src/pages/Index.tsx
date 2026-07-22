@@ -16,6 +16,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Check, PlayCircle } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -1467,8 +1468,8 @@ export default function Index() {
 
             <div className="mt-16 grid gap-6 md:grid-cols-3 lg:gap-8">
               {/* Column 1 */}
-              <motion.div {...revealProps} transition={{ delay: 0.1 }} className="flex flex-col gap-5 rounded-2xl border border-[#E4EDF1] bg-white p-7 shadow-sm">
-                <h3 className="text-[20px] font-bold tracking-[-0.02em] text-[#182026]">Self-managed</h3>
+              <motion.div {...revealProps} transition={{ delay: 0.1 }} className="relative flex h-full flex-col overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
+                <h3 className="mb-6 text-[22px] font-semibold tracking-[-0.03em] text-[#182026]">Self-managed</h3>
                 <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
                   <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> You gather invoices.</li>
                   <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Search old emails.</li>
@@ -1482,8 +1483,8 @@ export default function Index() {
               </motion.div>
 
               {/* Column 2 */}
-              <motion.div {...revealProps} transition={{ delay: 0.2 }} className="flex flex-col gap-5 rounded-2xl border border-[#E4EDF1] bg-white p-7 shadow-sm">
-                <h3 className="text-[20px] font-bold tracking-[-0.02em] text-[#182026]">Managed service</h3>
+              <motion.div {...revealProps} transition={{ delay: 0.2 }} className="relative flex h-full flex-col overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
+                <h3 className="mb-6 text-[22px] font-semibold tracking-[-0.03em] text-[#182026]">Managed service</h3>
                 <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
                   <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Specialists prepare documents.</li>
                   <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> File claims.</li>
@@ -1496,16 +1497,27 @@ export default function Index() {
               </motion.div>
 
               {/* Column 3 (Margin) */}
-              <motion.div {...revealProps} transition={{ delay: 0.3 }} className="relative flex flex-col gap-5 rounded-2xl border border-[#0B74DE]/20 bg-white p-7 shadow-[0_12px_24px_rgba(11,116,222,0.06)]">
-                <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-[#0B74DE]" />
-                <h3 className="text-[20px] font-bold tracking-[-0.02em] text-[#0B74DE]">Margin</h3>
-                <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#182026]">
-                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Margin connects the evidence.</li>
-                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Builds the recovery record.</li>
-                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Shows what's missing.</li>
-                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Keeps you in control before filing.</li>
-                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Learns from every completed case.</li>
-                </ul>
+              <motion.div {...revealProps} transition={{ delay: 0.3 }} className="relative flex h-full flex-col overflow-hidden rounded-[34px] border border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] transition-all duration-300">
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(11,116,222,0.1),_transparent_60%)]" />
+                
+                <div className="relative z-10">
+                  <div className="mb-6 flex items-start justify-between gap-4">
+                    <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#0B74DE]">Margin</h3>
+                    <Badge 
+                      variant="outline" 
+                      className="border-[#BFD8EA] bg-white text-[9px] font-semibold uppercase tracking-tight text-[#0B74DE]"
+                    >
+                      Margin Way
+                    </Badge>
+                  </div>
+                  <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#182026]">
+                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Margin connects the evidence.</li>
+                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Builds the recovery record.</li>
+                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Shows what's missing.</li>
+                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Keeps you in control before filing.</li>
+                    <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Learns from every completed case.</li>
+                  </ul>
+                </div>
               </motion.div>
             </div>
 
