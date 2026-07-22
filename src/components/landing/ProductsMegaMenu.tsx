@@ -44,7 +44,7 @@ export const productMenuGroups = [
     {
         label: 'Solutions',
         items: [
-            { title: 'Founding 500', description: 'Exclusive infrastructure access for early believers.', icon: BadgePercent },
+            { title: 'Early Access', description: 'Founder pricing and priority activation for early sellers.', icon: BadgePercent },
             { title: 'Enterprise Ops', description: 'Multi-workspace recovery for aggregators and 8-figure brands.', icon: TrendingUp },
             { title: 'Managed Recovery', description: 'White-glove oversight for complex, high-volume accounts.', icon: Briefcase }
         ]

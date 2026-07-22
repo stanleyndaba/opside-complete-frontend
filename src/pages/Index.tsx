@@ -1041,6 +1041,46 @@ function MinimalMetric({
     </motion.div>
   );
 }
+function FunnelCtaStrip({
+  title,
+  detail,
+  ctaLabel,
+  ctaLocation,
+  onCtaClick,
+}: {
+  title: string;
+  detail: string;
+  ctaLabel: string;
+  ctaLocation: string;
+  onCtaClick: (location: string) => void;
+}) {
+  return (
+    <section className="relative border-b border-[#E4EDF1] bg-white py-8 md:py-10">
+      <div className={containerClass}>
+        <motion.div
+          {...revealProps}
+          className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between"
+        >
+          <div className="max-w-[760px]">
+            <h2 className="text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] md:text-[32px]">
+              {title}
+            </h2>
+            <p className="mt-3 max-w-[680px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              {detail}
+            </p>
+          </div>
+          <Button
+            onClick={() => onCtaClick(ctaLocation)}
+            className="h-12 w-full shrink-0 rounded-[5px] bg-[#0B74DE] px-7 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.20)] hover:bg-[#0869C9] max-md:rounded-[2px] max-md:shadow-none md:w-auto"
+          >
+            {ctaLabel}
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 export default function Index() {
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
@@ -1086,8 +1126,12 @@ export default function Index() {
       {" "}
       <PublicNavbar
         variant="light"
-        ctaLabel="EVIDENCE WORKFLOW"
-        ctaTo="#how-margin-works"
+        ctaLabel={primaryCtaLabel}
+        ctaTo="/early-access"
+        onCtaClick={(event) => {
+          event.preventDefault();
+          handleClaimAccessClick("homepage_nav");
+        }}
       />{" "}
       <main className="relative">
         {" "}
@@ -1096,7 +1140,7 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />{" "}
-        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
+        <section className="relative border-y border-[#E4EDF1] bg-white py-14 md:py-24">
           <div className={containerClass}>
             <div className="mx-auto flex max-w-[1080px] flex-col-reverse gap-10 md:flex-row md:items-start md:gap-16 lg:gap-24">
               <div className="flex w-full flex-col gap-3 text-[14px] font-medium md:w-[28%] md:gap-4 md:pt-2 md:text-[15px]">
@@ -1108,7 +1152,7 @@ export default function Index() {
                   className="flex items-start gap-3"
                 >
                   <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#182026]" />
-                  <div className="text-[#182026]">Amazon OAuth secured</div>
+                  <div className="text-[#182026]">Inventory disappears</div>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.85, originX: 0 }}
@@ -1118,7 +1162,7 @@ export default function Index() {
                   className="flex items-start gap-3 text-[#66737F]"
                 >
                   <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
-                  <div>Amazon SP-API connected</div>
+                  <div>Amazon asks for proof</div>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.85, originX: 0 }}
@@ -1128,13 +1172,13 @@ export default function Index() {
                   className="flex items-start gap-3 text-[#66737F]"
                 >
                   <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
-                  <div>Your approval, every time</div>
+                  <div>Deadlines keep moving</div>
                 </motion.div>
               </div>
               <div className="font-serif-headline w-full text-[32px] font-bold leading-[1.1] tracking-[-0.04em] md:w-[72%] md:text-[48px] lg:text-[54px] lg:leading-[1.05]">
-                <span className="text-[#182026]">Trusted by design.</span>{" "}
+                <span className="text-[#182026]">The money is usually real.</span>{" "}
                 <span className="text-[#8A98A3]">
-                  Built around Amazon's official seller infrastructure.
+                  The proof trail is usually scattered before the deadline moves.
                 </span>
               </div>
             </div>
@@ -1148,19 +1192,27 @@ export default function Index() {
               {...revealProps}
               className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] max-md:text-left md:text-[28px] md:leading-9"
             >
-              <span className="text-[#182026]">Most sellers find the discrepancy.</span> <span className="text-[#8A98A3]">The recovery dies when Amazon asks for proof.</span>
+              <span className="text-[#182026]">Most recoveries do not fail because one document is gone.</span> <span className="text-[#8A98A3]">They fail because every proof record lives somewhere else.</span>
             </motion.p>{" "}
             <motion.p
               {...revealProps}
               className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[#4D5B66] max-md:text-left md:text-[18px] md:leading-8"
             >
               {" "}
-              Invoices, PODs, BOLs, shipment records, cost data, support
-              history, and payout records are usually there. They just are not
-              tied to one case before the deadline moves.{" "}
+              Amazon may ask for invoices, PODs, BOLs, shipment records, cost
+              data, support history, and payout records. Margin exists because
+              sellers need those records tied to one case before the review
+              window closes.{" "}
             </motion.p>{" "}
           </div>{" "}
         </section>{" "}
+        <FunnelCtaStrip
+          title="If that sounds familiar, preview the recovery path."
+          detail="See how Margin turns scattered proof into a seller-approved reimbursement workflow before you commit to Early Access."
+          ctaLabel={primaryCtaLabel}
+          ctaLocation="homepage_pain_cta"
+          onCtaClick={handleClaimAccessClick}
+        />{" "}
         <section className="relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
@@ -1170,15 +1222,15 @@ export default function Index() {
               <motion.div {...revealProps}>
                 {" "}
                 <div className={sectionLabelClass}>
-                  Before Amazon asks again
+                  Margin Workflow
                 </div>{" "}
                 <h2 className={sectionHeadingClass}>
-                  <span className="text-[#182026]">Know which claims</span> <span className="text-[#8A98A3]">can survive Amazon review.</span>
+                  <span className="text-[#182026]">Turn scattered proof</span> <span className="text-[#8A98A3]">into a seller-approved recovery path.</span>
                 </h2>{" "}
                 <p className={sectionBodyClass}>
-                  A claim is not ready because a document exists. It is ready
-                  when the proof matches the shipment, quantity, cost basis,
-                  deadline, and Amazon response.
+                  Margin finds the recovery signal, links the evidence, prepares
+                  the case, waits for seller approval, then keeps watching
+                  Amazon response and payout truth.
                 </p>{" "}
               </motion.div>{" "}
               <motion.div
@@ -1187,7 +1239,7 @@ export default function Index() {
               >
                 {" "}
                 <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
-                  Potential evidence requests
+                  Recovery path
                 </div>{" "}
                 <div className="mt-5 grid gap-0 border-t border-[#D8E3E8]">
                   {" "}
@@ -1196,16 +1248,15 @@ export default function Index() {
                     <div>
                       {" "}
                       <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
-                        Invoice
+                        Detect
                       </div>{" "}
                       <div className="mt-1 text-[15px] leading-7 text-[#66737F]">
-                        Amazon may still ask for the invoice, shipment proof,
-                        carrier record, signed POD, or cost breakdown before the
-                        case is ready to survive another response.
+                        Identify the discrepancy, claim window, case type, and
+                        likely evidence request before the opportunity expires.
                       </div>{" "}
                     </div>{" "}
                     <div className="font-mono text-[10px] uppercase tracking-tight text-[#8A98A3]">
-                      Likely request list
+                      Signal
                     </div>{" "}
                   </div>{" "}
                   <div className="grid gap-3 border-b border-[#D8E3E8] py-4 sm:grid-cols-[1fr_auto] sm:items-start">
@@ -1213,15 +1264,15 @@ export default function Index() {
                     <div>
                       {" "}
                       <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
-                        Shipment proof
+                        Link evidence
                       </div>{" "}
                       <div className="mt-1 text-[15px] leading-7 text-[#66737F]">
-                        The shipment record, carrier scan, and receiving data
-                        need to line up before the recovery can move forward.
+                        Match invoices, BOLs, PODs, shipment records, support
+                        history, and payout data to the same recovery story.
                       </div>{" "}
                     </div>{" "}
                     <div className="font-mono text-[10px] uppercase tracking-tight text-[#8A98A3]">
-                      Current status
+                      Proof
                     </div>{" "}
                   </div>{" "}
                   <div className="grid gap-3 py-4 sm:grid-cols-[1fr_auto] sm:items-start">
@@ -1229,15 +1280,15 @@ export default function Index() {
                     <div>
                       {" "}
                       <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
-                        Case readiness
+                        Seller approval
                       </div>{" "}
                       <div className="mt-1 text-[15px] leading-7 text-[#66737F]">
-                        Margin keeps the evidence trail attached so the case is
-                        ready when Amazon asks again.
+                        The seller sees what Margin is about to file. Nothing
+                        moves to Amazon without approval.
                       </div>{" "}
                     </div>{" "}
                     <div className="font-mono text-[10px] uppercase tracking-tight text-[#8A98A3]">
-                      Ready to review
+                      Control
                     </div>{" "}
                   </div>{" "}
                 </div>{" "}
@@ -1245,6 +1296,13 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
+        <FunnelCtaStrip
+          title="See the audit path before Amazon asks again."
+          detail="Preview the Early Access flow and decide whether Margin should prepare your first evidence-backed recovery workflow."
+          ctaLabel={primaryCtaLabel}
+          ctaLocation="homepage_workflow_cta"
+          onCtaClick={handleClaimAccessClick}
+        />{" "}
         <section
           className="hidden relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24"
           id="margin-demo"
@@ -1588,6 +1646,13 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
+        <FunnelCtaStrip
+          title="Keep approval in your hands while Margin does the recovery work."
+          detail="Early Access gives sellers a controlled path to evidence review, filing approval, and payout reconciliation without giving up 15-25% of recovered funds."
+          ctaLabel={primaryCtaLabel}
+          ctaLocation="homepage_trust_cta"
+          onCtaClick={handleClaimAccessClick}
+        />{" "}
         <SystemLogMarquee />{" "}
         <section className="relative overflow-hidden bg-[#F4FAFF] py-28 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] max-md:py-16 md:py-40">
           {" "}

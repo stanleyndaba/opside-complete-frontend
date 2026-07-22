@@ -371,7 +371,7 @@ export default function EarlyAccess() {
 
   /* ── render ────────────────────────────────────────────────────── */
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+    <div className="min-h-screen overflow-x-hidden bg-[#F4FAFF] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       <PublicNavbar variant="light" />
 
       <main className="relative">
@@ -423,7 +423,7 @@ export default function EarlyAccess() {
                 setIsDemoOpen(true);
               }}
               {...reveal}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[3px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#FAFAF7]"
+              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[3px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#F4FAFF]"
               aria-label="Watch the Margin product demo"
             >
               <div className="relative aspect-video overflow-hidden bg-[#E9EEF2]">
@@ -670,7 +670,7 @@ export default function EarlyAccess() {
         </section>
 
         {/* ═══ BOTTOM CTA ═══ */}
-        <section className="relative border-t border-[#E4EDF1] bg-[#FAFAF7] py-20 md:py-32">
+        <section className="relative border-t border-[#E4EDF1] bg-[#F4FAFF] py-20 md:py-32">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <motion.div {...reveal} className="flex flex-col items-center text-center">
               <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
@@ -680,7 +680,7 @@ export default function EarlyAccess() {
                 Hire the Agent. Win the case.
               </h2>
               <p className="mx-auto mt-5 max-w-[600px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
-                Secure your Founding Pass before July 30, 2026 or before the first 500 slots are gone.
+                Secure your Early Access slot before July 30, 2026 or before the first 500 slots are gone.
               </p>
 
               <div ref={bottomCtaRef} className="mt-10 w-full">
