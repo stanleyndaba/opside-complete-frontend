@@ -1,6 +1,29 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
+const TEXT_SEQUENCE = [
+  "You shipped 120 units.",
+  "Amazon received 113.",
+  "You filed a reimbursement claim.",
+  "But instead, you received...",
+  "Your claim has been denied.",
+  "or",
+  "We couldn't validate your claim.",
+  "", // (Pause)
+  "The claim wasn't weak.",
+  "The evidence trail was."
+];
 
 export default function EvidenceBeforeAsked() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((current) => (current + 1) % TEXT_SEQUENCE.length);
+    }, 1800); // 1.8 seconds per slide
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main
       className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-pink-50 px-6 py-12 font-sans text-slate-900"
@@ -15,15 +38,19 @@ export default function EvidenceBeforeAsked() {
       />
 
       <section className="relative z-10 w-full max-w-[960px]">
-        <div className="mx-auto flex flex-col items-center gap-6 text-center text-5xl font-bold leading-[0.96] tracking-tight text-slate-900 sm:text-6xl md:text-7xl lg:text-8xl">
-          <motion.p
-            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
-            className="max-w-[18ch]"
-          >
-            Once approved
-          </motion.p>
+        <div className="mx-auto flex h-[200px] flex-col items-center justify-center gap-6 text-center text-5xl font-bold leading-[0.96] tracking-tight text-slate-900 sm:text-6xl md:text-7xl lg:text-8xl">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={index}
+              initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-[18ch]"
+            >
+              {TEXT_SEQUENCE[index]}
+            </motion.p>
+          </AnimatePresence>
         </div>
       </section>
     </main>
