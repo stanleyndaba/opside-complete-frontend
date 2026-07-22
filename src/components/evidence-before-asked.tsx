@@ -9,7 +9,7 @@ const TEXT_SEQUENCE = [
   "Your claim has been denied.",
   "or",
   "We couldn't validate your claim.",
-  "", // (Pause)
+  "We couldn't validate your claim.", // Duplicate string creates a pause because the key won't change
   "The claim wasn't weak.",
   "The evidence trail was."
 ];
@@ -38,10 +38,11 @@ export default function EvidenceBeforeAsked() {
       />
 
       <section className="relative z-10 w-full max-w-[960px]">
-        <div className="mx-auto flex h-[200px] flex-col items-center justify-center gap-6 text-center text-5xl font-bold leading-[0.96] tracking-tight text-slate-900 sm:text-6xl md:text-7xl lg:text-8xl">
+        {/* Font size reduced by ~10% (4xl/5xl/6xl/7xl instead of 5xl/6xl/7xl/8xl) */}
+        <div className="mx-auto flex h-[200px] flex-col items-center justify-center gap-6 text-center text-4xl font-bold leading-[0.96] tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl">
           <AnimatePresence mode="wait">
             <motion.p
-              key={index}
+              key={TEXT_SEQUENCE[index]}
               initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
