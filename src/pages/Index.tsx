@@ -1054,6 +1054,142 @@ function MinimalMetric({
     </motion.div>
   );
 }
+
+function AbstractDataConvergence() {
+  return (
+    <div className="relative mx-auto mt-8 h-[200px] w-full max-w-[600px] md:h-[280px]">
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 600 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        {/* Central Core */}
+        <rect x="260" y="100" width="80" height="80" rx="16" className="fill-white stroke-[#CFE0EA] shadow-[0_0_40px_rgba(11,116,222,0.1)]" strokeWidth="2" />
+        <rect x="270" y="110" width="60" height="60" rx="12" className="fill-[#F4FAFF] stroke-[#0B74DE]/20" strokeWidth="1" />
+        <circle cx="300" cy="140" r="6" className="fill-[#0B74DE]" filter="url(#glow)" />
+        <motion.circle
+          cx="300" cy="140" r="16" className="stroke-[#0B74DE]/30" strokeWidth="2" fill="none"
+          animate={{ scale: [1, 2], opacity: [1, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeOut" }}
+        />
+
+        {/* Outer Nodes and connecting lines */}
+        {[
+          { cx: 80, cy: 60, path: "M80 60 Q 200 60 260 140" },
+          { cx: 60, cy: 220, path: "M60 220 Q 180 220 260 140" },
+          { cx: 520, cy: 60, path: "M520 60 Q 400 60 340 140" },
+          { cx: 540, cy: 220, path: "M540 220 Q 420 220 340 140" },
+          { cx: 300, cy: 30, path: "M300 30 L 300 100" },
+        ].map((node, i) => (
+          <g key={i}>
+            {/* Background track */}
+            <path d={node.path} className="stroke-[#E4EDF1]" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+            {/* Animated flow line */}
+            <motion.path
+              d={node.path}
+              className="stroke-[#0B74DE]"
+              strokeWidth="2"
+              fill="none"
+              strokeDasharray="100"
+              initial={{ strokeDashoffset: 100, opacity: 0 }}
+              animate={{ strokeDashoffset: -100, opacity: [0, 1, 0] }}
+              transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.4, ease: "linear" }}
+            />
+            {/* Node */}
+            <motion.circle
+              cx={node.cx} cy={node.cy} r="8"
+              className="fill-white stroke-[#CFE0EA]" strokeWidth="2"
+              animate={{ y: [-3, 3, -3] }}
+              transition={{ repeat: Infinity, duration: 4, delay: i * 0.2, ease: "easeInOut" }}
+            />
+            <motion.circle
+              cx={node.cx} cy={node.cy} r="3"
+              className="fill-[#8A98A3]"
+              animate={{ y: [-3, 3, -3] }}
+              transition={{ repeat: Infinity, duration: 4, delay: i * 0.2, ease: "easeInOut" }}
+            />
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function AbstractSecureConnection() {
+  return (
+    <div className="relative mx-auto h-[240px] w-full max-w-[400px]">
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow-secure" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        {/* Amazon Node */}
+        <rect x="40" y="80" width="80" height="80" rx="16" className="fill-[#F3F6F8] stroke-[#D8E3E8]" strokeWidth="2" />
+        <circle cx="80" cy="120" r="24" className="fill-white stroke-[#CFE0EA]" strokeWidth="2" />
+        <path d="M72 120 L 88 120 M 80 112 L 80 128" className="stroke-[#8A98A3]" strokeWidth="2" strokeLinecap="round" />
+
+        {/* Margin Node */}
+        <rect x="280" y="80" width="80" height="80" rx="16" className="fill-[#F4FAFF] stroke-[#BFD8EA]" strokeWidth="2" />
+        <circle cx="320" cy="120" r="24" className="fill-white stroke-[#0B74DE]/20" strokeWidth="2" />
+        <circle cx="320" cy="120" r="8" className="fill-[#0B74DE]" filter="url(#glow-secure)" />
+
+        {/* Connection Line */}
+        <path d="M120 120 L 280 120" className="stroke-[#E4EDF1]" strokeWidth="4" />
+
+        {/* Animated Security Rings in the middle */}
+        <g transform="translate(200, 120)">
+          <motion.circle
+            r="32" className="stroke-[#CFE0EA]" strokeWidth="2" fill="none" strokeDasharray="8 8"
+            animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          />
+          <motion.circle
+            r="22" className="stroke-[#0B74DE]/40" strokeWidth="3" fill="none" strokeDasharray="16 16"
+            animate={{ rotate: -360 }} transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+          />
+          <circle r="6" className="fill-[#0B74DE]" filter="url(#glow-secure)" />
+        </g>
+
+        {/* Animated Data Packets */}
+        {[0, 1, 2].map((i) => (
+          <motion.circle
+            key={i}
+            cx="120" cy="120" r="4"
+            className="fill-[#0B74DE]"
+            initial={{ x: 0, opacity: 0 }}
+            animate={{ x: 160, opacity: [0, 1, 1, 0] }}
+            transition={{ repeat: Infinity, duration: 2, delay: i * 0.6, ease: "linear" }}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function AbstractWorkflowPipeline() {
+  return (
+    <div className="relative mb-8 h-[2px] w-full bg-[#E4EDF1]">
+      <motion.div
+        className="absolute top-0 h-full bg-[#0B74DE] shadow-[0_0_12px_rgba(11,116,222,0.8)]"
+        initial={{ left: "0%", width: "0%", opacity: 0 }}
+        animate={{ left: ["0%", "100%"], width: ["0%", "20%", "0%"], opacity: [0, 1, 0] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+      />
+      {/* Pipeline Nodes */}
+      <div className="absolute inset-0 flex justify-between px-10">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="relative -top-1 h-3 w-3 rounded-full border-2 border-[#0B74DE] bg-white" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Index() {
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
@@ -1111,45 +1247,56 @@ export default function Index() {
         />{" "}
         <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
           <div className={containerClass}>
-            <div className="mx-auto flex max-w-[1080px] flex-col-reverse gap-10 md:flex-row md:items-start md:gap-16 lg:gap-24">
-              <div className="flex w-full flex-col gap-3 text-[14px] font-medium md:w-[28%] md:gap-4 md:pt-2 md:text-[15px]">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.85, originX: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ margin: "-10%" }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex items-start gap-3"
-                >
-                  <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#182026]" />
-                  <div className="text-[#182026]">Amazon OAuth secured</div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.85, originX: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ margin: "-10%" }}
-                  transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex items-start gap-3 text-[#66737F]"
-                >
-                  <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
-                  <div>Amazon SP-API connected</div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.85, originX: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ margin: "-10%" }}
-                  transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex items-start gap-3 text-[#66737F]"
-                >
-                  <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
-                  <div>Your approval, every time</div>
-                </motion.div>
+            <div className="mx-auto flex max-w-[1080px] flex-col gap-10 md:grid md:grid-cols-2 md:items-center md:gap-16 lg:gap-24">
+              <div>
+                <div className="font-serif-headline w-full text-[32px] font-bold leading-[1.1] tracking-[-0.04em] md:text-[48px] lg:text-[54px] lg:leading-[1.05]">
+                  <span className="text-[#182026]">Trusted by design.</span>{" "}
+                  <span className="text-[#8A98A3]">
+                    Built around Amazon's official seller infrastructure.
+                  </span>
+                </div>
+                <div className="mt-8 flex w-full flex-col gap-3 text-[14px] font-medium md:gap-4 md:text-[15px]">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.85, originX: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ margin: "-10%" }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex items-start gap-3"
+                  >
+                    <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#182026]" />
+                    <div className="text-[#182026]">Amazon OAuth secured</div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.85, originX: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ margin: "-10%" }}
+                    transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex items-start gap-3 text-[#66737F]"
+                  >
+                    <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
+                    <div>Amazon SP-API connected</div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.85, originX: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ margin: "-10%" }}
+                    transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex items-start gap-3 text-[#66737F]"
+                  >
+                    <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
+                    <div>Your approval, every time</div>
+                  </motion.div>
+                </div>
               </div>
-              <div className="font-serif-headline w-full text-[32px] font-bold leading-[1.1] tracking-[-0.04em] md:w-[72%] md:text-[48px] lg:text-[54px] lg:leading-[1.05]">
-                <span className="text-[#182026]">Trusted by design.</span>{" "}
-                <span className="text-[#8A98A3]">
-                  Built around Amazon's official seller infrastructure.
-                </span>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+                className="w-full"
+              >
+                <AbstractSecureConnection />
+              </motion.div>
             </div>
           </div>
         </section>
@@ -1342,7 +1489,7 @@ export default function Index() {
               </p>{" "}
             </div>{" "}
             <div className="mt-7 md:mt-9">
-              {" "}
+              <AbstractDataConvergence />
               <IntegrationsCarousel isMobileLayout={isMobileLayout} />{" "}
             </div>{" "}
             <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
@@ -1382,7 +1529,7 @@ export default function Index() {
               </p>{" "}
             </div>{" "}
             <div className="workflow-scrollbar-hide mt-10 overflow-hidden pb-2 max-md:overflow-visible max-md:pb-0 md:mt-16">
-              {" "}
+              <AbstractWorkflowPipeline />
               <motion.div
                 className="workflow-marquee-track flex w-max items-stretch gap-x-4 pr-5 max-md:w-full max-md:flex-col max-md:gap-0 max-md:pr-0 md:gap-x-7"
                 style={{ ["--duration" as string]: "58s" }}
