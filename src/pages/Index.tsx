@@ -1443,6 +1443,129 @@ export default function Index() {
             </div>
           </div>
         </section>
+        <section className="relative border-t border-[#E4EDF1] bg-[#F9FBFC] py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28" id="why-margin-exists">
+          <div className={containerClass}>
+            <motion.div {...revealProps} className="mx-auto max-w-[840px] text-center">
+              <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-[#CBD7DE] bg-white px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-tight text-[#8A98A3]">
+                Why Margin Exists
+              </div>
+              <h2 className="font-serif-headline text-[32px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] sm:text-[42px] md:text-[54px] lg:text-[60px]">
+                There are three ways to recover money Amazon owes you.
+              </h2>
+              <p className="mx-auto mt-6 max-w-[680px] text-[18px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
+                Recover it yourself. Hire a service. Or let Margin organize the recovery operation.
+              </p>
+            </motion.div>
+
+            <motion.div {...revealProps} className="mx-auto mt-12 max-w-[760px] text-center">
+              <p className="text-[16px] font-medium leading-7 text-[#182026] md:text-[18px] md:leading-8">
+                Every recovery starts with a discrepancy.<br className="max-md:hidden" />
+                Most recoveries fail somewhere between finding the problem and proving it.<br className="max-md:hidden" />
+                That's where Margin operates.
+              </p>
+            </motion.div>
+
+            <div className="mt-16 grid gap-6 md:grid-cols-3 lg:gap-8">
+              {/* Column 1 */}
+              <motion.div {...revealProps} transition={{ delay: 0.1 }} className="flex flex-col gap-5 rounded-2xl border border-[#E4EDF1] bg-white p-7 shadow-sm">
+                <h3 className="text-[20px] font-bold tracking-[-0.02em] text-[#182026]">Self-managed</h3>
+                <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> You gather invoices.</li>
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Search old emails.</li>
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Find shipment records.</li>
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Answer Amazon.</li>
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Track settlements.</li>
+                </ul>
+                <div className="mt-auto border-t border-[#E4EDF1] pt-5 text-[14px] font-medium leading-6 text-[#4D5B66]">
+                  Everything depends on you remembering where the evidence lives.
+                </div>
+              </motion.div>
+
+              {/* Column 2 */}
+              <motion.div {...revealProps} transition={{ delay: 0.2 }} className="flex flex-col gap-5 rounded-2xl border border-[#E4EDF1] bg-white p-7 shadow-sm">
+                <h3 className="text-[20px] font-bold tracking-[-0.02em] text-[#182026]">Managed service</h3>
+                <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#66737F]">
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Specialists prepare documents.</li>
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> File claims.</li>
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Respond to Amazon.</li>
+                  <li className="flex items-start gap-3"><div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD7DE]" /> Track recoveries.</li>
+                </ul>
+                <div className="mt-auto border-t border-[#E4EDF1] pt-5 text-[14px] font-medium leading-6 text-[#4D5B66]">
+                  The work is done for you—but much of the recovery process remains hidden behind the service.
+                </div>
+              </motion.div>
+
+              {/* Column 3 (Margin) */}
+              <motion.div {...revealProps} transition={{ delay: 0.3 }} className="relative flex flex-col gap-5 rounded-2xl border border-[#0B74DE]/20 bg-white p-7 shadow-[0_12px_24px_rgba(11,116,222,0.06)]">
+                <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-[#0B74DE]" />
+                <h3 className="text-[20px] font-bold tracking-[-0.02em] text-[#0B74DE]">Margin</h3>
+                <ul className="flex flex-col gap-3 text-[15px] leading-6 text-[#182026]">
+                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Margin connects the evidence.</li>
+                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Builds the recovery record.</li>
+                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Shows what's missing.</li>
+                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Keeps you in control before filing.</li>
+                  <li className="flex items-start gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-[#0B74DE]" /> Learns from every completed case.</li>
+                </ul>
+              </motion.div>
+            </div>
+
+            <motion.div {...revealProps} className="mx-auto mt-20 max-w-[800px] text-center">
+              <h3 className="font-serif-headline text-[24px] font-bold leading-[1.2] tracking-[-0.02em] text-[#182026] md:text-[32px]">
+                Finding a discrepancy creates an opportunity. <br className="max-md:hidden" />
+                Building the right evidence operation turns it into recovered cash.
+              </h3>
+            </motion.div>
+
+            {/* The Table */}
+            <motion.div {...revealProps} className="mx-auto mt-16 max-w-[960px] overflow-hidden rounded-2xl border border-[#E4EDF1] bg-white shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[600px] text-left text-[15px]">
+                  <thead>
+                    <tr className="border-b border-[#E4EDF1] bg-[#F9FBFC]">
+                      <th className="p-5 font-semibold text-[#182026]">Feature</th>
+                      <th className="p-5 font-semibold text-[#182026]">Self-managed</th>
+                      <th className="p-5 font-semibold text-[#182026]">Managed service</th>
+                      <th className="p-5 font-semibold text-[#0B74DE]">Margin</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E4EDF1]">
+                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
+                      <td className="p-5 font-medium text-[#182026]">Evidence linked automatically</td>
+                      <td className="p-5 text-[#66737F]">No</td>
+                      <td className="p-5 text-[#66737F]">Internal only</td>
+                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
+                    </tr>
+                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
+                      <td className="p-5 font-medium text-[#182026]">Claim timeline</td>
+                      <td className="p-5 text-[#66737F]">Manual</td>
+                      <td className="p-5 text-[#66737F]">Internal only</td>
+                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
+                    </tr>
+                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
+                      <td className="p-5 font-medium text-[#182026]">Recovery history</td>
+                      <td className="p-5 text-[#66737F]">Manual</td>
+                      <td className="p-5 text-[#66737F]">Internal only</td>
+                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
+                    </tr>
+                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
+                      <td className="p-5 font-medium text-[#182026]">Approval before filing</td>
+                      <td className="p-5 text-[#66737F]">Yes</td>
+                      <td className="p-5 text-[#66737F]">Usually No</td>
+                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
+                    </tr>
+                    <tr className="transition-colors hover:bg-[#F9FBFC]/50">
+                      <td className="p-5 font-medium text-[#182026]">Payout reconciliation</td>
+                      <td className="p-5 text-[#66737F]">Manual</td>
+                      <td className="p-5 text-[#66737F]">Varies</td>
+                      <td className="p-5 font-semibold text-[#182026]"><div className="flex items-center gap-2"><Check className="h-4 w-4 text-[#0B74DE]" /> Yes</div></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+
+          </div>
+        </section>
         <section className="relative bg-[#F3F6F8] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
