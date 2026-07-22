@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <!-- Top Bar -->
-  <rect x="14" y="34" width="70" height="26" rx="13" fill="black" />
-  <!-- Bottom Bar -->
-  <rect x="44" y="68" width="70" height="26" rx="13" fill="black" />
+  <rect width="128" height="128" rx="24" fill="#f8fafc" />
+  <rect x="14" y="34" width="70" height="26" rx="6" fill="#050505" />
+  <rect x="44" y="68" width="70" height="26" rx="6" fill="#050505" />
 </svg>

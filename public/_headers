@@ -10,6 +10,9 @@
 /
   Cache-Control: public, max-age=60
 
+/favicon*
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /app/*
   X-Robots-Tag: noindex, nofollow
 
