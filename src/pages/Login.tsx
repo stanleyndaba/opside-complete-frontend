@@ -47,6 +47,14 @@ type ClerkLoginResult =
   | { status: 'complete'; token: string; userId?: string | null; email: string }
   | { status: 'verification_required' };
 
+type ClerkFinalizedSession = {
+  id?: string;
+  user?: {
+    id?: string | null;
+  } | null;
+  getToken: (options?: { skipCache?: boolean }) => Promise<string | null>;
+};
+
 type DemoReviewerLoginResponse = {
   success: boolean;
   token: string;
@@ -242,7 +250,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
-  const { getToken: getClerkToken, isLoaded: clerkAuthLoaded, userId: clerkUserId } = useAuth();
+  const { isLoaded: clerkAuthLoaded, userId: clerkUserId } = useAuth();
   const {
     signIn,
     errors: clerkSignInErrors,
@@ -447,27 +455,6 @@ const Login = () => {
       || 'Unable to finish Clerk sign-in. Please check your details and try again.';
   };
 
-  const waitForClerkSessionToken = async () => {
-    const readToken = async () => {
-      try {
-        return await getClerkToken();
-      } catch {
-        return null;
-      }
-    };
-
-    for (let attempt = 0; attempt < 8; attempt += 1) {
-      const token = await readToken();
-      if (token) {
-        return token;
-      }
-
-      await new Promise((resolve) => window.setTimeout(resolve, 100));
-    }
-
-    return null;
-  };
-
   const bootstrapWorkspaceWithClerkToken = async (emailAddress: string, sessionToken: string) => {
     clearStoredTenantContext();
 
@@ -513,15 +500,16 @@ const Login = () => {
       throw new Error('Clerk sign-in is not complete yet.');
     }
 
-    const runBootstrapOnce = () => {
+    const runBootstrapOnce = (session: ClerkFinalizedSession) => {
       if (!clerkFinalizeBootstrapRef.current) {
         clerkFinalizeBootstrapRef.current = (async () => {
-          const sessionToken = await waitForClerkSessionToken();
+          const sessionToken = await session.getToken({ skipCache: true });
           if (!sessionToken) {
             throw new Error('No active Clerk session token was available after sign-in.');
           }
 
-          persistSession(sessionToken, clerkUserId, emailAddress);
+          const finalizedUserId = session.user?.id || clerkUserId;
+          persistSession(sessionToken, finalizedUserId, emailAddress);
           setActiveSessionEmail(emailAddress);
 
           if (isInternalDemoAccessEmail(emailAddress)) {
@@ -531,7 +519,7 @@ const Login = () => {
             return {
               status: 'complete',
               token: sessionToken,
-              userId: clerkUserId,
+              userId: finalizedUserId,
               email: emailAddress,
             };
           }
@@ -545,7 +533,7 @@ const Login = () => {
           return {
             status: 'complete',
             token: sessionToken,
-            userId: clerkUserId,
+            userId: finalizedUserId,
             email: emailAddress,
           };
         })();
@@ -556,10 +544,10 @@ const Login = () => {
 
     const finalizeResult = await signIn.finalize({
       navigate: async ({ session }) => {
-        if (!session) {
+        if (!session || typeof session.getToken !== 'function') {
           throw new Error('No active Clerk session was created after sign-in.');
         }
-        await runBootstrapOnce();
+        await runBootstrapOnce(session);
       },
     });
 
@@ -567,7 +555,10 @@ const Login = () => {
       throw new Error(getClerkErrorMessage(finalizeResult.error));
     }
 
-    const result = await runBootstrapOnce();
+    const result = await clerkFinalizeBootstrapRef.current;
+    if (!result) {
+      throw new Error('Clerk sign-in completed, but no active session was returned.');
+    }
     setClerkVerificationStep(null);
     setClerkVerificationCode('');
     setClerkVerificationMessage('');
