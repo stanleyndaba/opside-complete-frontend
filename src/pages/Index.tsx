@@ -110,48 +110,6 @@ const velocityMetrics = [
     detail: "Move before the window closes.",
   },
 ];
-const workflowSteps = [
-  {
-    step: "01",
-    title: "The discrepancy is found",
-    detail:
-      "The money may be there, but a detected issue is not a recoverable case yet.",
-  },
-  {
-    step: "02",
-    title: "Amazon needs proof",
-    detail:
-      "The invoice, BOL, POD, shipment ID, carrier record, cost basis, case history, and payout record all have to line up.",
-  },
-  {
-    step: "03",
-    title: "The proof is everywhere",
-    detail:
-      "One record sits in Gmail, another in Drive, another in Seller Central, another in a carrier portal.",
-  },
-  {
-    step: "04",
-    title: "The case becomes defensible",
-    detail: "The evidence becomes one recovery story Amazon can verify.",
-  },
-  {
-    step: "05",
-    title: "The seller stays in control",
-    detail: "Nothing moves until the seller approves it.",
-  },
-  {
-    step: "06",
-    title: "Amazon responds",
-    detail:
-      "Amazon asks again. Rejects. Approves less. Or requests more proof.",
-  },
-  {
-    step: "07",
-    title: "The payout has to reconcile",
-    detail:
-      "Amazon approval is not the end. Margin tracks whether the approved amount actually reaches the seller balance and prepares the recovery trail for accounting review.",
-  },
-];
 const stateTransitionSources = ["Gmail", "Drive", "Seller Central", "Excel"];
 const systemLogEntries = [
   { label: "SIGNAL", text: "Which discrepancies appeared today?" },
@@ -388,6 +346,30 @@ const faqs = [
       "No. Margin's accounting workflow is designed around visibility, reconciliation, and seller approval. Accounting exports or synced records should only move when the seller approves the action.",
   },
 ];
+const integrationLogos = [
+  { name: "Amazon", src: "/Amazon-logo.png", className: "h-6 w-auto md:h-7" },
+  { name: "Gmail", src: "/gmailicon.png", className: "h-7 w-auto md:h-8" },
+  { name: "Outlook", src: "/outlookicon.webp", className: "h-7 w-auto md:h-8" },
+  { name: "Google Drive", src: "/gd.png", className: "h-7 w-auto md:h-8" },
+  {
+    name: "Dropbox",
+    src: "/Dropbox_Icon.svg.png",
+    className: "h-7 w-auto md:h-8",
+  },
+  { name: "OneDrive", src: "/onedriive.png", className: "h-7 w-auto md:h-8" },
+  {
+    name: "QuickBooks",
+    src: "/quickbooks.png",
+    className: "h-7 w-auto md:h-8",
+  },
+  { name: "Xero", src: "/xero.png", className: "h-7 w-auto md:h-8" },
+  { name: "Adobe Sign", src: "/dobe.png", className: "h-7 w-auto md:h-8" },
+  {
+    name: "Slack",
+    src: "/slack-icon-2019.png",
+    className: "h-7 w-auto md:h-8",
+  },
+];
 const containerClass = "mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8";
 const sectionLabelClass =
   "text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]";
@@ -404,6 +386,52 @@ const revealProps = {
     ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
   },
 };
+function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
+  return (
+    <motion.div {...revealProps}>
+      <div className="relative flex items-center justify-center py-1 md:py-2">
+        <motion.div
+          className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-[#CFE0EA] to-transparent"
+          initial={{ scaleX: 0.55, opacity: 0 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.45 }}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
+          Proof sources sellers already have
+        </div>
+      </div>
+      <div className="relative mt-5 overflow-hidden md:mt-7">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#F3F6F8] to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#F3F6F8] to-transparent md:w-28" />
+        <motion.div
+          className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            duration: isMobileLayout ? 25.3 : 34.5,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          {[...integrationLogos, ...integrationLogos].map((logo, index) => (
+            <div
+              key={`${logo.name}-${index}`}
+              className="flex h-12 w-[78px] shrink-0 items-center justify-center rounded-2xl border border-[#E4EDF1] bg-white/82 shadow-[0_12px_28px_rgba(37,49,58,0.04)] md:h-16 md:w-[116px]"
+              aria-label={logo.name}
+              title={logo.name}
+            >
+              <img
+                src={logo.src}
+                alt={logo.name}
+                className={`${logo.className} object-contain`}
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
 function KineticHeroSection({
   onEarlyAccessCta,
   isFull,
@@ -979,249 +1007,56 @@ function MinimalMetric({
   );
 }
 
-function AbstractDataConvergence() {
+function TrustedConnectionGraphic() {
   const reduceMotion = useReducedMotion();
-  const nodes = [
-    { x: 86, y: 58, r: 9, path: "M86 58 C154 52 212 82 263 128" },
-    { x: 70, y: 220, r: 8, path: "M70 220 C154 222 208 194 263 154" },
-    { x: 202, y: 42, r: 7, path: "M202 42 C232 62 250 86 278 113" },
-    { x: 398, y: 42, r: 7, path: "M398 42 C368 62 350 86 322 113" },
-    { x: 530, y: 220, r: 8, path: "M530 220 C446 222 392 194 337 154" },
-    { x: 514, y: 58, r: 9, path: "M514 58 C446 52 388 82 337 128" },
-  ];
 
   return (
-    <motion.div
-      {...revealProps}
-      className="relative mx-auto mt-8 h-[220px] w-full max-w-[720px] overflow-hidden md:mt-10 md:h-[320px]"
-      aria-hidden="true"
-    >
-      <div className="absolute inset-x-6 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-[#CFE0EA] to-transparent" />
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 600 280"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <filter id="data-convergence-glow" x="-35%" y="-35%" width="170%" height="170%">
-            <feGaussianBlur stdDeviation="10" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <linearGradient id="data-convergence-flow" x1="70" y1="140" x2="530" y2="140" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#BFD8EA" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#0B74DE" />
-            <stop offset="1" stopColor="#2E7D5B" stopOpacity="0.7" />
-          </linearGradient>
-        </defs>
-
-        <rect x="66" y="34" width="468" height="210" rx="2" className="fill-white/35 stroke-[#D8E3E8]/70" />
-        <path d="M120 98H480M120 182H480M204 58V222M396 58V222" className="stroke-[#E4EDF1]/80" strokeWidth="1" strokeDasharray="3 10" />
-
-        {nodes.map((node, index) => (
-          <g key={node.path}>
-            <path d={node.path} className="stroke-[#CFE0EA]" strokeWidth="1.5" fill="none" />
-            <motion.path
-              d={node.path}
-              stroke="url(#data-convergence-flow)"
-              strokeWidth="2.5"
-              fill="none"
-              strokeLinecap="round"
-              strokeDasharray="44 220"
-              animate={reduceMotion ? undefined : { strokeDashoffset: [240, 0, -240], opacity: [0.2, 0.95, 0.2] }}
-              transition={{ repeat: Infinity, duration: 3.4, delay: index * 0.28, ease: "linear" }}
+    <div className="relative mx-auto w-full max-w-[500px]" aria-label="Amazon connection to Margin">
+      <div className="relative grid min-h-[240px] grid-cols-[1fr_auto_1fr] items-center gap-3 overflow-hidden rounded-[2px] border border-[#DCE8EE] bg-[#F9FBFC] px-5 py-8 md:min-h-[280px] md:px-8">
+        <div className="absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(191,216,234,0.35)_1px,transparent_1px),linear-gradient(90deg,rgba(191,216,234,0.28)_1px,transparent_1px)] [background-size:42px_42px]" />
+        <div className="relative z-10 flex flex-col items-center gap-3">
+          <div className="flex h-20 w-20 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-white shadow-[0_18px_42px_rgba(37,49,58,0.08)] md:h-24 md:w-24">
+            <img
+              src="/amazon-logo-transparent-circle.png"
+              alt="Amazon"
+              className="h-14 w-14 object-contain md:h-16 md:w-16"
+              loading="lazy"
             />
-            <motion.g
-              animate={reduceMotion ? undefined : { y: [-4, 4, -4] }}
-              transition={{ repeat: Infinity, duration: 4.8, delay: index * 0.18, ease: "easeInOut" }}
-            >
-              {index % 2 === 0 ? (
-                <rect
-                  x={node.x - node.r}
-                  y={node.y - node.r}
-                  width={node.r * 2}
-                  height={node.r * 2}
-                  rx="2"
-                  className="fill-white stroke-[#BFD8EA]"
-                  strokeWidth="2"
-                  transform={`rotate(45 ${node.x} ${node.y})`}
-                />
-              ) : (
-                <circle cx={node.x} cy={node.y} r={node.r} className="fill-white stroke-[#BFD8EA]" strokeWidth="2" />
-              )}
-              <circle cx={node.x} cy={node.y} r="3" className="fill-[#8A98A3]" />
-            </motion.g>
-          </g>
-        ))}
+          </div>
+          <span className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
+            Amazon
+          </span>
+        </div>
 
-        <motion.g
-          filter="url(#data-convergence-glow)"
-          animate={reduceMotion ? undefined : { scale: [1, 1.035, 1] }}
-          transition={{ repeat: Infinity, duration: 3.8, ease: "easeInOut" }}
-          style={{ transformOrigin: "300px 140px" }}
-        >
-          <rect x="254" y="94" width="92" height="92" rx="2" className="fill-white stroke-[#CFE0EA]" strokeWidth="2" />
-          <rect x="269" y="109" width="62" height="62" rx="2" className="fill-[#F4FAFF] stroke-[#0B74DE]/30" strokeWidth="1.5" />
-          <path d="M286 140H314M300 126V154" className="stroke-[#0B74DE]" strokeWidth="2" strokeLinecap="round" />
-        </motion.g>
-        <motion.circle
-          cx="300"
-          cy="140"
-          r="26"
-          className="stroke-[#0B74DE]/30"
-          strokeWidth="2"
-          fill="none"
-          animate={reduceMotion ? undefined : { r: [20, 38], opacity: [0.7, 0] }}
-          transition={{ repeat: Infinity, duration: 2.4, ease: "easeOut" }}
-        />
-      </svg>
-    </motion.div>
-  );
-}
-
-function AbstractSecureConnection() {
-  const reduceMotion = useReducedMotion();
-
-  return (
-    <div className="relative mx-auto h-[230px] w-full max-w-[460px] md:h-[280px]" aria-hidden="true">
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 460 280"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <filter id="secure-connection-glow" x="-35%" y="-35%" width="170%" height="170%">
-            <feGaussianBlur stdDeviation="9" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <linearGradient id="secure-connection-flow" x1="88" y1="140" x2="372" y2="140" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#0B74DE" stopOpacity="0.18" />
-            <stop offset="0.5" stopColor="#0B74DE" />
-            <stop offset="1" stopColor="#2E7D5B" stopOpacity="0.75" />
-          </linearGradient>
-        </defs>
-
-        <path d="M94 140H366" className="stroke-[#D8E3E8]" strokeWidth="12" strokeLinecap="round" />
-        <motion.path
-          d="M94 140H366"
-          stroke="url(#secure-connection-flow)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray="58 240"
-          animate={reduceMotion ? undefined : { strokeDashoffset: [320, 0, -320], opacity: [0.4, 1, 0.4] }}
-          transition={{ repeat: Infinity, duration: 3.2, ease: "linear" }}
-          filter="url(#secure-connection-glow)"
-        />
-
-        <rect x="38" y="86" width="96" height="108" rx="2" className="fill-white stroke-[#D8E3E8]" strokeWidth="2" />
-        <path d="M62 112H110M62 136H102M62 160H94" className="stroke-[#8A98A3]" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="86" cy="86" r="6" className="fill-[#BFD8EA]" />
-
-        <rect x="326" y="86" width="96" height="108" rx="2" className="fill-[#F4FAFF] stroke-[#BFD8EA]" strokeWidth="2" />
-        <path d="M350 112H398M350 136H390M350 160H404" className="stroke-[#0B74DE]/70" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="374" cy="86" r="6" className="fill-[#0B74DE]" filter="url(#secure-connection-glow)" />
-
-        <g transform="translate(230, 140)">
-          <path d="M-11 0v-10a11 11 0 0 1 22 0V0" className="stroke-[#182026]" strokeWidth="3" strokeLinecap="round" />
-          <rect x="-18" y="-1" width="36" height="28" rx="2" className="fill-white stroke-[#182026]" strokeWidth="3" />
-          <circle cx="0" cy="13" r="3" className="fill-[#0B74DE]" />
-          <motion.circle
-            r="43"
-            className="stroke-[#BFD8EA]"
-            strokeWidth="1.5"
-            fill="none"
-            strokeDasharray="14 12"
-            animate={reduceMotion ? undefined : { rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 22, ease: "linear" }}
-            style={{ transformOrigin: "0px 0px" }}
+        <div className="relative z-10 flex w-28 items-center justify-center md:w-40">
+          <div className="absolute h-px w-full bg-[#CFE0EA]" />
+          <motion.div
+            className="h-1.5 w-1.5 rounded-full bg-[#0B74DE] shadow-[0_0_18px_rgba(11,116,222,0.7)]"
+            animate={reduceMotion ? undefined : { x: [-58, 58], opacity: [0.1, 1, 0.1] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
           />
-          <motion.circle
-            r="30"
-            className="stroke-[#0B74DE]/45"
-            strokeWidth="2"
-            fill="none"
-            strokeDasharray="22 16"
-            animate={reduceMotion ? undefined : { rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 16, ease: "linear" }}
-            style={{ transformOrigin: "0px 0px" }}
+          <motion.div
+            className="absolute h-1.5 w-1.5 rounded-full bg-[#2E7D5B] shadow-[0_0_18px_rgba(46,125,91,0.55)]"
+            animate={reduceMotion ? undefined : { x: [58, -58], opacity: [0.1, 0.9, 0.1] }}
+            transition={{ duration: 3.1, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
           />
-        </g>
+        </div>
 
-        {[0, 1, 2, 3].map((index) => (
-          <motion.circle
-            key={index}
-            cx="94"
-            cy="140"
-            r="4"
-            className="fill-[#0B74DE]"
-            animate={reduceMotion ? undefined : { cx: [94, 366], opacity: [0, 1, 1, 0] }}
-            transition={{ repeat: Infinity, duration: 2.6, delay: index * 0.48, ease: "linear" }}
-          />
-        ))}
-      </svg>
+        <div className="relative z-10 flex flex-col items-center gap-3">
+          <div className="flex h-20 w-20 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-white shadow-[0_18px_42px_rgba(37,49,58,0.08)] md:h-24 md:w-24">
+            <img
+              src="/logoimagetwo.png"
+              alt="Margin"
+              className="h-11 w-auto object-contain md:h-12"
+              loading="lazy"
+            />
+          </div>
+          <span className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
+            Margin
+          </span>
+        </div>
+      </div>
     </div>
-  );
-}
-
-function AbstractWorkflowPipeline() {
-  const reduceMotion = useReducedMotion();
-  const nodes = [84, 348, 612, 876];
-
-  return (
-    <motion.div
-      {...revealProps}
-      className="relative mb-8 h-[72px] w-full overflow-hidden md:mb-10 md:h-[92px]"
-      aria-hidden="true"
-    >
-      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 960 92" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <filter id="workflow-pipeline-glow" x="-10%" y="-80%" width="120%" height="260%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <linearGradient id="workflow-pipeline-flow" x1="0" y1="46" x2="960" y2="46" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#0B74DE" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#0B74DE" />
-            <stop offset="1" stopColor="#2E7D5B" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d="M38 46H922" className="stroke-[#CFE0EA]" strokeWidth="2" strokeLinecap="round" />
-        <path d="M38 46H922" className="stroke-white/80" strokeWidth="9" strokeLinecap="round" />
-        <motion.path
-          d="M38 46H922"
-          stroke="url(#workflow-pipeline-flow)"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeDasharray="88 820"
-          animate={reduceMotion ? undefined : { strokeDashoffset: [920, 0, -920], opacity: [0.2, 1, 0.2] }}
-          transition={{ repeat: Infinity, duration: 4.6, ease: "easeInOut" }}
-          filter="url(#workflow-pipeline-glow)"
-        />
-        {nodes.map((x, index) => (
-          <g key={x}>
-            <circle cx={x} cy="46" r="12" className="fill-[#F4FAFF] stroke-[#BFD8EA]" strokeWidth="2" />
-            <motion.circle
-              cx={x}
-              cy="46"
-              r="4"
-              className="fill-[#0B74DE]"
-              animate={reduceMotion ? undefined : { opacity: [0.35, 1, 0.35] }}
-              transition={{ repeat: Infinity, duration: 2.6, delay: index * 0.36, ease: "easeInOut" }}
-            />
-          </g>
-        ))}
-      </svg>
-    </motion.div>
   );
 }
 
@@ -1268,11 +1103,7 @@ export default function Index() {
   return (
     <div className="min-h-screen overflow-x-clip bg-white font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       {" "}
-      <PublicNavbar
-        variant="light"
-        ctaLabel="EVIDENCE WORKFLOW"
-        ctaTo="#how-margin-works"
-      />{" "}
+      <PublicNavbar variant="light" />{" "}
       <main className="relative">
         {" "}
         <KineticHeroSection
@@ -1330,7 +1161,7 @@ export default function Index() {
                 transition={{ duration: 0.7, ease: "easeOut" }}
                 className="w-full"
               >
-                <AbstractSecureConnection />
+                <TrustedConnectionGraphic />
               </motion.div>
             </div>
           </div>
@@ -1524,7 +1355,7 @@ export default function Index() {
               </p>{" "}
             </div>{" "}
             <div className="mt-7 md:mt-9">
-              <AbstractDataConvergence />
+              <IntegrationsCarousel isMobileLayout={isMobileLayout} />
             </div>{" "}
             <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
               {" "}
@@ -1533,70 +1364,6 @@ export default function Index() {
               <br /> Everything has to point to the same recovery before Amazon
               accepts it.{" "}
             </p>{" "}
-          </div>{" "}
-        </section>{" "}
-        <section
-          className="relative bg-[#F4FAFF] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] max-md:py-16 md:py-28"
-          id="how-margin-works"
-        >
-          {" "}
-          <div className={containerClass}>
-            {" "}
-            <div className="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-end">
-              {" "}
-              <div>
-                {" "}
-                <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
-                  {" "}
-                  <span>06</span> <span>What Happens After Detection</span>{" "}
-                </div>{" "}
-                <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[44px] md:text-[58px] lg:text-[64px]">
-                  <span className="text-[#182026]">Finding the discrepancy is not the hard part.</span> <span className="text-[#8A98A3]">Proving it is.</span>
-                </h2>{" "}
-              </div>{" "}
-              <p className="max-w-[660px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9 lg:justify-self-end">
-                {" "}
-                Once the issue is found, the work becomes proof: deadline,
-                invoice, BOL, POD, shipment ID, quantity, cost basis, Amazon
-                response, and seller approval all have to support the same
-                case.{" "}
-              </p>{" "}
-            </div>{" "}
-            <div className="workflow-scrollbar-hide mt-10 overflow-hidden pb-2 max-md:overflow-visible max-md:pb-0 md:mt-16">
-              <AbstractWorkflowPipeline />
-              <motion.div
-                className="workflow-marquee-track flex w-max items-stretch gap-x-4 pr-5 max-md:w-full max-md:flex-col max-md:gap-0 max-md:pr-0 md:gap-x-7"
-                style={{ ["--duration" as string]: "58s" }}
-              >
-                {" "}
-                {(isMobileLayout
-                  ? workflowSteps
-                  : [...workflowSteps, ...workflowSteps]
-                ).map((item, index) => (
-                  <div
-                    key={`${item.step}-${index}`}
-                    className="min-h-[220px] w-[260px] shrink-0 border-t border-[#C9D6DE] pt-4 max-md:relative max-md:min-h-0 max-md:w-full max-md:border-l max-md:border-t-0 max-md:border-[#E5E7EB] max-md:pb-9 max-md:pl-7 max-md:pt-0 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
-                  >
-                    {" "}
-                    <div className="flex h-full flex-col">
-                      {" "}
-                      <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3] max-md:absolute max-md:-left-[14px] max-md:top-0 max-md:flex max-md:h-7 max-md:w-7 max-md:items-center max-md:justify-center max-md:rounded-[1px] max-md:border max-md:border-[#E5E7EB] max-md:bg-white max-md:text-[9px] md:text-[11px]">
-                        {" "}
-                        {item.step}{" "}
-                      </div>{" "}
-                      <h3 className="font-serif-headline mt-4 max-w-[240px] text-[22px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] max-md:mt-0 max-md:max-w-none max-md:text-[24px] md:mt-5 md:max-w-[260px] md:text-[29px]">
-                        {" "}
-                        {item.title}{" "}
-                      </h3>{" "}
-                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#66737F] max-md:max-w-none max-md:text-[14px] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
-                        {" "}
-                        {item.detail}{" "}
-                      </p>{" "}
-                    </div>{" "}
-                  </div>
-                ))}{" "}
-              </motion.div>{" "}
-            </div>{" "}
           </div>{" "}
         </section>{" "}
         <section className="relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28">
