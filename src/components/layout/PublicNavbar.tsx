@@ -19,36 +19,22 @@ type PublicNavbarProps = {
     variant?: 'dark' | 'light';
     ctaLabel?: string;
     ctaTo?: string;
-    onCtaClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
-export const PublicNavbar = ({ variant = 'dark', ctaLabel, ctaTo, onCtaClick }: PublicNavbarProps) => {
+export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
     const isLight = effectiveVariant === 'light';
-    const hasPrimaryCta = Boolean(ctaLabel && ctaTo);
-    const isExternalOrHashCta = Boolean(ctaTo?.startsWith('http') || ctaTo?.startsWith('#'));
     const mobileMenuItemClass = isLight
         ? "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
-    const mobilePrimaryActionClass = isLight
-        ? "flex items-center justify-center rounded-[6px] bg-[#0B74DE] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-colors hover:bg-[#0869C9]"
-        : "flex items-center justify-center rounded-[6px] bg-white px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#182026] transition-colors hover:bg-white/90";
     const desktopNavLinkClass = isLight
         ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8] hover:text-[#182026]"
         : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
     const desktopActionClass = isLight
         ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-[#DCE8EE] bg-white px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8]"
         : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-white/10 bg-white/[0.03] px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-all hover:bg-white/[0.07]";
-    const desktopPrimaryActionClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-[#0B74DE] bg-[#0B74DE] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-all hover:border-[#0869C9] hover:bg-[#0869C9]"
-        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-white bg-white px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-[#182026] transition-all hover:bg-white/90";
-
-    const handleCtaClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        onCtaClick?.(event);
-        setMobileMenuOpen(false);
-    };
 
     // Close mobile menu on resize
     useEffect(() => {
@@ -158,17 +144,6 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel, ctaTo, onCtaClick }: 
                     </nav>
 
                     <nav className="hidden md:flex items-center gap-2">
-                        {hasPrimaryCta && ctaTo ? (
-                            isExternalOrHashCta ? (
-                                <a href={ctaTo} onClick={handleCtaClick} className={desktopPrimaryActionClass}>
-                                    {ctaLabel}
-                                </a>
-                            ) : (
-                                <Link to={ctaTo} onClick={handleCtaClick} className={desktopPrimaryActionClass}>
-                                    {ctaLabel}
-                                </Link>
-                            )
-                        ) : null}
                         <Link to="/login" className={desktopActionClass}>
                             LOGIN
                         </Link>
@@ -202,17 +177,6 @@ export const PublicNavbar = ({ variant = 'dark', ctaLabel, ctaTo, onCtaClick }: 
                                     ? "rounded-[8px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.14)]"
                                     : "rounded-[8px] border border-white/10 bg-[#080808]/96 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
                             )}>
-                                {hasPrimaryCta && ctaTo ? (
-                                    isExternalOrHashCta ? (
-                                        <a href={ctaTo} onClick={handleCtaClick} className={mobilePrimaryActionClass}>
-                                            {ctaLabel}
-                                        </a>
-                                    ) : (
-                                        <Link to={ctaTo} onClick={handleCtaClick} className={mobilePrimaryActionClass}>
-                                            {ctaLabel}
-                                        </Link>
-                                    )
-                                ) : null}
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(

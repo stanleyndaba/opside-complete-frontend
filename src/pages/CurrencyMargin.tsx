@@ -113,7 +113,7 @@ export default function CurrencyMargin() {
   });
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#F4FAFF] font-sans text-[#182026]">
+    <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026]">
       <PublicNavbar variant="light" />
 
       <main className="relative">
@@ -199,7 +199,7 @@ export default function CurrencyMargin() {
           </div>
         </section>
 
-        <section className="relative border-t border-[#E4EDF1] bg-[#F4FAFF] py-16 md:py-24">
+        <section className="relative border-t border-[#E4EDF1] bg-[#FAFAF7] py-16 md:py-24">
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8">
             <div className="mx-auto max-w-[900px] text-center">
               <h2 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[40px] md:text-[56px]">
@@ -212,7 +212,7 @@ export default function CurrencyMargin() {
                 </span>
               </div>
               <div className="mt-6 text-[15px] font-medium leading-7 text-[#4D5B66]">
-                Secure your Early Access slot before July 30, 2026 or before the first 500 slots are gone.
+                Secure your Founding Pass before July 30, 2026 or before the first 500 slots are gone.
               </div>
               <div ref={bottomCtaRef} className="mt-4">
                 <Button
