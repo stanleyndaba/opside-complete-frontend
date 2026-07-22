@@ -42,8 +42,10 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 
 import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary';
 
+const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
 createRoot(document.getElementById("root")!).render(
-  <ClerkProvider>
+  <ClerkProvider publishableKey={clerkPublishableKey}>
     <GlobalErrorBoundary>
       <App />
     </GlobalErrorBoundary>
