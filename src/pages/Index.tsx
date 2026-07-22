@@ -435,8 +435,8 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
       </div>{" "}
       <div className="relative mt-5 overflow-hidden md:mt-7">
         {" "}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-28" />{" "}
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-28" />{" "}
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#F3F6F8] to-transparent md:w-28" />{" "}
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#F3F6F8] to-transparent md:w-28" />{" "}
         <motion.div
           className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
           animate={{ x: ["0%", "-50%"] }}
@@ -690,13 +690,13 @@ function KineticHeroSection({
 }
 function SystemLogMarquee() {
   return (
-    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 md:py-24">
+    <section className="system-log-marquee relative overflow-hidden bg-[#F3F6F8] py-16 md:py-24">
       {" "}
       <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(201,214,222,0.24)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.18)_1px,transparent_1px)] [background-size:52px_52px]" />{" "}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#FAFAF7] to-transparent" />{" "}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFAF7] to-transparent" />{" "}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-32" />{" "}
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-32" />{" "}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#F3F6F8] to-transparent" />{" "}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#F3F6F8] to-transparent" />{" "}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#F3F6F8] to-transparent md:w-32" />{" "}
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#F3F6F8] to-transparent md:w-32" />{" "}
       <div className={containerClass}>
         {" "}
         <motion.div {...revealProps} className="relative z-20 max-w-[760px]">
@@ -792,7 +792,7 @@ function EvidenceReadinessBlueprint() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[28px] border border-[#D8E3E8] bg-[linear-gradient(135deg,#FFFFFF_0%,#FAFAF7_52%,#F2F7F8_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-9"
+      className="relative overflow-hidden rounded-[28px] border border-[#D8E3E8] bg-[linear-gradient(135deg,#FFFFFF_0%,#F4FAFF_52%,#F3F6F8_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-9"
     >
       {" "}
       <div
@@ -1082,7 +1082,7 @@ export default function Index() {
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
   const primaryCtaLabel = "Preview Recovery Audit";
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+    <div className="min-h-screen overflow-x-clip bg-white font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       {" "}
       <PublicNavbar
         variant="light"
@@ -1140,7 +1140,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 max-md:bg-white max-md:py-14">
+        <section className="relative border-b border-[#E4EDF1] bg-[#F4FAFF] py-8 max-md:bg-[#F4FAFF] max-md:py-14">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -1152,7 +1152,7 @@ export default function Index() {
             </motion.p>{" "}
             <motion.p
               {...revealProps}
-              className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[#66737F] max-md:text-left md:text-[18px] md:leading-8"
+              className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[#4D5B66] max-md:text-left md:text-[18px] md:leading-8"
             >
               {" "}
               Invoices, PODs, BOLs, shipment records, cost data, support
@@ -1342,7 +1342,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <section
-          className="relative bg-[#FAFAF7] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28"
+          className="relative bg-[#F4FAFF] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] max-md:py-16 md:py-28"
           id="how-margin-works"
         >
           {" "}
@@ -1360,7 +1360,7 @@ export default function Index() {
                   <span className="text-[#182026]">Finding the discrepancy is not the hard part.</span> <span className="text-[#8A98A3]">Proving it is.</span>
                 </h2>{" "}
               </div>{" "}
-              <p className="max-w-[660px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9 lg:justify-self-end">
+              <p className="max-w-[660px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9 lg:justify-self-end">
                 {" "}
                 Once the issue is found, the work becomes proof: deadline,
                 invoice, BOL, POD, shipment ID, quantity, cost basis, Amazon
@@ -1530,7 +1530,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         {/* <ScrollytellingCoverage /> */} {/* <SystemPerformanceTicker /> */}{" "}
-        <section className="relative py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-28">
+        <section className="relative bg-white py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-28">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -1589,7 +1589,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <SystemLogMarquee />{" "}
-        <section className="relative overflow-hidden py-28 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-40">
+        <section className="relative overflow-hidden bg-[#F4FAFF] py-28 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] max-md:py-16 md:py-40">
           {" "}
           <motion.div
             aria-hidden="true"
@@ -1694,7 +1694,7 @@ export default function Index() {
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-[5px] border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#F8FAFC]"
+                    className="rounded-[5px] border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#F3F6F8]"
                   >
                     {" "}
                     Show more questions{" "}
@@ -1704,13 +1704,13 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-[#F3F6F8] py-16 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28">
+        <section className="relative bg-[#F4FAFF] py-16 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
             {" "}
             <motion.div
               {...revealProps}
-              className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF6EF_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-12"
+              className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F4FAFF_52%,#F3F6F8_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] max-md:rounded-none max-md:border-0 max-md:bg-[#F4FAFF] max-md:p-0 max-md:shadow-none md:p-12"
             >
               {" "}
               <div className="max-w-[880px]">
@@ -1718,7 +1718,7 @@ export default function Index() {
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[42px] md:text-[68px]">
                   <span className="text-[#182026]">Every recovery starts with &quot;I know Amazon owes me.&quot;</span> <span className="text-[#8A98A3]">Too many end with &quot;I couldn&apos;t prove it.&quot; Don&apos;t let yours.</span>
                 </h2>{" "}
-                <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[19px] md:leading-9">
+                <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#4D5B66] md:text-[19px] md:leading-9">
                   {" "}
                   Margin keeps every invoice, shipment record, POD, deadline,
                   response, and payout attached to the same recovery until the
@@ -1738,7 +1738,7 @@ export default function Index() {
             </motion.div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-[#F7F5F0] py-8 sm:bg-transparent sm:py-16 md:py-24">
+        <section className="relative bg-white py-8 sm:bg-white sm:py-16 md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}

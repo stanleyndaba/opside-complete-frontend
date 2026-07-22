@@ -36,7 +36,7 @@ export function TechnicalProtocolGrid() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-y border-[#E4EDF1] bg-[#FAFAF7] py-24 text-[#182026] md:py-32"
+      className="relative overflow-hidden border-y border-[#E4EDF1] bg-[#F4FAFF] py-24 text-[#182026] md:py-32"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_12%,rgba(11,116,222,0.055),transparent_30%),radial-gradient(circle_at_10%_84%,rgba(46,125,91,0.055),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.64),transparent_48%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-[0.42] [background-image:linear-gradient(rgba(122,137,148,0.10)_1px,transparent_1px)] [background-size:100%_96px]" />

@@ -65,7 +65,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                         Agents
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[22px] bg-[#FAFAF7] shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[85px] lg:w-[95vw] lg:max-w-[1120px] lg:-translate-x-1/2">
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[22px] bg-[#F3F6F8] shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[85px] lg:w-[95vw] lg:max-w-[1120px] lg:-translate-x-1/2">
                             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                                 <h4 className="px-6 pt-6 text-[10px] font-bold uppercase tracking-tight text-[#66737F] lg:px-7 lg:pt-7">
                                     Scale and Enterprise API

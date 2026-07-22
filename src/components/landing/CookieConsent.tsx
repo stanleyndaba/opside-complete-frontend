@@ -136,7 +136,7 @@ export function CookieConsent() {
 
                         <div className="max-w-3xl space-y-4 md:space-y-6">
                             {/* Box 1: Necessary */}
-                            <div className="flex items-start justify-between gap-4 rounded-[8px] border border-[#DCE8EE] bg-[#FAFAF7] p-4">
+                            <div className="flex items-start justify-between gap-4 rounded-[8px] border border-[#DCE8EE] bg-[#F3F6F8] p-4">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
                                         <span className="font-bold text-[#182026] text-[11px] uppercase tracking-tight font-sans">Necessary cookies</span>

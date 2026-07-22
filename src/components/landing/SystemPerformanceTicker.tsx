@@ -19,7 +19,7 @@ const metrics = [
 
 export function SystemPerformanceTicker() {
   return (
-    <section className="relative border-y border-[#DCE8EE] bg-[#F8FAFC] max-md:border-y-0">
+    <section className="relative border-y border-[#DCE8EE] bg-[#F3F6F8] max-md:border-y-0">
       <div className="mx-auto w-full max-w-[1280px] border-x border-[#DCE8EE] bg-white/42 max-md:border-x-0">
         <div className="flex min-h-[210px] items-center justify-center px-5 py-12 sm:px-8 md:min-h-[310px] md:py-24">
           <h2 className="mx-auto max-w-[860px] text-center text-[34px] font-semibold leading-[1.06] tracking-[-0.055em] text-[#182026] sm:text-[48px] md:text-[64px] lg:text-[72px]">

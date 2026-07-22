@@ -42,7 +42,7 @@ export function SolutionsMegaMenu({ variant = 'dark' }: SolutionsMegaMenuProps) 
                         Solutions
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[22px] bg-[#FAFAF7] shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[85px] lg:w-[95vw] lg:max-w-[820px] lg:-translate-x-1/2">
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[22px] bg-[#F3F6F8] shadow-[0_28px_90px_rgba(37,49,58,0.16)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[85px] lg:w-[95vw] lg:max-w-[820px] lg:-translate-x-1/2">
                             <div className="p-6 lg:p-7">
                                 <h4 className="mb-5 text-[10px] font-bold uppercase tracking-tight text-[#66737F]">
                                     E-commerce Marketplaces
