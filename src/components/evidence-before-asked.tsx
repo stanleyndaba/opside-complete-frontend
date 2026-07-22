@@ -1,42 +1,6 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-
-const TEXT_SEQUENCE = [
-  "You shipped 120 units.",
-  "Amazon received 113.",
-  "You filed a reimbursement claim.",
-  "But instead, you received...",
-  "Your claim has been denied.",
-  "or",
-  "We couldn't validate your claim.",
-  "We couldn't validate your claim.", // Duplicate string creates a pause because the key won't change
-  "The claim wasn't weak.",
-  "The evidence trail was."
-];
-
-// Helper to format specific words with the blue underline
-const formatText = (text: string) => {
-  if (text.includes("denied")) {
-    const parts = text.split("denied");
-    return <>{parts[0]}<span className="text-[#0B74DE] underline decoration-[#0B74DE] underline-offset-4">denied</span>{parts[1]}</>;
-  }
-  if (text.includes("couldn't validate")) {
-    const parts = text.split("couldn't validate");
-    return <>{parts[0]}<span className="text-[#0B74DE] underline decoration-[#0B74DE] underline-offset-4">couldn't validate</span>{parts[1]}</>;
-  }
-  return text;
-};
+import { motion } from 'framer-motion';
 
 export default function EvidenceBeforeAsked() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((current) => (current + 1) % TEXT_SEQUENCE.length);
-    }, 1800); // 1.8 seconds per slide
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <main
       className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-pink-50 px-6 py-12 font-sans text-slate-900"
@@ -51,20 +15,16 @@ export default function EvidenceBeforeAsked() {
       />
 
       <section className="relative z-10 w-full max-w-[960px]">
-        {/* Font size reduced by ~10% (4xl/5xl/6xl/7xl instead of 5xl/6xl/7xl/8xl) */}
+        {/* Keeping the 10% reduced font size: 4xl/5xl/6xl/7xl */}
         <div className="mx-auto flex h-[200px] flex-col items-center justify-center gap-6 text-center text-4xl font-bold leading-[0.96] tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={TEXT_SEQUENCE[index]}
-              initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-[18ch]"
-            >
-              {formatText(TEXT_SEQUENCE[index])}
-            </motion.p>
-          </AnimatePresence>
+          <motion.p
+            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] as const }}
+            className="max-w-[18ch]"
+          >
+            Margin rebuilds the claim to <span className="text-[#0B74DE]">withstand</span> Amazon's review.
+          </motion.p>
         </div>
       </section>
     </main>
