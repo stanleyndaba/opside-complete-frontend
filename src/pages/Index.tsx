@@ -313,6 +313,13 @@ const earlyAccessItems = [
   "0% Commission Through 2026",
   "Built for Hard-to-Prove Claims",
 ];
+const securityFeatures = [
+  "Official Amazon OAuth Authorization",
+  "Encrypted Data in Transit",
+  "Seller Approval Before Filing",
+  "Read-only Recovery Audit",
+  "Built on Enterprise Cloud Infrastructure",
+];
 const faqs = [
   {
     question: "What if Amazon rejects my claim?",
@@ -1405,6 +1412,37 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
+        <section className="relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28">
+          <div className={containerClass}>
+            <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+              <motion.div {...revealProps}>
+                <div className={sectionLabelClass}>Security & Trust</div>
+                <h2 className={sectionHeadingClass}>
+                  <span className="text-[#182026]">Built for enterprise protection.</span> <span className="text-[#8A98A3]">Zero compromise on safety.</span>
+                </h2>
+                <p className={sectionBodyClass}>
+                  Connecting to Amazon requires absolute trust. Margin is designed from the ground up to keep your seller data, infrastructure, and recovery actions completely secure.
+                </p>
+              </motion.div>
+              
+              <motion.div {...revealProps} className="grid gap-2">
+                {securityFeatures.map((item) => (
+                  <div
+                    key={item}
+                    className="group relative flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-[#F4FAFF] hover:shadow-sm max-md:rounded-none max-md:border-t max-md:border-[#E5E7EB] max-md:px-0 max-md:py-4 max-md:hover:bg-transparent max-md:hover:shadow-none"
+                  >
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0B74DE]/10 text-[#0B74DE]">
+                      <Check className="h-4 w-4" strokeWidth={3} />
+                    </div>
+                    <span className="text-[16px] font-medium leading-6 tracking-tight text-[#182026]">
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
         <section className="relative bg-[#F3F6F8] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
