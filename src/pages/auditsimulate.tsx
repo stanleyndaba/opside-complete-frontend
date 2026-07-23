@@ -79,18 +79,18 @@ const auditLines: AuditLine[] = [
 const severityStyles = {
   priority: {
     label: 'Priority',
-    marker: 'bg-[#7A2638]',
-    text: 'text-[#F2C9D0]',
+    marker: 'bg-[#0B74DE]',
+    text: 'text-[#0B74DE]',
   },
   review: {
     label: 'Review',
-    marker: 'bg-[#B58A32]',
-    text: 'text-[#E9D3A0]',
+    marker: 'bg-[#2E7D5B]',
+    text: 'text-[#2E7D5B]',
   },
   watch: {
     label: 'Watch',
-    marker: 'bg-[#66717D]',
-    text: 'text-[#C2C9D0]',
+    marker: 'bg-[#8A99A4]',
+    text: 'text-[#66737F]',
   },
 };
 
@@ -120,34 +120,34 @@ function AuditRow({
         duration: 0.44,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="grid border-b border-white/[0.08] px-5 py-4 sm:grid-cols-[72px_minmax(0,1fr)_150px] sm:px-8"
+      className="grid border-b border-[#DCE8EE] px-4 py-3 sm:grid-cols-[64px_minmax(0,1fr)_136px] sm:px-6"
     >
-      <div className="font-mono text-[11px] font-medium text-[#8B96A1] sm:pt-1">
+      <div className="font-mono text-[10px] font-medium text-[#8A99A4] sm:pt-1">
         {line.time}
       </div>
 
-      <div className="relative min-w-0 sm:border-l sm:border-white/[0.1] sm:pl-7">
+      <div className="relative min-w-0 sm:border-l sm:border-[#DCE8EE] sm:pl-6">
         <span className={`absolute -left-[4.5px] top-1.5 hidden h-2 w-2 ${severity.marker} sm:block`} />
         <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-tight">
-          <span className="text-[#AAB3BD]">{line.id}</span>
+          <span className="text-[#66737F]">{line.id}</span>
           <span className={severity.text}>{severity.label}</span>
         </div>
         <h2
-          className="mt-1.5 text-[18px] font-semibold leading-tight tracking-[-0.02em] text-[#F7F4EE] sm:text-[20px]"
+          className="mt-1 text-[16px] font-semibold leading-tight tracking-[-0.02em] text-[#182026] sm:text-[18px]"
           style={{ fontFamily: 'Georgia, Merriweather, serif' }}
         >
           {line.title}
         </h2>
-        <p className="mt-1 max-w-3xl text-[13px] leading-6 text-[#A5AFB8] sm:text-[14px]">
+        <p className="mt-0.5 max-w-3xl text-[12px] leading-5 text-[#4D5B66] sm:text-[13px]">
           {line.detail}
         </p>
       </div>
 
-      <div className="mt-3 border-t border-white/[0.08] pt-3 sm:mt-0 sm:border-t-0 sm:pt-1 sm:text-right">
-        <span className="font-mono text-[10px] uppercase tracking-tight text-[#8B96A1]">
+      <div className="mt-2 border-t border-[#DCE8EE] pt-2 sm:mt-0 sm:border-t-0 sm:pt-1 sm:text-right">
+        <span className="font-mono text-[10px] uppercase tracking-tight text-[#8A99A4]">
           Exposure
         </span>
-        <strong className="mt-1 block font-mono text-[14px] font-medium tracking-tight text-[#F7F4EE]">
+        <strong className="mt-1 block font-mono text-[13px] font-medium tracking-tight text-[#182026]">
           {formatExposure(line.amount)}
         </strong>
       </div>
@@ -161,39 +161,39 @@ const AuditSimulate = () => {
   const visibleFeed = reduceMotion ? auditLines : auditFeed;
 
   return (
-    <main className="h-screen overflow-hidden bg-[#07111D] p-3 text-[#F7F4EE] sm:p-6">
-      <section className="mx-auto grid h-full w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] border border-white/[0.12] bg-[#0A1422]">
-        <header className="border-b border-white/[0.1] px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-end">
+    <main className="h-screen overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-4">
+      <section className="mx-auto grid h-full w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] border border-[#CFE0EA] bg-white">
+        <header className="border-b border-[#DCE8EE] px-4 py-4 sm:px-7 lg:px-8 lg:py-5">
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-end">
             <div>
-              <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#9CA7B3]">
+              <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
                 Amazon recovery evaluation
               </div>
               <h1
-                className="mt-3 max-w-4xl text-[38px] font-semibold leading-[0.96] tracking-[-0.045em] text-[#F7F4EE] sm:text-[54px] lg:text-[68px]"
+                className="mt-2 max-w-4xl text-[34px] font-semibold leading-[0.96] tracking-[-0.045em] text-[#182026] sm:text-[46px] lg:text-[56px]"
                 style={{ fontFamily: 'Georgia, Merriweather, serif' }}
               >
                 Recovery audit running
               </h1>
-              <p className="mt-4 max-w-2xl text-[14px] leading-7 text-[#A5AFB8] sm:text-[15px]">
+              <p className="mt-3 max-w-2xl text-[13px] leading-6 text-[#4D5B66] sm:text-[14px]">
                 Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 border border-white/[0.1] bg-white/[0.035]">
-              <div className="border-r border-white/[0.1] p-4 sm:p-5">
-                <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+            <div className="grid grid-cols-2 border border-[#DCE8EE] bg-[#F8FAFC]">
+              <div className="border-r border-[#DCE8EE] p-3 sm:p-4">
+                <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
                   Scope value
                 </span>
-                <strong className="mt-2 block font-mono text-[18px] font-medium tracking-[-0.03em] text-[#F7F4EE] sm:text-[21px]">
+                <strong className="mt-1.5 block font-mono text-[16px] font-medium tracking-[-0.03em] text-[#182026] sm:text-[18px]">
                   {formatExposure(totalExposure)}
                 </strong>
               </div>
-              <div className="p-4 sm:p-5">
-                <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+              <div className="p-3 sm:p-4">
+                <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
                   Scope
                 </span>
-                <strong className="mt-2 block font-mono text-[18px] font-medium tracking-[-0.03em] text-[#F7F4EE] sm:text-[21px]">
+                <strong className="mt-1.5 block font-mono text-[16px] font-medium tracking-[-0.03em] text-[#182026] sm:text-[18px]">
                   {auditLines.length}
                 </strong>
               </div>
@@ -201,10 +201,10 @@ const AuditSimulate = () => {
           </div>
         </header>
 
-        <div className="grid min-h-0 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="grid min-h-0 lg:grid-cols-[minmax(0,1fr)_340px]">
           <div className="relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-gradient-to-b from-[#0A1422] to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-gradient-to-t from-[#0A1422] to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 bg-gradient-to-b from-white to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-10 bg-gradient-to-t from-white to-transparent" />
             <motion.ol
               className="relative"
               animate={reduceMotion ? undefined : { y: ['0%', '-50%'] }}
@@ -221,25 +221,25 @@ const AuditSimulate = () => {
             </motion.ol>
           </div>
 
-          <aside className="border-t border-white/[0.1] bg-[#08111D] px-5 py-6 sm:px-7 lg:border-l lg:border-t-0">
-            <div className="space-y-8">
+          <aside className="border-t border-[#DCE8EE] bg-[#F8FAFC] px-4 py-5 sm:px-6 lg:border-l lg:border-t-0">
+            <div className="space-y-5">
               <div>
-                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
                   Audit scope
                 </div>
                 <h2
-                  className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[#F7F4EE]"
+                  className="mt-1.5 text-[20px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
                   style={{ fontFamily: 'Georgia, Merriweather, serif' }}
                 >
                   Evidence and account movement
                 </h2>
               </div>
 
-              <div className="border-y border-white/[0.1] py-5">
-                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+              <div className="border-y border-[#DCE8EE] py-4">
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
                   Findings
                 </div>
-                <ul className="mt-4 space-y-3 text-[14px] leading-6 text-[#C2C9D0]">
+                <ul className="mt-3 space-y-2 text-[13px] leading-5 text-[#25313A]">
                   <li>Inbound shipment shortages</li>
                   <li>Inventory adjustment gaps</li>
                   <li>Settlement mismatches</li>
@@ -251,21 +251,21 @@ const AuditSimulate = () => {
                 initial={reduceMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: reduceMotion ? 0 : 3.2, duration: 0.45 }}
-                className="bg-[#10201A] p-5"
+                className="border border-[#DCE8EE] bg-white p-4"
               >
-                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#7FAC95]">
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2E7D5B]">
                   Status: Evidence map forming
                 </div>
-                <p className="mt-3 text-[14px] leading-6 text-[#C7D8D0]">
+                <p className="mt-2 text-[13px] leading-5 text-[#4D5B66]">
                   Findings are being grouped by case so the seller can see what is recoverable, what is missing, and what needs approval.
                 </p>
               </motion.div>
 
-              <div className="border-l-2 border-[#B58A32] pl-4">
-                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#D7BE82]">
+              <div className="border-l-2 border-[#0B74DE] pl-4">
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
                   Seller approval stays required
                 </div>
-                <p className="mt-3 text-[14px] leading-6 text-[#C2C9D0]">
+                <p className="mt-2 text-[13px] leading-5 text-[#4D5B66]">
                   Margin prepares the path. The seller decides what moves.
                 </p>
               </div>
