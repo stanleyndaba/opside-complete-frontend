@@ -16,7 +16,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, PlayCircle } from "lucide-react";
+import { ArrowRight, Check, CircleDollarSign, PlayCircle, Truck } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
@@ -528,6 +528,7 @@ type EvidenceOrchestratorSource = {
   id: string;
   name: string;
   icon?: string;
+  Icon?: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   shortName: string;
   evidence: string[];
   x: number;
@@ -577,6 +578,7 @@ const evidenceOrchestratorSources: EvidenceOrchestratorSource[] = [
   {
     id: "carrier",
     name: "Carrier portal",
+    Icon: Truck,
     shortName: "Carrier",
     evidence: ["POD", "Tracking"],
     x: 78,
@@ -587,6 +589,7 @@ const evidenceOrchestratorSources: EvidenceOrchestratorSource[] = [
   {
     id: "settlements",
     name: "Settlements",
+    Icon: CircleDollarSign,
     shortName: "Payouts",
     evidence: ["Payout", "Ledger"],
     x: 68,
@@ -617,6 +620,8 @@ function EvidenceOrchestratorSourceNode({
   source: EvidenceOrchestratorSource;
   reduceMotion: boolean;
 }) {
+  const SourceIcon = source.Icon;
+
   return (
     <div
       className="absolute z-30 -translate-x-1/2 -translate-y-1/2"
@@ -632,6 +637,8 @@ function EvidenceOrchestratorSourceNode({
         <div className="flex h-11 w-11 items-center justify-center rounded-[10px] border border-[#E1EAF0] bg-white shadow-[0_14px_34px_rgba(37,49,58,0.08)] sm:h-14 sm:w-14">
           {source.icon ? (
             <img src={source.icon} alt={source.name} className="h-[62%] w-[62%] object-contain" />
+          ) : SourceIcon ? (
+            <SourceIcon className="h-5 w-5 text-[#0B74DE] sm:h-6 sm:w-6" strokeWidth={1.9} />
           ) : (
             <span className="text-[10px] font-semibold tracking-tight text-[#0B74DE]">{source.shortName}</span>
           )}
