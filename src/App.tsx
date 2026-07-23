@@ -90,6 +90,7 @@ const FoundingActivationStatus = lazy(() => import("./pages/FoundingActivationSt
 const DesignSimulate = lazy(() => import("./pages/designsimulate"));
 const PlatformSimulate = lazy(() => import("./pages/platformsimulate"));
 const DocumentSimulate = lazy(() => import("./pages/documentsimulate"));
+const AuditSimulate = lazy(() => import("./pages/auditsimulate"));
 const TimelineSimulation = lazy(() => import("./pages/TimelineSimulation"));
 const ReadinessSimulate = lazy(() => import("./pages/ReadinessSimulate"));
 const ReadinessSimulateTwo = lazy(() => import("./pages/readiness-simulate-two"));
@@ -242,7 +243,7 @@ import { SessionProvider } from '@/contexts/SessionContext';
 const RouteOverlays = () => {
   const location = useLocation();
   usePrivateRouteRobots(location.pathname);
-  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/documentsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin'].includes(location.pathname);
+  const hidePublicChat = ['/designsimulate', '/platformsimulate', '/documentsimulate', '/auditsimulate', '/platformfly', '/accuracy-graph', '/scatterdesign', '/countdown', '/plane', '/closingcta', '/finality', '/finalpayoffsimulate', '/amazon-asks', '/evidence-chase', '/evidence-insight', '/launch-countdown', '/giving-up', '/results-scroll', '/supplier-chat', '/google-drive', '/intro-pain', '/action-simulate', '/rejection-screen', '/card-review', '/api-connection', '/evidence-analysis', '/evidence-match', '/rejection-loop', '/report-generation', '/accuracy-scaling', '/feedback-learning', '/auditable-workspace', '/auditable-outputs', '/every-case', '/openstatement', '/margin-takes-over', '/margin-reads', '/evidence-before-asked', '/recovery-lifecycle', '/learning-recovery', '/audit-ready-history', '/AppealSimulate', '/appealsimulate', '/timeline-simulation', '/readiness-simulate', '/readiness-simulate-two', '/memory-simulate', '/reconciliation-simulate', '/currency-margin'].includes(location.pathname);
 
   return (
     <>
@@ -299,6 +300,7 @@ const App = () => (
                         <Route path="/designsimulate" element={<DesignSimulate />} />
                         <Route path="/platformsimulate" element={<PlatformSimulate />} />
                         <Route path="/documentsimulate" element={<DocumentSimulate />} />
+                        <Route path="/auditsimulate" element={<AuditSimulate />} />
                         <Route path="/timeline-simulation" element={<TimelineSimulation />} />
                         <Route path="/readiness-simulate" element={<ReadinessSimulate />} />
                         <Route path="/readiness-simulate-two" element={<ReadinessSimulateTwo />} />
