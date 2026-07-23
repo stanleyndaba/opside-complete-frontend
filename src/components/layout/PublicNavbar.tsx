@@ -95,7 +95,12 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     }, [variant]);
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 border-transparent bg-transparent">
+        <header
+            className={cn(
+                "fixed left-0 right-0 top-0 z-50 border-transparent transition-colors md:bg-transparent",
+                isLight ? "max-md:bg-white" : "max-md:bg-[#080808]",
+            )}
+        >
             <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
                 <div className={cn(
                     "relative flex items-center justify-between gap-3 transition-colors md:gap-5 md:px-4 md:py-3 lg:px-6",

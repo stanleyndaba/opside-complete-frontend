@@ -32,6 +32,8 @@ import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
+const RECOVERY_PREVIEW_EMBED_URL =
+  "https://www.youtube.com/embed/G1I3ybqRTWE?autoplay=1&mute=1&loop=1&playlist=G1I3ybqRTWE&controls=0&modestbranding=1&playsinline=1&rel=0";
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: "bg-blue-400", delay: 0.1, duration: 3.6 },
   { x: 18, y: 54, size: 7, color: "bg-emerald-400", delay: 1.4, duration: 4.2 },
@@ -866,6 +868,58 @@ function EvidenceSourcesOrchestrator() {
         </section>
       </div>
     </motion.div>
+  );
+}
+
+function RecoveryPreviewSection({
+  onEarlyAccessCta,
+}: {
+  onEarlyAccessCta: () => void;
+}) {
+  return (
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-16 md:py-24">
+      <div className={containerClass}>
+        <div className="grid gap-9 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-14">
+          <motion.div {...revealProps} className="max-w-[560px]">
+            <div className={sectionLabelClass}>Recovery preview</div>
+            <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]">
+              Every recovery starts with one finding.
+            </h2>
+            <p className="mt-4 max-w-[520px] text-[23px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[32px]">
+              But every payout depends on the evidence behind it.
+            </p>
+            <p className="mt-6 max-w-[600px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+              Invoices, shipment records, inventory events, settlement history,
+              and supporting documents are automatically connected into one
+              recovery case.
+            </p>
+            <Button
+              onClick={onEarlyAccessCta}
+              className="mt-8 h-12 rounded-[5px] bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_16px_38px_rgba(11,116,222,0.24)] transition hover:bg-[#0c66c2]"
+            >
+              Start Recovery Audit
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </motion.div>
+
+          <motion.div {...revealProps} className="relative">
+            <div className="relative overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_30px_80px_rgba(37,49,58,0.12)]">
+              <div className="aspect-video">
+                <iframe
+                  className="h-full w-full"
+                  src={RECOVERY_PREVIEW_EMBED_URL}
+                  title="Margin 10-second recovery preview"
+                  loading="lazy"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   );
 }
 function KineticHeroSection({
@@ -1719,6 +1773,9 @@ export default function Index() {
             </motion.p>{" "}
           </div>{" "}
         </section>{" "}
+        <RecoveryPreviewSection
+          onEarlyAccessCta={() => handleClaimAccessClick("homepage_recovery_preview")}
+        />{" "}
         <section className="relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
