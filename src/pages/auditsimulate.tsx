@@ -139,23 +139,23 @@ const AuditSimulate = () => {
                 Recovery audit running
               </div>
               <h1 className="mt-2 max-w-3xl text-3xl font-semibold leading-[0.96] tracking-tight text-[#182026] sm:text-5xl">
-                Margin is checking where Amazon may owe money back.
+                Amazon recovery evaluation
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-[#536171] sm:text-base">
                 Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
               </p>
             </div>
 
-            <div className="grid min-w-[220px] grid-cols-2 gap-2 rounded-[6px] border border-[#D8E4EF] bg-[#FBFDFF] p-2">
-              <div className="rounded-[4px] bg-white p-2.5">
-                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8897]">Potential value</span>
-                <strong className="mt-0.5 block text-xl font-semibold tracking-tight text-[#182026]">
+            <div className="grid min-w-[168px] grid-cols-2 gap-1 rounded-[4px] border border-[#D8E4EF] bg-[#FBFDFF] p-1">
+              <div className="rounded-[3px] bg-white px-2 py-1.5">
+                <span className="text-[9px] font-semibold uppercase tracking-tight text-[#7A8897]">Scope value</span>
+                <strong className="mt-0.5 block text-base font-semibold tracking-tight text-[#182026]">
                   ${totalExposure.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </strong>
               </div>
-              <div className="rounded-[4px] bg-white p-2.5">
-                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8897]">Findings</span>
-                <strong className="mt-0.5 block text-xl font-semibold tracking-tight text-[#182026]">{auditLines.length}</strong>
+              <div className="rounded-[3px] bg-white px-2 py-1.5">
+                <span className="text-[9px] font-semibold uppercase tracking-tight text-[#7A8897]">Scope</span>
+                <strong className="mt-0.5 block text-base font-semibold tracking-tight text-[#182026]">{auditLines.length}</strong>
               </div>
             </div>
           </div>
