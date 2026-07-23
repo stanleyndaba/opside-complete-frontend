@@ -870,40 +870,29 @@ function EvidenceSourcesOrchestrator() {
   );
 }
 
-function RecoveryPreviewSection({
-  onEarlyAccessCta,
-}: {
-  onEarlyAccessCta: () => void;
-}) {
+function RecoveryPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-16 md:py-24">
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
       <div className={containerClass}>
-        <div className="grid gap-9 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-14">
-          <motion.div {...revealProps} className="max-w-[560px]">
+        <div className="grid gap-7 lg:grid-cols-[0.62fr_1.38fr] lg:items-center lg:gap-12">
+          <motion.div {...revealProps} className="max-w-[500px]">
             <div className={sectionLabelClass}>Recovery preview</div>
-            <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[58px]">
+            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
               Every recovery starts with one finding.
             </h2>
-            <p className="mt-4 max-w-[520px] text-[23px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[32px]">
+            <p className="mt-3 max-w-[460px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
               But every payout depends on the evidence behind it.
             </p>
-            <p className="mt-6 max-w-[600px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+            <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
               Invoices, shipment records, inventory events, settlement history,
               and supporting documents are automatically connected into one
               recovery case.
             </p>
-            <Button
-              onClick={onEarlyAccessCta}
-              className="mt-8 h-12 rounded-[5px] bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_16px_38px_rgba(11,116,222,0.24)] transition hover:bg-[#0c66c2]"
-            >
-              Start Recovery Audit
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className="relative overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_30px_80px_rgba(37,49,58,0.12)]">
-              <div className="aspect-video">
+            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+              <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-cover"
                   src={RECOVERY_PREVIEW_VIDEO_URL}
@@ -1773,9 +1762,7 @@ export default function Index() {
             </motion.p>{" "}
           </div>{" "}
         </section>{" "}
-        <RecoveryPreviewSection
-          onEarlyAccessCta={() => handleClaimAccessClick("homepage_recovery_preview")}
-        />{" "}
+        <RecoveryPreviewSection />{" "}
         <section className="relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
