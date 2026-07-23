@@ -32,8 +32,7 @@ import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
-const RECOVERY_PREVIEW_EMBED_URL =
-  "https://www.youtube.com/embed/G1I3ybqRTWE?autoplay=1&mute=1&loop=1&playlist=G1I3ybqRTWE&controls=0&modestbranding=1&playsinline=1&rel=0";
+const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: "bg-blue-400", delay: 0.1, duration: 3.6 },
   { x: 18, y: 54, size: 7, color: "bg-emerald-400", delay: 1.4, duration: 4.2 },
@@ -905,14 +904,15 @@ function RecoveryPreviewSection({
           <motion.div {...revealProps} className="relative">
             <div className="relative overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_30px_80px_rgba(37,49,58,0.12)]">
               <div className="aspect-video">
-                <iframe
-                  className="h-full w-full"
-                  src={RECOVERY_PREVIEW_EMBED_URL}
-                  title="Margin 10-second recovery preview"
-                  loading="lazy"
-                  allow="autoplay; encrypted-media; picture-in-picture"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
+                <video
+                  className="h-full w-full object-cover"
+                  src={RECOVERY_PREVIEW_VIDEO_URL}
+                  aria-label="Margin 10-second recovery preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
                 />
               </div>
             </div>
