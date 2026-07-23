@@ -753,8 +753,8 @@ function EvidenceSourcesOrchestrator() {
 
   return (
     <motion.div {...revealProps} className="mx-auto max-w-[1040px]">
-      <div className="relative overflow-hidden rounded-[26px] border border-[#E2EBF1] bg-white p-4 shadow-[0_28px_70px_rgba(37,49,58,0.08)] sm:p-6 md:p-8">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(11,116,222,0.08),transparent_30%),radial-gradient(circle_at_82%_24%,rgba(46,125,91,0.08),transparent_28%)]" />
+      <div className="relative overflow-hidden border-y border-[#D8E3E8] bg-white py-4 sm:py-6 md:py-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(11,116,222,0.045),transparent_30%),radial-gradient(circle_at_82%_24%,rgba(46,125,91,0.04),transparent_28%)]" />
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.32]"
           style={{
@@ -1196,7 +1196,7 @@ function SystemLogMarquee() {
         </motion.div>{" "}
         <motion.div
           {...revealProps}
-          className="relative z-20 mx-auto mt-12 max-w-[680px] rounded-[1px] border border-[#BFCBD3] bg-white/78 p-5 shadow-[0_28px_80px_rgba(37,49,58,0.08)] backdrop-blur-xl md:p-7"
+          className="relative z-20 mx-auto mt-12 max-w-[680px] border-y border-[#BFCBD3] bg-white/62 py-5 backdrop-blur-xl md:py-7"
         >
           {" "}
           <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-tight text-[#7B8A95]">
@@ -1234,7 +1234,7 @@ function SystemLogMarquee() {
               {[...row.items, ...row.items].map((entry, index) => (
                 <div
                   key={`${rowIndex}-${entry.label}-${entry.text}-${index}`}
-                  className="min-w-[280px] rounded-[1px] border border-[#C9D6DE] bg-white/62 px-3 py-[9px] shadow-[0_16px_36px_rgba(37,49,58,0.035)] backdrop-blur-xl md:min-w-[350px]"
+                  className="min-w-[280px] border-y border-[#C9D6DE] bg-white/50 px-3 py-[9px] backdrop-blur-xl md:min-w-[350px]"
                 >
                   {" "}
                   <div className="font-mono text-[8px] font-bold uppercase tracking-tight text-[#8A98A3]">
@@ -1951,7 +1951,7 @@ export default function Index() {
             </motion.button>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-12 md:py-18">
+        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-20">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -1969,7 +1969,7 @@ export default function Index() {
                 case.{" "}
               </p>{" "}
             </div>{" "}
-            <div className="mt-7 md:mt-9">
+            <div className="mt-8 md:mt-10">
               <EvidenceSourcesOrchestrator />
             </div>{" "}
             <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
@@ -1982,7 +1982,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <section
-          className="relative bg-[#F4FAFF] py-16 max-md:border-b max-md:border-[#E5E7EB] md:py-28"
+          className="relative bg-[#F4FAFF] py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24"
           id="how-margin-works"
         >
           {" "}
@@ -2011,7 +2011,7 @@ export default function Index() {
                 case.{" "}
               </p>{" "}
             </div>{" "}
-            <div className="workflow-scrollbar-hide mt-10 overflow-x-auto overflow-y-hidden pb-2 md:mt-16 md:overflow-hidden">
+            <div className="workflow-scrollbar-hide mt-10 border-y border-[#C9D6DE] overflow-x-auto overflow-y-hidden pb-2 pt-5 md:mt-14 md:overflow-hidden md:pt-7">
               <motion.div
                 className="workflow-marquee-track flex w-max snap-x snap-mandatory items-stretch gap-x-4 pr-5 md:gap-x-7"
                 style={{ ["--duration" as string]: "58s" }}
@@ -2023,7 +2023,7 @@ export default function Index() {
                 ).map((item, index) => (
                   <div
                     key={`${item.step}-${index}`}
-                    className="min-h-[230px] w-[260px] shrink-0 snap-start border-t border-[#C9D6DE] pt-4 sm:w-[280px] md:min-h-[260px] md:w-[270px] lg:w-[320px]"
+                    className="min-h-[210px] w-[260px] shrink-0 snap-start pt-1 sm:w-[280px] md:min-h-[240px] md:w-[270px] lg:w-[320px]"
                   >
                     {" "}
                     <div className="flex h-full flex-col">
@@ -2047,7 +2047,7 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28">
+        <section className="relative border-t border-[#E4EDF1] bg-white py-14 max-md:border-y max-md:border-[#E5E7EB] md:py-24">
           <div className={containerClass}>
             <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
               <motion.div {...revealProps}>
@@ -2060,13 +2060,13 @@ export default function Index() {
                 </p>
               </motion.div>
               
-              <motion.div {...revealProps} className="grid gap-2">
+              <motion.div {...revealProps} className="border-y border-[#D8E3E8]">
                 {securityFeatures.map((item) => (
                   <div
                     key={item}
-                    className="group relative flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-[#F4FAFF] hover:shadow-sm max-md:rounded-none max-md:border-t max-md:border-[#E5E7EB] max-md:px-0 max-md:py-4 max-md:hover:bg-transparent max-md:hover:shadow-none"
+                    className="relative flex items-center gap-4 border-b border-[#D8E3E8] py-4 last:border-b-0 md:py-5"
                   >
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0B74DE]/10 text-[#0B74DE]">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[#EEF6FF] text-[#0B74DE]">
                       <Check className="h-4 w-4" strokeWidth={3} />
                     </div>
                     <span className="text-[16px] font-medium leading-6 tracking-tight text-[#182026]">
@@ -2155,7 +2155,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="relative bg-[#F3F6F8] py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white max-md:py-16 md:py-28">
+        <section className="relative bg-[#F3F6F8] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2280,7 +2280,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         {/* <ScrollytellingCoverage /> */} {/* <SystemPerformanceTicker /> */}{" "}
-        <section className="relative bg-white py-16 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-28">
+        <section className="relative bg-white py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2339,17 +2339,12 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <SystemLogMarquee />{" "}
-        <section className="relative overflow-hidden bg-[#F4FAFF] py-28 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] max-md:py-16 md:py-40">
+        <section className="relative overflow-hidden bg-[#F4FAFF] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
           {" "}
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-1/3 hidden h-[500px] w-full bg-[radial-gradient(circle_at_50%_50%,rgba(11,116,222,0.06),transparent_60%)] md:block"
-          />{" "}
           <div className={containerClass}>
             {" "}
-            <div className="glass-card relative overflow-hidden rounded-[32px] border border-[#E4EDF1] bg-white p-8 shadow-[0_32px_64px_rgba(0,0,0,0.08)] md:p-16 lg:p-20 max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none">
+            <div className="relative overflow-hidden border-y border-[#D8E3E8] bg-white py-8 md:py-12">
               {" "}
-              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#0B74DE] to-transparent opacity-20 max-md:hidden" />{" "}
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 {" "}
                 <motion.div {...revealProps}>
@@ -2379,15 +2374,15 @@ export default function Index() {
                     </Button>{" "}
                   </div>{" "}
                 </motion.div>{" "}
-                <motion.div {...revealProps} className="grid gap-2">
+                <motion.div {...revealProps} className="border-y border-[#D8E3E8]">
                   {" "}
                   {earlyAccessItems.map((item, index) => (
                     <div
                       key={item}
-                      className="group relative flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/60 hover:shadow-sm max-md:rounded-none max-md:border-t max-md:border-[#E5E7EB] max-md:px-0 max-md:py-4 max-md:hover:bg-transparent max-md:hover:shadow-none"
+                      className="relative flex items-center gap-4 border-b border-[#D8E3E8] py-4 last:border-b-0 md:py-5"
                     >
                       {" "}
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0B74DE]/10 text-[#0B74DE]">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[#EEF6FF] text-[#0B74DE]">
                         {" "}
                         <Check className="h-4 w-4" strokeWidth={3} />{" "}
                       </div>{" "}
@@ -2454,13 +2449,13 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-[#F4FAFF] py-16 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] max-md:py-16 md:py-28">
+        <section className="relative bg-[#F4FAFF] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
             <motion.div
               {...revealProps}
-              className="overflow-hidden rounded-[38px] border border-[#CFE0EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F4FAFF_52%,#F3F6F8_100%)] p-7 shadow-[0_34px_100px_rgba(37,49,58,0.1)] max-md:rounded-none max-md:border-0 max-md:bg-[#F4FAFF] max-md:p-0 max-md:shadow-none md:p-12"
+              className="overflow-hidden border-y border-[#CFE0EA] bg-white py-8 md:py-12"
             >
               {" "}
               <div className="max-w-[880px]">
