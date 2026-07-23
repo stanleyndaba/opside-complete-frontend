@@ -521,6 +521,291 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
     </motion.div>
   );
 }
+
+type EvidenceOrchestratorPoint = { x: number; y: number };
+
+type EvidenceOrchestratorSource = {
+  id: string;
+  name: string;
+  icon?: string;
+  shortName: string;
+  evidence: string[];
+  x: number;
+  y: number;
+  laneX: number;
+  delay: number;
+};
+
+const evidenceOrchestratorMarginNode: EvidenceOrchestratorPoint = { x: 20, y: 50 };
+const evidenceOrchestratorIntakePoint: EvidenceOrchestratorPoint = { x: 32, y: 50 };
+const evidenceOrchestratorTrunkX = 54;
+
+const evidenceOrchestratorSources: EvidenceOrchestratorSource[] = [
+  {
+    id: "amazon",
+    name: "Seller Central",
+    icon: "/amazon-logo-transparent-circle.png",
+    shortName: "Amazon",
+    evidence: ["Shipment ID", "Case ID"],
+    x: 72,
+    y: 16,
+    laneX: 58,
+    delay: 0.2,
+  },
+  {
+    id: "gmail",
+    name: "Gmail",
+    icon: "/gmailicon.png",
+    shortName: "Gmail",
+    evidence: ["Invoice", "Supplier thread"],
+    x: 62,
+    y: 31,
+    laneX: 52,
+    delay: 0.45,
+  },
+  {
+    id: "drive",
+    name: "Google Drive",
+    icon: "/gd.png",
+    shortName: "Drive",
+    evidence: ["BOL", "Packing slip"],
+    x: 86,
+    y: 29,
+    laneX: 64,
+    delay: 0.7,
+  },
+  {
+    id: "carrier",
+    name: "Carrier portal",
+    shortName: "Carrier",
+    evidence: ["POD", "Tracking"],
+    x: 78,
+    y: 56,
+    laneX: 59,
+    delay: 0.95,
+  },
+  {
+    id: "settlements",
+    name: "Settlements",
+    shortName: "Payouts",
+    evidence: ["Payout", "Ledger"],
+    x: 68,
+    y: 80,
+    laneX: 55,
+    delay: 1.2,
+  },
+];
+
+function evidenceOrchestratorRoute(source: EvidenceOrchestratorSource): EvidenceOrchestratorPoint[] {
+  return [
+    { x: source.x, y: source.y },
+    { x: source.laneX, y: source.y },
+    { x: source.laneX, y: evidenceOrchestratorMarginNode.y },
+    evidenceOrchestratorIntakePoint,
+    evidenceOrchestratorMarginNode,
+  ];
+}
+
+function evidenceOrchestratorPath(points: EvidenceOrchestratorPoint[]) {
+  return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x * 10} ${point.y * 6.4}`).join(" ");
+}
+
+function EvidenceOrchestratorSourceNode({
+  source,
+  reduceMotion,
+}: {
+  source: EvidenceOrchestratorSource;
+  reduceMotion: boolean;
+}) {
+  return (
+    <div
+      className="absolute z-30 -translate-x-1/2 -translate-y-1/2"
+      style={{ left: `${source.x}%`, top: `${source.y}%` }}
+    >
+      <motion.div
+        initial={reduceMotion ? false : { opacity: 0, x: 24, scale: 0.94 }}
+        whileInView={{ opacity: 1, x: 0, scale: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ delay: reduceMotion ? 0 : source.delay, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="flex flex-col items-center gap-1.5"
+      >
+        <div className="flex h-11 w-11 items-center justify-center rounded-[10px] border border-[#E1EAF0] bg-white shadow-[0_14px_34px_rgba(37,49,58,0.08)] sm:h-14 sm:w-14">
+          {source.icon ? (
+            <img src={source.icon} alt={source.name} className="h-[62%] w-[62%] object-contain" />
+          ) : (
+            <span className="text-[10px] font-semibold tracking-tight text-[#0B74DE]">{source.shortName}</span>
+          )}
+        </div>
+        <span className="hidden text-[10px] font-semibold tracking-tight text-[#66737F] sm:block">{source.name}</span>
+      </motion.div>
+    </div>
+  );
+}
+
+function EvidenceOrchestratorToken({
+  source,
+  label,
+  tokenIndex,
+  reduceMotion,
+}: {
+  source: EvidenceOrchestratorSource;
+  label: string;
+  tokenIndex: number;
+  reduceMotion: boolean;
+}) {
+  if (reduceMotion) return null;
+
+  const route = evidenceOrchestratorRoute(source);
+  const lastIndex = route.length - 1;
+
+  return (
+    <motion.div
+      initial={{ left: `${source.x}%`, top: `${source.y}%`, opacity: 0, scale: 0.86 }}
+      whileInView={{
+        left: route.map((point) => `${point.x}%`),
+        top: route.map((point) => `${point.y}%`),
+        opacity: route.map((_, index) => (index === 0 || index === lastIndex ? 0 : 1)),
+        scale: route.map((_, index) => (index >= lastIndex - 1 ? 0.72 : 1)),
+      }}
+      viewport={{ once: false, amount: 0.35 }}
+      transition={{
+        duration: 6.8,
+        delay: source.delay + 1.05 + tokenIndex * 0.7,
+        repeat: Infinity,
+        repeatDelay: 1.8,
+        times: route.map((_, index) => (index === lastIndex ? 1 : (index / (lastIndex - 1)) * 0.9)),
+        ease: [0.4, 0, 0.2, 1],
+      }}
+      className="pointer-events-none absolute z-40 -translate-x-1/2 -translate-y-1/2 rounded-[6px] border border-[#D9E5EC] bg-white px-2 py-1 text-[9px] font-semibold tracking-tight text-[#25313A] shadow-[0_12px_24px_rgba(37,49,58,0.08)]"
+    >
+      {label}
+    </motion.div>
+  );
+}
+
+function EvidenceSourcesOrchestrator() {
+  const prefersReducedMotion = useReducedMotion();
+  const reduceMotion = Boolean(prefersReducedMotion);
+
+  return (
+    <motion.div {...revealProps} className="mx-auto max-w-[1040px]">
+      <div className="relative overflow-hidden rounded-[26px] border border-[#E2EBF1] bg-white p-4 shadow-[0_28px_70px_rgba(37,49,58,0.08)] sm:p-6 md:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(11,116,222,0.08),transparent_30%),radial-gradient(circle_at_82%_24%,rgba(46,125,91,0.08),transparent_28%)]" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.32]"
+          style={{
+            backgroundImage: "radial-gradient(rgba(148,163,184,0.32) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+
+        <section
+          className="relative h-[420px] w-full sm:h-[520px] md:h-[600px]"
+          aria-label="Scattered reimbursement evidence organized into one Margin case"
+        >
+          <div className="absolute right-4 top-4 hidden text-[10px] font-semibold tracking-tight text-[#8A98A3] sm:block">
+            Evidence orchestration
+          </div>
+
+          <svg
+            className="pointer-events-none absolute inset-0 h-full w-full"
+            viewBox="0 0 1000 640"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <motion.path
+              d={evidenceOrchestratorPath([
+                { x: evidenceOrchestratorTrunkX, y: 16 },
+                { x: evidenceOrchestratorTrunkX, y: 84 },
+              ])}
+              fill="none"
+              stroke="#D4E0E8"
+              strokeWidth="1"
+              initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 0.72 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: reduceMotion ? 0 : 1.45, duration: 0.9, ease: "easeOut" }}
+            />
+            <motion.path
+              d={evidenceOrchestratorPath([
+                { x: evidenceOrchestratorTrunkX, y: evidenceOrchestratorMarginNode.y },
+                evidenceOrchestratorIntakePoint,
+                evidenceOrchestratorMarginNode,
+              ])}
+              fill="none"
+              stroke="#AFC5D4"
+              strokeWidth="1.2"
+              initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 0.9 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: reduceMotion ? 0 : 1.6, duration: 0.9, ease: "easeOut" }}
+            />
+
+            {evidenceOrchestratorSources.map((source) => (
+              <motion.path
+                key={source.id}
+                d={evidenceOrchestratorPath(evidenceOrchestratorRoute(source).slice(0, -1))}
+                fill="none"
+                stroke="#C9D9E4"
+                strokeWidth="1"
+                initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 0.66 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ delay: reduceMotion ? 0 : source.delay + 0.35, duration: 0.95, ease: "easeOut" }}
+              />
+            ))}
+
+            {Array.from(new Set([evidenceOrchestratorTrunkX, ...evidenceOrchestratorSources.map((source) => source.laneX)])).map((x) => (
+              <circle key={x} cx={x * 10} cy={evidenceOrchestratorMarginNode.y * 6.4} r="3.5" fill="white" stroke="#AFC5D4" strokeWidth="1" />
+            ))}
+          </svg>
+
+          <div
+            className="absolute z-50 -translate-x-1/2 -translate-y-1/2"
+            style={{ left: `${evidenceOrchestratorMarginNode.x}%`, top: `${evidenceOrchestratorMarginNode.y}%` }}
+          >
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.86 }}
+              whileInView={{
+                opacity: 1,
+                scale: reduceMotion ? 1 : [1, 1, 1.06, 1],
+                borderColor: reduceMotion ? "#D8E3EA" : ["#D8E3EA", "#D8E3EA", "#0B74DE", "#D8E3EA"],
+              }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{
+                opacity: { delay: reduceMotion ? 0 : 0.1, duration: 0.45, ease: "easeOut" },
+                scale: { delay: reduceMotion ? 0 : 4.5, duration: 0.8 },
+                borderColor: { delay: reduceMotion ? 0 : 4.5, duration: 0.8 },
+              }}
+              className="flex h-20 w-20 items-center justify-center rounded-[18px] border bg-white shadow-[0_22px_56px_rgba(37,49,58,0.12)] sm:h-24 sm:w-24"
+            >
+              <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain sm:h-9" />
+            </motion.div>
+            <div className="absolute -bottom-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold tracking-tight text-[#66737F] sm:block">
+              Margin case file
+            </div>
+          </div>
+
+          {evidenceOrchestratorSources.map((source) => (
+            <EvidenceOrchestratorSourceNode key={source.id} source={source} reduceMotion={reduceMotion} />
+          ))}
+
+          {evidenceOrchestratorSources.flatMap((source) =>
+            source.evidence.map((label, tokenIndex) => (
+              <EvidenceOrchestratorToken
+                key={`${source.id}-${label}-${tokenIndex}`}
+                source={source}
+                label={label}
+                tokenIndex={tokenIndex}
+                reduceMotion={reduceMotion}
+              />
+            )),
+          )}
+        </section>
+      </div>
+    </motion.div>
+  );
+}
 function KineticHeroSection({
   onEarlyAccessCta,
   isFull,
@@ -1540,7 +1825,7 @@ export default function Index() {
               </p>{" "}
             </div>{" "}
             <div className="mt-7 md:mt-9">
-              <IntegrationsCarousel isMobileLayout={isMobileLayout} />
+              <EvidenceSourcesOrchestrator />
             </div>{" "}
             <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
               {" "}
