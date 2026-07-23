@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { Forward } from 'lucide-react';
 
 type AuditLine = {
   id: string;
@@ -166,13 +167,9 @@ const AuditSimulate = () => {
         <header className="border-b border-[#DCE8EE] px-4 py-2.5 sm:px-6 lg:px-7 lg:py-3">
           <div className="mb-2 flex items-center justify-between border-b border-[#E8EFF3] pb-2">
             <div className="flex items-center gap-2.5">
-              <div className="relative h-5 w-8 shrink-0">
-                <span className="absolute left-0 top-[3px] h-1.5 w-5 rounded-[2px] bg-[#182026]" />
-                <span className="absolute left-3 top-[11px] h-1.5 w-5 rounded-[2px] bg-[#182026]" />
-              </div>
+              <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
               <span
-                className="text-[16px] font-semibold leading-none tracking-[-0.03em] text-[#182026]"
-                style={{ fontFamily: 'Merriweather, Georgia, serif' }}
+                className="brand-wordmark font-merriweather text-base leading-none tracking-tight text-[#182026] md:text-lg"
               >
                 Margin
               </span>
@@ -187,8 +184,9 @@ const AuditSimulate = () => {
               </button>
               <button
                 type="button"
-                className="h-7 border border-[#182026] bg-[#182026] px-3 font-mono text-[10px] font-medium tracking-tight text-white transition-colors hover:bg-[#25313A]"
+                className="inline-flex h-7 items-center gap-1.5 border border-[#182026] bg-[#182026] px-3 font-mono text-[10px] font-medium tracking-tight text-white transition-colors hover:bg-[#25313A]"
               >
+                <Forward className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
                 Export
               </button>
             </div>
