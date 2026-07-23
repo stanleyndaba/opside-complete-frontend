@@ -1,13 +1,12 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { AlertTriangle, CheckCircle2, FileSearch, ScanLine } from 'lucide-react';
 
 type AuditLine = {
   id: string;
   time: string;
   title: string;
   detail: string;
-  amount: string;
-  severity: 'high' | 'medium' | 'watch';
+  amount: number;
+  severity: 'priority' | 'review' | 'watch';
 };
 
 const auditLines: AuditLine[] = [
@@ -16,39 +15,39 @@ const auditLines: AuditLine[] = [
     time: '00:03',
     title: 'Inbound shipment shortage detected',
     detail: 'Shipment record shows 36 units sent. Amazon receiving shows 32 units checked in.',
-    amount: '$184.72',
-    severity: 'high',
+    amount: 184.72,
+    severity: 'priority',
   },
   {
     id: 'RFD-16882-XFER',
     time: '00:07',
     title: 'Warehouse transfer loss surfaced',
     detail: 'Transfer movement closed without matching inventory arrival event at destination FC.',
-    amount: '$312.18',
-    severity: 'high',
+    amount: 312.18,
+    severity: 'priority',
   },
   {
     id: 'RFD-16865-DMG',
     time: '00:11',
     title: 'Damaged inventory gap found',
     detail: 'Inventory adjustment references damaged units, but no reimbursement was posted in settlements.',
-    amount: '$96.44',
-    severity: 'medium',
+    amount: 96.44,
+    severity: 'review',
   },
   {
     id: 'RFD-16891-SET',
     time: '00:15',
     title: 'Settlement mismatch identified',
     detail: 'Approved reimbursement amount does not reconcile with the payout line on the seller ledger.',
-    amount: '$227.09',
-    severity: 'medium',
+    amount: 227.09,
+    severity: 'review',
   },
   {
     id: 'RFD-16904-PRF',
     time: '00:19',
     title: 'Evidence gap before filing',
     detail: 'Invoice is available in Gmail, but shipment ID and SKU mapping still need to be attached.',
-    amount: '$418.60',
+    amount: 418.6,
     severity: 'watch',
   },
   {
@@ -56,15 +55,15 @@ const auditLines: AuditLine[] = [
     time: '00:23',
     title: 'Carrier proof matched',
     detail: 'Signed delivery proof, BOL, and Amazon receiving event now point to the same case.',
-    amount: '$739.25',
-    severity: 'high',
+    amount: 739.25,
+    severity: 'priority',
   },
   {
     id: 'RFD-16922-FEE',
     time: '00:27',
     title: 'Fee recovery candidate queued',
     detail: 'Referral fee and FBA fee charges exceed the expected category and dimensional weight profile.',
-    amount: '$52.81',
+    amount: 52.81,
     severity: 'watch',
   },
   {
@@ -72,53 +71,85 @@ const auditLines: AuditLine[] = [
     time: '00:31',
     title: 'Amazon reply requires action',
     detail: 'Support asked for supplier invoice and shipment proof. Margin found both in connected evidence.',
-    amount: '$301.76',
-    severity: 'high',
+    amount: 301.76,
+    severity: 'priority',
   },
 ];
 
 const severityStyles = {
-  high: 'border-[#B91C1C]/20 bg-[#FFF5F5] text-[#B91C1C]',
-  medium: 'border-[#C87900]/20 bg-[#FFF8EA] text-[#A35B00]',
-  watch: 'border-[#1D4ED8]/20 bg-[#F3F7FF] text-[#1D4ED8]',
+  priority: {
+    label: 'Priority',
+    marker: 'bg-[#7A2638]',
+    text: 'text-[#F2C9D0]',
+  },
+  review: {
+    label: 'Review',
+    marker: 'bg-[#B58A32]',
+    text: 'text-[#E9D3A0]',
+  },
+  watch: {
+    label: 'Watch',
+    marker: 'bg-[#66717D]',
+    text: 'text-[#C2C9D0]',
+  },
 };
 
-const severityLabels = {
-  high: 'High priority',
-  medium: 'Review',
-  watch: 'Watchlist',
-};
-
-const totalExposure = auditLines.reduce((sum, line) => sum + Number(line.amount.replace(/[$,]/g, '')), 0);
+const totalExposure = auditLines.reduce((sum, line) => sum + line.amount, 0);
 const auditFeed = [...auditLines, ...auditLines];
 
-function AuditRow({ line, index, reduceMotion, compact = false }: { line: AuditLine; index: number; reduceMotion: boolean; compact?: boolean }) {
+const formatExposure = (amount: number) =>
+  `USD ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+function AuditRow({
+  line,
+  index,
+  reduceMotion,
+}: {
+  line: AuditLine;
+  index: number;
+  reduceMotion: boolean;
+}) {
+  const severity = severityStyles[line.severity];
+
   return (
     <motion.li
-      initial={reduceMotion ? false : { opacity: 0, y: 18, filter: 'blur(6px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ delay: reduceMotion ? 0 : 0.18 + Math.min(index, auditLines.length - 1) * 0.18, duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-      className="grid gap-3 border-b border-[#E6EDF4] px-4 py-3 last:border-b-0 sm:grid-cols-[60px_1fr_92px] sm:px-5"
+      initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        delay: reduceMotion ? 0 : 0.14 + Math.min(index, auditLines.length - 1) * 0.14,
+        duration: 0.44,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="grid border-b border-white/[0.08] px-5 py-4 sm:grid-cols-[72px_minmax(0,1fr)_150px] sm:px-8"
     >
-      <div className="flex items-center gap-3 sm:block">
-        <span className="block font-mono text-xs font-semibold text-[#7A8897]">{line.time}</span>
-        <span className="mt-1.5 hidden h-1.5 w-1.5 rounded-full bg-[#1473E6] sm:block" />
+      <div className="font-mono text-[11px] font-medium text-[#8B96A1] sm:pt-1">
+        {line.time}
       </div>
 
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="font-mono text-[11px] font-semibold text-[#536171]">{line.id}</span>
-          <span className={`rounded-[3px] border px-1.5 py-0.5 text-[10px] font-semibold ${severityStyles[line.severity]}`}>
-            {severityLabels[line.severity]}
-          </span>
+      <div className="relative min-w-0 sm:border-l sm:border-white/[0.1] sm:pl-7">
+        <span className={`absolute -left-[4.5px] top-1.5 hidden h-2 w-2 ${severity.marker} sm:block`} />
+        <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-tight">
+          <span className="text-[#AAB3BD]">{line.id}</span>
+          <span className={severity.text}>{severity.label}</span>
         </div>
-        <h2 className="mt-1 text-base font-semibold tracking-tight text-[#182026] sm:text-lg">{line.title}</h2>
-        <p className={`mt-0.5 max-w-3xl text-sm leading-5 text-[#536171] ${compact ? 'line-clamp-1' : ''}`}>{line.detail}</p>
+        <h2
+          className="mt-1.5 text-[18px] font-semibold leading-tight tracking-[-0.02em] text-[#F7F4EE] sm:text-[20px]"
+          style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+        >
+          {line.title}
+        </h2>
+        <p className="mt-1 max-w-3xl text-[13px] leading-6 text-[#A5AFB8] sm:text-[14px]">
+          {line.detail}
+        </p>
       </div>
 
-      <div className="flex items-center justify-between gap-3 sm:block sm:text-right">
-        <span className="text-[10px] font-semibold uppercase tracking-tight text-[#7A8897]">Exposure</span>
-        <strong className="block text-lg font-semibold tracking-tight text-[#182026]">{line.amount}</strong>
+      <div className="mt-3 border-t border-white/[0.08] pt-3 sm:mt-0 sm:border-t-0 sm:pt-1 sm:text-right">
+        <span className="font-mono text-[10px] uppercase tracking-tight text-[#8B96A1]">
+          Exposure
+        </span>
+        <strong className="mt-1 block font-mono text-[14px] font-medium tracking-tight text-[#F7F4EE]">
+          {formatExposure(line.amount)}
+        </strong>
       </div>
     </motion.li>
   );
@@ -127,102 +158,116 @@ function AuditRow({ line, index, reduceMotion, compact = false }: { line: AuditL
 const AuditSimulate = () => {
   const prefersReducedMotion = useReducedMotion();
   const reduceMotion = Boolean(prefersReducedMotion);
+  const visibleFeed = reduceMotion ? auditLines : auditFeed;
 
   return (
-    <main className="h-screen overflow-hidden bg-[#F4F8FC] px-3 py-3 font-sans text-[#182026] sm:px-5">
-      <section className="mx-auto flex h-full w-full max-w-6xl flex-col rounded-[14px] border border-[#D8E4EF] bg-white shadow-[0_24px_70px_rgba(24,32,38,0.08)]">
-        <header className="shrink-0 border-b border-[#E6EDF4] px-4 py-4 sm:px-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <main className="h-screen overflow-hidden bg-[#07111D] p-3 text-[#F7F4EE] sm:p-6">
+      <section className="mx-auto grid h-full w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] border border-white/[0.12] bg-[#0A1422]">
+        <header className="border-b border-white/[0.1] px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-end">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-[3px] border border-[#CFE0F1] bg-[#F7FBFF] px-2 py-0.5 text-[11px] font-semibold text-[#1473E6]">
-                <ScanLine className="h-3 w-3" />
-                Recovery audit running
-              </div>
-              <h1 className="mt-2 max-w-3xl text-3xl font-semibold leading-[0.96] tracking-tight text-[#182026] sm:text-5xl">
+              <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#9CA7B3]">
                 Amazon recovery evaluation
+              </div>
+              <h1
+                className="mt-3 max-w-4xl text-[38px] font-semibold leading-[0.96] tracking-[-0.045em] text-[#F7F4EE] sm:text-[54px] lg:text-[68px]"
+                style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+              >
+                Recovery audit running
               </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#536171] sm:text-base">
+              <p className="mt-4 max-w-2xl text-[14px] leading-7 text-[#A5AFB8] sm:text-[15px]">
                 Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
               </p>
             </div>
 
-            <div className="grid min-w-[168px] grid-cols-2 gap-1 rounded-[4px] border border-[#D8E4EF] bg-[#FBFDFF] p-1">
-              <div className="rounded-[3px] bg-white px-2 py-1.5">
-                <span className="text-[9px] font-semibold uppercase tracking-tight text-[#7A8897]">Scope value</span>
-                <strong className="mt-0.5 block text-base font-semibold tracking-tight text-[#182026]">
-                  ${totalExposure.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <div className="grid grid-cols-2 border border-white/[0.1] bg-white/[0.035]">
+              <div className="border-r border-white/[0.1] p-4 sm:p-5">
+                <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+                  Scope value
+                </span>
+                <strong className="mt-2 block font-mono text-[18px] font-medium tracking-[-0.03em] text-[#F7F4EE] sm:text-[21px]">
+                  {formatExposure(totalExposure)}
                 </strong>
               </div>
-              <div className="rounded-[3px] bg-white px-2 py-1.5">
-                <span className="text-[9px] font-semibold uppercase tracking-tight text-[#7A8897]">Scope</span>
-                <strong className="mt-0.5 block text-base font-semibold tracking-tight text-[#182026]">{auditLines.length}</strong>
+              <div className="p-4 sm:p-5">
+                <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+                  Scope
+                </span>
+                <strong className="mt-2 block font-mono text-[18px] font-medium tracking-[-0.03em] text-[#F7F4EE] sm:text-[21px]">
+                  {auditLines.length}
+                </strong>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="grid min-h-0 flex-1 lg:grid-cols-[1fr_286px]">
+        <div className="grid min-h-0 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div className="relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 bg-gradient-to-b from-white to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-10 bg-gradient-to-t from-white to-transparent" />
-            <motion.ul
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-gradient-to-b from-[#0A1422] to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-gradient-to-t from-[#0A1422] to-transparent" />
+            <motion.ol
               className="relative"
               animate={reduceMotion ? undefined : { y: ['0%', '-50%'] }}
-              transition={reduceMotion ? undefined : { duration: 19, ease: 'linear', repeat: Infinity }}
+              transition={reduceMotion ? undefined : { duration: 24, ease: 'linear', repeat: Infinity }}
             >
-              {auditFeed.map((line, index) => (
-                <AuditRow key={`${line.id}-${index}`} line={line} index={index} reduceMotion={reduceMotion} compact />
+              {visibleFeed.map((line, index) => (
+                <AuditRow
+                  key={`${line.id}-${index}`}
+                  line={line}
+                  index={index}
+                  reduceMotion={reduceMotion}
+                />
               ))}
-            </motion.ul>
+            </motion.ol>
           </div>
 
-          <aside className="shrink-0 border-t border-[#E6EDF4] bg-[#FBFDFF] p-4 lg:border-l lg:border-t-0">
-            <div className="sticky top-4 space-y-3">
-              <div className="rounded-[6px] border border-[#D8E4EF] bg-white p-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-[5px] bg-[#EEF6FF] text-[#1473E6]">
-                    <FileSearch className="h-4.5 w-4.5" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold tracking-tight text-[#182026]">Audit scope</p>
-                    <p className="text-xs text-[#6B7787]">Evidence and account movement</p>
-                  </div>
+          <aside className="border-t border-white/[0.1] bg-[#08111D] px-5 py-6 sm:px-7 lg:border-l lg:border-t-0">
+            <div className="space-y-8">
+              <div>
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+                  Audit scope
                 </div>
-                <div className="mt-3 space-y-2 text-sm text-[#536171]">
-                  <p>Inbound shipment shortages</p>
-                  <p>Inventory adjustment gaps</p>
-                  <p>Settlement mismatches</p>
-                  <p>Amazon reply requirements</p>
+                <h2
+                  className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[#F7F4EE]"
+                  style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+                >
+                  Evidence and account movement
+                </h2>
+              </div>
+
+              <div className="border-y border-white/[0.1] py-5">
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8B96A1]">
+                  Findings
                 </div>
+                <ul className="mt-4 space-y-3 text-[14px] leading-6 text-[#C2C9D0]">
+                  <li>Inbound shipment shortages</li>
+                  <li>Inventory adjustment gaps</li>
+                  <li>Settlement mismatches</li>
+                  <li>Amazon reply requirements</li>
+                </ul>
               </div>
 
               <motion.div
                 initial={reduceMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: reduceMotion ? 0 : 5.4, duration: 0.45 }}
-                className="rounded-[6px] border border-[#B8E1CE] bg-[#F3FCF7] p-3"
+                transition={{ delay: reduceMotion ? 0 : 3.2, duration: 0.45 }}
+                className="bg-[#10201A] p-5"
               >
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 text-[#128A55]" />
-                  <div>
-                    <p className="text-sm font-semibold tracking-tight text-[#0F5E3C]">Evidence map forming</p>
-                    <p className="mt-1 text-sm leading-5 text-[#36624F]">
-                      Findings are being grouped by case so the seller can see what is recoverable, what is missing, and what needs approval.
-                    </p>
-                  </div>
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#7FAC95]">
+                  Status: Evidence map forming
                 </div>
+                <p className="mt-3 text-[14px] leading-6 text-[#C7D8D0]">
+                  Findings are being grouped by case so the seller can see what is recoverable, what is missing, and what needs approval.
+                </p>
               </motion.div>
 
-              <div className="rounded-[6px] border border-[#F3D2A3] bg-[#FFF9EF] p-3">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="mt-0.5 h-4.5 w-4.5 text-[#C87900]" />
-                  <div>
-                    <p className="text-sm font-semibold tracking-tight text-[#7A4700]">Seller approval stays required</p>
-                    <p className="mt-1 text-sm leading-5 text-[#795D35]">
-                      Margin prepares the path. The seller decides what moves forward.
-                    </p>
-                  </div>
+              <div className="border-l-2 border-[#B58A32] pl-4">
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#D7BE82]">
+                  Seller approval stays required
                 </div>
+                <p className="mt-3 text-[14px] leading-6 text-[#C2C9D0]">
+                  Margin prepares the path. The seller decides what moves.
+                </p>
               </div>
             </div>
           </aside>
