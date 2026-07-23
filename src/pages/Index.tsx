@@ -895,7 +895,7 @@ function RecoveryPreviewSection() {
             <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
-                  className="h-full w-full scale-[1.018] object-cover"
+                  className="h-full w-full translate-x-[-0.45%] scale-[1.026] object-cover"
                   src={RECOVERY_PREVIEW_VIDEO_URL}
                   aria-label="Margin 10-second recovery preview"
                   autoPlay
