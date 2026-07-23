@@ -163,7 +163,37 @@ const AuditSimulate = () => {
   return (
     <main className="flex h-screen items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
       <section className="mx-auto grid h-[calc(100vh-96px)] max-h-[540px] min-h-[430px] w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] border border-[#CFE0EA] bg-white">
-        <header className="border-b border-[#DCE8EE] px-4 py-3 sm:px-6 lg:px-7 lg:py-4">
+        <header className="border-b border-[#DCE8EE] px-4 py-2.5 sm:px-6 lg:px-7 lg:py-3">
+          <div className="mb-2 flex items-center justify-between border-b border-[#E8EFF3] pb-2">
+            <div className="flex items-center gap-2.5">
+              <div className="relative h-5 w-8 shrink-0">
+                <span className="absolute left-0 top-[3px] h-1.5 w-5 rounded-[2px] bg-[#182026]" />
+                <span className="absolute left-3 top-[11px] h-1.5 w-5 rounded-[2px] bg-[#182026]" />
+              </div>
+              <span
+                className="text-[16px] font-semibold leading-none tracking-[-0.03em] text-[#182026]"
+                style={{ fontFamily: 'Merriweather, Georgia, serif' }}
+              >
+                Margin
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="h-7 border border-[#DCE8EE] bg-white px-3 font-mono text-[10px] font-medium tracking-tight text-[#25313A] transition-colors hover:bg-[#F8FAFC]"
+              >
+                File
+              </button>
+              <button
+                type="button"
+                className="h-7 border border-[#182026] bg-[#182026] px-3 font-mono text-[10px] font-medium tracking-tight text-white transition-colors hover:bg-[#25313A]"
+              >
+                Export
+              </button>
+            </div>
+          </div>
+
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
             <div>
               <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
