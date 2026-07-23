@@ -161,8 +161,8 @@ const AuditSimulate = () => {
   const visibleFeed = reduceMotion ? auditLines : auditFeed;
 
   return (
-    <main className="h-screen overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
-      <section className="mx-auto grid h-full w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] border border-[#CFE0EA] bg-white">
+    <main className="flex h-screen items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="mx-auto grid h-[calc(100vh-96px)] max-h-[540px] min-h-[430px] w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] border border-[#CFE0EA] bg-white">
         <header className="border-b border-[#DCE8EE] px-4 py-3 sm:px-6 lg:px-7 lg:py-4">
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
             <div>
