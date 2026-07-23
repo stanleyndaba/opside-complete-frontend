@@ -33,6 +33,7 @@ import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
+const REPLIES_PREVIEW_VIDEO_URL = "/Replies.mp4";
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: "bg-blue-400", delay: 0.1, duration: 3.6 },
   { x: 18, y: 54, size: 7, color: "bg-emerald-400", delay: 1.4, duration: 4.2 },
@@ -905,6 +906,43 @@ function RecoveryPreviewSection() {
                 />
               </div>
             </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RepliesPreviewSection() {
+  return (
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
+      <div className={containerClass}>
+        <div className="grid gap-7 lg:grid-cols-[1.38fr_0.62fr] lg:items-center lg:gap-12">
+          <motion.div {...revealProps} className="relative order-2 lg:order-1">
+            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full object-cover"
+                  src={REPLIES_PREVIEW_VIDEO_URL}
+                  aria-label="Margin Amazon replies management preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div {...revealProps} className="order-1 max-w-[500px] lg:order-2 lg:justify-self-end">
+            <div className={sectionLabelClass}>Reply management</div>
+            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+              Recovery doesn't end when Amazon replies.
+            </h2>
+            <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              <strong className="font-semibold text-[#182026]">Margin keeps every Amazon response, document request, rejection, and approval connected to the same recovery until the case is resolved.</strong>
+            </p>
           </motion.div>
         </div>
       </div>
@@ -1847,6 +1885,7 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
+        <RepliesPreviewSection />{" "}
         <section
           className="hidden relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24"
           id="margin-demo"
