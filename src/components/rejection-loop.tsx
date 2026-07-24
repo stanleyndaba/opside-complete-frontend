@@ -6,6 +6,7 @@ import { animate, AnimatePresence, motion } from 'framer-motion';
 type WorkflowEvent = {
   id: string;
   owner: 'amazon' | 'margin';
+  code: string;
   label: string;
   body?: string;
   steps?: string[];
@@ -17,117 +18,48 @@ const WORKFLOW: WorkflowEvent[] = [
   {
     id: 'rejection',
     owner: 'amazon',
-    label: 'Amazon Support: Please provide proof of delivery and invoice.',
-    body: 'Case paused until the missing support is returned.',
+    code: 'AMZ-REPLY-01',
+    label: 'Amazon response received',
+    body: 'Support requested proof of delivery, invoice support, and transaction detail before review can continue.',
     delay: 500,
   },
   {
     id: 'analysis',
     owner: 'margin',
-    label: 'Margin: Response Review',
-    steps: ['POD already linked', 'Invoice already linked', 'Quantity variance explanation added'],
+    code: 'MARGIN-ANALYSIS',
+    label: 'Rejection converted into case data',
+    steps: ['Request classified as evidence gap', 'POD already linked to shipment', 'Invoice already linked to cost basis'],
     delay: 2100,
   },
   {
     id: 'protocol',
     owner: 'margin',
-    label: 'Margin: Evidence Pack Updated',
-    steps: ['Evidence pack updated', 'Response ready', 'Supporting records re-checked against the case'],
+    code: 'SECOND-STRIKE',
+    label: 'Second filing strategy prepared',
+    steps: ['Quantity variance explanation added', 'Amazon reply requirements mapped to records', 'Evidence pack rebuilt for the next response'],
     delay: 4000,
     emphasis: 'hero',
   },
   {
     id: 'resubmission',
     owner: 'margin',
-    label: 'Margin: Resubmission Sent',
-    steps: ['Boilerplate request answered', 'Reply routed back to Amazon', 'Support fatigue avoided'],
+    code: 'RESUBMIT',
+    label: 'Bolstered dispute response ready',
+    steps: ['Proof packet updated', 'Response language prepared', 'Case routed back with matched support'],
     delay: 6100,
   },
   {
     id: 'approval',
     owner: 'amazon',
-    label: 'Refund Approved',
-    body: 'Initiated to Seller Balance.',
+    code: 'OUTCOME',
+    label: 'Reimbursement approved',
+    body: 'Recovered value initiated to Seller Balance after the follow-up response.',
     delay: 8200,
     emphasis: 'win',
   },
 ];
 
 const spring = { type: 'spring' as const, stiffness: 260, damping: 28 };
-
-/* ── Buzzing platform icons ────────────────────────────── */
-const PLATFORM_ICONS = [
-  {
-    id: 'amazon-badge',
-    icon: '/amazon-logo-transparent-circle.png',
-    alt: 'Amazon',
-    size: 52,
-    buzzDelay: 0,
-  },
-  {
-    id: 'margin-badge',
-    icon: '/logoimagetwo.png',
-    alt: 'Margin',
-    size: 62,
-    buzzDelay: 0.7,
-  },
-  {
-    id: 'gmail-badge',
-    icon: '/gmailicon.png',
-    alt: 'Gmail',
-    size: 52,
-    buzzDelay: 0.35,
-  },
-];
-
-function BuzzingIcons() {
-  return (
-    <div className="flex items-center gap-3">
-      {PLATFORM_ICONS.map((platform) => (
-        <motion.div
-          key={platform.id}
-          initial={{ opacity: 0, scale: 0.5, y: 12 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            y: [0, -5, 0, -3, 0],
-            rotate: [0, -2, 0, 2, 0],
-          }}
-          transition={{
-            opacity: { delay: 0.3 + platform.buzzDelay, duration: 0.45, ease: 'easeOut' },
-            scale: { delay: 0.3 + platform.buzzDelay, duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-            y: {
-              delay: 1.2 + platform.buzzDelay,
-              duration: 3.2,
-              repeat: Infinity,
-              repeatType: 'loop',
-              ease: 'easeInOut',
-            },
-            rotate: {
-              delay: 1.4 + platform.buzzDelay,
-              duration: 3.8,
-              repeat: Infinity,
-              repeatType: 'loop',
-              ease: 'easeInOut',
-            },
-          }}
-          className="flex items-center justify-center rounded-2xl border border-[#E6E9EE] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
-          style={{
-            width: platform.size,
-            height: platform.size,
-          }}
-        >
-          <img
-            src={platform.icon}
-            alt={platform.alt}
-            className="h-[58%] w-[58%] object-contain"
-            draggable={false}
-          />
-        </motion.div>
-      ))}
-    </div>
-  );
-}
 
 /* ── Counter animation ─────────────────────────────────── */
 function CountUpCurrency({ start }: { start: boolean }) {
@@ -161,98 +93,158 @@ function CountUpCurrency({ start }: { start: boolean }) {
 function WorkflowItem({
   event,
   isVisible,
+  index,
 }: {
   event: WorkflowEvent;
   isVisible: boolean;
+  index: number;
 }) {
   const isHero = event.emphasis === 'hero';
   const isWin = event.emphasis === 'win';
+  const isAmazon = event.owner === 'amazon';
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 14, filter: 'blur(8px)' }}
+      initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       exit={{ opacity: 0, y: -10 }}
       transition={spring}
-      className="relative"
+      className="relative grid grid-cols-[48px_1fr_118px] gap-4 border-b border-[#DCE8EE] py-3 last:border-b-0"
     >
-      <motion.div
-        whileInView={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0.94, y: 4 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.35, ease: 'easeOut' }}
-      >
-        <div className="min-w-0">
-          <p
-            className={
-              isWin
-                ? 'text-lg font-medium tracking-tight text-[#242424] sm:text-xl'
-                : isHero
-                  ? 'text-sm font-medium tracking-tight text-[#242424] sm:text-base'
-                  : event.owner === 'amazon'
-                    ? 'text-sm font-normal text-[#8B95A5]'
-                    : 'text-sm font-medium text-[#242424]'
-            }
-          >
-            {event.label}
-          </p>
+      <div className="font-mono text-[10px] text-[#8A99A4]">{`00:${String(index * 4 + 3).padStart(2, '0')}`}</div>
 
-          {isWin ? (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                textShadow: [
-                  '0 0 0 rgba(58,170,120,0)',
-                  '0 0 16px rgba(58,170,120,0.18)',
-                  '0 0 10px rgba(58,170,120,0.1)',
-                ],
-              }}
-              transition={{ delay: 0.18, duration: 0.75, ease: 'easeOut' }}
-              className="mt-0.5 text-lg font-bold tracking-tight text-[#242424] sm:text-[1.25rem] leading-none"
-            >
-              <CountUpCurrency start={isVisible} />
-              <p className="mt-0.5 text-sm font-normal text-[#8B95A5]">{event.body}</p>
-            </motion.div>
-          ) : (
-            event.body && <p className="mt-1.5 text-sm leading-6 text-[#6F7785]">{event.body}</p>
-          )}
-
-          {event.steps && (
-            <motion.ul
-              className="mt-1.5 space-y-1"
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.45 }}
-              variants={{
-                hidden: {},
-                show: {
-                  transition: {
-                    staggerChildren: 0.1,
-                  },
-                },
-              }}
-            >
-              {event.steps.map((step) => (
-                <motion.li
-                  key={step}
-                  variants={{
-                    hidden: { opacity: 0, y: 8 },
-                    show: { opacity: 1, y: 0 },
-                  }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
-                  className="flex items-center gap-2.5 text-sm leading-5 text-[#6F7785]"
-                >
-                  <span className="h-px w-4 bg-[#D7DCE4]" />
-                  {step}
-                </motion.li>
-              ))}
-            </motion.ul>
-          )}
+      <div className="min-w-0">
+        <div className="mb-1 flex items-center gap-2">
+          <span
+            className={`h-2 w-2 ${isAmazon ? 'bg-[#8A99A4]' : isHero ? 'bg-[#0B74DE]' : 'bg-[#2F8A62]'}`}
+          />
+          <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
+            {event.code}
+          </span>
         </div>
-      </motion.div>
+
+        <p
+          className={
+            isWin
+              ? 'text-[17px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]'
+              : isHero
+                ? 'text-[15px] font-semibold leading-tight tracking-[-0.03em] text-[#182026]'
+                : isAmazon
+                  ? 'text-[14px] font-medium leading-tight text-[#4D5B66]'
+                  : 'text-[14px] font-semibold leading-tight text-[#182026]'
+          }
+          style={isWin || isHero ? { fontFamily: 'Georgia, Merriweather, serif' } : undefined}
+        >
+          {event.label}
+        </p>
+
+        {isWin ? (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              textShadow: [
+                '0 0 0 rgba(47,138,98,0)',
+                '0 0 14px rgba(47,138,98,0.16)',
+                '0 0 8px rgba(47,138,98,0.08)',
+              ],
+            }}
+            transition={{ delay: 0.18, duration: 0.7, ease: 'easeOut' }}
+            className="mt-1 text-[15px] font-semibold leading-tight tracking-tight text-[#182026]"
+          >
+            <CountUpCurrency start={isVisible} />
+            <p className="mt-1 text-[12px] font-normal leading-5 text-[#66737F]">{event.body}</p>
+          </motion.div>
+        ) : (
+          event.body && <p className="mt-1 text-[12px] leading-5 text-[#66737F]">{event.body}</p>
+        )}
+
+        {event.steps && (
+          <motion.ul
+            className="mt-2 grid gap-1"
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: {},
+              show: {
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+          >
+            {event.steps.map((step) => (
+              <motion.li
+                key={step}
+                variants={{
+                  hidden: { opacity: 0, x: -8 },
+                  show: { opacity: 1, x: 0 },
+                }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="flex items-center gap-2 text-[12px] leading-5 text-[#4D5B66]"
+              >
+                <span className="h-px w-4 bg-[#AEBAC5]" />
+                {step}
+              </motion.li>
+            ))}
+          </motion.ul>
+        )}
+      </div>
+
+      <div className="text-right">
+        <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8A99A4]">
+          {isWin ? 'outcome' : isAmazon ? 'pushback' : 'strategy'}
+        </span>
+        {isHero && (
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.55, ease: 'easeOut' }}
+            className="mt-2 h-px origin-right bg-[#0B74DE]"
+          />
+        )}
+      </div>
     </motion.article>
+  );
+}
+
+function StrategicSummary({ isComplete }: { isComplete: boolean }) {
+  return (
+    <aside className="border-l border-[#DCE8EE] bg-[#F8FAFC] p-4">
+      <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Rejection intelligence</p>
+      <h2
+        className="mt-2 text-[18px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
+        style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+      >
+        Rejection becomes the next filing strategy
+      </h2>
+      <div className="mt-5 border-y border-[#DCE8EE] py-3">
+        <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin reads</p>
+        <ul className="mt-3 space-y-2 text-[12px] leading-5 text-[#33404A]">
+          <li>Amazon proof requests</li>
+          <li>Missing evidence signals</li>
+          <li>Case-thread blockers</li>
+          <li>Response fatigue patterns</li>
+        </ul>
+      </div>
+      <AnimatePresence>
+        {isComplete && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-4 border border-[#DCE8EE] bg-white p-3"
+          >
+            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Status: response ready</p>
+            <p className="mt-2 text-[12px] leading-5 text-[#4D5B66]">
+              Margin does not treat the rejection as finality. It turns the reply into a checklist,
+              rebuilds the evidence pack, and prepares the case for the next filing move.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </aside>
   );
 }
 
@@ -278,37 +270,42 @@ export default function RejectionLoop() {
   const visibleEvents = WORKFLOW.slice(0, visibleCount);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F6F7F9] p-4 font-sans text-[#242424] sm:p-8">
-      <section className="relative flex h-[min(420px,calc(100vh-32px))] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-[#E6E9EE] bg-white shadow-[0_20px_60px_rgba(17,24,39,0.06),0_4px_16px_rgba(17,24,39,0.03)]">
-        {/* Soft radial overlay – warmer tone */}
-        <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_80%_8%,rgba(66,133,244,0.04),transparent_40%),radial-gradient(circle_at_20%_90%,rgba(58,170,120,0.03),transparent_35%)]" />
-
-        {/* ── Header with buzzing icons ── */}
-        <header className="relative flex items-center justify-between border-b border-[#EAECF0] px-6 py-3 sm:px-8 sm:py-4">
-          <div>
-            <h1 className="text-base font-semibold tracking-tight text-[#1A1D23]">Amazon Pushback Loop</h1>
-            <p className="mt-0.5 text-sm text-[#8B95A5]">Analyzing responses and advancing the case</p>
+    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 font-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="flex h-[calc(100dvh-88px)] max-h-[540px] w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
+        <header className="flex shrink-0 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
+          <div className="min-w-0">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Amazon pushback review</p>
+            <h1
+              className="mt-1 text-[19px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
+              style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+            >
+              Margin turns rejection into strategy
+            </h1>
+            <p className="mt-1 max-w-2xl text-[12px] leading-5 text-[#66737F]">
+              Amazon asks again. Margin reads the blocker, binds the missing support, and prepares the next filing response.
+            </p>
           </div>
-
-          {/* Buzzing platform badges */}
-          <BuzzingIcons />
+          <div className="hidden items-center gap-3 sm:flex">
+            <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-9 w-9 object-contain" draggable={false} />
+            <div className="h-px w-16 bg-[#DCE8EE]" />
+            <img src="/logoimagetwo.png" alt="Margin" className="h-11 w-11 object-contain" draggable={false} />
+          </div>
         </header>
 
-
-
-        {/* ── Event stream ── */}
-        <div ref={scrollRef} className="relative flex-1 overflow-y-auto px-6 py-3 sm:px-8 sm:py-4">
-          <div className="relative space-y-3.5">
+        <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_310px]">
+          <div ref={scrollRef} className="min-h-0 overflow-y-auto bg-white px-4 py-2 custom-scrollbar">
             <AnimatePresence initial={false}>
               {visibleEvents.map((event, index) => (
                 <WorkflowItem
                   key={event.id}
                   event={event}
+                  index={index}
                   isVisible={visibleCount > index}
                 />
               ))}
             </AnimatePresence>
           </div>
+          <StrategicSummary isComplete={!isSimulating} />
         </div>
       </section>
     </main>
