@@ -113,7 +113,7 @@ const MemorySimulate: React.FC = () => {
     <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 font-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
       <section className="flex h-[calc(100dvh-88px)] max-h-[460px] w-full max-w-3xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
         
-        {/* Header: Neural Audit */}
+        {/* Header: Outcome Intelligence */}
         <div className="flex shrink-0 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
           <div className="flex items-center gap-3">
             <div>
@@ -123,12 +123,31 @@ const MemorySimulate: React.FC = () => {
               >
                 Operational Memory
               </h2>
-              <p className="mt-1 font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Neural Audit Log: Case 99288777</p>
+              <p className="mt-1 font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Case outcome recorded: Inbound shortage</p>
             </div>
           </div>
           <div className="flex items-center gap-2 border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5">
             <div className="h-2 w-2 rounded-full bg-[#3AAA78] animate-pulse" />
-            <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Learning Active</span>
+            <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Outcome recorded</span>
+          </div>
+        </div>
+
+        <div className="grid shrink-0 grid-cols-2 border-b border-[#DCE8EE] bg-white text-[11px] leading-5 text-[#4D5B66] sm:grid-cols-4">
+          <div className="border-r border-[#DCE8EE] px-4 py-2">
+            <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Evidence accepted</p>
+            <p className="mt-1 text-[#182026]">Invoice, BOL, quantity explanation</p>
+          </div>
+          <div className="border-r border-[#DCE8EE] px-4 py-2">
+            <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Insufficient alone</p>
+            <p className="mt-1 text-[#182026]">POD without quantity context</p>
+          </div>
+          <div className="border-r border-[#DCE8EE] px-4 py-2">
+            <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Approved</p>
+            <p className="mt-1 font-mono text-[#182026]">R1,247</p>
+          </div>
+          <div className="px-4 py-2">
+            <p className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Additional recovery</p>
+            <p className="mt-1 font-mono text-[#182026]">R407</p>
           </div>
         </div>
 
@@ -162,7 +181,7 @@ const MemorySimulate: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          {/* Future Optimization: The "Unfair Advantage" */}
+          {/* Future case lesson */}
           <AnimatePresence>
             {activeStep === learningNodes.length && (
               <motion.div 
@@ -172,9 +191,9 @@ const MemorySimulate: React.FC = () => {
               >
                 <div className="flex items-start gap-4">
                   <div className="flex-1">
-                    <h4 className="mb-1 font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Long-term performance tuning</h4>
+                    <h4 className="mb-1 font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Lesson applied to future cases</h4>
                     <p className="text-xs leading-relaxed text-[#4D5B66]">
-                      "Effective immediately, a Quantity Explanation is mandatory for all future claims of this type prior to filing to ensure complete reimbursement."
+                      Require a quantity explanation before filing similar inbound-shortage claims.
                     </p>
                   </div>
                 </div>
@@ -183,21 +202,17 @@ const MemorySimulate: React.FC = () => {
           </AnimatePresence>
         </div>
 
-        {/* Footer: Infrastructure Stats */}
-        <div className="flex shrink-0 items-center justify-between border-t border-[#DCE8EE] bg-white px-4 py-3">
-          <div className="flex gap-6">
-            <div className="flex flex-col">
-              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8A99A4]">Data Points</span>
-              <span className="font-mono text-sm text-[#33404A]">1,248</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8A99A4]">Neural Sync</span>
-              <span className="font-mono text-sm text-[#33404A]">99.9%</span>
-            </div>
+        {/* Footer: Recovery intelligence */}
+        <div className="flex shrink-0 items-start justify-between gap-4 border-t border-[#DCE8EE] bg-white px-4 py-3">
+          <div className="max-w-xl">
+            <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Recovery intelligence updated</span>
+            <p className="mt-1 text-[11px] leading-5 text-[#66737F]">
+              Margin keeps each seller's records private while learning from anonymized outcome patterns such as evidence type, claim category, Amazon response, approval path, and payout result.
+            </p>
           </div>
-          <div className="flex items-center gap-2 text-[#66737F]">
+          <div className="flex shrink-0 items-center gap-2 text-[#66737F]">
             <Database className="h-4 w-4" />
-            <span className="font-mono text-[10px] font-medium uppercase tracking-tight">Global Memory</span>
+            <span className="font-mono text-[10px] font-medium uppercase tracking-tight">Outcome intelligence</span>
           </div>
         </div>
 
