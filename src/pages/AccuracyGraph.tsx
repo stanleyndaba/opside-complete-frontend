@@ -35,7 +35,7 @@ const AccuracyGraph = () => {
               className="mt-1 text-[20px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
               style={{ fontFamily: 'Georgia, Merriweather, serif' }}
             >
-              Evidence accuracy improves with resolved cases
+              Evidence Calibration
             </h1>
             <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#66737F]">
               Margin learns from approved, rejected, underpaid, and reversed outcomes to improve how future evidence packs are scored before filing.
