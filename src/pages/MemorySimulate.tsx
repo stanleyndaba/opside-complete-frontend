@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Database, AlertCircle, CheckCircle2, Info } from 'lucide-react';
 
 const MemorySimulate: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const feedRef = useRef<HTMLDivElement | null>(null);
 
   const learningNodes = [
     { 
-      title: "POD Accepted", 
+      title: "POD Accepted",
       status: "success", 
       detail: "Proof of Delivery format verified for JHB warehouse.",
       icon: CheckCircle2,
@@ -20,6 +21,27 @@ const MemorySimulate: React.FC = () => {
       icon: CheckCircle2,
       color: "text-[#2F8A62]"
     },
+    {
+      title: "BOL Accepted",
+      status: "success",
+      detail: "Bill of Lading matched to shipment reference and carrier handoff.",
+      icon: CheckCircle2,
+      color: "text-[#2F8A62]"
+    },
+    {
+      title: "Shipment ID Bound",
+      status: "success",
+      detail: "Inbound shipment ID linked to receiving event and case record.",
+      icon: CheckCircle2,
+      color: "text-[#2F8A62]"
+    },
+    {
+      title: "ASIN/FNSKU Mapped",
+      status: "success",
+      detail: "Catalog identifiers reconciled against disputed unit movement.",
+      icon: CheckCircle2,
+      color: "text-[#2F8A62]"
+    },
     { 
       title: "Quantity Variance", 
       status: "warning", 
@@ -27,12 +49,40 @@ const MemorySimulate: React.FC = () => {
       icon: Info,
       color: "text-[#9A6B1F]"
     },
+    {
+      title: "Cost Basis Accepted",
+      status: "success",
+      detail: "Unit cost supported by supplier invoice and SKU-level records.",
+      icon: CheckCircle2,
+      color: "text-[#2F8A62]"
+    },
+    {
+      title: "Deadline Captured",
+      status: "success",
+      detail: "Filing window stored against the case before submission review.",
+      icon: CheckCircle2,
+      color: "text-[#2F8A62]"
+    },
+    {
+      title: "Case Thread Indexed",
+      status: "success",
+      detail: "Amazon response history attached to the active recovery record.",
+      icon: CheckCircle2,
+      color: "text-[#2F8A62]"
+    },
     { 
       title: "Underpayment Detected", 
       status: "alert", 
       detail: "Amazon reimbursed R840 instead of R1,247.",
       icon: AlertCircle,
       color: "text-[#66737F]"
+    },
+    {
+      title: "Settlement Line Matched",
+      status: "success",
+      detail: "Approved reimbursement linked to the seller balance payout line.",
+      icon: CheckCircle2,
+      color: "text-[#2F8A62]"
     },
     { 
       title: "Follow-up Successful", 
@@ -46,9 +96,18 @@ const MemorySimulate: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveStep((prev) => (prev < learningNodes.length ? prev + 1 : prev));
-    }, 1500);
+    }, 950);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (!feedRef.current) return;
+
+    feedRef.current.scrollTo({
+      top: feedRef.current.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, [activeStep]);
 
   return (
     <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 font-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
@@ -74,7 +133,7 @@ const MemorySimulate: React.FC = () => {
         </div>
 
         {/* Learning Feed */}
-        <div className="min-h-0 flex-1 overflow-y-auto bg-[#FAFAF7] p-4">
+        <div ref={feedRef} className="min-h-0 flex-1 overflow-y-auto bg-[#FAFAF7] p-4 custom-scrollbar">
           <div className="mb-2 text-[12px] font-medium text-[#4D5B66]">
             This case taught Margin:
           </div>
@@ -96,7 +155,7 @@ const MemorySimulate: React.FC = () => {
                     <p className="mt-0.5 text-[11px] leading-relaxed text-[#66737F]">{node.detail}</p>
                   </div>
                   <div className="font-mono text-[10px] text-[#8A99A4]">
-                    {`0${index + 1}`}
+                    {String(index + 1).padStart(2, '0')}
                   </div>
                 </motion.div>
               ))}
