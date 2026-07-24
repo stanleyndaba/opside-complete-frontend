@@ -1923,9 +1923,9 @@ export default function Index() {
             </motion.p>{" "}
           </div>{" "}
         </section>{" "}
-        <RecoveryPreviewSection />
-        <EvidenceExtractionPreviewSection />
-        <EvidenceMatchingPreviewSection />
+        {/* <RecoveryPreviewSection /> */}
+        {/* <EvidenceExtractionPreviewSection /> */}
+        {/* <EvidenceMatchingPreviewSection /> */}
         <section className="relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
@@ -2010,8 +2010,8 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <EvidenceCalibrationPreviewSection />
-        <RepliesPreviewSection />
+        {/* <EvidenceCalibrationPreviewSection /> */}
+        {/* <RepliesPreviewSection /> */}
         <section
           className="hidden relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24"
           id="margin-demo"
