@@ -11,35 +11,35 @@ const MemorySimulate: React.FC = () => {
       status: "success", 
       detail: "Proof of Delivery format verified for JHB warehouse.",
       icon: CheckCircle2,
-      color: "text-green-500"
+      color: "text-[#2F8A62]"
     },
     { 
       title: "Invoice Accepted", 
       status: "success", 
       detail: "Manufacturer header & VAT number validated.",
       icon: CheckCircle2,
-      color: "text-green-500"
+      color: "text-[#2F8A62]"
     },
     { 
       title: "Quantity Variance", 
       status: "warning", 
       detail: "Explanation required for 3-unit discrepancy.",
       icon: Info,
-      color: "text-amber-500"
+      color: "text-[#9A6B1F]"
     },
     { 
       title: "Underpayment Detected", 
       status: "alert", 
       detail: "Amazon reimbursed R840 instead of R1,247.",
       icon: AlertCircle,
-      color: "text-blue-500"
+      color: "text-[#66737F]"
     },
     { 
       title: "Follow-up Successful", 
       status: "success", 
       detail: "Agent 11 successfully appealed the underpayment.",
       icon: CheckCircle2,
-      color: "text-green-500"
+      color: "text-[#2F8A62]"
     }
   ];
 
@@ -51,26 +51,31 @@ const MemorySimulate: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 font-sans">
-      <div className="w-full max-w-3xl max-h-[480px] flex flex-col bg-white rounded-[4px] border border-gray-100 shadow-xl overflow-hidden">
+    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 font-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="flex h-[calc(100dvh-88px)] max-h-[460px] w-full max-w-3xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
         
         {/* Header: Neural Audit */}
-        <div className="p-3 border-b border-gray-100 flex items-center justify-between shrink-0">
+        <div className="flex shrink-0 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
           <div className="flex items-center gap-3">
             <div>
-              <h2 className="text-base font-bold text-gray-900 tracking-tight">Operational Memory</h2>
-              <p className="text-[10px] text-gray-500 font-mono uppercase tracking-tight">Neural Audit Log: Case 99288777</p>
+              <h2
+                className="text-[17px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
+                style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+              >
+                Operational Memory
+              </h2>
+              <p className="mt-1 font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Neural Audit Log: Case 99288777</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-[10px] font-bold text-gray-600 uppercase tracking-tight">Learning Active</span>
+          <div className="flex items-center gap-2 border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5">
+            <div className="h-2 w-2 rounded-full bg-[#3AAA78] animate-pulse" />
+            <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Learning Active</span>
           </div>
         </div>
 
         {/* Learning Feed */}
-        <div className="p-3 flex-1 overflow-y-auto">
-          <div className="text-xs text-gray-500 font-medium mb-2">
+        <div className="min-h-0 flex-1 overflow-y-auto bg-[#FAFAF7] p-4">
+          <div className="mb-2 text-[12px] font-medium text-[#4D5B66]">
             This case taught Margin:
           </div>
 
@@ -81,16 +86,16 @@ const MemorySimulate: React.FC = () => {
                   key={node.title}
                   initial={{ opacity: 0, x: -20, scale: 0.95 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
-                  className="flex items-start gap-3 bg-gray-50 border border-gray-100 p-2 rounded-[4px] hover:bg-gray-100/50 transition-colors"
+                  className="flex items-start gap-3 border border-[#DCE8EE] bg-white px-3 py-2 transition-colors hover:bg-[#F8FAFC]"
                 >
                   <div className={`mt-0.5 ${node.color}`}>
                     <node.icon className="w-4 h-4" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xs font-bold text-gray-900">{node.title}</h3>
-                    <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">{node.detail}</p>
+                    <h3 className="text-[12px] font-semibold text-[#182026]">{node.title}</h3>
+                    <p className="mt-0.5 text-[11px] leading-relaxed text-[#66737F]">{node.detail}</p>
                   </div>
-                  <div className="text-[10px] font-mono text-gray-400">
+                  <div className="font-mono text-[10px] text-[#8A99A4]">
                     {`0${index + 1}`}
                   </div>
                 </motion.div>
@@ -104,12 +109,12 @@ const MemorySimulate: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-3 p-3 bg-gray-50/50 border border-gray-100 rounded-[4px]"
+                className="mt-3 border border-[#DCE8EE] bg-white p-3"
               >
                 <div className="flex items-start gap-4">
                   <div className="flex-1">
-                    <h4 className="text-xs font-bold text-gray-900 uppercase tracking-tight mb-1">Long-term performance tuning</h4>
-                    <p className="text-xs text-gray-600 leading-relaxed">
+                    <h4 className="mb-1 font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Long-term performance tuning</h4>
+                    <p className="text-xs leading-relaxed text-[#4D5B66]">
                       "Effective immediately, a Quantity Explanation is mandatory for all future claims of this type prior to filing to ensure complete reimbursement."
                     </p>
                   </div>
@@ -120,25 +125,25 @@ const MemorySimulate: React.FC = () => {
         </div>
 
         {/* Footer: Infrastructure Stats */}
-        <div className="p-3 bg-white flex justify-between items-center border-t border-gray-100 shrink-0">
+        <div className="flex shrink-0 items-center justify-between border-t border-[#DCE8EE] bg-white px-4 py-3">
           <div className="flex gap-6">
             <div className="flex flex-col">
-              <span className="text-[10px] text-gray-400 uppercase font-bold">Data Points</span>
-              <span className="text-sm text-gray-600 font-mono">1,248</span>
+              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8A99A4]">Data Points</span>
+              <span className="font-mono text-sm text-[#33404A]">1,248</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] text-gray-400 uppercase font-bold">Neural Sync</span>
-              <span className="text-sm text-gray-600 font-mono">99.9%</span>
+              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#8A99A4]">Neural Sync</span>
+              <span className="font-mono text-sm text-[#33404A]">99.9%</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-gray-500">
-            <Database className="w-4 h-4" />
-            <span className="text-[10px] font-mono uppercase tracking-tight">Global Memory</span>
+          <div className="flex items-center gap-2 text-[#66737F]">
+            <Database className="h-4 w-4" />
+            <span className="font-mono text-[10px] font-medium uppercase tracking-tight">Global Memory</span>
           </div>
         </div>
 
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 
