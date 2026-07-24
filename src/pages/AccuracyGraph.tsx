@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const AccuracyGraph = () => {
-  // The Simulated Learning Data
   const dataPoints = [
     { cases: 0, accuracy: 58 },
     { cases: 100, accuracy: 67 },
@@ -13,16 +12,13 @@ const AccuracyGraph = () => {
     { cases: 5000, accuracy: 96 },
   ];
 
-  // SVG dimensions & padding — compact height
   const width = 800;
-  const height = 260;
+  const height = 230;
   const padding = 40;
 
-  // Scale functions to map data to SVG coordinates
   const xScale = (cases: number) => (cases / 5000) * (width - 2 * padding) + padding;
   const yScale = (accuracy: number) => height - padding - ((accuracy - 50) / 50) * (height - 2 * padding);
 
-  // Generate the SVG Path string (straight lines)
   const pathData = dataPoints.reduce((acc, point, i) => {
     const x = xScale(point.cases);
     const y = yScale(point.accuracy);
@@ -30,38 +26,40 @@ const AccuracyGraph = () => {
   }, "");
 
   return (
-    <section className="bg-white py-16 px-6 border-t border-gray-100">
-      <div className="max-w-5xl mx-auto">
-        
-        {/* Institutional Heading — centered, compact */}
-        <div className="mb-10 text-center">
-          <h2 className="text-xl font-serif font-bold text-gray-900 mb-3 tracking-tight sm:text-2xl">
-            Evidence Intelligence Accuracy Over Time
-          </h2>
-          <p className="text-gray-500 text-sm max-w-2xl mx-auto leading-relaxed">
-            Margin learns from every approved, rejected, underpaid, and reversed claim to improve how it scores future evidence packs before filing.
-          </p>
-          <div className="mt-4 flex justify-between items-start">
-            <div className="flex items-center gap-5">
-              <div className="flex flex-col">
-                <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Current Learning State</span>
-                <span className="text-xs font-bold text-gray-900">High-Velocity Synthesis</span>
-              </div>
-              <div className="h-4 w-px bg-gray-200" />
-              <div className="flex flex-col">
-                <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Model Integrity</span>
-                <span className="text-xs font-bold text-gray-900">99.4% Verified</span>
-              </div>
+    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 font-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="flex h-[calc(100dvh-104px)] max-h-[500px] w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
+        <header className="flex shrink-0 items-start justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Outcome intelligence</p>
+            <h1
+              className="mt-1 text-[20px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
+              style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+            >
+              Evidence accuracy improves with resolved cases
+            </h1>
+            <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#66737F]">
+              Margin learns from approved, rejected, underpaid, and reversed outcomes to improve how future evidence packs are scored before filing.
+            </p>
+          </div>
+          <div className="hidden min-w-[290px] grid-cols-2 border border-[#DCE8EE] text-left sm:grid">
+            <div className="border-r border-[#DCE8EE] px-4 py-3">
+              <span className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Resolved cases</span>
+              <p className="mt-1 font-mono text-sm text-[#182026]">5,000</p>
             </div>
-            <div className="flex flex-col items-end">
-              <span className="text-[9px] text-gray-500 font-mono uppercase tracking-tight">Protocol</span>
-              <span className="text-xs font-bold text-gray-900">Operational Memory</span>
+            <div className="px-4 py-3">
+              <span className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#8A99A4]">Current score</span>
+              <p className="mt-1 font-mono text-sm text-[#182026]">96%</p>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* The Simulation Canvas — compact */}
-        <div className="relative bg-[#FAFAFA] rounded-xl border border-gray-100 p-5 md:p-8 shadow-sm">
+        <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_300px]">
+          <div className="relative flex min-h-0 flex-col bg-white px-4 py-4">
+            <div className="mb-3 flex items-center justify-between border-b border-[#DCE8EE] pb-2">
+              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Evidence scoring curve</span>
+              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Outcome verified</span>
+            </div>
+            <div className="relative min-h-0 flex-1">
           <svg 
             width="100%" 
             height="100%" 
@@ -84,7 +82,7 @@ const AccuracyGraph = () => {
                   y={yScale(level)}
                   textAnchor="end"
                   alignmentBaseline="middle"
-                  className="fill-gray-400 text-[9px] font-mono font-medium"
+                  className="fill-[#8A99A4] text-[9px] font-mono font-medium"
                 >
                   {level}%
                 </text>
@@ -98,7 +96,7 @@ const AccuracyGraph = () => {
                 x={xScale(val)}
                 y={height - padding + 18}
                 textAnchor="middle"
-                className="fill-gray-400 text-[9px] font-mono font-medium"
+                className="fill-[#8A99A4] text-[9px] font-mono font-medium"
               >
                 {val === 0 ? '0' : `${val / 1000}k`}
               </text>
@@ -108,7 +106,7 @@ const AccuracyGraph = () => {
             <motion.path
               d={pathData}
               fill="none"
-              stroke="#1A1A1A"
+              stroke="#182026"
               strokeWidth="1"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -121,7 +119,7 @@ const AccuracyGraph = () => {
             {/* Area Fill (The Intelligence Volume) */}
             <motion.path
               d={`${pathData} L ${xScale(5000)} ${height - padding} L ${padding} ${height - padding} Z`}
-              fill="rgba(0,0,0,0.03)"
+              fill="rgba(11,116,222,0.035)"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -139,7 +137,7 @@ const AccuracyGraph = () => {
                     cx={cx}
                     cy={cy}
                     r="3.5"
-                    fill="#1A1A1A"
+                    fill="#182026"
                     initial={{ opacity: 0, scale: 0 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -150,7 +148,7 @@ const AccuracyGraph = () => {
                     x={cx}
                     y={cy - 10}
                     textAnchor="middle"
-                    className="fill-[#1A1A1A] text-[10px] font-mono font-semibold tracking-tight"
+                    className="fill-[#182026] text-[10px] font-mono font-semibold tracking-tight"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
@@ -163,14 +161,39 @@ const AccuracyGraph = () => {
             })}
           </svg>
 
-          {/* Axis Labels — tracking-tight, darker */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[9px] uppercase tracking-tight text-gray-500 font-mono font-bold">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 font-mono text-[9px] font-medium uppercase tracking-tight text-[#66737F]">
             Resolved recovery cases learned from
           </div>
-        </div>
+          </div>
+          </div>
 
-      </div>
-    </section>
+          <aside className="border-l border-[#DCE8EE] bg-[#F8FAFC] p-4">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Accuracy inputs</p>
+            <h2
+              className="mt-2 text-[18px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
+              style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+            >
+              Outcome patterns
+            </h2>
+            <div className="mt-4 border-y border-[#DCE8EE] py-3">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Signals learned</p>
+              <ul className="mt-3 space-y-2 text-[12px] leading-5 text-[#33404A]">
+                <li>Claim category</li>
+                <li>Evidence type accepted</li>
+                <li>Amazon response path</li>
+                <li>Payout reconciliation result</li>
+              </ul>
+            </div>
+            <div className="mt-4 border border-[#DCE8EE] bg-white p-3">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Recovery intelligence updated</p>
+              <p className="mt-2 text-[12px] leading-5 text-[#4D5B66]">
+                Future cases are scored against anonymized outcome patterns, not another seller's private records.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
   );
 };
 
