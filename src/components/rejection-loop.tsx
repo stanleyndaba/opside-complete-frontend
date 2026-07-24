@@ -26,26 +26,26 @@ const WORKFLOW: WorkflowEvent[] = [
   {
     id: 'analysis',
     owner: 'margin',
-    code: 'MARGIN-ANALYSIS',
-    label: 'Rejection converted into case data',
-    steps: ['Request classified as evidence gap', 'POD already linked to shipment', 'Invoice already linked to cost basis'],
+    code: 'REQUIREMENTS PARSED',
+    label: 'Requirements parsed',
+    steps: ['Amazon evidence requests identified', 'POD already linked to shipment', 'Invoice already linked to cost basis'],
     delay: 2100,
   },
   {
     id: 'protocol',
     owner: 'margin',
-    code: 'SECOND-STRIKE',
-    label: 'Second filing strategy prepared',
-    steps: ['Quantity variance explanation added', 'Amazon reply requirements mapped to records', 'Evidence pack rebuilt for the next response'],
+    code: 'CASE UPDATED',
+    label: 'Evidence gap resolved',
+    steps: ['Quantity variance explanation added', 'Missing support matched to records', 'Evidence packet rebuilt with case history intact'],
     delay: 4000,
     emphasis: 'hero',
   },
   {
     id: 'resubmission',
     owner: 'margin',
-    code: 'RESUBMIT',
-    label: 'Bolstered dispute response ready',
-    steps: ['Proof packet updated', 'Response language prepared', 'Case routed back with matched support'],
+    code: 'SELLER APPROVAL',
+    label: 'Updated response ready',
+    steps: ['Proof packet updated', 'Response language prepared', 'Seller approval required before submission'],
     delay: 6100,
   },
   {
@@ -109,7 +109,7 @@ function WorkflowItem({
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       exit={{ opacity: 0, y: -10 }}
       transition={spring}
-      className="relative grid grid-cols-[48px_1fr_118px] gap-4 border-b border-[#DCE8EE] py-3 last:border-b-0"
+      className="relative grid grid-cols-[42px_1fr_96px] gap-3 border-b border-[#DCE8EE] py-2.5 last:border-b-0"
     >
       <div className="font-mono text-[10px] text-[#8A99A4]">{`00:${String(index * 4 + 3).padStart(2, '0')}`}</div>
 
@@ -151,18 +151,18 @@ function WorkflowItem({
               ],
             }}
             transition={{ delay: 0.18, duration: 0.7, ease: 'easeOut' }}
-            className="mt-1 text-[15px] font-semibold leading-tight tracking-tight text-[#182026]"
+            className="mt-1 text-[14px] font-semibold leading-tight tracking-tight text-[#182026]"
           >
             <CountUpCurrency start={isVisible} />
-            <p className="mt-1 text-[12px] font-normal leading-5 text-[#66737F]">{event.body}</p>
+            <p className="mt-1 text-[11px] font-normal leading-4 text-[#66737F]">{event.body}</p>
           </motion.div>
         ) : (
-          event.body && <p className="mt-1 text-[12px] leading-5 text-[#66737F]">{event.body}</p>
+          event.body && <p className="mt-1 text-[11px] leading-4 text-[#66737F]">{event.body}</p>
         )}
 
         {event.steps && (
           <motion.ul
-            className="mt-2 grid gap-1"
+            className="mt-1.5 grid gap-0.5"
             initial="hidden"
             animate="show"
             variants={{
@@ -182,7 +182,7 @@ function WorkflowItem({
                   show: { opacity: 1, x: 0 },
                 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="flex items-center gap-2 text-[12px] leading-5 text-[#4D5B66]"
+                className="flex items-center gap-2 text-[11px] leading-4 text-[#4D5B66]"
               >
                 <span className="h-px w-4 bg-[#AEBAC5]" />
                 {step}
@@ -211,21 +211,24 @@ function WorkflowItem({
 
 function StrategicSummary({ isComplete }: { isComplete: boolean }) {
   return (
-    <aside className="border-l border-[#DCE8EE] bg-[#F8FAFC] p-4">
-      <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Rejection intelligence</p>
+    <aside className="border-l border-[#DCE8EE] bg-[#F8FAFC] p-3.5">
+      <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Case continuity</p>
       <h2
-        className="mt-2 text-[18px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
+        className="mt-1.5 text-[17px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
         style={{ fontFamily: 'Georgia, Merriweather, serif' }}
       >
-        Rejection becomes the next filing strategy
+        Response Orchestration
       </h2>
-      <div className="mt-5 border-y border-[#DCE8EE] py-3">
-        <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">What Margin reads</p>
-        <ul className="mt-3 space-y-2 text-[12px] leading-5 text-[#33404A]">
-          <li>Amazon proof requests</li>
-          <li>Missing evidence signals</li>
+      <p className="mt-2 text-[11px] leading-4 text-[#66737F]">
+        Margin maintains the case through Amazon's back-and-forth instead of treating each response as a new manual task.
+      </p>
+      <div className="mt-3 border-y border-[#DCE8EE] py-2.5">
+        <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Response signals</p>
+        <ul className="mt-2 space-y-1.5 text-[11px] leading-4 text-[#33404A]">
+          <li>Amazon evidence requests</li>
+          <li>Missing support</li>
           <li>Case-thread blockers</li>
-          <li>Response fatigue patterns</li>
+          <li>Prior submissions</li>
         </ul>
       </div>
       <AnimatePresence>
@@ -234,12 +237,11 @@ function StrategicSummary({ isComplete }: { isComplete: boolean }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="mt-4 border border-[#DCE8EE] bg-white p-3"
+            className="mt-3 border border-[#DCE8EE] bg-white p-2.5"
           >
-            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Status: response ready</p>
-            <p className="mt-2 text-[12px] leading-5 text-[#4D5B66]">
-              Margin does not treat the rejection as finality. It turns the reply into a checklist,
-              rebuilds the evidence pack, and prepares the case for the next filing move.
+            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#2F8A62]">Response ready for approval</p>
+            <p className="mt-1.5 text-[11px] leading-4 text-[#4D5B66]">
+              The requested support has been added and the evidence packet has been rebuilt without losing the case history.
             </p>
           </motion.div>
         )}
@@ -271,18 +273,18 @@ export default function RejectionLoop() {
 
   return (
     <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 font-sans text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
-      <section className="flex h-[calc(100dvh-88px)] max-h-[540px] w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
-        <header className="flex shrink-0 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
+      <section className="flex h-[calc(100dvh-112px)] max-h-[500px] w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white">
+        <header className="flex shrink-0 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-2.5">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Amazon pushback review</p>
+            <p className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">Amazon response handling</p>
             <h1
-              className="mt-1 text-[19px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
+              className="mt-0.5 text-[18px] font-semibold leading-tight tracking-[-0.04em] text-[#182026]"
               style={{ fontFamily: 'Georgia, Merriweather, serif' }}
             >
-              Margin turns rejection into strategy
+              Adaptive Resubmission
             </h1>
-            <p className="mt-1 max-w-2xl text-[12px] leading-5 text-[#66737F]">
-              Amazon asks again. Margin reads the blocker, binds the missing support, and prepares the next filing response.
+            <p className="mt-1 max-w-2xl text-[11px] leading-4 text-[#66737F]">
+              Margin interprets Amazon's response, resolves the evidence gap, and prepares the updated case for seller approval.
             </p>
           </div>
           <div className="hidden items-center gap-3 sm:flex">
@@ -292,8 +294,8 @@ export default function RejectionLoop() {
           </div>
         </header>
 
-        <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_310px]">
-          <div ref={scrollRef} className="min-h-0 overflow-y-auto bg-white px-4 py-2 custom-scrollbar">
+        <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1fr_292px]">
+          <div ref={scrollRef} className="min-h-0 overflow-y-auto bg-white px-4 py-1.5 custom-scrollbar">
             <AnimatePresence initial={false}>
               {visibleEvents.map((event, index) => (
                 <WorkflowItem
