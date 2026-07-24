@@ -162,8 +162,8 @@ const AuditSimulate = () => {
   const visibleFeed = reduceMotion ? auditLines : auditFeed;
 
   return (
-    <main className="flex h-screen items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
-      <section className="mx-auto grid h-[calc(100vh-96px)] max-h-[540px] min-h-[430px] w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] border border-[#CFE0EA] bg-white">
+    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="mx-auto grid h-[calc(100dvh-72px)] max-h-[500px] min-h-0 w-full max-w-7xl grid-rows-[auto_minmax(0,1fr)] overflow-hidden border border-[#CFE0EA] bg-white">
         <header className="border-b border-[#DCE8EE] px-4 py-2.5 sm:px-6 lg:px-7 lg:py-3">
           <div className="mb-2 flex items-center justify-between border-b border-[#E8EFF3] pb-2">
             <div className="flex items-center gap-2.5">
@@ -229,10 +229,10 @@ const AuditSimulate = () => {
           </div>
         </header>
 
-        <div className="grid min-h-0 lg:grid-cols-[minmax(0,1fr)_310px]">
-          <div className="relative overflow-hidden">
+        <div className="grid min-h-0 overflow-hidden lg:grid-cols-[minmax(0,1fr)_310px]">
+          <div className="relative min-h-0 overflow-hidden">
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 bg-gradient-to-b from-white to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-10 bg-gradient-to-t from-white to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-white via-white to-transparent" />
             <motion.ol
               className="relative"
               animate={reduceMotion ? undefined : { y: ['0%', '-50%'] }}
@@ -249,7 +249,7 @@ const AuditSimulate = () => {
             </motion.ol>
           </div>
 
-          <aside className="border-t border-[#DCE8EE] bg-[#F8FAFC] px-4 py-4 sm:px-5 lg:border-l lg:border-t-0">
+          <aside className="min-h-0 overflow-hidden border-t border-[#DCE8EE] bg-[#F8FAFC] px-4 py-3 sm:px-5 lg:border-l lg:border-t-0">
             <div className="space-y-4">
               <div>
                 <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
