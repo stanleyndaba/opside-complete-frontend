@@ -51,36 +51,36 @@ export default function EvidenceAnalysis() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-5xl flex items-start gap-5">
+    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="grid h-[calc(100dvh-88px)] max-h-[500px] min-h-0 w-full max-w-6xl grid-cols-1 gap-0 overflow-hidden border border-[#CFE0EA] bg-white lg:grid-cols-[minmax(0,1fr)_360px]">
 
         {/* LEFT: DOCUMENT PREVIEW */}
-        <div className="flex-1 bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
-          <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+        <div className="relative flex min-h-0 flex-col overflow-hidden border-b border-[#DCE8EE] bg-white lg:border-b-0 lg:border-r">
+          <div className="z-10 flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-gray-400" />
-              <span className="text-xs font-medium text-gray-500">Intake_Form_26197503.pdf</span>
+              <FileText className="h-4 w-4 text-[#66737F]" />
+              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Intake_Form_26197503.pdf</span>
             </div>
             <div className="flex gap-1">
-              <div className="w-2 h-2 rounded-full bg-gray-100" />
-              <div className="w-2 h-2 rounded-full bg-gray-100" />
-              <div className="w-2 h-2 rounded-full bg-gray-100" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
             </div>
           </div>
 
-          <div className="flex-1 p-8 relative overflow-hidden">
+          <div className="relative min-h-0 flex-1 overflow-hidden p-5 sm:p-6">
             {/* Document Content */}
-            <div className="space-y-4 text-gray-400 text-sm leading-relaxed select-none">
+            <div className="space-y-3 select-none text-[12.5px] leading-6 text-[#8A99A4]">
               <p>
                 Member submitted a formal dispute on{' '}
                 <motion.span
-                  animate={scanProgress >= 12 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  animate={scanProgress >= 12 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                 >
                   January 15, 2024
                 </motion.span>
                 , regarding a series of unauthorized charges appearing on their account between{' '}
                 <motion.span
-                  animate={scanProgress >= 12 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  animate={scanProgress >= 12 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                 >
                   January 10-13, 2024
                 </motion.span>
@@ -90,20 +90,20 @@ export default function EvidenceAnalysis() {
               <p className="relative">
                 <span className="relative z-10">
                   <motion.span
-                    animate={scanProgress >= 25 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 25 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     Amazon claims 0 units received
                   </motion.span>
                   , despite the{' '}
                   <motion.span
-                    animate={scanProgress >= 25 ? { color: '#1f2937', fontWeight: 500 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 25 ? { color: '#25313A', fontWeight: 500 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     carrier delivery record
                   </motion.span>{' '}
                   and warehouse intake confirmation.
                 </span>
                 <motion.span
-                  className="absolute inset-0 bg-yellow-100 -z-0 rounded"
+                  className="absolute inset-0 -z-0 rounded-[2px] bg-[#F4E8B8]"
                   initial={{ width: 0 }}
                   animate={{ width: scanProgress > 25 ? '100%' : 0 }}
                   transition={{ duration: 1 }}
@@ -113,13 +113,13 @@ export default function EvidenceAnalysis() {
               <p>
                 Upon discovering the transactions, member attempted to resolve the matter directly by contacting{' '}
                 <motion.span
-                  animate={scanProgress >= 38 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  animate={scanProgress >= 38 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                 >
                   Technoworld Online
                 </motion.span>{' '}
                 on{' '}
                 <motion.span
-                  animate={scanProgress >= 38 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  animate={scanProgress >= 38 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                 >
                   January 14, 2024
                 </motion.span>
@@ -130,20 +130,20 @@ export default function EvidenceAnalysis() {
                 <span className="relative z-10">
                   Carrier weight log confirms{' '}
                   <motion.span
-                    animate={scanProgress >= 50 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 50 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     shipment weight of 45.2 lbs
                   </motion.span>
                   , matching the{' '}
                   <motion.span
-                    animate={scanProgress >= 50 ? { color: '#1f2937', fontWeight: 500 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 50 ? { color: '#25313A', fontWeight: 500 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     original packing list
                   </motion.span>{' '}
                   exactly. No discrepancies found in physical transit logs.
                 </span>
                 <motion.span
-                  className="absolute inset-0 bg-emerald-100 -z-0 rounded"
+                  className="absolute inset-0 -z-0 rounded-[2px] bg-[#DCEEE5]"
                   initial={{ width: 0 }}
                   animate={{ width: scanProgress > 50 ? '100%' : 0 }}
                   transition={{ duration: 1 }}
@@ -154,32 +154,32 @@ export default function EvidenceAnalysis() {
                 <span className="relative z-10">
                   Receiving clerk{' '}
                   <motion.span
-                    animate={scanProgress >= 75 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 75 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     J. Smith signed for delivery
                   </motion.span>{' '}
                   at{' '}
                   <motion.span
-                    animate={scanProgress >= 75 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 75 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     14:22
                   </motion.span>{' '}
                   on{' '}
                   <motion.span
-                    animate={scanProgress >= 75 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 75 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     Jan 14
                   </motion.span>
                   . Signature verified against the{' '}
                   <motion.span
-                    animate={scanProgress >= 75 ? { color: '#1f2937', fontWeight: 500 } : { color: '#9ca3af', fontWeight: 400 }}
+                    animate={scanProgress >= 75 ? { color: '#25313A', fontWeight: 500 } : { color: '#8A99A4', fontWeight: 400 }}
                   >
                     warehouse staff registry
                   </motion.span>
                   .
                 </span>
                 <motion.span
-                  className="absolute inset-0 bg-rose-100 -z-0 rounded"
+                  className="absolute inset-0 -z-0 rounded-[2px] bg-[#F0D7D8]"
                   initial={{ width: 0 }}
                   animate={{ width: scanProgress > 75 ? '100%' : 0 }}
                   transition={{ duration: 1 }}
@@ -189,13 +189,13 @@ export default function EvidenceAnalysis() {
               <p>
                 Member confirmed that their{' '}
                 <motion.span
-                  animate={scanProgress >= 90 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  animate={scanProgress >= 90 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                 >
                   physical debit card remained in their possession
                 </motion.span>{' '}
                 during the disputed transaction window and was{' '}
                 <motion.span
-                  animate={scanProgress >= 90 ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+                  animate={scanProgress >= 90 ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
                 >
                   not lost or stolen
                 </motion.span>
@@ -206,41 +206,51 @@ export default function EvidenceAnalysis() {
         </div>
 
         {/* RIGHT: ANALYSIS PANEL */}
-        <div className="w-[360px] flex flex-col">
-          <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex flex-col">
-            <div className="flex items-center gap-2 mb-4">
-              <Search className="w-[18px] h-[18px] text-gray-600" />
-              <h3 className="text-[15px] font-semibold text-gray-900">Meta-Data Analysis</h3>
+        <div className="flex min-h-0 flex-col overflow-hidden bg-[#F8FAFC]">
+          <div className="flex min-h-0 flex-1 flex-col p-4">
+            <div className="mb-4 flex items-center gap-2">
+              <Search className="h-[17px] w-[17px] text-[#66737F]" />
+              <div>
+                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
+                  Evidence extraction
+                </div>
+                <h3
+                  className="mt-1 text-[16px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
+                  style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+                >
+                  Meta-Data Analysis
+                </h3>
+              </div>
             </div>
 
-            <div className="min-h-[210px] space-y-2.5 overflow-y-auto pr-1 custom-scrollbar">
+            <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto pr-1 custom-scrollbar">
               <AnimatePresence initial={false}>
                 {activeCards.map((card, index) => (
                   <motion.div
                     key={card.id}
                     initial={{ opacity: 0, x: 16, scale: 0.96 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
-                    className="rounded-[10px] border border-gray-300 bg-gray-100/80 px-3 py-2.5"
+                    className="border border-[#DCE8EE] bg-white px-3 py-2.5"
                   >
                     <div className="flex items-start gap-2.5">
                       <motion.div
                         initial={{ rotate: 0 }}
                         animate={{ rotate: 360 }}
                         transition={{ duration: 0.55, delay: index * 0.12, ease: 'easeInOut' }}
-                        className="relative mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] border-gray-300 border-t-[#3aaa78] text-[#3aaa78]"
+                        className="relative mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] border-[#DCE8EE] border-t-[#3aaa78] text-[#3aaa78]"
                       >
                         <motion.span
                           initial={{ opacity: 0, scale: 0.2 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ type: 'spring', stiffness: 460, damping: 18, delay: 0.5 + index * 0.12 }}
-                          className="absolute inset-[-1.5px] flex items-center justify-center rounded-full border-[1.5px] border-[#3aaa78] bg-emerald-50"
+                          className="absolute inset-[-1.5px] flex items-center justify-center rounded-full border-[1.5px] border-[#3aaa78] bg-[#DCEEE5]"
                         >
                           <Check className="h-3 w-3" strokeWidth={3} />
                         </motion.span>
                       </motion.div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="text-[13px] font-semibold leading-5 text-gray-800">{card.title}</h4>
-                        <p className="mt-0.5 text-[11px] leading-[17px] text-gray-600">
+                        <h4 className="text-[12px] font-semibold leading-5 text-[#182026]">{card.title}</h4>
+                        <p className="mt-0.5 text-[10.5px] leading-[16px] text-[#4D5B66]">
                           {card.description}
                         </p>
                       </div>
@@ -251,10 +261,10 @@ export default function EvidenceAnalysis() {
 
               {activeCards.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                  <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                    <RefreshCw className="w-6 h-6 text-gray-200 animate-spin" />
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center border border-[#DCE8EE] bg-white">
+                    <RefreshCw className="h-5 w-5 animate-spin text-[#B9C4CC]" />
                   </div>
-                  <p className="text-sm text-gray-400">Scanning document for evidence...</p>
+                  <p className="text-sm text-[#8A99A4]">Scanning document for evidence...</p>
                 </div>
               )}
             </div>
@@ -266,17 +276,17 @@ export default function EvidenceAnalysis() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleReset}
-                className="mt-3 h-10 w-full bg-[#007AFF] text-white rounded-[10px] text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-blue-100"
+                className="mt-3 flex h-8 w-full items-center justify-center gap-2 rounded-[2px] bg-[#182026] font-mono text-[11px] font-medium tracking-tight text-white"
               >
                 Proceed to Dispute
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </motion.button>
             )}
           </div>
         </div>
 
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
 
