@@ -34,6 +34,7 @@ const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
 const EVIDENCE_EXTRACTION_VIDEO_URL = "/EvidenceExtraction.mp4";
+const EVIDENCE_MATCHING_VIDEO_URL = "/EvidenceMatching.mp4";
 const EVIDENCE_CALIBRATION_VIDEO_URL = "/EvidenceCalibration.mp4";
 const REPLIES_PREVIEW_VIDEO_URL = "/Replies.mp4";
 const auditPulses = [
@@ -992,6 +993,46 @@ function EvidenceExtractionPreviewSection() {
   );
 }
 
+function EvidenceMatchingPreviewSection() {
+  return (
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
+      <div className={containerClass}>
+        <div className="grid gap-7 lg:grid-cols-[0.62fr_1.38fr] lg:items-center lg:gap-12">
+          <motion.div {...revealProps} className="max-w-[520px]">
+            <div className={sectionLabelClass}>Evidence Matching</div>
+            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+              Operate from proof, not assumptions.
+            </h2>
+            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              Margin matches each discrepancy to the correct shipment records, quantities, SKUs, invoices, receiving data, deadlines, and policy basis—so you know exactly why the recovery exists and which evidence supports it.
+            </p>
+            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+              The right records. The right case. A clear path to recovery.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} className="relative">
+            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full scale-[1.018] object-cover"
+                  src={EVIDENCE_MATCHING_VIDEO_URL}
+                  aria-label="Margin evidence matching preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function EvidenceCalibrationPreviewSection() {
   return (
     <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
@@ -1884,6 +1925,7 @@ export default function Index() {
         </section>{" "}
         {/* <RecoveryPreviewSection /> */}
         {/* <EvidenceExtractionPreviewSection /> */}
+        {/* <EvidenceMatchingPreviewSection /> */}
         <section className="relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
