@@ -36,9 +36,9 @@ const MATCH_HIGHLIGHTS: MatchHighlight[] = [
 type HighlightTone = 'yellow' | 'emerald' | 'rose';
 
 const highlightColors: Record<HighlightTone, string> = {
-  yellow: 'bg-yellow-100',
-  emerald: 'bg-emerald-100',
-  rose: 'bg-rose-100',
+  yellow: 'bg-[#F4E8B8]',
+  emerald: 'bg-[#DCEEE5]',
+  rose: 'bg-[#F0D7D8]',
 };
 
 function MetadataHighlight({
@@ -51,7 +51,7 @@ function MetadataHighlight({
   tone: HighlightTone;
 }) {
   return (
-    <span className="relative -mx-0.5 inline-flex overflow-hidden rounded px-0.5">
+    <span className="relative -mx-0.5 inline-flex overflow-hidden rounded-[2px] px-0.5">
       <motion.span
         initial={false}
         animate={{ scaleX: active ? 1 : 0 }}
@@ -60,7 +60,7 @@ function MetadataHighlight({
       />
       <motion.span
         className="relative z-10"
-        animate={active ? { color: '#111827', fontWeight: 600 } : { color: '#9ca3af', fontWeight: 400 }}
+        animate={active ? { color: '#182026', fontWeight: 600 } : { color: '#8A99A4', fontWeight: 400 }}
       >
         {children}
       </motion.span>
@@ -107,7 +107,7 @@ function MatchAnalysisViz() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="space-y-4 text-[13px] leading-7 text-gray-500">
+      <div className="space-y-3 text-[12px] leading-6 text-[#4D5B66] sm:text-[13px]">
         <p>
           Amazon received fewer units than the inbound shipment record shows were shipped.{' '}
           <MetadataHighlight active={isActive('r-summary')} tone="yellow">60 shipped, 46 received</MetadataHighlight>{' '}
@@ -130,30 +130,30 @@ function MatchAnalysisViz() {
         <p>Margin is comparing shipment, receipt, and reimbursement records to determine whether the gap can move into a case.</p>
       </div>
 
-      <div className="mt-4 border-t border-gray-200 pt-3">
+      <div className="mt-4 border-t border-[#DCE8EE] pt-3">
         <div className="space-y-2">
-          <div className="space-y-1.5 text-[12px] leading-5 text-gray-700">
+          <div className="space-y-1.5 font-mono text-[11px] leading-5 text-[#25313A]">
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Shipment</span>{' '}
+              <span className="font-medium uppercase tracking-tight text-[#66737F]">Shipment</span>{' '}
               Shipment <MetadataHighlight active={isActive('r-ship-id')} tone="yellow">FBA17ACME001</MetadataHighlight> ·{' '}
               <MetadataHighlight active={isActive('r-shipped')} tone="yellow">60 shipped</MetadataHighlight>.
             </p>
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Receipt</span>{' '}
+              <span className="font-medium uppercase tracking-tight text-[#66737F]">Receipt</span>{' '}
               Amazon received <MetadataHighlight active={isActive('r-received')} tone="yellow">46 units</MetadataHighlight> at{' '}
               <MetadataHighlight active={isActive('r-ont8')} tone="yellow">ONT8</MetadataHighlight>.
             </p>
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Backend</span>{' '}
+              <span className="font-medium uppercase tracking-tight text-[#66737F]">Backend</span>{' '}
               Record <MetadataHighlight active={isActive('r-record')} tone="rose">00000000-000</MetadataHighlight> · Source{' '}
               <MetadataHighlight active={isActive('r-sp-api')} tone="rose">SP API</MetadataHighlight> · Sync{' '}
               <MetadataHighlight active={isActive('r-sync')} tone="rose">acme-sync-20260420</MetadataHighlight>
             </p>
           </div>
 
-          <div className="border-t border-gray-100 pt-2 text-[12px] leading-5 text-gray-700">
+          <div className="border-t border-[#E8EFF3] pt-2 font-mono text-[11px] leading-5 text-[#25313A]">
             <p>
-              <span className="font-medium text-gray-400 uppercase tracking-tight text-[10px]">Case readiness</span>{' '}
+              <span className="font-medium uppercase tracking-tight text-[#66737F]">Case readiness</span>{' '}
               <MetadataHighlight active={isActive('r-candidate')} tone="emerald">Claim candidate</MetadataHighlight> · Deadline{' '}
               <MetadataHighlight active={isActive('r-deadline')} tone="emerald">Apr 2, 2026</MetadataHighlight> · Case link{' '}
               <MetadataHighlight active={isActive('r-case-link')} tone="emerald">ACME-CASE-2001</MetadataHighlight>
@@ -161,14 +161,14 @@ function MatchAnalysisViz() {
           </div>
         </div>
 
-        <div className="mt-2 flex flex-col gap-2 border-t border-gray-200 pt-3">
+        <div className="mt-2 flex flex-col gap-2 border-t border-[#DCE8EE] pt-3">
           {buttonReady && (
             <motion.button
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="h-9 w-full rounded-[10px] bg-[#007AFF] text-sm font-medium text-white shadow-md shadow-blue-100"
+              className="h-8 w-full rounded-[2px] bg-[#182026] font-mono text-[11px] font-medium tracking-tight text-white"
               type="button"
             >
               Evidence Match Confirmed
@@ -227,23 +227,25 @@ export default function EvidenceMatch() {
   const isDocumentMatch = (id: string) => documentMatches.has(id);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="grid w-full max-w-6xl gap-5 lg:grid-cols-2">
-        <div className="bg-white rounded-[14px] shadow-xl border border-gray-100 overflow-hidden flex flex-col relative">
-          <div className="px-4 py-3 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
+      <section className="grid h-[calc(100dvh-88px)] max-h-[500px] min-h-0 w-full max-w-6xl grid-cols-1 gap-0 overflow-hidden border border-[#CFE0EA] bg-white lg:grid-cols-2">
+        <div className="relative flex min-h-0 flex-col overflow-hidden border-b border-[#DCE8EE] bg-white lg:border-b-0 lg:border-r">
+          <div className="z-10 flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-gray-400" />
-              <span className="text-xs font-medium text-gray-500">Shipment_FBA17ACME001.pdf</span>
+              <FileText className="h-4 w-4 text-[#66737F]" />
+              <span className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
+                Shipment_FBA17ACME001.pdf
+              </span>
             </div>
             <div className="flex gap-1">
-              <div className="w-2 h-2 rounded-full bg-gray-100" />
-              <div className="w-2 h-2 rounded-full bg-gray-100" />
-              <div className="w-2 h-2 rounded-full bg-gray-100" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[#E8EFF3]" />
             </div>
           </div>
 
-          <div className="flex-1 p-8 relative overflow-hidden">
-            <div className="space-y-4 text-gray-400 text-sm leading-relaxed select-none">
+          <div className="relative min-h-0 flex-1 overflow-hidden p-5 sm:p-6">
+            <div className="space-y-3 select-none text-[12.5px] leading-6 text-[#8A99A4]">
               <p>
                 Inbound shipment record shows{' '}
                 <MetadataHighlight active={isDocumentMatch('l-units')} tone="yellow">60 units shipped</MetadataHighlight>{' '}
@@ -291,17 +293,33 @@ export default function EvidenceMatch() {
           </div>
         </div>
 
-        <div className="flex flex-col">
-          <div className="bg-white rounded-[14px] p-5 shadow-lg border border-gray-100 flex flex-col h-full">
+        <div className="flex min-h-0 flex-col overflow-hidden bg-[#F8FAFC]">
+          <div className="flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
+            <div>
+              <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
+                Evidence matching protocol
+              </div>
+              <h1
+                className="mt-1 text-[16px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
+                style={{ fontFamily: 'Georgia, Merriweather, serif' }}
+              >
+                Inbound shipment shortage
+              </h1>
+            </div>
+            <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
+              Ready
+            </div>
+          </div>
+          <div className="min-h-0 flex-1 overflow-hidden p-4">
             <MatchAnalysisViz />
           </div>
         </div>
-      </div>
+      </section>
 
       <div className="hidden">
         {activeHighlights.length}
       </div>
-    </div>
+    </main>
   );
 }
 
