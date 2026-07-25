@@ -342,33 +342,34 @@ export default function ReportGeneration() {
                     <p className="mt-1 text-sm font-normal text-[#8A8F98]">All evidence bound and verified.</p>
                   </div>
 
-                  <article className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
-                    <div className="relative h-32 w-[96px] shrink-0">
-                      <div className="absolute inset-0 translate-x-3 -rotate-3 border border-[#DCE8EE] bg-white/40" />
-                      <div className="absolute inset-0 translate-x-1.5 rotate-2 border border-[#DCE8EE] bg-white/60" />
-                      <div className="absolute inset-0 border border-[#DCE8EE] bg-white/85 p-3">
-                        <div className="flex items-center justify-between border-b border-[#D8DDE3] pb-2">
-                          <span className="text-[8px] font-medium uppercase tracking-tight text-[#242424]">Margin</span>
-                          <span className="text-[6px] uppercase tracking-tight text-[#A0A6AE]">Dossier</span>
+                  <article className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
+                    <div className="relative h-[116px] w-[86px] shrink-0">
+                      <div className="absolute inset-0 translate-x-2.5 -rotate-2 border border-[#DCE8EE] bg-white/45" />
+                      <div className="absolute inset-0 translate-x-1 rotate-1 border border-[#DCE8EE] bg-white/70" />
+                      <div className="absolute inset-0 border border-[#DCE8EE] bg-white p-2.5">
+                        <div className="flex items-center justify-between border-b border-[#E3E8ED] pb-1.5">
+                          <span className="text-[7px] font-semibold uppercase tracking-tight text-[#182026]">Margin</span>
+                          <span className="font-mono text-[5.5px] uppercase tracking-tight text-[#A0A6AE]">Verified</span>
                         </div>
-                        <div className="mt-3 space-y-1">
-                          <div className="h-1.5 w-20 rounded-full bg-[#242424]/70" />
-                          <div className="h-1 w-24 rounded-full bg-[#C7CDD4]" />
-                          <div className="h-1 w-16 rounded-full bg-[#E1E5EA]" />
+                        <div className="mt-2.5 space-y-1.5">
+                          <div className="h-1.5 w-16 bg-[#182026]/80" />
+                          <div className="h-1 w-20 bg-[#C9D0D7]" />
+                          <div className="h-1 w-14 bg-[#E4E8EC]" />
                         </div>
-                        <div className="mt-3 space-y-1.5 border-y border-[#E6E9EE] py-2">
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">CASE</span><span className="font-medium text-[#242424]">#17520708561</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">SHIPMENT</span><span className="font-medium text-[#242424]">FBA15JJ4K7L1</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">WEIGHT</span><span className="font-medium text-[#242424]">45.2 lb</span></div>
-                          <div className="flex justify-between gap-2 text-[6px]"><span className="text-[#A0A6AE]">SIGNATURE</span><span className="font-medium text-[#242424]">J. Smith</span></div>
+                        <div className="mt-3 border-t border-[#E6E9EE] pt-2">
+                          <div className="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1 font-mono text-[5.5px] uppercase tracking-tight">
+                            <span className="text-[#A0A6AE]">Case</span>
+                            <span className="text-[#182026]">175207</span>
+                            <span className="text-[#A0A6AE]">Ship</span>
+                            <span className="text-[#182026]">FBA15J</span>
+                            <span className="text-[#A0A6AE]">Match</span>
+                            <span className="text-[#182026]">14/14</span>
+                          </div>
                         </div>
-                        <div className="mt-2 grid grid-cols-2 gap-1">
-                          <div className="h-1 rounded-full bg-[#D8DDE3]" />
-                          <div className="h-1 rounded-full bg-[#E6E9EE]" />
-                          <div className="h-1 rounded-full bg-[#E6E9EE]" />
-                          <div className="h-1 rounded-full bg-[#D8DDE3]" />
+                        <div className="absolute bottom-2.5 left-2.5 right-2.5 h-3 bg-[#F3F6F8]">
+                          <div className="mt-1 h-1 w-10 bg-[#B8C0C8]" />
                         </div>
-                        <span className="absolute bottom-2 right-2 text-[7px] text-[#C5CBD3]">1 / 14</span>
+                        <span className="absolute bottom-1.5 right-2 text-[6px] text-[#B7C0C9]">1/14</span>
                       </div>
                     </div>
 
