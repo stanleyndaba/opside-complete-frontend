@@ -32,6 +32,7 @@ import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
+const PLATFORM_INTEGRATION_VIDEO_URL = "/PlatformIntegrations.mp4";
 const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
 const EVIDENCE_EXTRACTION_VIDEO_URL = "/EvidenceExtraction.mp4";
 const EVIDENCE_MATCHING_VIDEO_URL = "/EvidenceMatching.mp4";
@@ -909,6 +910,46 @@ function RecoveryPreviewSection() {
                 />
               </div>
             </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PlatformIntegrationPreviewSection() {
+  return (
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
+      <div className={containerClass}>
+        <div className="grid gap-7 lg:grid-cols-[1.38fr_0.62fr] lg:items-center lg:gap-12">
+          <motion.div {...revealProps} className="relative order-2 lg:order-1">
+            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full scale-[1.018] object-cover"
+                  src={PLATFORM_INTEGRATION_VIDEO_URL}
+                  aria-label="Margin platform integration preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
+            <div className={sectionLabelClass}>Platform Integration</div>
+            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+              Stop searching across tools. Start operating from one recovery record.
+            </h2>
+            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              Margin brings together the invoices, BOLs, PODs, case logs, shipment records, settlement data, and accounting records scattered across your platforms—then reads and organizes them around the recovery they support.
+            </p>
+            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+              No source-hopping. No manual sorting. Every record ready when the case needs it.
+            </p>
           </motion.div>
         </div>
       </div>
@@ -1924,6 +1965,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         {/* <RecoveryPreviewSection /> */}
+        {/* <PlatformIntegrationPreviewSection /> */}
         {/* <EvidenceExtractionPreviewSection /> */}
         {/* <EvidenceMatchingPreviewSection /> */}
         <section className="relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
