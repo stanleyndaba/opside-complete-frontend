@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Download, Loader2, PlugZap, Radar, Share2 } from 'lucide-react';
+import { ArrowRight, Download, Loader2, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -226,10 +226,14 @@ export default function Audit() {
       tenantSlug: response.data.tenant.slug,
       phase: response.data.audit.status === 'amazon_connection_required' ? 'amazon_connection_required' : 'account_ready',
     });
+
+    if (!response.data.amazonConnected || response.data.audit.status === 'amazon_connection_required') {
+      await connectAmazonForAudit(response.data.audit, response.data.tenant.slug);
+    }
   };
 
-  const connectAmazon = async () => {
-    if (!audit?.id || !tenantSlug) {
+  const connectAmazonForAudit = async (targetAudit = audit, targetTenantSlug = tenantSlug) => {
+    if (!targetAudit?.id || !targetTenantSlug) {
       setError('Margin needs an audit workspace before Amazon can be connected.');
       return;
     }
@@ -237,16 +241,16 @@ export default function Audit() {
     setIsBusy(true);
     setError(null);
     trackEvent(ANALYTICS_EVENTS.auditAmazonConnectStarted, {
-      audit_id: audit.id,
-      tenant_slug: tenantSlug,
+      audit_id: targetAudit.id,
+      tenant_slug: targetTenantSlug,
     });
     savePendingAudit({
-      auditId: audit.id,
-      tenantSlug,
+      auditId: targetAudit.id,
+      tenantSlug: targetTenantSlug,
       phase: 'amazon_oauth_started',
     });
 
-    const response = await api.connectAmazon(undefined, false, tenantSlug);
+    const response = await api.connectAmazon(undefined, false, targetTenantSlug);
     setIsBusy(false);
 
     const authUrl = response.data?.auth_url || response.data?.authUrl;
@@ -257,6 +261,8 @@ export default function Audit() {
 
     window.location.assign(authUrl);
   };
+
+  const connectAmazon = () => connectAmazonForAudit();
 
   const runAudit = async () => {
     if (!audit?.id) {
@@ -334,12 +340,11 @@ export default function Audit() {
   const primaryAction =
     step === 'public' ? (
       <Button onClick={startAccountStep} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        <PlugZap className="mr-2 h-3.5 w-3.5" />
         Connect Amazon
       </Button>
     ) : step === 'connect' ? (
       <Button onClick={connectAmazon} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <PlugZap className="mr-2 h-3.5 w-3.5" />}
+        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : null}
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
@@ -349,7 +354,7 @@ export default function Audit() {
       </Button>
     ) : (
       <Button onClick={runAudit} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <PlugZap className="mr-2 h-3.5 w-3.5" />}
+        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : null}
         {audit?.sync_id ? 'Continue Audit' : 'Connect Amazon'}
       </Button>
     );
