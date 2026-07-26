@@ -470,7 +470,7 @@ const sectionLabelClass =
 const sectionHeadingClass =
   "mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[64px]";
 const sectionBodyClass =
-  "mt-5 max-w-[740px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9";
+  "mt-5 max-w-[740px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9";
 const revealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -491,13 +491,13 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         />
-        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
+        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-tight text-[#4D5B66]">
           Proof sources sellers already have
         </div>
       </div>
       <div className="relative mt-5 overflow-hidden md:mt-7">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#F3F6F8] to-transparent md:w-28" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#F3F6F8] to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-28" />
         <motion.div
           className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
           animate={{ x: ["0%", "-50%"] }}
@@ -703,7 +703,7 @@ function EvidenceOrchestratorSourceNode({
             <span className="text-[10px] font-semibold tracking-tight text-[#0B74DE]">{source.shortName}</span>
           )}
         </div>
-        <span className="hidden text-[10px] font-semibold tracking-tight text-[#66737F] sm:block">{source.name}</span>
+        <span className="hidden text-[10px] font-semibold tracking-tight text-[#4D5B66] sm:block">{source.name}</span>
       </motion.div>
     </div>
   );
@@ -848,7 +848,7 @@ function EvidenceSourcesOrchestrator() {
             >
               <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain sm:h-9" />
             </motion.div>
-            <div className="absolute -bottom-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold tracking-tight text-[#66737F] sm:block">
+            <div className="absolute -bottom-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold tracking-tight text-[#4D5B66] sm:block">
               Margin case file
             </div>
           </div>
@@ -1522,13 +1522,13 @@ function KineticHeroSection({
 }
 function SystemLogMarquee() {
   return (
-    <section className="system-log-marquee relative overflow-hidden bg-[#F3F6F8] py-16 md:py-24">
+    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 md:py-24">
       {" "}
       <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(201,214,222,0.24)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.18)_1px,transparent_1px)] [background-size:52px_52px]" />{" "}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#F3F6F8] to-transparent" />{" "}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#F3F6F8] to-transparent" />{" "}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#F3F6F8] to-transparent md:w-32" />{" "}
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#F3F6F8] to-transparent md:w-32" />{" "}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#FAFAF7] to-transparent" />{" "}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFAF7] to-transparent" />{" "}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-32" />{" "}
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-32" />{" "}
       <div className={containerClass}>
         {" "}
         <motion.div {...revealProps} className="relative z-20 max-w-[760px]">
@@ -1537,7 +1537,7 @@ function SystemLogMarquee() {
           <h2 className="mt-4 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] sm:text-[42px] md:text-[62px]">
             <span className="text-[#182026]">One rejected case.</span> <span className="text-[#8A98A3]">Every missing answer.</span>
           </h2>{" "}
-          <p className="mt-5 max-w-[680px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
+          <p className="mt-5 max-w-[680px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
             {" "}
             Amazon asks again, rejects, underpays, or delays. Margin keeps the
             proof, timeline, response, and payout state tied to the same
@@ -1558,7 +1558,7 @@ function SystemLogMarquee() {
             {" "}
             <TypewriterPrompt text="Show me what Amazon still needs for this claim." />{" "}
           </div>{" "}
-          <div className="mt-5 border-t border-[#D8E3E8] pt-3 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
+          <div className="mt-5 border-t border-[#D8E3E8] pt-3 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#4D5B66]">
             {" "}
             Missing proof found - Ready for seller review{" "}
           </div>{" "}
@@ -1668,7 +1668,7 @@ function EvidenceReadinessBlueprint() {
             %
           </span>{" "}
         </div>{" "}
-        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#66737F] max-md:mt-5 md:text-[16px]">
+        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] max-md:mt-5 md:text-[16px]">
           {" "}
           Amazon may still ask for an invoice, shipment proof, carrier record,
           signed POD, or cost breakdown before the case is ready to survive
@@ -1704,7 +1704,7 @@ function EvidenceReadinessBlueprint() {
             {" "}
             Likely request list{" "}
           </div>{" "}
-          <p className="mt-4 max-w-[260px] text-[15px] leading-7 text-[#66737F]">
+          <p className="mt-4 max-w-[260px] text-[15px] leading-7 text-[#4D5B66]">
             {" "}
             Invoice <br /> Shipment proof <br /> Carrier record <br /> Signed
             POD <br /> Cost breakdown{" "}
@@ -1716,7 +1716,7 @@ function EvidenceReadinessBlueprint() {
             {" "}
             Current status{" "}
           </div>{" "}
-          <p className="mt-4 max-w-[280px] text-[15px] leading-7 text-[#66737F]">
+          <p className="mt-4 max-w-[280px] text-[15px] leading-7 text-[#4D5B66]">
             {" "}
             Not ready to survive another Amazon response.{" "}
           </p>{" "}
@@ -1741,7 +1741,7 @@ function MobileMarketplaceHub() {
       <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em]">
         <span className="text-[#182026]">Supported</span> <span className="text-[#8A98A3]">FBA marketplaces</span>
       </h2>{" "}
-      <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#66737F]">
+      <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#4D5B66]">
         {" "}
         Margin is built for Amazon FBA reimbursement work across supported
         marketplaces. Marketplace availability may vary during Early
@@ -1866,7 +1866,7 @@ function MinimalMetric({
           {suffix}{" "}
         </span>{" "}
       </div>{" "}
-      <p className="mt-5 max-w-[320px] text-[15px] leading-6 text-[#66737F] md:text-base">
+      <p className="mt-5 max-w-[320px] text-[15px] leading-6 text-[#4D5B66] md:text-base">
         {" "}
         {detail}{" "}
       </p>{" "}
@@ -2092,7 +2092,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="hidden relative border-b border-[#E4EDF1] bg-[#F4FAFF] py-8 max-md:bg-[#F4FAFF] max-md:py-14">
+        <section className="hidden relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 max-md:bg-[#FAFAF7] max-md:py-14">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2154,7 +2154,7 @@ export default function Index() {
                       <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
                         Invoice
                       </div>{" "}
-                      <div className="mt-1 text-[15px] leading-7 text-[#66737F]">
+                      <div className="mt-1 text-[15px] leading-7 text-[#4D5B66]">
                         Amazon may still ask for the invoice, shipment proof,
                         carrier record, signed POD, or cost breakdown before the
                         case is ready to survive another response.
@@ -2171,7 +2171,7 @@ export default function Index() {
                       <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
                         Shipment proof
                       </div>{" "}
-                      <div className="mt-1 text-[15px] leading-7 text-[#66737F]">
+                      <div className="mt-1 text-[15px] leading-7 text-[#4D5B66]">
                         The shipment record, carrier scan, and receiving data
                         need to line up before the recovery can move forward.
                       </div>{" "}
@@ -2187,7 +2187,7 @@ export default function Index() {
                       <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
                         Case readiness
                       </div>{" "}
-                      <div className="mt-1 text-[15px] leading-7 text-[#66737F]">
+                      <div className="mt-1 text-[15px] leading-7 text-[#4D5B66]">
                         Margin keeps the evidence trail attached so the case is
                         ready when Amazon asks again.
                       </div>{" "}
@@ -2206,7 +2206,7 @@ export default function Index() {
         {/* <MarginOrchestrationFlow /> */}
         <MarginIdentityCards />
         <section
-          className="hidden relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24"
+          className="hidden relative border-y border-[#E4EDF1] bg-[#FAFAF7] py-14 md:py-24"
           id="margin-demo"
         >
           {" "}
@@ -2221,7 +2221,7 @@ export default function Index() {
               <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] sm:text-[40px] md:text-[58px]">
                 <span className="text-[#182026]">See how a discovered discrepancy</span> <span className="text-[#8A98A3]">becomes a case Amazon can review.</span>
               </h2>{" "}
-              <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#66737F] md:text-[18px] md:leading-9">
+              <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
                 {" "}
                 Follow the path from deadline pressure to evidence matching,
                 seller approval, Amazon pushback, and payout
@@ -2270,7 +2270,7 @@ export default function Index() {
             </motion.button>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="hidden relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-20">
+        <section className="hidden relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-14 md:py-20">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2280,7 +2280,7 @@ export default function Index() {
               <h2 className="mt-3 text-[28px] font-semibold leading-tight tracking-[-0.04em] md:text-[42px]">
                 <span className="text-[#182026]">The proof exists.</span> <span className="text-[#8A98A3]">Amazon just will not accept it scattered.</span>
               </h2>{" "}
-              <p className="mt-4 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+              <p className="mt-4 text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
                 {" "}
                 The invoice in Gmail, the BOL in Drive, the POD in a carrier
                 portal, the shipment ID in Seller Central, and the payout record
@@ -2291,7 +2291,7 @@ export default function Index() {
             <div className="mt-8 md:mt-10">
               <EvidenceSourcesOrchestrator />
             </div>{" "}
-            <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#66737F] max-md:text-left md:text-[16px]">
+            <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#4D5B66] max-md:text-left md:text-[16px]">
               {" "}
               Amazon never reviews your Gmail. <br /> Or your Drive. <br /> Or
               your carrier portal. <br /> It reviews one reimbursement case.{" "}
@@ -2301,7 +2301,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <section
-          className="hidden relative bg-[#F4FAFF] py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24"
+          className="hidden relative bg-[#FAFAF7] py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24"
           id="how-margin-works"
         >
           {" "}
@@ -2355,7 +2355,7 @@ export default function Index() {
                         {" "}
                         {item.title}{" "}
                       </h3>{" "}
-                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#66737F] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
+                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#4D5B66] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
                         {" "}
                         {item.detail}{" "}
                       </p>{" "}
@@ -2406,7 +2406,7 @@ export default function Index() {
               {...revealProps}
               className="mx-auto max-w-[880px] text-center"
             >
-              <div className="mx-auto mb-5 inline-flex items-center rounded-full border border-[#CBD7DE] bg-[#F9FBFC] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-tight text-[#66737F]">
+              <div className="mx-auto mb-5 inline-flex items-center rounded-full border border-[#CBD7DE] bg-[#F9FBFC] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-tight text-[#4D5B66]">
                 Why Margin Outperforms
               </div>
               <h2 className="text-[38px] font-bold leading-[0.98] tracking-[-0.055em] text-[#182026] sm:text-[54px] md:text-[68px] lg:text-[76px]">
@@ -2442,7 +2442,7 @@ export default function Index() {
                       {card.points.map((point, pointIndex) => (
                         <li
                           key={point}
-                          className="flex items-start gap-2 text-[14px] leading-6 text-[#66737F] md:text-[15px]"
+                          className="flex items-start gap-2 text-[14px] leading-6 text-[#4D5B66] md:text-[15px]"
                         >
                           <span
                             className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-[1px] ${
@@ -2474,7 +2474,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="hidden relative bg-[#F3F6F8] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
+        <section className="hidden relative bg-[#FAFAF7] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2647,7 +2647,7 @@ export default function Index() {
                       <h3 className="text-[19px] font-semibold tracking-[-0.025em] text-[#182026] md:text-[22px]">
                         {item.title}
                       </h3>{" "}
-                      <p className="mt-3 max-w-[620px] text-[15px] leading-7 text-[#66737F] md:text-[16px] md:leading-8">
+                      <p className="mt-3 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8">
                         {item.detail}
                       </p>{" "}
                     </div>{" "}
@@ -2744,7 +2744,7 @@ export default function Index() {
                       {" "}
                       {item.question}{" "}
                     </AccordionTrigger>{" "}
-                    <AccordionContent className="max-w-[860px] pb-7 pr-10 text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
+                    <AccordionContent className="max-w-[860px] pb-7 pr-10 text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
                       {" "}
                       <p>{item.answer}</p>{" "}
                     </AccordionContent>{" "}
@@ -2757,7 +2757,7 @@ export default function Index() {
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-[5px] border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#F3F6F8]"
+                    className="rounded-[5px] border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#FAFAF7]"
                   >
                     {" "}
                     Show more questions{" "}
@@ -2824,7 +2824,7 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-[#F4FAFF] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
+        <section className="relative bg-[#FAFAF7] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#FAFAF7] md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2858,11 +2858,11 @@ export default function Index() {
             </motion.div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative overflow-hidden bg-[#F4FAFF] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
+        <section className="relative overflow-hidden bg-white py-12 max-md:border-y max-md:border-[#E5E7EB] md:py-20">
           {" "}
           <div className={containerClass}>
             {" "}
-            <div className="relative overflow-hidden border-y border-[#D8E3E8] bg-white py-8 md:py-12">
+            <div className="relative border-y border-[#D8E3E8] py-8 md:py-10">
               {" "}
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 {" "}
