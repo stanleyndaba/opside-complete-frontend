@@ -892,6 +892,11 @@ export const api = {
     audit: AuditRunRecord;
   }>(`/api/audits/${encodeURIComponent(auditId)}`),
 
+  getLatestAudit: () => requestJson<{
+    success: boolean;
+    audit: AuditRunRecord | null;
+  }>('/api/audits/latest'),
+
   runAudit: (auditId: string) => requestJson<{
     success: boolean;
     audit: AuditRunRecord;

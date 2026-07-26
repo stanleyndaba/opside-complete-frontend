@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Download, Link2, Loader2, Radar, Share2 } from 'lucide-react';
+import { ArrowRight, Download, Loader2, PlugZap, Radar, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,14 @@ import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 
 type AuditStep = 'public' | 'ready' | 'connect' | 'syncing' | 'detecting' | 'completed' | 'failed';
+type PendingAuditContext = {
+  auditId: string;
+  tenantSlug: string;
+  phase: 'account_ready' | 'amazon_connection_required' | 'amazon_oauth_started' | 'syncing' | 'completed';
+  updatedAt: string;
+};
+
+const PENDING_AUDIT_KEY = 'margin_pending_audit';
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -70,6 +78,37 @@ function formatMoney(value: number) {
   return CURRENCY_FORMATTER.format(value);
 }
 
+function savePendingAudit(context: Omit<PendingAuditContext, 'updatedAt'>) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(PENDING_AUDIT_KEY, JSON.stringify({
+    ...context,
+    updatedAt: new Date().toISOString(),
+  }));
+}
+
+function readPendingAudit(): PendingAuditContext | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(PENDING_AUDIT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PendingAuditContext>;
+    if (!parsed.auditId || !parsed.tenantSlug) return null;
+    return {
+      auditId: parsed.auditId,
+      tenantSlug: parsed.tenantSlug,
+      phase: parsed.phase || 'account_ready',
+      updatedAt: parsed.updatedAt || new Date().toISOString(),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function clearPendingAudit() {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(PENDING_AUDIT_KEY);
+}
+
 export default function Audit() {
   const navigate = useNavigate();
   const { authToken, isAuthReady, isSessionValid } = useSession();
@@ -81,6 +120,7 @@ export default function Audit() {
   const [error, setError] = useState<string | null>(null);
   const trackedViewRef = useRef(false);
   const trackedCompletionRef = useRef(false);
+  const restoredAuditRef = useRef(false);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
 
@@ -101,6 +141,50 @@ export default function Audit() {
       source_page: '/audit',
     });
   }, [audit?.id, audit?.status]);
+
+  useEffect(() => {
+    if (!isAuthenticated || restoredAuditRef.current) return;
+    restoredAuditRef.current = true;
+
+    const restoreAudit = async () => {
+      const pending = readPendingAudit();
+      setIsBusy(true);
+      setError(null);
+
+      if (pending?.auditId) {
+        const response = await api.getAudit(pending.auditId);
+        if (response.ok && response.data?.audit) {
+          setAudit(response.data.audit);
+          setTenantSlug(pending.tenantSlug);
+          if (response.data.audit.status === 'completed') {
+            const results = await api.getAuditResults(response.data.audit.id);
+            if (results.ok && results.data?.teaser) {
+              setTeaser(results.data.teaser);
+            }
+          }
+          setIsBusy(false);
+          return;
+        }
+      }
+
+      const latest = await api.getLatestAudit();
+      if (latest.ok && latest.data?.audit) {
+        setAudit(latest.data.audit);
+        const storedTenantSlug = localStorage.getItem('active_tenant_slug');
+        if (storedTenantSlug) setTenantSlug(storedTenantSlug);
+        if (latest.data.audit.status === 'completed') {
+          const results = await api.getAuditResults(latest.data.audit.id);
+          if (results.ok && results.data?.teaser) {
+            setTeaser(results.data.teaser);
+          }
+        }
+      }
+
+      setIsBusy(false);
+    };
+
+    void restoreAudit();
+  }, [isAuthenticated]);
 
   const startAccountStep = () => {
     trackEvent(ANALYTICS_EVENTS.auditStarted, {
@@ -137,6 +221,11 @@ export default function Audit() {
 
     setAudit(response.data.audit);
     setTenantSlug(response.data.tenant.slug);
+    savePendingAudit({
+      auditId: response.data.audit.id,
+      tenantSlug: response.data.tenant.slug,
+      phase: response.data.audit.status === 'amazon_connection_required' ? 'amazon_connection_required' : 'account_ready',
+    });
   };
 
   const connectAmazon = async () => {
@@ -150,6 +239,11 @@ export default function Audit() {
     trackEvent(ANALYTICS_EVENTS.auditAmazonConnectStarted, {
       audit_id: audit.id,
       tenant_slug: tenantSlug,
+    });
+    savePendingAudit({
+      auditId: audit.id,
+      tenantSlug,
+      phase: 'amazon_oauth_started',
     });
 
     const response = await api.connectAmazon(undefined, false, tenantSlug);
@@ -186,6 +280,13 @@ export default function Audit() {
     }
 
     setAudit(response.data.audit);
+    if (tenantSlug) {
+      savePendingAudit({
+        auditId: response.data.audit.id,
+        tenantSlug,
+        phase: response.data.audit.status === 'completed' ? 'completed' : response.data.audit.status === 'syncing' ? 'syncing' : 'account_ready',
+      });
+    }
 
     if (response.data.audit.status === 'completed') {
       const results = await api.getAuditResults(response.data.audit.id);
@@ -216,6 +317,7 @@ export default function Audit() {
       findings_count: teaser.findingsCount,
       destination: '/currency-margin',
     });
+    clearPendingAudit();
     navigate(`/currency-margin?source=audit${audit?.id ? `&audit_id=${encodeURIComponent(audit.id)}` : ''}`);
   };
 
@@ -237,7 +339,7 @@ export default function Audit() {
       </Button>
     ) : step === 'connect' ? (
       <Button onClick={connectAmazon} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <Link2 className="mr-2 h-3.5 w-3.5" />}
+        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <PlugZap className="mr-2 h-3.5 w-3.5" />}
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
@@ -390,22 +492,8 @@ export default function Audit() {
                   className="text-[19px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
                   style={{ fontFamily: 'Georgia, Merriweather, serif' }}
                 >
-                  Building your recovery picture
+                  Workspace report
                 </h2>
-              </div>
-
-              <div className="border-b border-[#DCE8EE] py-3">
-                <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#66737F]">
-                  We'll check for
-                </div>
-                <div className="mt-3 space-y-2 text-[13px] leading-5 text-[#182026]">
-                  <p>Lost inbound inventory</p>
-                  <p>Missing reimbursements</p>
-                  <p>Refunds without returns</p>
-                  <p>Settlement discrepancies</p>
-                  <p>Fee overcharges</p>
-                  <p>Amazon response requirements</p>
-                </div>
               </div>
 
               {step === 'completed' && teaser.categories.length ? (
