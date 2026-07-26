@@ -334,8 +334,8 @@ export default function Audit() {
   const primaryAction =
     step === 'public' ? (
       <Button onClick={startAccountStep} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
+        <PlugZap className="mr-2 h-3.5 w-3.5" />
         Connect Amazon
-        <ArrowRight className="ml-2 h-3.5 w-3.5" />
       </Button>
     ) : step === 'connect' ? (
       <Button onClick={connectAmazon} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
@@ -349,7 +349,7 @@ export default function Audit() {
       </Button>
     ) : (
       <Button onClick={runAudit} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <Radar className="mr-2 h-3.5 w-3.5" />}
+        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <PlugZap className="mr-2 h-3.5 w-3.5" />}
         {audit?.sync_id ? 'Continue Audit' : 'Connect Amazon'}
       </Button>
     );
