@@ -97,8 +97,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     return (
         <header
             className={cn(
-                "fixed left-0 right-0 top-0 z-50 border-transparent transition-colors md:bg-transparent",
-                isLight ? "max-md:bg-white" : "max-md:bg-[#080808]",
+                "fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent transition-colors",
             )}
         >
             <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
@@ -142,9 +141,6 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         </div>
                         <Link to="/about-margin" className={desktopNavLinkClass}>
                             About
-                        </Link>
-                        <Link to="/sales" className={desktopNavLinkClass}>
-                            Enterprise
                         </Link>
                     </nav>
 
@@ -190,7 +186,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                                 ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
                                                 : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
                                         )}>
-                                            Agents
+                                            Workflows
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2">
                                             <div className="space-y-6">
@@ -277,12 +273,6 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={mobileMenuItemClass}>
                                     About
-                                </Link>
-                                <Link
-                                    to="/sales"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
-                                    Enterprise
                                 </Link>
                                 <Link
                                     to="/login"

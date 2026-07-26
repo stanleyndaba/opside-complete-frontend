@@ -91,6 +91,7 @@ const DesignSimulate = lazy(() => import("./pages/designsimulate"));
 const PlatformSimulate = lazy(() => import("./pages/platformsimulate"));
 const DocumentSimulate = lazy(() => import("./pages/documentsimulate"));
 const AuditSimulate = lazy(() => import("./pages/auditsimulate"));
+const Audit = lazy(() => import("./pages/audit"));
 const TimelineSimulation = lazy(() => import("./pages/TimelineSimulation"));
 const ReadinessSimulate = lazy(() => import("./pages/ReadinessSimulate"));
 const ReadinessSimulateTwo = lazy(() => import("./pages/readiness-simulate-two"));
@@ -301,6 +302,7 @@ const App = () => (
                         <Route path="/platformsimulate" element={<PlatformSimulate />} />
                         <Route path="/documentsimulate" element={<DocumentSimulate />} />
                         <Route path="/auditsimulate" element={<AuditSimulate />} />
+                        <Route path="/audit" element={<Audit />} />
                         <Route path="/timeline-simulation" element={<TimelineSimulation />} />
                         <Route path="/readiness-simulate" element={<ReadinessSimulate />} />
                         <Route path="/readiness-simulate-two" element={<ReadinessSimulateTwo />} />

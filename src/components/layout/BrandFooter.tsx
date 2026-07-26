@@ -112,7 +112,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
         style={{ width: '100%', maxWidth: '100%' }}
       >
         <div className="container mx-auto px-4 py-16">
-          <div className="mx-auto mb-12 max-w-3xl text-center">
+          <div className="hidden mx-auto mb-12 max-w-3xl text-center">
             <h2 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
               Join for product updates, insights, and event invites.
             </h2>

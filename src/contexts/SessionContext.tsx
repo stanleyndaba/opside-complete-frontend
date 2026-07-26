@@ -47,6 +47,7 @@ const PUBLIC_ROUTE_SEGMENTS = [
     '/research',
     '/fba-reimbursement-research',
     '/pricing',
+    '/audit',
     '/branding',
     '/system-error-preview',
     '/amazon-sandbox',

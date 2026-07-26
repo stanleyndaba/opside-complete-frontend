@@ -57,7 +57,7 @@ function AppAccessGateway() {
     trackClaimAccessClicked({
       cta_location: ctaLocation,
       cta_text: ctaText,
-      destination: '/early-access',
+      destination: '/audit',
       attempted_path_type: attemptedPathType,
     });
     trackEvent(ANALYTICS_EVENTS.appGateEarlyAccessClicked, {
@@ -94,7 +94,7 @@ function AppAccessGateway() {
               <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <Button asChild className="h-12 w-full justify-center rounded-[5px] bg-[#0B74DE] px-6 text-sm font-bold text-white hover:bg-[#0869C9] sm:w-auto">
                   <Link
-                    to="/early-access"
+                    to="/audit"
                     onClick={() => trackStartAudit()}
                   >
                     Preview Recovery Audit
@@ -127,17 +127,17 @@ function AppAccessGateway() {
                 </div>
                 <div>
                   <h2 className="text-[17px] font-semibold tracking-normal text-[#182026]">
-                    Early Access is open
+                    Free audit is open
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-[#66737F]">
-                    Reserve the audit path now. Margin keeps seller approval, evidence review, and reimbursement workflow access controlled while onboarding opens.
+                    Run a free recovery evaluation first. Margin keeps evidence detail, filing controls, and reimbursement workflow access locked until activation.
                   </p>
                   <Link
-                    to="/early-access"
-                    onClick={() => trackStartAudit('Continue to Early Access', 'app_access_gate_sidebar')}
+                    to="/audit"
+                    onClick={() => trackStartAudit('Start Free Audit', 'app_access_gate_sidebar')}
                     className="mt-5 inline-flex items-center text-sm font-bold text-[#0B74DE] hover:text-[#0869C9]"
                   >
-                    Continue to Early Access
+                    Start Free Audit
                     <ArrowRight className="ml-1.5 h-4 w-4" />
                   </Link>
                 </div>

@@ -311,13 +311,11 @@ const trustControls = [
   },
 ];
 const earlyAccessItems = [
-  "Founder onboarding before filing",
-  "Autonomous Evidence Linking",
-  "Claim deadline and proof readiness check",
-  "Auto-Filing with Opt-Out Control",
-  "Accounting-ready QuickBooks/Xero reconciliation layer included in the rollout",
-  "0% Commission Through 2026",
-  "Built for Hard-to-Prove Claims",
+  "Seller Approval Before Filing",
+  "Evidence linked automatically",
+  "Deadline tracking",
+  "Accounting-ready reconciliation",
+  "0% commission through 2026",
 ];
 const securityFeatures = [
   "Official Amazon OAuth Authorization",
@@ -466,6 +464,7 @@ const integrationLogos = [
   },
 ];
 const containerClass = "mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8";
+const demoContainerClass = "mx-auto w-full max-w-[1240px] px-5 sm:px-6 md:px-8";
 const sectionLabelClass =
   "text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]";
 const sectionHeadingClass =
@@ -877,11 +876,11 @@ function EvidenceSourcesOrchestrator() {
 
 function RecoveryPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
-      <div className={containerClass}>
-        <div className="grid gap-7 lg:grid-cols-[0.62fr_1.38fr] lg:items-center lg:gap-12">
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="max-w-[500px]">
-            <div className={sectionLabelClass}>Recovery preview</div>
+            <div className={sectionLabelClass}>RECOVERY PREVIEW</div>
             <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
               Every recovery starts with one finding.
             </h2>
@@ -889,9 +888,11 @@ function RecoveryPreviewSection() {
               But every payout depends on the evidence behind it.
             </p>
             <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Invoices, shipment records, inventory events, settlement history,
-              and supporting documents are automatically connected into one
-              recovery case.
+              <strong className="font-semibold text-[#182026]">Stop wondering whether you have enough proof.</strong>{" "}
+              Margin automatically connects invoices, shipment records,
+              inventory events, settlement history, and supporting documents
+              into one recovery case—so when Amazon asks, the evidence is
+              already there.
             </p>
           </motion.div>
 
@@ -899,7 +900,7 @@ function RecoveryPreviewSection() {
             <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
-                  className="h-full w-full translate-x-[-0.45%] scale-[1.026] object-cover"
+                  className="h-full w-full object-contain"
                   src={RECOVERY_PREVIEW_VIDEO_URL}
                   aria-label="Margin 10-second recovery preview"
                   autoPlay
@@ -919,14 +920,14 @@ function RecoveryPreviewSection() {
 
 function PlatformIntegrationPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
-      <div className={containerClass}>
-        <div className="grid gap-7 lg:grid-cols-[1.38fr_0.62fr] lg:items-center lg:gap-12">
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
             <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
-                  className="h-full w-full scale-[1.018] object-cover"
+                  className="h-full w-full object-contain"
                   src={PLATFORM_INTEGRATION_VIDEO_URL}
                   aria-label="Margin platform integration preview"
                   autoPlay
@@ -942,13 +943,18 @@ function PlatformIntegrationPreviewSection() {
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
             <div className={sectionLabelClass}>Platform Integration</div>
             <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
-              Stop searching across tools. Start operating from one recovery record.
+              Everything you need. One recovery record.
             </h2>
             <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Margin brings together the invoices, BOLs, PODs, case logs, shipment records, settlement data, and accounting records scattered across your platforms—then reads and organizes them around the recovery they support.
+              Stop switching between Seller Central, email, cloud storage,
+              accounting software, and carrier portals just to answer one Amazon
+              question. Margin automatically brings together the invoices,
+              shipment records, PODs, BOLs, case history, settlement data, and
+              accounting records behind every recovery—so the right evidence is
+              already in one place.
             </p>
             <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
-              No source-hopping. No manual sorting. Every record ready when the case needs it.
+              One recovery. One record. Nothing left to chase.
             </p>
           </motion.div>
         </div>
@@ -959,14 +965,14 @@ function PlatformIntegrationPreviewSection() {
 
 function RepliesPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
-      <div className={containerClass}>
-        <div className="grid gap-7 lg:grid-cols-[1.38fr_0.62fr] lg:items-center lg:gap-12">
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
             <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
-                  className="h-full w-full scale-[1.018] object-cover"
+                  className="h-full w-full object-contain"
                   src={REPLIES_PREVIEW_VIDEO_URL}
                   aria-label="Margin Amazon replies management preview"
                   autoPlay
@@ -985,7 +991,13 @@ function RepliesPreviewSection() {
               Recovery doesn't end when Amazon replies.
             </h2>
             <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              <strong className="font-semibold text-[#182026]">Margin keeps every Amazon response, document request, rejection, and approval connected to the same recovery until the case is resolved.</strong>
+              Recovery rarely ends with the first submission. When Amazon asks
+              for more information, rejects a claim, or approves only part of it,
+              everything stays connected to the same recovery—so you always know
+              what happened, what&apos;s missing, and what comes next.
+            </p>
+            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+              Stay in control until the money arrives.
             </p>
           </motion.div>
         </div>
@@ -996,14 +1008,31 @@ function RepliesPreviewSection() {
 
 function EvidenceExtractionPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
-      <div className={containerClass}>
-        <div className="grid gap-7 lg:grid-cols-[1.38fr_0.62fr] lg:items-center lg:gap-12">
-          <motion.div {...revealProps} className="relative order-2 lg:order-1">
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="max-w-[520px]">
+            <div className={sectionLabelClass}>EVIDENCE EXTRACTION</div>
+            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+              Know exactly what your records prove.
+            </h2>
+            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              Stop reading hundreds of documents looking for one answer. Margin
+              automatically reads invoices, BOLs, PODs, carrier records, and
+              warehouse confirmations to identify the dates, quantities,
+              signatures, weights, and inconsistencies that matter—then connects
+              them to the recovery they support.
+            </p>
+            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+              Less document hunting. Faster case preparation. Evidence you can trust.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} className="relative">
             <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
-                  className="h-full w-full scale-[1.018] object-cover"
+                  className="h-full w-full object-contain"
                   src={EVIDENCE_EXTRACTION_VIDEO_URL}
                   aria-label="Margin evidence extraction preview"
                   autoPlay
@@ -1015,19 +1044,6 @@ function EvidenceExtractionPreviewSection() {
               </div>
             </div>
           </motion.div>
-
-          <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
-            <div className={sectionLabelClass}>Evidence Extraction</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
-              Know exactly what your records prove.
-            </h2>
-            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Margin reads invoices, BOLs, PODs, carrier records, and warehouse confirmations to extract the dates, quantities, weights, signatures, and contradictions that matter—then connects them to the recovery they support.
-            </p>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
-              Less document hunting. Faster case preparation. Evidence you can act on.
-            </p>
-          </motion.div>
         </div>
       </div>
     </section>
@@ -1036,27 +1052,14 @@ function EvidenceExtractionPreviewSection() {
 
 function EvidenceMatchingPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
-      <div className={containerClass}>
-        <div className="grid gap-7 lg:grid-cols-[0.62fr_1.38fr] lg:items-center lg:gap-12">
-          <motion.div {...revealProps} className="max-w-[520px]">
-            <div className={sectionLabelClass}>Evidence Matching</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
-              Operate from proof, not assumptions.
-            </h2>
-            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Margin matches each discrepancy to the correct shipment records, quantities, SKUs, invoices, receiving data, deadlines, and policy basis—so you know exactly why the recovery exists and which evidence supports it.
-            </p>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
-              The right records. The right case. A clear path to recovery.
-            </p>
-          </motion.div>
-
-          <motion.div {...revealProps} className="relative">
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="relative order-2 lg:order-1">
             <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
-                  className="h-full w-full scale-[1.018] object-cover"
+                  className="h-full w-full object-contain"
                   src={EVIDENCE_MATCHING_VIDEO_URL}
                   aria-label="Margin evidence matching preview"
                   autoPlay
@@ -1068,6 +1071,24 @@ function EvidenceMatchingPreviewSection() {
               </div>
             </div>
           </motion.div>
+
+          <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
+            <div className={sectionLabelClass}>Evidence Matching</div>
+            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+              Operate from proof, not assumptions.
+            </h2>
+            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              When Amazon asks why a recovery should be approved, every answer
+              needs evidence. Margin automatically connects each discrepancy to
+              the shipment records, quantities, SKUs, invoices, receiving data,
+              deadlines, and policy that support it—so you know exactly{" "}
+              <strong className="font-semibold text-[#182026]">why</strong> the
+              recovery exists before it&apos;s filed.
+            </p>
+            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+              The right records. The right case. A clear path to recovery.
+            </p>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -1076,19 +1097,22 @@ function EvidenceMatchingPreviewSection() {
 
 function EvidenceCalibrationPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-12 md:py-20">
-      <div className={containerClass}>
-        <div className="grid gap-7 lg:grid-cols-[0.62fr_1.38fr] lg:items-center lg:gap-12">
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="max-w-[520px]">
             <div className={sectionLabelClass}>Evidence Calibration</div>
             <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
               Stronger cases. Better approval odds.
             </h2>
             <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Margin learns which evidence Amazon accepted, what caused rejection, and what ultimately unlocked approval—then applies those outcome patterns to prepare similar cases more effectively.
+              <strong className="font-semibold text-[#182026]">Every approved case teaches the next one.</strong>{" "}
+              Margin remembers which evidence helped claims get approved, what
+              caused rejections, and what Amazon asked for—so future recoveries
+              start with stronger evidence before they&apos;re ever filed.
             </p>
             <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
-              Better evidence selection. Fewer preventable gaps. Greater confidence before filing.
+              Every case makes the next one stronger.
             </p>
           </motion.div>
 
@@ -1096,7 +1120,7 @@ function EvidenceCalibrationPreviewSection() {
             <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
-                  className="h-full w-full scale-[1.018] object-cover"
+                  className="h-full w-full object-contain"
                   src={EVIDENCE_CALIBRATION_VIDEO_URL}
                   aria-label="Margin evidence calibration preview"
                   autoPlay
@@ -1113,6 +1137,167 @@ function EvidenceCalibrationPreviewSection() {
     </section>
   );
 }
+
+const marginIdentityCards = [
+  {
+    image: "/Discover.png",
+    title: "Finds money you didn't know you lost.",
+    body:
+      "Every shipment, inventory movement, settlement, and reimbursement is continuously audited—so missing money doesn't stay hidden.",
+  },
+  {
+    image: "/BuildsCase.png",
+    title: "Builds the case Amazon expects.",
+    body:
+      "Invoices, shipment records, receiving logs, carrier proof, and policy references are automatically connected into one recovery before filing begins.",
+  },
+  {
+    image: "/Recover.png",
+    title: "Stays with every recovery until you're paid.",
+    body:
+      "Amazon asks questions. Rejects claims. Approves partial payouts. Margin keeps everything connected until the recovery is finished.",
+  },
+];
+
+const orchestrationSources = [
+  { name: "Amazon", image: "/amazon-logo-transparent-circle.png", top: "14%", left: "5%", delay: 0 },
+  { name: "Gmail", image: "/gmailicon.png", top: "30%", left: "10%", delay: 0.22 },
+  { name: "Drive", image: "/Driveboy.png", top: "70%", left: "7%", delay: 0.44 },
+  { name: "Dropbox", image: "/Dropbox_Icon.svg.png", top: "20%", left: "20%", delay: 0.66 },
+  { name: "Slack", image: "/slack-icon-2019.png", top: "50%", left: "18%", delay: 0.88 },
+  { name: "OneDrive", image: "/onedrivelogo.png", top: "80%", left: "23%", delay: 1.1 },
+  { name: "QuickBooks", image: "/quickbooks.png", top: "36%", left: "30%", delay: 1.32 },
+  { name: "Xero", image: "/xero.png", top: "62%", left: "31%", delay: 1.54 },
+  { name: "Invoice", image: "/quickbooks.png", top: "10%", left: "36%", delay: 1.76 },
+  { name: "Settlement", image: "/xero.png", top: "86%", left: "38%", delay: 1.98 },
+];
+
+const orchestrationOutputs = [
+  { label: "Evidence pack ready", tone: "REVIEW", lane: -150, delay: 0 },
+  { label: "Shipment timeline rebuilt", tone: "TRACE", lane: -108, delay: 0.18 },
+  { label: "POD linked to case", tone: "EVIDENCE", lane: -66, delay: 0.36 },
+  { label: "Invoice matched", tone: "VALIDATION", lane: -24, delay: 0.54 },
+  { label: "Amazon response prepared", tone: "RESPONSE", lane: 20, delay: 0.72 },
+  { label: "Payout variance flagged", tone: "LEDGER", lane: 64, delay: 0.9 },
+  { label: "Case ready for approval", tone: "APPROVAL", lane: 108, delay: 1.08 },
+  { label: "Accounting record ready", tone: "EXPORT", lane: 150, delay: 1.26 },
+  { label: "Missing proof found", tone: "SIGNAL", lane: -128, delay: 1.44 },
+  { label: "Settlement matched", tone: "LEDGER", lane: 128, delay: 1.62 },
+];
+
+function MarginOrchestrationFlow() {
+  return (
+    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-10 md:py-16">
+      <div className={demoContainerClass}>
+        <div className="relative min-h-[420px] overflow-hidden border-y border-[#D8E3E8] bg-[#FBFCFD]">
+          <div className="absolute inset-8 grid grid-cols-6 gap-5 opacity-70 md:grid-cols-8">
+            {Array.from({ length: 32 }).map((_, index) => (
+              <div
+                key={index}
+                className="aspect-square rounded-[10px] border border-[#E5ECEF]"
+              />
+            ))}
+          </div>
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#FBFCFD] to-transparent" />
+          <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[#FBFCFD] to-transparent" />
+
+          {orchestrationSources.map((source) => (
+            <motion.div
+              key={source.name}
+              className="absolute flex h-12 w-12 items-center justify-center rounded-[6px] border border-[#D8E3E8] bg-white shadow-[0_12px_28px_rgba(37,49,58,0.08)]"
+              style={{ top: source.top, left: source.left }}
+              animate={{
+                x: [0, 155, 286, 376],
+                y: [
+                  0,
+                  -18 + (source.delay % 1) * 36,
+                  -5 + (source.delay % 1) * 10,
+                  -2 + (source.delay % 1) * 5,
+                ],
+                opacity: [0, 0.82, 1, 0],
+                scale: [0.72, 0.94, 0.72, 0.3],
+              }}
+              transition={{
+                duration: 4.8,
+                delay: source.delay,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <img src={source.image} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
+            </motion.div>
+          ))}
+
+          <div className="absolute left-1/2 top-1/2 z-10 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[14px] border border-[#C9D8E0] bg-white shadow-[0_26px_60px_rgba(37,49,58,0.12)]">
+            <img src="/logoimagetwo.png" alt="Margin" className="h-12 w-16 object-contain" />
+          </div>
+
+          {orchestrationOutputs.map((output) => (
+            <motion.div
+              key={output.label}
+              className="absolute left-[52%] top-1/2 z-20 flex items-center gap-3 rounded-[2px] border border-[#D8E3E8] bg-white/92 px-4 py-3 text-sm text-[#182026] shadow-[0_14px_34px_rgba(37,49,58,0.08)] backdrop-blur"
+              animate={{
+                x: [0, 42, 122, 272],
+                y: [0, output.lane * 0.08, output.lane * 0.36, output.lane],
+                opacity: [0, 1, 0.92, 0],
+                scale: [0.56, 0.9, 1, 0.96],
+              }}
+              transition={{
+                duration: 4.9,
+                delay: output.delay,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <span className="h-3 w-3 rounded-[2px] border border-[#B9C7CF]" />
+              <span className="font-medium tracking-[-0.02em]">{output.label}</span>
+              <span className="text-[10px] font-semibold tracking-tight text-[#8A98A3]">{output.tone}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MarginIdentityCards() {
+  return (
+    <section className="relative border-b border-[#E4EDF1] bg-white py-10 md:py-16">
+      <div className={demoContainerClass}>
+        <div className="grid gap-8 lg:grid-cols-3 lg:gap-0">
+          {marginIdentityCards.map((card, index) => (
+            <motion.article
+              key={card.title}
+              {...revealProps}
+              transition={{
+                ...revealProps.transition,
+                delay: index * 0.06,
+              }}
+              className={`pt-2 lg:px-10 ${index > 0 ? "lg:border-l lg:border-[#D8E3E8]" : ""}`}
+            >
+              <div className="relative aspect-[16/10] overflow-hidden rounded-[2px] border border-[#DCE8EE] bg-white">
+                <img
+                  src={card.image}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full object-contain"
+                  loading="lazy"
+                />
+              </div>
+              <h3 className="mt-7 max-w-[360px] text-[26px] font-medium leading-[1.05] tracking-[-0.04em] text-[#182026] md:text-[30px]">
+                {card.title}
+              </h3>
+              <p className="mt-4 max-w-[390px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8">
+                {card.body}
+              </p>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function KineticHeroSection({
   onEarlyAccessCta,
   isFull,
@@ -1232,7 +1417,7 @@ function KineticHeroSection({
           </motion.div>{" "}
           <h1
             id="margin-hero-title"
-            className="mt-6 font-serif-headline max-w-[960px] text-[34px] font-bold leading-[1.02] tracking-[-0.045em] min-[390px]:text-[40px] sm:mt-7 sm:text-[52px] sm:tracking-[-0.055em] md:text-[64px] lg:text-[80px]"
+            className="mt-6 font-serif-headline max-w-[900px] text-[34px] font-bold leading-[1.02] tracking-[-0.045em] min-[390px]:text-[40px] sm:mt-7 sm:text-[52px] sm:tracking-[-0.055em] md:text-[58px] lg:text-[66px]"
           >
             {" "}
             <motion.span
@@ -1257,7 +1442,9 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Bulletproof evidence. Seller-approved. Defensible claims.
+              <span className="block">Evidence connected.</span>
+              <span className="block">Seller-approved.</span>
+              <span className="block">Built to survive Amazon review.</span>
             </motion.span>{" "}
           </h1>{" "}
           <motion.p
@@ -1271,9 +1458,8 @@ function KineticHeroSection({
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
           >
             {" "}
-            Margin prepares reimbursement cases the way Amazon expects to review
-            them—connecting evidence, organizing documentation, reconciling every
-            claim, while keeping every submission under your approval.{" "}
+            Every recovery starts with one discrepancy. Margin builds
+            everything Amazon expects to see before a claim is filed.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -1288,12 +1474,12 @@ function KineticHeroSection({
             {" "}
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Preview Recovery Audit"
+              aria-label="Run Free Audit"
               className="group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
             >
               {" "}
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-              Preview Recovery Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
+              Run Free Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
           </motion.div>{" "}
           <motion.div
@@ -1304,20 +1490,20 @@ function KineticHeroSection({
           >
             {" "}
             <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Autonomous
-              Evidence Linking
+              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Read-only
+              audit
             </span>{" "}
             <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Auto-Filing with
-              Opt-Out Control
+              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No card
+              required
             </span>{" "}
             <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> 0% Commission
-              Through 2026
+              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Seller Approval
+              Before Filing
             </span>{" "}
             <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Built for
-              Hard-to-Prove Claims
+              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Amazon pays you
+              directly
             </span>{" "}
           </motion.div>{" "}
           {isFull ? (
@@ -1859,13 +2045,13 @@ export default function Index() {
     trackEarlyAccessCtaClicked({
       cta_location: location,
       cta_text: primaryCtaLabel,
-      destination: "/early-access",
+      destination: "/audit",
     });
     if (isFull) {
       window.location.assign("/waitlist?reason=capacity");
       return;
     }
-    window.location.assign("/early-access");
+    window.location.assign("/audit");
   };
   const openDemo = () => {
     trackEvent(ANALYTICS_EVENTS.demoCtaClicked, {
@@ -1876,7 +2062,7 @@ export default function Index() {
     setIsDemoOpen(true);
   };
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = "Preview Recovery Audit";
+  const primaryCtaLabel = "Run Free Audit";
   return (
     <div className="min-h-screen overflow-x-clip bg-white font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       {" "}
@@ -1888,62 +2074,25 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />{" "}
-        <section className="relative border-y border-[#E4EDF1] bg-white py-16 md:py-28">
+        <section className="relative bg-white py-4">
           <div className={containerClass}>
-            <div className="mx-auto flex max-w-[1080px] flex-col gap-10 md:grid md:grid-cols-2 md:items-center md:gap-16 lg:gap-24">
-              <div>
-                <div className="font-serif-headline w-full text-[32px] font-bold leading-[1.1] tracking-[-0.04em] md:text-[48px] lg:text-[54px] lg:leading-[1.05]">
-                  <span className="text-[#182026]">Trusted by design.</span>{" "}
-                  <span className="text-[#8A98A3]">
-                    Built around Amazon's official seller infrastructure.
-                  </span>
-                </div>
-                <div className="mt-8 flex w-full flex-col gap-3 text-[14px] font-medium md:gap-4 md:text-[15px]">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.85, originX: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ margin: "-10%" }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex items-start gap-3"
-                  >
-                    <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#182026]" />
-                    <div className="text-[#182026]">Amazon OAuth secured</div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.85, originX: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ margin: "-10%" }}
-                    transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex items-start gap-3 text-[#66737F]"
-                  >
-                    <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
-                    <div>Amazon SP-API connected</div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.85, originX: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ margin: "-10%" }}
-                    transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex items-start gap-3 text-[#66737F]"
-                  >
-                    <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#66737F]" />
-                    <div>Your approval, every time</div>
-                  </motion.div>
-                </div>
+            <div className="space-y-2 text-center">
+              <p className="text-[13px] font-medium tracking-[-0.015em] text-[#8A98A3] md:text-[14px]">
+                Built for sellers who want every dollar accounted for.
+              </p>
+              <div className="flex flex-col gap-3 text-[13px] font-semibold tracking-[-0.015em] text-[#5F6D77] sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-5 md:text-[14px]">
+                <span>Official Amazon connection</span>
+                <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
+                <span>Read-only audit</span>
+                <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
+                <span>Seller approval before filing</span>
+                <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
+                <span>Disconnect anytime</span>
               </div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
-                className="w-full"
-              >
-                <TrustedConnectionGraphic />
-              </motion.div>
             </div>
           </div>
         </section>
-        <section className="relative border-b border-[#E4EDF1] bg-[#F4FAFF] py-8 max-md:bg-[#F4FAFF] max-md:py-14">
+        <section className="hidden relative border-b border-[#E4EDF1] bg-[#F4FAFF] py-8 max-md:bg-[#F4FAFF] max-md:py-14">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -1964,11 +2113,11 @@ export default function Index() {
             </motion.p>{" "}
           </div>{" "}
         </section>{" "}
-        {/* <RecoveryPreviewSection /> */}
-        {/* <PlatformIntegrationPreviewSection /> */}
-        {/* <EvidenceExtractionPreviewSection /> */}
-        {/* <EvidenceMatchingPreviewSection /> */}
-        <section className="relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
+        <RecoveryPreviewSection />
+        <PlatformIntegrationPreviewSection />
+        <EvidenceExtractionPreviewSection />
+        <EvidenceMatchingPreviewSection />
+        <section className="hidden relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2052,8 +2201,10 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        {/* <EvidenceCalibrationPreviewSection /> */}
-        {/* <RepliesPreviewSection /> */}
+        <EvidenceCalibrationPreviewSection />
+        <RepliesPreviewSection />
+        <MarginOrchestrationFlow />
+        <MarginIdentityCards />
         <section
           className="hidden relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24"
           id="margin-demo"
@@ -2119,7 +2270,7 @@ export default function Index() {
             </motion.button>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-20">
+        <section className="hidden relative border-b border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-20">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2150,7 +2301,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <section
-          className="relative bg-[#F4FAFF] py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24"
+          className="hidden relative bg-[#F4FAFF] py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24"
           id="how-margin-works"
         >
           {" "}
@@ -2247,7 +2398,7 @@ export default function Index() {
           </div>
         </section>
         <section
-          className="relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28"
+          className="hidden relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28"
           id="why-margin-outperforms"
         >
           <div className={containerClass}>
@@ -2323,7 +2474,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="relative bg-[#F3F6F8] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
+        <section className="hidden relative bg-[#F3F6F8] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2448,7 +2599,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         {/* <ScrollytellingCoverage /> */} {/* <SystemPerformanceTicker /> */}{" "}
-        <section className="relative bg-white py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
+        <section className="hidden relative bg-white py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2506,62 +2657,61 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <SystemLogMarquee />{" "}
-        <section className="relative overflow-hidden bg-[#F4FAFF] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
+        {/* <SystemLogMarquee /> */}{" "}
+        <section className="hidden relative bg-white py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
-            <div className="relative overflow-hidden border-y border-[#D8E3E8] bg-white py-8 md:py-12">
+            <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
               {" "}
-              <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+              <motion.div {...revealProps} className="max-w-[560px]">
                 {" "}
-                <motion.div {...revealProps}>
+                <div className={sectionLabelClass}>Marketplace Scope</div>{" "}
+                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
                   {" "}
-                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight sm:text-[48px] md:text-[64px]">
-                    <span className="text-[#182026]">Every seller</span> <span className="text-[#8A98A3]">needs Margin.</span>
-                  </h2>{" "}
-                  <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
-                    {" "}
-                    You&apos;re already doing the work. Finding invoices.
-                    Downloading PODs. Checking settlements. Searching case
-                    history. Stop rebuilding the same recovery every time Amazon
-                    asks.{" "}
-                  </p>{" "}
-                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                    {" "}
-                    <Button
-                      onClick={() =>
-                        handleClaimAccessClick("homepage_early_access_section")
-                      }
-                      className="group relative h-14 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] max-md:rounded-[2px] max-md:shadow-none sm:w-auto"
-                    >
-                      {" "}
-                      <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[5px]" />{" "}
-                      {primaryCtaLabel}{" "}
-                      <ArrowRight className="ml-2 h-4 w-4" />{" "}
-                    </Button>{" "}
-                  </div>{" "}
-                </motion.div>{" "}
-                <motion.div {...revealProps} className="border-y border-[#D8E3E8]">
+                  Built for Amazon FBA operators worldwide.{" "}
+                </h2>{" "}
+                <p className={sectionBodyClass}>
                   {" "}
-                  {earlyAccessItems.map((item, index) => (
-                    <div
-                      key={item}
-                      className="relative flex items-center gap-4 border-b border-[#D8E3E8] py-4 last:border-b-0 md:py-5"
-                    >
+                  Margin currently supports sellers across the major Amazon FBA
+                  marketplaces. Early Access is currently available for
+                  supported marketplaces. Additional regions will be added over
+                  time.{" "}
+                </p>{" "}
+              </motion.div>{" "}
+              <motion.div
+                {...revealProps}
+                className="border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 xl:grid-cols-3"
+              >
+                {" "}
+                {marketplaceCountries.map((marketplace, index) => (
+                  <motion.div
+                    key={marketplace.code}
+                    {...revealProps}
+                    transition={{
+                      ...revealProps.transition,
+                      delay: index * 0.035,
+                    }}
+                    className={`group flex items-center gap-4 py-5 sm:px-5 ${index > 0 ? "border-t border-[#D8E3E8] sm:border-t-0" : ""} ${index % 2 === 1 ? "sm:border-l sm:border-[#D8E3E8]" : ""} ${index >= 2 ? "sm:border-t sm:border-[#D8E3E8]" : ""} ${index % 3 !== 0 ? "xl:border-l xl:border-[#D8E3E8]" : "xl:border-l-0"} ${index >= 3 ? "xl:border-t xl:border-[#D8E3E8]" : ""}`}
+                  >
+                    {" "}
+                    <span
+                      className={`fi fi-${marketplace.flagCode} h-5 w-7 shrink-0 rounded-[4px] shadow-[0_8px_18px_rgba(37,49,58,0.12)]`}
+                      aria-hidden="true"
+                    />{" "}
+                    <div>
                       {" "}
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[#EEF6FF] text-[#0B74DE]">
-                        {" "}
-                        <Check className="h-4 w-4" strokeWidth={3} />{" "}
+                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">
+                        {marketplace.country}
                       </div>{" "}
-                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[#182026]">
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
                         {" "}
-                        {item}{" "}
-                      </span>{" "}
-                    </div>
-                  ))}{" "}
-                </motion.div>{" "}
-              </div>{" "}
+                        {marketplace.region} · {marketplace.code}{" "}
+                      </div>{" "}
+                    </div>{" "}
+                  </motion.div>
+                ))}{" "}
+              </motion.div>{" "}
             </div>{" "}
           </div>{" "}
         </section>{" "}
@@ -2617,67 +2767,30 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-[#F4FAFF] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
-          {" "}
-          <div className={containerClass}>
-            {" "}
-            <motion.div
-              {...revealProps}
-              className="overflow-hidden border-y border-[#CFE0EA] bg-white py-8 md:py-12"
-            >
-              {" "}
-              <div className="max-w-[880px]">
-                {" "}
-                <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[42px] md:text-[68px]">
-                  <span className="text-[#182026]">Every recovery starts with &quot;I know Amazon owes me.&quot;</span> <span className="text-[#8A98A3]">Too many end with &quot;I couldn&apos;t prove it.&quot; Don&apos;t let yours.</span>
-                </h2>{" "}
-                <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#4D5B66] md:text-[19px] md:leading-9">
-                  {" "}
-                  Margin keeps every invoice, shipment record, POD, deadline,
-                  response, and payout attached to the same recovery until the
-                  money is actually reconciled.{" "}
-                </p>{" "}
-              </div>{" "}
-              <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
-                {" "}
-                <Button
-                  onClick={() => handleClaimAccessClick("homepage_bottom_cta")}
-                  className="h-12 w-full sm:w-auto rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] max-md:rounded-[2px] max-md:shadow-none"
-                >
-                  {" "}
-                  {primaryCtaLabel} <ArrowRight className="ml-2 h-4 w-4" />{" "}
-                </Button>{" "}
-              </div>{" "}
-            </motion.div>{" "}
-          </div>{" "}
-        </section>{" "}
-        <section className="relative bg-white py-8 sm:bg-white sm:py-16 md:py-24">
+        <section className="relative bg-white py-12 max-md:border-b max-md:border-[#E5E7EB] md:py-18">
           {" "}
           <div className={containerClass}>
             {" "}
             <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
               {" "}
-              <motion.div
-                {...revealProps}
-                className="hidden max-w-[560px] sm:block"
-              >
+              <motion.div {...revealProps} className="max-w-[560px]">
                 {" "}
                 <div className={sectionLabelClass}>Marketplace Scope</div>{" "}
                 <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
                   {" "}
-                  Supported FBA marketplaces{" "}
+                  Built for Amazon FBA operators worldwide.{" "}
                 </h2>{" "}
                 <p className={sectionBodyClass}>
                   {" "}
-                  Margin is built for Amazon FBA reimbursement work across
-                  supported marketplaces. Marketplace availability may vary
-                  during Early Access.{" "}
+                  Margin currently supports sellers across the major Amazon FBA
+                  marketplaces. Early Access is currently available for
+                  supported marketplaces. Additional regions will be added over
+                  time.{" "}
                 </p>{" "}
               </motion.div>{" "}
-              <MobileMarketplaceHub />{" "}
               <motion.div
                 {...revealProps}
-                className="hidden border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
+                className="border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 xl:grid-cols-3"
               >
                 {" "}
                 {marketplaceCountries.map((marketplace, index) => (
@@ -2711,6 +2824,97 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
+        <section className="relative bg-[#F4FAFF] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
+          {" "}
+          <div className={containerClass}>
+            {" "}
+            <motion.div
+              {...revealProps}
+              className="hidden overflow-hidden border-y border-[#CFE0EA] bg-white py-8 md:py-12"
+            >
+              {" "}
+              <div className="max-w-[880px]">
+                {" "}
+                <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[42px] md:text-[68px]">
+                  <span className="text-[#182026]">Every recovery starts with &quot;I know Amazon owes me.&quot;</span> <span className="text-[#8A98A3]">Too many end with &quot;I couldn&apos;t prove it.&quot; Don&apos;t let yours.</span>
+                </h2>{" "}
+                <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#4D5B66] md:text-[19px] md:leading-9">
+                  {" "}
+                  Margin keeps every invoice, shipment record, POD, deadline,
+                  response, and payout attached to the same recovery until the
+                  money is actually reconciled.{" "}
+                </p>{" "}
+              </div>{" "}
+              <div className="mt-8 flex w-full max-w-[460px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
+                {" "}
+                <Button
+                  onClick={() => handleClaimAccessClick("homepage_bottom_cta")}
+                  className="h-12 w-full sm:w-auto rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] max-md:rounded-[2px] max-md:shadow-none"
+                >
+                  {" "}
+                  {primaryCtaLabel} <ArrowRight className="ml-2 h-4 w-4" />{" "}
+                </Button>{" "}
+              </div>{" "}
+            </motion.div>{" "}
+          </div>{" "}
+        </section>{" "}
+        <section className="relative overflow-hidden bg-[#F4FAFF] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#F4FAFF] md:py-24">
+          {" "}
+          <div className={containerClass}>
+            {" "}
+            <div className="relative overflow-hidden border-y border-[#D8E3E8] bg-white py-8 md:py-12">
+              {" "}
+              <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+                {" "}
+                <motion.div {...revealProps}>
+                  {" "}
+                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight sm:text-[48px] md:text-[64px]">
+                    <span className="text-[#182026]">You&apos;ve already done the hard work.</span> <span className="text-[#8A98A3]">Margin simply connects it.</span>
+                  </h2>{" "}
+                  <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
+                    {" "}
+                    Shipment records. Invoices. PODs. Settlement history.
+                    Support cases. Margin brings them together into one recovery
+                    workflow before Amazon asks for proof.{" "}
+                  </p>{" "}
+                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                    {" "}
+                    <Button
+                      onClick={() =>
+                        handleClaimAccessClick("homepage_early_access_section")
+                      }
+                      className="group relative h-14 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] max-md:rounded-[2px] max-md:shadow-none sm:w-auto"
+                    >
+                      {" "}
+                      <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[5px]" />{" "}
+                      {primaryCtaLabel}{" "}
+                      <ArrowRight className="ml-2 h-4 w-4" />{" "}
+                    </Button>{" "}
+                  </div>{" "}
+                </motion.div>{" "}
+                <motion.div {...revealProps} className="border-y border-[#D8E3E8]">
+                  {" "}
+                  {earlyAccessItems.map((item) => (
+                    <div
+                      key={item}
+                      className="relative flex items-center gap-4 border-b border-[#D8E3E8] py-4 last:border-b-0 md:py-5"
+                    >
+                      {" "}
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[#EEF6FF] text-[#0B74DE]">
+                        {" "}
+                        <Check className="h-4 w-4" strokeWidth={3} />{" "}
+                      </div>{" "}
+                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[#182026]">
+                        {" "}
+                        {item}{" "}
+                      </span>{" "}
+                    </div>
+                  ))}{" "}
+                </motion.div>{" "}
+              </div>{" "}
+            </div>{" "}
+          </div>{" "}
+        </section>{" "}
       </main>{" "}
       <DemoVideoModal
         open={isDemoOpen}
@@ -2725,3 +2929,4 @@ export default function Index() {
     </div>
   );
 }
+

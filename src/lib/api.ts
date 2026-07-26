@@ -124,6 +124,30 @@ export interface ManualUserBroadcastRecord extends ManualUserBroadcastInput {
   };
 }
 
+export interface AuditRunRecord {
+  id: string;
+  user_id?: string;
+  tenant_id: string;
+  store_id?: string | null;
+  sync_id?: string | null;
+  status: 'created' | 'amazon_connection_required' | 'syncing' | 'detecting' | 'completed' | 'failed' | 'activated';
+  source_type?: string;
+  started_at?: string;
+  completed_at?: string | null;
+  summary?: AuditTeaserSummary;
+  activation_status?: 'not_activated' | 'pending_manual_review' | 'activated';
+}
+
+export interface AuditTeaserSummary {
+  scopeValue: number;
+  findingsCount: number;
+  categories: string[];
+  evidenceReadyCount: number;
+  locked: boolean;
+  message: string;
+  activationRequired?: boolean;
+}
+
 import { getFrontendAuthContext } from './authSession';
 import { buildFirstPartyAnalyticsPayload } from './analytics';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
@@ -849,6 +873,35 @@ export const api = {
     };
   }>(`/api/auth/me${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
+
+  startAudit: () => requestJson<{
+    success: boolean;
+    audit: AuditRunRecord;
+    tenant: {
+      id: string;
+      slug: string;
+      name?: string;
+      plan?: string;
+      status?: string;
+    };
+    amazonConnected: boolean;
+  }>('/api/audits/start', { method: 'POST' }),
+
+  getAudit: (auditId: string) => requestJson<{
+    success: boolean;
+    audit: AuditRunRecord;
+  }>(`/api/audits/${encodeURIComponent(auditId)}`),
+
+  runAudit: (auditId: string) => requestJson<{
+    success: boolean;
+    audit: AuditRunRecord;
+  }>(`/api/audits/${encodeURIComponent(auditId)}/run`, { method: 'POST' }),
+
+  getAuditResults: (auditId: string) => requestJson<{
+    success: boolean;
+    audit: Pick<AuditRunRecord, 'id' | 'status' | 'activation_status' | 'sync_id' | 'started_at' | 'completed_at'>;
+    teaser: AuditTeaserSummary;
+  }>(`/api/audits/${encodeURIComponent(auditId)}/results`),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
   connectAmazon(marketplaceId?: string, bypassOAuth = false, tenantSlug?: string) {
