@@ -1,1 +1,622 @@
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/onboarding/capacity: 
+[2m10:11:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/onboarding/capacity[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:37[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:38[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:38[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:39[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:47[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:48[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:48[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:48[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:48[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:11:48[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:22[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:22[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:22[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:22[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:22[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:23[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:23[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:23[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:28[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:28[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:29[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:12:29[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:13:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:13:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:30:37[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:30:37[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:34:54[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:34:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:34:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:34:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:35:01[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:35:01[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m10:35:27[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:34[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:34[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:34[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:35[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:35[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:35[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:38[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:39[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:39[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:39[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:42[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:51:42[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m15:58:13[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[2m16:15:30[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\src\pages\audit.tsx: Unexpected token (418:0)
+
+[0m [90m 416 |[31m     [33m<[31m[33m/[31m[33mmain[31m[33m>[31m
+ [90m 417 |[31m   )[33m;[31m
+[31m[1m>[22m[31m[90m 418 |[31m
+ [90m     |[31m [31m[1m^[22m[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/Student/Contacts/Clario-Complete-Backend/opside-complete-frontend/src/pages/audit.tsx[39m:418:0
+      at constructor (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:6599:19)
+      at TypeScriptParserMixin.unexpected (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:6619:16)
+      at TypeScriptParserMixin.parseExprAtom (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:11442:22)
+      at TypeScriptParserMixin.parseExprAtom (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:4764:20)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:11081:23)
+      at TypeScriptParserMixin.parseUpdate (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:11066:21)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:11046:23)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:9837:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10899:61)
+      at TypeScriptParserMixin.parseExprOps (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10904:23)
+      at TypeScriptParserMixin.parseMaybeConditional (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10881:23)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10831:21)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:9786:20)
+      at TypeScriptParserMixin.parseExpressionBase (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10784:23)
+      at C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10780:39
+      at TypeScriptParserMixin.allowInAnd (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12421:16)
+      at TypeScriptParserMixin.parseExpression (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10780:17)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12895:23)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:9508:18)
+      at TypeScriptParserMixin.parseStatementLike (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12767:17)
+      at TypeScriptParserMixin.parseStatementListItem (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12747:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13316:61)
+      at TypeScriptParserMixin.parseBlockBody (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13309:10)
+      at TypeScriptParserMixin.parseBlock (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13297:10)
+      at TypeScriptParserMixin.parseFunctionBody (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12100:24)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12086:10)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:9172:18)
+      at C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13445:12
+      at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12403:14)
+      at TypeScriptParserMixin.parseFunction (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13444:10)
+      at TypeScriptParserMixin.parseExportDefaultExpression (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13907:19)
+      at TypeScriptParserMixin.parseExportDefaultExpression (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:9402:18)
+      at TypeScriptParserMixin.parseExport (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13828:25)
+      at TypeScriptParserMixin.parseExport (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:9385:20)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12878:27)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:9508:18)
+      at TypeScriptParserMixin.parseStatementLike (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12767:17)
+      at TypeScriptParserMixin.parseModuleItem (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12744:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13316:36)
+      at TypeScriptParserMixin.parseBlockBody (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:13309:10)
+      at TypeScriptParserMixin.parseProgram (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12622:10)
+      at TypeScriptParserMixin.parseTopLevel (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:12612:25)
+      at TypeScriptParserMixin.parse (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:14488:25)
+      at TypeScriptParserMixin.parse (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:10126:18)
+      at parse (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\parser\lib\index.js:14522:38)
+      at parser (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (C:\Users\Student\Contacts\Clario-Complete-Backend\opside-complete-frontend\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+[Proxy] Error for /api/metrics/track: 
+[2m16:22:29[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m16:33:07[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:15[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:15[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:15[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:16[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/onboarding/capacity: 
+[2m17:18:28[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/onboarding/capacity[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:32[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:34[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:35[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:57[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:57[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:57[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:18:58[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:19:12[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:19:12[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)
+[Proxy] Error for /api/metrics/track: 
+[2m17:24:45[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/metrics/track[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1139:18)
+    at afterConnectMultiple (node:net:1712:7)

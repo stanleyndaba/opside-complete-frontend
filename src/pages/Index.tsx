@@ -907,7 +907,7 @@ function RecoveryPreviewSection() {
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                 />
               </div>
             </div>
@@ -934,7 +934,7 @@ function PlatformIntegrationPreviewSection() {
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                 />
               </div>
             </div>
@@ -979,7 +979,7 @@ function RepliesPreviewSection() {
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                 />
               </div>
             </div>
@@ -1039,7 +1039,7 @@ function EvidenceExtractionPreviewSection() {
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                 />
               </div>
             </div>
@@ -1066,7 +1066,7 @@ function EvidenceMatchingPreviewSection() {
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                 />
               </div>
             </div>
@@ -1127,7 +1127,7 @@ function EvidenceCalibrationPreviewSection() {
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                 />
               </div>
             </div>
@@ -2203,7 +2203,7 @@ export default function Index() {
         </section>{" "}
         <EvidenceCalibrationPreviewSection />
         <RepliesPreviewSection />
-        <MarginOrchestrationFlow />
+        {/* <MarginOrchestrationFlow /> */}
         <MarginIdentityCards />
         <section
           className="hidden relative border-y border-[#E4EDF1] bg-[#F3F6F8] py-14 md:py-24"
