@@ -34,6 +34,7 @@ const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const PLATFORM_INTEGRATION_VIDEO_URL = "/PlatformIntegrations.mp4";
 const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
+const DOCUMENT_ANALYSIS_VIDEO_URL = "/DocumentAnalysis.mp4";
 const EVIDENCE_EXTRACTION_VIDEO_URL = "/EvidenceExtraction.mp4";
 const EVIDENCE_MATCHING_VIDEO_URL = "/EvidenceMatching.mp4";
 const EVIDENCE_CALIBRATION_VIDEO_URL = "/EvidenceCalibration.mp4";
@@ -465,12 +466,22 @@ const integrationLogos = [
 ];
 const containerClass = "mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8";
 const demoContainerClass = "mx-auto w-full max-w-[1240px] px-5 sm:px-6 md:px-8";
+const postHeroSectionClass =
+  "relative overflow-hidden border-b border-[#D8E3E8] bg-[#FAFAF7] py-9 md:py-14";
+const demoFrameClass =
+  "relative -mx-5 overflow-hidden border-y border-[#CFE0EA] bg-white shadow-[0_18px_54px_rgba(37,49,58,0.07)] sm:mx-0 sm:rounded-[5px] sm:border";
+const demoTitleClass =
+  "mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[44px]";
+const demoBodyClass =
+  "mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8";
+const demoClosingClass =
+  "mt-5 max-w-[500px] text-[19px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[23px]";
 const sectionLabelClass =
   "text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]";
 const sectionHeadingClass =
-  "mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[64px]";
+  "mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]";
 const sectionBodyClass =
-  "mt-5 max-w-[740px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9";
+  "mt-5 max-w-[740px] text-[16px] leading-8 text-[#4D5B66] md:text-[17px] md:leading-8";
 const revealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -876,18 +887,18 @@ function EvidenceSourcesOrchestrator() {
 
 function RecoveryPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+    <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="max-w-[500px]">
             <div className={sectionLabelClass}>RECOVERY PREVIEW</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+            <h2 className={demoTitleClass}>
               Every recovery starts with one finding.
             </h2>
-            <p className="mt-3 max-w-[460px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+            <p className={demoClosingClass}>
               But every payout depends on the evidence behind it.
             </p>
-            <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p className={demoBodyClass}>
               <strong className="font-semibold text-[#182026]">Stop wondering whether you have enough proof.</strong>{" "}
               Margin automatically connects invoices, shipment records,
               inventory events, settlement history, and supporting documents
@@ -897,7 +908,7 @@ function RecoveryPreviewSection() {
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+            <div className={demoFrameClass}>
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-contain"
@@ -920,11 +931,11 @@ function RecoveryPreviewSection() {
 
 function PlatformIntegrationPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+    <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+            <div className={demoFrameClass}>
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-contain"
@@ -942,10 +953,10 @@ function PlatformIntegrationPreviewSection() {
 
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
             <div className={sectionLabelClass}>Platform Integration</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+            <h2 className={demoTitleClass}>
               Everything you need. One recovery record.
             </h2>
-            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p className={demoBodyClass}>
               Stop switching between Seller Central, email, cloud storage,
               accounting software, and carrier portals just to answer one Amazon
               question. Margin automatically brings together the invoices,
@@ -953,7 +964,7 @@ function PlatformIntegrationPreviewSection() {
               accounting records behind every recovery—so the right evidence is
               already in one place.
             </p>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+            <p className={demoClosingClass}>
               One recovery. One record. Nothing left to chase.
             </p>
           </motion.div>
@@ -963,13 +974,57 @@ function PlatformIntegrationPreviewSection() {
   );
 }
 
+function DocumentIntelligencePreviewSection() {
+  return (
+    <section className={postHeroSectionClass}>
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="max-w-[520px]">
+            <div className={sectionLabelClass}>Document Intelligence</div>
+            <h2 className={demoTitleClass}>
+              Every document becomes evidence.
+            </h2>
+            <p className={demoBodyClass}>
+              Margin connects to the platforms where your recovery records
+              already exist, extracts the information that matters, and links
+              every invoice, POD, BOL, shipment record, carrier update, and
+              settlement to the recovery it supports.
+            </p>
+            <p className={demoClosingClass}>
+              No manual searching. No copying data between systems. Every
+              document ready when Amazon asks for proof.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} className="relative">
+            <div className={demoFrameClass}>
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full object-contain"
+                  src={DOCUMENT_ANALYSIS_VIDEO_URL}
+                  aria-label="Margin document intelligence preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function RepliesPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+    <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+            <div className={demoFrameClass}>
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-contain"
@@ -987,16 +1042,16 @@ function RepliesPreviewSection() {
 
           <motion.div {...revealProps} className="order-1 max-w-[500px] lg:order-2 lg:justify-self-end">
             <div className={sectionLabelClass}>Reply management</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+            <h2 className={demoTitleClass}>
               Recovery doesn't end when Amazon replies.
             </h2>
-            <p className="mt-5 max-w-[500px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p className={demoBodyClass}>
               Recovery rarely ends with the first submission. When Amazon asks
               for more information, rejects a claim, or approves only part of it,
               everything stays connected to the same recovery—so you always know
               what happened, what&apos;s missing, and what comes next.
             </p>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+            <p className={demoClosingClass}>
               Stay in control until the money arrives.
             </p>
           </motion.div>
@@ -1008,28 +1063,28 @@ function RepliesPreviewSection() {
 
 function EvidenceExtractionPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+    <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="max-w-[520px]">
             <div className={sectionLabelClass}>EVIDENCE EXTRACTION</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+            <h2 className={demoTitleClass}>
               Know exactly what your records prove.
             </h2>
-            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p className={demoBodyClass}>
               Stop reading hundreds of documents looking for one answer. Margin
               automatically reads invoices, BOLs, PODs, carrier records, and
               warehouse confirmations to identify the dates, quantities,
               signatures, weights, and inconsistencies that matter—then connects
               them to the recovery they support.
             </p>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+            <p className={demoClosingClass}>
               Less document hunting. Faster case preparation. Evidence you can trust.
             </p>
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+            <div className={demoFrameClass}>
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-contain"
@@ -1052,11 +1107,11 @@ function EvidenceExtractionPreviewSection() {
 
 function EvidenceMatchingPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+    <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+            <div className={demoFrameClass}>
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-contain"
@@ -1074,10 +1129,10 @@ function EvidenceMatchingPreviewSection() {
 
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
             <div className={sectionLabelClass}>Evidence Matching</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+            <h2 className={demoTitleClass}>
               Operate from proof, not assumptions.
             </h2>
-            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p className={demoBodyClass}>
               When Amazon asks why a recovery should be approved, every answer
               needs evidence. Margin automatically connects each discrepancy to
               the shipment records, quantities, SKUs, invoices, receiving data,
@@ -1085,7 +1140,7 @@ function EvidenceMatchingPreviewSection() {
               <strong className="font-semibold text-[#182026]">why</strong> the
               recovery exists before it&apos;s filed.
             </p>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+            <p className={demoClosingClass}>
               The right records. The right case. A clear path to recovery.
             </p>
           </motion.div>
@@ -1097,27 +1152,27 @@ function EvidenceMatchingPreviewSection() {
 
 function EvidenceCalibrationPreviewSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-9 md:py-14">
+    <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="max-w-[520px]">
             <div className={sectionLabelClass}>Evidence Calibration</div>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[48px]">
+            <h2 className={demoTitleClass}>
               Stronger cases. Better approval odds.
             </h2>
-            <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p className={demoBodyClass}>
               <strong className="font-semibold text-[#182026]">Every approved case teaches the next one.</strong>{" "}
               Margin remembers which evidence helped claims get approved, what
               caused rejections, and what Amazon asked for—so future recoveries
               start with stronger evidence before they&apos;re ever filed.
             </p>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[26px]">
+            <p className={demoClosingClass}>
               Every case makes the next one stronger.
             </p>
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className="relative -mx-5 overflow-hidden border-y border-[#DCE8EE] bg-[#F8FBFD] shadow-[0_26px_70px_rgba(37,49,58,0.12)] sm:mx-0 sm:rounded-[8px] sm:border">
+            <div className={demoFrameClass}>
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-contain"
@@ -1262,7 +1317,7 @@ function MarginOrchestrationFlow() {
 
 function MarginIdentityCards() {
   return (
-    <section className="relative border-b border-[#E4EDF1] bg-white py-10 md:py-16">
+    <section className="relative border-b border-[#D8E3E8] bg-[#FAFAF7] py-10 md:py-14">
       <div className={demoContainerClass}>
         <div className="grid gap-8 lg:grid-cols-3 lg:gap-0">
           {marginIdentityCards.map((card, index) => (
@@ -1275,7 +1330,7 @@ function MarginIdentityCards() {
               }}
               className={`pt-2 lg:px-10 ${index > 0 ? "lg:border-l lg:border-[#D8E3E8]" : ""}`}
             >
-              <div className="relative aspect-[16/10] overflow-hidden rounded-[2px] border border-[#DCE8EE] bg-white">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-[5px] border border-[#CFE0EA] bg-white">
                 <img
                   src={card.image}
                   alt=""
@@ -1284,7 +1339,7 @@ function MarginIdentityCards() {
                   loading="lazy"
                 />
               </div>
-              <h3 className="mt-7 max-w-[360px] text-[26px] font-medium leading-[1.05] tracking-[-0.04em] text-[#182026] md:text-[30px]">
+              <h3 className="mt-7 max-w-[360px] text-[25px] font-medium leading-[1.05] tracking-[-0.04em] text-[#182026] md:text-[28px]">
                 {card.title}
               </h3>
               <p className="mt-4 max-w-[390px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8">
@@ -2064,7 +2119,7 @@ export default function Index() {
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
   const primaryCtaLabel = "Run Free Audit";
   return (
-    <div className="min-h-screen overflow-x-clip bg-white font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+    <div className="min-h-screen overflow-x-clip bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       {" "}
       <PublicNavbar variant="light" />{" "}
       <main className="relative">
@@ -2074,7 +2129,7 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />{" "}
-        <section className="relative bg-white py-4">
+        <section className="relative border-b border-[#D8E3E8] bg-[#FAFAF7] py-4">
           <div className={containerClass}>
             <div className="space-y-2 text-center">
               <p className="text-[13px] font-medium tracking-[-0.015em] text-[#8A98A3] md:text-[14px]">
@@ -2115,6 +2170,7 @@ export default function Index() {
         </section>{" "}
         <RecoveryPreviewSection />
         <PlatformIntegrationPreviewSection />
+        <DocumentIntelligencePreviewSection />
         <EvidenceExtractionPreviewSection />
         <EvidenceMatchingPreviewSection />
         <section className="hidden relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
@@ -2366,7 +2422,7 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-t border-[#E4EDF1] bg-white py-14 max-md:border-y max-md:border-[#E5E7EB] md:py-24">
+        <section className="relative border-t border-[#D8E3E8] bg-[#FAFAF7] py-14 max-md:border-y max-md:border-[#D8E3E8] md:py-20">
           <div className={containerClass}>
             <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
               <motion.div {...revealProps}>
@@ -2388,7 +2444,7 @@ export default function Index() {
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[#EEF6FF] text-[#0B74DE]">
                       <Check className="h-4 w-4" strokeWidth={3} />
                     </div>
-                    <span className="text-[16px] font-medium leading-6 tracking-tight text-[#182026]">
+                    <span className="text-[15px] font-medium leading-6 tracking-tight text-[#182026] md:text-[16px]">
                       {item}
                     </span>
                   </div>
@@ -2715,14 +2771,14 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-t border-[#E4EDF1] bg-white py-14 max-md:py-16 md:py-24">
+        <section className="relative border-t border-[#D8E3E8] bg-[#FAFAF7] py-14 max-md:py-16 md:py-20">
           {" "}
           <div className={containerClass}>
             {" "}
             <motion.div {...revealProps}>
               {" "}
               <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]">
-                <span className="text-[#050607]">Frequently asked</span> <span className="text-[#8A98A3]">questions</span>
+                <span className="text-[#182026]">Frequently asked</span> <span className="text-[#8A98A3]">questions</span>
               </h2>{" "}
             </motion.div>{" "}
             <div className="mt-10 md:mt-14">
@@ -2740,7 +2796,7 @@ export default function Index() {
                     className="border-b border-[#DADFE3] px-0"
                   >
                     {" "}
-                    <AccordionTrigger className="py-6 text-left text-[19px] font-semibold tracking-[-0.035em] text-[#050607] hover:no-underline md:py-7 md:text-[24px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[#6C737A]">
+                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-[#182026] hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[#6C737A]">
                       {" "}
                       {item.question}{" "}
                     </AccordionTrigger>{" "}
@@ -2757,7 +2813,7 @@ export default function Index() {
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-[5px] border-[#DADFE3] bg-white px-6 text-sm font-semibold text-[#050607] hover:bg-[#FAFAF7]"
+                    className="rounded-[5px] border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F3F6F8]"
                   >
                     {" "}
                     Show more questions{" "}
@@ -2767,7 +2823,7 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-white py-12 max-md:border-b max-md:border-[#E5E7EB] md:py-18">
+        <section className="relative bg-[#FAFAF7] py-12 max-md:border-b max-md:border-[#D8E3E8] md:py-16">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2776,7 +2832,7 @@ export default function Index() {
               <motion.div {...revealProps} className="max-w-[560px]">
                 {" "}
                 <div className={sectionLabelClass}>Marketplace Scope</div>{" "}
-                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
+                  <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[52px]">
                   {" "}
                   Built for Amazon FBA operators worldwide.{" "}
                 </h2>{" "}
@@ -2858,7 +2914,7 @@ export default function Index() {
             </motion.div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative overflow-hidden bg-white py-12 max-md:border-y max-md:border-[#E5E7EB] md:py-20">
+        <section className="relative overflow-hidden bg-[#FAFAF7] py-12 max-md:border-y max-md:border-[#D8E3E8] md:py-18">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2868,10 +2924,10 @@ export default function Index() {
                 {" "}
                 <motion.div {...revealProps}>
                   {" "}
-                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[38px] font-bold leading-[1.02] tracking-tight sm:text-[48px] md:text-[64px]">
+                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[36px] font-semibold leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]">
                     <span className="text-[#182026]">You&apos;ve already done the hard work.</span> <span className="text-[#8A98A3]">Margin simply connects it.</span>
                   </h2>{" "}
-                  <p className="mt-5 max-w-[740px] text-[17px] leading-[1.7] text-[#4d5b66] md:text-[19px]">
+                  <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[#4D5B66] md:text-[17px]">
                     {" "}
                     Shipment records. Invoices. PODs. Settlement history.
                     Support cases. Margin brings them together into one recovery
@@ -2929,4 +2985,5 @@ export default function Index() {
     </div>
   );
 }
+
 
