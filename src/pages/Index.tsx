@@ -36,7 +36,7 @@ const PLATFORM_INTEGRATION_VIDEO_URL = "/PlatformIntegrations.mp4";
 const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
 const DOCUMENT_ANALYSIS_VIDEO_URL = "/DocumentAnalysis.mp4";
 const EVIDENCE_EXTRACTION_VIDEO_URL = "/EvidenceExtraction.mp4";
-const EVIDENCE_MATCHING_VIDEO_URL = "/EvidenceMatching.mp4";
+const SUPER_EVIDENCE_VIDEO_URL = "/superEvidence.mp4";
 const EVIDENCE_CALIBRATION_VIDEO_URL = "/EvidenceCalibration.mp4";
 const REPLIES_PREVIEW_VIDEO_URL = "/Replies.mp4";
 const auditPulses = [
@@ -1105,7 +1105,7 @@ function EvidenceExtractionPreviewSection() {
   );
 }
 
-function EvidenceMatchingPreviewSection() {
+function SupportingEvidencePreviewSection() {
   return (
     <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
@@ -1115,8 +1115,8 @@ function EvidenceMatchingPreviewSection() {
               <div className="aspect-[16/10] sm:aspect-video">
                 <video
                   className="h-full w-full object-contain"
-                  src={EVIDENCE_MATCHING_VIDEO_URL}
-                  aria-label="Margin evidence matching preview"
+                  src={SUPER_EVIDENCE_VIDEO_URL}
+                  aria-label="Margin supporting evidence matching preview"
                   autoPlay
                   muted
                   loop
@@ -1130,18 +1130,17 @@ function EvidenceMatchingPreviewSection() {
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
             <div className={sectionLabelClass}>Evidence Matching</div>
             <h2 className={demoTitleClass}>
-              Operate from proof, not assumptions.
+              Know exactly which documents support each recovery.
             </h2>
             <p className={demoBodyClass}>
-              When Amazon asks why a recovery should be approved, every answer
-              needs evidence. Margin automatically connects each discrepancy to
-              the shipment records, quantities, SKUs, invoices, receiving data,
-              deadlines, and policy that support it—so you know exactly{" "}
-              <strong className="font-semibold text-[#182026]">why</strong> the
-              recovery exists before it&apos;s filed.
+              Margin automatically connects each discrepancy to the invoices,
+              shipment records, PODs, bills of lading, receiving events,
+              settlement entries, and carrier updates that support it—so you can
+              see exactly why the recovery exists and what proof is already
+              attached.
             </p>
             <p className={demoClosingClass}>
-              The right records. The right case. A clear path to recovery.
+              The right evidence, already attached to the right recovery.
             </p>
           </motion.div>
         </div>
@@ -2172,7 +2171,7 @@ export default function Index() {
         <PlatformIntegrationPreviewSection />
         <DocumentIntelligencePreviewSection />
         <EvidenceExtractionPreviewSection />
-        <EvidenceMatchingPreviewSection />
+        <SupportingEvidencePreviewSection />
         <section className="hidden relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
