@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, Download, Loader2, Share2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { useSession } from '@/contexts/SessionContext';
@@ -111,6 +111,7 @@ function clearPendingAudit() {
 
 export default function Audit() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { authToken, isAuthReady, isSessionValid } = useSession();
   const isAuthenticated = isAuthReady && isSessionValid && Boolean(authToken);
   const [audit, setAudit] = useState<AuditRunRecord | null>(null);
@@ -121,6 +122,7 @@ export default function Audit() {
   const trackedViewRef = useRef(false);
   const trackedCompletionRef = useRef(false);
   const restoredAuditRef = useRef(false);
+  const autoRunAfterOAuthRef = useRef(false);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
 
@@ -186,6 +188,17 @@ export default function Audit() {
     void restoreAudit();
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (!isAuthenticated || autoRunAfterOAuthRef.current) return;
+    const query = new URLSearchParams(location.search);
+    if (query.get('amazon_connected') !== '1') return;
+    if (!audit?.id || !tenantSlug) return;
+    if (audit.status === 'syncing' || audit.status === 'detecting' || audit.status === 'completed' || audit.status === 'activated') return;
+
+    autoRunAfterOAuthRef.current = true;
+    void runAuditForAudit(audit);
+  }, [audit, isAuthenticated, location.search, tenantSlug]);
+
   const startAccountStep = () => {
     trackEvent(ANALYTICS_EVENTS.auditStarted, {
       cta_location: 'audit_public_hero',
@@ -229,6 +242,11 @@ export default function Audit() {
 
     if (!response.data.amazonConnected || response.data.audit.status === 'amazon_connection_required') {
       await connectAmazonForAudit(response.data.audit, response.data.tenant.slug);
+      return;
+    }
+
+    if (response.data.amazonConnected) {
+      await runAuditForAudit(response.data.audit);
     }
   };
 
@@ -264,8 +282,8 @@ export default function Audit() {
 
   const connectAmazon = () => connectAmazonForAudit();
 
-  const runAudit = async () => {
-    if (!audit?.id) {
+  const runAuditForAudit = async (targetAudit = audit) => {
+    if (!targetAudit?.id) {
       await startAudit();
       return;
     }
@@ -273,11 +291,11 @@ export default function Audit() {
     setIsBusy(true);
     setError(null);
     trackEvent(ANALYTICS_EVENTS.auditSyncStarted, {
-      audit_id: audit.id,
-      current_status: audit.status,
+      audit_id: targetAudit.id,
+      current_status: targetAudit.status,
     });
 
-    const response = await api.runAudit(audit.id);
+    const response = await api.runAudit(targetAudit.id);
     setIsBusy(false);
 
     if (!response.ok || !response.data?.success) {
@@ -327,6 +345,8 @@ export default function Audit() {
     navigate(`/currency-margin?source=audit${audit?.id ? `&audit_id=${encodeURIComponent(audit.id)}` : ''}`);
   };
 
+  const runAudit = () => runAuditForAudit();
+
   const statusCopy = {
     public: 'Create an account first. The audit is free, and activation only happens after you see the locked summary.',
     ready: 'Your account is ready. Start the audit and Margin will check whether Amazon data is connected.',
@@ -355,7 +375,7 @@ export default function Audit() {
     ) : (
       <Button onClick={runAudit} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
         {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : null}
-        {audit?.sync_id ? 'Continue Audit' : 'Connect Amazon'}
+        {audit?.sync_id ? 'Continue Audit' : 'Run Audit'}
       </Button>
     );
 
