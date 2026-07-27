@@ -40,6 +40,7 @@ const CASES_TABLE_VIDEO_URL = "/CasesTable.mp4";
 const FILING_VIDEO_URL = "/Filing.mp4";
 const EVIDENCE_CALIBRATION_VIDEO_URL = "/EvidenceCalibration.mp4";
 const REPLIES_PREVIEW_VIDEO_URL = "/Replies.mp4";
+const APPEALS_PREVIEW_VIDEO_URL = "/2026-07-27__12_58_06_a_m_-Appeals_Scene.mp4";
 const auditPulses = [
   { x: 8, y: 18, size: 9, color: "bg-blue-400", delay: 0.1, duration: 3.6 },
   { x: 18, y: 54, size: 7, color: "bg-emerald-400", delay: 1.4, duration: 4.2 },
@@ -1010,6 +1011,61 @@ function RepliesPreviewSection() {
             <p className={demoClosingClass}>
               Stay in control until the money arrives.
             </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AppealsPreviewSection() {
+  return (
+    <section className={postHeroSectionClass}>
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="max-w-[520px]">
+            <div className={sectionLabelClass}>Recovery Appeals</div>
+            <h2 className={demoTitleClass}>
+              Rejected cases don&apos;t stop. Margin rebuilds them.
+            </h2>
+            <p className={demoBodyClass}>
+              When Amazon rejects a recovery, Margin analyzes the response,
+              gathers the missing evidence, rebuilds the case, and prepares it
+              for resubmission automatically—keeping the recovery moving without
+              starting over.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+              {[
+                "Rejections rebuilt automatically",
+                "Stronger evidence prepared",
+                "Recovery continues without starting over",
+              ].map((item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  {item}
+                </span>
+              ))}
+            </div>
+            <p className={demoClosingClass}>
+              The recovery keeps moving—even when Amazon says no.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} className="relative">
+            <div className={demoFrameClass}>
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full object-contain"
+                  src={APPEALS_PREVIEW_VIDEO_URL}
+                  aria-label="Margin recovery appeals preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -2335,8 +2391,9 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <EvidenceCalibrationPreviewSection />
         <RepliesPreviewSection />
+        <AppealsPreviewSection />
+        <EvidenceCalibrationPreviewSection />
         {/* <MarginOrchestrationFlow /> */}
         <MarginIdentityCards />
         <section
