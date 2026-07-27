@@ -32,11 +32,12 @@ import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
-const PLATFORM_INTEGRATION_VIDEO_URL = "/PlatformIntegrations.mp4";
 const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
 const DOCUMENT_ANALYSIS_VIDEO_URL = "/DocumentAnalysis.mp4";
-const EVIDENCE_EXTRACTION_VIDEO_URL = "/EvidenceExtraction.mp4";
 const SUPER_EVIDENCE_VIDEO_URL = "/superEvidence.mp4";
+const CASE_BUILDING_VIDEO_URL = "/CaseBuilding.mp4";
+const CASES_TABLE_VIDEO_URL = "/CasesTable.mp4";
+const FILING_VIDEO_URL = "/Filing.mp4";
 const EVIDENCE_CALIBRATION_VIDEO_URL = "/EvidenceCalibration.mp4";
 const REPLIES_PREVIEW_VIDEO_URL = "/Replies.mp4";
 const auditPulses = [
@@ -929,51 +930,6 @@ function RecoveryPreviewSection() {
   );
 }
 
-function PlatformIntegrationPreviewSection() {
-  return (
-    <section className={postHeroSectionClass}>
-      <div className={demoContainerClass}>
-        <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
-          <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={PLATFORM_INTEGRATION_VIDEO_URL}
-                  aria-label="Margin platform integration preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
-            <div className={sectionLabelClass}>Platform Integration</div>
-            <h2 className={demoTitleClass}>
-              Everything you need. One recovery record.
-            </h2>
-            <p className={demoBodyClass}>
-              Stop switching between Seller Central, email, cloud storage,
-              accounting software, and carrier portals just to answer one Amazon
-              question. Margin automatically brings together the invoices,
-              shipment records, PODs, BOLs, case history, settlement data, and
-              accounting records behind every recovery—so the right evidence is
-              already in one place.
-            </p>
-            <p className={demoClosingClass}>
-              One recovery. One record. Nothing left to chase.
-            </p>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function DocumentIntelligencePreviewSection() {
   return (
     <section className={postHeroSectionClass}>
@@ -1061,50 +1017,6 @@ function RepliesPreviewSection() {
   );
 }
 
-function EvidenceExtractionPreviewSection() {
-  return (
-    <section className={postHeroSectionClass}>
-      <div className={demoContainerClass}>
-        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
-          <motion.div {...revealProps} className="max-w-[520px]">
-            <div className={sectionLabelClass}>EVIDENCE EXTRACTION</div>
-            <h2 className={demoTitleClass}>
-              Know exactly what your records prove.
-            </h2>
-            <p className={demoBodyClass}>
-              Stop reading hundreds of documents looking for one answer. Margin
-              automatically reads invoices, BOLs, PODs, carrier records, and
-              warehouse confirmations to identify the dates, quantities,
-              signatures, weights, and inconsistencies that matter—then connects
-              them to the recovery they support.
-            </p>
-            <p className={demoClosingClass}>
-              Less document hunting. Faster case preparation. Evidence you can trust.
-            </p>
-          </motion.div>
-
-          <motion.div {...revealProps} className="relative">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={EVIDENCE_EXTRACTION_VIDEO_URL}
-                  aria-label="Margin evidence extraction preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function SupportingEvidencePreviewSection() {
   return (
     <section className={postHeroSectionClass}>
@@ -1142,6 +1054,172 @@ function SupportingEvidencePreviewSection() {
             <p className={demoClosingClass}>
               The right evidence, already attached to the right recovery.
             </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CaseBuildingPreviewSection() {
+  return (
+    <section className={postHeroSectionClass}>
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="max-w-[520px]">
+            <div className={sectionLabelClass}>Case Building</div>
+            <h2 className={demoTitleClass}>
+              Your recovery is already prepared.
+            </h2>
+            <p className={demoBodyClass}>
+              Margin brings the evidence together, builds the recovery case, and
+              prepares a complete review package you can download, share,
+              archive, or submit when you&apos;re ready. Every recovery stays
+              organized from the first discrepancy to the final payout.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+              {[
+                "Evidence already attached",
+                "Recovery timeline included",
+                "Download or share anytime",
+              ].map((item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  {item}
+                </span>
+              ))}
+            </div>
+            <p className={demoClosingClass}>
+              Nothing left to assemble. Everything ready to review.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} className="relative">
+            <div className={demoFrameClass}>
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full object-contain"
+                  src={CASE_BUILDING_VIDEO_URL}
+                  aria-label="Margin case building preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RecoveryOrchestrationPreviewSection() {
+  return (
+    <section className={postHeroSectionClass}>
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="relative order-2 lg:order-1">
+            <div className={demoFrameClass}>
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full object-contain"
+                  src={CASES_TABLE_VIDEO_URL}
+                  aria-label="Margin recovery orchestration preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
+            <div className={sectionLabelClass}>Recovery Orchestration</div>
+            <h2 className={demoTitleClass}>
+              Every recovery keeps moving—even when you don&apos;t.
+            </h2>
+            <p className={demoBodyClass}>
+              Once a recovery is created, Margin keeps it moving. Cases are
+              tracked automatically, missing requirements are blocked before
+              submission, and every recovery progresses through the workflow
+              until it&apos;s resolved. Nothing gets forgotten. Nothing falls
+              through the cracks.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+              {[
+                "Cases tracked automatically",
+                "Incomplete submissions prevented",
+                "Every recovery monitored end-to-end",
+              ].map((item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  {item}
+                </span>
+              ))}
+            </div>
+            <p className={demoClosingClass}>
+              Built once. Managed until it&apos;s finished.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SellerControlledFilingPreviewSection() {
+  return (
+    <section className={postHeroSectionClass}>
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="max-w-[520px]">
+            <div className={sectionLabelClass}>Seller-Controlled Filing</div>
+            <h2 className={demoTitleClass}>
+              Nothing gets filed without your approval.
+            </h2>
+            <p className={demoBodyClass}>
+              When a recovery is ready, Margin notifies you for review before
+              anything is submitted. After approval, the filing is tracked
+              automatically, keeping every Amazon response, status change, and
+              next step connected until the recovery is resolved.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+              {[
+                "Seller approval before filing",
+                "Automatic case tracking",
+                "Every Amazon update in one place",
+              ].map((item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  {item}
+                </span>
+              ))}
+            </div>
+            <p className={demoClosingClass}>
+              You stay in control. Margin keeps the recovery moving.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} className="relative">
+            <div className={demoFrameClass}>
+              <div className="aspect-[16/10] sm:aspect-video">
+                <video
+                  className="h-full w-full object-contain"
+                  src={FILING_VIDEO_URL}
+                  aria-label="Margin seller-controlled filing preview"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -2168,10 +2246,11 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <RecoveryPreviewSection />
-        <PlatformIntegrationPreviewSection />
         <DocumentIntelligencePreviewSection />
-        <EvidenceExtractionPreviewSection />
         <SupportingEvidencePreviewSection />
+        <CaseBuildingPreviewSection />
+        <RecoveryOrchestrationPreviewSection />
+        <SellerControlledFilingPreviewSection />
         <section className="hidden relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
