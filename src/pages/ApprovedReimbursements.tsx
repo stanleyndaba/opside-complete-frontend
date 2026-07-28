@@ -161,31 +161,31 @@ export default function ApprovedReimbursements() {
 
   return (
     <PageLayout title="Approved Reimbursements" noPadding>
-      <main className="min-h-screen bg-[#F8FAFC] text-[#111827]">
-        <div className="mx-auto max-w-[1320px] px-5 py-7 sm:px-6 lg:px-8 lg:py-9">
-          <header className="border-b border-[#DDE5EC] pb-7">
-            <div className="flex items-center gap-2 text-[12px] font-semibold tracking-tight text-[#0B74DE]">
-              <CircleCheck className="h-4 w-4" />
+      <main className="min-h-screen bg-[#FAFAF7] text-[#111827]">
+        <div className="mx-auto max-w-[1280px] px-5 py-8 sm:px-6 lg:px-8 lg:py-10">
+          <header className="border-b border-[#D8E3E8] pb-7">
+            <div className="flex items-center gap-2 text-[12px] font-semibold tracking-tight text-[#365B7D]">
+              <CircleCheck className="h-4 w-4 text-[#047857]" />
               Approved reimbursements
             </div>
             <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.48fr)] lg:items-end">
               <div>
-                <h1 className="max-w-3xl text-[34px] font-semibold leading-[0.98] tracking-[-0.055em] text-[#182026] sm:text-[46px] lg:text-[58px]">
+                <h1 className="max-w-3xl text-[34px] font-semibold leading-[0.98] tracking-tight text-[#111827] sm:text-[46px] lg:text-[58px]">
                   Reimbursed Disputes
                 </h1>
-                <p className="mt-4 max-w-3xl text-[15px] leading-7 tracking-tight text-[#66737F] sm:text-[16px]">
+                <p className="mt-4 max-w-3xl text-[15px] leading-7 tracking-tight text-[#546575] sm:text-[16px]">
                   Completed reimbursement outcomes from the filing pipeline. Every row is approved, payout-confirmed, reconciled, and tied back to an Amazon case reference.
                 </p>
               </div>
 
-              <div className="grid min-w-0 grid-cols-[0.82fr_1.18fr] border-y border-[#DDE5EC] bg-[#F8FAFC] lg:border-y-0 lg:border-l">
+              <div className="grid min-w-0 grid-cols-[0.82fr_1.18fr] border-y border-[#D8E3E8] bg-white lg:border-y-0 lg:border-l">
                 <div className="min-w-0 py-4 pr-4 lg:pl-7">
-                  <div className="text-[12px] font-semibold tracking-tight text-[#66737F]">Approval rate</div>
-                  <div className="mt-2 text-[36px] font-semibold leading-none tracking-[-0.055em] text-[#050607] xl:text-[39px]">96.2%</div>
+                  <div className="text-[12px] font-semibold tracking-tight text-[#6B7C88]">Approval rate</div>
+                  <div className="mt-2 text-[34px] font-semibold leading-none tracking-tight text-[#111827] xl:text-[37px]">96.2%</div>
                 </div>
-                <div className="min-w-0 border-l border-[#DDE5EC] py-4 pl-4 lg:pl-7">
-                  <div className="text-[12px] font-semibold tracking-tight text-[#66737F]">Total amount</div>
-                  <div className="mt-2 whitespace-nowrap text-[36px] font-semibold leading-none tracking-[-0.055em] text-[#050607] xl:text-[39px]">
+                <div className="min-w-0 border-l border-[#D8E3E8] py-4 pl-4 lg:pl-7">
+                  <div className="text-[12px] font-semibold tracking-tight text-[#6B7C88]">Total amount</div>
+                  <div className="mt-2 whitespace-nowrap text-[34px] font-semibold leading-none tracking-tight text-[#111827] xl:text-[37px]">
                     {formatMoney(DISPLAY_TOTAL_AMOUNT)}
                   </div>
                 </div>
@@ -193,20 +193,20 @@ export default function ApprovedReimbursements() {
             </div>
           </header>
 
-          <div className="mt-5 flex flex-col gap-3 border-b border-[#DDE5EC] pb-5 md:flex-row md:items-center md:justify-between">
+          <div className="mt-5 flex flex-col gap-3 border-b border-[#D8E3E8] pb-5 md:flex-row md:items-center md:justify-between">
             <label className="relative block w-full md:max-w-[520px]">
               <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A98A4]" />
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search dispute, seller, case ID, amount..."
-                className="h-11 w-full rounded-[5px] border border-[#DDE5EC] bg-white pl-10 pr-4 text-[14px] font-medium tracking-tight text-[#182026] outline-none transition focus:border-[#9DB7CB] focus:ring-4 focus:ring-[#0B74DE]/8"
+                className="h-10 w-full rounded-[2px] border border-[#D8E3E8] bg-white pl-10 pr-4 text-[14px] font-medium tracking-tight text-[#111827] outline-none transition focus:border-[#8FA0AD] focus:ring-4 focus:ring-[#D8E3E8]/55"
               />
             </label>
             <select
               value={closeoutFilter}
               onChange={(event) => setCloseoutFilter(event.target.value)}
-              className="h-11 rounded-[5px] border border-[#DDE5EC] bg-white px-3 text-[13px] font-semibold tracking-tight text-[#4D5B66] outline-none transition focus:border-[#9DB7CB] focus:ring-4 focus:ring-[#0B74DE]/8"
+              className="h-10 rounded-[2px] border border-[#D8E3E8] bg-white px-3 text-[13px] font-semibold tracking-tight text-[#4B5563] outline-none transition focus:border-[#8FA0AD] focus:ring-4 focus:ring-[#D8E3E8]/55"
             >
               {closeoutFilters.map((filter) => (
                 <option key={filter} value={filter}>{filter}</option>
@@ -214,16 +214,16 @@ export default function ApprovedReimbursements() {
             </select>
           </div>
 
-          <section className="mt-5 overflow-x-auto border-y border-[#DDE5EC] bg-white">
+          <section className="mt-5 overflow-x-auto rounded-[2px] border-y border-[#D8E3E8] bg-white">
             <table className="w-full min-w-[1040px] border-collapse">
               <thead>
-                <tr className="border-b border-[#DDE5EC] bg-[#FBFCFD] text-left">
-                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7A8994]">Dispute Type</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7A8994]">Case Reference</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7A8994]">Amazon Case ID</th>
-                  <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-tight text-[#7A8994]">Amount</th>
-                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7A8994]">Status / Closeout</th>
-                  <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-tight text-[#7A8994]">Updated</th>
+                <tr className="border-b border-[#D8E3E8] bg-[#F8FAFB] text-left">
+                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7B8A97]">Dispute Type</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7B8A97]">Case Reference</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7B8A97]">Amazon Case ID</th>
+                  <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-tight text-[#7B8A97]">Amount</th>
+                  <th className="px-5 py-3 text-[11px] font-semibold tracking-tight text-[#7B8A97]">Status / Closeout</th>
+                  <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-tight text-[#7B8A97]">Updated</th>
                   <th className="w-10 px-3 py-3" />
                 </tr>
               </thead>
@@ -231,30 +231,30 @@ export default function ApprovedReimbursements() {
                 {filteredRows.map((item) => (
                   <tr
                     key={item.caseNumber}
-                    className="group border-b border-[#E6ECF1] transition-colors last:border-b-0 hover:bg-[#F8FAFC]"
+                    className="group border-b border-[#E6ECF1] transition-colors last:border-b-0 hover:bg-[#F8FAFB]"
                   >
                     <td className="px-5 py-3.5 align-middle">
-                      <div className="text-[14px] font-semibold leading-5 tracking-tight text-[#182026]">{item.disputeName}</div>
-                      <div className="mt-0.5 text-[12px] font-medium tracking-tight text-[#7A8994]">{item.seller}</div>
+                      <div className="text-[14px] font-semibold leading-5 tracking-tight text-[#111827]">{item.disputeName}</div>
+                      <div className="mt-0.5 text-[12px] font-medium tracking-tight text-[#7B8A97]">{item.seller}</div>
                     </td>
-                    <td className="px-5 py-3.5 align-middle text-[12px] font-semibold tracking-tight text-[#4D5B66]">
+                    <td className="px-5 py-3.5 align-middle text-[12px] font-semibold tracking-tight text-[#4B5563]">
                       {item.caseNumber}
                     </td>
-                    <td className="px-5 py-3.5 align-middle text-[12px] font-medium tracking-tight text-[#66737F]">
+                    <td className="px-5 py-3.5 align-middle text-[12px] font-medium tracking-tight text-[#6B7C88]">
                       {item.amazonCaseId}
                     </td>
-                    <td className="px-5 py-3.5 text-right align-middle text-[16px] font-semibold tabular-nums tracking-[-0.035em] text-[#050607]">
+                    <td className="px-5 py-3.5 text-right align-middle text-[15px] font-semibold tabular-nums tracking-tight text-[#111827]">
                       {formatMoney(item.amount)}
                     </td>
                     <td className="px-5 py-3.5 align-middle">
-                      <div className="text-[12px] font-semibold tracking-tight text-[#4D5B66]">{item.closeout}</div>
+                      <div className="text-[12px] font-semibold tracking-tight text-[#4B5563]">{item.closeout}</div>
                       <div className="mt-0.5 text-[11px] font-medium tracking-tight text-[#8A98A4]">{item.proofReference}</div>
                     </td>
-                    <td className="px-5 py-3.5 text-right align-middle text-[12px] font-semibold tracking-tight text-[#66737F]">
+                    <td className="px-5 py-3.5 text-right align-middle text-[12px] font-semibold tracking-tight text-[#6B7C88]">
                       {item.updated}
                     </td>
                     <td className="px-3 py-3.5 align-middle">
-                      <ChevronRight className="h-4 w-4 text-[#B0BBC5] transition group-hover:translate-x-0.5 group-hover:text-[#4D5B66]" />
+                      <ChevronRight className="h-4 w-4 text-[#B0BBC5] transition group-hover:translate-x-0.5 group-hover:text-[#4B5563]" />
                     </td>
                   </tr>
                 ))}
@@ -262,7 +262,7 @@ export default function ApprovedReimbursements() {
             </table>
 
             {filteredRows.length === 0 ? (
-              <div className="px-5 py-10 text-center text-[13px] font-semibold tracking-tight text-[#66737F]">
+              <div className="px-5 py-10 text-center text-[13px] font-semibold tracking-tight text-[#6B7C88]">
                 No approved reimbursements match this search.
               </div>
             ) : null}
