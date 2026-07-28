@@ -38,7 +38,7 @@ type PricingTier = {
 type BillingView = 'monthly' | 'annual';
 type SelectablePlan = 'starter' | 'pro' | 'enterprise';
 
-const pricingTiers: PricingTier[] = [
+const getPricingTiers = (interval: BillingView): PricingTier[] => [
   {
     name: 'Free Recovery Audit',
     price: '$0',
@@ -60,8 +60,8 @@ const pricingTiers: PricingTier[] = [
   {
     name: 'Recovery Workspace',
     planKey: 'starter',
-    price: '$99/mo',
-    priceContext: '0% recovery commission',
+    price: interval === 'annual' ? '$79/mo' : '$99/mo',
+    priceContext: interval === 'annual' ? 'Billed $948 annually' : '0% recovery commission',
     purpose: 'For one Seller Central business. Cancel anytime. Nothing is filed without your approval.',
     features: [
       'Continuous discrepancy monitoring',
@@ -105,6 +105,7 @@ export default function PricingAdjust() {
   const { toast } = useToast();
   const { isAuthReady, authToken } = useSession();
   const { tenant, isReady: isTenantReady } = useTenant();
+  const [billingInterval, setBillingInterval] = useState<BillingView>('monthly');
   const [processingSelectionKey, setProcessingSelectionKey] = useState<string | null>(null);
   const [restoredSelectionKey, setRestoredSelectionKey] = useState<string | null>(null);
   const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
@@ -339,7 +340,7 @@ export default function PricingAdjust() {
                   openSalesPage();
                   return;
                 }
-                startSubscribeIntent(tier.planKey, 'monthly');
+                startSubscribeIntent(tier.planKey, billingInterval);
               }}
               disabled={processingSelectionKey !== null || tier.badgeLabel?.includes('Coming Soon')}
               className={cn(
@@ -351,7 +352,7 @@ export default function PricingAdjust() {
                     : "border border-[#CFE0EA] bg-white text-[#25313A] hover:bg-[#F8FAFC]"
               )}
             >
-              {tier.planKey && processingSelectionKey === `${tier.planKey}:monthly`
+              {tier.planKey && processingSelectionKey === `${tier.planKey}:${billingInterval}`
                 ? 'Preparing Checkout'
                 : tier.ctaLabel || `Start ${tier.name} Coverage`}
               {!tier.badgeLabel?.includes('Coming Soon') && <ArrowRight className="ml-2 h-4 w-4" />}
@@ -405,26 +406,49 @@ export default function PricingAdjust() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-12 flex flex-col items-center text-center"
+            className="mb-16 flex flex-col items-start justify-between gap-10 md:flex-row md:items-end"
           >
-            <div className="flex flex-col items-center gap-3">
-              <Badge variant="outline" className="border-[#DCE8EE] bg-white text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
-                Tiered Revenue Recovery Infrastructure
-              </Badge>
-              <h1 className="text-2xl font-semibold tracking-[-0.035em] text-[#182026]">Pricing</h1>
-            </div>
-            <div className="mt-6 max-w-4xl space-y-4">
-              <h2 className="text-4xl font-semibold leading-tight tracking-[-0.055em] text-[#182026] md:text-6xl">
-                Evidence-ready Amazon reimbursement workflows.
+            <div className="max-w-xl">
+              <h2 className="text-5xl font-semibold leading-none tracking-[-0.04em] text-[#182026] md:text-7xl">
+                Simple pricing,<br />
+                <span className="text-[#8A99A4]">real results.</span>
               </h2>
-              <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
-                A flat subscription with 0% commission. The Free Recovery Audit identifies exactly what is missing and what can be recovered. The Recovery Workspace executes the entire recovery workflow seamlessly.
+            </div>
+            
+            <div className="flex max-w-[280px] flex-col items-start md:items-end md:text-right">
+              <p className="mb-6 text-[13px] leading-relaxed text-[#66737F]">
+                Start on any tier. Move up or down whenever your data follows. No migrations, no exports, no downtime.
+              </p>
+              
+              <div className="flex w-full items-center justify-between rounded-full border border-[#E4EDF1] bg-[#F8FAFC] p-1 md:w-auto md:justify-end">
+                <button 
+                  onClick={() => setBillingInterval('monthly')}
+                  className={cn(
+                    "flex-1 rounded-full px-5 py-2 text-[11px] font-semibold uppercase tracking-wide transition-all md:flex-none",
+                    billingInterval === 'monthly' ? "bg-white text-[#182026] shadow-sm" : "text-[#66737F] hover:text-[#182026]"
+                  )}
+                >
+                  Monthly
+                </button>
+                <button 
+                  onClick={() => setBillingInterval('annual')}
+                  className={cn(
+                    "flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-2 text-[11px] font-semibold uppercase tracking-wide transition-all md:flex-none",
+                    billingInterval === 'annual' ? "bg-white text-[#182026] shadow-sm" : "text-[#66737F] hover:text-[#182026]"
+                  )}
+                >
+                  Yearly
+                  <span className="rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] tracking-tight text-[#0284C7]">Save 20%</span>
+                </button>
+              </div>
+              <p className="mt-3 w-full text-center text-[10px] font-medium tracking-wide text-[#8A99A4] md:text-right">
+                Billed yearly · 2 months free
               </p>
             </div>
           </motion.div>
 
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">
-            {pricingTiers.map((tier, index) => renderPricingTier(tier, index))}
+            {getPricingTiers(billingInterval).map((tier, index) => renderPricingTier(tier, index))}
           </div>
 
           <p className="mx-auto mt-10 max-w-4xl text-center text-[11px] font-medium leading-5 text-[#7A8994]">
