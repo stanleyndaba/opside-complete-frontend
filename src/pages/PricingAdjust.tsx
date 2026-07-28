@@ -40,70 +40,61 @@ type SelectablePlan = 'starter' | 'pro' | 'enterprise';
 
 const pricingTiers: PricingTier[] = [
   {
-    name: 'Early Access',
+    name: 'Free Recovery Audit',
+    price: '$0',
+    priceContext: 'A one-time snapshot',
+    purpose: 'Find out exactly what is missing and what can be recovered.',
+    features: [
+      'Potential recovery opportunities',
+      'Evidence gaps',
+      'Claim deadlines',
+      'Settlement mismatches',
+      'Reversals or underpayments',
+      'What is ready and what still needs proof',
+      'Read-only connection',
+      'No card required',
+    ],
+    ctaLabel: 'Run Free Recovery Audit',
+    checkoutUrl: '/register',
+  },
+  {
+    name: 'Recovery Workspace',
     planKey: 'starter',
-    price: '$99',
-    priceContext: 'One-time payment. 0% commission through Dec 31, 2026.',
-    purpose: 'Early sellers who want founder pricing locked and priority activation reserved before standard plans begin.',
+    price: '$99/mo',
+    priceContext: '0% recovery commission',
+    purpose: 'For one Seller Central business. Cancel anytime. Nothing is filed without your approval.',
     features: [
-      'Keep 100% of every recovery during Early Access',
-      '$0 monthly subscription fee through Dec 31, 2026',
-      '$99 credited if you upgrade to Pro or Scale',
-      'Limited to 500 slots; closes July 30, 2026 or when filled',
+      'Continuous discrepancy monitoring',
+      'Evidence ingestion across connected sources',
+      'Document extraction and analysis',
+      'Evidence matching & Missing-proof identification',
+      'Claim-ready case building',
+      'Seller approval before filing',
+      'Amazon response and rejection handling',
+      'Recovery status tracking',
+      'Payout, underpayment, and reversal reconciliation',
+      'Accounting-ready recovery record',
     ],
-    ctaLabel: 'Get Early Access',
-    checkoutUrl: 'https://paystack.shop/pay/margin-early-access',
-  },
-  {
-    name: 'Performance',
-    planKey: 'pro',
-    price: '10% on recovered funds',
-    priceContext: '$0 monthly fee. Pay only when recoveries are made.',
-    purpose: 'Low-volume or risk-averse sellers who prefer no base fee.',
-    features: [
-      'We win the cases other tools avoid.',
-      'Pay only on what we recover',
-      '$0 monthly subscription fee',
-      'Includes one primary marketplace',
-      'Standard support',
-    ],
-    ctaLabel: 'Start Risk-Free',
-    checkoutUrl: 'https://www.paypal.com/ncp/payment/LE8SN5PGT6PPC',
-    badgeLabel: 'Coming Soon',
-  },
-  {
-    name: 'Pro',
-    planKey: 'enterprise',
-    price: '$199/mo + 3% on recovered funds',
-    priceContext: 'Recommended for serious sellers',
-    purpose: 'Consistent claim volume requiring priority handling and lower success fees. Recommended for sellers recovering $8,000+ annually.',
-    features: [
-      'Lower 3% success fee',
-      'Priority case processing & filing',
-      'Up to 3 marketplaces supported',
-      'Early Access members can apply their $99 credit',
-      'Priority email & chat support',
-    ],
-    ctaLabel: 'Upgrade to Pro',
-    checkoutUrl: 'https://www.paypal.com/ncp/payment/FXJZGLPPDYWJU',
+    ctaLabel: 'Activate Recovery Workspace',
     featured: true,
-    badgeLabel: 'Coming Soon',
   },
   {
     name: 'Scale',
-    price: '$399/mo',
-    priceContext: '0% commission on recovered funds',
-    purpose: 'High-volume, multi-marketplace enterprises and aggregators.',
+    price: 'Custom pricing',
+    priceContext: 'Built for enterprise volume',
+    purpose: 'For multiple accounts, brands, or high volume.',
     features: [
-      '0% commission on recovered funds',
-      'Unlimited global marketplace support',
-      'Early Access members can apply their $99 credit',
-      'Highest priority processing & 24/7 dedicated support',
-      'Advanced analytics & API access',
+      'Multiple Seller Central accounts',
+      'Multiple brands or legal entities',
+      'High case volume',
+      'Multiple team members',
+      'Advanced permissions',
+      'Multiple marketplaces',
+      'Priority onboarding and support',
+      'Custom accounting or API workflows',
     ],
-    ctaLabel: 'Run Recoveries at Scale',
+    ctaLabel: 'Talk to Margin',
     salesLed: true,
-    badgeLabel: 'Coming Soon',
   },
 ];
 
@@ -427,10 +418,7 @@ export default function PricingAdjust() {
                 Evidence-ready Amazon reimbursement workflows.
               </h2>
               <p className="mx-auto max-w-3xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
-                Early Access locks introductory pricing through 2026 with 0% commission, priority activation, and onboarding included. Standard plans are available for sellers who prefer performance-based, priority, or scale-level recovery management.
-              </p>
-              <p className="mx-auto max-w-2xl text-[13px] font-semibold leading-6 text-[#182026] md:text-[15px]">
-                Early Access is now open. Performance, Pro, and Scale plans will become available after the Early Access launch.
+                A flat subscription with 0% commission. The Free Recovery Audit identifies exactly what is missing and what can be recovered. The Recovery Workspace executes the entire recovery workflow seamlessly.
               </p>
             </div>
           </motion.div>
