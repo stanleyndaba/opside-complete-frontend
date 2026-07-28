@@ -26,7 +26,7 @@ const resourceLinks: FooterLink[] = [
 ];
 
 const companyLinks: FooterLink[] = [
-  { label: 'About Us', href: '/about-margin' },
+  { label: 'About', href: '/about-margin' },
   { label: 'Contact', href: '/contact' },
   { label: 'Sales', href: '/sales' }
 ];

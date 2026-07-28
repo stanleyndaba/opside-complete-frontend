@@ -139,8 +139,8 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         <div className="hidden lg:block">
                             <ProductsMegaMenu variant={effectiveVariant} />
                         </div>
-                        <Link to="/about-margin" className={desktopNavLinkClass}>
-                            About
+                        <Link to="/pricing" className={desktopNavLinkClass}>
+                            Pricing
                         </Link>
                     </nav>
 
@@ -269,10 +269,10 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     </AccordionItem>
                                 </Accordion>
                                 <Link
-                                    to="/about-margin"
+                                    to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={mobileMenuItemClass}>
-                                    About
+                                    Pricing
                                 </Link>
                                 <Link
                                     to="/login"

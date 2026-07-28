@@ -294,7 +294,7 @@ const App = () => (
                         <Route path="/about-margin" element={<AboutMargin />} />
                         <Route path="/research" element={<Research />} />
                         <Route path="/fba-reimbursement-research" element={<Research />} />
-                        <Route path="/pricing" element={<PreserveSearchRedirect to="/early-access" />} />
+                        <Route path="/pricing" element={<PricingAdjust />} />
                         <Route path="/currency-margin" element={<CurrencyMargin />} />
                         <Route path="/payment/success" element={<PaymentSuccess />} />
                         <Route path="/founding-500/status" element={<FoundingActivationStatus />} />
