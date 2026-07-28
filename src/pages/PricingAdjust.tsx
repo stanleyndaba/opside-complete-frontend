@@ -54,7 +54,7 @@ const pricingTiers: PricingTier[] = [
       'Read-only connection',
       'No card required',
     ],
-    ctaLabel: 'Run Free Recovery Audit',
+    ctaLabel: 'Get Started',
     checkoutUrl: '/register',
   },
   {
@@ -75,7 +75,7 @@ const pricingTiers: PricingTier[] = [
       'Payout, underpayment, and reversal reconciliation',
       'Accounting-ready recovery record',
     ],
-    ctaLabel: 'Activate Recovery Workspace',
+    ctaLabel: 'Get Started',
     featured: true,
   },
   {
@@ -93,7 +93,7 @@ const pricingTiers: PricingTier[] = [
       'Priority onboarding and support',
       'Custom accounting or API workflows',
     ],
-    ctaLabel: 'Talk to Margin',
+    ctaLabel: 'Talk to team',
     salesLed: true,
   },
 ];
@@ -281,10 +281,10 @@ export default function PricingAdjust() {
               <Badge 
                 variant={tier.badgeLabel?.includes('Coming Soon') ? 'default' : 'outline'} 
                 className={cn(
-                  "text-[9px] uppercase",
+                  "text-[9px] uppercase whitespace-nowrap",
                   tier.badgeLabel?.includes('Coming Soon')
                     ? "font-medium tracking-tight bg-[#007AFF] text-white border-transparent shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
-                    : "font-semibold tracking-tight border-[#BFD8EA] bg-white text-[#0B74DE]"
+                    : "font-semibold tracking-tight border-transparent bg-[#007AFF] text-white shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
                 )}
               >
                 {tier.badgeLabel || 'Most Popular'}
@@ -302,7 +302,7 @@ export default function PricingAdjust() {
             </div>
           </div>
 
-          <div className="mb-6 rounded-[22px] border border-[#E4EDF1] bg-white p-4">
+          <div className="mb-6 rounded-[22px] border border-[#E4EDF1] bg-white p-4 min-h-[104px]">
             <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Purpose</div>
             <div className="mt-3 text-sm font-semibold text-[#25313A]">{tier.purpose}</div>
           </div>
