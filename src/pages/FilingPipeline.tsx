@@ -114,11 +114,11 @@ const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'und
 const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
 const DEMO_PIPELINE_ROW_COUNT = 11;
-const PIPELINE_EXPLAINER_CLASS = 'mt-1.5 max-w-3xl text-sm font-medium leading-5 text-sky-100/85';
-const PIPELINE_META_CLASS = 'mt-2 text-[11px] font-medium tracking-tight text-sky-100/60';
-const PIPELINE_PROGRESS_LABEL_CLASS = 'mt-1 text-[13px] font-semibold tracking-tight text-sky-50';
-const PIPELINE_PROGRESS_VALUE_CLASS = 'text-right text-[11px] font-semibold tabular-nums tracking-tight text-sky-200';
-const PIPELINE_PROGRESS_TRACK_CLASS = 'mt-3 h-1.5 overflow-hidden rounded-full bg-sky-400/15';
+const PIPELINE_EXPLAINER_CLASS = 'mt-1.5 max-w-3xl text-sm font-normal leading-5 text-[#546575]';
+const PIPELINE_META_CLASS = 'mt-2 text-[11px] font-medium tracking-tight text-[#7B8A97]';
+const PIPELINE_PROGRESS_LABEL_CLASS = 'mt-1 text-[13px] font-semibold tracking-tight text-[#111827]';
+const PIPELINE_PROGRESS_VALUE_CLASS = 'text-right text-[11px] font-semibold tabular-nums tracking-tight text-[#6B7C88]';
+const PIPELINE_PROGRESS_TRACK_CLASS = 'mt-3 h-1 overflow-hidden rounded-none bg-[#E5E7EB]';
 
 type ActiveFilingPreview = {
   currentAction: string;
@@ -2573,53 +2573,53 @@ function toneClasses(tone: RowTone) {
   switch (tone) {
     case 'ready':
       return {
-        card: 'border-white/8 bg-[#111111]/96',
-        badge: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200',
-        chip: 'border-emerald-500/18 bg-emerald-500/[0.08] text-emerald-200',
+        card: 'border-[#D8E3E8] bg-white',
+        badge: 'border-[#BFE8D3] bg-[#F0FBF5] text-[#047857]',
+        chip: 'border-[#BFE8D3] bg-[#F0FBF5] text-[#047857]',
       };
     case 'inFlight':
       return {
-        card: 'border-white/8 bg-[#111111]/96',
-        badge: 'border-amber-500/20 bg-amber-500/10 text-amber-200',
-        chip: 'border-amber-500/18 bg-amber-500/[0.08] text-amber-200',
+        card: 'border-[#D8E3E8] bg-white',
+        badge: 'border-[#E5D8B5] bg-[#FFF8E8] text-[#8A5A00]',
+        chip: 'border-[#E5D8B5] bg-[#FFF8E8] text-[#8A5A00]',
       };
     case 'submitted':
       return {
-        card: 'border-white/8 bg-[#111111]/96',
-        badge: 'border-blue-500/20 bg-blue-500/10 text-blue-200',
-        chip: 'border-blue-500/18 bg-blue-500/[0.08] text-blue-200',
+        card: 'border-[#D8E3E8] bg-white',
+        badge: 'border-[#C8D9EA] bg-[#F4F8FB] text-[#365B7D]',
+        chip: 'border-[#C8D9EA] bg-[#F4F8FB] text-[#365B7D]',
       };
     case 'approved':
       return {
-        card: 'border-white/8 bg-[#111111]/96',
-        badge: 'border-violet-500/20 bg-violet-500/10 text-violet-200',
-        chip: 'border-violet-500/18 bg-violet-500/[0.08] text-violet-200',
+        card: 'border-[#D8E3E8] bg-white',
+        badge: 'border-[#D8D3EA] bg-[#F7F5FB] text-[#5B4A7D]',
+        chip: 'border-[#D8D3EA] bg-[#F7F5FB] text-[#5B4A7D]',
       };
     case 'completed':
       return {
-        card: 'border-white/8 bg-[#111111]/96',
-        badge: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200',
-        chip: 'border-emerald-500/18 bg-emerald-500/[0.08] text-emerald-200',
+        card: 'border-[#D8E3E8] bg-white',
+        badge: 'border-[#BFE8D3] bg-[#F0FBF5] text-[#047857]',
+        chip: 'border-[#BFE8D3] bg-[#F0FBF5] text-[#047857]',
       };
     case 'attention':
       return {
-        card: 'border-white/8 bg-[#111111]/96',
-        badge: 'border-red-500/20 bg-red-500/10 text-red-200',
-        chip: 'border-red-500/18 bg-red-500/[0.08] text-red-200',
+        card: 'border-[#D8E3E8] bg-white',
+        badge: 'border-[#F3C6C6] bg-[#FFF3F3] text-[#A23A3A]',
+        chip: 'border-[#F3C6C6] bg-[#FFF3F3] text-[#A23A3A]',
       };
   }
 }
 
 function LoadingState({ label }: { label: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#111111]/90 p-4 shadow-2xl">
-      <div className="flex items-center gap-3 text-[12px] font-medium text-white/64">
-        <RefreshCw className="h-4 w-4 animate-spin text-white/42" />
+    <div className="rounded-[2px] border border-[#D8E3E8] bg-white p-4">
+      <div className="flex items-center gap-3 text-[12px] font-medium text-[#6B7C88]">
+        <RefreshCw className="h-4 w-4 animate-spin text-[#8FA0AD]" />
         <span>{label}</span>
       </div>
       <div className="mt-4 grid gap-3">
-        <Skeleton className="h-24 w-full bg-white/[0.06]" />
-        <Skeleton className="h-24 w-full bg-white/[0.04]" />
+        <Skeleton className="h-20 w-full bg-[#EDF2F5]" />
+        <Skeleton className="h-20 w-full bg-[#F3F6F8]" />
       </div>
     </div>
   );
@@ -2627,7 +2627,7 @@ function LoadingState({ label }: { label: string }) {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/14 bg-[#111111]/92 px-4 py-5 text-sm leading-6 text-white/66 shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+    <div className="rounded-[2px] border border-dashed border-[#D8E3E8] bg-white px-4 py-5 text-sm leading-6 text-[#6B7C88]">
       {message}
     </div>
   );
@@ -2635,8 +2635,8 @@ function EmptyState({ message }: { message: string }) {
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-red-500/18 bg-red-500/[0.05] px-4 py-4 text-sm leading-6 text-red-100/90">
-      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-300" />
+    <div className="flex items-start gap-3 rounded-[2px] border border-[#F3C6C6] bg-[#FFF3F3] px-4 py-4 text-sm leading-6 text-[#8A2F2F]">
+      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#A23A3A]" />
       <div>{message}</div>
     </div>
   );
@@ -2658,16 +2658,16 @@ function PipelineSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-3 px-6 py-4">
+    <section className="space-y-3 px-5 py-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-            <h2 className="text-[15px] font-sans font-semibold tracking-tight text-white/88">{title}</h2>
-            <div className="text-[13px] font-sans font-semibold tracking-tight text-[#8b8b8b]">{amount}</div>
+            <h2 className="text-[15px] font-sans font-semibold tracking-tight text-[#111827]">{title}</h2>
+            <div className="text-[13px] font-sans font-semibold tracking-tight text-[#4B5563]">{amount}</div>
           </div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-sans text-white/60">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-sans text-[#6B7C88]">
             <span>{detail}</span>
-            <span className="text-white/32">{countLabel}</span>
+            <span className="text-[#8FA0AD]">{countLabel}</span>
           </div>
         </div>
         {action}
@@ -2685,15 +2685,15 @@ function InlineMetricStack({
   const visibleRows = rows.filter((row) => row.value && row.value !== NOT_AVAILABLE);
 
   return (
-    <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+    <div className="min-w-0 lg:border-l lg:border-[#D8E3E8] lg:pl-5">
       <div className="space-y-1.5">
         {visibleRows.map((row, index) => (
           <div key={`${row.label}-${index}`} className="flex items-center justify-between gap-4">
-            <span className="text-[11px] font-medium tracking-tight text-white/34">{row.label}</span>
+            <span className="text-[11px] font-medium tracking-tight text-[#7B8A97]">{row.label}</span>
             <span
               className={cn(
                 'text-right font-semibold tracking-tight',
-                index === 0 ? 'text-[13px] tabular-nums text-white' : 'text-[12px] text-[#c4c4c4]'
+                index === 0 ? 'text-[13px] tabular-nums text-[#111827]' : 'text-[12px] text-[#4B5563]'
               )}
             >
               {row.value}
@@ -2728,14 +2728,14 @@ function DisputeCard({
 }) {
   const classes = toneClasses(tone);
   return (
-    <Card className={cn('border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
       <CardContent className="grid gap-3 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{disputeTypeLabel(row)}</span>
-            <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
+            <span className="text-[11px] font-semibold uppercase tracking-tight text-[#8FA0AD]">Ref {disputeReference(row)}</span>
           </div>
-          <h3 className="mt-2 text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
+          <h3 className="mt-2 text-[14px] font-medium tracking-tight text-[#111827]">{disputeTitle(row)}</h3>
           <p className={PIPELINE_EXPLAINER_CLASS}>{detail}</p>
           <div className={PIPELINE_META_CLASS}>{disputeMeta(row)}</div>
         </div>
@@ -2768,7 +2768,7 @@ function ReadyFilingCard({
   const confidence = Math.max(1, Math.min(99, preview.confidence));
 
   return (
-    <Card className={cn('border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
@@ -2776,13 +2776,13 @@ function ReadyFilingCard({
               <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
                 Seller decision
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-emerald-200/70">{preview.priority}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-[#8FA0AD]">Ref {disputeReference(row)}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-tight text-[#047857]">{preview.priority}</span>
             </div>
 
             <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
-              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+              <h3 className="text-[14px] font-medium tracking-tight text-[#111827]">{disputeTitle(row)}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#111827]">{formatMoney(disputeAmount(row), row.currency)}</span>
             </div>
 
             <p className={PIPELINE_EXPLAINER_CLASS}>{preview.whyFile}</p>
@@ -2794,7 +2794,7 @@ function ReadyFilingCard({
               {preview.evidenceDocs.slice(0, 4).map((doc) => (
                 <span
                   key={doc}
-                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                  className="inline-flex max-w-full rounded-[2px] border border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#546575]"
                 >
                   <span className="truncate">{doc}</span>
                 </span>
@@ -2802,10 +2802,10 @@ function ReadyFilingCard({
             </div>
           </div>
 
-          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+          <div className="min-w-0 lg:border-l lg:border-[#D8E3E8] lg:pl-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Evidence confidence</div>
+                <div className="text-[10px] font-semibold uppercase tracking-tight text-[#7B8A97]">Evidence confidence</div>
                 <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{confidence}% ready</div>
               </div>
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
@@ -2814,28 +2814,28 @@ function ReadyFilingCard({
             </div>
 
             <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-emerald-300 shadow-[0_0_16px_rgba(110,231,183,0.35)]" style={{ width: `${confidence}%` }} />
+              <div className="h-full rounded-none bg-[#111827]" style={{ width: `${confidence}%` }} />
             </div>
 
-            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#546575]">
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Amazon route</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.amazonRoute}</span>
+                <span className="text-[#8FA0AD]">Amazon route</span>
+                <span className="max-w-[72%] text-right text-[#4B5563]">{preview.amazonRoute}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Evidence packet</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.evidencePacket}</span>
+                <span className="text-[#8FA0AD]">Evidence packet</span>
+                <span className="max-w-[72%] text-right text-[#4B5563]">{preview.evidencePacket}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Safety</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.safety}</span>
+                <span className="text-[#8FA0AD]">Safety</span>
+                <span className="max-w-[72%] text-right text-[#4B5563]">{preview.safety}</span>
               </div>
             </div>
 
             <div className="mt-3 space-y-1.5">
               {preview.checks.slice(0, 3).map((check) => (
-                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#6B7C88]">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#047857]" />
                   <span className="truncate">{check}</span>
                 </div>
               ))}
@@ -2849,10 +2849,10 @@ function ReadyFilingCard({
             </span>
 
             <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
-              <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+              <Button asChild size="sm" className="h-9 w-full rounded-[2px] border border-[#111827] bg-[#111827] px-4 font-sans text-[10px] font-semibold uppercase tracking-tight text-white hover:bg-[#020617] hover:text-white">
                 <Link to={decisionHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
               </Button>
-              <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+              <Button asChild size="sm" variant="outline" className="h-9 w-full rounded-[2px] border-[#D8E3E8] bg-white text-[10px] font-semibold uppercase tracking-tight text-[#111827] hover:bg-[#F3F6F8] hover:text-[#111827]">
                 <Link to={decisionHref}>Review Packet<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
               </Button>
             </div>
@@ -2864,8 +2864,8 @@ function ReadyFilingCard({
                 { label: 'Last movement', value: timeLabel || null },
               ].filter((item) => item.value).map((item) => (
                 <div key={item.label} className="flex items-start justify-between gap-3">
-                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
-                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                  <span className="text-[11px] font-medium tracking-tight text-[#7B8A97]">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#4B5563]">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -2888,7 +2888,7 @@ function ActiveFilingCard({
   const progress = Math.max(5, Math.min(98, preview.progress));
 
   return (
-    <Card className={cn('border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
@@ -3010,7 +3010,7 @@ function FiledFilingCard({
   const submittedLabel = proof?.submitted_at ? formatTimestamp(proof.submitted_at) : null;
 
   return (
-    <Card className={cn('border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
@@ -3147,7 +3147,7 @@ function PayoutTrackingCard({
   const title = ledgerMeta(row) !== 'Identity not available' ? ledgerMeta(row) : ledgerReference(row);
 
   return (
-    <Card className={cn('border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
@@ -3285,7 +3285,7 @@ function CompletedRecoveryCard({
   const title = ledgerMeta(row) !== 'Identity not available' ? ledgerMeta(row) : ledgerReference(row);
 
   return (
-    <Card className={cn('border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
@@ -3760,7 +3760,34 @@ export default function FilingPipeline() {
 
   return (
     <PageLayout title="Submission Flow" noPadding>
-      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
+      <div className="platform-vitality-page filing-pipeline-ledger min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
+        <style>{`
+          .filing-pipeline-ledger [class*="text-white"] { color: #111827 !important; }
+          .filing-pipeline-ledger [class*="text-white/30"],
+          .filing-pipeline-ledger [class*="text-white/32"],
+          .filing-pipeline-ledger [class*="text-white/34"],
+          .filing-pipeline-ledger [class*="text-white/36"],
+          .filing-pipeline-ledger [class*="text-white/38"],
+          .filing-pipeline-ledger [class*="text-white/40"],
+          .filing-pipeline-ledger [class*="text-white/42"],
+          .filing-pipeline-ledger [class*="text-white/46"],
+          .filing-pipeline-ledger [class*="text-white/48"],
+          .filing-pipeline-ledger [class*="text-white/50"],
+          .filing-pipeline-ledger [class*="text-white/60"],
+          .filing-pipeline-ledger [class*="text-white/62"],
+          .filing-pipeline-ledger [class*="text-white/64"],
+          .filing-pipeline-ledger [class*="text-white/66"],
+          .filing-pipeline-ledger [class*="text-white/68"],
+          .filing-pipeline-ledger [class*="text-white/70"],
+          .filing-pipeline-ledger [class*="text-white/72"],
+          .filing-pipeline-ledger [class*="text-white/75"] { color: #6B7C88 !important; }
+          .filing-pipeline-ledger [class*="border-white"] { border-color: #D8E3E8 !important; }
+          .filing-pipeline-ledger [class*="bg-white/"] { background-color: #F8FAFB !important; }
+          .filing-pipeline-ledger [class*="bg-[#0052FF]"],
+          .filing-pipeline-ledger [class*="bg-[#111827]"] { background-color: #111827 !important; color: #FFFFFF !important; border-color: #111827 !important; }
+          .filing-pipeline-ledger [class*="bg-[#0052FF]"] *,
+          .filing-pipeline-ledger [class*="bg-[#111827]"] * { color: #FFFFFF !important; }
+        `}</style>
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -3771,27 +3798,27 @@ export default function FilingPipeline() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
-        <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
+        <div className="relative z-10 mx-auto max-w-[1280px] px-5 pt-8 pb-16 sm:px-6 lg:px-8 space-y-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
-              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Submissions and Payouts</h1>
-              <p className="text-sm text-white/50 font-sans max-w-3xl">
+              <h1 className="text-4xl font-sans font-semibold text-[#111827] tracking-tight">Submissions and Payouts</h1>
+              <p className="text-sm text-[#546575] font-sans max-w-3xl">
                 Show exactly what is proof-complete, actively submitting, filed with proof, blocked, waiting for payout, and fully recovered without asking sellers to interpret queue logic.
               </p>
             </div>
             <div className="flex flex-col items-start gap-2 lg:items-end">
               {lastUpdatedLabel ? (
-                <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
+                <div className="inline-flex items-center rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
                   Submission flow live
-                  <span className="ml-2 text-white/40">{lastUpdatedLabel}</span>
+                  <span className="ml-2 text-[#8FA0AD]">{lastUpdatedLabel}</span>
                 </div>
               ) : null}
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
+              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7C88]">
                 {latestMovement ? `Pipeline refreshed ${lastUpdatedLabel}` : 'Pipeline update time unavailable'}
               </div>
               <Button
                 onClick={() => void refreshAll()}
-                className="h-10 px-4 font-sans font-bold text-[10px] bg-white text-[#4B5563] border border-[#E5E7EB] hover:bg-[#F3F4F6] hover:text-[#111827] rounded-lg uppercase tracking-tight"
+                className="h-9 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-semibold uppercase tracking-tight text-[#111827] hover:bg-[#F3F6F8] hover:text-[#111827]"
               >
                 <RefreshCw className={cn('w-3 h-3 mr-2', refreshing ? 'animate-spin' : '')} />
                 Refresh
@@ -3799,40 +3826,40 @@ export default function FilingPipeline() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#0c0c0c] text-white">
+          <div className="overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white text-[#111827]">
             <div className="px-5 py-4">
               <div className="min-w-0">
-                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Current filing snapshot</p>
-                <p className="mt-2 text-sm font-sans font-bold tracking-tight text-white">
+                <p className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#7B8A97]">Current filing snapshot</p>
+                <p className="mt-2 text-sm font-sans font-semibold tracking-tight text-[#111827]">
                   {readyRows.length > 0
                     ? `${formatMoney(readyTotal)} is ready to file now while ${formatMoney(inMotionTotal)} is already moving through Amazon or payout follow-up.`
                     : `${formatMoney(inMotionTotal)} is already moving while Margin keeps checking for the next filing-ready case.`}
                 </p>
-                <p className="mt-1 text-xs font-sans text-white/60">
+                <p className="mt-1 text-xs font-sans text-[#6B7C88]">
                   {completedRows.length > 0
                     ? `${formatMoney(recoveredTotal)} is already confirmed back to the account.`
                     : 'Recovered payouts will appear here as soon as financial confirmation lands.'}
                 </p>
-                <p className="mt-2 text-xs font-sans text-white/48">
+                <p className="mt-2 text-xs font-sans text-[#6B7C88]">
                   Margin files only when proof requirements are met; blocked cases stay out of filing until the recorded issue is cleared.
                 </p>
-                <p className="mt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
+                <p className="mt-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#8FA0AD]">
                   Scope: ready, submitting, filed, gated, payout, and recovered truth from the current account
                 </p>
               </div>
             </div>
-            <div className="border-t border-white/8 px-5 py-4">
+            <div className="border-t border-[#D8E3E8] px-5 py-4">
               <div className="mb-4 flex flex-wrap gap-2">
                 {snapshotPills.map((pill) => (
                   <span
                     key={pill}
-                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"
+                    className="rounded-[2px] border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-1 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#546575]"
                   >
                     {pill}
                   </span>
                 ))}
                 {totalVisibleRecords > 0 ? (
-                  <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                  <span className="rounded-[2px] border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-1 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#546575]">
                     {totalVisibleRecords} records in pipeline view
                   </span>
                 ) : null}
@@ -3844,23 +3871,23 @@ export default function FilingPipeline() {
                   { label: 'Needs attention', value: formatMoney(totalAmount(attentionRows.map(disputeAmount))), detail: attentionRows.length ? `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} blocked with recorded reasons` : 'No blockers visible right now' },
                   { label: 'Recovered', value: formatMoney(recoveredTotal), detail: completedRows.length ? `${completedRows.length} payout-confirmed item${completedRows.length === 1 ? '' : 's'}` : 'No recovered payouts confirmed yet' },
                 ].map((card) => (
-                  <div key={card.label} className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{card.label}</div>
-                    <div className="mt-2 text-left text-lg font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">{card.value}</div>
-                    <div className="mt-1 text-[11px] font-sans leading-5 tracking-tight text-white/62">{card.detail}</div>
+                  <div key={card.label} className="rounded-[2px] border border-[#D8E3E8] bg-white p-3">
+                    <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#7B8A97]">{card.label}</div>
+                    <div className="mt-2 text-left text-lg font-sans font-semibold tracking-tight text-[#111827] tabular-nums">{card.value}</div>
+                    <div className="mt-1 text-[11px] font-sans leading-5 tracking-tight text-[#6B7C88]">{card.detail}</div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-            <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
+          <Card className="overflow-hidden rounded-[2px] border-[#D8E3E8] bg-white text-[#111827] shadow-none">
+            <CardHeader className="border-b border-[#D8E3E8] bg-white px-5 py-4">
               <div className="flex flex-col gap-3">
                 <div>
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Conversion surface</div>
-                  <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Confirmed claims moving through filing</h2>
-                  <p className="mt-1 text-xs font-sans leading-5 text-white/60">
+                  <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#7B8A97]">Conversion surface</div>
+                  <h2 className="mt-2 text-xl font-sans font-semibold tracking-tight text-[#111827]">Confirmed claims moving through filing</h2>
+                  <p className="mt-1 text-xs font-sans leading-5 text-[#6B7C88]">
                     Each tab answers one question: what can file, what is filing, what is already with Amazon, what is approved, and what is already recovered.
                   </p>
                 </div>
@@ -3869,13 +3896,13 @@ export default function FilingPipeline() {
 
             <CardContent className="p-0">
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="w-full">
-                <div className="overflow-x-auto border-b border-white/6">
+                <div className="overflow-x-auto border-b border-[#D8E3E8]">
                   <TabsList className="h-auto w-full min-w-max justify-start gap-8 rounded-none bg-transparent px-6 py-0 text-left">
                     {pipelineTabs.map((tab) => (
                       <TabsTrigger
                         key={tab.value}
                         value={tab.value}
-                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[15px] font-sans font-semibold tracking-tight text-white/38 shadow-none ring-0 transition-colors hover:text-[#0052FF] data-[state=active]:border-[#0052FF] data-[state=active]:bg-transparent data-[state=active]:text-[#0052FF] data-[state=active]:shadow-none"
+                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[14px] font-sans font-semibold tracking-tight text-[#7B8A97] shadow-none ring-0 transition-colors hover:text-[#111827] data-[state=active]:border-[#111827] data-[state=active]:bg-transparent data-[state=active]:text-[#111827] data-[state=active]:shadow-none"
                       >
                         {tab.label}
                       </TabsTrigger>
