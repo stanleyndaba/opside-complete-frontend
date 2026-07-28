@@ -248,7 +248,7 @@ const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
     case 'Unmatched':
     case 'Not Parsed':
     default:
-      return 'bg-[#F9FAFB] text-[#4B5563] border-[#E5E7EB]';
+      return 'bg-[#FAFAF7] text-[#4B5563] border-[#D8E3E8]';
   }
 };
 
@@ -812,19 +812,18 @@ export default function EvidenceLocker() {
 
   if (!activeSlug) {
     return (
-      <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
+      <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#FAFAF7] text-[#111827]">
+        <div className="pointer-events-none absolute inset-0 bg-[#FAFAF7]" />
         <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
         <div className="flex-1 flex h-full overflow-hidden">
           <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
           <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
             <div className="relative pt-8">
-              <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
-                <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-10">
-                  <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Claim Documents</h1>
-                  <p className="text-white/60 text-sm font-sans font-bold uppercase tracking-tight">Tenant context required</p>
-                  <p className="text-white/35 mt-3 font-sans text-sm max-w-xl">
+              <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-[#111827]">
+                <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none p-10">
+                  <h1 className="text-3xl font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
+                  <p className="text-[#6B7280] text-sm font-sans font-semibold uppercase tracking-tight">Tenant context required</p>
+                  <p className="text-[#4B5563] mt-3 font-sans text-sm max-w-xl">
                     Claim Documents only renders inside a real tenant workspace. Open this page from a tenant-scoped route to load document inventory truthfully.
                   </p>
                 </div>
@@ -837,26 +836,24 @@ export default function EvidenceLocker() {
   }
 
   return (
-    <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
-      {/* Background Matrix Pattern / Noise */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
+    <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#FAFAF7] text-[#111827]">
+      <div className="pointer-events-none absolute inset-0 bg-[#FAFAF7]" />
 
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
           <div className="relative pt-8">
-            <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
+            <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-[#111827]">
               <div className="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Claim Documents</h1>
-                  <p className="text-sm text-white/50 font-sans max-w-3xl">
+                  <h1 className="text-3xl font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
+                  <p className="text-sm text-[#4B5563] font-sans max-w-3xl">
                     Review stored files, parsing progress, and case links that can support recoveries, filings, and payout follow-up.
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">
                     {latestInventoryTimestamp
                       ? `Updated ${formatDistanceToNow(new Date(latestInventoryTimestamp), { addSuffix: true })}`
                       : 'Update time unavailable'}
@@ -864,7 +861,7 @@ export default function EvidenceLocker() {
                   <Button
                     onClick={() => void refreshInventory()}
                     disabled={loading}
-                    className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight disabled:opacity-50"
+                    className="h-10 px-4 font-sans font-bold text-[10px] bg-white text-[#4B5563] border border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827] rounded-[2px] shadow-none uppercase tracking-tight disabled:opacity-50"
                   >
                     <RefreshCw className={cn("w-3 h-3 mr-2", loading && "animate-spin")} />
                     Refresh
@@ -873,10 +870,10 @@ export default function EvidenceLocker() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-6">
+                <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none p-6">
                   <GmailConnectionStatus onStatusChange={setGmailConnected} />
                 </div>
-                <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-6">
+                <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none p-6">
                     <EvidenceIngestion
                       gmailConnected={gmailConnected}
                       onIngestionComplete={() => {
@@ -887,9 +884,9 @@ export default function EvidenceLocker() {
               </div>
 
               {/* Forensic Ingestion Terminal */}
-              <div className="bg-white border border-[#E5E7EB] rounded-xl overflow-hidden mb-8 relative">
+              <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden mb-8 relative">
                 {/* Terminal Header */}
-                <div className="px-6 py-4 border-b border-[#E5E7EB] bg-white flex items-center justify-between">
+                <div className="px-6 py-4 border-b border-[#D8E3E8] bg-white flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Terminal className="h-3 w-3 text-[#4B5563]" />
                     <h2 className="text-[10px] font-sans font-bold text-[#111827] uppercase tracking-tight">Document History</h2>
@@ -908,14 +905,14 @@ export default function EvidenceLocker() {
                       placeholder="Search document history..."
                       value={docLogSearch}
                       onChange={(e) => setDocLogSearch(e.target.value)}
-                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white border-[#DCE5F2] text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#0052FF]/30 rounded-lg tracking-tight shadow-none"
+                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white border-[#D8E3E8] text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#8FA0AD] rounded-[2px] tracking-tight shadow-none"
                     />
                   </div>
 
                   {/* Terminal Logs */}
                   <div
                     ref={docLogContainerRef}
-                    className="bg-white border border-[#E5E7EB] rounded-lg p-6 font-sans font-bold text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative tracking-tight shadow-none">
+                    className="bg-white border border-[#D8E3E8] rounded-[2px] p-6 font-sans font-bold text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative tracking-tight shadow-none">
                     {filteredDocLogs.length === 0 ? (
                       <div className="text-[#9CA3AF] flex items-center justify-center h-full gap-3">
                         <Clock className="h-3 w-3 opacity-20" />
@@ -925,7 +922,7 @@ export default function EvidenceLocker() {
                       <div className="relative space-y-1.5">
                         {filteredDocLogs.map((log) => (
                           <div key={log.id} className="flex flex-col group/log">
-                            <div className="flex items-start gap-4 hover:bg-[#F9FAFB] -mx-2 px-2 py-1 rounded transition-colors">
+                            <div className="flex items-start gap-4 hover:bg-[#F8FAFB] -mx-2 px-2 py-1 rounded-[2px] transition-colors">
                               <span className="text-[#4B5563] shrink-0 select-none tabular-nums transition-colors">
                                 [{new Date(log.timestamp).toLocaleTimeString()}]
                               </span>
@@ -949,31 +946,31 @@ export default function EvidenceLocker() {
               </div>
 
               {/* Ingestion Node - Dropzone */}
-              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl mb-12 relative p-10">
-                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-white/15 rounded-tl-xl" />
-                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-white/15 rounded-tr-xl" />
+              <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none mb-12 relative p-10">
+                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-[#D8E3E8]" />
+                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-[#D8E3E8]" />
 
                 <div
                   className={cn(
-                    "border border-dashed transition-all duration-300 rounded-xl p-12 text-center group relative overflow-hidden",
-                    dragActive ? "border-white/25 bg-white/[0.04]" : "border-white/10 hover:border-white/20 bg-white/[0.01]"
+                    "border border-dashed transition-all duration-300 rounded-[2px] p-12 text-center group relative overflow-hidden",
+                    dragActive ? "border-[#8FA0AD] bg-[#F8FAFB]" : "border-[#D8E3E8] hover:border-[#8FA0AD] bg-[#FAFAF7]"
                   )}
                   onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
                 >
-                  <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-[#F8FAFB] opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-white/80" : "text-white/10 group-hover:text-white/20")} />
-                  <h3 className="text-sm font-sans font-bold text-white mb-2 uppercase tracking-tight">Document Ingestion</h3>
-                  <p className="text-[10px] text-white/20 font-sans font-bold mb-3 uppercase tracking-tight">
+                  <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-[#111827]" : "text-[#B8C4CE] group-hover:text-[#8FA0AD]")} />
+                  <h3 className="text-sm font-sans font-bold text-[#111827] mb-2 uppercase tracking-tight">Document Ingestion</h3>
+                  <p className="text-[10px] text-[#6B7280] font-sans font-bold mb-3 uppercase tracking-tight">
                     Supported types: PDF, JPG, PNG
                   </p>
-                  <p className="mx-auto mb-8 max-w-xl text-[11px] font-sans font-medium leading-relaxed text-white/35">
+                  <p className="mx-auto mb-8 max-w-xl text-[11px] font-sans font-medium leading-relaxed text-[#4B5563]">
                     Margin checks connected repositories first. Use upload only when a supporting document is not available from your ingested sources; uploaded files still enter the same parsing, matching, and evidence workflow.
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button
-                      className="group relative px-6 py-2.5 bg-[#0052FF] hover:bg-[#0047DD] transition-all rounded-lg overflow-hidden shadow-[0_14px_30px_rgba(0,82,255,0.18)]"
+                      className="group relative px-6 py-2.5 bg-[#111827] hover:bg-[#1F2937] transition-all rounded-[2px] overflow-hidden shadow-none"
                       onClick={() => document.getElementById('doc-file-input')?.click()}
                     >
                       <div className="relative flex items-center gap-2">
@@ -987,12 +984,12 @@ export default function EvidenceLocker() {
                       e.target.value = '';
                     }} />
 
-                    <div className="flex items-center gap-6 pl-4 border-l border-white/5">
-                      <div className="flex items-center gap-2 text-white/20">
+                    <div className="flex items-center gap-6 pl-4 border-l border-[#D8E3E8]">
+                      <div className="flex items-center gap-2 text-[#6B7280]">
                         <Mail className="w-3.5 h-3.5" />
                         <span className="text-[10px] font-sans font-bold uppercase tracking-tight">store@invoices.margin.app</span>
                       </div>
-                      <Link to={`/app/${activeSlug}/integrations-hub`} className="text-[10px] font-sans font-bold text-white/50 hover:text-white uppercase tracking-tight transition-colors">
+                      <Link to={`/app/${activeSlug}/integrations-hub`} className="text-[10px] font-sans font-bold text-[#111827] hover:text-[#4B5563] uppercase tracking-tight transition-colors">
                         Connect sources {">>"}
                       </Link>
                     </div>
@@ -1001,21 +998,21 @@ export default function EvidenceLocker() {
               </div>
 
               {/* Audit Registry Ledger - Document Library */}
-              <div className="border-y border-white/10 bg-transparent relative">
+              <div className="relative border-y border-[#D8E3E8] bg-white">
                 {/* Ledger Header */}
-                <div className="px-5 py-4 border-b border-white/10 flex flex-col gap-4 bg-transparent lg:flex-row lg:items-end lg:justify-between">
+                <div className="px-5 py-4 border-b border-[#D8E3E8] flex flex-col gap-4 bg-white lg:flex-row lg:items-end lg:justify-between">
                   <div>
                     <h2 className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Document Library</h2>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-[15px] font-sans font-medium text-white tracking-tight">{displayMetrics.filteredResults} results</span>
-                      <div className="h-1.5 w-[1px] bg-white/10" />
+                      <span className="text-[15px] font-sans font-medium text-[#111827] tracking-tight">{displayMetrics.filteredResults} results</span>
+                      <div className="h-1.5 w-[1px] bg-[#D8E3E8]" />
                       <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Total archive: {displayMetrics.totalDocuments}</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                     <div className="relative group/search">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-white/20 group-focus-within/search:text-white transition-colors" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-[#9CA3AF] group-focus-within/search:text-[#111827] transition-colors" />
                       <Input
                         placeholder="Search documents..."
                         value={q}
@@ -1023,14 +1020,14 @@ export default function EvidenceLocker() {
                           setQ(e.target.value);
                           setPage(1);
                         }}
-                        className="h-8 w-full rounded-none border-white/10 bg-transparent pl-9 font-sans text-[11px] font-medium tracking-tight text-white transition-all placeholder:text-zinc-600 focus:border-white/25 sm:w-64"
+                        className="h-8 w-full rounded-[2px] border-[#D8E3E8] bg-[#FAFAF7] pl-9 font-sans text-[11px] font-medium tracking-tight text-[#111827] transition-all placeholder:text-[#9CA3AF] focus:border-[#8FA0AD] sm:w-64"
                       />
                     </div>
 
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 rounded-none border border-white/10 bg-transparent px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-zinc-400 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white"
+                      className="h-8 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-[#4B5563] transition-colors hover:bg-[#F8FAFB] hover:text-[#111827]"
                       onClick={exportCsv}
                     >
                       <Download className="mr-2 h-3.5 w-3.5" />
@@ -1041,7 +1038,7 @@ export default function EvidenceLocker() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 rounded-none border border-rose-500/15 bg-transparent px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-rose-500/50 transition-colors hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400"
+                        className="h-8 rounded-[2px] border border-rose-200 bg-white px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-rose-500 transition-colors hover:bg-rose-50"
                         onClick={handleDeleteAllDocuments}>
                         <Trash2 className="w-3.5 h-3.5 mr-2" />
                         Delete All
@@ -1055,10 +1052,10 @@ export default function EvidenceLocker() {
                   {loading ? (
                     <div className="flex flex-col items-center justify-center py-32">
                       <div className="relative flex h-4 w-4 mb-6">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/25 opacity-20"></span>
-                        <span className="relative inline-flex rounded-full h-4 w-4 bg-white/35"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#111827]/20 opacity-20"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-[#111827]/35"></span>
                       </div>
-                      <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">Loading documents...</span>
+                      <span className="text-[11px] font-sans font-bold text-[#6B7280] uppercase tracking-tight">Loading documents...</span>
                     </div>
                   ) : error ? (
                     <div className="flex flex-col items-center justify-center py-32 bg-rose-500/[0.02]">
@@ -1067,7 +1064,7 @@ export default function EvidenceLocker() {
                       <p className="text-[10px] text-rose-500/40 mt-2 font-sans font-bold tracking-tight">{error}</p>
                       <Button
                         variant="ghost"
-                        className="mt-8 text-[11px] font-sans font-bold text-white/20 hover:text-white tracking-tight"
+                        className="mt-8 text-[11px] font-sans font-bold text-[#6B7280] hover:text-[#111827] tracking-tight"
                         onClick={() => window.location.reload()}
                       >
                         Retry
@@ -1077,27 +1074,27 @@ export default function EvidenceLocker() {
                     <>
                       {displayDocuments.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-24">
-                          <CircleDashed className="h-6 w-6 text-white/15 mb-4" />
-                          <span className="text-[11px] font-sans font-bold text-white/30 uppercase tracking-tight">
+                          <CircleDashed className="h-6 w-6 text-[#B8C4CE] mb-4" />
+                          <span className="text-[11px] font-sans font-bold text-[#6B7280] uppercase tracking-tight">
                             {displayMetrics.totalDocuments === 0 ? 'No documents in this workspace' : 'No documents match the current search'}
                           </span>
                         </div>
                       ) : (
                       <div className="overflow-hidden">
-                        <div className="hidden border-b border-white/10 px-5 py-2.5 lg:grid lg:grid-cols-[2.25rem_minmax(0,1.35fr)_minmax(0,1.25fr)_minmax(0,0.85fr)_5.5rem] lg:gap-5">
+                        <div className="hidden border-b border-[#D8E3E8] px-5 py-2.5 lg:grid lg:grid-cols-[2.25rem_minmax(0,1.35fr)_minmax(0,1.25fr)_minmax(0,0.85fr)_5.5rem] lg:gap-5">
                           {['', 'Document', 'Evidence details', 'Value / date', 'Action'].map((label) => (
                             <div key={label || 'selection'} className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                               {label}
                             </div>
                           ))}
                         </div>
-                      <div className="divide-y divide-white/8">
+                      <div className="divide-y divide-[#D8E3E8]">
                         {displayDocuments.map((doc) => (
                           <div
                             key={doc.id}
-                            className="group relative px-5 py-3.5 transition-colors hover:bg-white/[0.025]"
+                            className="group relative px-5 py-3.5 transition-colors hover:bg-[#F8FAFB]"
                           >
-                            <div className="absolute left-0 top-2 bottom-2 w-[1px] bg-white/70 opacity-0 transition-opacity group-hover:opacity-100" />
+                            <div className="absolute left-0 top-2 bottom-2 w-[1px] bg-[#111827] opacity-0 transition-opacity group-hover:opacity-100" />
 
                             <div className="grid gap-4 lg:grid-cols-[2.25rem_minmax(0,1.35fr)_minmax(0,1.25fr)_minmax(0,0.85fr)_5.5rem] lg:items-start lg:gap-5">
                               <div className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-2">
@@ -1110,14 +1107,14 @@ export default function EvidenceLocker() {
                                       return next;
                                     });
                                   }}
-                                  className="h-3.5 w-3.5 border-white/20 rounded-sm data-[state=checked]:bg-[#0052FF] data-[state=checked]:border-none transition-colors"
+                                  className="h-3.5 w-3.5 border-[#D8E3E8] rounded-[2px] data-[state=checked]:bg-[#111827] data-[state=checked]:border-none transition-colors"
                                 />
-                                <Hexagon className="h-3.5 w-3.5 text-white/5 group-hover:text-white/40 transition-colors" />
+                                <Hexagon className="h-3.5 w-3.5 text-[#B8C4CE] group-hover:text-[#8FA0AD] transition-colors" />
                               </div>
 
                               <div className="min-w-0">
                                 <div className="flex flex-wrap items-center gap-2.5">
-                                  <span className="min-w-0 truncate text-[13px] font-sans font-medium tracking-tight text-white normal-case transition-colors group-hover:text-white/90">
+                                  <span className="min-w-0 truncate text-[13px] font-sans font-medium tracking-tight text-[#111827] normal-case transition-colors">
                                     {doc.name}
                                   </span>
                                   <Badge className={cn("text-[9px] font-sans font-bold uppercase tracking-tight flex items-center gap-1.5", getEvidenceStateBadgeClass(doc))}>
@@ -1125,7 +1122,7 @@ export default function EvidenceLocker() {
                                     {getEvidenceStateLabel(doc)}
                                   </Badge>
                                   {doc.linked_case_count > 0 && (
-                                    <div className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-medium text-white/75 uppercase tracking-tight flex items-center gap-1.5">
+                                    <div className="px-2 py-0.5 bg-[#FAFAF7] border border-[#D8E3E8] text-[9px] font-sans font-medium text-[#4B5563] uppercase tracking-tight flex items-center gap-1.5">
                                       <Link2 className="h-2.5 w-2.5" />
                                       {doc.linked_case_count} linked cases
                                     </div>
@@ -1133,17 +1130,17 @@ export default function EvidenceLocker() {
                                 </div>
 
                                 <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                                  <span className="text-white/40">{doc.source_display || "Unknown source"}</span>
-                                  <span className="text-white/10">|</span>
-                                  <span className="text-white/40">{doc.content_type || "Type unavailable"}</span>
-                                  <span className="text-white/10">|</span>
-                                  <span className="text-white/40">{formatBytes(doc.size_bytes)}</span>
+                                  <span className="text-[#4B5563]">{doc.source_display || "Unknown source"}</span>
+                                  <span className="text-[#B8C4CE]">|</span>
+                                  <span className="text-[#4B5563]">{doc.content_type || "Type unavailable"}</span>
+                                  <span className="text-[#B8C4CE]">|</span>
+                                  <span className="text-[#4B5563]">{formatBytes(doc.size_bytes)}</span>
                                 </div>
 
                                 <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium tracking-tight text-zinc-500">
-                                  <span className="text-white/40">Supplier: {doc.supplier || "Not available"}</span>
-                                  <span className="text-white/10">|</span>
-                                  <span className="text-white/40">Invoice: {doc.invoice || "Not available"}</span>
+                                  <span className="text-[#4B5563]">Supplier: {doc.supplier || "Not available"}</span>
+                                  <span className="text-[#B8C4CE]">|</span>
+                                  <span className="text-[#4B5563]">Invoice: {doc.invoice || "Not available"}</span>
                                 </div>
                               </div>
 
@@ -1158,16 +1155,16 @@ export default function EvidenceLocker() {
                                       return (
                                         <>
                                     <div className={cn(
-                                      "h-1.5 w-1.5 rounded-full shadow-[0_0_8px]",
-                                      parsingStatus === 'completed' ? 'bg-emerald-500 shadow-emerald-500/30' :
-                                        parsingStatus === 'partial' ? 'bg-amber-400 shadow-amber-400/50' :
-                                          parsingStatus === 'processing' ? 'bg-amber-500 shadow-amber-500/50 animate-pulse' :
-                                            parsingStatus === 'failed' ? 'bg-rose-500 shadow-rose-500/50' : 'bg-white/10'
+                                      "h-1.5 w-1.5 rounded-full",
+                                      parsingStatus === 'completed' ? 'bg-emerald-600' :
+                                        parsingStatus === 'partial' ? 'bg-amber-500' :
+                                          parsingStatus === 'processing' ? 'bg-amber-500 animate-pulse' :
+                                            parsingStatus === 'failed' ? 'bg-rose-500' : 'bg-[#B8C4CE]'
                                     )} />
                                     <span className={cn(
-                                      parsingStatus === 'completed' ? 'text-white/60' :
+                                      parsingStatus === 'completed' ? 'text-[#4B5563]' :
                                         parsingStatus === 'partial' ? 'text-amber-400/80' :
-                                          parsingStatus === 'failed' ? 'text-rose-500/60' : 'text-white/20'
+                                          parsingStatus === 'failed' ? 'text-rose-500/80' : 'text-[#6B7280]'
                                     )}>
                                       {formatAutonomyLabel(doc.parsing_strategy || parsingStatus)}
                                     </span>
@@ -1175,22 +1172,22 @@ export default function EvidenceLocker() {
                                       );
                                     })()}
                                   </div>
-                                  <span className="text-white/10">|</span>
-                                  <span className="text-white/40">
+                                  <span className="text-[#B8C4CE]">|</span>
+                                  <span className="text-[#4B5563]">
                                     {doc.parser_confidence != null ? `${(doc.parser_confidence * 100).toFixed(0)}% confidence` : "Confidence unknown"}
                                   </span>
-                                  <span className="text-white/10">|</span>
-                                  <span className="text-white/40">{doc.usability_reason}</span>
+                                  <span className="text-[#B8C4CE]">|</span>
+                                  <span className="text-[#4B5563]">{doc.usability_reason}</span>
                                   {getLockerIngestionLabel(doc) ? (
                                     <>
-                                      <span className="text-white/10">|</span>
-                                      <span className="text-white/40">Intake: {getLockerIngestionLabel(doc)}</span>
+                                      <span className="text-[#B8C4CE]">|</span>
+                                      <span className="text-[#4B5563]">Intake: {getLockerIngestionLabel(doc)}</span>
                                     </>
                                   ) : null}
                                   {getLockerParsingReason(doc) ? (
                                     <>
-                                      <span className="text-white/10">|</span>
-                                      <span className="text-white/40">Decision: {getLockerParsingReason(doc)}</span>
+                                      <span className="text-[#B8C4CE]">|</span>
+                                      <span className="text-[#4B5563]">Decision: {getLockerParsingReason(doc)}</span>
                                     </>
                                   ) : null}
                                 </div>
@@ -1200,7 +1197,7 @@ export default function EvidenceLocker() {
                                 <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                                   Value / date
                                 </div>
-                                <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white lg:mt-0">
+                                <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-[#111827] lg:mt-0">
                                   {typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : "—"}
                                 </div>
                                 <div className="mt-1 text-[10px] font-sans text-zinc-500 tabular-nums">
@@ -1212,7 +1209,7 @@ export default function EvidenceLocker() {
                               {doc.linked_case_count > 0 && (
                                 <Link
                                   to={`/app/${activeSlug}/recoveries/${encodeURIComponent(doc.linked_case_ids[0])}`}
-                                  className="text-[9px] font-sans font-medium text-white/30 hover:text-white transition-colors uppercase tracking-tight flex items-center gap-2"
+                                  className="text-[9px] font-sans font-medium text-[#4B5563] hover:text-[#111827] transition-colors uppercase tracking-tight flex items-center gap-2"
                                 >
                                   {doc.linked_case_refs[0] || `ID_${doc.linked_case_ids[0].slice(0, 8)}`}
                                   <ArrowRight className="h-3 w-3" />
@@ -1221,12 +1218,12 @@ export default function EvidenceLocker() {
 
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="sm" className="h-7 w-7 rounded-none border border-transparent p-0 text-white/15 transition-colors hover:border-white/10 hover:bg-white/[0.04] hover:text-white">
+                                  <Button variant="ghost" size="sm" className="h-7 w-7 rounded-[2px] border border-transparent p-0 text-[#9CA3AF] transition-colors hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]">
                                     <MoreHorizontal className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="platform-vitality-page w-56 bg-white border border-[#E5E7EB] rounded-xl shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl p-2 animate-in fade-in slide-in-from-top-1">
-                                  <DropdownMenuItem asChild className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-tight">
+                                <DropdownMenuContent align="end" className="platform-vitality-page w-56 bg-white border border-[#D8E3E8] rounded-[2px] shadow-none p-2 animate-in fade-in slide-in-from-top-1">
+                                  <DropdownMenuItem asChild className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] rounded-[2px] cursor-pointer px-4 py-2.5 uppercase tracking-tight">
                                     <Link to={`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
                                       <Eye className="w-3.5 h-3.5" />
                                       View Details
@@ -1234,15 +1231,15 @@ export default function EvidenceLocker() {
                                   </DropdownMenuItem>
                                   <DropdownMenuItem
                                     onClick={() => downloadDoc(doc.id)}
-                                    className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-tight"
+                                    className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] rounded-[2px] cursor-pointer px-4 py-2.5 uppercase tracking-tight"
                                   >
                                     <Download className="w-3.5 h-3.5 mr-3" />
                                     Download
                                   </DropdownMenuItem>
-                                  <div className="h-[1px] bg-white/5 my-2" />
+                                  <div className="h-[1px] bg-[#D8E3E8] my-2" />
                                   <DropdownMenuItem
                                     onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                                    className="text-[11px] font-sans font-bold text-rose-500/60 focus:bg-rose-500/10 focus:text-rose-500 rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-tight"
+                                    className="text-[11px] font-sans font-bold text-rose-500/80 focus:bg-rose-50 focus:text-rose-600 rounded-[2px] cursor-pointer px-4 py-2.5 uppercase tracking-tight"
                                   >
                                     <Trash2 className="w-3.5 h-3.5 mr-3" />
                                     Delete
@@ -1258,7 +1255,7 @@ export default function EvidenceLocker() {
                       )}
 
                       {/* Ledger Pagination */}
-                      <div className="px-5 py-3.5 flex flex-col gap-4 border-t border-white/10 bg-transparent lg:flex-row lg:items-center lg:justify-between">
+                      <div className="px-5 py-3.5 flex flex-col gap-4 border-t border-[#D8E3E8] bg-[#FAFAF7] lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex flex-wrap items-center gap-5">
                           <div className="flex items-center gap-3">
                               <Checkbox
@@ -1267,11 +1264,11 @@ export default function EvidenceLocker() {
                                 if (c) setSelectedIds(new Set(displayDocuments.map(d => d.id)));
                                 else setSelectedIds(new Set());
                               }}
-                              className="h-3 w-3 border-white/10 rounded-sm"
+                              className="h-3 w-3 border-[#D8E3E8] rounded-[2px]"
                             />
                             <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Selection</span>
                           </div>
-                          <span className="h-3 w-[1px] bg-white/10" />
+                          <span className="h-3 w-[1px] bg-[#D8E3E8]" />
                           <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">
                             PAGE {pagination.page} OF {pagination.totalPages}
                           </span>
@@ -1281,7 +1278,7 @@ export default function EvidenceLocker() {
                           <div className="flex items-center gap-3">
                             <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Page size</span>
                             <select
-                              className="bg-transparent border-none text-[10px] font-sans font-medium text-zinc-300 focus:ring-0 cursor-pointer p-0 uppercase"
+                              className="bg-transparent border-none text-[10px] font-sans font-medium text-[#4B5563] focus:ring-0 cursor-pointer p-0 uppercase"
                               value={pageSize}
                               onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
                             >
@@ -1294,7 +1291,7 @@ export default function EvidenceLocker() {
                           <div className="flex items-center gap-2">
                             <Button
                               variant="ghost"
-                              className="h-8 rounded-none border border-white/10 bg-transparent px-4 font-sans text-[10px] font-medium tracking-tight text-zinc-500 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white disabled:opacity-10"
+                              className="h-8 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-medium tracking-tight text-[#4B5563] transition-colors hover:bg-[#F8FAFB] hover:text-[#111827] disabled:opacity-30"
                               disabled={pagination.page <= 1}
                               onClick={() => setPage(p => Math.max(1, (pagination.page || p) - 1))}
                             >
@@ -1302,7 +1299,7 @@ export default function EvidenceLocker() {
                             </Button>
                             <Button
                               variant="ghost"
-                              className="h-8 rounded-none border border-white/10 bg-transparent px-4 font-sans text-[10px] font-medium tracking-tight text-zinc-500 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white disabled:opacity-10"
+                              className="h-8 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-medium tracking-tight text-[#4B5563] transition-colors hover:bg-[#F8FAFB] hover:text-[#111827] disabled:opacity-30"
                               disabled={pagination.page >= pagination.totalPages}
                               onClick={() => setPage(p => Math.min(pagination.totalPages, (pagination.page || p) + 1))}
                             >
@@ -1322,3 +1319,4 @@ export default function EvidenceLocker() {
     </div>
   );
 }
+

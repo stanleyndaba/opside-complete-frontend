@@ -177,3 +177,514 @@
 [2m18:38:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavfilter.html[22m
 [2m18:38:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-devices.html[22m
 [2m18:39:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-all.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/faq.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/developer.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/community.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-utils.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-codecs.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-scaler.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/drawvg-reference.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffplay.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-formats.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/fate.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-bitstream-filters.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-resampler.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-filters.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-protocols.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffplay-all.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-devices.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffprobe.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/platform.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavformat.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/git-howto.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/mailing-list-faq.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavdevice.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavcodec.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libswresample.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/general.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/nut.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libswscale.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavutil.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffprobe-all.html[22m
+[2m18:45:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavfilter.html[22m
+[2m18:53:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m18:55:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m18:55:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m18:56:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/faq.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-all.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffprobe.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/platform.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/git-howto.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavformat.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/mailing-list-faq.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/community.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/developer.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-utils.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavdevice.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-codecs.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-scaler.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/general.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavcodec.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libswresample.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/drawvg-reference.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-formats.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffplay.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/nut.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/fate.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libswscale.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavutil.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-bitstream-filters.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-filters.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-protocols.html[22m
+[2m20:33:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-resampler.html[22m
+[2m20:33:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-protocols.html[22m
+[2m20:33:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffplay-all.html[22m
+[2m20:33:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffprobe-all.html[22m
+[2m20:33:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffprobe-all.html[22m
+[2m20:33:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavfilter.html[22m
+[2m20:33:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavfilter.html[22m
+[2m20:33:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-devices.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/community.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/developer.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/drawvg-reference.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/faq.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/fate.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-codecs.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-bitstream-filters.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-devices.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-all.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffprobe.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/git-howto.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-utils.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-scaler.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/general.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-formats.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffplay.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-filters.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-protocols.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffmpeg-resampler.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffplay-all.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/ffprobe-all.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/platform.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavformat.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/mailing-list-faq.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavdevice.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavcodec.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libswresample.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/nut.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libswscale.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavutil.html[22m
+[2m20:33:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mpublic/ffmpeg_folder/ffmpeg-master-latest-win64-gpl/doc/libavfilter.html[22m
+[2m21:32:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/contexts/TenantContext.tsx, /src/components/providers/NotificationsProvider.tsx, /src/pages/PricingAdjust.tsx, /src/pages/EarlyAccess.tsx, /src/pages/Index.tsx, /src/pages/AboutMargin.tsx, /src/pages/Research.tsx, /src/pages/Contact.tsx, /src/pages/Waitlist.tsx, /src/components/layout/Sidebar.tsx, /src/components/layout/Navbar.tsx, /src/pages/audit.tsx[22m
+[2m21:32:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/contexts/TenantContext.tsx, /src/components/providers/NotificationsProvider.tsx, /src/pages/PricingAdjust.tsx, /src/pages/EarlyAccess.tsx, /src/pages/Index.tsx, /src/pages/AboutMargin.tsx, /src/pages/Research.tsx, /src/pages/Contact.tsx, /src/pages/Waitlist.tsx, /src/components/layout/Sidebar.tsx, /src/components/layout/Navbar.tsx, /src/pages/audit.tsx[22m
+[2m21:32:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m21:33:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m21:45:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/contexts/TenantContext.tsx[22m Could not Fast Refresh ("default" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m21:45:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/components/providers/NotificationsProvider.tsx, /src/pages/PricingAdjust.tsx, /src/components/layout/Sidebar.tsx, /src/components/layout/Navbar.tsx, /src/components/layout/NotificationBell.tsx[22m
+[2m21:45:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/providers/NotificationsProvider.tsx[22m Could not Fast Refresh ("useNotifications" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m21:45:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/components/layout/Sidebar.tsx, /src/components/layout/NotificationBell.tsx[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m21:51:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m21:59:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m22:07:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m22:07:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m22:13:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m22:13:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m22:39:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m22:57:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m22:57:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m22:58:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m22:58:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m23:00:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m23:04:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m23:06:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m23:06:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m23:07:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m23:25:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m23:25:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[2m23:26:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[2m23:27:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m23:48:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[2m23:49:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[2m23:50:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m00:04:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m00:04:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m00:05:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m00:05:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m00:45:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m00:45:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m00:45:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m00:46:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m01:02:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m01:02:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m01:16:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m01:16:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[2m01:26:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m01:26:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m02:19:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m02:19:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m03:04:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[2m03:10:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m03:10:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m18:14:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m18:14:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m18:14:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m18:14:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/audit.tsx, /src/index.css[22m
+[2m19:42:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m19:42:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m19:58:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Index.tsx, /src/index.css[22m
+[2m12:39:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:39:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:47:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:52:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:01:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:03:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:06:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:08:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:15:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:34:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:34:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:35:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:36:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:36:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:39:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:41:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:45:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:48:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m13:49:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] GET /api/onboarding/capacity -> http://localhost:3001/api/onboarding/capacity
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/auth/demo-reviewer/login -> http://localhost:3001/api/auth/demo-reviewer/login
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/auth/demo-reviewer/login -> http://localhost:3001/api/auth/demo-reviewer/login
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/auth/demo-reviewer/login -> http://localhost:3001/api/auth/demo-reviewer/login
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m14:26:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m14:26:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[Proxy] POST /api/metrics/track -> http://localhost:3001/api/metrics/track
+[2m14:56:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/PageLayout.tsx[22m
+[2m14:58:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/Sidebar.tsx[22m
+[2m15:00:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/Navbar.tsx[22m
+[2m15:07:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/Navbar.tsx[22m
+[2m15:12:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
