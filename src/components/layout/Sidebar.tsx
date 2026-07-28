@@ -233,16 +233,16 @@ export function Sidebar({
                   "group relative flex items-center justify-center border-l transition-all duration-200",
                   collapsedBaseClasses,
                   isActive
-                    ? "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
+                    ? "border-[#111827] bg-[#F8FAFB] text-[#111827]"
                     : variant === 'core'
-                      ? "border-transparent text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
-                      : "border-transparent text-[#6B7280] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
+                      ? "border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                      : "border-transparent text-[#6B7280] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
                   <motion.span
                     layoutId="active-indicator-collapsed"
-                    className="absolute bottom-2 left-0 top-2 w-[2px] bg-[#0052FF]"
+                    className="absolute bottom-2 left-0 top-2 w-[2px] bg-[#111827]"
                   />
                 )}
                 <item.icon
@@ -250,16 +250,16 @@ export function Sidebar({
                     "transition-colors duration-200",
                     variant === 'core' ? "h-[17px] w-[17px]" : "h-4 w-4",
                     isActive
-                      ? "text-[#0052FF]"
+                      ? "text-[#111827]"
                       : variant === 'core'
-                        ? "text-[#4B5563] group-hover:text-[#0052FF]"
-                        : "text-[#6B7280] group-hover:text-[#0052FF]"
+                        ? "text-[#4B5563] group-hover:text-[#111827]"
+                        : "text-[#6B7280] group-hover:text-[#111827]"
                   )}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="border border-[#E5E7EB] bg-white px-3 py-2 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.12)]">
+            <TooltipContent side="right" className="rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-2 text-[#111827] shadow-none">
               <div className="text-[10px] font-sans font-medium tracking-tight text-[#111827]">
                 {item.title}
               </div>
@@ -281,22 +281,22 @@ export function Sidebar({
               : "gap-2.5 px-3 py-2",
           isActive
             ? variant === 'core'
-              ? "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
+              ? "border-[#111827] bg-[#F8FAFB] text-[#111827]"
               : variant === 'utility'
-                ? "border-[#0052FF] bg-transparent text-[#0052FF]"
-                : "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
+                ? "border-[#111827] bg-transparent text-[#111827]"
+                : "border-[#111827] bg-[#F8FAFB] text-[#111827]"
             : variant === 'core'
-              ? "border-transparent text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
+              ? "border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
               : variant === 'utility'
-                ? "border-transparent text-[#6B7280] hover:border-[#D8E7FF] hover:text-[#0052FF]"
-                : "border-transparent text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
+                ? "border-transparent text-[#6B7280] hover:border-[#D8E3E8] hover:text-[#111827]"
+                : "border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
             className={cn(
-              "absolute left-0 w-[2px] bg-[#0052FF]",
+              "absolute left-0 w-[2px] bg-[#111827]",
               variant === 'utility' ? "top-1.5 bottom-1.5" : "top-2 bottom-2"
             )}
           />
@@ -307,12 +307,12 @@ export function Sidebar({
             "h-4 w-4 shrink-0 transition-all duration-200",
             variant === 'core' ? "h-[17px] w-[17px]" : "",
             isActive
-              ? "text-[#0052FF]"
+              ? "text-[#111827]"
               : variant === 'core'
-                ? "text-[#4B5563] group-hover:text-[#0052FF]"
+                ? "text-[#4B5563] group-hover:text-[#111827]"
                 : variant === 'utility'
-                  ? "text-[#6B7280] group-hover:text-[#0052FF]"
-                : "text-[#6B7280] group-hover:text-[#0052FF]"
+                  ? "text-[#6B7280] group-hover:text-[#111827]"
+                : "text-[#6B7280] group-hover:text-[#111827]"
           )}
         />
         <div className="min-w-0 flex-1">
@@ -324,7 +324,7 @@ export function Sidebar({
                 : variant === 'utility'
                   ? "text-[13px] font-medium leading-5"
                   : "text-[13.5px] font-[300] leading-5",
-              isActive ? "text-[#0052FF]" : ""
+              isActive ? "text-[#111827]" : ""
             )}>
               {item.title}
             </span>
@@ -335,8 +335,8 @@ export function Sidebar({
             className={cn(
               "h-3 w-3 shrink-0 transition-all duration-200",
             isActive
-                ? "translate-x-0 text-[#0052FF]/60"
-                : "translate-x-[-2px] text-[#9CA3AF] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[#0052FF]/60"
+                ? "translate-x-0 text-[#111827]/55"
+                : "translate-x-[-2px] text-[#9CA3AF] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[#111827]/55"
             )}
             strokeWidth={1.6}
           />
@@ -345,8 +345,8 @@ export function Sidebar({
           <span className={cn(
             "ml-auto border-l px-1.5 text-[10px] font-sans font-medium tabular-nums tracking-tight",
             isActive
-              ? "border-[#BFD7FF] text-[#0052FF]"
-              : "border-[#E5E7EB] text-[#6B7280]"
+              ? "border-[#D8E3E8] text-[#111827]"
+              : "border-[#D8E3E8] text-[#6B7280]"
           )}>
             {item.count}
           </span>
@@ -359,7 +359,7 @@ export function Sidebar({
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col font-sans transition-all duration-500 ease-in-out gpu-accelerated",
         isCollapsed ? "w-16" : "w-60",
-        "border-r border-[#E5E7EB] bg-white/92 text-[#4B5563] shadow-[8px_0_28px_rgba(17,24,39,0.04)] backdrop-blur-xl",
+        "border-r border-[#D8E3E8] bg-white text-[#4B5563] shadow-none",
         className
       )}
       style={{
@@ -369,7 +369,7 @@ export function Sidebar({
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-[#E5E7EB]",
+          "border-b border-[#D8E3E8]",
           isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
         )}>
         <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-2")}>
@@ -388,7 +388,7 @@ export function Sidebar({
                 className="h-3.5 w-auto object-contain"
               />
               {!isCollapsed && subscriptionTierLabel ? (
-                <span className="border-l border-[#E5E7EB] pl-2 text-[10px] font-medium uppercase tracking-tight text-[#6B7280]">
+                <span className="border-l border-[#D8E3E8] pl-2 text-[10px] font-medium uppercase tracking-tight text-[#6B7280]">
                   {subscriptionTierLabel}
                 </span>
               ) : null}
@@ -398,7 +398,7 @@ export function Sidebar({
             <Link
               to={pricingAdjustHref}
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
-              className="inline-flex items-center border-l border-[#BFD7FF] px-2 py-0.5 text-[12px] font-sans font-medium tracking-tight text-[#0052FF] transition-colors hover:border-[#0052FF] hover:text-[#003DBF]"
+              className="inline-flex items-center border-l border-[#D8E3E8] px-2 py-0.5 text-[12px] font-sans font-medium tracking-tight text-[#365B7D] transition-colors hover:border-[#111827] hover:text-[#111827]"
             >
               Upgrade Plan
             </Link>
@@ -422,7 +422,7 @@ export function Sidebar({
 
       {/* Footer Utilities */}
       <div className={cn(
-        "mt-auto border-t border-[#E5E7EB] py-3",
+        "mt-auto border-t border-[#D8E3E8] py-3",
         isCollapsed ? "px-2" : "px-3"
       )}>
         {(() => {
@@ -437,26 +437,26 @@ export function Sidebar({
               className={cn(
                 "group flex w-full items-center border-l border-transparent transition-all outline-none",
                 isCollapsed
-                  ? "justify-center p-2.5 hover:border-[#D8E7FF] hover:bg-[#F3F7FF]"
-                  : "gap-3 px-3 py-2.5 text-left text-[#6B7280] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
+                  ? "justify-center p-2.5 hover:border-[#D8E3E8] hover:bg-[#F8FAFB]"
+                  : "gap-3 px-3 py-2.5 text-left text-[#6B7280] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
               )}>
               <Menu className={cn("h-4 w-4 text-[#9CA3AF] transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
               {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-[#6B7280]">More</span>}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="mb-2 ml-2 w-64 rounded-2xl border border-[#E5E7EB] bg-white p-1.5 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)]">
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="mb-2 ml-2 w-64 rounded-[2px] border border-[#D8E3E8] bg-white p-1.5 text-[#111827] shadow-none">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
-                "text-[13px] text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
-                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
-                settingsActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
+                "text-[13px] text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]",
+                "data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none",
+                settingsActive && "border-[#111827] bg-[#F8FAFB] text-[#111827]"
               )}>
               <Settings2
                 className={cn(
                   "h-4 w-4 shrink-0 transition-colors",
-                  settingsActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
+                  settingsActive ? "text-[#111827]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#111827]"
                 )}
                 strokeWidth={1.5}
               />
@@ -466,14 +466,14 @@ export function Sidebar({
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/billing'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 font-sans transition-colors",
-                "text-[13px] text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
-                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
-                billingActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
+                "text-[13px] text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]",
+                "data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none",
+                billingActive && "border-[#111827] bg-[#F8FAFB] text-[#111827]"
               )}>
               <CreditCard
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  billingActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
+                  billingActive ? "text-[#111827]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#111827]"
                 )}
                 strokeWidth={1.5}
               />
@@ -483,14 +483,14 @@ export function Sidebar({
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
-                "text-[13px] text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
-                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
-                helpActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
+                "text-[13px] text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]",
+                "data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none",
+                helpActive && "border-[#111827] bg-[#F8FAFB] text-[#111827]"
               )}>
               <LifeBuoy
                 className={cn(
                   "h-4 w-4 shrink-0 transition-colors",
-                  helpActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
+                  helpActive ? "text-[#111827]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#111827]"
                 )}
                 strokeWidth={1.5}
               />
@@ -500,14 +500,14 @@ export function Sidebar({
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
               className={cn(
                 "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight transition-colors",
-                "text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]",
-                "data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none",
-                notesActive && "border-[#0052FF] bg-[#F3F7FF] text-[#0052FF]"
+                "text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]",
+                "data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none",
+                notesActive && "border-[#111827] bg-[#F8FAFB] text-[#111827]"
               )}>
               <NotebookPen
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  notesActive ? "text-[#0052FF]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#0052FF]"
+                  notesActive ? "text-[#111827]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#111827]"
                 )}
                 strokeWidth={1.5}
               />
@@ -552,10 +552,10 @@ export function Sidebar({
                 </HoverCardContent>
               </HoverCard>
             </DropdownMenuItem> */}
-            <DropdownMenuSeparator className="my-1 bg-[#E5E7EB]" />
+            <DropdownMenuSeparator className="my-1 bg-[#D8E3E8]" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF] data-[highlighted]:border-[#D8E7FF] data-[highlighted]:bg-[#F3F7FF] data-[highlighted]:text-[#0052FF] data-[highlighted]:outline-none">
+              className="flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827] data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
@@ -566,11 +566,11 @@ export function Sidebar({
 
       {/* Sign Out Confirmation Dialog */}
       <Dialog open={signOutOpen} onOpenChange={setSignOutOpen}>
-        <DialogContent className="platform-vitality-page sm:max-w-[420px] border border-[#E5E7EB] bg-white p-0 gap-0 overflow-hidden shadow-[0_18px_45px_rgba(17,24,39,0.10)] rounded-2xl">
-          <DialogHeader className="px-8 pt-8 pb-6 border-b border-[#E5E7EB]">
+        <DialogContent className="platform-vitality-page sm:max-w-[420px] border border-[#D8E3E8] bg-white p-0 gap-0 overflow-hidden shadow-none rounded-[2px]">
+          <DialogHeader className="px-8 pt-8 pb-6 border-b border-[#D8E3E8]">
             <div className="flex items-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-xl border border-[#D8E7FF] bg-[#F3F7FF] flex items-center justify-center">
-                <LogOut className="h-5 w-5 text-[#0052FF]" />
+              <div className="h-10 w-10 rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] flex items-center justify-center">
+                <LogOut className="h-5 w-5 text-[#111827]" />
               </div>
               <div>
                 <DialogTitle className="text-xl font-sans font-bold text-[#111827] tracking-tight">
@@ -587,17 +587,17 @@ export function Sidebar({
               You can safely sign out. Margin will continue monitoring your store, tracking recoveries, and preserving workflow activity in the background.
             </p>
           </div>
-          <DialogFooter className="px-8 py-6 bg-[#F9FAFB] flex gap-3 sm:justify-end border-t border-[#E5E7EB]">
+          <DialogFooter className="px-8 py-6 bg-[#FAFAF7] flex gap-3 sm:justify-end border-t border-[#D8E3E8]">
             <Button
               variant="outline"
               onClick={() => setSignOutOpen(false)}
-              className="bg-white border-[#E5E7EB] text-[#4B5563] hover:bg-[#F3F4F6] hover:text-[#111827] rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6"
+              className="bg-white border-[#D8E3E8] text-[#4B5563] hover:bg-[#F8FAFB] hover:text-[#111827] rounded-[2px] font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSignOut}
-              className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] rounded-xl font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6 shadow-[0_12px_28px_rgba(0,82,255,0.14)]"
+              className="bg-[#111827] text-[#FFFFFF] hover:bg-[#1F2937] rounded-[2px] font-sans font-bold uppercase tracking-tight text-[11px] h-10 px-6 shadow-none"
             >
               Sign Out
             </Button>
@@ -712,7 +712,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-14 -right-2.5 z-50 flex h-8 w-5 items-center justify-center border border-[#E5E7EB] bg-white text-[#4B5563] shadow-[0_10px_24px_rgba(17,24,39,0.10)] backdrop-blur-md transition-all duration-300 hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]',
+          'absolute top-14 -right-2.5 z-50 flex h-8 w-5 items-center justify-center border border-[#D8E3E8] bg-white text-[#4B5563] shadow-none transition-all duration-300 hover:bg-[#F8FAFB] hover:text-[#111827]',
         )}>
         {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
       </button>

@@ -3231,13 +3231,13 @@ export function Dashboard() {
 
   if (!activeSlug) {
     return (
-      <div className="platform-vitality-dashboard relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#F9FAFB] text-[#111827]">
+      <div className="platform-vitality-dashboard relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#FAFAF7] text-[#111827]">
         <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
         <div className="flex-1 flex h-full overflow-hidden">
           <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
           <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
             <div className="relative pt-8 px-8">
-              <div className="rounded-2xl border border-[#E5E7EB] bg-white p-8 text-[#111827] shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
+              <div className="rounded-[2px] border border-[#D8E3E8] bg-white p-8 text-[#111827] shadow-none">
                 <h1 className="text-lg font-sans font-bold tracking-tight">Tenant context required</h1>
                 <p className="mt-3 font-sans text-sm text-[#4B5563]">
                   Dashboard metrics are blocked until a real tenant workspace is selected.
@@ -3252,8 +3252,8 @@ export function Dashboard() {
 
   return (
     <div
-      className="platform-vitality-dashboard relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#F9FAFB] text-[#111827]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,82,255,0.06),transparent_32%),linear-gradient(180deg,#F9FAFB_0%,#F3F6F8_100%)]" />
+      className="platform-vitality-dashboard relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#FAFAF7] text-[#111827]">
+      <div className="pointer-events-none absolute inset-0 bg-[#FAFAF7]" />
 
       <Navbar
         sidebarCollapsed={isSidebarCollapsed}
@@ -3281,7 +3281,7 @@ export function Dashboard() {
                         className={cn(
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'overview'
-                            ? "font-semibold text-[#0052FF]"
+                            ? "font-semibold text-[#111827]"
                             : "text-[#6B7280] hover:text-[#111827]"
                         )}
                       >
@@ -3289,7 +3289,7 @@ export function Dashboard() {
                         <span
                           className={cn(
                             "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'overview' ? "bg-[#0052FF] opacity-100" : "bg-transparent opacity-0"
+                            activeTab === 'overview' ? "bg-[#111827] opacity-100" : "bg-transparent opacity-0"
                           )}
                         />
                       </button>
@@ -3298,7 +3298,7 @@ export function Dashboard() {
                         className={cn(
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'discrepancies'
-                            ? "font-semibold text-[#0052FF]"
+                            ? "font-semibold text-[#111827]"
                             : "text-[#6B7280] hover:text-[#111827]"
                         )}
                       >
@@ -3306,7 +3306,7 @@ export function Dashboard() {
                         <span
                           className={cn(
                             "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'discrepancies' ? "bg-[#0052FF] opacity-100" : "bg-transparent opacity-0"
+                            activeTab === 'discrepancies' ? "bg-[#111827] opacity-100" : "bg-transparent opacity-0"
                           )}
                         />
                       </button>
@@ -3315,7 +3315,7 @@ export function Dashboard() {
                         className={cn(
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'evidence'
-                            ? "font-semibold text-[#0052FF]"
+                            ? "font-semibold text-[#111827]"
                             : "text-[#6B7280] hover:text-[#111827]"
                         )}
                       >
@@ -3323,7 +3323,7 @@ export function Dashboard() {
                         <span
                           className={cn(
                             "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'evidence' ? "bg-[#0052FF] opacity-100" : "bg-transparent opacity-0"
+                            activeTab === 'evidence' ? "bg-[#111827] opacity-100" : "bg-transparent opacity-0"
                           )}
                         />
                       </button>
@@ -3332,7 +3332,7 @@ export function Dashboard() {
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2">
                   <div className="flex flex-col items-end gap-2">
-                    <div className="w-[360px] max-w-[calc(100vw-4rem)] rounded-2xl border border-[#E5E7EB] bg-white px-3 py-2 shadow-[0_4px_20px_rgba(17,24,39,0.03)]">
+                    <div className="w-[360px] max-w-[calc(100vw-4rem)] rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-2 shadow-none">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                           <span className={cn(
@@ -3355,7 +3355,7 @@ export function Dashboard() {
                             }}
                             disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
                             aria-label="Dashboard Auto-File seller-controlled filing switch"
-                            className="data-[state=checked]:bg-[#0052FF] data-[state=unchecked]:bg-[#D1D5DB]"
+                            className="data-[state=checked]:bg-[#111827] data-[state=unchecked]:bg-[#D1D5DB]"
                           />
                           <span className="min-w-9 text-right text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                             {dashboardAutoFileSaving ? 'Saving' : dashboardAutoFileEnabled ? 'On' : 'Off'}
@@ -3382,8 +3382,8 @@ export function Dashboard() {
                   {/* Main Content - 3 columns */}
                   <div className="space-y-5">
                     <div className="relative group/pipeline-grid space-y-4">
-                      <div className="pointer-events-none absolute -inset-x-4 -top-6 h-64 rounded-[36px] bg-[radial-gradient(circle_at_20%_0%,rgba(0,82,255,0.10),transparent_36%),radial-gradient(circle_at_80%_20%,rgba(17,24,39,0.08),transparent_34%)] blur-2xl" />
-                      <div className="relative overflow-hidden rounded-[24px] border border-white/70 bg-white/75 p-5 shadow-[0_18px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1 hover:border-[#0052FF]/25 hover:shadow-[0_24px_70px_rgba(0,82,255,0.12)] group-hover/pipeline-grid:opacity-85 hover:opacity-100">
+                      <div className="hidden" />
+                      <div className="relative overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-5 shadow-none transition-colors duration-200 hover:bg-white">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                           <div>
                             <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
@@ -3394,7 +3394,7 @@ export function Dashboard() {
                             </p>
                           </div>
                           <Select value={pipelineWindow} onValueChange={setPipelineWindow}>
-                            <SelectTrigger className="h-8 w-[150px] self-start rounded-full border-[#0052FF]/15 bg-[#F3F7FF] px-3 text-[10px] font-sans font-semibold tracking-tight text-[#0052FF] shadow-[0_10px_24px_rgba(0,82,255,0.08)] focus:ring-0 focus:ring-offset-0 lg:self-auto">
+                            <SelectTrigger className="h-8 w-[150px] self-start rounded-[2px] border-[#D8E3E8] bg-[#FAFAF7] px-3 text-[10px] font-sans font-semibold tracking-tight text-[#4B5563] shadow-none focus:ring-0 focus:ring-offset-0 lg:self-auto">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent align="end" className="rounded-xl border-[#E5E7EB] bg-white text-[11px] font-sans">
@@ -3410,15 +3410,15 @@ export function Dashboard() {
                             <button
                               key={stage.label}
                               onClick={stage.onClick}
-                              className="group/stage relative min-h-[116px] overflow-hidden rounded-[18px] border border-white/70 bg-white/70 px-4 py-4 text-left shadow-[0_10px_28px_rgba(17,24,39,0.05)] backdrop-blur-md transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#0052FF]/30 hover:bg-white hover:shadow-[0_20px_46px_rgba(0,82,255,0.12)]"
+                              className="group/stage relative min-h-[108px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white px-4 py-3.5 text-left shadow-none transition-colors duration-200 hover:bg-[#F8FAFB]"
                             >
-                              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0052FF]/20 to-transparent opacity-0 transition-opacity duration-500 group-hover/stage:opacity-100" />
+                              <div className="absolute inset-x-0 top-0 h-px bg-[#D8E3E8] opacity-0 transition-opacity duration-200 group-hover/stage:opacity-100" />
                               <div className="flex items-center gap-2">
                                 <span className="relative flex h-2.5 w-2.5 items-center justify-center">
                                   {stage.active ? (
-                                    <span className="absolute h-2.5 w-2.5 animate-ping rounded-full bg-[#0052FF]/30" />
+                                    <span className="absolute h-2.5 w-2.5 animate-ping rounded-full bg-[#111827]/20" />
                                   ) : null}
-                                  <span className={cn("relative h-2 w-2 rounded-full", stage.active ? "bg-[#0052FF]" : "bg-[#D7E2F2]")} />
+                                  <span className={cn("relative h-2 w-2 rounded-full", stage.active ? "bg-[#111827]" : "bg-[#B8C4CE]")} />
                                 </span>
                                 <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                                   {stage.label}
@@ -3448,17 +3448,17 @@ export function Dashboard() {
                       </div>
 
                       <div className="relative grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_repeat(2,minmax(220px,0.55fr))]">
-                        <div className="relative overflow-hidden rounded-[28px] border border-white/80 bg-white/80 p-6 shadow-[0_24px_80px_rgba(17,24,39,0.10)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.005] hover:border-[#0052FF]/30 hover:shadow-[0_32px_88px_rgba(0,82,255,0.14)] group-hover/pipeline-grid:opacity-85 hover:opacity-100">
-                          <div className="pointer-events-none absolute right-0 top-0 h-40 w-48 rounded-bl-full bg-[#0052FF]/[0.055] blur-xl" />
+                        <div className="relative overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-6 shadow-none transition-colors duration-200 hover:bg-white">
+                          <div className="hidden" />
                           <div className="relative">
                             <div className="flex flex-wrap items-center justify-between gap-3">
                               <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
                                 Recovery pipeline
                               </div>
-                              <div className="inline-flex items-center gap-2 rounded-full bg-[#F3F6FB] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
+                              <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
                                 <span className="relative flex h-2 w-2">
-                                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0052FF]/30" />
-                                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#0052FF]" />
+                                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#111827]/20" />
+                                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#111827]" />
                                 </span>
                                 {overviewCurrentStatus.value}
                               </div>
@@ -3484,23 +3484,23 @@ export function Dashboard() {
                               {overviewNarrative}
                             </p>
                             <div className="mt-4 h-px w-full max-w-3xl bg-[#E5E7EB]" />
-                            <div className="mt-3 text-[13px] font-sans font-[300] tracking-tight text-[#0052FF]">
+                            <div className="mt-3 text-[13px] font-sans font-[300] tracking-tight text-[#111827]">
                               +$3,210 this week
                             </div>
                             <div className="mt-5 flex flex-wrap gap-2">
                               {readyToFileCount > 0 ? (
-                                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
+                                <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#B9E6D3] bg-[#F4FBF7] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
                                   <span className="h-1.5 w-1.5 rounded-full bg-[#10B981]" />
                                   {pluralize(readyToFileCount, 'case')} ready to file
                                 </div>
                               ) : null}
-                              <div className="inline-flex items-center gap-2 rounded-full bg-[#F3F6FB] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
+                              <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
                                 <span className="h-1.5 w-1.5 rounded-full bg-[#9CA3AF]" />
                                 {overviewNeedsFromYou.detail}
                               </div>
                               {latestDashboardSignalLabel ? (
-                                <div className="inline-flex items-center gap-2 rounded-full bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
-                                  <span className="h-1.5 w-1.5 rounded-full bg-[#BFD7FF]" />
+                                <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
+                                  <span className="h-1.5 w-1.5 rounded-full bg-[#B8C4CE]" />
                                   {latestDashboardSignalLabel}
                                 </div>
                               ) : null}
@@ -3510,11 +3510,11 @@ export function Dashboard() {
                         {overviewHeroMetrics.map((item, index) => (
                           <div
                             key={item.label}
-                            className="relative min-h-[156px] overflow-hidden rounded-[24px] border border-white/75 bg-white/72 p-5 shadow-[0_16px_52px_rgba(17,24,39,0.07)] backdrop-blur-xl transition-all duration-500 ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#0052FF]/25 hover:shadow-[0_26px_64px_rgba(0,82,255,0.12)] group-hover/pipeline-grid:opacity-85 hover:opacity-100 xl:min-h-[172px]"
+                            className="relative min-h-[150px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-5 shadow-none transition-colors duration-200 hover:bg-[#F8FAFB] xl:min-h-[164px]"
                           >
                             <div className={cn(
-                              "pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl",
-                              index === 0 ? "bg-[#0052FF]/[0.06]" : "bg-emerald-500/[0.07]"
+                              "hidden",
+                              index === 0 ? "" : ""
                             )} />
                             <div className="relative">
                               <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
@@ -3538,7 +3538,7 @@ export function Dashboard() {
 
                     <div className="space-y-3">
                       <div className="relative">
-                        <div className="rounded-[24px] border border-white/75 bg-white/78 p-5 shadow-[0_18px_60px_rgba(17,24,39,0.08)] backdrop-blur-xl">
+                        <div className="rounded-[2px] border border-[#D8E3E8] bg-white p-5 shadow-none">
                           <div className="flex items-start justify-between gap-4">
                             <div>
                               <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
@@ -3552,7 +3552,7 @@ export function Dashboard() {
                               <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                                 Reading mode
                               </div>
-                              <div className="mt-0.5 text-[10px] font-sans font-semibold leading-5 text-[#0052FF]">
+                              <div className="mt-0.5 text-[10px] font-sans font-semibold leading-5 text-[#111827]">
                                 Most recent first
                               </div>
                             </div>
@@ -3560,16 +3560,16 @@ export function Dashboard() {
 
                           <div className="mt-5">
                           {launchMonitor?.recent_events === null ? (
-                            <div className="rounded-[18px] border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
+                            <div className="rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
                               Not Available
                             </div>
                           ) : (launchMonitor?.recent_events || []).length === 0 ? (
-                            <div className="rounded-[18px] border border-[#E5E7EB] bg-[#F8FAFC] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
+                            <div className="rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
                               No recent operational events recorded for this tenant.
                             </div>
                           ) : (
                             <ScrollArea className="h-[560px] w-full">
-                              <div className="overflow-hidden rounded-[16px] border border-[#E5E7EB] bg-white">
+                              <div className="overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white">
                                 {launchMonitor?.recent_events?.map((event) => {
                                   const eventTimestamp = new Date(event.timestamp);
                                   const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
@@ -3615,7 +3615,7 @@ export function Dashboard() {
                                             <Button
                                               variant="ghost"
                                               size="sm"
-                                              className="h-7 rounded-full border border-[#D7E2F2] bg-white px-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF] transition-all hover:border-[#0052FF]/25 hover:bg-[#F3F7FF] hover:text-[#003DB8]"
+                                              className="h-7 rounded-[2px] border border-[#D8E3E8] bg-white px-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#111827] transition-colors hover:bg-[#F8FAFB]"
                                               onClick={(clickEvent) => {
                                                 clickEvent.stopPropagation();
                                                 navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`), { state: { claim: event } });
