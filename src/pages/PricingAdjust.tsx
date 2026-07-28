@@ -415,10 +415,19 @@ export default function PricingAdjust() {
               </h2>
             </div>
             
-            <div className="flex max-w-[280px] flex-col items-start md:items-end md:text-right">
-              <p className="mb-6 text-[13px] leading-relaxed text-[#66737F]">
-                Start on any tier. Move up or down whenever your data follows. No migrations, no exports, no downtime.
-              </p>
+            <div className="flex max-w-[320px] flex-col items-start md:items-end md:text-right">
+              <div className="mb-6 grid gap-2 text-left md:text-right">
+                {[
+                  'Start on any tier',
+                  'Move up or down whenever your data follows',
+                  'No migrations, exports, or downtime',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-[13px] leading-relaxed text-[#66737F] md:justify-end">
+                    <Check className="h-3.5 w-3.5 shrink-0 text-[#0B74DE]" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
               
               <div className="flex w-full items-center justify-between rounded-full border border-[#E4EDF1] bg-[#F8FAFC] p-1 md:w-auto md:justify-end">
                 <button 
