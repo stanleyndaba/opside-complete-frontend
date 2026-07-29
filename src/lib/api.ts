@@ -148,6 +148,51 @@ export interface AuditTeaserSummary {
   activationRequired?: boolean;
 }
 
+export interface RecoveryWorkspaceSubscriptionStatus {
+  success: boolean;
+  product: {
+    key: 'recovery_workspace_monthly';
+    name: string;
+    amount_subunits: number;
+    currency: 'ZAR';
+    interval: 'monthly';
+  };
+  subscription: {
+    id: string;
+    status: 'pending' | 'active' | 'non_renewing' | 'past_due' | 'suspended' | 'cancelled' | 'expired';
+    current_period_start: string | null;
+    current_period_end: string | null;
+    next_payment_at: string | null;
+    grace_expires_at: string | null;
+    cancel_at_period_end: boolean;
+    cancelled_at: string | null;
+    ended_at: string | null;
+    amount_subunits: number;
+    currency: string;
+    interval: string;
+  } | null;
+  entitlement: {
+    active: boolean;
+    entitled: boolean;
+    state: string;
+    access_until: string | null;
+    subscription_id: string | null;
+  };
+  latest_payment: any | null;
+  payments: any[];
+}
+
+export interface PaystackSubscriptionInitializeResponse {
+  success: boolean;
+  already_exists?: boolean;
+  subscription_intent_id?: string;
+  payment_id?: string;
+  reference?: string;
+  authorization_url?: string;
+  subscription?: RecoveryWorkspaceSubscriptionStatus['subscription'];
+  entitlement?: RecoveryWorkspaceSubscriptionStatus['entitlement'];
+}
+
 import { getFrontendAuthContext } from './authSession';
 import { buildFirstPartyAnalyticsPayload } from './analytics';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
@@ -2904,6 +2949,50 @@ export const api = {
         legacy_recovery_fee_total: number | null;
       };
     }>(`/api/billing/status?${query}`);
+  },
+
+  initializeRecoveryWorkspaceSubscription: (auditRunId: string, tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<PaystackSubscriptionInitializeResponse>(`/api/paystack/subscription/initialize${query}`, {
+      method: 'POST',
+      body: JSON.stringify({ audit_run_id: auditRunId }),
+    });
+  },
+
+  verifyPaystackPayment: (reference: string, tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<any>(`/api/paystack/verify/${encodeURIComponent(reference)}${query}`);
+  },
+
+  getRecoveryWorkspaceSubscription: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for getRecoveryWorkspaceSubscription');
+    return requestJson<RecoveryWorkspaceSubscriptionStatus>(
+      `/api/billing/subscription?tenantSlug=${encodeURIComponent(tenantSlug)}`
+    );
+  },
+
+  cancelRecoveryWorkspaceSubscription: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for cancelRecoveryWorkspaceSubscription');
+    return requestJson<RecoveryWorkspaceSubscriptionStatus>(
+      `/api/billing/subscription/cancel?tenantSlug=${encodeURIComponent(tenantSlug)}`,
+      { method: 'POST' }
+    );
+  },
+
+  resumeRecoveryWorkspaceSubscription: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for resumeRecoveryWorkspaceSubscription');
+    return requestJson<RecoveryWorkspaceSubscriptionStatus & { new_checkout_required?: boolean }>(
+      `/api/billing/subscription/resume?tenantSlug=${encodeURIComponent(tenantSlug)}`,
+      { method: 'POST' }
+    );
+  },
+
+  getRecoveryWorkspaceManageLink: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for getRecoveryWorkspaceManageLink');
+    return requestJson<{ success: boolean; url: string | null }>(
+      `/api/billing/subscription/manage-link?tenantSlug=${encodeURIComponent(tenantSlug)}`,
+      { method: 'POST' }
+    );
   },
 
   // Agent 10: Notifications endpoints

@@ -335,14 +335,57 @@ export default function Audit() {
   };
 
   const activateAudit = () => {
+    void activateRecoveryWorkspace();
+  };
+
+  const activateRecoveryWorkspace = async () => {
+    if (!audit?.id) {
+      setError('Finish the audit before activating Recovery Workspace.');
+      return;
+    }
+
+    setIsBusy(true);
+    setError(null);
     trackEvent(ANALYTICS_EVENTS.auditActivationClicked, {
       audit_id: audit?.id || null,
       scope_value: teaser.scopeValue,
       findings_count: teaser.findingsCount,
-      destination: '/currency-margin',
+      destination: 'paystack_subscription_checkout',
+      value: 1799,
+      currency: 'ZAR',
     });
-    clearPendingAudit();
-    navigate(`/currency-margin?source=audit${audit?.id ? `&audit_id=${encodeURIComponent(audit.id)}` : ''}`);
+    trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
+      offer: 'recovery_workspace',
+      value: 1799,
+      currency: 'ZAR',
+      payment_provider: 'paystack_subscription',
+    });
+    trackEvent(ANALYTICS_EVENTS.subscriptionCheckoutStarted, {
+      offer: 'recovery_workspace',
+      value: 1799,
+      currency: 'ZAR',
+    });
+
+    const response = await api.initializeRecoveryWorkspaceSubscription(audit.id, tenantSlug || undefined);
+    setIsBusy(false);
+
+    if (!response.ok || !response.data?.success) {
+      setError(response.error || 'Margin could not open subscription checkout yet.');
+      return;
+    }
+
+    if (response.data.entitlement?.active && tenantSlug) {
+      clearPendingAudit();
+      navigate(`/app/${tenantSlug}/dashboard`);
+      return;
+    }
+
+    if (!response.data.authorization_url) {
+      setError('Subscription checkout is pending. Refresh billing status in a moment.');
+      return;
+    }
+
+    window.location.assign(response.data.authorization_url);
   };
 
   const runAudit = () => runAuditForAudit();
@@ -369,7 +412,7 @@ export default function Audit() {
       </Button>
     ) : step === 'completed' ? (
       <Button onClick={activateAudit} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        Activate Recovery Workflow
+        Activate Your Recovery Workspace
         <ArrowRight className="ml-2 h-3.5 w-3.5" />
       </Button>
     ) : (

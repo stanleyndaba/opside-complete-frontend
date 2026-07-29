@@ -1,142 +1,161 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Loader2, XCircle } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { markFoundingReservationConfirmed } from '@/lib/foundingActivation';
-import { getPendingYocoCheckoutContext, getSafeYocoReturnPath } from '@/lib/yocoCheckout';
+import { api, RecoveryWorkspaceSubscriptionStatus } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
-import {
-  EARLY_ACCESS_CURRENCY,
-  EARLY_ACCESS_VALUE_ZAR,
-  PAYSTACK_PAYMENT_PROVIDER,
-  trackEvent,
-} from '@/lib/analytics';
+import { trackEvent } from '@/lib/analytics';
+
+type VerifyState = 'verifying' | 'subscription_pending' | 'active' | 'failed' | 'error';
 
 function readLocalStorage(key: string): string | null {
   if (typeof window === 'undefined') return null;
   return window.localStorage.getItem(key);
 }
 
-function resolveReturnPath(searchParams: URLSearchParams, tenantSlug: string | null): string {
-  const explicitReturn = getSafeYocoReturnPath(searchParams.get('return'));
-  if (explicitReturn) return explicitReturn;
-
-  const pendingReturn = getPendingYocoCheckoutContext().returnPath;
-  if (pendingReturn) return pendingReturn;
-
-  if (tenantSlug) return `/app/${tenantSlug}/billing`;
-
-  return `/login?next=${encodeURIComponent('/app')}`;
+function getReference(searchParams: URLSearchParams): string | null {
+  return searchParams.get('reference') || searchParams.get('trxref') || searchParams.get('payment_reference');
 }
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const tenantSlug = searchParams.get('tenant') || readLocalStorage('active_tenant_slug');
+  const reference = useMemo(() => getReference(searchParams), [searchParams]);
+  const trackedPurchaseRef = useRef(false);
 
-  const pending = useMemo(() => getPendingYocoCheckoutContext(), []);
-  const tenantSlug = searchParams.get('tenant') || pending.tenantSlug || readLocalStorage('active_tenant_slug');
-  const checkoutKind = String(searchParams.get('kind') || pending.kind || '');
-  const source = String(searchParams.get('source') || '').toLowerCase();
-  const paymentStatus = String(searchParams.get('status') || searchParams.get('payment_status') || '').toLowerCase();
-  const offer = searchParams.get('offer') || pending.offer || 'Margin checkout';
-  const price = searchParams.get('price') || pending.price || null;
-  const returnPath = resolveReturnPath(searchParams, tenantSlug);
-  const isEarlyAccess = checkoutKind.includes('early_access');
-  const isCancelled = ['cancelled', 'canceled', 'cancel'].includes(paymentStatus);
-  const isFailed = ['failed', 'failure', 'declined', 'error'].includes(paymentStatus);
-  const isPayPal = source === 'paypal' && !isEarlyAccess;
-  const paymentProviderLabel = isEarlyAccess || source === 'paystack_payment_page' ? 'Paystack' : isPayPal ? 'PayPal' : 'Paystack';
-
-  const pageTitle = isEarlyAccess ? 'Early Access Reservation Confirmed | Margin' : 'Payment Submitted | Margin';
-  const pageDescription = isEarlyAccess
-    ? 'Your Early Access reservation is confirmed. Founder pricing is locked and priority activation is reserved.'
-    : `Your ${paymentProviderLabel} payment return page for Margin. Continue setup while payment confirmation is verified.`;
-  const heading = isEarlyAccess
-    ? 'Early Access reservation confirmed.'
-    : 'Payment submitted. Continue into Margin.';
-  const body = isEarlyAccess
-    ? `You are back from Paystack for ${offer}${price ? ` (${price})` : ''}. Your seat is secured, founder pricing is locked, and priority activation is reserved. A founder or team member will contact you with the next setup step.`
-    : `You are back from ${paymentProviderLabel} for ${offer}${price ? ` (${price})` : ''}. Margin will verify the payment before activating billing or starting the recovery scan.`;
-  const primaryButtonLabel = isEarlyAccess ? 'Back to Early Access' : 'Continue to Margin';
+  const [state, setState] = useState<VerifyState>('verifying');
+  const [message, setMessage] = useState('Margin is verifying your Recovery Workspace subscription.');
+  const [subscriptionStatus, setSubscriptionStatus] = useState<RecoveryWorkspaceSubscriptionStatus | null>(null);
 
   useEffect(() => {
-    if (isCancelled) {
-      trackEvent(ANALYTICS_EVENTS.checkoutCancelled, {
-        offer: 'early_access',
-        value: EARLY_ACCESS_VALUE_ZAR,
-        currency: EARLY_ACCESS_CURRENCY,
-        payment_provider: PAYSTACK_PAYMENT_PROVIDER,
-        payment_status: paymentStatus,
-      });
-      return;
-    }
+    let cancelled = false;
 
-    if (isFailed) {
-      trackEvent(ANALYTICS_EVENTS.paymentFailed, {
-        offer: 'early_access',
-        value: EARLY_ACCESS_VALUE_ZAR,
-        currency: EARLY_ACCESS_CURRENCY,
-        payment_provider: PAYSTACK_PAYMENT_PROVIDER,
-        payment_status: paymentStatus,
-      });
-      return;
-    }
-
-    if (isEarlyAccess) {
-      if (typeof window !== 'undefined') {
-        const guardKey = 'margin_ga_payment_success_founding_500';
-        if (!window.sessionStorage.getItem(guardKey)) {
-          window.sessionStorage.setItem(guardKey, '1');
-          // Paystack dashboard remains the source of truth until full Paystack API/webhook integration exists.
-          trackEvent(ANALYTICS_EVENTS.paymentSuccess, {
-            offer: 'early_access',
-            value: EARLY_ACCESS_VALUE_ZAR,
-            currency: EARLY_ACCESS_CURRENCY,
-            payment_provider: PAYSTACK_PAYMENT_PROVIDER,
-          });
-        }
+    async function verify() {
+      if (!reference) {
+        setState('error');
+        setMessage('Payment reference is missing. Open Billing to refresh your subscription status.');
+        return;
       }
-      markFoundingReservationConfirmed('payment_success');
+
+      const verifyResponse = await api.verifyPaystackPayment(reference, tenantSlug || undefined);
+      if (cancelled) return;
+
+      if (!verifyResponse.ok || !verifyResponse.data?.success) {
+        setState('failed');
+        setMessage(verifyResponse.error || 'Paystack payment verification failed.');
+        trackEvent(ANALYTICS_EVENTS.paymentFailed, {
+          offer: 'recovery_workspace',
+          payment_provider: 'paystack_subscription',
+          reference_present: true,
+        });
+        return;
+      }
+
+      for (let attempt = 0; attempt < 6; attempt += 1) {
+        if (!tenantSlug) break;
+        const statusResponse = await api.getRecoveryWorkspaceSubscription(tenantSlug);
+        if (cancelled) return;
+
+        if (statusResponse.ok && statusResponse.data) {
+          setSubscriptionStatus(statusResponse.data);
+          if (statusResponse.data.entitlement?.active) {
+            setState('active');
+            setMessage('Your Recovery Workspace subscription is active.');
+            if (!trackedPurchaseRef.current) {
+              trackedPurchaseRef.current = true;
+              trackEvent(ANALYTICS_EVENTS.purchase, {
+                offer: 'recovery_workspace',
+                value: 1799,
+                currency: 'ZAR',
+                payment_provider: 'paystack_subscription',
+              });
+              trackEvent(ANALYTICS_EVENTS.paymentSuccess, {
+                offer: 'recovery_workspace',
+                value: 1799,
+                currency: 'ZAR',
+                payment_provider: 'paystack_subscription',
+              });
+              trackEvent(ANALYTICS_EVENTS.subscriptionCreated, {
+                offer: 'recovery_workspace',
+                currency: 'ZAR',
+              });
+            }
+            return;
+          }
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 2500));
+      }
+
+      setState('subscription_pending');
+      setMessage('Payment was received. Margin is waiting for Paystack subscription confirmation.');
     }
-  }, [isCancelled, isEarlyAccess, isFailed, paymentProviderLabel, paymentStatus]);
+
+    void verify();
+    return () => {
+      cancelled = true;
+    };
+  }, [reference, tenantSlug]);
 
   usePageMeta({
-    title: pageTitle,
-    description: pageDescription,
+    title: 'Payment Verification | Margin',
+    description: 'Margin verifies Paystack subscription payments against backend subscription truth before opening Recovery Workspace access.',
   });
 
+  const isLoading = state === 'verifying' || state === 'subscription_pending';
+  const icon = state === 'active'
+    ? <CheckCircle2 className="h-6 w-6" strokeWidth={1.8} />
+    : state === 'failed' || state === 'error'
+      ? <XCircle className="h-6 w-6" strokeWidth={1.8} />
+      : <Loader2 className="h-6 w-6 animate-spin" strokeWidth={1.8} />;
+
   return (
-    <PageLayout title={isEarlyAccess ? 'Early Access Reservation Confirmed' : 'Payment Submitted'} noPadding hideNavbar hideSidebar hideLogo plainBackground>
+    <PageLayout title="Payment Verification" noPadding hideNavbar hideSidebar hideLogo plainBackground>
       <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         <PublicNavbar variant="light" />
         <main className="relative overflow-hidden pt-32 md:pt-40">
-          <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
-
           <section className="relative mx-auto flex min-h-[calc(100vh-220px)] max-w-5xl flex-col items-center justify-center px-6 pb-24 text-center">
-            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#E4EDF1] bg-white text-[#2E7D5B] shadow-[0_12px_30px_rgba(37,49,58,0.08)]">
-              <CheckCircle2 className="h-6 w-6" strokeWidth={1.8} />
+            <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-full border bg-white shadow-[0_12px_30px_rgba(37,49,58,0.08)] ${
+              state === 'active' ? 'border-emerald-100 text-[#2E7D5B]' : state === 'failed' || state === 'error' ? 'border-rose-100 text-rose-600' : 'border-[#E4EDF1] text-[#0B74DE]'
+            }`}>
+              {icon}
             </div>
             <h1 className="max-w-3xl text-4xl font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] md:text-6xl">
-              {heading}
+              {state === 'active' ? 'Recovery Workspace is active.' : isLoading ? 'Verifying subscription.' : 'Payment needs attention.'}
             </h1>
             <p className="mt-5 max-w-2xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
-              {body}
+              {message}
             </p>
+
+            {subscriptionStatus?.subscription ? (
+              <div className="mt-6 grid w-full max-w-xl grid-cols-2 border border-[#DCE8EE] bg-white text-left">
+                <div className="border-r border-[#DCE8EE] p-4">
+                  <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Status</div>
+                  <div className="mt-1 text-sm font-semibold text-[#182026]">{subscriptionStatus.subscription.status}</div>
+                </div>
+                <div className="p-4">
+                  <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Access until</div>
+                  <div className="mt-1 text-sm font-semibold text-[#182026]">{subscriptionStatus.entitlement?.access_until || 'Pending'}</div>
+                </div>
+              </div>
+            ) : null}
 
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
               <Button
                 onClick={() => {
-                  navigate(isEarlyAccess ? '/founding-500/status' : returnPath);
+                  if (state === 'active' && tenantSlug) navigate(`/app/${tenantSlug}/dashboard`);
+                  else if (tenantSlug) navigate(`/app/${tenantSlug}/billing`);
+                  else navigate('/audit');
                 }}
                 className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
               >
-                {primaryButtonLabel}
+                {state === 'active' ? 'Open Recovery Workspace' : 'Open Billing'}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
