@@ -208,7 +208,7 @@ export default function Audit() {
       cta_location: 'audit_public_hero',
       destination: '/login',
     });
-    navigate('/login?mode=signup&intent=onboarding&next=%2Faudit');
+    navigate('/login?mode=signup&intent=audit&next=%2Faudit');
   };
 
   const startAudit = async () => {

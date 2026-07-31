@@ -266,6 +266,7 @@ const Login = () => {
   const intent = searchParams.get('intent');
   const next = searchParams.get('next');
   const nextPath = useMemo(() => sanitizeNextPath(next, intent), [intent, next]);
+  const isAuditIntent = intent === 'audit' || nextPath === '/audit' || nextPath.startsWith('/audit?');
   const demoBypassAvailable = isDemoBypassAvailable();
 
   const [mode, setMode] = useState<AuthMode>('login');
@@ -360,7 +361,9 @@ const Login = () => {
   const subtitle = 'User access and marketplace OAuth are separate flows. Your account login gets you into the workspace. Amazon, Gmail, and the other providers are connected after that from Integrations Hub.';
 
   const heading = mode === 'signup'
-    ? 'Create your reservation account'
+    ? isAuditIntent
+      ? 'Create your audit account'
+      : 'Create your reservation account'
     : mode === 'recovery'
       ? 'Reset your password'
     : 'Log in to your account';
@@ -470,7 +473,7 @@ const Login = () => {
       body: JSON.stringify({
         workspaceName,
         preferredTenantSlug: normalizeTenantSlug(localStorage.getItem('active_tenant_slug')),
-        foundingReservation: intent === 'onboarding' || hasFoundingReservationContext(),
+        foundingReservation: !isAuditIntent && (intent === 'onboarding' || hasFoundingReservationContext()),
       }),
     });
 
@@ -718,7 +721,7 @@ const Login = () => {
     }>('/api/auth/bootstrap', {
       workspaceName,
       preferredTenantSlug: normalizeTenantSlug(preferredTenantSlug || localStorage.getItem('active_tenant_slug')),
-      foundingReservation: intent === 'onboarding' || hasFoundingReservationContext(),
+      foundingReservation: !isAuditIntent && (intent === 'onboarding' || hasFoundingReservationContext()),
     });
 
     applyFoundingActivationState({
@@ -918,7 +921,9 @@ const Login = () => {
           failureStep = 'workspace';
           setLoginStep('workspace');
           const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
-          const targetPath = intent === 'onboarding' || hasFoundingReservationContext()
+          const targetPath = isAuditIntent
+            ? '/audit'
+            : intent === 'onboarding' || hasFoundingReservationContext()
             ? '/founding-500/status'
             : `/app/${resolvedTenantSlug}/connect-amazon`;
           await routeWithCapacityGate(targetPath);
@@ -1093,6 +1098,8 @@ const Login = () => {
               <p className="max-w-[560px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
                 {intent === 'upload-csv' && mode === 'login'
                   ? 'Sign in to upload files into your workspace. Data import starts after account access, not before.'
+                  : isAuditIntent
+                    ? 'Create access for your free recovery audit. Amazon connects after account setup, and activation only happens after you see the locked summary.'
                   : intent === 'onboarding'
                     ? 'Your Founding 500 seat is reserved first. Platform activation begins after payment reconciliation and founder onboarding readiness.'
                     : 'Your Margin account gets you into the workspace first. Amazon, Gmail, and other providers are connected after that from inside the product.'}
@@ -1112,7 +1119,9 @@ const Login = () => {
                   </div>
                   <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
                     {mode === 'signup'
-                      ? 'Create your reservation access'
+                      ? isAuditIntent
+                        ? 'Create your audit access'
+                        : 'Create your reservation access'
                       : mode === 'recovery'
                         ? 'Set your new password'
                         : 'Enter your details'}
