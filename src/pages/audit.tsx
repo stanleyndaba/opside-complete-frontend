@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useAuth } from '@clerk/react';
 import { ArrowRight, Download, Loader2, Share2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -113,7 +114,14 @@ export default function Audit() {
   const navigate = useNavigate();
   const location = useLocation();
   const { authToken, isAuthReady, isSessionValid } = useSession();
-  const isAuthenticated = isAuthReady && isSessionValid && Boolean(authToken);
+  const {
+    isLoaded: isClerkLoaded,
+    isSignedIn: isClerkSignedIn,
+    userId: clerkUserId,
+    getToken: getClerkToken,
+  } = useAuth();
+  const hasLegacySession = isAuthReady && isSessionValid && Boolean(authToken);
+  const isAuthenticated = Boolean((isClerkLoaded && isClerkSignedIn) || hasLegacySession);
   const [audit, setAudit] = useState<AuditRunRecord | null>(null);
   const [tenantSlug, setTenantSlug] = useState<string | null>(null);
   const [teaser, setTeaser] = useState<AuditTeaserSummary>(defaultTeaser);
@@ -125,6 +133,23 @@ export default function Audit() {
   const autoRunAfterOAuthRef = useRef(false);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
+
+  const ensureFreshAuditAuth = async () => {
+    if (!isClerkLoaded || !isClerkSignedIn) {
+      return Boolean(authToken);
+    }
+
+    const token = await getClerkToken({ skipCache: true });
+    if (!token) {
+      throw new Error('Margin could not prepare your secure session yet. Please refresh and try again.');
+    }
+
+    localStorage.setItem('session_token', token);
+    if (clerkUserId) {
+      localStorage.setItem('user_id', clerkUserId);
+    }
+    return true;
+  };
 
   useEffect(() => {
     if (trackedViewRef.current) return;
@@ -152,6 +177,14 @@ export default function Audit() {
       const pending = readPendingAudit();
       setIsBusy(true);
       setError(null);
+
+      try {
+        await ensureFreshAuditAuth();
+      } catch (authError: any) {
+        setError(authError?.message || 'Margin could not prepare your secure session yet.');
+        setIsBusy(false);
+        return;
+      }
 
       if (pending?.auditId) {
         const response = await api.getAudit(pending.auditId);
@@ -186,7 +219,7 @@ export default function Audit() {
     };
 
     void restoreAudit();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isClerkLoaded, isClerkSignedIn, clerkUserId]);
 
   useEffect(() => {
     if (!isAuthenticated || autoRunAfterOAuthRef.current) return;
@@ -223,6 +256,14 @@ export default function Audit() {
       cta_location: 'audit_app_step',
       cta_text: 'Connect Amazon',
     });
+
+    try {
+      await ensureFreshAuditAuth();
+    } catch (authError: any) {
+      setIsBusy(false);
+      setError(authError?.message || 'Margin could not prepare your secure session yet.');
+      return;
+    }
 
     const response = await api.startAudit();
     setIsBusy(false);
@@ -295,6 +336,14 @@ export default function Audit() {
       current_status: targetAudit.status,
     });
 
+    try {
+      await ensureFreshAuditAuth();
+    } catch (authError: any) {
+      setIsBusy(false);
+      setError(authError?.message || 'Margin could not prepare your secure session yet.');
+      return;
+    }
+
     const response = await api.runAudit(targetAudit.id);
     setIsBusy(false);
 
@@ -324,6 +373,13 @@ export default function Audit() {
     if (!audit?.id) return;
     setIsBusy(true);
     setError(null);
+    try {
+      await ensureFreshAuditAuth();
+    } catch (authError: any) {
+      setIsBusy(false);
+      setError(authError?.message || 'Margin could not prepare your secure session yet.');
+      return;
+    }
     const response = await api.getAuditResults(audit.id);
     setIsBusy(false);
     if (!response.ok || !response.data?.success) {
