@@ -2204,7 +2204,7 @@ function KineticHeroSection({
               delay: 0.78,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="hidden mt-8 w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:mt-10"
+            className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:mt-10"
           >
             {" "}
             <Button
@@ -2934,7 +2934,9 @@ export default function Index() {
         <PayoutReconciliationPreviewSection />
         <ExistingOperationFitSection />
         <RecoveryWorkspacePricingSection
-          onActivate={undefined}
+          onActivate={() =>
+            handleClaimAccessClick("homepage_recovery_workspace_pricing")
+          }
         />
         {/* Additional mini-demo sections are intentionally hidden for the launch page. */}
         {/* <MarginOrchestrationFlow /> */}
