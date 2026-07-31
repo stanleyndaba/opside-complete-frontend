@@ -179,21 +179,21 @@
   /* Light Theme (default) - Pure White */
   :root {
     /* Margin Precision System */
-    --margin-canvas: #f4f6f8;
+    --margin-canvas: #fcfcfd;
     --margin-surface: #ffffff;
-    --margin-section-alt: #eef2f6;
-    --margin-inverse: #0b1220;
-    --margin-inverse-surface: #111c2d;
-    --margin-text-primary: #101828;
-    --margin-text-secondary: #344054;
-    --margin-text-muted: #667085;
+    --margin-section-alt: #f7f7f8;
+    --margin-inverse: #191a1e;
+    --margin-inverse-surface: #202127;
+    --margin-text-primary: #1b1c20;
+    --margin-text-secondary: #50525b;
+    --margin-text-muted: #858792;
     --margin-text-inverse: #f8fafc;
     --margin-text-inverse-muted: #cbd5e1;
-    --margin-blue: #175cd3;
-    --margin-blue-hover: #164fc4;
-    --margin-blue-soft: #eff4ff;
-    --margin-blue-border: #b2ccff;
-    --margin-success: #067647;
+    --margin-blue: #225cd6;
+    --margin-blue-hover: #1d4fc0;
+    --margin-blue-soft: #eef3ff;
+    --margin-blue-border: #c8d8ff;
+    --margin-success: #2b7a5a;
     --margin-success-soft: #ecfdf3;
     --margin-success-border: #abefc6;
     --margin-warning: #b54708;
@@ -202,8 +202,8 @@
     --margin-danger: #b42318;
     --margin-danger-soft: #fef3f2;
     --margin-danger-border: #fecdca;
-    --margin-border: #d0d5dd;
-    --margin-border-subtle: #eaecf0;
+    --margin-border: #e9e9ec;
+    --margin-border-subtle: #f0f0f2;
     --margin-control-border: #8a94a6;
 
     --background: 0 0% 100%;

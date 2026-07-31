@@ -475,9 +475,9 @@ const integrationLogos = [
 const containerClass = "mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8";
 const demoContainerClass = "mx-auto w-full max-w-[1240px] px-5 sm:px-6 md:px-8";
 const postHeroSectionClass =
-  "relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-7 md:py-10";
+  "relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-20";
 const demoFrameClass =
-  "margin-product-surface relative -mx-5 overflow-hidden border-y border-[var(--margin-border)] bg-[var(--margin-surface)] shadow-[0_18px_54px_rgba(16,24,40,0.08)] sm:mx-0 sm:rounded-[12px] sm:border";
+  "margin-product-surface relative -mx-5 overflow-hidden border-y border-[var(--margin-border)] bg-[var(--margin-surface)] shadow-[0_18px_48px_rgba(27,28,32,0.045)] sm:mx-0 sm:rounded-[12px] sm:border";
 const demoTitleClass =
   "mt-3 text-[28px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[40px]";
 const demoBodyClass =
@@ -485,7 +485,7 @@ const demoBodyClass =
 const demoClosingClass =
   "mt-4 max-w-[500px] text-[18px] font-semibold leading-[1.18] tracking-[-0.035em] text-[var(--margin-text-muted)] md:text-[21px]";
 const sectionLabelClass =
-  "text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]";
+  "text-[11px] font-semibold tracking-tight text-[var(--margin-text-muted)]";
 const sectionHeadingClass =
   "mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[58px]";
 const sectionBodyClass =
@@ -1677,51 +1677,61 @@ function OperatorQualificationSection() {
 
 function DiscrepancyIsNotRevenueSection() {
   const stages = [
-    "Issue detected",
-    "Value verified",
-    "Evidence ready",
-    "Seller approved",
-    "Amazon response managed",
-    "Payout reconciled",
+    "Detect",
+    "Value",
+    "Evidence",
+    "Approve",
+    "Respond",
+    "Reconcile",
   ];
 
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-10 md:py-14">
+    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-14 md:py-24">
       <div className={containerClass}>
-        <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+        <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
           <motion.div {...revealProps}>
-            <div className={sectionLabelClass}>Why Margin exists</div>
-            <h2 className="mt-3 max-w-[760px] text-[32px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[56px]">
-              A detected discrepancy is not recovered revenue.
+            <div className={sectionLabelClass}>Recovery Control Loop</div>
+            <h2 className="mt-3 max-w-[760px] text-[34px] font-medium leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[60px]">
+              Recovering revenue is a control loop, not an alert.
             </h2>
             <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
-              An alert is only the beginning. The issue still has to be valued
-              correctly, supported by the right records, pursued before the
-              deadline, managed through Amazon&apos;s response, and matched to the
-              final settlement.
+              A discrepancy only becomes money when its value, evidence,
+              approval, Amazon response and payout all stay attached to the same
+              recovery record.
             </p>
             <p className="mt-4 max-w-[720px] text-[15px] font-semibold leading-7 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[17px]">
-              Margin keeps that entire chain attached to one recovery, from the
-              first signal to the books.
+              Margin keeps that path intact from first signal to reconciled
+              cash.
             </p>
           </motion.div>
-          <motion.div {...revealProps} className="border-y border-[var(--margin-border)] py-5">
-            <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-3">
+          <motion.div {...revealProps} className="relative overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)] md:p-7">
+            <div className="absolute left-7 right-7 top-[66px] hidden h-px bg-[var(--margin-border)] md:block" />
+            <div className="grid gap-0 md:grid-cols-6">
               {stages.map((stage, index) => (
                 <div
                   key={stage}
-                  className={`relative border-b border-[var(--margin-border-subtle)] px-4 py-4 sm:[&:nth-child(odd)]:border-r lg:border-r lg:[&:nth-child(3n)]:border-r-0 ${index > 3 ? "sm:border-b-0" : ""} ${index > 2 ? "lg:border-b-0" : ""}`}
+                  className={`relative px-0 py-4 md:px-3 md:py-0 ${index > 0 ? "border-t border-[var(--margin-border)] md:border-t-0" : ""}`}
                 >
-                  <div className="font-mono text-[10px] font-semibold tracking-tight text-[var(--margin-text-muted)]">
+                  <div className="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border border-[var(--margin-border)] bg-white font-mono text-[10px] font-semibold tracking-tight text-[var(--margin-text-muted)]">
                     {String(index + 1).padStart(2, "0")}
                   </div>
-                  <div className="mt-2 text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
+                  <div className="mt-3 text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
                     {stage}
+                  </div>
+                  <div className="mt-2 max-w-[150px] text-[12px] leading-5 text-[var(--margin-text-muted)]">
+                    {[
+                      "Shipment gap found",
+                      "USD 1,247 scoped",
+                      "Invoice connected",
+                      "Seller approval",
+                      "Reply managed",
+                      "Settlement matched",
+                    ][index]}
                   </div>
                 </div>
               ))}
             </div>
-            <p className="mt-5 border-t border-[var(--margin-border)] pt-4 text-[14px] font-medium leading-6 text-[var(--margin-text-secondary)]">
+            <p className="mt-6 border-t border-[var(--margin-border)] pt-5 text-[14px] font-medium leading-6 text-[var(--margin-text-secondary)]">
               No disconnected alerts. No rebuilding the case history. No
               approved reimbursement left unmatched.
             </p>
@@ -1878,16 +1888,15 @@ function ExistingOperationFitSection() {
   const reduceMotion = useReducedMotion();
   return (
     <section
-      data-navbar-theme="dark"
-      className="relative border-b border-[var(--margin-inverse)] bg-[var(--margin-inverse)] py-10 text-[var(--margin-text-inverse)] md:py-14"
+      className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-20"
     >
       <div className={containerClass}>
-        <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
-          <div className="text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue-border)]">One control layer across the team</div>
-          <h2 className="mt-3 text-[34px] font-semibold leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-inverse)] sm:text-[44px] md:text-[58px]">
+        <motion.div {...revealProps} className="mx-auto max-w-[860px] text-center">
+          <div className={sectionLabelClass}>One control layer across the team</div>
+          <h2 className="mt-3 text-[34px] font-semibold leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]">
             Operations sees the case. Finance sees the money.
           </h2>
-          <p className="mx-auto mt-5 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-inverse-muted)] md:text-[18px]">
+          <p className="mx-auto mt-5 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
             Margin keeps the evidence, deadline, seller decision, Amazon
             response, expected value, paid value and settlement status attached
             to one recovery, so the story does not have to be reconstructed
@@ -1898,10 +1907,10 @@ function ExistingOperationFitSection() {
         <div className="mt-10 grid gap-7 lg:grid-cols-3">
           <motion.article
             {...revealProps}
-            className="border-t border-white/12 pt-5"
+            className="border-t border-[var(--margin-border)] pt-5"
           >
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-white/12 bg-white/[0.06] p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)]">
-              <div className="absolute inset-0 opacity-[0.26] [background-image:linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:38px_38px]" />
+            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
+              <div className="absolute inset-0 opacity-[0.5] [background-image:linear-gradient(rgba(233,233,236,0.75)_1px,transparent_1px),linear-gradient(90deg,rgba(233,233,236,0.7)_1px,transparent_1px)] [background-size:38px_38px]" />
               <div className="relative space-y-4">
                 {[
                   "Amazon synced",
@@ -1920,17 +1929,17 @@ function ExistingOperationFitSection() {
                         ease: "easeInOut",
                       }}
                     />
-                    <div className="border-b border-white/10 pb-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-inverse-muted)]">
+                    <div className="border-b border-[var(--margin-border)] pb-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)]">
                       {item}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-inverse)] md:text-[28px]">
+            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] md:text-[28px]">
               Operations knows what is ready and what happens next.
             </h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-inverse-muted)] md:text-[16px]">
+            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
               See missing proof, deadlines, response status, seller approvals
               and the next required action without relying on another
               spreadsheet or someone&apos;s memory.
@@ -1940,9 +1949,9 @@ function ExistingOperationFitSection() {
           <motion.article
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.06 }}
-            className="border-t border-white/12 pt-5"
+            className="border-t border-[var(--margin-border)] pt-5"
           >
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-white/12 bg-white/[0.06] p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)]">
+            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
               <div className="grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4">
                 <div className="grid grid-cols-2 gap-3">
                   {[
@@ -1953,18 +1962,18 @@ function ExistingOperationFitSection() {
                   ].map(([src, label]) => (
                     <div
                       key={label}
-                      className="flex h-14 items-center justify-center rounded-[8px] border border-white/10 bg-white"
+                      className="flex h-14 items-center justify-center rounded-[8px] border border-[var(--margin-border)] bg-white"
                     >
                       <img src={src} alt="" className="max-h-7 max-w-8 object-contain" />
                     </div>
                   ))}
                 </div>
-                <div className="font-mono text-[18px] text-[var(--margin-text-inverse-muted)]">→</div>
-                <div className="rounded-[8px] border border-white/12 bg-white/[0.06] p-4">
-                  <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-inverse-muted)]">
+                <div className="font-mono text-[18px] text-[var(--margin-text-muted)]">→</div>
+                <div className="rounded-[8px] border border-[var(--margin-border)] bg-[var(--margin-section-alt)] p-4">
+                  <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                     Connected recovery
                   </div>
-                  <div className="mt-3 space-y-2 text-[12px] font-medium text-[var(--margin-text-inverse)]">
+                  <div className="mt-3 space-y-2 text-[12px] font-medium text-[var(--margin-text-primary)]">
                     <div>Shipment record</div>
                     <div>Invoice</div>
                     <div>Case timeline</div>
@@ -1973,10 +1982,10 @@ function ExistingOperationFitSection() {
                 </div>
               </div>
             </div>
-            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-inverse)] md:text-[28px]">
+            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] md:text-[28px]">
               Finance knows what Amazon approved and what it actually paid.
             </h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-inverse-muted)] md:text-[16px]">
+            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
               Compare expected, approved, paid, underpaid, reversed and
               unreconciled values from the same recovery record operations uses
               to manage the case.
@@ -1986,9 +1995,9 @@ function ExistingOperationFitSection() {
           <motion.article
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.12 }}
-            className="border-t border-white/12 pt-5"
+            className="border-t border-[var(--margin-border)] pt-5"
           >
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-white/12 bg-white/[0.06] p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)]">
+            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
               <div className="space-y-3">
                 {[
                   ["Case prepared", "Complete"],
@@ -1998,27 +2007,27 @@ function ExistingOperationFitSection() {
                 ].map(([item, label], index) => (
                   <div
                     key={item}
-                    className="flex items-center justify-between border-b border-white/10 pb-3"
+                    className="flex items-center justify-between border-b border-[var(--margin-border)] pb-3"
                   >
                     <div className="flex items-center gap-3">
                       <span className={`flex h-5 w-5 items-center justify-center rounded-full ${index < 2 ? "bg-[var(--margin-success-soft)] text-[var(--margin-success)]" : "bg-[var(--margin-warning-soft)] text-[var(--margin-warning)]"}`}>
                         <Check className="h-3.5 w-3.5" strokeWidth={2.6} />
                       </span>
-                      <span className="text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-inverse-muted)]">
+                      <span className="text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)]">
                         {item}
                       </span>
                     </div>
-                    <span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-inverse-muted)]">
+                    <span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                       {label}
                     </span>
                   </div>
                 ))}
               </div>
             </div>
-            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-inverse)] md:text-[28px]">
+            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] md:text-[28px]">
               Seller control stays attached to every sensitive decision.
             </h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-inverse-muted)] md:text-[16px]">
+            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
               Margin performs monitoring and preparation in the background.
               Filing and response actions remain subject to seller approval.
             </p>
@@ -2821,7 +2830,6 @@ export default function Index() {
           </div>
         </section>
         <DiscrepancyIsNotRevenueSection />
-        <OperatorQualificationSection />
         <FreeAuditResultPreviewSection />
         <section className="hidden relative border-b border-[var(--margin-border-subtle)] bg-[var(--margin-canvas)] py-8 max-md:bg-[var(--margin-canvas)] max-md:py-14">
           {" "}
@@ -3595,22 +3603,21 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <section
-          data-navbar-theme="dark"
-          className="relative overflow-hidden bg-[var(--margin-inverse)] py-12 text-[var(--margin-text-inverse)] max-md:border-y max-md:border-white/10 md:py-18"
+          className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-18"
         >
           {" "}
           <div className={containerClass}>
             {" "}
-            <div className="relative border-y border-white/12 py-8 md:py-10">
+            <div className="relative border-y border-[var(--margin-border)] py-8 md:py-10">
               {" "}
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 {" "}
                 <motion.div {...revealProps}>
                   {" "}
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[36px] font-semibold leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]">
-                    <span className="text-[var(--margin-text-inverse)]">You&apos;ve already done the hard work.</span> <span className="text-[var(--margin-text-inverse-muted)]">Margin simply connects it.</span>
+                    <span className="text-[var(--margin-text-primary)]">You&apos;ve already done the hard work.</span> <span className="text-[var(--margin-text-muted)]">Margin simply connects it.</span>
                   </h2>{" "}
-                  <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-inverse-muted)] md:text-[17px]">
+                  <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px]">
                     {" "}
                     Shipment records. Invoices. PODs. Settlement history.
                     Support cases. Margin brings them together into one recovery
@@ -3631,19 +3638,19 @@ export default function Index() {
                     </Button>{" "}
                   </div>{" "}
                 </motion.div>{" "}
-                <motion.div {...revealProps} className="border-y border-white/12">
+                <motion.div {...revealProps} className="border-y border-[var(--margin-border)]">
                   {" "}
                   {earlyAccessItems.map((item) => (
                     <div
                       key={item}
-                      className="relative flex items-center gap-4 border-b border-white/12 py-4 last:border-b-0 md:py-5"
+                      className="relative flex items-center gap-4 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
                     >
                       {" "}
                       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[var(--margin-success-soft)] text-[var(--margin-success)]">
                         {" "}
                         <Check className="h-4 w-4" strokeWidth={3} />{" "}
                       </div>{" "}
-                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[var(--margin-text-inverse)]">
+                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[var(--margin-text-primary)]">
                         {" "}
                         {item}{" "}
                       </span>{" "}
