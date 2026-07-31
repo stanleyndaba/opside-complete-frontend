@@ -16,7 +16,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, PlayCircle } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  CircleDollarSign,
+  FileCheck2,
+  Landmark,
+  MessagesSquare,
+  PlayCircle,
+  Radar,
+  UserCheck,
+} from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
@@ -1677,12 +1687,42 @@ function OperatorQualificationSection() {
 
 function DiscrepancyIsNotRevenueSection() {
   const stages = [
-    "Detect",
-    "Value",
-    "Evidence",
-    "Approve",
-    "Respond",
-    "Reconcile",
+    {
+      title: "Detect",
+      detail: "Shipment gap found",
+      meta: "REC-7702",
+      icon: Radar,
+    },
+    {
+      title: "Value",
+      detail: "USD 1,247 scoped",
+      meta: "VAL: 1,247",
+      icon: CircleDollarSign,
+    },
+    {
+      title: "Evidence",
+      detail: "Invoice connected",
+      meta: "DOC: 03",
+      icon: FileCheck2,
+    },
+    {
+      title: "Approve",
+      detail: "Seller approval",
+      meta: "CTL: USER",
+      icon: UserCheck,
+    },
+    {
+      title: "Respond",
+      detail: "Reply managed",
+      meta: "AMZ: OPEN",
+      icon: MessagesSquare,
+    },
+    {
+      title: "Reconcile",
+      detail: "Settlement matched",
+      meta: "LEDGER",
+      icon: Landmark,
+    },
   ];
 
   return (
@@ -1704,34 +1744,87 @@ function DiscrepancyIsNotRevenueSection() {
               cash.
             </p>
           </motion.div>
-          <motion.div {...revealProps} className="relative overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)] md:p-7">
-            <div className="absolute left-7 right-7 top-[66px] hidden h-px bg-[var(--margin-border)] md:block" />
-            <div className="grid gap-0 md:grid-cols-6">
-              {stages.map((stage, index) => (
-                <div
-                  key={stage}
-                  className={`relative px-0 py-4 md:px-3 md:py-0 ${index > 0 ? "border-t border-[var(--margin-border)] md:border-t-0" : ""}`}
-                >
-                  <div className="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border border-[var(--margin-border)] bg-white font-mono text-[10px] font-semibold tracking-tight text-[var(--margin-text-muted)]">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <div className="mt-3 text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
-                    {stage}
-                  </div>
-                  <div className="mt-2 max-w-[150px] text-[12px] leading-5 text-[var(--margin-text-muted)]">
-                    {[
-                      "Shipment gap found",
-                      "USD 1,247 scoped",
-                      "Invoice connected",
-                      "Seller approval",
-                      "Reply managed",
-                      "Settlement matched",
-                    ][index]}
-                  </div>
-                </div>
-              ))}
+          <motion.div
+            {...revealProps}
+            className="relative overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-white/65 p-5 shadow-[0_36px_120px_rgba(0,0,0,0.02)] ring-1 ring-white/80 backdrop-blur-3xl md:p-7"
+          >
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.72),rgba(247,247,248,0.38))]" />
+            <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-[rgba(34,92,214,0.045)] blur-3xl" />
+            <div className="relative">
+              <div className="hidden md:block">
+                <div className="absolute left-[5%] right-[5%] top-[31px] h-px bg-[#DCDDDF]" />
+                <motion.div
+                  className="absolute left-[5%] top-[31px] h-px origin-left bg-[var(--margin-blue)]"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 0.64 }}
+                  viewport={{ once: true, amount: 0.55 }}
+                  transition={{ duration: 1.45, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ width: "90%" }}
+                />
+              </div>
+              <div className="grid gap-4 md:grid-cols-6 md:gap-3">
+                {stages.map(({ title, detail, meta, icon: Icon }, index) => {
+                  const isActive = index <= 3;
+
+                  return (
+                    <div
+                      key={title}
+                      className={`relative rounded-[10px] border border-[var(--margin-border-subtle)] bg-white/55 p-3 md:border-0 md:bg-transparent md:p-0 ${index > 0 ? "md:pl-1" : ""}`}
+                    >
+                      <div className="flex items-start gap-3 md:block">
+                        <motion.div
+                          className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-white shadow-[0_8px_22px_rgba(27,28,32,0.045)] ${
+                            isActive
+                              ? "border-[var(--margin-blue-border)] text-[var(--margin-blue)]"
+                              : "border-[var(--margin-border)] text-[var(--margin-text-muted)]"
+                          }`}
+                          animate={
+                            index === 3
+                              ? {
+                                  boxShadow: [
+                                    "0 8px 22px rgba(27,28,32,0.045), 0 0 0 0 rgba(34,92,214,0.16)",
+                                    "0 8px 22px rgba(27,28,32,0.045), 0 0 0 8px rgba(34,92,214,0)",
+                                  ],
+                                }
+                              : undefined
+                          }
+                          transition={{
+                            duration: 2.4,
+                            repeat: Infinity,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Icon className="h-4 w-4" strokeWidth={1.8} />
+                        </motion.div>
+                        <div>
+                          <div className="mt-0 text-[15px] font-semibold tracking-[-0.025em] text-[var(--margin-text-primary)] md:mt-4">
+                            {title}
+                          </div>
+                          <div className="mt-1 text-[12px] leading-5 text-[var(--margin-text-muted)]">
+                            {detail}
+                          </div>
+                          <div className="mt-2 font-mono text-[10px] font-medium tracking-tight text-[var(--margin-text-muted)]">
+                            {meta}
+                          </div>
+                        </div>
+                      </div>
+                      {index === 2 && (
+                        <motion.div
+                          className="mt-3 w-fit rounded-[8px] border border-white/80 bg-white/70 px-3 py-2 text-[11px] font-medium tracking-tight text-[var(--margin-text-secondary)] shadow-[0_16px_42px_rgba(27,28,32,0.055)] backdrop-blur-xl md:absolute md:left-1 md:top-[102px] md:mt-0 md:-translate-y-1"
+                          initial={{ opacity: 0, y: 8 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, amount: 0.7 }}
+                          transition={{ delay: 0.55, duration: 0.45 }}
+                        >
+                          POD linked
+                        </motion.div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <p className="mt-6 border-t border-[var(--margin-border)] pt-5 text-[14px] font-medium leading-6 text-[var(--margin-text-secondary)]">
+            <p className="relative mt-6 border-t border-[var(--margin-border)] pt-5 text-[14px] font-medium leading-6 text-[var(--margin-text-secondary)] md:mt-16">
               No disconnected alerts. No rebuilding the case history. No
               approved reimbursement left unmatched.
             </p>
@@ -1772,18 +1865,21 @@ function FreeAuditResultPreviewSection() {
               reversals that require attention.
             </p>
           </motion.div>
-          <motion.div {...revealProps} className="border-y border-[var(--margin-border)]">
-            <div className="grid grid-cols-2 border-b border-[var(--margin-border)] lg:grid-cols-4">
+          <motion.div
+            {...revealProps}
+            className="overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-white shadow-[0_24px_80px_rgba(0,0,0,0.04)] lg:-mr-10 xl:-mr-20"
+          >
+            <div className="grid grid-cols-2 gap-y-6 px-5 py-6 sm:px-7 lg:grid-cols-4 lg:gap-x-8 lg:px-8">
               {metrics.map(([label, value], index) => (
                 <div
                   key={label}
-                  className={`px-4 py-4 ${index % 2 === 1 ? "border-l border-[var(--margin-border)]" : ""} ${index > 1 ? "border-t border-[var(--margin-border)] lg:border-t-0" : ""} lg:border-l lg:first:border-l-0`}
+                  className={index > 1 ? "border-t border-[var(--margin-border-subtle)] pt-6 lg:border-t-0 lg:pt-0" : ""}
                 >
-                  <div className="text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
-                    {label}
-                  </div>
-                  <div className="mt-2 font-mono text-[19px] font-semibold tracking-[-0.04em] text-[var(--margin-text-primary)]">
+                  <div className="font-mono text-[24px] font-semibold leading-none tracking-[-0.04em] text-[var(--margin-text-primary)] md:text-[30px]">
                     {value}
+                  </div>
+                  <div className="mt-2 text-[13px] font-medium leading-5 text-[var(--margin-text-muted)]">
+                    {label}
                   </div>
                 </div>
               ))}
@@ -1791,15 +1887,15 @@ function FreeAuditResultPreviewSection() {
             {findings.map(([name, detail, status]) => (
               <div
                 key={name}
-                className="grid gap-2 border-b border-[var(--margin-border-subtle)] px-4 py-4 last:border-b-0 sm:grid-cols-[1fr_1.2fr_auto] sm:items-center"
+                className="grid gap-2 border-t border-[var(--margin-border-subtle)] px-5 py-4 sm:grid-cols-[1fr_1.25fr_auto] sm:items-center sm:px-7 lg:px-8"
               >
-                <div className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
+                <div className="text-[16px] font-medium tracking-[-0.025em] text-[var(--margin-text-primary)]">
                   {name}
                 </div>
                 <div className="text-[14px] leading-6 text-[var(--margin-text-secondary)]">
                   {detail}
                 </div>
-                <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+                <div className="w-fit rounded-full bg-[var(--margin-section-alt)] px-3 py-1 text-[12px] font-medium leading-5 text-[var(--margin-text-muted)] transition-colors duration-150 hover:bg-[var(--margin-blue-soft)] hover:text-[var(--margin-blue)]">
                   {status}
                 </div>
               </div>
@@ -3643,14 +3739,11 @@ export default function Index() {
                   {earlyAccessItems.map((item) => (
                     <div
                       key={item}
-                      className="relative flex items-center gap-4 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
+                      className="relative flex items-center gap-3 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
                     >
                       {" "}
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[var(--margin-success-soft)] text-[var(--margin-success)]">
-                        {" "}
-                        <Check className="h-4 w-4" strokeWidth={3} />{" "}
-                      </div>{" "}
-                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[var(--margin-text-primary)]">
+                      <Check className="h-4 w-4 shrink-0 text-[var(--margin-success)]" strokeWidth={2.2} />{" "}
+                      <span className="text-[15px] font-medium leading-6 tracking-tight text-[var(--margin-text-primary)] md:text-[16px]">
                         {" "}
                         {item}{" "}
                       </span>{" "}
