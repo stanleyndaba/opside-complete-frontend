@@ -38,6 +38,7 @@ const SUPER_EVIDENCE_VIDEO_URL = "/superEvidence.mp4";
 const CASE_BUILDING_VIDEO_URL = "/CaseBuilding.mp4";
 const CASES_TABLE_VIDEO_URL = "/CasesTable.mp4";
 const FILING_VIDEO_URL = "/Filing.mp4";
+const RECONCILIATION_VIDEO_URL = "/CasesTable.mp4";
 const EVIDENCE_CALIBRATION_VIDEO_URL = "/EvidenceCalibration.mp4";
 const REPLIES_PREVIEW_VIDEO_URL = "/Replies.mp4";
 const APPEALS_PREVIEW_VIDEO_URL = "/2026-07-27__12_58_06_a_m_-Appeals_Scene.mp4";
@@ -270,7 +271,7 @@ function TypewriterPrompt({ text }: { text: string }) {
       {visibleText}{" "}
       <motion.span
         aria-hidden="true"
-        className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[#182026]"
+        className="ml-0.5 inline-block h-[0.9em] w-px translate-y-[0.12em] bg-[var(--margin-text-primary)]"
         animate={reduceMotion ? undefined : { opacity: [1, 0, 1] }}
         transition={{ duration: 0.86, repeat: Infinity, ease: "linear" }}
       />{" "}
@@ -318,14 +319,14 @@ const earlyAccessItems = [
   "Evidence linked automatically",
   "Deadline tracking",
   "Accounting-ready reconciliation",
-  "0% commission through 2026",
+  "Payout trail kept with the recovery",
 ];
 const securityFeatures = [
-  "Official Amazon OAuth Authorization",
-  "Encrypted Data in Transit",
-  "Seller Approval Before Filing",
-  "Read-only Recovery Audit",
-  "Built on Enterprise Cloud Infrastructure",
+  "Official Amazon OAuth",
+  "Read-only audit access",
+  "No filing without approval",
+  "Encrypted data in transit",
+  "Disconnect anytime",
 ];
 const outperformanceCards = [
   {
@@ -377,9 +378,39 @@ const outperformanceCards = [
 ];
 const faqs = [
   {
-    question: "What's Margin's approval rate?",
+    question: "What does the free audit access?",
     answer:
-      "97% approved on first submission. Margin doesn't file until the evidence trail is complete — that's why the approval rate stays high.",
+      "The audit reviews reimbursement-related Amazon activity such as shipments, inventory events, settlement lines, fees, refunds, case signals, and supporting proof. It is designed to show what Margin finds before you activate the recovery workspace.",
+  },
+  {
+    question: "Is the Amazon connection read-only?",
+    answer:
+      "Yes. Margin begins with read-only audit access through Amazon's official authorization process. The audit does not change your seller account.",
+  },
+  {
+    question: "Can Margin file anything without my approval?",
+    answer:
+      "No. Margin can prepare the recovery path, evidence trail, and filing package, but no claim is filed without seller approval.",
+  },
+  {
+    question: "How long does the audit take?",
+    answer:
+      "Most sellers can start the audit in minutes after connecting Amazon. The full picture depends on account history, data volume, and how many recoveries need evidence review.",
+  },
+  {
+    question: "What happens when Margin finds a recovery?",
+    answer:
+      "Margin shows the finding, the estimated recovery context, the proof already connected, what is missing, and whether the recovery is ready for seller review.",
+  },
+  {
+    question: "Can I use Margin alongside another recovery provider?",
+    answer:
+      "Yes. Margin is built around evidence control, response continuity, and payout reconciliation, so it can sit alongside another provider or internal recovery process.",
+  },
+  {
+    question: "Which Amazon marketplaces does Margin support?",
+    answer:
+      "Margin currently supports sellers across the United States, Canada, Mexico, United Kingdom, Germany, France, Italy, Spain, Netherlands, Poland, Japan, and Australia. Additional regions will be added over time.",
   },
   {
     question: "What if Amazon rejects my claim?",
@@ -392,34 +423,9 @@ const faqs = [
       "Margin flags the missing proof, links the right records, and keeps the case moving until the response can be answered.",
   },
   {
-    question: "What if I already submitted the claim?",
-    answer:
-      "Margin tracks the case after filing, follows Amazon responses, and keeps the evidence trail attached through the recovery.",
-  },
-  {
     question: "What if Amazon approves less than expected?",
     answer:
       "Margin keeps the payout in view so the approved amount can be compared against what actually reached the seller balance.",
-  },
-  {
-    question: "What if the reimbursement never reaches my settlement?",
-    answer:
-      "Margin keeps following the recovery until the approved amount and the settlement record reconcile.",
-  },
-  {
-    question: "Can Margin work alongside GETIDA or Sellerboard?",
-    answer:
-      "Yes. Margin is built around evidence control and payout reconciliation, so it can sit alongside other recovery workflows.",
-  },
-  {
-    question: "Can I approve every case before anything is submitted?",
-    answer:
-      "Yes. Margin keeps seller approval in the loop before filing or other actions move forward.",
-  },
-  {
-    question: "What does Margin do after I connect my Amazon account?",
-    answer:
-      "Margin starts by tying the proof, shipment, case, and payout trail together so the recovery is ready for review.",
   },
   {
     question: "What is an evidence pack?",
@@ -469,21 +475,21 @@ const integrationLogos = [
 const containerClass = "mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8";
 const demoContainerClass = "mx-auto w-full max-w-[1240px] px-5 sm:px-6 md:px-8";
 const postHeroSectionClass =
-  "relative overflow-hidden border-b border-[#D8E3E8] bg-[#FAFAF7] py-9 md:py-14";
+  "relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-7 md:py-10";
 const demoFrameClass =
-  "relative -mx-5 overflow-hidden border-y border-[#CFE0EA] bg-white shadow-[0_18px_54px_rgba(37,49,58,0.07)] sm:mx-0 sm:rounded-[5px] sm:border lg:max-h-[440px]";
+  "margin-product-surface relative -mx-5 overflow-hidden border-y border-[var(--margin-border)] bg-[var(--margin-surface)] shadow-[0_18px_54px_rgba(16,24,40,0.08)] sm:mx-0 sm:rounded-[12px] sm:border";
 const demoTitleClass =
-  "mt-3 text-[30px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[44px]";
+  "mt-3 text-[28px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[40px]";
 const demoBodyClass =
-  "mt-5 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8";
+  "mt-4 max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8";
 const demoClosingClass =
-  "mt-5 max-w-[500px] text-[19px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#8A98A3] md:text-[23px]";
+  "mt-4 max-w-[500px] text-[18px] font-semibold leading-[1.18] tracking-[-0.035em] text-[var(--margin-text-muted)] md:text-[21px]";
 const sectionLabelClass =
-  "text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]";
+  "text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]";
 const sectionHeadingClass =
-  "mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]";
+  "mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[58px]";
 const sectionBodyClass =
-  "mt-5 max-w-[740px] text-[16px] leading-8 text-[#4D5B66] md:text-[17px] md:leading-8";
+  "mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8";
 const revealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -493,24 +499,79 @@ const revealProps = {
     ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
   },
 };
+
+function DemoVideoFrame({
+  src,
+  label,
+}: {
+  src: string;
+  label: string;
+  stage?: string;
+}) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const reduceMotion = useReducedMotion();
+  const isNearView = useInView(frameRef, {
+    margin: "640px 0px 640px 0px",
+  });
+  const isPlayingView = useInView(frameRef, {
+    amount: 0.22,
+    margin: "120px 0px 120px 0px",
+  });
+  const shouldLoad = isNearView || reduceMotion;
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (reduceMotion || !isPlayingView) {
+      video.pause();
+      return;
+    }
+
+    const playPromise = video.play();
+    if (playPromise) {
+      playPromise.catch(() => undefined);
+    }
+  }, [isPlayingView, reduceMotion, shouldLoad]);
+
+  return (
+    <div ref={frameRef} className={demoFrameClass}>
+      <div className="aspect-video">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#FFFFFF_0%,#F6F9FB_100%)]" aria-hidden="true" />
+        <video
+          ref={videoRef}
+          className="relative h-full w-full object-contain"
+          src={shouldLoad ? src : undefined}
+          aria-label={label}
+          autoPlay={!reduceMotion}
+          muted
+          loop={!reduceMotion}
+          playsInline
+          preload={shouldLoad ? "metadata" : "none"}
+        />
+      </div>
+    </div>
+  );
+}
 function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   return (
     <motion.div {...revealProps}>
       <div className="relative flex items-center justify-center py-1 md:py-2">
         <motion.div
-          className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-[#CFE0EA] to-transparent"
+          className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-[var(--margin-border)] to-transparent"
           initial={{ scaleX: 0.55, opacity: 0 }}
           whileInView={{ scaleX: 1, opacity: 1 }}
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         />
-        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[#DCE8EE] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-tight text-[#4D5B66]">
+        <div className="relative z-10 mx-auto inline-flex rounded-full border border-[var(--margin-border)] bg-white px-4 py-1.5 text-[11px] font-semibold tracking-tight text-[var(--margin-text-secondary)]">
           Proof sources sellers already have
         </div>
       </div>
       <div className="relative mt-5 overflow-hidden md:mt-7">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-28" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[var(--margin-canvas)] to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[var(--margin-canvas)] to-transparent md:w-28" />
         <motion.div
           className="flex w-max items-center gap-8 px-2 md:gap-12 md:px-4"
           animate={{ x: ["0%", "-50%"] }}
@@ -523,7 +584,7 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
           {[...integrationLogos, ...integrationLogos].map((logo, index) => (
             <div
               key={`${logo.name}-${index}`}
-              className="flex h-12 w-[78px] shrink-0 items-center justify-center rounded-2xl border border-[#E4EDF1] bg-white/82 shadow-[0_12px_28px_rgba(37,49,58,0.04)] md:h-16 md:w-[116px]"
+              className="flex h-12 w-[78px] shrink-0 items-center justify-center rounded-2xl border border-[var(--margin-border-subtle)] bg-white/82 shadow-[0_12px_28px_rgba(37,49,58,0.04)] md:h-16 md:w-[116px]"
               aria-label={logo.name}
               title={logo.name}
             >
@@ -711,12 +772,12 @@ function EvidenceOrchestratorSourceNode({
           {source.icon ? (
             <img src={source.icon} alt={source.name} className="h-[62%] w-[62%] object-contain" />
           ) : SourceIcon ? (
-            <SourceIcon className="h-5 w-5 text-[#0B74DE] sm:h-6 sm:w-6" strokeWidth={1.9} />
+            <SourceIcon className="h-5 w-5 text-[var(--margin-blue)] sm:h-6 sm:w-6" strokeWidth={1.9} />
           ) : (
-            <span className="text-[10px] font-semibold tracking-tight text-[#0B74DE]">{source.shortName}</span>
+            <span className="text-[10px] font-semibold tracking-tight text-[var(--margin-blue)]">{source.shortName}</span>
           )}
         </div>
-        <span className="hidden text-[10px] font-semibold tracking-tight text-[#4D5B66] sm:block">{source.name}</span>
+        <span className="hidden text-[10px] font-semibold tracking-tight text-[var(--margin-text-secondary)] sm:block">{source.name}</span>
       </motion.div>
     </div>
   );
@@ -756,7 +817,7 @@ function EvidenceOrchestratorToken({
         times: route.map((_, index) => (index === lastIndex ? 1 : (index / (lastIndex - 1)) * 0.9)),
         ease: [0.4, 0, 0.2, 1],
       }}
-      className="pointer-events-none absolute z-40 -translate-x-1/2 -translate-y-1/2 rounded-[6px] border border-[#D9E5EC] bg-white px-2 py-1 text-[9px] font-semibold tracking-tight text-[#25313A] shadow-[0_12px_24px_rgba(37,49,58,0.08)]"
+      className="pointer-events-none absolute z-40 -translate-x-1/2 -translate-y-1/2 rounded-[6px] border border-[#D9E5EC] bg-white px-2 py-1 text-[9px] font-semibold tracking-tight text-[var(--margin-text-secondary)] shadow-[0_12px_24px_rgba(37,49,58,0.08)]"
     >
       {label}
     </motion.div>
@@ -769,7 +830,7 @@ function EvidenceSourcesOrchestrator() {
 
   return (
     <motion.div {...revealProps} className="mx-auto max-w-[1040px]">
-      <div className="relative overflow-hidden border-y border-[#D8E3E8] bg-white py-4 sm:py-6 md:py-8">
+      <div className="relative overflow-hidden border-y border-[var(--margin-border)] bg-white py-4 sm:py-6 md:py-8">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(11,116,222,0.045),transparent_30%),radial-gradient(circle_at_82%_24%,rgba(46,125,91,0.04),transparent_28%)]" />
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.32]"
@@ -783,7 +844,7 @@ function EvidenceSourcesOrchestrator() {
           className="relative h-[420px] w-full sm:h-[520px] md:h-[600px]"
           aria-label="Scattered reimbursement evidence organized into one Margin case"
         >
-          <div className="absolute right-4 top-4 hidden text-[10px] font-semibold tracking-tight text-[#8A98A3] sm:block">
+          <div className="absolute right-4 top-4 hidden text-[10px] font-semibold tracking-tight text-[var(--margin-text-muted)] sm:block">
             Evidence orchestration
           </div>
 
@@ -849,7 +910,7 @@ function EvidenceSourcesOrchestrator() {
               whileInView={{
                 opacity: 1,
                 scale: reduceMotion ? 1 : [1, 1, 1.06, 1],
-                borderColor: reduceMotion ? "#D8E3EA" : ["#D8E3EA", "#D8E3EA", "#0B74DE", "#D8E3EA"],
+                borderColor: reduceMotion ? "#D8E3EA" : ["#D8E3EA", "#D8E3EA", "var(--margin-blue)", "#D8E3EA"],
               }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{
@@ -861,7 +922,7 @@ function EvidenceSourcesOrchestrator() {
             >
               <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain sm:h-9" />
             </motion.div>
-            <div className="absolute -bottom-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold tracking-tight text-[#4D5B66] sm:block">
+            <div className="absolute -bottom-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold tracking-tight text-[var(--margin-text-secondary)] sm:block">
               Margin case file
             </div>
           </div>
@@ -893,37 +954,27 @@ function RecoveryPreviewSection() {
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="max-w-[500px]">
-            <div className={sectionLabelClass}>RECOVERY PREVIEW</div>
+            <div className={sectionLabelClass}>Verify what Amazon owes</div>
             <h2 className={demoTitleClass}>
-              Every recovery starts with one finding.
+              Find the financial exceptions that deserve action.
             </h2>
             <p className={demoClosingClass}>
-              But every payout depends on the evidence behind it.
+              Prioritized by value, deadline, evidence readiness and financial risk.
             </p>
             <p className={demoBodyClass}>
-              <strong className="font-semibold text-[#182026]">Stop wondering whether you have enough proof.</strong>{" "}
-              Margin automatically connects invoices, shipment records,
-              inventory events, settlement history, and supporting documents
-              into one recovery case—so when Amazon asks, the evidence is
-              already there.
+              Margin audits shipment, inventory, return, fee, reimbursement and
+              settlement activity to identify potential recoveries, valuation
+              differences, underpayments and reversals before they disappear
+              into reports or expire.
             </p>
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={RECOVERY_PREVIEW_VIDEO_URL}
-                  aria-label="Margin 10-second recovery preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={RECOVERY_PREVIEW_VIDEO_URL}
+              label="Margin 10-second recovery preview"
+              stage="Recovery Found"
+            />
           </motion.div>
         </div>
       </div>
@@ -937,20 +988,11 @@ function DocumentIntelligencePreviewSection() {
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={DOCUMENT_ANALYSIS_VIDEO_URL}
-                  aria-label="Margin document intelligence preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={DOCUMENT_ANALYSIS_VIDEO_URL}
+              label="Margin document intelligence preview"
+              stage="Evidence Ready"
+            />
           </motion.div>
 
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
@@ -981,36 +1023,27 @@ function RepliesPreviewSection() {
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="max-w-[500px]">
-            <div className={sectionLabelClass}>Reply management</div>
+            <div className={sectionLabelClass}>Control the response</div>
             <h2 className={demoTitleClass}>
-              Recovery doesn't end when Amazon replies.
+              Keep every request, rejection and decision on one timeline.
             </h2>
             <p className={demoBodyClass}>
-              Recovery rarely ends with the first submission. When Amazon asks
-              for more information, rejects a claim, or approves only part of it,
-              everything stays connected to the same recovery—so you always know
-              what happened, what&apos;s missing, and what comes next.
+              When Amazon asks for more information, rejects a case, approves
+              partially or changes its position, Margin preserves the full case
+              history, identifies the next evidence gap and prepares the
+              response for seller review.
             </p>
             <p className={demoClosingClass}>
-              Stay in control until the money arrives.
+              No lost context. No duplicated work. Nothing submitted without approval.
             </p>
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={REPLIES_PREVIEW_VIDEO_URL}
-                  aria-label="Margin Amazon replies management preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={REPLIES_PREVIEW_VIDEO_URL}
+              label="Margin Amazon replies management preview"
+              stage="Amazon Response"
+            />
           </motion.div>
         </div>
       </div>
@@ -1024,20 +1057,11 @@ function AppealsPreviewSection() {
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={APPEALS_PREVIEW_VIDEO_URL}
-                  aria-label="Margin recovery appeals preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={APPEALS_PREVIEW_VIDEO_URL}
+              label="Margin recovery appeals preview"
+              stage="Amazon Response"
+            />
           </motion.div>
 
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
@@ -1051,14 +1075,14 @@ function AppealsPreviewSection() {
               for resubmission automatically—keeping the recovery moving without
               starting over.
             </p>
-            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)] md:text-[14px]">
               {[
                 "Rejections rebuilt automatically",
                 "Stronger evidence prepared",
                 "Recovery continues without starting over",
               ].map((item) => (
                 <span key={item} className="inline-flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  <Check className="h-3.5 w-3.5 text-[var(--margin-blue)]" strokeWidth={2.4} />
                   {item}
                 </span>
               ))}
@@ -1077,39 +1101,28 @@ function SupportingEvidencePreviewSection() {
   return (
     <section className={postHeroSectionClass}>
       <div className={demoContainerClass}>
-        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
-          <motion.div {...revealProps} className="max-w-[520px]">
-            <div className={sectionLabelClass}>Evidence Matching</div>
-            <h2 className={demoTitleClass}>
-              Know exactly which documents support each recovery.
-            </h2>
-            <p className={demoBodyClass}>
-              Margin automatically connects each discrepancy to the invoices,
-              shipment records, PODs, bills of lading, receiving events,
-              settlement entries, and carrier updates that support it—so you can
-              see exactly why the recovery exists and what proof is already
-              attached.
-            </p>
-            <p className={demoClosingClass}>
-              The right evidence, already attached to the right recovery.
-            </p>
+        <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="relative order-2 lg:order-1">
+            <DemoVideoFrame
+              src={SUPER_EVIDENCE_VIDEO_URL}
+              label="Margin supporting evidence matching preview"
+              stage="Evidence Ready"
+            />
           </motion.div>
 
-          <motion.div {...revealProps} className="relative">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={SUPER_EVIDENCE_VIDEO_URL}
-                  aria-label="Margin supporting evidence matching preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+          <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
+            <div className={sectionLabelClass}>Build the evidence</div>
+            <h2 className={demoTitleClass}>
+              Turn scattered records into a recovery Amazon can evaluate.
+            </h2>
+            <p className={demoBodyClass}>
+              Margin connects the shipment records, quantities, SKUs, invoices,
+              BOLs, PODs, receiving data, cost basis, policy references and
+              deadlines behind each recovery.
+            </p>
+            <p className={demoClosingClass}>
+              The relevant proof, attached to the correct issue, before filing.
+            </p>
           </motion.div>
         </div>
       </div>
@@ -1123,20 +1136,11 @@ function CaseBuildingPreviewSection() {
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={CASE_BUILDING_VIDEO_URL}
-                  aria-label="Margin case building preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={CASE_BUILDING_VIDEO_URL}
+              label="Margin case building preview"
+              stage="Evidence Ready"
+            />
           </motion.div>
 
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
@@ -1150,14 +1154,14 @@ function CaseBuildingPreviewSection() {
               archive, or submit when you&apos;re ready. Every recovery stays
               organized from the first discrepancy to the final payout.
             </p>
-            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)] md:text-[14px]">
               {[
                 "Evidence already attached",
                 "Recovery timeline included",
                 "Download or share anytime",
               ].map((item) => (
                 <span key={item} className="inline-flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  <Check className="h-3.5 w-3.5 text-[var(--margin-blue)]" strokeWidth={2.4} />
                   {item}
                 </span>
               ))}
@@ -1189,14 +1193,14 @@ function RecoveryOrchestrationPreviewSection() {
               until it&apos;s resolved. Nothing gets forgotten. Nothing falls
               through the cracks.
             </p>
-            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)] md:text-[14px]">
               {[
                 "Cases tracked automatically",
                 "Incomplete submissions prevented",
                 "Every recovery monitored end-to-end",
               ].map((item) => (
                 <span key={item} className="inline-flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  <Check className="h-3.5 w-3.5 text-[var(--margin-blue)]" strokeWidth={2.4} />
                   {item}
                 </span>
               ))}
@@ -1207,20 +1211,11 @@ function RecoveryOrchestrationPreviewSection() {
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={CASES_TABLE_VIDEO_URL}
-                  aria-label="Margin recovery orchestration preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={CASES_TABLE_VIDEO_URL}
+              label="Margin recovery orchestration preview"
+              stage="Seller Approval"
+            />
           </motion.div>
         </div>
       </div>
@@ -1234,20 +1229,11 @@ function SellerControlledFilingPreviewSection() {
       <div className={demoContainerClass}>
         <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
           <motion.div {...revealProps} className="relative order-2 lg:order-1">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={FILING_VIDEO_URL}
-                  aria-label="Margin seller-controlled filing preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={FILING_VIDEO_URL}
+              label="Margin seller-controlled filing preview"
+              stage="Seller Approval"
+            />
           </motion.div>
 
           <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
@@ -1261,20 +1247,54 @@ function SellerControlledFilingPreviewSection() {
               automatically, keeping every Amazon response, status change, and
               next step connected until the recovery is resolved.
             </p>
-            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[#4D5B66] md:text-[14px]">
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)] md:text-[14px]">
               {[
                 "Seller approval before filing",
                 "Automatic case tracking",
                 "Every Amazon update in one place",
               ].map((item) => (
                 <span key={item} className="inline-flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-[#0B74DE]" strokeWidth={2.4} />
+                  <Check className="h-3.5 w-3.5 text-[var(--margin-blue)]" strokeWidth={2.4} />
                   {item}
                 </span>
               ))}
             </div>
             <p className={demoClosingClass}>
               You stay in control. Margin keeps the recovery moving.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PayoutReconciliationPreviewSection() {
+  return (
+    <section className={postHeroSectionClass}>
+      <div className={demoContainerClass}>
+        <div className="grid gap-6 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-10">
+          <motion.div {...revealProps} className="relative order-2 lg:order-1">
+            <DemoVideoFrame
+              src={RECONCILIATION_VIDEO_URL}
+              label="Margin payout reconciliation preview"
+              stage="Payout Reconciled"
+            />
+          </motion.div>
+
+          <motion.div {...revealProps} className="order-1 max-w-[520px] lg:order-2 lg:justify-self-end">
+            <div className={sectionLabelClass}>Reconcile the money</div>
+            <h2 className={demoTitleClass}>
+              Confirm that the correct payout actually reached the business.
+            </h2>
+            <p className={demoBodyClass}>
+              Margin connects the approved recovery to reimbursement and
+              settlement activity, compares expected value with paid value,
+              flags underpayments and later reversals, and keeps an
+              accounting-ready record of the final outcome.
+            </p>
+            <p className={demoClosingClass}>
+              Approval is not the finish line. Reconciled cash is.
             </p>
           </motion.div>
         </div>
@@ -1294,7 +1314,7 @@ function EvidenceCalibrationPreviewSection() {
               Stronger cases. Better approval odds.
             </h2>
             <p className={demoBodyClass}>
-              <strong className="font-semibold text-[#182026]">Every approved case teaches the next one.</strong>{" "}
+              <strong className="font-semibold text-[var(--margin-text-primary)]">Every approved case teaches the next one.</strong>{" "}
               Margin remembers which evidence helped claims get approved, what
               caused rejections, and what Amazon asked for—so future recoveries
               start with stronger evidence before they&apos;re ever filed.
@@ -1305,20 +1325,11 @@ function EvidenceCalibrationPreviewSection() {
           </motion.div>
 
           <motion.div {...revealProps} className="relative">
-            <div className={demoFrameClass}>
-              <div className="aspect-[16/10] sm:aspect-video">
-                <video
-                  className="h-full w-full object-contain"
-                  src={EVIDENCE_CALIBRATION_VIDEO_URL}
-                  aria-label="Margin evidence calibration preview"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                />
-              </div>
-            </div>
+            <DemoVideoFrame
+              src={EVIDENCE_CALIBRATION_VIDEO_URL}
+              label="Margin evidence calibration preview"
+              stage="Payout Reconciled"
+            />
           </motion.div>
         </div>
       </div>
@@ -1375,9 +1386,9 @@ const orchestrationOutputs = [
 
 function MarginOrchestrationFlow() {
   return (
-    <section className="relative overflow-hidden border-b border-[#E4EDF1] bg-white py-10 md:py-16">
+    <section className="relative overflow-hidden border-b border-[var(--margin-border-subtle)] bg-white py-10 md:py-16">
       <div className={demoContainerClass}>
-        <div className="relative min-h-[420px] overflow-hidden border-y border-[#D8E3E8] bg-[#FBFCFD]">
+        <div className="relative min-h-[420px] overflow-hidden border-y border-[var(--margin-border)] bg-[#FBFCFD]">
           <div className="absolute inset-8 grid grid-cols-6 gap-5 opacity-70 md:grid-cols-8">
             {Array.from({ length: 32 }).map((_, index) => (
               <div
@@ -1392,7 +1403,7 @@ function MarginOrchestrationFlow() {
           {orchestrationSources.map((source) => (
             <motion.div
               key={source.name}
-              className="absolute flex h-12 w-12 items-center justify-center rounded-[6px] border border-[#D8E3E8] bg-white shadow-[0_12px_28px_rgba(37,49,58,0.08)]"
+              className="absolute flex h-12 w-12 items-center justify-center rounded-[6px] border border-[var(--margin-border)] bg-white shadow-[0_12px_28px_rgba(37,49,58,0.08)]"
               style={{ top: source.top, left: source.left }}
               animate={{
                 x: [0, 155, 286, 376],
@@ -1423,7 +1434,7 @@ function MarginOrchestrationFlow() {
           {orchestrationOutputs.map((output) => (
             <motion.div
               key={output.label}
-              className="absolute left-[52%] top-1/2 z-20 flex items-center gap-3 rounded-[2px] border border-[#D8E3E8] bg-white/92 px-4 py-3 text-sm text-[#182026] shadow-[0_14px_34px_rgba(37,49,58,0.08)] backdrop-blur"
+              className="absolute left-[52%] top-1/2 z-20 flex items-center gap-3 rounded-[2px] border border-[var(--margin-border)] bg-white/92 px-4 py-3 text-sm text-[var(--margin-text-primary)] shadow-[0_14px_34px_rgba(37,49,58,0.08)] backdrop-blur"
               animate={{
                 x: [0, 42, 122, 272],
                 y: [0, output.lane * 0.08, output.lane * 0.36, output.lane],
@@ -1439,7 +1450,7 @@ function MarginOrchestrationFlow() {
             >
               <span className="h-3 w-3 rounded-[2px] border border-[#B9C7CF]" />
               <span className="font-medium tracking-[-0.02em]">{output.label}</span>
-              <span className="text-[10px] font-semibold tracking-tight text-[#8A98A3]">{output.tone}</span>
+              <span className="text-[10px] font-semibold tracking-tight text-[var(--margin-text-muted)]">{output.tone}</span>
             </motion.div>
           ))}
         </div>
@@ -1450,7 +1461,7 @@ function MarginOrchestrationFlow() {
 
 function MarginIdentityCards() {
   return (
-    <section className="relative border-b border-[#D8E3E8] bg-[#FAFAF7] py-10 md:py-14">
+    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-10 md:py-14">
       <div className={demoContainerClass}>
         <div className="grid gap-8 lg:grid-cols-3 lg:gap-0">
           {marginIdentityCards.map((card, index) => (
@@ -1461,9 +1472,9 @@ function MarginIdentityCards() {
                 ...revealProps.transition,
                 delay: index * 0.06,
               }}
-              className={`pt-2 lg:px-10 ${index > 0 ? "lg:border-l lg:border-[#D8E3E8]" : ""}`}
+              className={`pt-2 lg:px-10 ${index > 0 ? "lg:border-l lg:border-[var(--margin-border)]" : ""}`}
             >
-              <div className="relative aspect-[16/10] overflow-hidden rounded-[5px] border border-[#CFE0EA] bg-white">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-[5px] border border-[var(--margin-border)] bg-white">
                 <img
                   src={card.image}
                   alt=""
@@ -1472,14 +1483,546 @@ function MarginIdentityCards() {
                   loading="lazy"
                 />
               </div>
-              <h3 className="mt-7 max-w-[360px] text-[25px] font-medium leading-[1.05] tracking-[-0.04em] text-[#182026] md:text-[28px]">
+              <h3 className="mt-7 max-w-[360px] text-[25px] font-medium leading-[1.05] tracking-[-0.04em] text-[var(--margin-text-primary)] md:text-[28px]">
                 {card.title}
               </h3>
-              <p className="mt-4 max-w-[390px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8">
+              <p className="mt-4 max-w-[390px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">
                 {card.body}
               </p>
             </motion.article>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HeroAuditFindingCard() {
+  const scenes = [
+    {
+      eyebrow: "Recovery Found",
+      title: "Inbound shortage found",
+      status: "Found",
+      metrics: [
+        ["60", "units shipped"],
+        ["46", "received"],
+        ["14", "unit gap"],
+      ],
+      rows: [
+        ["Potential recovery", "USD 569.50"],
+        ["Shipment", "FBA17ACME001"],
+        ["Location", "ONT8"],
+      ],
+      note:
+        "Margin surfaces the recoveries worth reviewing before they disappear into settlement noise.",
+    },
+    {
+      eyebrow: "Evidence Ready",
+      title: "Claim proof assembled",
+      status: "Review",
+      metrics: [
+        ["80%", "readiness"],
+        ["2", "records linked"],
+        ["9d", "claim window"],
+      ],
+      rows: [
+        ["Invoice", "Linked"],
+        ["Shipment", "Matched"],
+        ["Missing proof", "POD required"],
+      ],
+      note:
+        "The case shows what is connected, what is missing, and what needs seller approval before filing.",
+    },
+    {
+      eyebrow: "Payout Reconciled",
+      title: "Recovery closed",
+      status: "Paid",
+      metrics: [
+        ["USD", "currency"],
+        ["1,247", "reimbursed"],
+        ["0", "open gaps"],
+      ],
+      rows: [
+        ["Amazon reimbursed", "USD 1,247.00"],
+        ["Settlement", "Matched"],
+        ["Case status", "Closed"],
+      ],
+      note:
+        "Margin keeps the payout trail attached so approval and money received reconcile cleanly.",
+    },
+  ];
+  const [sceneIndex, setSceneIndex] = useState(0);
+  const scene = scenes[sceneIndex];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setSceneIndex((current) => (current + 1) % scenes.length);
+    }, 2800);
+    return () => window.clearInterval(timer);
+  }, [scenes.length]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.62, delay: 0.46, ease: [0.22, 1, 0.36, 1] }}
+      className="hidden justify-self-end overflow-hidden rounded-[12px] border border-white/12 bg-white/[0.075] p-5 text-white shadow-[0_18px_54px_rgba(0,0,0,0.22)] backdrop-blur-xl lg:block lg:w-full lg:max-w-[430px]"
+      aria-label="Example Margin recovery lifecycle"
+    >
+      <motion.div
+        key={scene.title}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="flex items-center justify-between border-b border-white/12 pb-4">
+          <div>
+            <div className="text-[10px] font-semibold uppercase tracking-tight text-blue-100/80">
+              {scene.eyebrow}
+            </div>
+            <div className="mt-2 text-[22px] font-semibold leading-tight tracking-[-0.035em]">
+              {scene.title}
+            </div>
+          </div>
+          <div className="rounded-[3px] bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight text-slate-200">
+            {scene.status}
+          </div>
+        </div>
+        <div className="grid grid-cols-3 border-b border-white/12 py-5">
+          {scene.metrics.map(([value, label], index) => (
+            <div
+              key={label}
+              className={index > 0 ? "border-l border-white/12 pl-5" : ""}
+            >
+              <div className="font-mono text-[26px] font-semibold leading-none tracking-[-0.04em] text-white">
+                {value}
+              </div>
+              <div className="mt-2 text-[11px] font-medium uppercase tracking-tight text-slate-400">
+                {label}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="space-y-3 py-5">
+          {scene.rows.map(([label, value]) => (
+            <div key={label} className="flex items-center justify-between gap-6">
+              <span className="text-[13px] text-slate-400">{label}</span>
+              <span className="text-right text-[13px] font-semibold text-slate-100">
+                {value}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="border-t border-white/12 pt-4 text-[12px] leading-5 text-slate-300">
+          {scene.note}
+        </div>
+      </motion.div>
+      <div className="mt-4 flex gap-1.5">
+        {scenes.map((item, index) => (
+          <span
+            key={item.eyebrow}
+            className={`h-1 rounded-full transition-[width,background-color] duration-300 ${
+              index === sceneIndex ? "w-7 bg-[var(--margin-blue)]" : "w-2 bg-white/20"
+            }`}
+          />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function OperatorQualificationSection() {
+  const points = [
+    "Your FBA activity is continuous across shipments, SKUs, marketplaces, brands or client accounts.",
+    "Recovery work crosses operations, finance, VAs, agencies, carriers and suppliers.",
+    "Invoices, BOLs, PODs, shipment records, support messages, cost data and payout entries live in different places.",
+    "Approved reimbursements, partial payments, reversals and settlement differences still have to be reconstructed at month end.",
+    "A missed window, weak evidence trail or underpaid reimbursement materially affects margin.",
+  ];
+
+  return (
+    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-10 md:py-14">
+      <div className={containerClass}>
+        <div className="grid gap-8 md:grid-cols-[0.86fr_1.14fr] md:items-start">
+          <motion.div {...revealProps}>
+            <div className={sectionLabelClass}>Built for complex FBA operations</div>
+            <h2 className="mt-3 max-w-[640px] text-[31px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[50px]">
+              Recovery has become an operating process, not an occasional claim.
+            </h2>
+            <p className="mt-5 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              Margin is designed for businesses where shipment volume,
+              evidence, Amazon responses and settlement activity are too
+              important to depend on spreadsheets, inboxes or one person&apos;s
+              memory.
+            </p>
+          </motion.div>
+          <motion.div {...revealProps} className="border-y border-[var(--margin-border)]">
+            {points.map((point) => (
+              <div
+                key={point}
+                className="flex gap-4 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
+              >
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--margin-blue)]" />
+                <p className="max-w-[760px] text-[16px] leading-7 tracking-[-0.018em] text-[var(--margin-text-secondary)] md:text-[18px] md:leading-8">
+                  {point}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DiscrepancyIsNotRevenueSection() {
+  const stages = [
+    "Issue detected",
+    "Value verified",
+    "Evidence ready",
+    "Seller approved",
+    "Amazon response managed",
+    "Payout reconciled",
+  ];
+
+  return (
+    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-10 md:py-14">
+      <div className={containerClass}>
+        <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+          <motion.div {...revealProps}>
+            <div className={sectionLabelClass}>Why Margin exists</div>
+            <h2 className="mt-3 max-w-[760px] text-[32px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[56px]">
+              A detected discrepancy is not recovered revenue.
+            </h2>
+            <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
+              An alert is only the beginning. The issue still has to be valued
+              correctly, supported by the right records, pursued before the
+              deadline, managed through Amazon&apos;s response, and matched to the
+              final settlement.
+            </p>
+            <p className="mt-4 max-w-[720px] text-[15px] font-semibold leading-7 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[17px]">
+              Margin keeps that entire chain attached to one recovery, from the
+              first signal to the books.
+            </p>
+          </motion.div>
+          <motion.div {...revealProps} className="border-y border-[var(--margin-border)] py-5">
+            <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-3">
+              {stages.map((stage, index) => (
+                <div
+                  key={stage}
+                  className={`relative border-b border-[var(--margin-border-subtle)] px-4 py-4 sm:[&:nth-child(odd)]:border-r lg:border-r lg:[&:nth-child(3n)]:border-r-0 ${index > 3 ? "sm:border-b-0" : ""} ${index > 2 ? "lg:border-b-0" : ""}`}
+                >
+                  <div className="font-mono text-[10px] font-semibold tracking-tight text-[var(--margin-text-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <div className="mt-2 text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
+                    {stage}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 border-t border-[var(--margin-border)] pt-4 text-[14px] font-medium leading-6 text-[var(--margin-text-secondary)]">
+              No disconnected alerts. No rebuilding the case history. No
+              approved reimbursement left unmatched.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FreeAuditResultPreviewSection() {
+  const metrics = [
+    ["Potential recovery", "USD 2,847.20"],
+    ["Evidence-ready cases", "4"],
+    ["Missing documents", "3"],
+    ["Claim windows", "< 14 days"],
+  ];
+  const findings = [
+    ["Inbound shortage", "14-unit gap at ONT8", "Needs invoice"],
+    ["Settlement mismatch", "Approved value underpaid", "Reconcile payout"],
+    ["Refund without return", "Return record unmatched", "Held for review"],
+  ];
+
+  return (
+    <section className="relative border-b border-[var(--margin-border)] bg-white py-10 md:py-14">
+      <div className={containerClass}>
+        <div className="grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+          <motion.div {...revealProps}>
+            <div className={sectionLabelClass}>Free recovery audit</div>
+            <h2 className="mt-3 max-w-[680px] text-[32px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]">
+              See what Amazon may owe and what it will take to recover it.
+            </h2>
+            <p className="mt-5 max-w-[660px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
+              Connect your Amazon account through a read-only authorization.
+              Margin audits shipment, inventory, fee, reimbursement and
+              settlement activity, then shows named recoveries, potential value,
+              evidence status, missing proof, deadlines, underpayments and
+              reversals that require attention.
+            </p>
+          </motion.div>
+          <motion.div {...revealProps} className="border-y border-[var(--margin-border)]">
+            <div className="grid grid-cols-2 border-b border-[var(--margin-border)] lg:grid-cols-4">
+              {metrics.map(([label, value], index) => (
+                <div
+                  key={label}
+                  className={`px-4 py-4 ${index % 2 === 1 ? "border-l border-[var(--margin-border)]" : ""} ${index > 1 ? "border-t border-[var(--margin-border)] lg:border-t-0" : ""} lg:border-l lg:first:border-l-0`}
+                >
+                  <div className="text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
+                    {label}
+                  </div>
+                  <div className="mt-2 font-mono text-[19px] font-semibold tracking-[-0.04em] text-[var(--margin-text-primary)]">
+                    {value}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {findings.map(([name, detail, status]) => (
+              <div
+                key={name}
+                className="grid gap-2 border-b border-[var(--margin-border-subtle)] px-4 py-4 last:border-b-0 sm:grid-cols-[1fr_1.2fr_auto] sm:items-center"
+              >
+                <div className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
+                  {name}
+                </div>
+                <div className="text-[14px] leading-6 text-[var(--margin-text-secondary)]">
+                  {detail}
+                </div>
+                <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+                  {status}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RecoveryWorkspacePricingSection({
+  onActivate,
+}: {
+  onActivate?: () => void;
+}) {
+  return (
+    <section className="relative border-b border-[var(--margin-border)] bg-white py-10 md:py-14">
+      <div className={containerClass}>
+        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <motion.div {...revealProps}>
+            <div className={sectionLabelClass}>After the audit</div>
+            <h2 className="mt-3 max-w-[720px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]">
+              Keep every recovery under continuous control.
+            </h2>
+            <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
+              Activate the Recovery Workspace to continue monitoring, evidence
+              preparation, seller approvals, Amazon response handling, payout
+              validation and reconciliation.
+            </p>
+          </motion.div>
+          <motion.div {...revealProps} className="border-y border-[var(--margin-border)] py-6">
+            <div className="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+              <div>
+                <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
+                  Recovery Workspace
+                </div>
+                <div className="mt-3 text-[42px] font-semibold leading-none tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[54px]">
+                  $99/month
+                </div>
+                <p className="mt-3 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
+                  Charged as R1,799 ZAR. 0% recovery commission. One fixed
+                  monthly subscription. Keep 100% of the recovery.
+                </p>
+              </div>
+              {onActivate ? (
+                <Button
+                  onClick={onActivate}
+                  className="h-12 rounded-[8px] bg-[var(--margin-blue)] px-7 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(23,92,211,0.22)] hover:bg-[var(--margin-blue-hover)]"
+                >
+                  Activate Recovery Workspace
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              ) : null}
+            </div>
+            <div className="mt-5 grid gap-3 border-t border-[var(--margin-border)] pt-5 sm:grid-cols-2">
+              {[
+                "Continuous recovery monitoring",
+                "Evidence ingestion and matching",
+                "Missing-proof and deadline alerts",
+                "Case and response continuity",
+                "Seller approval workflows",
+                "Underpayment and reversal monitoring",
+                "Payout and settlement reconciliation",
+                "Accounting-ready recovery record",
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2 text-[13px] leading-6 text-[var(--margin-text-secondary)]">
+                  <Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[var(--margin-blue)]" strokeWidth={2.4} />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 text-[13px] leading-6 text-[var(--margin-text-muted)]">
+              Cancel anytime. Nothing is filed without your approval. Managing
+              multiple brands, client accounts or complex recovery operations?
+              Talk to Sales about Scale.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ExistingOperationFitSection() {
+  const reduceMotion = useReducedMotion();
+  return (
+    <section
+      data-navbar-theme="dark"
+      className="relative border-b border-[var(--margin-inverse)] bg-[var(--margin-inverse)] py-10 text-[var(--margin-text-inverse)] md:py-14"
+    >
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
+          <div className="text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue-border)]">One control layer across the team</div>
+          <h2 className="mt-3 text-[34px] font-semibold leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-inverse)] sm:text-[44px] md:text-[58px]">
+            Operations sees the case. Finance sees the money.
+          </h2>
+          <p className="mx-auto mt-5 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-inverse-muted)] md:text-[18px]">
+            Margin keeps the evidence, deadline, seller decision, Amazon
+            response, expected value, paid value and settlement status attached
+            to one recovery, so the story does not have to be reconstructed
+            every time responsibility changes hands.
+          </p>
+        </motion.div>
+
+        <div className="mt-10 grid gap-7 lg:grid-cols-3">
+          <motion.article
+            {...revealProps}
+            className="border-t border-white/12 pt-5"
+          >
+            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-white/12 bg-white/[0.06] p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)]">
+              <div className="absolute inset-0 opacity-[0.26] [background-image:linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:38px_38px]" />
+              <div className="relative space-y-4">
+                {[
+                  "Amazon synced",
+                  "Shipment variance detected",
+                  "Settlement checked",
+                  "Recovery surfaced",
+                ].map((item, index) => (
+                  <div key={item} className="flex items-center gap-3">
+                    <motion.span
+                      className="h-2 w-2 rounded-full bg-[var(--margin-blue)]"
+                      animate={reduceMotion ? undefined : { opacity: [0.3, 1, 0.3] }}
+                      transition={{
+                        duration: 1.8,
+                        delay: index * 0.35,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                    <div className="border-b border-white/10 pb-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-inverse-muted)]">
+                      {item}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-inverse)] md:text-[28px]">
+              Operations knows what is ready and what happens next.
+            </h3>
+            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-inverse-muted)] md:text-[16px]">
+              See missing proof, deadlines, response status, seller approvals
+              and the next required action without relying on another
+              spreadsheet or someone&apos;s memory.
+            </p>
+          </motion.article>
+
+          <motion.article
+            {...revealProps}
+            transition={{ ...revealProps.transition, delay: 0.06 }}
+            className="border-t border-white/12 pt-5"
+          >
+            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-white/12 bg-white/[0.06] p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)]">
+              <div className="grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4">
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    ["/amazon-logo-transparent-circle.png", "Amazon"],
+                    ["/gmailicon.png", "Gmail"],
+                    ["/gd.png", "Drive"],
+                    ["/quickbooks.png", "QuickBooks"],
+                  ].map(([src, label]) => (
+                    <div
+                      key={label}
+                      className="flex h-14 items-center justify-center rounded-[8px] border border-white/10 bg-white"
+                    >
+                      <img src={src} alt="" className="max-h-7 max-w-8 object-contain" />
+                    </div>
+                  ))}
+                </div>
+                <div className="font-mono text-[18px] text-[var(--margin-text-inverse-muted)]">→</div>
+                <div className="rounded-[8px] border border-white/12 bg-white/[0.06] p-4">
+                  <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-inverse-muted)]">
+                    Connected recovery
+                  </div>
+                  <div className="mt-3 space-y-2 text-[12px] font-medium text-[var(--margin-text-inverse)]">
+                    <div>Shipment record</div>
+                    <div>Invoice</div>
+                    <div>Case timeline</div>
+                    <div>Payout ledger</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-inverse)] md:text-[28px]">
+              Finance knows what Amazon approved and what it actually paid.
+            </h3>
+            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-inverse-muted)] md:text-[16px]">
+              Compare expected, approved, paid, underpaid, reversed and
+              unreconciled values from the same recovery record operations uses
+              to manage the case.
+            </p>
+          </motion.article>
+
+          <motion.article
+            {...revealProps}
+            transition={{ ...revealProps.transition, delay: 0.12 }}
+            className="border-t border-white/12 pt-5"
+          >
+            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-white/12 bg-white/[0.06] p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)]">
+              <div className="space-y-3">
+                {[
+                  ["Case prepared", "Complete"],
+                  ["Evidence ready", "Ready"],
+                  ["Seller review required", "Approval"],
+                  ["Approve filing", "Decision"],
+                ].map(([item, label], index) => (
+                  <div
+                    key={item}
+                    className="flex items-center justify-between border-b border-white/10 pb-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${index < 2 ? "bg-[var(--margin-success-soft)] text-[var(--margin-success)]" : "bg-[var(--margin-warning-soft)] text-[var(--margin-warning)]"}`}>
+                        <Check className="h-3.5 w-3.5" strokeWidth={2.6} />
+                      </span>
+                      <span className="text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-inverse-muted)]">
+                        {item}
+                      </span>
+                    </div>
+                    <span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-inverse-muted)]">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <h3 className="mt-6 text-[25px] font-medium leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-inverse)] md:text-[28px]">
+              Seller control stays attached to every sensitive decision.
+            </h3>
+            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-inverse-muted)] md:text-[16px]">
+              Margin performs monitoring and preparation in the background.
+              Filing and response actions remain subject to seller approval.
+            </p>
+          </motion.article>
         </div>
       </div>
     </section>
@@ -1506,7 +2049,10 @@ function KineticHeroSection({
   );
   return (
     <motion.section
-      style={{ scale: heroScale, opacity: heroOpacity }}
+      style={{
+        scale: reduceMotion ? 1 : heroScale,
+        opacity: reduceMotion ? 1 : heroOpacity,
+      }}
       data-navbar-theme="dark"
       className="relative isolate flex min-h-svh overflow-hidden bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.18),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.12),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-4 pb-16 pt-28 text-white sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-64"
       aria-labelledby="margin-hero-title"
@@ -1601,11 +2147,11 @@ function KineticHeroSection({
             className="inline-block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis rounded-[5px] bg-white/[0.07] px-4 py-2 text-left text-[9px] font-semibold leading-relaxed uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl sm:px-3 sm:py-1.5 sm:text-[11px]"
           >
             {" "}
-            BUILT FOR AMAZON'S REVIEW{" "}
+            AMAZON FBA REVENUE RECOVERY &amp; RECONCILIATION{" "}
           </motion.div>{" "}
           <h1
             id="margin-hero-title"
-            className="mt-6 font-serif-headline max-w-[900px] text-[34px] font-bold leading-[1.02] tracking-[-0.045em] min-[390px]:text-[40px] sm:mt-7 sm:text-[52px] sm:tracking-[-0.055em] md:text-[58px] lg:text-[66px]"
+            className="mt-6 font-serif-headline max-w-[880px] text-[34px] font-bold leading-[1.02] tracking-[-0.045em] min-[390px]:text-[40px] sm:mt-7 sm:text-[52px] sm:tracking-[-0.055em] md:text-[58px] lg:text-[64px]"
           >
             {" "}
             <motion.span
@@ -1618,7 +2164,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Recover your Amazon refunds.
+              Your FBA operation is too large
             </motion.span>{" "}
             <motion.span
               className="block text-slate-400"
@@ -1630,9 +2176,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <span className="block">Evidence connected.</span>
-              <span className="block">Seller-approved.</span>
-              <span className="block">Built to survive Amazon review.</span>
+              <span className="block">to rebuild every recovery by hand.</span>
             </motion.span>{" "}
           </h1>{" "}
           <motion.p
@@ -1646,8 +2190,11 @@ function KineticHeroSection({
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
           >
             {" "}
-            Every recovery starts with one discrepancy. Margin builds
-            everything Amazon expects to see before a claim is filed.{" "}
+            Margin verifies what Amazon may owe across shipments, inventory,
+            fees, reimbursements and settlements, connects every valid recovery
+            to the evidence behind it, and keeps the case moving until the
+            payout is verified and reconciled—with your approval before
+            anything is filed.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -1657,17 +2204,17 @@ function KineticHeroSection({
               delay: 0.78,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:mt-10"
+            className="hidden mt-8 w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:mt-10"
           >
             {" "}
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Run Free Audit"
-              className="hidden group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#0c66c2]"
+              aria-label="Audit Seller Account"
+              className="landing-pressable group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
             >
               {" "}
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-              Run Free Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
+              Audit Seller Account <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
           </motion.div>{" "}
           <motion.div
@@ -1677,22 +2224,13 @@ function KineticHeroSection({
             className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12px] font-medium text-slate-400 sm:mt-8"
           >
             {" "}
-            <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Read-only
-              audit
-            </span>{" "}
-            <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> No card
-              required
-            </span>{" "}
-            <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Seller Approval
-              Before Filing
-            </span>{" "}
-            <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-[#0B74DE]" /> Amazon pays you
-              directly
-            </span>{" "}
+            <span>Read-only audit</span>
+            <span className="text-slate-600">·</span>
+            <span>No card required</span>
+            <span className="text-slate-600">·</span>
+            <span>Seller approval before filing</span>
+            <span className="text-slate-600">·</span>
+            <span>0% recovery commission</span>
           </motion.div>{" "}
           {isFull ? (
             <div className="mt-5 max-w-[430px] rounded-2xl bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
@@ -1704,28 +2242,29 @@ function KineticHeroSection({
             </div>
           ) : null}{" "}
         </div>{" "}
+        <HeroAuditFindingCard />
       </div>{" "}
     </motion.section>
   );
 }
 function SystemLogMarquee() {
   return (
-    <section className="system-log-marquee relative overflow-hidden bg-[#FAFAF7] py-16 md:py-24">
+    <section className="system-log-marquee relative overflow-hidden bg-[var(--margin-canvas)] py-16 md:py-24">
       {" "}
       <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(201,214,222,0.24)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.18)_1px,transparent_1px)] [background-size:52px_52px]" />{" "}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#FAFAF7] to-transparent" />{" "}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFAF7] to-transparent" />{" "}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#FAFAF7] to-transparent md:w-32" />{" "}
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAFAF7] to-transparent md:w-32" />{" "}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[var(--margin-canvas)] to-transparent" />{" "}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--margin-canvas)] to-transparent" />{" "}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[var(--margin-canvas)] to-transparent md:w-32" />{" "}
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[var(--margin-canvas)] to-transparent md:w-32" />{" "}
       <div className={containerClass}>
         {" "}
         <motion.div {...revealProps} className="relative z-20 max-w-[760px]">
           {" "}
           <div className={sectionLabelClass}>Recovery Intelligence</div>{" "}
           <h2 className="mt-4 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] sm:text-[42px] md:text-[62px]">
-            <span className="text-[#182026]">One rejected case.</span> <span className="text-[#8A98A3]">Every missing answer.</span>
+            <span className="text-[var(--margin-text-primary)]">One rejected case.</span> <span className="text-[var(--margin-text-muted)]">Every missing answer.</span>
           </h2>{" "}
-          <p className="mt-5 max-w-[680px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+          <p className="mt-5 max-w-[680px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
             {" "}
             Amazon asks again, rejects, underpays, or delays. Margin keeps the
             proof, timeline, response, and payout state tied to the same
@@ -1739,14 +2278,14 @@ function SystemLogMarquee() {
           {" "}
           <div className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-tight text-[#7B8A95]">
             {" "}
-            <span className="h-1.5 w-1.5 rounded-full bg-[#21B487]" /> Recovery
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--margin-success)]" /> Recovery
             OS{" "}
           </div>{" "}
-          <div className="mt-4 text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] md:text-[31px]">
+          <div className="mt-4 text-[24px] font-semibold leading-tight tracking-[-0.035em] text-[var(--margin-text-primary)] md:text-[31px]">
             {" "}
             <TypewriterPrompt text="Show me what Amazon still needs for this claim." />{" "}
           </div>{" "}
-          <div className="mt-5 border-t border-[#D8E3E8] pt-3 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#4D5B66]">
+          <div className="mt-5 border-t border-[var(--margin-border)] pt-3 font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-secondary)]">
             {" "}
             Missing proof found - Ready for seller review{" "}
           </div>{" "}
@@ -1775,11 +2314,11 @@ function SystemLogMarquee() {
                   className="min-w-[280px] border-y border-[#C9D6DE] bg-white/50 px-3 py-[9px] backdrop-blur-xl md:min-w-[350px]"
                 >
                   {" "}
-                  <div className="font-mono text-[8px] font-bold uppercase tracking-tight text-[#8A98A3]">
+                  <div className="font-mono text-[8px] font-bold uppercase tracking-tight text-[var(--margin-text-muted)]">
                     {" "}
                     {entry.label}{" "}
                   </div>{" "}
-                  <div className="mt-2 text-[14px] font-[350] leading-5 tracking-[-0.025em] text-[#25313A] md:text-[15px]">
+                  <div className="mt-2 text-[14px] font-[350] leading-5 tracking-[-0.025em] text-[var(--margin-text-secondary)] md:text-[15px]">
                     {" "}
                     {entry.text}{" "}
                   </div>{" "}
@@ -1812,7 +2351,7 @@ function EvidenceReadinessBlueprint() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[28px] border border-[#D8E3E8] bg-[linear-gradient(135deg,#FFFFFF_0%,#F4FAFF_52%,#F3F6F8_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-9"
+      className="relative overflow-hidden rounded-[28px] border border-[var(--margin-border)] bg-[linear-gradient(135deg,#FFFFFF_0%,#F4FAFF_52%,var(--margin-section-alt)_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-9"
     >
       {" "}
       <div
@@ -1826,20 +2365,20 @@ function EvidenceReadinessBlueprint() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_14%,rgba(11,116,222,0.08),transparent_34%),radial-gradient(circle_at_12%_92%,rgba(46,125,91,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.82),transparent_54%)] max-md:hidden" />{" "}
       <div className="relative">
         {" "}
-        <div className="text-[10px] font-semibold uppercase text-[#7A8994]">
+        <div className="text-[10px] font-semibold uppercase text-[var(--margin-text-muted)]">
           {" "}
           Potential evidence requests{" "}
         </div>{" "}
         <div className="mt-4 md:hidden">
           {" "}
-          <div className="flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-tight text-[#182026]">
+          <div className="flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-primary)]">
             {" "}
             <span>Potential Amazon requests</span> <span>{score}%</span>{" "}
           </div>{" "}
-          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-[1px] bg-[#E5E7EB]">
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-[1px] bg-[var(--margin-border-subtle)]">
             {" "}
             <motion.div
-              className="h-full rounded-[1px] bg-[#0B74DE]"
+              className="h-full rounded-[1px] bg-[var(--margin-blue)]"
               initial={{ width: "0%" }}
               animate={isInView ? { width: `${score}%` } : { width: "0%" }}
               transition={{ duration: 0.4, ease: "easeOut" }}
@@ -1848,15 +2387,15 @@ function EvidenceReadinessBlueprint() {
         </div>{" "}
         <div className="mt-3 flex items-end gap-2 max-md:hidden">
           {" "}
-          <span className="text-[78px] font-bold leading-none tracking-[-0.06em] text-[#182026] md:text-[104px]">
+          <span className="text-[78px] font-bold leading-none tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[104px]">
             {" "}
             {score}{" "}
           </span>{" "}
-          <span className="mb-2 text-[28px] font-bold leading-none text-[#182026] md:mb-3 md:text-[38px]">
+          <span className="mb-2 text-[28px] font-bold leading-none text-[var(--margin-text-primary)] md:mb-3 md:text-[38px]">
             %
           </span>{" "}
         </div>{" "}
-        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[#4D5B66] max-md:mt-5 md:text-[16px]">
+        <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] max-md:mt-5 md:text-[16px]">
           {" "}
           Amazon may still ask for an invoice, shipment proof, carrier record,
           signed POD, or cost breakdown before the case is ready to survive
@@ -1886,13 +2425,13 @@ function EvidenceReadinessBlueprint() {
           transition={{ duration: 0.65, delay: 0.34, ease: [0.22, 1, 0.36, 1] }}
           className="absolute left-0 right-0 top-1/2 h-px origin-left bg-[#C9D6DE] md:hidden"
         />{" "}
-        <div className="min-h-[148px] py-7 pr-0 max-md:border-b max-md:border-[#E5E7EB] max-md:pb-6 md:pr-8">
+        <div className="min-h-[148px] py-7 pr-0 max-md:border-b max-md:border-[var(--margin-border-subtle)] max-md:pb-6 md:pr-8">
           {" "}
-          <div className="text-[11px] font-bold uppercase text-[#182026]">
+          <div className="text-[11px] font-bold uppercase text-[var(--margin-text-primary)]">
             {" "}
             Likely request list{" "}
           </div>{" "}
-          <p className="mt-4 max-w-[260px] text-[15px] leading-7 text-[#4D5B66]">
+          <p className="mt-4 max-w-[260px] text-[15px] leading-7 text-[var(--margin-text-secondary)]">
             {" "}
             Invoice <br /> Shipment proof <br /> Carrier record <br /> Signed
             POD <br /> Cost breakdown{" "}
@@ -1900,11 +2439,11 @@ function EvidenceReadinessBlueprint() {
         </div>{" "}
         <div className="min-h-[148px] py-7 max-md:pt-6 md:pl-8">
           {" "}
-          <div className="text-[11px] font-bold uppercase text-[#182026]">
+          <div className="text-[11px] font-bold uppercase text-[var(--margin-text-primary)]">
             {" "}
             Current status{" "}
           </div>{" "}
-          <p className="mt-4 max-w-[280px] text-[15px] leading-7 text-[#4D5B66]">
+          <p className="mt-4 max-w-[280px] text-[15px] leading-7 text-[var(--margin-text-secondary)]">
             {" "}
             Not ready to survive another Amazon response.{" "}
           </p>{" "}
@@ -1927,17 +2466,17 @@ function MobileMarketplaceHub() {
       {" "}
       <div className={sectionLabelClass}>Marketplace Scope</div>{" "}
       <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em]">
-        <span className="text-[#182026]">Supported</span> <span className="text-[#8A98A3]">FBA marketplaces</span>
+        <span className="text-[var(--margin-text-primary)]">Supported</span> <span className="text-[var(--margin-text-muted)]">FBA marketplaces</span>
       </h2>{" "}
-      <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[#4D5B66]">
+      <p className="mt-5 max-w-[340px] text-[16px] leading-8 text-[var(--margin-text-secondary)]">
         {" "}
         Margin is built for Amazon FBA reimbursement work across supported
         marketplaces. Marketplace availability may vary during Early
         Access.{" "}
       </p>{" "}
-      <div className="mt-8 border-y border-[#D8E3E8] py-6">
+      <div className="mt-8 border-y border-[var(--margin-border)] py-6">
         {" "}
-        <div className="text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
+        <div className="text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
           {" "}
           All Supported Regions{" "}
         </div>{" "}
@@ -1954,7 +2493,7 @@ function MobileMarketplaceHub() {
                 delay: index * 0.018,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className={`flex items-center gap-3 py-3 ${index > 0 ? "border-t border-[#D8E3E8]" : ""}`}
+              className={`flex items-center gap-3 py-3 ${index > 0 ? "border-t border-[var(--margin-border)]" : ""}`}
             >
               {" "}
               <span
@@ -1963,11 +2502,11 @@ function MobileMarketplaceHub() {
               />{" "}
               <span className="min-w-0">
                 {" "}
-                <span className="block truncate text-[15px] font-semibold tracking-[-0.02em] text-[#182026]">
+                <span className="block truncate text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
                   {" "}
                   {marketplace.country}{" "}
                 </span>{" "}
-                <span className="mt-1 block text-[10px] font-semibold uppercase tracking-tight text-[#7A8994]">
+                <span className="mt-1 block text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                   {" "}
                   {marketplace.region} · {marketplace.code}{" "}
                 </span>{" "}
@@ -2035,26 +2574,26 @@ function MinimalMetric({
           ease: "easeInOut",
           delay: index * 0.35,
         }}
-        className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE] md:text-xs"
+        className="text-[11px] font-bold uppercase tracking-tight text-[var(--margin-blue)] md:text-xs"
       >
         {" "}
         {label}{" "}
       </motion.div>{" "}
       <div
         aria-hidden="true"
-        className="mt-4 flex items-end font-black leading-none tracking-[-0.08em] text-[#182026]"
+        className="mt-4 flex items-end font-black leading-none tracking-[-0.08em] text-[var(--margin-text-primary)]"
       >
         {" "}
         <span className="text-[82px] sm:text-[96px] md:text-[112px] lg:text-[132px]">
           {" "}
           {displayValue}{" "}
         </span>{" "}
-        <span className="mb-3 ml-2 text-[38px] font-medium tracking-[-0.05em] text-[#8A98A3] sm:text-[44px] md:mb-4 md:text-[54px]">
+        <span className="mb-3 ml-2 text-[38px] font-medium tracking-[-0.05em] text-[var(--margin-text-muted)] sm:text-[44px] md:mb-4 md:text-[54px]">
           {" "}
           {suffix}{" "}
         </span>{" "}
       </div>{" "}
-      <p className="mt-5 max-w-[320px] text-[15px] leading-6 text-[#4D5B66] md:text-base">
+      <p className="mt-5 max-w-[320px] text-[15px] leading-6 text-[var(--margin-text-secondary)] md:text-base">
         {" "}
         {detail}{" "}
       </p>{" "}
@@ -2093,8 +2632,8 @@ function TrustedConnectionGraphic() {
             y2="140"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#0B74DE" stopOpacity="0.08" />
-            <stop offset="0.5" stopColor="#0B74DE" />
+            <stop stopColor="var(--margin-blue)" stopOpacity="0.08" />
+            <stop offset="0.5" stopColor="var(--margin-blue)" />
             <stop offset="1" stopColor="#2E7D5B" stopOpacity="0.38" />
           </linearGradient>
         </defs>
@@ -2123,7 +2662,7 @@ function TrustedConnectionGraphic() {
             cx="260"
             cy="140"
             r="32"
-            className="stroke-[#0B74DE]/55"
+            className="stroke-[rgba(23,92,211,0.55)]"
             strokeWidth="1.8"
             strokeDasharray="3 8"
           />
@@ -2137,7 +2676,7 @@ function TrustedConnectionGraphic() {
             cx="260"
             cy="140"
             r="45"
-            className="stroke-[#0B74DE]/60"
+            className="stroke-[rgba(23,92,211,0.60)]"
             strokeWidth="1.9"
             strokeDasharray="10 14"
           />
@@ -2146,7 +2685,7 @@ function TrustedConnectionGraphic() {
           cx="132"
           cy="140"
           r="4.5"
-          className="fill-[#0B74DE]"
+          className="fill-[var(--margin-blue)]"
           animate={
             reduceMotion
               ? undefined
@@ -2167,7 +2706,7 @@ function TrustedConnectionGraphic() {
           cx="388"
           cy="140"
           r="4.5"
-          className="fill-[#0B74DE]"
+          className="fill-[var(--margin-blue)]"
           animate={
             reduceMotion
               ? undefined
@@ -2250,9 +2789,9 @@ export default function Index() {
     setIsDemoOpen(true);
   };
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = "Run Free Audit";
+  const primaryCtaLabel = "Audit Seller Account";
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+    <div className="min-h-screen overflow-x-clip bg-[var(--margin-canvas)] font-sans text-[var(--margin-text-primary)] selection:bg-[rgba(23,92,211,0.16)] selection:text-[var(--margin-text-primary)]">
       {" "}
       <PublicNavbar variant="light" />{" "}
       <main className="relative">
@@ -2262,13 +2801,14 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />{" "}
-        <section className="relative border-b border-[#D8E3E8] bg-[#FAFAF7] py-4">
+        <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-4">
           <div className={containerClass}>
             <div className="space-y-2 text-center">
-              <p className="text-[13px] font-medium tracking-[-0.015em] text-[#8A98A3] md:text-[14px]">
-                Built for sellers who want every dollar accounted for.
+              <p className="text-[13px] font-medium tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[14px]">
+                Built for established FBA brands, agencies, aggregators, and
+                the operations and finance teams responsible for recovery cash.
               </p>
-              <div className="flex flex-col gap-3 text-[13px] font-semibold tracking-[-0.015em] text-[#5F6D77] sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-5 md:text-[14px]">
+              <div className="flex flex-col gap-3 text-[13px] font-semibold tracking-[-0.015em] text-[var(--margin-text-secondary)] sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-5 md:text-[14px]">
                 <span>Official Amazon connection</span>
                 <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
                 <span>Read-only audit</span>
@@ -2280,7 +2820,10 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="hidden relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-8 max-md:bg-[#FAFAF7] max-md:py-14">
+        <DiscrepancyIsNotRevenueSection />
+        <OperatorQualificationSection />
+        <FreeAuditResultPreviewSection />
+        <section className="hidden relative border-b border-[var(--margin-border-subtle)] bg-[var(--margin-canvas)] py-8 max-md:bg-[var(--margin-canvas)] max-md:py-14">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2288,11 +2831,11 @@ export default function Index() {
               {...revealProps}
               className="mx-auto max-w-[820px] text-center text-[20px] font-semibold leading-8 tracking-[-0.035em] max-md:text-left md:text-[28px] md:leading-9"
             >
-              <span className="text-[#182026]">Most sellers find the discrepancy.</span> <span className="text-[#8A98A3]">The recovery dies when Amazon asks for proof.</span>
+              <span className="text-[var(--margin-text-primary)]">Most sellers find the discrepancy.</span> <span className="text-[var(--margin-text-muted)]">The recovery dies when Amazon asks for proof.</span>
             </motion.p>{" "}
             <motion.p
               {...revealProps}
-              className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[#4D5B66] max-md:text-left md:text-[18px] md:leading-8"
+              className="mx-auto mt-4 max-w-[840px] text-center text-[15px] leading-7 text-[var(--margin-text-secondary)] max-md:text-left md:text-[18px] md:leading-8"
             >
               {" "}
               Invoices, PODs, BOLs, shipment records, cost data, support
@@ -2302,12 +2845,8 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <RecoveryPreviewSection />
-        <DocumentIntelligencePreviewSection />
         <SupportingEvidencePreviewSection />
-        <CaseBuildingPreviewSection />
-        <RecoveryOrchestrationPreviewSection />
-        <SellerControlledFilingPreviewSection />
-        <section className="hidden relative overflow-hidden border-y border-[#E4EDF1] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
+        <section className="hidden relative overflow-hidden border-y border-[var(--margin-border-subtle)] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2319,7 +2858,7 @@ export default function Index() {
                   Before Amazon asks again
                 </div>{" "}
                 <h2 className={sectionHeadingClass}>
-                  <span className="text-[#182026]">Know which claims</span> <span className="text-[#8A98A3]">can survive Amazon review.</span>
+                  <span className="text-[var(--margin-text-primary)]">Know which claims</span> <span className="text-[var(--margin-text-muted)]">can survive Amazon review.</span>
                 </h2>{" "}
                 <p className={sectionBodyClass}>
                   A claim is not ready because a document exists. It is ready
@@ -2329,44 +2868,44 @@ export default function Index() {
               </motion.div>{" "}
               <motion.div
                 {...revealProps}
-                className="min-w-0 border-t border-[#D8E3E8] pt-6 lg:border-t-0 lg:border-l lg:border-[#D8E3E8] lg:pl-10 lg:pt-0"
+                className="min-w-0 border-t border-[var(--margin-border)] pt-6 lg:border-t-0 lg:border-l lg:border-[var(--margin-border)] lg:pl-10 lg:pt-0"
               >
                 {" "}
-                <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
+                <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
                   Potential evidence requests
                 </div>{" "}
-                <div className="mt-5 grid gap-0 border-t border-[#D8E3E8]">
+                <div className="mt-5 grid gap-0 border-t border-[var(--margin-border)]">
                   {" "}
-                  <div className="grid gap-3 border-b border-[#D8E3E8] py-4 sm:grid-cols-[1fr_auto] sm:items-start">
+                  <div className="grid gap-3 border-b border-[var(--margin-border)] py-4 sm:grid-cols-[1fr_auto] sm:items-start">
                     {" "}
                     <div>
                       {" "}
-                      <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
+                      <div className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
                         Invoice
                       </div>{" "}
-                      <div className="mt-1 text-[15px] leading-7 text-[#4D5B66]">
+                      <div className="mt-1 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
                         Amazon may still ask for the invoice, shipment proof,
                         carrier record, signed POD, or cost breakdown before the
                         case is ready to survive another response.
                       </div>{" "}
                     </div>{" "}
-                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#8A98A3]">
+                    <div className="font-mono text-[10px] uppercase tracking-tight text-[var(--margin-text-muted)]">
                       Likely request list
                     </div>{" "}
                   </div>{" "}
-                  <div className="grid gap-3 border-b border-[#D8E3E8] py-4 sm:grid-cols-[1fr_auto] sm:items-start">
+                  <div className="grid gap-3 border-b border-[var(--margin-border)] py-4 sm:grid-cols-[1fr_auto] sm:items-start">
                     {" "}
                     <div>
                       {" "}
-                      <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
+                      <div className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
                         Shipment proof
                       </div>{" "}
-                      <div className="mt-1 text-[15px] leading-7 text-[#4D5B66]">
+                      <div className="mt-1 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
                         The shipment record, carrier scan, and receiving data
                         need to line up before the recovery can move forward.
                       </div>{" "}
                     </div>{" "}
-                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#8A98A3]">
+                    <div className="font-mono text-[10px] uppercase tracking-tight text-[var(--margin-text-muted)]">
                       Current status
                     </div>{" "}
                   </div>{" "}
@@ -2374,15 +2913,15 @@ export default function Index() {
                     {" "}
                     <div>
                       {" "}
-                      <div className="text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
+                      <div className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
                         Case readiness
                       </div>{" "}
-                      <div className="mt-1 text-[15px] leading-7 text-[#4D5B66]">
+                      <div className="mt-1 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
                         Margin keeps the evidence trail attached so the case is
                         ready when Amazon asks again.
                       </div>{" "}
                     </div>{" "}
-                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#8A98A3]">
+                    <div className="font-mono text-[10px] uppercase tracking-tight text-[var(--margin-text-muted)]">
                       Ready to review
                     </div>{" "}
                   </div>{" "}
@@ -2392,12 +2931,16 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <RepliesPreviewSection />
-        <AppealsPreviewSection />
-        <EvidenceCalibrationPreviewSection />
+        <PayoutReconciliationPreviewSection />
+        <ExistingOperationFitSection />
+        <RecoveryWorkspacePricingSection
+          onActivate={undefined}
+        />
+        {/* Additional mini-demo sections are intentionally hidden for the launch page. */}
         {/* <MarginOrchestrationFlow /> */}
-        <MarginIdentityCards />
+        {/* Summary identity cards are hidden so the page focuses on three outcomes. */}
         <section
-          className="hidden relative border-y border-[#E4EDF1] bg-[#FAFAF7] py-14 md:py-24"
+          className="hidden relative border-y border-[var(--margin-border-subtle)] bg-[var(--margin-canvas)] py-14 md:py-24"
           id="margin-demo"
         >
           {" "}
@@ -2410,9 +2953,9 @@ export default function Index() {
               {" "}
               <div className={sectionLabelClass}>See Demo</div>{" "}
               <h2 className="mt-4 text-[30px] font-semibold leading-[1.05] tracking-[-0.045em] sm:text-[40px] md:text-[58px]">
-                <span className="text-[#182026]">See how a discovered discrepancy</span> <span className="text-[#8A98A3]">becomes a case Amazon can review.</span>
+                <span className="text-[var(--margin-text-primary)]">See how a discovered discrepancy</span> <span className="text-[var(--margin-text-muted)]">becomes a case Amazon can review.</span>
               </h2>{" "}
-              <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+              <p className="mx-auto mt-5 max-w-[720px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
                 {" "}
                 Follow the path from deadline pressure to evidence matching,
                 seller approval, Amazon pushback, and payout
@@ -2423,7 +2966,7 @@ export default function Index() {
               type="button"
               onClick={openDemo}
               {...revealProps}
-              className="group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[#CFE0EA] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE] focus-visible:ring-offset-4 focus-visible:ring-offset-[#F3F6F8]"
+              className="landing-menu-item group mx-auto block w-full max-w-[1120px] overflow-hidden rounded-[2px] border border-[var(--margin-border)] bg-white text-left shadow-[0_34px_100px_rgba(37,49,58,0.14)] transition-[border-color,box-shadow,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--margin-blue)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--margin-section-alt)]"
               aria-label="Watch the Margin product demo"
             >
               {" "}
@@ -2432,13 +2975,13 @@ export default function Index() {
                 <img
                   src={DEMO_VIDEO_THUMBNAIL_URL}
                   alt="Margin reimbursement proof path product demo thumbnail"
-                  className="h-full w-full object-cover opacity-95 saturate-[0.95] transition duration-500 group-hover:scale-[1.015]"
+                  className="h-full w-full object-cover opacity-95 saturate-[0.95]"
                   loading="lazy"
                 />{" "}
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(24,32,38,0.54)_100%)]" />{" "}
                 <div className="absolute inset-0 flex items-center justify-center">
                   {" "}
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/60 bg-white/88 text-[#0B74DE] shadow-[0_22px_54px_rgba(37,49,58,0.18)] backdrop-blur transition group-hover:scale-105 md:h-20 md:w-20">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/60 bg-white/88 text-[var(--margin-blue)] shadow-[0_22px_54px_rgba(37,49,58,0.18)] backdrop-blur md:h-20 md:w-20">
                     {" "}
                     <PlayCircle
                       className="h-8 w-8 md:h-10 md:w-10"
@@ -2461,7 +3004,7 @@ export default function Index() {
             </motion.button>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="hidden relative border-b border-[#E4EDF1] bg-[#FAFAF7] py-14 md:py-20">
+        <section className="hidden relative border-b border-[var(--margin-border-subtle)] bg-[var(--margin-canvas)] py-14 md:py-20">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2469,9 +3012,9 @@ export default function Index() {
               {" "}
               <div className={sectionLabelClass}>Evidence Sources</div>{" "}
               <h2 className="mt-3 text-[28px] font-semibold leading-tight tracking-[-0.04em] md:text-[42px]">
-                <span className="text-[#182026]">The proof exists.</span> <span className="text-[#8A98A3]">Amazon just will not accept it scattered.</span>
+                <span className="text-[var(--margin-text-primary)]">The proof exists.</span> <span className="text-[var(--margin-text-muted)]">Amazon just will not accept it scattered.</span>
               </h2>{" "}
-              <p className="mt-4 text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
                 {" "}
                 The invoice in Gmail, the BOL in Drive, the POD in a carrier
                 portal, the shipment ID in Seller Central, and the payout record
@@ -2482,7 +3025,7 @@ export default function Index() {
             <div className="mt-8 md:mt-10">
               <EvidenceSourcesOrchestrator />
             </div>{" "}
-            <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[#4D5B66] max-md:text-left md:text-[16px]">
+            <p className="mx-auto mt-6 max-w-[760px] text-center text-[14px] leading-7 text-[var(--margin-text-secondary)] max-md:text-left md:text-[16px]">
               {" "}
               Amazon never reviews your Gmail. <br /> Or your Drive. <br /> Or
               your carrier portal. <br /> It reviews one reimbursement case.{" "}
@@ -2492,7 +3035,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         <section
-          className="hidden relative bg-[#FAFAF7] py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24"
+          className="hidden relative bg-[var(--margin-canvas)] py-14 max-md:border-b max-md:border-[var(--margin-border-subtle)] md:py-24"
           id="how-margin-works"
         >
           {" "}
@@ -2502,18 +3045,18 @@ export default function Index() {
               {" "}
               <div>
                 {" "}
-                <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3]">
+                <div className="flex items-center gap-8 font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                   {" "}
                   <span>06</span> <span>What Happens After Detection</span>{" "}
                 </div>{" "}
                 <h2 className="font-serif-headline mt-5 max-w-[820px] text-[30px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[44px] md:text-[58px] lg:text-[64px]">
-                  <span className="text-[#182026]">
+                  <span className="text-[var(--margin-text-primary)]">
                     Finding the discrepancy is not the hard part.
                   </span>{" "}
-                  <span className="text-[#8A98A3]">Proving it is.</span>
+                  <span className="text-[var(--margin-text-muted)]">Proving it is.</span>
                 </h2>{" "}
               </div>{" "}
-              <p className="max-w-[660px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9 lg:justify-self-end">
+              <p className="max-w-[660px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9 lg:justify-self-end">
                 {" "}
                 Once the issue is found, the work becomes proof: deadline,
                 invoice, BOL, POD, shipment ID, quantity, cost basis, Amazon
@@ -2538,15 +3081,15 @@ export default function Index() {
                     {" "}
                     <div className="flex h-full flex-col">
                       {" "}
-                      <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#8A98A3] md:text-[11px]">
+                      <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)] md:text-[11px]">
                         {" "}
                         {item.step}{" "}
                       </div>{" "}
-                      <h3 className="font-serif-headline mt-4 max-w-[240px] text-[22px] font-bold leading-[1.08] tracking-[-0.025em] text-[#182026] md:mt-5 md:max-w-[260px] md:text-[29px]">
+                      <h3 className="font-serif-headline mt-4 max-w-[240px] text-[22px] font-bold leading-[1.08] tracking-[-0.025em] text-[var(--margin-text-primary)] md:mt-5 md:max-w-[260px] md:text-[29px]">
                         {" "}
                         {item.title}{" "}
                       </h3>{" "}
-                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[#4D5B66] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
+                      <p className="mt-3 max-w-[240px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:mt-4 md:max-w-[285px] md:text-[15px] md:leading-7">
                         {" "}
                         {item.detail}{" "}
                       </p>{" "}
@@ -2557,29 +3100,31 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-t border-[#D8E3E8] bg-[#FAFAF7] py-14 max-md:border-y max-md:border-[#D8E3E8] md:py-20">
+        <section className="hidden relative border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-14 max-md:border-y max-md:border-[var(--margin-border)] md:py-20">
           <div className={containerClass}>
             <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
               <motion.div {...revealProps}>
                 <div className={sectionLabelClass}>Security & Trust</div>
                 <h2 className={sectionHeadingClass}>
-                  <span className="text-[#182026]">Built for enterprise protection.</span> <span className="text-[#8A98A3]">Zero compromise on safety.</span>
+                  <span className="text-[var(--margin-text-primary)]">Your Amazon account</span> <span className="text-[var(--margin-text-muted)]">stays under your control.</span>
                 </h2>
                 <p className={sectionBodyClass}>
-                  Connecting to Amazon requires absolute trust. Margin is designed from the ground up to keep your seller data, infrastructure, and recovery actions completely secure.
+                  Margin connects through Amazon&apos;s official authorization
+                  process, begins with read-only audit access, and never files a
+                  case without seller approval.
                 </p>
               </motion.div>
               
-              <motion.div {...revealProps} className="border-y border-[#D8E3E8]">
+              <motion.div {...revealProps} className="border-y border-[var(--margin-border)]">
                 {securityFeatures.map((item) => (
                   <div
                     key={item}
-                    className="relative flex items-center gap-4 border-b border-[#D8E3E8] py-4 last:border-b-0 md:py-5"
+                    className="relative flex items-center gap-4 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
                   >
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[#EEF6FF] text-[#0B74DE]">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[var(--margin-blue-soft)] text-[var(--margin-blue)]">
                       <Check className="h-4 w-4" strokeWidth={3} />
                     </div>
-                    <span className="text-[15px] font-medium leading-6 tracking-tight text-[#182026] md:text-[16px]">
+                    <span className="text-[15px] font-medium leading-6 tracking-tight text-[var(--margin-text-primary)] md:text-[16px]">
                       {item}
                     </span>
                   </div>
@@ -2589,7 +3134,7 @@ export default function Index() {
           </div>
         </section>
         <section
-          className="hidden relative border-t border-[#E4EDF1] bg-white py-16 max-md:border-y max-md:border-[#E5E7EB] md:py-28"
+          className="hidden relative border-t border-[var(--margin-border-subtle)] bg-white py-16 max-md:border-y max-md:border-[var(--margin-border-subtle)] md:py-28"
           id="why-margin-outperforms"
         >
           <div className={containerClass}>
@@ -2597,13 +3142,13 @@ export default function Index() {
               {...revealProps}
               className="mx-auto max-w-[880px] text-center"
             >
-              <div className="mx-auto mb-5 inline-flex items-center rounded-full border border-[#CBD7DE] bg-[#F9FBFC] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-tight text-[#4D5B66]">
+              <div className="mx-auto mb-5 inline-flex items-center rounded-full border border-[#CBD7DE] bg-[#F9FBFC] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-tight text-[var(--margin-text-secondary)]">
                 Why Margin Outperforms
               </div>
-              <h2 className="text-[38px] font-bold leading-[0.98] tracking-[-0.055em] text-[#182026] sm:text-[54px] md:text-[68px] lg:text-[76px]">
+              <h2 className="text-[38px] font-bold leading-[0.98] tracking-[-0.055em] text-[var(--margin-text-primary)] sm:text-[54px] md:text-[68px] lg:text-[76px]">
                 Why Margin outperforms
               </h2>
-              <p className="mx-auto mt-6 max-w-[700px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
+              <p className="mx-auto mt-6 max-w-[700px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[20px] md:leading-9">
                 Margin is not another claims checklist. It turns fragmented
                 reimbursement signals into a controlled recovery system sellers
                 can actually trust.
@@ -2619,25 +3164,25 @@ export default function Index() {
                     ...revealProps.transition,
                     delay: index * 0.06,
                   }}
-                  className="grid min-h-[168px] grid-cols-[58px_1px_minmax(0,1fr)] gap-5 rounded-[2px] border border-[#E4EDF1] bg-white px-5 py-6 shadow-[0_20px_60px_rgba(37,49,58,0.04)] sm:grid-cols-[76px_1px_minmax(0,1fr)_auto] sm:px-6 md:min-h-[188px] md:gap-6 lg:px-7"
+                  className="grid min-h-[168px] grid-cols-[58px_1px_minmax(0,1fr)] gap-5 rounded-[2px] border border-[var(--margin-border-subtle)] bg-white px-5 py-6 shadow-[0_20px_60px_rgba(37,49,58,0.04)] sm:grid-cols-[76px_1px_minmax(0,1fr)_auto] sm:px-6 md:min-h-[188px] md:gap-6 lg:px-7"
                 >
                   <div className="flex items-center text-[42px] font-semibold leading-none tracking-[-0.06em] text-[#D7DDE2] sm:text-[50px] md:text-[56px]">
                     {String(index + 1).padStart(2, "0")}
                   </div>
-                  <div className="h-full w-px bg-[#E4EDF1]" />
+                  <div className="h-full w-px bg-[var(--margin-border-subtle)]" />
                   <div className="min-w-0 self-center">
-                    <h3 className="text-[20px] font-semibold leading-tight tracking-[-0.04em] text-[#182026] md:text-[24px]">
+                    <h3 className="text-[20px] font-semibold leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] md:text-[24px]">
                       {card.title}
                     </h3>
                     <ul className="mt-4 space-y-2">
                       {card.points.map((point, pointIndex) => (
                         <li
                           key={point}
-                          className="flex items-start gap-2 text-[14px] leading-6 text-[#4D5B66] md:text-[15px]"
+                          className="flex items-start gap-2 text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px]"
                         >
                           <span
                             className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-[1px] ${
-                              pointIndex === 0 ? "bg-[#0B74DE]" : "bg-[#21B487]"
+                              pointIndex === 0 ? "bg-[var(--margin-blue)]" : "bg-[var(--margin-success)]"
                             }`}
                           />
                           <span>{point}</span>
@@ -2665,7 +3210,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section className="hidden relative bg-[#FAFAF7] py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
+        <section className="hidden relative bg-[var(--margin-canvas)] py-14 max-md:border-b max-md:border-[var(--margin-border-subtle)] max-md:bg-white md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2675,7 +3220,7 @@ export default function Index() {
                 Before and After Proof
               </div>{" "}
               <h2 className={sectionHeadingClass}>
-                <span className="text-[#182026]">The same evidence</span> <span className="text-[#8A98A3]">can either stay scattered or become a case.</span>
+                <span className="text-[var(--margin-text-primary)]">The same evidence</span> <span className="text-[var(--margin-text-muted)]">can either stay scattered or become a case.</span>
               </h2>{" "}
               <p className={sectionBodyClass}>
                 {" "}
@@ -2693,7 +3238,7 @@ export default function Index() {
                 {" "}
                 <div className="px-0 py-8 md:py-10 lg:pr-12">
                   {" "}
-                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#DC2626] md:text-[#8A98A3]">
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-danger)] md:text-[var(--margin-text-muted)]">
                     {" "}
                     Scattered Recovery{" "}
                   </div>{" "}
@@ -2701,7 +3246,7 @@ export default function Index() {
                     {" "}
                     Scattered proof dies slowly.{" "}
                   </h3>{" "}
-                  <div className="mt-8 border-t border-[#D8E3E8] max-md:mt-6">
+                  <div className="mt-8 border-t border-[var(--margin-border)] max-md:mt-6">
                     {" "}
                     {stateTransitionSources.map((source, index) => (
                       <motion.div
@@ -2717,14 +3262,14 @@ export default function Index() {
                           delay: index * 0.08,
                           ease: "easeOut",
                         }}
-                        className={`flex items-center justify-between gap-4 py-4 ${index > 0 ? "border-t border-[#D8E3E8]" : ""}`}
+                        className={`flex items-center justify-between gap-4 py-4 ${index > 0 ? "border-t border-[var(--margin-border)]" : ""}`}
                       >
                         {" "}
-                        <span className="text-[15px] font-semibold tracking-[-0.015em] text-[#25313A] md:text-[16px]">
+                        <span className="text-[15px] font-semibold tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[16px]">
                           {" "}
                           {source}{" "}
                         </span>{" "}
-                        <span className="font-mono text-[10px] uppercase tracking-tight text-[#9AA8B2]">
+                        <span className="font-mono text-[10px] uppercase tracking-tight text-[var(--margin-text-muted)]">
                           {" "}
                           detached source{" "}
                         </span>{" "}
@@ -2734,7 +3279,7 @@ export default function Index() {
                 </div>{" "}
                 <div className="border-t border-[#CBD7DE] px-0 py-8 md:py-10 lg:border-l lg:border-t-0 lg:pl-12">
                   {" "}
-                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#21B487] md:text-[#5F6D77]">
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-success)] md:text-[var(--margin-text-secondary)]">
                     {" "}
                     Defensible Recovery{" "}
                   </div>{" "}
@@ -2745,7 +3290,7 @@ export default function Index() {
                     transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
                   >
                     {" "}
-                    <h3 className="mt-5 max-w-[460px] text-[28px] font-semibold leading-tight tracking-[-0.045em] text-[#182026] max-md:mt-3 max-md:text-[24px] md:text-[38px]">
+                    <h3 className="mt-5 max-w-[460px] text-[28px] font-semibold leading-tight tracking-[-0.045em] text-[var(--margin-text-primary)] max-md:mt-3 max-md:text-[24px] md:text-[38px]">
                       {" "}
                       One evidence trail survives review.{" "}
                     </h3>{" "}
@@ -2762,17 +3307,17 @@ export default function Index() {
                             delay: 0.18 + index * 0.08,
                             ease: [0.22, 1, 0.36, 1],
                           }}
-                          className={`flex items-center gap-3 py-4 ${index > 0 ? "border-t border-[#D8E3E8]" : ""}`}
+                          className={`flex items-center gap-3 py-4 ${index > 0 ? "border-t border-[var(--margin-border)]" : ""}`}
                         >
                           {" "}
-                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#21B487] text-white">
+                          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--margin-success)] text-white">
                             {" "}
                             <Check
                               className="h-2.5 w-2.5"
                               strokeWidth={3}
                             />{" "}
                           </span>{" "}
-                          <span className="text-[15px] font-semibold tracking-[-0.015em] text-[#182026] md:text-[16px]">
+                          <span className="text-[15px] font-semibold tracking-[-0.015em] text-[var(--margin-text-primary)] md:text-[16px]">
                             {" "}
                             {source}{" "}
                           </span>{" "}
@@ -2790,7 +3335,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         {/* <ScrollytellingCoverage /> */} {/* <SystemPerformanceTicker /> */}{" "}
-        <section className="hidden relative bg-white py-14 max-md:border-b max-md:border-[#E5E7EB] max-md:bg-white md:py-24">
+        <section className="hidden relative bg-white py-14 max-md:border-b max-md:border-[var(--margin-border-subtle)] max-md:bg-white md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2800,7 +3345,7 @@ export default function Index() {
                 {" "}
                 <div className={sectionLabelClass}>Trust & Control</div>{" "}
                 <h2 className={sectionHeadingClass}>
-                  <span className="text-[#182026]">Amazon doesn&apos;t stop after you submit.</span> <span className="text-[#8A98A3]">Neither does Margin.</span>
+                  <span className="text-[var(--margin-text-primary)]">Amazon doesn&apos;t stop after you submit.</span> <span className="text-[var(--margin-text-muted)]">Neither does Margin.</span>
                 </h2>{" "}
                 <p className={sectionBodyClass}>
                   {" "}
@@ -2823,22 +3368,22 @@ export default function Index() {
                       ...revealProps.transition,
                       delay: index * 0.05,
                     }}
-                    className={`grid gap-4 py-7 sm:grid-cols-[54px_minmax(0,1fr)] md:py-8 ${index > 0 ? "border-t border-[#D8E3E8]" : ""}`}
+                    className={`grid gap-4 py-7 sm:grid-cols-[54px_minmax(0,1fr)] md:py-8 ${index > 0 ? "border-t border-[var(--margin-border)]" : ""}`}
                   >
                     {" "}
                     <div>
                       {" "}
-                      <div className="text-[12px] font-semibold uppercase tracking-tight text-[#9AA8B2]">
+                      <div className="text-[12px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                         {" "}
                         {String(index + 1).padStart(2, "0")}{" "}
                       </div>{" "}
                     </div>{" "}
                     <div>
                       {" "}
-                      <h3 className="text-[19px] font-semibold tracking-[-0.025em] text-[#182026] md:text-[22px]">
+                      <h3 className="text-[19px] font-semibold tracking-[-0.025em] text-[var(--margin-text-primary)] md:text-[22px]">
                         {item.title}
                       </h3>{" "}
-                      <p className="mt-3 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[16px] md:leading-8">
+                      <p className="mt-3 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">
                         {item.detail}
                       </p>{" "}
                     </div>{" "}
@@ -2849,7 +3394,7 @@ export default function Index() {
           </div>{" "}
         </section>{" "}
         {/* <SystemLogMarquee /> */}{" "}
-        <section className="hidden relative bg-white py-14 max-md:border-b max-md:border-[#E5E7EB] md:py-24">
+        <section className="hidden relative bg-white py-14 max-md:border-b max-md:border-[var(--margin-border-subtle)] md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2858,21 +3403,20 @@ export default function Index() {
               <motion.div {...revealProps} className="max-w-[560px]">
                 {" "}
                 <div className={sectionLabelClass}>Marketplace Scope</div>{" "}
-                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[58px]">
+                <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[58px]">
                   {" "}
                   Built for Amazon FBA operators worldwide.{" "}
                 </h2>{" "}
                 <p className={sectionBodyClass}>
                   {" "}
                   Margin currently supports sellers across the major Amazon FBA
-                  marketplaces. Early Access is currently available for
-                  supported marketplaces. Additional regions will be added over
-                  time.{" "}
+                  marketplaces. Margin currently supports the listed
+                  marketplaces. Additional regions will be added over time.{" "}
                 </p>{" "}
               </motion.div>{" "}
               <motion.div
                 {...revealProps}
-                className="border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 xl:grid-cols-3"
+                className="border-y border-[var(--margin-border)] sm:grid sm:grid-cols-2 xl:grid-cols-3"
               >
                 {" "}
                 {marketplaceCountries.map((marketplace, index) => (
@@ -2883,7 +3427,7 @@ export default function Index() {
                       ...revealProps.transition,
                       delay: index * 0.035,
                     }}
-                    className={`group flex items-center gap-4 py-5 sm:px-5 ${index > 0 ? "border-t border-[#D8E3E8] sm:border-t-0" : ""} ${index % 2 === 1 ? "sm:border-l sm:border-[#D8E3E8]" : ""} ${index >= 2 ? "sm:border-t sm:border-[#D8E3E8]" : ""} ${index % 3 !== 0 ? "xl:border-l xl:border-[#D8E3E8]" : "xl:border-l-0"} ${index >= 3 ? "xl:border-t xl:border-[#D8E3E8]" : ""}`}
+                    className={`group flex items-center gap-4 py-5 sm:px-5 ${index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : ""} ${index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : ""} ${index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : ""} ${index % 3 !== 0 ? "xl:border-l xl:border-[var(--margin-border)]" : "xl:border-l-0"} ${index >= 3 ? "xl:border-t xl:border-[var(--margin-border)]" : ""}`}
                   >
                     {" "}
                     <span
@@ -2892,10 +3436,10 @@ export default function Index() {
                     />{" "}
                     <div>
                       {" "}
-                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">
+                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
                         {marketplace.country}
                       </div>{" "}
-                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                         {" "}
                         {marketplace.region} · {marketplace.code}{" "}
                       </div>{" "}
@@ -2906,14 +3450,14 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-t border-[#D8E3E8] bg-[#FAFAF7] py-14 max-md:py-16 md:py-20">
+        <section className="relative border-t border-[var(--margin-border)] bg-[var(--margin-surface)] py-14 max-md:py-16 md:py-20">
           {" "}
           <div className={containerClass}>
             {" "}
             <motion.div {...revealProps}>
               {" "}
               <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]">
-                <span className="text-[#182026]">Frequently asked</span> <span className="text-[#8A98A3]">questions</span>
+                <span className="text-[var(--margin-text-primary)]">Frequently asked</span> <span className="text-[var(--margin-text-muted)]">questions</span>
               </h2>{" "}
             </motion.div>{" "}
             <div className="mt-10 md:mt-14">
@@ -2921,21 +3465,21 @@ export default function Index() {
               <Accordion
                 type="single"
                 collapsible
-                className="w-full border-t border-[#DADFE3]"
+                className="w-full border-t border-[var(--margin-border)]"
               >
                 {" "}
                 {faqs.slice(0, visibleFaqCount).map((item, index) => (
                   <AccordionItem
                     key={item.question}
                     value={`faq-${index}`}
-                    className="border-b border-[#DADFE3] px-0"
+                    className="border-b border-[var(--margin-border)] px-0"
                   >
                     {" "}
-                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-[#182026] hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[#6C737A]">
+                    <AccordionTrigger className="py-6 text-left text-[18px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)] hover:no-underline md:py-7 md:text-[22px] [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-[var(--margin-text-muted)]">
                       {" "}
                       {item.question}{" "}
                     </AccordionTrigger>{" "}
-                    <AccordionContent className="max-w-[860px] pb-7 pr-10 text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+                    <AccordionContent className="max-w-[860px] pb-7 pr-10 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
                       {" "}
                       <p>{item.answer}</p>{" "}
                     </AccordionContent>{" "}
@@ -2948,7 +3492,7 @@ export default function Index() {
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-[5px] border-[#CFE0EA] bg-white px-6 text-sm font-semibold text-[#25313A] hover:bg-[#F3F6F8]"
+                    className="rounded-[5px] border-[var(--margin-border)] bg-white px-6 text-sm font-semibold text-[var(--margin-text-secondary)] hover:bg-[var(--margin-section-alt)]"
                   >
                     {" "}
                     Show more questions{" "}
@@ -2958,7 +3502,7 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-[#FAFAF7] py-12 max-md:border-b max-md:border-[#D8E3E8] md:py-16">
+        <section className="hidden relative bg-[var(--margin-canvas)] py-12 max-md:border-b max-md:border-[var(--margin-border)] md:py-16">
           {" "}
           <div className={containerClass}>
             {" "}
@@ -2967,21 +3511,20 @@ export default function Index() {
               <motion.div {...revealProps} className="max-w-[560px]">
                 {" "}
                 <div className={sectionLabelClass}>Marketplace Scope</div>{" "}
-                  <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[#182026] sm:text-[42px] md:text-[52px]">
+                  <h2 className="mt-4 text-[34px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]">
                   {" "}
                   Built for Amazon FBA operators worldwide.{" "}
                 </h2>{" "}
                 <p className={sectionBodyClass}>
                   {" "}
                   Margin currently supports sellers across the major Amazon FBA
-                  marketplaces. Early Access is currently available for
-                  supported marketplaces. Additional regions will be added over
-                  time.{" "}
+                  marketplaces. Margin currently supports the listed
+                  marketplaces. Additional regions will be added over time.{" "}
                 </p>{" "}
               </motion.div>{" "}
               <motion.div
                 {...revealProps}
-                className="border-y border-[#D8E3E8] sm:grid sm:grid-cols-2 xl:grid-cols-3"
+                className="border-y border-[var(--margin-border)] sm:grid sm:grid-cols-2 xl:grid-cols-3"
               >
                 {" "}
                 {marketplaceCountries.map((marketplace, index) => (
@@ -2992,7 +3535,7 @@ export default function Index() {
                       ...revealProps.transition,
                       delay: index * 0.035,
                     }}
-                    className={`group flex items-center gap-4 py-5 sm:px-5 ${index > 0 ? "border-t border-[#D8E3E8] sm:border-t-0" : ""} ${index % 2 === 1 ? "sm:border-l sm:border-[#D8E3E8]" : ""} ${index >= 2 ? "sm:border-t sm:border-[#D8E3E8]" : ""} ${index % 3 !== 0 ? "xl:border-l xl:border-[#D8E3E8]" : "xl:border-l-0"} ${index >= 3 ? "xl:border-t xl:border-[#D8E3E8]" : ""}`}
+                    className={`group flex items-center gap-4 py-5 sm:px-5 ${index > 0 ? "border-t border-[var(--margin-border)] sm:border-t-0" : ""} ${index % 2 === 1 ? "sm:border-l sm:border-[var(--margin-border)]" : ""} ${index >= 2 ? "sm:border-t sm:border-[var(--margin-border)]" : ""} ${index % 3 !== 0 ? "xl:border-l xl:border-[var(--margin-border)]" : "xl:border-l-0"} ${index >= 3 ? "xl:border-t xl:border-[var(--margin-border)]" : ""}`}
                   >
                     {" "}
                     <span
@@ -3001,10 +3544,10 @@ export default function Index() {
                     />{" "}
                     <div>
                       {" "}
-                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[#182026]">
+                      <div className="text-[16px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
                         {marketplace.country}
                       </div>{" "}
-                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[#7A8994]">
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                         {" "}
                         {marketplace.region} · {marketplace.code}{" "}
                       </div>{" "}
@@ -3015,21 +3558,21 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative bg-[#FAFAF7] py-14 max-md:border-y max-md:border-[#E5E7EB] max-md:bg-[#FAFAF7] md:py-24">
+        <section className="relative bg-[var(--margin-canvas)] py-14 max-md:border-y max-md:border-[var(--margin-border-subtle)] max-md:bg-[var(--margin-canvas)] md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
             <motion.div
               {...revealProps}
-              className="hidden overflow-hidden border-y border-[#CFE0EA] bg-white py-8 md:py-12"
+              className="hidden overflow-hidden border-y border-[var(--margin-border)] bg-white py-8 md:py-12"
             >
               {" "}
               <div className="max-w-[880px]">
                 {" "}
                 <h2 className="mt-4 max-w-[860px] text-[34px] font-semibold leading-[1.02] tracking-[-0.05em] sm:text-[42px] md:text-[68px]">
-                  <span className="text-[#182026]">Every recovery starts with &quot;I know Amazon owes me.&quot;</span> <span className="text-[#8A98A3]">Too many end with &quot;I couldn&apos;t prove it.&quot; Don&apos;t let yours.</span>
+                  <span className="text-[var(--margin-text-primary)]">Every recovery starts with &quot;I know Amazon owes me.&quot;</span> <span className="text-[var(--margin-text-muted)]">Too many end with &quot;I couldn&apos;t prove it.&quot; Don&apos;t let yours.</span>
                 </h2>{" "}
-                <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[#4D5B66] md:text-[19px] md:leading-9">
+                <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9">
                   {" "}
                   Margin keeps every invoice, shipment record, POD, deadline,
                   response, and payout attached to the same recovery until the
@@ -3040,7 +3583,7 @@ export default function Index() {
                 {" "}
                 <Button
                   onClick={() => handleClaimAccessClick("homepage_bottom_cta")}
-                  className="h-12 w-full sm:w-auto rounded-[5px] bg-[#0B74DE] px-10 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9] max-md:rounded-[2px] max-md:shadow-none"
+                  className="h-12 w-full sm:w-auto rounded-[8px] bg-[var(--margin-blue)] px-10 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(23,92,211,0.22)] hover:bg-[var(--margin-blue-hover)] max-md:shadow-none"
                 >
                   {" "}
                   {primaryCtaLabel} <ArrowRight className="ml-2 h-4 w-4" />{" "}
@@ -3049,20 +3592,23 @@ export default function Index() {
             </motion.div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative overflow-hidden bg-[#FAFAF7] py-12 max-md:border-y max-md:border-[#D8E3E8] md:py-18">
+        <section
+          data-navbar-theme="dark"
+          className="relative overflow-hidden bg-[var(--margin-inverse)] py-12 text-[var(--margin-text-inverse)] max-md:border-y max-md:border-white/10 md:py-18"
+        >
           {" "}
           <div className={containerClass}>
             {" "}
-            <div className="relative border-y border-[#D8E3E8] py-8 md:py-10">
+            <div className="relative border-y border-white/12 py-8 md:py-10">
               {" "}
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 {" "}
                 <motion.div {...revealProps}>
                   {" "}
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[36px] font-semibold leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]">
-                    <span className="text-[#182026]">You&apos;ve already done the hard work.</span> <span className="text-[#8A98A3]">Margin simply connects it.</span>
+                    <span className="text-[var(--margin-text-inverse)]">You&apos;ve already done the hard work.</span> <span className="text-[var(--margin-text-inverse-muted)]">Margin simply connects it.</span>
                   </h2>{" "}
-                  <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[#4D5B66] md:text-[17px]">
+                  <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-inverse-muted)] md:text-[17px]">
                     {" "}
                     Shipment records. Invoices. PODs. Settlement history.
                     Support cases. Margin brings them together into one recovery
@@ -3074,28 +3620,28 @@ export default function Index() {
                       onClick={() =>
                         handleClaimAccessClick("homepage_early_access_section")
                       }
-                      className="hidden group relative h-14 w-full rounded-[5px] bg-[#0B74DE] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(11,116,222,0.34)] transition-all duration-300 hover:scale-[1.02] max-md:rounded-[2px] max-md:shadow-none sm:w-auto"
+                    className="landing-pressable hidden group relative h-14 w-full rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow,transform] duration-150 max-md:shadow-none sm:w-auto"
                     >
                       {" "}
-                      <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[5px]" />{" "}
+                      <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
                       {primaryCtaLabel}{" "}
                       <ArrowRight className="ml-2 h-4 w-4" />{" "}
                     </Button>{" "}
                   </div>{" "}
                 </motion.div>{" "}
-                <motion.div {...revealProps} className="border-y border-[#D8E3E8]">
+                <motion.div {...revealProps} className="border-y border-white/12">
                   {" "}
                   {earlyAccessItems.map((item) => (
                     <div
                       key={item}
-                      className="relative flex items-center gap-4 border-b border-[#D8E3E8] py-4 last:border-b-0 md:py-5"
+                      className="relative flex items-center gap-4 border-b border-white/12 py-4 last:border-b-0 md:py-5"
                     >
                       {" "}
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[#EEF6FF] text-[#0B74DE]">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] bg-[var(--margin-success-soft)] text-[var(--margin-success)]">
                         {" "}
                         <Check className="h-4 w-4" strokeWidth={3} />{" "}
                       </div>{" "}
-                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[#182026]">
+                      <span className="text-[16px] font-medium leading-6 tracking-tight text-[var(--margin-text-inverse)]">
                         {" "}
                         {item}{" "}
                       </span>{" "}

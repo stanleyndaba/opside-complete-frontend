@@ -63,10 +63,40 @@
   display: none;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .landing-menu-item {
+    transition-property: transform, background-color, border-color, box-shadow;
+  }
+
+  .landing-menu-item:hover {
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .landing-pressable {
+    transition-property: transform, background-color, box-shadow;
+  }
+
+  .landing-pressable:hover {
+    transform: scale(1.02);
+  }
+}
+
+.landing-pressable:active {
+  transform: scale(0.97);
+  transition-duration: 120ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .system-log-track {
+  .system-log-track,
+  .workflow-marquee-track {
     animation: none;
     transform: translate3d(0, 0, 0);
+  }
+
+  .landing-menu-item,
+  .landing-pressable {
+    transform: none !important;
+    transition-property: background-color, border-color, color, box-shadow, opacity;
   }
 }
 
@@ -148,6 +178,34 @@
 @layer base {
   /* Light Theme (default) - Pure White */
   :root {
+    /* Margin Precision System */
+    --margin-canvas: #f4f6f8;
+    --margin-surface: #ffffff;
+    --margin-section-alt: #eef2f6;
+    --margin-inverse: #0b1220;
+    --margin-inverse-surface: #111c2d;
+    --margin-text-primary: #101828;
+    --margin-text-secondary: #344054;
+    --margin-text-muted: #667085;
+    --margin-text-inverse: #f8fafc;
+    --margin-text-inverse-muted: #cbd5e1;
+    --margin-blue: #175cd3;
+    --margin-blue-hover: #164fc4;
+    --margin-blue-soft: #eff4ff;
+    --margin-blue-border: #b2ccff;
+    --margin-success: #067647;
+    --margin-success-soft: #ecfdf3;
+    --margin-success-border: #abefc6;
+    --margin-warning: #b54708;
+    --margin-warning-soft: #fffaeb;
+    --margin-warning-border: #fedf89;
+    --margin-danger: #b42318;
+    --margin-danger-soft: #fef3f2;
+    --margin-danger-border: #fecdca;
+    --margin-border: #d0d5dd;
+    --margin-border-subtle: #eaecf0;
+    --margin-control-border: #8a94a6;
+
     --background: 0 0% 100%;
     --foreground: 220 13% 13%;
 
@@ -688,6 +746,17 @@ footer .brand-wordmark,
   font-style: normal !important;
   font-weight: 700 !important;
   letter-spacing: -0.025em;
+}
+
+@layer components {
+  .margin-product-surface {
+    border-color: var(--margin-border);
+    box-shadow: 0 18px 54px rgba(16, 24, 40, 0.08);
+  }
+
+  .margin-button-radius {
+    border-radius: 8px;
+  }
 }
 
 .route-loading-brand-text {

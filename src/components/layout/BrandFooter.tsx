@@ -13,10 +13,11 @@ type FooterLink = {
 };
 
 const productLinks: FooterLink[] = [
-  { label: 'Audit-to-Evidence', href: '/#how-margin-works' },
-  { label: 'Zero-Friction Filing', href: '/#margin-demo' },
-  { label: 'Managed Access', href: '/early-access' },
-  { label: 'Early Access', href: '/early-access' }
+  { label: 'Free Recovery Audit', href: '/audit' },
+  { label: 'Recovery Workspace', href: '/app' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Security', href: '/security' },
+  { label: 'Integrations', href: '/integrations' }
 ];
 
 const resourceLinks: FooterLink[] = [
@@ -155,10 +156,10 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 <span className="brand-wordmark font-merriweather text-2xl tracking-tight text-white">Margin</span>
               </Link>
               <p className="mt-5 text-sm leading-6 tracking-tight text-gray-400">
-                Margin: The Recovery OS for Amazon Sellers.
+                Amazon FBA revenue recovery and reconciliation for established brands, agencies and operations teams.
               </p>
               <p className="mt-4 text-sm leading-6 tracking-tight text-gray-500">
-                Read-only first. Seller approval before filing. No recovery commissions. Margin is monthly recovery management.
+                Verify what Amazon owes, connect the evidence, control the response and reconcile the payout.
               </p>
             </div>
 

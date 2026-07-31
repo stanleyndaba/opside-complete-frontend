@@ -7,45 +7,42 @@ import {
     NavigationMenuTrigger
 } from '@/components/ui/navigation-menu';
 import {
-    FileText,
+    Building2,
     Briefcase,
-    TrendingUp,
-    BadgePercent,
-    ShieldCheck,
+    FileCheck2,
     Layers,
-    BarChart3,
-    Activity,
-    Globe2,
-    Network,
+    Users,
+    WalletCards,
+    Crown,
+    Store,
+    CheckCircle2,
     type LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const productMenuGroups = [
     {
-        label: 'Recovery Workflow',
+        label: 'By Business',
         items: [
-            { title: 'Discrepancy Detection', description: 'Find inventory, reimbursement, and fee discrepancies automatically.', icon: TrendingUp },
-            { title: 'Evidence Builder', description: 'Connect invoices, BOLs, PODs, and shipment records into one case.', icon: Layers },
-            { title: 'Case Preparation', description: 'Prepare Amazon-ready recovery cases before filing.', icon: FileText },
-            { title: 'Recovery Automation', description: 'Handle follow-ups, lowball offers, and rejections automatically.', icon: ShieldCheck }
+            { title: 'Established FBA Brands', description: 'Continuous recovery control for brands with recurring shipment volume, meaningful inventory exposure and growing operational complexity.', icon: Store },
+            { title: 'Agencies & Amazon Operators', description: 'Manage recoveries across client accounts while keeping evidence, ownership and seller approvals clear.', icon: Briefcase },
+            { title: 'Aggregators & Multi-Brand Portfolios', description: 'Standardize recovery monitoring, case handling and financial reconciliation across multiple brands and entities.', icon: Building2 }
         ]
     },
     {
-        label: 'Operational Control',
+        label: 'By Team',
         items: [
-            { title: 'Recovery Dashboard', description: 'Track claims, payouts, deadlines, and recovery performance.', icon: BarChart3 },
-            { title: 'Recovery Timeline', description: 'Every Amazon reply, action, document, and payout in one place.', icon: Briefcase },
-            { title: 'Global Operations', description: 'Manage recovery across every supported Amazon marketplace.', icon: Globe2 },
-            { title: 'Accounting Integrations', description: 'Export recovered payouts to QuickBooks and Xero.', icon: Network }
+            { title: 'Operations Teams', description: 'See evidence readiness, deadlines, ownership, Amazon responses and the next required action.', icon: Layers },
+            { title: 'Finance Teams', description: 'Compare expected, approved, paid, underpaid, reversed and unreconciled values from one recovery record.', icon: WalletCards },
+            { title: 'Founders & Leadership', description: 'Understand current recovery exposure, unresolved financial risk and the value reaching the business.', icon: Crown }
         ]
     },
     {
-        label: 'Solutions',
+        label: 'Control at Scale',
         items: [
-            { title: 'Early Access', description: 'Founding 500 access with 0% commission through 2026.', icon: BadgePercent },
-            { title: 'Enterprise', description: 'Recovery operations for multi-store and enterprise sellers.', icon: TrendingUp },
-            { title: 'Managed Recovery', description: 'White-glove oversight for complex, high-volume accounts.', icon: Briefcase }
+            { title: 'Multi-Account Oversight', description: 'Monitor recovery status across stores, brands and client accounts.', icon: Users },
+            { title: 'Team Roles & Approvals', description: 'Assign ownership and preserve seller approval before sensitive actions.', icon: CheckCircle2 },
+            { title: 'Accounting-Ready Records', description: 'Keep the case, evidence, response, payout and settlement trail connected for finance review.', icon: FileCheck2 }
         ]
     }
 ];
@@ -64,7 +61,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuTrigger className={triggerClassName}>
-                        Operations
+                        For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[14px] bg-[#F3F6F8] shadow-[0_22px_70px_rgba(37,49,58,0.14)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[78px] lg:w-[92vw] lg:max-w-[1040px] lg:-translate-x-1/2">
@@ -101,6 +98,17 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                     </div>
                                 ))}
                             </div>
+                            <div className="border-t border-[#D8E3E8] bg-white/45 px-5 py-4 lg:flex lg:items-center lg:justify-between lg:px-6">
+                                <div>
+                                    <p className="text-[12px] font-bold tracking-tight text-[#182026]">Built for serious FBA operations</p>
+                                    <p className="mt-1 max-w-[680px] text-[11px] leading-snug text-[#66737F]">
+                                        Margin is designed for businesses where recovery crosses multiple shipments, systems and people, and where missed windows, weak evidence or incorrect payouts materially affect margin.
+                                    </p>
+                                </div>
+                                <span className="mt-3 inline-flex text-[10px] font-bold uppercase tracking-tight text-[#0B74DE] lg:mt-0">
+                                    See who Margin is for
+                                </span>
+                            </div>
                         </div>
                     </NavigationMenuContent>
                 </NavigationMenuItem>
@@ -125,14 +133,14 @@ export function ProductServiceItem({
     return (
         <div
             className={cn(
-                'group flex cursor-default items-center gap-3 rounded-[6px] border p-3 transition-all duration-200 ease-out hover:-translate-y-0.5',
+                'landing-menu-item group flex cursor-default items-center gap-3 rounded-[6px] border p-3 transition-[background-color,border-color,box-shadow] duration-150 ease-out',
                 isLight
                     ? 'border-transparent bg-transparent hover:border-[#DCE3E8] hover:bg-white hover:shadow-[0_16px_34px_rgba(24,32,38,0.08)]'
                     : 'border-transparent bg-transparent hover:bg-white/[0.045] hover:shadow-[0_16px_34px_rgba(255,255,255,0.05)]'
             )}
         >
             <div className={cn(
-                'flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] transition-all duration-200',
+                'flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] transition-[background-color,border-color,box-shadow,color] duration-150',
                 isLight
                     ? 'border border-[#CDD7DE] bg-[#F9F9FB] text-[#25313A] group-hover:border-[#9EACB6] group-hover:bg-white group-hover:shadow-[0_0_0_3px_rgba(24,32,38,0.04)]'
                     : 'bg-white/[0.055] text-white group-hover:bg-white/[0.075] group-hover:shadow-[0_0_0_3px_rgba(255,255,255,0.055)]'

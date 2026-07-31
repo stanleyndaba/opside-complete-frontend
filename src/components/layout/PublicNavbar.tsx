@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/accordion';
 import { ProductsMegaMenu, productMenuGroups, ProductServiceItem } from '@/components/landing/ProductsMegaMenu';
 import { ApisMegaMenu, apiMenuGroups, ApiServiceItem } from '@/components/landing/ApisMegaMenu';
-import { SolutionsMegaMenu, solutionMenuGroups, SolutionServiceItem } from '@/components/landing/SolutionsMegaMenu';
 
 type PublicNavbarProps = {
     variant?: 'dark' | 'light';
@@ -30,11 +29,11 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
         ? "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
     const desktopNavLinkClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8] hover:text-[#182026]"
-        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
+        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-[background-color,color,border-color] duration-150 hover:bg-[#F3F6F8] hover:text-[#182026]"
+        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-[background-color,color,border-color] duration-150 hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
     const desktopActionClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-[#DCE8EE] bg-white px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-all hover:bg-[#F3F6F8]"
-        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-white/10 bg-white/[0.03] px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-all hover:bg-white/[0.07]";
+        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-[#DCE8EE] bg-white px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-[background-color,border-color,color] duration-150 hover:bg-[#F3F6F8]"
+        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-white/10 bg-white/[0.03] px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-[background-color,border-color,color] duration-150 hover:bg-white/[0.07]";
 
     // Close mobile menu on resize
     useEffect(() => {
@@ -134,9 +133,6 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             <ApisMegaMenu variant={effectiveVariant} />
                         </div>
                         <div className="hidden lg:block">
-                            <SolutionsMegaMenu variant={effectiveVariant} />
-                        </div>
-                        <div className="hidden lg:block">
                             <ProductsMegaMenu variant={effectiveVariant} />
                         </div>
                         <Link to="/pricing" className={desktopNavLinkClass}>
@@ -171,6 +167,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
                             className="relative z-50 mt-2 md:hidden">
                             <div className={cn(
                                 "flex max-h-[calc(100vh-92px)] flex-col gap-1 overflow-y-auto p-3",
@@ -211,40 +208,14 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
-                                    <AccordionItem value="solutions" className="border-none">
+                                    <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
                                             mobileMenuItemClass,
                                             isLight
                                                 ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
                                                 : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
                                         )}>
-                                            Solutions
-                                        </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-3">
-                                            <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
-                                                E-commerce Marketplaces
-                                            </h5>
-                                            <div className="grid gap-1">
-                                                {solutionMenuGroups[0].items.map((item) => (
-                                                    <SolutionServiceItem
-                                                        key={item.title}
-                                                        variant={effectiveVariant}
-                                                        icon={item.icon}
-                                                        title={item.title}
-                                                        description={item.description}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                    <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className={cn(
-                                            mobileMenuItemClass,
-                                            isLight
-                                                ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
-                                                : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
-                                        )}>
-                                            Operations
+                                            For Teams
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
                                             {productMenuGroups.map((group) => (
