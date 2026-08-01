@@ -56,6 +56,25 @@ function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+function getSafeAuditStatusMessage(message: string | undefined, fallback: string) {
+  if (!message) return fallback;
+  const normalized = message.toLowerCase();
+  const leaksImplementationDetail =
+    normalized.includes('supabase') ||
+    normalized.includes('duplicate key') ||
+    normalized.includes('constraint') ||
+    normalized.includes('is not a function') ||
+    normalized.includes('typeerror') ||
+    normalized.includes('syntaxerror') ||
+    normalized.includes('pipeline failed');
+
+  if (leaksImplementationDetail) {
+    return fallback;
+  }
+
+  return message;
+}
+
 function savePendingAudit(context: Omit<PendingAuditContext, 'updatedAt'>) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(PENDING_AUDIT_KEY, JSON.stringify({
@@ -511,7 +530,10 @@ export default function Audit() {
     syncing: 'Margin is syncing Amazon data. If Amazon is still blocked, this step will fail gracefully.',
     detecting: 'The seven recovery detectors are reviewing synced FBA data for reimbursable patterns.',
     completed: teaser.message,
-    failed: audit?.summary?.message || 'The audit could not finish. You can retry when Amazon access is available.',
+    failed: getSafeAuditStatusMessage(
+      audit?.summary?.message,
+      'The audit could not finish automatically. Retry after the Amazon connection settles.'
+    ),
   } satisfies Record<AuditStep, string>;
 
   const primaryAction =
