@@ -16,6 +16,8 @@ type AmazonConnectResponseData = {
   authUrl?: string;
   state?: string;
   capacity_full?: boolean;
+  error?: string;
+  message?: string;
 };
 
 function getErrorMessage(error: unknown) {
@@ -132,11 +134,12 @@ export default function ConnectAmazonAccount() {
       if (!response.ok || !authUrl) {
         const rawError = typeof response.error === 'string' ? response.error : '';
         const isCapacityFull = rawError.includes('capacity_full') || responseData?.capacity_full;
+        const connectionError = responseData?.message || responseData?.error || response.error;
         toast({
           title: isCapacityFull ? 'Audit capacity is temporarily full' : 'Amazon connection failed',
           description: isCapacityFull
             ? 'Margin is processing the current audit queue. Join the waitlist and we will notify you when more audit capacity opens.'
-            : (response.error || 'We could not start Amazon authorization. Please try again.'),
+            : (connectionError || 'We could not start Amazon authorization. Please try again.'),
           variant: 'destructive',
         });
         if (isCapacityFull) {
