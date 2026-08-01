@@ -162,6 +162,36 @@ function getAuditState(step: AuditStep) {
   };
 }
 
+function getCompletedAuditState(teaser: AuditTeaserSummary) {
+  switch (teaser.finalStatus) {
+    case 'complete_with_findings':
+      return {
+        title: 'Your Recovery Audit is ready.',
+        description: 'Margin identified recovery opportunities in the Amazon activity reviewed.',
+      };
+    case 'complete_no_findings':
+      return {
+        title: 'Your audit is complete.',
+        description: 'Margin did not identify recovery opportunities in the Amazon activity reviewed.',
+      };
+    case 'partial_with_findings':
+      return {
+        title: 'Margin found opportunities from the data available.',
+        description: 'Some Amazon datasets were unavailable, but Margin identified findings from the activity it could review.',
+      };
+    case 'partial_no_findings':
+      return {
+        title: 'Your audit completed with limited Amazon data.',
+        description: 'Margin did not identify opportunities in the available activity, but some Amazon datasets could not be reviewed.',
+      };
+    default:
+      return {
+        title: 'Your audit summary is ready.',
+        description: 'Review the recovery scope from this audit before deciding what should happen next.',
+      };
+  }
+}
+
 export default function Audit() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -195,7 +225,15 @@ export default function Audit() {
   const autoRunAfterOAuthRef = useRef(false);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
-  const auditState = useMemo(() => getAuditState(step), [step]);
+  const auditState = useMemo(() => {
+    const baseState = getAuditState(step);
+    if (step !== 'completed') return baseState;
+    const completedState = getCompletedAuditState(teaser);
+    return {
+      ...baseState,
+      ...completedState
+    };
+  }, [step, teaser.finalStatus]);
   const hasFindings = step === 'completed' && teaser.findingsCount > 0;
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
 
@@ -654,6 +692,19 @@ export default function Audit() {
                       {category}
                     </span>
                   ))}
+                </div>
+              ) : null}
+
+              {step === 'completed' && (teaser.recordsReviewed != null || teaser.sourcesUnavailable?.length) ? (
+                <div className="mb-6 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
+                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Audit coverage</div>
+                  <p className="mt-1 text-[13px] leading-relaxed text-gray-500">
+                    {teaser.recordsReviewed != null
+                      ? `${teaser.recordsReviewed.toLocaleString()} Amazon record${teaser.recordsReviewed === 1 ? '' : 's'} reviewed.`
+                      : 'Amazon record coverage is being prepared.'}
+                    {teaser.sourcesReviewed?.length ? ` Sources reviewed: ${teaser.sourcesReviewed.join(', ')}.` : ''}
+                    {teaser.sourcesUnavailable?.length ? ` Unavailable: ${teaser.sourcesUnavailable.join(', ')}.` : ''}
+                  </p>
                 </div>
               ) : null}
 

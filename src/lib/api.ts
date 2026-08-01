@@ -146,6 +146,11 @@ export interface AuditTeaserSummary {
   locked: boolean;
   message: string;
   activationRequired?: boolean;
+  finalStatus?: 'complete_with_findings' | 'complete_no_findings' | 'partial_with_findings' | 'partial_no_findings' | 'failed';
+  recordsReviewed?: number;
+  sourcesReviewed?: string[];
+  sourcesUnavailable?: string[];
+  retryable?: boolean;
 }
 
 export interface RecoveryWorkspaceSubscriptionStatus {
