@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useClerk } from '@clerk/react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -71,11 +72,76 @@ function getSafeFailureCopy(rawError: string, provider: string) {
   return 'The provider returned to Margin, but the connection could not finish automatically. Return to the workspace and try again.';
 }
 
+type AmazonErrorKind = 'connected_elsewhere' | 'expired_session' | 'generic_failure';
+
+type AmazonConnectionState = {
+  kind: AmazonErrorKind;
+  heading: string;
+  body: string;
+  eyebrow: string;
+  primaryLabel: string;
+  showSecondary: boolean;
+  showSupport: boolean;
+};
+
+function mapAmazonConnectionState(params: URLSearchParams): AmazonConnectionState {
+  const errorCode = (params.get('error_code') || '').toLowerCase();
+  const rawSignal = `${params.get('error') || ''} ${params.get('error_description') || ''}`.toLowerCase();
+
+  if (errorCode === 'amazon_seller_connected_elsewhere') {
+    return {
+      kind: 'connected_elsewhere',
+      eyebrow: 'Amazon connection',
+      heading: 'This Amazon account is already connected',
+      body: 'This Amazon seller account belongs to another Margin workspace. Sign in with the Margin account that originally connected it, or contact support if the connection needs to be reviewed.',
+      primaryLabel: 'Sign in to another account',
+      showSecondary: true,
+      showSupport: true,
+    };
+  }
+
+  if (
+    errorCode.includes('expired') ||
+    errorCode.includes('state') ||
+    rawSignal.includes('expired') ||
+    rawSignal.includes('state') ||
+    rawSignal.includes('session')
+  ) {
+    return {
+      kind: 'expired_session',
+      eyebrow: 'Amazon connection',
+      heading: 'Your Amazon connection session expired',
+      body: 'Return to your audit and connect Amazon again.',
+      primaryLabel: 'Return to Audit',
+      showSecondary: false,
+      showSupport: false,
+    };
+  }
+
+  return {
+    kind: 'generic_failure',
+    eyebrow: 'Amazon connection',
+    heading: 'Amazon could not be connected',
+    body: 'Your Margin account is safe. Return to the audit and try the connection again.',
+    primaryLabel: 'Return to Audit',
+    showSecondary: false,
+    showSupport: true,
+  };
+}
+
 export default function OAuthSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const clerk = useClerk();
   const [countdown, setCountdown] = useState(3);
+  const [amazonConnectionState] = useState<AmazonConnectionState | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const initialParams = new URLSearchParams(window.location.search);
+    const isAmazonError = (initialParams.get('provider') || 'amazon') === 'amazon'
+      && initialParams.get('status') === 'error';
+    return isAmazonError ? mapAmazonConnectionState(initialParams) : null;
+  });
 
   const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const provider = params.get('provider') || 'amazon';
@@ -102,6 +168,11 @@ export default function OAuthSuccess() {
     : tenantRoute(resolvedSlug, `${config.redirect}?connected=${provider}`);
 
   useEffect(() => {
+    if (!amazonConnectionState || !location.search) return;
+    navigate(location.pathname, { replace: true });
+  }, [amazonConnectionState, location.pathname, location.search, navigate]);
+
+  useEffect(() => {
     if (isError) return;
 
     const delay = provider === 'amazon' && hasPendingAmazonAudit() ? 900 : 1000;
@@ -118,6 +189,93 @@ export default function OAuthSuccess() {
 
     return () => window.clearInterval(timer);
   }, [isError, navigate, provider, targetPath]);
+
+  const signInToAnotherAccount = async () => {
+    try {
+      await clerk.signOut();
+    } catch {
+      // The route still clears local app session and moves to login if Clerk sign-out is already settled.
+    }
+
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('session_token');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('user_email');
+      localStorage.removeItem('active_tenant_id');
+      localStorage.removeItem('active_tenant_slug');
+    }
+
+    navigate('/login?next=%2Faudit', { replace: true });
+  };
+
+  if (amazonConnectionState) {
+    const isConflict = amazonConnectionState.kind === 'connected_elsewhere';
+
+    return (
+      <PageLayout title={amazonConnectionState.heading} noPadding hideNavbar hideSidebar hideLogo>
+        <main className="min-h-screen bg-white px-4 py-6 text-slate-950 sm:px-6">
+          <section className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-2xl items-center justify-center">
+            <div
+              role="status"
+              aria-live="polite"
+              className="w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:p-7"
+            >
+              <div className="flex items-start gap-4">
+                <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                  <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-tight text-blue-600">
+                    {amazonConnectionState.eyebrow}
+                  </p>
+                  <h1 className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.03em] text-slate-950 sm:text-[30px]">
+                    {amazonConnectionState.heading}
+                  </h1>
+                  <p className="mt-3 text-[14px] leading-6 text-slate-600 sm:text-[15px]">
+                    {amazonConnectionState.body}
+                  </p>
+                  {isConflict ? (
+                    <p className="mt-4 rounded-md bg-slate-50 px-3 py-2 text-[13px] leading-5 text-slate-500">
+                      For security, one Amazon seller account can only belong to one Margin workspace at a time.
+                    </p>
+                  ) : null}
+
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                    <Button
+                      onClick={isConflict ? signInToAnotherAccount : () => navigate('/audit', { replace: true })}
+                      className="h-11 justify-between rounded-md bg-blue-600 px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(37,99,235,0.18)] hover:bg-blue-700 sm:min-w-56"
+                    >
+                      <span>{amazonConnectionState.primaryLabel}</span>
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+
+                    {amazonConnectionState.showSecondary ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => navigate('/audit', { replace: true })}
+                        className="h-11 rounded-md border-slate-200 bg-white px-5 text-[13px] font-medium text-slate-700 hover:bg-slate-50"
+                      >
+                        Return to Audit
+                      </Button>
+                    ) : null}
+                  </div>
+
+                  {amazonConnectionState.showSupport ? (
+                    <a
+                      href="mailto:support@margin-finance.com?subject=Amazon%20account%20connection%20review"
+                      className="mt-5 inline-flex text-[13px] font-medium text-slate-500 underline-offset-4 hover:text-slate-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    >
+                      Contact Margin Support
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </PageLayout>
+    );
+  }
 
   const heading = isError
     ? `${config.label} connection needs attention`
