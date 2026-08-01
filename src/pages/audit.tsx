@@ -4,6 +4,7 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
 import { api, AuditRunRecord, AuditTeaserSummary } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
@@ -124,13 +125,23 @@ export default function Audit() {
     userId: clerkUserId,
     getToken: getClerkToken,
   } = useAuth();
-  const hasLegacySession = isAuthReady && isSessionValid && Boolean(authToken);
-  const isAuthenticated = Boolean((isClerkLoaded && isClerkSignedIn) || hasLegacySession);
+  const hasDemoSession = isAuthReady && isSessionValid && authToken === 'demo-session-local';
+  const isAuthenticated = Boolean((isClerkLoaded && isClerkSignedIn) || hasDemoSession);
   const [audit, setAudit] = useState<AuditRunRecord | null>(null);
   const [tenantSlug, setTenantSlug] = useState<string | null>(null);
   const [teaser, setTeaser] = useState<AuditTeaserSummary>(defaultTeaser);
   const [isBusy, setIsBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const { toast } = useToast();
+  const setError = (message: string | null) => {
+    if (message) {
+      toast({
+        variant: 'destructive',
+        description: message,
+      });
+    }
+  };
+
   const trackedViewRef = useRef(false);
   const trackedCompletionRef = useRef(false);
   const restoredAuditRef = useRef(false);
@@ -138,9 +149,9 @@ export default function Audit() {
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
 
-  const ensureFreshAuditAuth = async () => {
+  const ensureFreshAuditAuth = async (): Promise<string | null> => {
     if (!isClerkLoaded || !isClerkSignedIn) {
-      return Boolean(authToken);
+      return hasDemoSession ? authToken : null;
     }
 
     const token = await getClerkToken({ skipCache: true });
@@ -152,7 +163,7 @@ export default function Audit() {
     if (clerkUserId) {
       localStorage.setItem('user_id', clerkUserId);
     }
-    return true;
+    return token;
   };
 
   useEffect(() => {
@@ -183,40 +194,43 @@ export default function Audit() {
       setError(null);
 
       try {
-        await ensureFreshAuditAuth();
-      } catch (authError: unknown) {
-        setError(getErrorMessage(authError, 'Margin could not prepare your secure session yet.'));
-        setIsBusy(false);
-        return;
-      }
+        const freshToken = await ensureFreshAuditAuth();
+        if (!freshToken) {
+          throw new Error('Margin could not prepare your secure session yet. Please refresh and try again.');
+        }
 
-      if (pending?.auditId) {
-        const response = await api.getAudit(pending.auditId);
-        if (response.ok && response.data?.audit) {
-          setAudit(response.data.audit);
-          setTenantSlug(pending.tenantSlug);
-          if (response.data.audit.status === 'completed') {
-            const results = await api.getAuditResults(response.data.audit.id);
+        if (pending?.auditId) {
+          const response = await api.getAudit(pending.auditId, freshToken);
+          if (response.ok && response.data?.audit) {
+            setAudit(response.data.audit);
+            setTenantSlug(pending.tenantSlug);
+            if (response.data.audit.status === 'completed') {
+              const results = await api.getAuditResults(response.data.audit.id, freshToken);
+              if (results.ok && results.data?.teaser) {
+                setTeaser(results.data.teaser);
+              }
+            }
+            setIsBusy(false);
+            return;
+          }
+        }
+
+        const latest = await api.getLatestAudit(freshToken);
+        if (latest.ok && latest.data?.audit) {
+          setAudit(latest.data.audit);
+          const storedTenantSlug = localStorage.getItem('active_tenant_slug');
+          if (storedTenantSlug) setTenantSlug(storedTenantSlug);
+          if (latest.data.audit.status === 'completed') {
+            const results = await api.getAuditResults(latest.data.audit.id, freshToken);
             if (results.ok && results.data?.teaser) {
               setTeaser(results.data.teaser);
             }
           }
-          setIsBusy(false);
-          return;
         }
-      }
-
-      const latest = await api.getLatestAudit();
-      if (latest.ok && latest.data?.audit) {
-        setAudit(latest.data.audit);
-        const storedTenantSlug = localStorage.getItem('active_tenant_slug');
-        if (storedTenantSlug) setTenantSlug(storedTenantSlug);
-        if (latest.data.audit.status === 'completed') {
-          const results = await api.getAuditResults(latest.data.audit.id);
-          if (results.ok && results.data?.teaser) {
-            setTeaser(results.data.teaser);
-          }
-        }
+      } catch (authError: unknown) {
+        setError(getErrorMessage(authError, 'Margin could not prepare your secure session yet.'));
+        setIsBusy(false);
+        return;
       }
 
       setIsBusy(false);
@@ -261,15 +275,19 @@ export default function Audit() {
       cta_text: 'Connect Amazon',
     });
 
+    let freshToken: string | null;
     try {
-      await ensureFreshAuditAuth();
+      freshToken = await ensureFreshAuditAuth();
+      if (!freshToken) {
+        throw new Error('Margin could not prepare your secure session yet. Please refresh and try again.');
+      }
     } catch (authError: unknown) {
       setIsBusy(false);
       setError(getErrorMessage(authError, 'Margin could not prepare your secure session yet.'));
       return;
     }
 
-    const response = await api.startAudit();
+    const response = await api.startAudit(freshToken);
     setIsBusy(false);
 
     if (!response.ok || !response.data?.success) {
@@ -339,15 +357,19 @@ export default function Audit() {
       current_status: targetAudit.status,
     });
 
+    let freshToken: string | null;
     try {
-      await ensureFreshAuditAuth();
+      freshToken = await ensureFreshAuditAuth();
+      if (!freshToken) {
+        throw new Error('Margin could not prepare your secure session yet. Please refresh and try again.');
+      }
     } catch (authError: unknown) {
       setIsBusy(false);
       setError(getErrorMessage(authError, 'Margin could not prepare your secure session yet.'));
       return;
     }
 
-    const response = await api.runAudit(targetAudit.id);
+    const response = await api.runAudit(targetAudit.id, freshToken);
     setIsBusy(false);
 
     if (!response.ok || !response.data?.success) {
@@ -365,7 +387,7 @@ export default function Audit() {
     }
 
     if (response.data.audit.status === 'completed') {
-      const results = await api.getAuditResults(response.data.audit.id);
+      const results = await api.getAuditResults(response.data.audit.id, freshToken);
       if (results.ok && results.data?.teaser) {
         setTeaser(results.data.teaser);
       }
@@ -376,14 +398,18 @@ export default function Audit() {
     if (!audit?.id) return;
     setIsBusy(true);
     setError(null);
+    let freshToken: string | null;
     try {
-      await ensureFreshAuditAuth();
+      freshToken = await ensureFreshAuditAuth();
+      if (!freshToken) {
+        throw new Error('Margin could not prepare your secure session yet. Please refresh and try again.');
+      }
     } catch (authError: unknown) {
       setIsBusy(false);
       setError(getErrorMessage(authError, 'Margin could not prepare your secure session yet.'));
       return;
     }
-    const response = await api.getAuditResults(audit.id);
+    const response = await api.getAuditResults(audit.id, freshToken);
     setIsBusy(false);
     if (!response.ok || !response.data?.success) {
       setError(response.error || 'Margin could not load the audit result yet.');
@@ -461,169 +487,143 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-      <Button onClick={startAccountStep} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
+      <Button onClick={startAccountStep} className="h-10 rounded-md bg-gray-900 px-5 font-mono text-[12px] font-medium text-white hover:bg-gray-800">
         Start Free Audit
       </Button>
     ) : step === 'connect' ? (
-      <Button onClick={connectAmazon} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : null}
+      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 font-mono text-[12px] font-medium text-white hover:bg-gray-800">
+        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
-      <Button onClick={activateAudit} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
+      <Button onClick={activateAudit} className="h-10 rounded-md bg-blue-600 px-5 font-mono text-[12px] font-medium text-white hover:bg-blue-700">
         Activate Your Recovery Workspace
-        <ArrowRight className="ml-2 h-3.5 w-3.5" />
+        <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     ) : (
-      <Button onClick={runAudit} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
-        {isBusy ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : null}
+      <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 font-mono text-[12px] font-medium text-white hover:bg-gray-800">
+        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         {audit?.sync_id ? 'Continue Audit' : 'Run Audit'}
       </Button>
     );
 
   return (
-    <main className="min-h-screen bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16">
-      <section className="flex min-h-screen items-center justify-center px-3 py-5 sm:px-5">
-        <div className="w-full max-w-7xl">
-          <div className="mb-3 flex items-center justify-between">
+    <main className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 selection:bg-blue-100">
+      <section className="flex min-h-screen items-start justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="w-full max-w-3xl">
+          {/* Header */}
+          <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-              <span className="brand-wordmark font-merriweather text-base leading-none tracking-tight text-[#182026] md:text-lg">
-                Margin
-              </span>
+              <span className="font-semibold tracking-tight text-gray-900">Margin</span>
             </div>
-
-            <div />
           </div>
 
-        <div className="mx-auto grid max-h-none min-h-0 w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden border border-[#CFE0EA] bg-white md:max-h-[505px]">
-          <header className="border-b border-[#DCE8EE] px-4 py-2.5 sm:px-6 lg:px-7">
-            <div className="mb-2 flex items-center justify-end border-b border-[#E8EFF3] pb-2">
-              <div className="flex items-center gap-2">
-                {primaryAction}
-                {step === 'completed' ? (
-                  <Button variant="outline" onClick={loadResults} disabled={isBusy} className="hidden h-9 rounded-none border-[#DCE8EE] bg-white px-3 font-mono text-[10px] font-medium tracking-tight text-[#25313A] hover:bg-[#F8FAFC] sm:inline-flex">
-                    Refresh
-                  </Button>
-                ) : null}
-              </div>
-            </div>
+          <header className="mb-10">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900">Audit workspace</h1>
+            <p className="mt-2 text-[15px] text-gray-500">
+              Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
+            </p>
 
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
+            <div className="mt-6 flex items-center gap-8 border-b border-gray-200 pb-6">
               <div>
-                <h1
-                  className="max-w-4xl text-[24px] font-semibold leading-[0.96] tracking-[-0.045em] text-[#182026] sm:text-[30px] lg:text-[34px]"
-                  style={{ fontFamily: 'Georgia, Merriweather, serif' }}
-                >
-                  Audit workspace
-                </h1>
-                <p className="mt-2 max-w-2xl text-[12px] leading-5 text-[#4D5B66] sm:text-[13px]">
-                  Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
-                </p>
+                <div className="font-mono text-[10px] font-medium uppercase tracking-wider text-gray-500">Scope value</div>
+                <div className="mt-1 font-mono text-2xl font-medium tracking-tight text-gray-900">{formatMoney(teaser.scopeValue)}</div>
               </div>
-
-              <div className="grid grid-cols-2 border border-[#DCE8EE] bg-[#F8FAFC]">
-                <div className="flex min-h-[44px] flex-col justify-center border-r border-[#DCE8EE] px-3 py-1.5">
-                  <span className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#66737F]">
-                    Scope value
-                  </span>
-                  <strong className="mt-1 block font-mono text-[14px] font-medium tracking-[-0.03em] text-[#182026]">
-                    {formatMoney(teaser.scopeValue)}
-                  </strong>
-                </div>
-                <div className="flex min-h-[44px] flex-col justify-center px-3 py-1.5">
-                  <span className="font-mono text-[9px] font-medium uppercase tracking-tight text-[#66737F]">
-                    Findings
-                  </span>
-                  <strong className="mt-1 block font-mono text-[14px] font-medium tracking-[-0.03em] text-[#182026]">
-                    {teaser.findingsCount}
-                  </strong>
-                </div>
+              <div>
+                <div className="font-mono text-[10px] font-medium uppercase tracking-wider text-gray-500">Findings</div>
+                <div className="mt-1 font-mono text-2xl font-medium tracking-tight text-gray-900">{teaser.findingsCount}</div>
               </div>
             </div>
-
-            {error ? (
-              <div className="mt-3 border border-[#F3B9B9] bg-[#FFF5F5] px-3 py-2 font-mono text-[11px] font-medium text-[#B42318]">
-                {error}
-              </div>
-            ) : null}
           </header>
 
-          <div className="grid min-h-0 overflow-y-auto lg:grid-cols-[minmax(0,1fr)_360px]">
-            <div className="min-h-0 border-r border-[#DCE8EE]">
-              <ul className="divide-y divide-[#DCE8EE]">
-                {auditChecklist.map((item, index) => {
-                  const value =
-                    item.label === 'Create your workspace'
-                      ? (isAuthenticated ? 'Ready' : item.idle)
-                      : item.label === 'Connect your Amazon account'
-                        ? (step === 'connect' || step === 'public' || step === 'ready' ? item.idle : 'In place')
-                        : item.label === 'Scan your FBA account'
-                          ? (step === 'syncing' ? 'Running' : audit?.sync_id ? 'Started' : item.idle)
-                          : item.label === 'Find recovery opportunities'
-                            ? (step === 'detecting' ? 'Running' : step === 'completed' ? 'Complete' : item.idle)
-                            : (step === 'completed' ? 'Required to unlock workflow' : item.idle);
-                  return (
-                    <li key={item.label} className="grid px-4 py-2.5 sm:grid-cols-[58px_minmax(0,1fr)_128px] sm:px-5">
-                      <div className="font-mono text-[10px] font-medium text-[#8A99A4] sm:pt-1">
-                        00:{String(index * 4 + 3).padStart(2, '0')}
-                      </div>
-                      <div className="relative min-w-0 sm:border-l sm:border-[#DCE8EE] sm:pl-5">
-                        <span className="absolute -left-[3.5px] top-1.5 hidden h-1.5 w-1.5 rounded-full bg-[#8A99A4] sm:block" />
-                        <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-tight">
-                          <span className="text-[#66737F]">AUDIT-0{index + 1}</span>
-                          <span className="text-[#66737F]">{value}</span>
-                        </div>
-                        <h2
-                          className="mt-0.5 text-[13px] font-semibold leading-tight tracking-[-0.02em] text-[#182026] sm:text-[14px]"
-                          style={{ fontFamily: 'Georgia, Merriweather, serif' }}
-                        >
-                          {item.label}
-                        </h2>
-                        <p className="mt-0.5 max-w-3xl text-[12px] leading-[1.45] text-[#4D5B66]">
-                          {item.description}
-                        </p>
-                      </div>
-                      <div className="mt-2 border-t border-[#DCE8EE] pt-2 sm:mt-0 sm:border-t-0 sm:pt-0.5 sm:text-right">
-                        <span className="font-mono text-[10px] uppercase tracking-tight text-[#8A99A4]">
-                          State
-                        </span>
-                        <strong className="mt-1 block font-mono text-[13px] font-medium tracking-tight text-[#182026]">
-                          {value}
-                        </strong>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+          {/* Timeline Steps */}
+          <div className="relative ml-3 border-l-2 border-gray-100 pb-8 pl-8 sm:ml-4 sm:pl-10">
+            {auditChecklist.map((item, index) => {
+              const value =
+                item.label === 'Create your workspace'
+                  ? (isAuthenticated ? 'Ready' : item.idle)
+                  : item.label === 'Connect your Amazon account'
+                    ? (step === 'connect' || step === 'public' || step === 'ready' ? item.idle : 'In place')
+                    : item.label === 'Scan your FBA account'
+                      ? (step === 'syncing' ? 'Running' : audit?.sync_id ? 'Started' : item.idle)
+                      : item.label === 'Find recovery opportunities'
+                        ? (step === 'detecting' ? 'Running' : step === 'completed' ? 'Complete' : item.idle)
+                        : (step === 'completed' ? 'Unlocked' : item.idle);
 
-            <aside className="bg-[#F8FAFC] px-4 py-3 sm:px-5">
-              <div className="border-b border-[#DCE8EE] pb-2.5">
-                <h2
-                  className="text-[19px] font-semibold leading-tight tracking-[-0.035em] text-[#182026]"
-                  style={{ fontFamily: 'Georgia, Merriweather, serif' }}
-                >
-                  Workspace report
-                </h2>
+              const isActive = value === 'Running' || (item.label === 'Connect your Amazon account' && step === 'connect') || (item.label === 'Create your workspace' && step === 'public');
+              const isCompleted = value === 'Ready' || value === 'In place' || value === 'Started' || value === 'Complete' || value === 'Unlocked';
+              
+              return (
+                <div key={item.label} className="relative mb-10 last:mb-0">
+                  {/* Node */}
+                  <span className="absolute -left-[41px] flex h-6 w-6 items-center justify-center bg-[#FAFAFA] sm:-left-[49px]">
+                    {isActive ? (
+                       <span className="relative flex h-3 w-3">
+                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
+                         <span className="relative inline-flex h-3 w-3 rounded-full bg-blue-600"></span>
+                       </span>
+                    ) : isCompleted ? (
+                      <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
+                    ) : (
+                      <span className="h-2.5 w-2.5 rounded-full border-2 border-gray-300 bg-transparent"></span>
+                    )}
+                  </span>
+
+                  <div className="flex flex-col gap-1">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="font-mono text-[11px] font-medium text-gray-400">00:{String(index * 4 + 3).padStart(2, '0')}</div>
+                      <div className="font-mono text-[11px] font-medium text-gray-400">AUDIT-0{index + 1}</div>
+                      
+                      <div className={`ml-auto rounded-md px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${
+                        isActive ? 'bg-blue-50 text-blue-700' :
+                        isCompleted ? 'bg-gray-100 text-gray-700' : 'bg-gray-50 text-gray-400'
+                      }`}>
+                        {value}
+                      </div>
+                    </div>
+                    <h3 className="mt-1 text-base font-semibold text-gray-900">{item.label}</h3>
+                    <p className="text-[14px] leading-relaxed text-gray-500">{item.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Workspace Report (Locked / Unlocked state) */}
+          <div className="mt-8">
+            <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-6 sm:p-8`}>
+              <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 className="text-lg font-semibold text-gray-900">Workspace report</h2>
+                {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-gray-500">Locked</span>}
               </div>
 
               {step === 'completed' && teaser.categories.length ? (
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mb-8 flex flex-wrap gap-2">
                   {teaser.categories.map((category) => (
-                    <span key={category} className="border border-[#CFE0EA] bg-white px-2 py-1 font-mono text-[10px] font-medium tracking-tight text-[#66737F]">
+                    <span key={category} className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 font-mono text-[11px] font-medium text-gray-600">
                       {category}
                     </span>
                   ))}
                 </div>
               ) : null}
-            </aside>
+
+              <div className="flex flex-col items-center justify-center text-center">
+                 <p className="mb-6 max-w-sm font-mono text-[12px] leading-relaxed text-gray-500">
+                  {statusCopy[step]} Seller approval stays required. Margin prepares the path; the seller decides what moves.
+                 </p>
+                 <div className="flex items-center justify-center gap-3">
+                   {step === 'completed' && (
+                     <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-10 rounded-md border-gray-200 bg-white px-4 font-mono text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                       Refresh
+                     </Button>
+                   )}
+                   {primaryAction}
+                 </div>
+              </div>
+            </div>
           </div>
 
-        </div>
-        <p className="mt-2 max-w-5xl font-mono text-[10px] leading-4 tracking-tight text-[#66737F]">
-          {statusCopy[step]} Seller approval stays required. Margin prepares the path; the seller decides what moves.
-        </p>
         </div>
       </section>
     </main>
