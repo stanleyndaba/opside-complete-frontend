@@ -1746,20 +1746,35 @@ function DiscrepancyIsNotRevenueSection() {
           </motion.div>
           <motion.div
             {...revealProps}
-            className="relative overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-white/65 p-5 shadow-[0_36px_120px_rgba(0,0,0,0.02)] ring-1 ring-white/80 backdrop-blur-3xl md:p-7"
+            className="relative overflow-hidden rounded-[12px] border-b border-r border-[rgba(0,0,0,0.05)] border-l border-t border-white/90 bg-white/40 p-5 shadow-[24px_42px_120px_rgba(27,28,32,0.055)] ring-1 ring-[var(--margin-border)] backdrop-blur-[30px] md:p-8"
+            style={{
+              transform: "perspective(1100px) rotateX(1.8deg) rotateY(-1.2deg)",
+              transformOrigin: "center",
+            }}
           >
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.72),rgba(247,247,248,0.38))]" />
-            <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-[rgba(34,92,214,0.045)] blur-3xl" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,92,214,0.035),transparent_56%),linear-gradient(135deg,rgba(255,255,255,0.62),rgba(247,247,248,0.22))]" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/95" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-white/95" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-black/[0.035]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-px bg-black/[0.035]" />
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-48 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(34,92,214,0.025)] blur-3xl" />
             <div className="relative">
               <div className="hidden md:block">
-                <div className="absolute left-[5%] right-[5%] top-[31px] h-px bg-[#DCDDDF]" />
+                <div className="absolute left-[5%] right-[5%] top-[30px] h-px bg-[#E9E9EC]" />
                 <motion.div
-                  className="absolute left-[5%] top-[31px] h-px origin-left bg-[var(--margin-blue)]"
+                  className="absolute left-[5%] top-[29.5px] h-[2px] origin-left bg-[var(--margin-blue)] shadow-[0_0_12px_rgba(34,92,214,0.4)]"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 0.64 }}
                   viewport={{ once: true, amount: 0.55 }}
                   transition={{ duration: 1.45, ease: [0.22, 1, 0.36, 1] }}
                   style={{ width: "90%" }}
+                />
+                <motion.div
+                  className="absolute top-[26px] h-[9px] w-[9px] rounded-full bg-[var(--margin-blue)] shadow-[0_0_18px_rgba(34,92,214,0.65)]"
+                  initial={{ left: "5%", opacity: 0 }}
+                  whileInView={{ left: "62%", opacity: [0, 1, 1, 0] }}
+                  viewport={{ once: true, amount: 0.55 }}
+                  transition={{ duration: 1.45, ease: [0.22, 1, 0.36, 1] }}
                 />
               </div>
               <div className="grid gap-4 md:grid-cols-6 md:gap-3">
@@ -1769,21 +1784,21 @@ function DiscrepancyIsNotRevenueSection() {
                   return (
                     <div
                       key={title}
-                      className={`relative rounded-[10px] border border-[var(--margin-border-subtle)] bg-white/55 p-3 md:border-0 md:bg-transparent md:p-0 ${index > 0 ? "md:pl-1" : ""}`}
+                      className={`relative rounded-[10px] border border-white/80 bg-white/32 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] md:border-0 md:bg-transparent md:p-0 md:shadow-none ${index > 0 ? "md:pl-1" : ""}`}
                     >
                       <div className="flex items-start gap-3 md:block">
                         <motion.div
-                          className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-white shadow-[0_8px_22px_rgba(27,28,32,0.045)] ${
+                          className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-white/46 backdrop-blur-xl ${
                             isActive
-                              ? "border-[var(--margin-blue-border)] text-[var(--margin-blue)]"
-                              : "border-[var(--margin-border)] text-[var(--margin-text-muted)]"
+                              ? "border-[rgba(34,92,214,0.22)] text-[var(--margin-blue)] shadow-[0_0_22px_rgba(34,92,214,0.18),inset_0_1px_0_rgba(255,255,255,0.72)]"
+                              : "border-white/80 text-[rgba(80,82,91,0.62)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
                           }`}
                           animate={
                             index === 3
                               ? {
                                   boxShadow: [
-                                    "0 8px 22px rgba(27,28,32,0.045), 0 0 0 0 rgba(34,92,214,0.16)",
-                                    "0 8px 22px rgba(27,28,32,0.045), 0 0 0 8px rgba(34,92,214,0)",
+                                    "0 0 22px rgba(34,92,214,0.18), 0 0 0 0 rgba(34,92,214,0.16), inset 0 1px 0 rgba(255,255,255,0.72)",
+                                    "0 0 26px rgba(34,92,214,0.22), 0 0 0 10px rgba(34,92,214,0), inset 0 1px 0 rgba(255,255,255,0.72)",
                                   ],
                                 }
                               : undefined
@@ -1794,7 +1809,10 @@ function DiscrepancyIsNotRevenueSection() {
                             ease: "easeOut",
                           }}
                         >
-                          <Icon className="h-4 w-4" strokeWidth={1.8} />
+                          <Icon
+                            className="h-4 w-4 drop-shadow-[0_1px_0_rgba(255,255,255,0.9)]"
+                            strokeWidth={1.15}
+                          />
                         </motion.div>
                         <div>
                           <div className="mt-0 text-[15px] font-semibold tracking-[-0.025em] text-[var(--margin-text-primary)] md:mt-4">
@@ -1803,28 +1821,23 @@ function DiscrepancyIsNotRevenueSection() {
                           <div className="mt-1 text-[12px] leading-5 text-[var(--margin-text-muted)]">
                             {detail}
                           </div>
-                          <div className="mt-2 font-mono text-[10px] font-medium tracking-tight text-[var(--margin-text-muted)]">
-                            {meta}
+                          <div className="mt-2 flex items-center gap-2 font-mono text-[10px] font-medium tracking-tight text-[rgba(34,92,214,0.62)] drop-shadow-[0_0_8px_rgba(34,92,214,0.12)]">
+                            <span>{meta}</span>
+                            {index === 2 && (
+                              <>
+                                <span className="h-3 w-px bg-[rgba(34,92,214,0.2)]" />
+                                <span>POD linked</span>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
-                      {index === 2 && (
-                        <motion.div
-                          className="mt-3 w-fit rounded-[8px] border border-white/80 bg-white/70 px-3 py-2 text-[11px] font-medium tracking-tight text-[var(--margin-text-secondary)] shadow-[0_16px_42px_rgba(27,28,32,0.055)] backdrop-blur-xl md:absolute md:left-1 md:top-[102px] md:mt-0 md:-translate-y-1"
-                          initial={{ opacity: 0, y: 8 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.7 }}
-                          transition={{ delay: 0.55, duration: 0.45 }}
-                        >
-                          POD linked
-                        </motion.div>
-                      )}
                     </div>
                   );
                 })}
               </div>
             </div>
-            <p className="relative mt-6 border-t border-[var(--margin-border)] pt-5 text-[14px] font-medium leading-6 text-[var(--margin-text-secondary)] md:mt-16">
+            <p className="relative mt-6 border-t border-white/70 pt-5 text-[14px] font-medium leading-6 text-[var(--margin-text-secondary)] md:mt-10">
               No disconnected alerts. No rebuilding the case history. No
               approved reimbursement left unmatched.
             </p>
