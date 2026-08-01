@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useAuth, useClerk, useSignIn, useUser } from '@clerk/react';
+import { useAuth, useClerk, useSignIn, useSignUp, useUser } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,10 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
     return '/founding-500/status';
   }
 
+  if (value?.includes('/sync')) {
+    return '/audit';
+  }
+
   if (value && value.startsWith('/') && !value.startsWith('/login')) {
     return value;
   }
@@ -41,7 +45,7 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
 
 type AuthMode = 'login' | 'signup' | 'recovery';
 type LoginStep = 'account' | 'workspace';
-type ClerkVerificationStep = 'client_trust_email_code';
+type ClerkVerificationStep = 'client_trust_email_code' | 'signup_email_code';
 
 type ClerkLoginResult =
   | { status: 'complete'; token: string; userId?: string | null; email: string }
@@ -263,6 +267,9 @@ const Login = () => {
     errors: clerkSignInErrors,
     fetchStatus: clerkSignInFetchStatus,
   } = useSignIn();
+  const {
+    signUp,
+  } = useSignUp();
   usePageMeta({
     title: 'Log In | Margin',
     description: 'Access your Margin workspace with your account credentials.',
@@ -669,6 +676,108 @@ const Login = () => {
     return handleClerkSignInStatus(normalizedEmail);
   };
 
+  const finalizeClerkSignUp = async (emailAddress: string): Promise<ClerkLoginResult> => {
+    if (!signUp || signUp.status !== 'complete') {
+      throw new Error('Clerk signup is not complete yet.');
+    }
+
+    let completed = false;
+    const finalizeResult = await signUp.finalize({
+      navigate: async ({ session }) => {
+        if (!session || typeof session.getToken !== 'function') {
+          throw new Error('No active Clerk session was created after signup.');
+        }
+
+        const sessionToken = await session.getToken({ skipCache: true });
+        if (!sessionToken) {
+          throw new Error('No active Clerk session token was available after signup.');
+        }
+
+        const finalizedUserId = session.user?.id || clerkUserId;
+        persistSession(sessionToken, finalizedUserId, emailAddress);
+        setActiveSessionEmail(emailAddress);
+
+        const resolvedTenantSlug = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
+        const targetPath = nextPath !== '/app'
+          ? bindPathToTenant(nextPath, resolvedTenantSlug)
+          : getDefaultWorkspaceLanding(resolvedTenantSlug);
+        await routeWithCapacityGate(targetPath);
+        completed = true;
+      },
+    });
+
+    if (finalizeResult.error) {
+      throw new Error(extractClerkSignalErrorMessage(finalizeResult.error) || 'Unable to finish Clerk signup.');
+    }
+
+    if (!completed) {
+      throw new Error('Clerk signup completed, but the workspace was not opened.');
+    }
+
+    setClerkVerificationStep(null);
+    setClerkVerificationCode('');
+    setClerkVerificationMessage('');
+    return { status: 'complete', token: localStorage.getItem('session_token') || '', userId: localStorage.getItem('user_id'), email: emailAddress };
+  };
+
+  const authenticateSignupWithClerk = async (): Promise<ClerkLoginResult> => {
+    if (!clerkAuthLoaded || !signUp) {
+      throw new Error('Authentication is still loading. Please try again in a moment.');
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (clerkVerificationStep === 'signup_email_code') {
+      const code = clerkVerificationCode.trim();
+      if (!code) {
+        throw new Error('Enter the verification code sent to your email.');
+      }
+
+      const verifyResult = await signUp.verifications.verifyEmailCode({ code });
+      if (verifyResult.error) {
+        throw new Error(extractClerkSignalErrorMessage(verifyResult.error) || 'Unable to verify that code.');
+      }
+
+      if (signUp.status === 'complete') {
+        return finalizeClerkSignUp(normalizedEmail);
+      }
+
+      throw new Error(import.meta.env.DEV
+        ? `Clerk signup stopped at unsupported status: ${signUp.status || 'unknown'}.`
+        : 'This signup needs an additional authentication step Margin does not support yet.');
+    }
+
+    const result = await signUp.password({
+      emailAddress: normalizedEmail,
+      password,
+    });
+
+    if (result.error) {
+      throw new Error(extractClerkSignalErrorMessage(result.error) || 'Unable to create this account. Please check the details and try again.');
+    }
+
+    if (signUp.status === 'complete') {
+      return finalizeClerkSignUp(normalizedEmail);
+    }
+
+    if (signUp.status === 'needs_verification') {
+      const sendResult = await signUp.verifications.sendEmailCode();
+      if (sendResult.error) {
+        throw new Error(extractClerkSignalErrorMessage(sendResult.error) || 'Unable to send the verification code.');
+      }
+
+      setClerkVerificationStep('signup_email_code');
+      setClerkVerificationCode('');
+      setClerkVerificationMessage('Enter the verification code sent to your email to finish account creation.');
+      setError('Enter the verification code sent to your email to finish account creation.');
+      return { status: 'verification_required' };
+    }
+
+    throw new Error(import.meta.env.DEV
+      ? `Clerk signup stopped at unsupported status: ${signUp.status || 'unknown'}.`
+      : 'This signup needs an additional authentication step Margin does not support yet.');
+  };
+
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
 
   const routeWithCapacityGate = async (targetPath: string) => {
@@ -903,7 +1012,7 @@ const Login = () => {
       setError(mode === 'signup' ? 'Enter your email and create a password.' : 'Enter both your email and password.');
       return;
     }
-    if (mode === 'login' && clerkVerificationStep && !clerkVerificationCode.trim()) {
+    if ((mode === 'login' || mode === 'signup') && clerkVerificationStep && !clerkVerificationCode.trim()) {
       setError('Enter the verification code sent to your email.');
       return;
     }
@@ -919,49 +1028,21 @@ const Login = () => {
     try {
       if (mode === 'signup') {
         failureStep = 'account';
-        const { data, error: authError } = await supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/login`,
-          },
-        });
-
-        if (authError) {
-          setLoginStep('account');
-          trackLoginFailure('account', authError);
-          setError(formatLoginError(authError, 'account'));
+        const signupResult = await authenticateSignupWithClerk();
+        if (signupResult.status === 'verification_required') {
           setLoading(false);
           return;
         }
 
-        persistSession(data.session?.access_token, data.user?.id, data.user?.email);
-        setActiveSessionEmail(data.user?.email || email.trim() || null);
         trackEvent(ANALYTICS_EVENTS.loginSuccess, buildLoginAnalyticsParams({
           auth_mode: 'signup',
-          access_outcome: data.session ? 'session_started' : 'email_confirmation_required',
+          access_outcome: 'session_started',
         }));
 
         toast({
-          title: data.session ? 'Account created' : 'Check your inbox',
-          description: data.session
-            ? 'Your account is ready. Redirecting you into the workspace now.'
-            : 'We sent a confirmation link to your email address.',
+          title: 'Account created',
+          description: 'Your account is ready. Redirecting you into the audit workspace now.',
         });
-
-        if (data.session) {
-          failureStep = 'workspace';
-          setLoginStep('workspace');
-          const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
-          const targetPath = isAuditIntent
-            ? '/audit'
-            : intent === 'onboarding' || hasFoundingReservationContext()
-            ? '/founding-500/status'
-            : `/app/${resolvedTenantSlug}/connect-amazon`;
-          await routeWithCapacityGate(targetPath);
-        } else {
-          setMode('login');
-        }
         setLoading(false);
         return;
       }
@@ -1248,7 +1329,7 @@ const Login = () => {
                 </div>
               </div>
 
-              {mode === 'login' && clerkVerificationStep ? (
+              {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
                 <div className="space-y-2">
                   <Label htmlFor="clerkVerificationCode" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
                     Verification Code

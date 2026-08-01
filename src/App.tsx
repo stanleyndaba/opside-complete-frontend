@@ -25,7 +25,6 @@ const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => (
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
 const ConnectAmazonAccount = lazy(() => import("./pages/ConnectAmazonAccount"));
-const Sync = lazy(() => import("./pages/Sync"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/RecoveryPipelineAgent8"));
@@ -384,7 +383,6 @@ const App = () => (
                         <Route path="/app/:tenantSlug/reports" element={appRoute(<Navigate to="../dashboard" replace />)} />
                         <Route path="/app/:tenantSlug/export" element={appRoute(<ExportCenter />)} />
                         <Route path="/app/:tenantSlug/learning-insights" element={appRoute(<LearningInsights />)} />
-                        <Route path="/app/:tenantSlug/sync" element={appRoute(<Sync />)} />
                         <Route path="/app/:tenantSlug/auth/callback" element={appRoute(<FoundingActivationGate><OAuthCallback /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/auth/success" element={appRoute(<FoundingActivationGate><OAuthSuccess /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/integrations-hub" element={appRoute(<FoundingActivationGate><IntegrationsHub /></FoundingActivationGate>)} />
@@ -434,7 +432,6 @@ const App = () => (
                         <Route path="/approved-reimbursements" element={<TenantRedirect targetPath="/approved-reimbursements" />} />
                         <Route path="/dispute-cases" element={<TenantRedirect />} />
                         <Route path="/appeals" element={<TenantRedirect />} />
-                        <Route path="/sync" element={<TenantRedirect />} />
                         <Route path="/settings" element={<TenantRedirect />} />
                         <Route path="/reconnect-amazon" element={<TenantRedirect />} />
                         <Route path="/connect-amazon-account" element={<TenantRedirect targetPath="/connect-amazon" />} />

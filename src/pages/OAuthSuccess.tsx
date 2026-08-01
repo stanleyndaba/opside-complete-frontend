@@ -10,7 +10,7 @@ const PROVIDER_CONFIG: Record<string, { label: string; icon: string; redirect: s
   amazon: {
     label: 'Amazon Store',
     icon: '/AMZN.png',
-    redirect: '/sync',
+    redirect: '/audit',
   },
   gmail: {
     label: 'Gmail',
@@ -133,7 +133,7 @@ export default function OAuthSuccess() {
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          navigate(tenantRoute(resolvedSlug, `${config.redirect}?connected=${provider}`));
+          navigate(provider === 'amazon' ? '/audit?amazon_connected=1' : tenantRoute(resolvedSlug, `${config.redirect}?connected=${provider}`));
           return 0;
         }
         return prev - 1;
@@ -144,9 +144,9 @@ export default function OAuthSuccess() {
   }, [config.redirect, isError, navigate, provider, resolvedSlug]);
 
   const errorMessage = params.get('error') || 'Connection failed. Please try again.';
-  const destinationLabel = provider === 'amazon' ? 'Sync' : 'Integrations Hub';
+  const destinationLabel = provider === 'amazon' ? 'Audit' : 'Integrations Hub';
   const successDescription = provider === 'amazon'
-    ? 'Your Amazon Store is now securely linked to your workspace. The sync pipeline can continue from here.'
+    ? 'Your Amazon Store is now securely linked. Margin can continue the free recovery audit from here.'
     : `Your ${config.label} account is now securely linked and ready for evidence collection.`;
 
   return (
@@ -238,7 +238,7 @@ export default function OAuthSuccess() {
                     {isError
                       ? 'Return to Integrations and retry once the connection issue is resolved.'
                       : provider === 'amazon'
-                        ? 'Continue to Sync to review findings and ingestion progress.'
+                        ? 'Continue the audit to review findings and ingestion progress.'
                         : 'Return to Integrations Hub to continue managing connected evidence sources.'}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-white/40">
@@ -255,18 +255,18 @@ export default function OAuthSuccess() {
                 <SectionLabel>Actions</SectionLabel>
                 <div className="mt-4 flex flex-col gap-3">
                   <Button
-                    onClick={() => navigate(tenantRoute(resolvedSlug, isError ? '/integrations-hub' : `${config.redirect}?connected=${provider}`))}
+                    onClick={() => navigate(provider === 'amazon' && !isError ? '/audit?amazon_connected=1' : tenantRoute(resolvedSlug, isError ? '/integrations-hub' : `${config.redirect}?connected=${provider}`))}
                     className="h-11 justify-between border border-white/10 bg-[#141414] px-4 text-white shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)] hover:bg-[#1b1b1b]"
                   >
                     <span className="font-sans font-medium tracking-tight">
-                      {isError ? 'Return to Integrations' : provider === 'amazon' ? 'Continue to Sync' : 'Go to Integrations'}
+                      {isError ? 'Return to Integrations' : provider === 'amazon' ? 'Continue Audit' : 'Go to Integrations'}
                     </span>
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                   {!isError && (
                     <Button
                       variant="outline"
-                      onClick={() => navigate(tenantRoute(resolvedSlug, `${config.redirect}?connected=${provider}`))}
+                      onClick={() => navigate(provider === 'amazon' ? '/audit?amazon_connected=1' : tenantRoute(resolvedSlug, `${config.redirect}?connected=${provider}`))}
                       className="h-11 border-white/[0.08] bg-transparent px-4 text-white/65 hover:bg-white/[0.04] hover:text-white"
                     >
                       Open now

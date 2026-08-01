@@ -95,7 +95,7 @@ export default function OAuthCallback() {
                 const hasActiveSync = syncStatusRes.ok && syncStatusRes.data?.hasActiveSync;
 
                 if (hasActiveSync && syncStatusRes.data?.syncId) {
-                  navigate(tenantRoute(tenantSlug || 'beta', `/sync?id=${syncStatusRes.data.syncId}`));
+                  navigate('/audit?amazon_connected=1');
                   return;
                 }
 
