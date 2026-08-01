@@ -2887,16 +2887,11 @@ export default function Index() {
     return () => mediaQuery.removeListener(sync);
   }, []);
   const handleClaimAccessClick = (location: string) => {
-    trackEarlyAccessCtaClicked({
+    trackEvent("audit_access_paused_clicked", {
       cta_location: location,
       cta_text: primaryCtaLabel,
-      destination: "/audit",
+      destination: "paused",
     });
-    if (isFull) {
-      window.location.assign("/waitlist?reason=capacity");
-      return;
-    }
-    window.location.assign("/audit");
   };
   const openDemo = () => {
     trackEvent(ANALYTICS_EVENTS.demoCtaClicked, {
@@ -2907,7 +2902,7 @@ export default function Index() {
     setIsDemoOpen(true);
   };
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = "Audit Seller Account";
+  const primaryCtaLabel = "Audits Reopen Tomorrow";
   return (
     <div className="min-h-screen overflow-x-clip bg-[var(--margin-canvas)] font-sans text-[var(--margin-text-primary)] selection:bg-[rgba(23,92,211,0.16)] selection:text-[var(--margin-text-primary)]">
       {" "}

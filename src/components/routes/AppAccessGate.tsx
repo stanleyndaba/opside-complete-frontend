@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, BadgePercent, LogIn } from 'lucide-react';
+import { BadgePercent } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
 import { useSession } from '@/contexts/SessionContext';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
-import { trackClaimAccessClicked, trackEvent } from '@/lib/analytics';
+import { trackEvent } from '@/lib/analytics';
 import { getFrontendAuthContext } from '@/lib/authSession';
 import { DEMO_SESSION_TOKEN, isDemoSessionActive, isDemoWorkspacePath, isInternalDemoAccessEmail, seedDemoSession } from '@/lib/demoSession';
 
@@ -28,8 +27,6 @@ function AppAccessLoader() {
 
 function AppAccessGateway() {
   const location = useLocation();
-  const nextPath = `${location.pathname}${location.search}${location.hash}`;
-  const loginPath = `/login?next=${encodeURIComponent(nextPath)}`;
   const isDemoWorkspaceRoute = isDemoWorkspacePath(location.pathname);
   const trackedViewRef = useRef(false);
 
@@ -52,22 +49,6 @@ function AppAccessGateway() {
     }
   }, [isDemoWorkspaceRoute]);
 
-  const attemptedPathType = isDemoWorkspaceRoute ? 'reserved_demo_workspace' : 'private_app_route';
-
-  const trackStartAudit = (ctaText = 'Preview Recovery Audit', ctaLocation = 'app_access_gate') => {
-    trackClaimAccessClicked({
-      cta_location: ctaLocation,
-      cta_text: ctaText,
-      destination: '/audit',
-      attempted_path_type: attemptedPathType,
-    });
-    trackEvent(ANALYTICS_EVENTS.appGateEarlyAccessClicked, {
-      cta_location: ctaLocation,
-      cta_text: ctaText,
-      attempted_path_type: attemptedPathType,
-    });
-  };
-
   return (
     <main className="min-h-screen bg-[#FAFAF7] px-5 py-6 text-[#182026] sm:px-8 sm:py-8">
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-5xl flex-col">
@@ -89,35 +70,17 @@ function AppAccessGateway() {
                 <span className="block">Bulletproof evidence. Seller-approved. Defensible claims.</span>
               </h1>
               <p className="mt-6 max-w-2xl text-[16px] leading-7 text-[#5F6D77] sm:text-[18px] sm:leading-8">
-                You found the workspace. Preview the Early Access recovery path before Margin prepares your evidence-backed reimbursement workflow.
+                Audit access is paused for tonight while we finish the live recovery path. The workspace reopens tomorrow.
               </p>
 
               <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <Button asChild className="h-12 w-full justify-center rounded-[5px] bg-[#0B74DE] px-6 text-sm font-bold text-white hover:bg-[#0869C9] sm:w-auto">
-                  <Link
-                    to="/audit"
-                    onClick={() => trackStartAudit()}
-                  >
-                    Preview Recovery Audit
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                <div className="inline-flex h-12 w-full items-center justify-center rounded-[5px] border border-[#CFE0EA] bg-white px-6 text-sm font-bold text-[#25313A] shadow-[0_12px_30px_rgba(37,49,58,0.06)] sm:w-auto">
+                  Audits reopen tomorrow
+                </div>
               </div>
 
               <p className="mt-5 text-sm leading-6 text-[#6B7883]">
-                Already approved or reviewing Margin? Use the login details supplied to you.
-                <Link
-                  to={loginPath}
-                  onClick={() => trackEvent(ANALYTICS_EVENTS.appGateLoginClicked, {
-                    cta_location: 'app_access_gate',
-                    cta_text: 'Already have access? Log in',
-                    attempted_path_type: attemptedPathType,
-                  })}
-                  className="ml-2 inline-flex items-center font-bold text-[#0B74DE] hover:text-[#0869C9]"
-                >
-                  <LogIn className="mr-1.5 h-3.5 w-3.5" />
-                  Log in
-                </Link>
+                Direct reviewer access remains available for approved reviewers only.
               </p>
             </div>
 
@@ -131,16 +94,8 @@ function AppAccessGateway() {
                     Free audit is open
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-[#66737F]">
-                    Run a free recovery evaluation first. Margin keeps evidence detail, filing controls, and reimbursement workflow access locked until activation.
+                    The public audit path is temporarily closed while Margin finishes the live Amazon recovery flow.
                   </p>
-                  <Link
-                    to="/audit"
-                    onClick={() => trackStartAudit('Start Free Audit', 'app_access_gate_sidebar')}
-                    className="mt-5 inline-flex items-center text-sm font-bold text-[#0B74DE] hover:text-[#0869C9]"
-                  >
-                    Start Free Audit
-                    <ArrowRight className="ml-1.5 h-4 w-4" />
-                  </Link>
                 </div>
               </div>
             </aside>
