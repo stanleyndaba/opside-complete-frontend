@@ -52,33 +52,6 @@ const RECONCILIATION_VIDEO_URL = "/CasesTable.mp4";
 const EVIDENCE_CALIBRATION_VIDEO_URL = "/EvidenceCalibration.mp4";
 const REPLIES_PREVIEW_VIDEO_URL = "/Replies.mp4";
 const APPEALS_PREVIEW_VIDEO_URL = "/2026-07-27__12_58_06_a_m_-Appeals_Scene.mp4";
-const auditPulses = [
-  { x: 8, y: 18, size: 9, color: "bg-blue-400", delay: 0.1, duration: 3.6 },
-  { x: 18, y: 54, size: 7, color: "bg-emerald-400", delay: 1.4, duration: 4.2 },
-  { x: 27, y: 30, size: 6, color: "bg-blue-300", delay: 2.2, duration: 3.8 },
-  { x: 39, y: 68, size: 8, color: "bg-emerald-300", delay: 0.8, duration: 4.5 },
-  { x: 48, y: 22, size: 7, color: "bg-blue-400", delay: 3.0, duration: 4.1 },
-  {
-    x: 59,
-    y: 47,
-    size: 10,
-    color: "bg-emerald-400",
-    delay: 1.1,
-    duration: 3.9,
-  },
-  { x: 68, y: 74, size: 6, color: "bg-blue-300", delay: 2.8, duration: 4.6 },
-  { x: 76, y: 28, size: 8, color: "bg-emerald-300", delay: 0.4, duration: 3.7 },
-  { x: 84, y: 58, size: 7, color: "bg-blue-400", delay: 2.0, duration: 4.3 },
-  { x: 92, y: 36, size: 6, color: "bg-emerald-400", delay: 3.4, duration: 4.0 },
-  { x: 33, y: 84, size: 7, color: "bg-blue-300", delay: 1.8, duration: 3.9 },
-];
-const auditLines = [
-  { left: 10, top: 22, width: 28, rotate: 18, delay: 0.4 },
-  { left: 25, top: 54, width: 36, rotate: -10, delay: 1.6 },
-  { left: 48, top: 32, width: 31, rotate: 14, delay: 2.7 },
-  { left: 59, top: 66, width: 29, rotate: -20, delay: 3.4 },
-  { left: 15, top: 76, width: 48, rotate: 7, delay: 4.3 },
-];
 const whyNowItems = [
   {
     title: "The claim window keeps closing",
@@ -2178,7 +2151,7 @@ function KineticHeroSection({
             "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E\")",
         }}
       />{" "}
-      <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center gap-12 lg:grid lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center">
         {" "}
         <div className="max-w-[980px]">
           {" "}
@@ -2284,7 +2257,6 @@ function KineticHeroSection({
             </div>
           ) : null}{" "}
         </div>{" "}
-        <HeroAuditFindingCard />
       </div>{" "}
     </motion.section>
   );
