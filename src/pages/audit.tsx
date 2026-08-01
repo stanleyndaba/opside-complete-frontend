@@ -36,34 +36,6 @@ const defaultTeaser: AuditTeaserSummary = {
   message: 'Margin will show a locked recovery summary after the Amazon audit finishes.',
 };
 
-const auditChecklist = [
-  {
-    label: 'Create your workspace',
-    idle: 'Required',
-    description: 'Secure your audit workspace in under a minute.',
-  },
-  {
-    label: 'Connect your Amazon account',
-    idle: 'Pending',
-    description: 'Read-only access. No changes are made to your seller account.',
-  },
-  {
-    label: 'Scan your FBA account',
-    idle: 'Waiting',
-    description: 'Margin reviews shipments, inventory, reimbursements, fees, and settlements.',
-  },
-  {
-    label: 'Find recovery opportunities',
-    idle: 'Waiting',
-    description: 'Hidden losses, shortages, fee issues, refunds, and reimbursement gaps.',
-  },
-  {
-    label: 'Unlock your recovery plan',
-    idle: 'Locked',
-    description: 'View every recovery, supporting evidence, and filing workflow.',
-  },
-] as const;
-
 function getStep(audit: AuditRunRecord | null, isAuthenticated: boolean): AuditStep {
   if (!isAuthenticated) return 'public';
   if (!audit) return 'ready';
@@ -115,6 +87,62 @@ function clearPendingAudit() {
   localStorage.removeItem(PENDING_AUDIT_KEY);
 }
 
+function getAuditState(step: AuditStep) {
+  if (step === 'public') {
+    return {
+      label: 'Account required',
+      title: 'Start with a secure audit workspace.',
+      description: 'Create your account first. Then Margin can connect Amazon and begin the free audit.',
+    };
+  }
+
+  if (step === 'ready') {
+    return {
+      label: 'Workspace ready',
+      title: 'Your audit workspace is ready.',
+      description: 'Run the audit to check whether Amazon is connected and ready for analysis.',
+    };
+  }
+
+  if (step === 'connect') {
+    return {
+      label: 'Amazon required',
+      title: 'Connect Amazon to continue.',
+      description: 'Margin needs seller authorization before it can scan shipments, settlements, inventory, fees, and reimbursements.',
+    };
+  }
+
+  if (step === 'syncing') {
+    return {
+      label: 'Syncing',
+      title: 'Amazon data is syncing.',
+      description: 'Margin is pulling the account data needed to build the recovery scope.',
+    };
+  }
+
+  if (step === 'detecting') {
+    return {
+      label: 'Analyzing',
+      title: 'Margin is checking for recovery opportunities.',
+      description: 'The recovery detectors are reviewing synced FBA data for reimbursable patterns.',
+    };
+  }
+
+  if (step === 'completed') {
+    return {
+      label: 'Result ready',
+      title: 'Your locked recovery summary is ready.',
+      description: 'Review the scope value, finding count, and categories before activating the full recovery workspace.',
+    };
+  }
+
+  return {
+    label: 'Retry needed',
+    title: 'The audit could not finish.',
+    description: 'Retry when Amazon access is available, or refresh after the connection settles.',
+  };
+}
+
 export default function Audit() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -148,6 +176,7 @@ export default function Audit() {
   const autoRunAfterOAuthRef = useRef(false);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
+  const auditState = useMemo(() => getAuditState(step), [step]);
 
   const ensureFreshAuditAuth = async (): Promise<string | null> => {
     if (!isClerkLoaded || !isClerkSignedIn) {
@@ -508,7 +537,7 @@ export default function Audit() {
     );
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 selection:bg-blue-100">
+    <main className="min-h-screen bg-[#FAFAFA] font-inter text-gray-900 selection:bg-blue-100">
       <section className="flex min-h-screen items-start justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="w-full max-w-3xl">
           {/* Header */}
@@ -537,57 +566,24 @@ export default function Audit() {
             </div>
           </header>
 
-          {/* Timeline Steps */}
-          <div className="relative ml-3 border-l-2 border-gray-100 pb-8 pl-8 sm:ml-4 sm:pl-10">
-            {auditChecklist.map((item, index) => {
-              const value =
-                item.label === 'Create your workspace'
-                  ? (isAuthenticated ? 'Ready' : item.idle)
-                  : item.label === 'Connect your Amazon account'
-                    ? (step === 'connect' || step === 'public' || step === 'ready' ? item.idle : 'In place')
-                    : item.label === 'Scan your FBA account'
-                      ? (step === 'syncing' ? 'Running' : audit?.sync_id ? 'Started' : item.idle)
-                      : item.label === 'Find recovery opportunities'
-                        ? (step === 'detecting' ? 'Running' : step === 'completed' ? 'Complete' : item.idle)
-                        : (step === 'completed' ? 'Unlocked' : item.idle);
-
-              const isActive = value === 'Running' || (item.label === 'Connect your Amazon account' && step === 'connect') || (item.label === 'Create your workspace' && step === 'public');
-              const isCompleted = value === 'Ready' || value === 'In place' || value === 'Started' || value === 'Complete' || value === 'Unlocked';
-
-              return (
-                <div key={item.label} className="relative mb-10 last:mb-0">
-                  {/* Node */}
-                  <span className="absolute -left-[41px] flex h-6 w-6 items-center justify-center bg-[#FAFAFA] sm:-left-[49px]">
-                    {isActive ? (
-                       <span className="relative flex h-3 w-3">
-                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
-                         <span className="relative inline-flex h-3 w-3 rounded-full bg-blue-600"></span>
-                       </span>
-                    ) : isCompleted ? (
-                      <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
-                    ) : (
-                      <span className="h-2.5 w-2.5 rounded-full border-2 border-gray-300 bg-transparent"></span>
-                    )}
-                  </span>
-
-                  <div className="flex flex-col gap-1">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <div className="font-mono text-[12px] text-gray-400">00:{String(index * 4 + 3).padStart(2, '0')}</div>
-                      <div className="font-mono text-[12px] text-gray-400">AUDIT-0{index + 1}</div>
-
-                      <div className={`ml-auto rounded-md px-2 py-0.5 font-mono text-[11px] font-medium uppercase ${
-                        isActive ? 'bg-blue-50 text-blue-700' :
-                        isCompleted ? 'bg-gray-100 text-gray-700' : 'bg-gray-50 text-gray-400'
-                      }`}>
-                        {value}
-                      </div>
-                    </div>
-                    <h3 className="mt-1 text-[16px] font-semibold tracking-[-0.01em] text-gray-900">{item.label}</h3>
-                    <p className="text-[14px] leading-relaxed text-gray-500">{item.description}</p>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="mb-8 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-6">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <span className="inline-flex rounded-md bg-blue-50 px-2 py-1 text-[11px] font-medium uppercase text-blue-700">
+                  {auditState.label}
+                </span>
+                <h2 className="mt-3 text-[22px] font-semibold tracking-[-0.025em] text-gray-900 sm:text-[26px]">
+                  {auditState.title}
+                </h2>
+                <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-gray-500">
+                  {auditState.description}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 rounded-full bg-gray-50 px-3 py-2 text-[12px] font-medium text-gray-500">
+                <span className={`h-2 w-2 rounded-full ${step === 'failed' ? 'bg-red-500' : step === 'completed' ? 'bg-emerald-500' : 'bg-blue-600'}`} />
+                {isBusy ? 'Working' : step === 'completed' ? 'Ready' : step === 'failed' ? 'Needs retry' : 'Waiting'}
+              </div>
+            </div>
           </div>
 
           {/* Workspace Report (Locked / Unlocked state) */}
