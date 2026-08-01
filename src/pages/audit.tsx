@@ -538,23 +538,23 @@ export default function Audit() {
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] font-inter text-gray-900 selection:bg-blue-100">
-      <section className="flex min-h-screen items-start justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <section className="flex min-h-screen items-start justify-center px-4 py-8 sm:px-6 lg:px-8">
         <div className="w-full max-w-3xl">
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-              <span className="text-[15px] font-semibold tracking-[-0.01em] text-gray-900">Margin</span>
+              <span className="brand-wordmark font-merriweather text-base tracking-tight text-[#182026] md:text-lg">Margin</span>
             </div>
           </div>
 
-          <header className="mb-10">
+          <header className="mb-6">
             <h1 className="text-[32px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-4xl">Audit workspace</h1>
             <p className="mt-2 text-[15px] leading-relaxed text-gray-500">
               Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
             </p>
 
-            <div className="mt-6 flex items-center gap-8 border-b border-gray-200 pb-6">
+            <div className="mt-4 flex items-center gap-8 border-b border-gray-200 pb-4">
               <div>
                 <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Scope value</div>
                 <div className="mt-1 text-[26px] font-semibold tracking-[-0.02em] text-gray-900">{formatMoney(teaser.scopeValue)}</div>
@@ -566,7 +566,7 @@ export default function Audit() {
             </div>
           </header>
 
-          <div className="mb-8 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-6">
+          <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-5">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <span className="inline-flex rounded-md bg-blue-50 px-2 py-1 text-[11px] font-medium uppercase text-blue-700">
@@ -587,9 +587,9 @@ export default function Audit() {
           </div>
 
           {/* Workspace Report (Locked / Unlocked state) */}
-          <div className="mt-8">
-            <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-6 sm:p-8`}>
-              <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+          <div className="mt-6">
+            <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-5 sm:p-6`}>
+              <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-3">
                 <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-gray-900">Workspace report</h2>
                 {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-[11px] font-medium uppercase text-gray-500">Locked</span>}
               </div>
@@ -605,7 +605,7 @@ export default function Audit() {
               ) : null}
 
               <div className="flex flex-col items-center justify-center text-center">
-                 <p className="mb-6 max-w-sm text-[14px] leading-relaxed text-gray-500">
+                 <p className="mb-4 max-w-sm text-[14px] leading-relaxed text-gray-500">
                   {statusCopy[step]} Seller approval stays required. Margin prepares the path; the seller decides what moves.
                  </p>
                  <div className="flex items-center justify-center gap-3">
