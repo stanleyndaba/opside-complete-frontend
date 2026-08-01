@@ -19,12 +19,12 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Check,
-  CircleDollarSign,
   FileCheck2,
   Landmark,
   MessagesSquare,
   PlayCircle,
-  Radar,
+  ReceiptText,
+  SearchCheck,
   UserCheck,
 } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
@@ -1691,13 +1691,13 @@ function DiscrepancyIsNotRevenueSection() {
       title: "Detect",
       detail: "Shipment gap found",
       meta: "REC-7702",
-      icon: Radar,
+      icon: SearchCheck,
     },
     {
       title: "Value",
       detail: "USD 1,247 scoped",
       meta: "VAL: 1,247",
-      icon: CircleDollarSign,
+      icon: ReceiptText,
     },
     {
       title: "Evidence",
