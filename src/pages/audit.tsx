@@ -150,8 +150,8 @@ function getAuditState(step: AuditStep) {
   if (step === 'completed') {
     return {
       label: 'Result ready',
-      title: 'Your locked recovery summary is ready.',
-      description: 'Review the scope value, finding count, and categories before activating the full recovery workspace.',
+      title: 'Your audit summary is ready.',
+      description: 'Review the recovery scope from this audit before deciding what should happen next.',
     };
   }
 
@@ -196,6 +196,8 @@ export default function Audit() {
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
   const auditState = useMemo(() => getAuditState(step), [step]);
+  const hasFindings = step === 'completed' && teaser.findingsCount > 0;
+  const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
 
   const ensureFreshAuditAuth = async (): Promise<string | null> => {
     if (!isClerkLoaded || !isClerkSignedIn) {
@@ -477,6 +479,11 @@ export default function Audit() {
       return;
     }
 
+    if (!hasFindings && !hasScopeValue) {
+      setError('No recovery candidates are ready from this audit yet. Margin will keep this workspace available for future checks.');
+      return;
+    }
+
     setIsBusy(true);
     setError(null);
     trackEvent(ANALYTICS_EVENTS.auditActivationClicked, {
@@ -547,14 +554,21 @@ export default function Audit() {
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
-      <Button onClick={activateAudit} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
-        Activate Your Recovery Workspace
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
+      hasFindings || hasScopeValue ? (
+        <Button onClick={activateAudit} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+          Activate Your Recovery Workspace
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      ) : (
+        <Button onClick={loadResults} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+          {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          Check Again Later
+        </Button>
+      )
     ) : (
       <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-        {audit?.sync_id ? 'Continue Audit' : 'Run Audit'}
+        {step === 'syncing' || step === 'detecting' ? 'Check Status' : audit?.sync_id ? 'Retry Audit' : 'Run Audit'}
       </Button>
     );
 
@@ -616,8 +630,25 @@ export default function Audit() {
                 {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-[11px] font-medium uppercase text-gray-500">Locked</span>}
               </div>
 
+              {step === 'completed' ? (
+                <div className="mb-6 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
+                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
+                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{formatMoney(teaser.scopeValue)}</div>
+                  </div>
+                  <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
+                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
+                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{teaser.findingsCount}</div>
+                  </div>
+                  <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
+                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Evidence ready</div>
+                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{teaser.evidenceReadyCount}</div>
+                  </div>
+                </div>
+              ) : null}
+
               {step === 'completed' && teaser.categories.length ? (
-                <div className="mb-8 flex flex-wrap gap-2">
+                <div className="mb-6 flex flex-wrap gap-2">
                   {teaser.categories.map((category) => (
                     <span key={category} className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 font-mono text-[12px] text-gray-600">
                       {category}
