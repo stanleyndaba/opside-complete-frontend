@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BadgePercent } from 'lucide-react';
+import { ArrowRight, BadgePercent } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { useSession } from '@/contexts/SessionContext';
@@ -70,17 +70,24 @@ function AppAccessGateway() {
                 <span className="block">Bulletproof evidence. Seller-approved. Defensible claims.</span>
               </h1>
               <p className="mt-6 max-w-2xl text-[16px] leading-7 text-[#5F6D77] sm:text-[18px] sm:leading-8">
-                Audit access is paused for tonight while we finish the live recovery path. The workspace reopens tomorrow.
+                Run a free recovery audit first. Margin will create your account,
+                connect Amazon securely, and keep the audit moving from sync to
+                findings without making you start over.
               </p>
 
               <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <div className="inline-flex h-12 w-full items-center justify-center rounded-[5px] border border-[#CFE0EA] bg-white px-6 text-sm font-bold text-[#25313A] shadow-[0_12px_30px_rgba(37,49,58,0.06)] sm:w-auto">
-                  Audits reopen tomorrow
-                </div>
+                <Link
+                  to="/audit"
+                  className="inline-flex h-12 w-full items-center justify-center rounded-[5px] bg-[#182026] px-6 text-sm font-bold text-white shadow-[0_12px_30px_rgba(37,49,58,0.14)] transition-colors hover:bg-[#25313A] sm:w-auto"
+                >
+                  Run Free Audit
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </div>
 
               <p className="mt-5 text-sm leading-6 text-[#6B7883]">
-                Direct reviewer access remains available for approved reviewers only.
+                Already approved or reviewing Margin? Use the login details
+                supplied to you.
               </p>
             </div>
 
@@ -94,7 +101,9 @@ function AppAccessGateway() {
                     Free audit is open
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-[#66737F]">
-                    The public audit path is temporarily closed while Margin finishes the live Amazon recovery flow.
+                    If this is your first visit, Margin starts with account
+                    creation, then Amazon authorization, then a recovery audit
+                    result you can come back to.
                   </p>
                 </div>
               </div>

@@ -31,6 +31,7 @@ import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
+import { useNavigate } from "react-router-dom";
 import { InhaleSection } from "@/components/landing/InhaleSection";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -2768,6 +2769,7 @@ export default function Index() {
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const navigate = useNavigate();
   const { isFull, capacity } = useOnboardingCapacity();
   usePageMeta(PUBLIC_ROUTE_META["/"]);
   useEffect(() => {
@@ -2783,11 +2785,12 @@ export default function Index() {
     return () => mediaQuery.removeListener(sync);
   }, []);
   const handleClaimAccessClick = (location: string) => {
-    trackEvent("audit_access_paused_clicked", {
+    trackEvent(ANALYTICS_EVENTS.auditStarted, {
       cta_location: location,
       cta_text: primaryCtaLabel,
-      destination: "paused",
+      destination: "/audit",
     });
+    navigate("/audit");
   };
   const openDemo = () => {
     trackEvent(ANALYTICS_EVENTS.demoCtaClicked, {
@@ -2798,7 +2801,7 @@ export default function Index() {
     setIsDemoOpen(true);
   };
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
-  const primaryCtaLabel = "Audits Reopen Tomorrow";
+  const primaryCtaLabel = "Run Free Audit";
   return (
     <div className="min-h-screen overflow-x-clip bg-[var(--margin-canvas)] font-sans text-[var(--margin-text-primary)] selection:bg-[rgba(23,92,211,0.16)] selection:text-[var(--margin-text-primary)]">
       {" "}

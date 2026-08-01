@@ -18,7 +18,6 @@ type PendingAuditContext = {
 };
 
 const PENDING_AUDIT_KEY = 'margin_pending_audit';
-const AUDIT_ACCESS_PAUSED = true;
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -175,7 +174,6 @@ export default function Audit() {
   }, [audit?.id, audit?.status]);
 
   useEffect(() => {
-    if (AUDIT_ACCESS_PAUSED) return;
     if (!isAuthenticated || restoredAuditRef.current) return;
     restoredAuditRef.current = true;
 
@@ -228,7 +226,6 @@ export default function Audit() {
   }, [isAuthenticated, isClerkLoaded, isClerkSignedIn, clerkUserId]);
 
   useEffect(() => {
-    if (AUDIT_ACCESS_PAUSED) return;
     if (!isAuthenticated || autoRunAfterOAuthRef.current) return;
     const query = new URLSearchParams(location.search);
     if (query.get('amazon_connected') !== '1') return;
@@ -240,14 +237,9 @@ export default function Audit() {
   }, [audit, isAuthenticated, location.search, tenantSlug]);
 
   const startAccountStep = () => {
-    if (AUDIT_ACCESS_PAUSED) {
-      setError('Recovery audits reopen tomorrow.');
-      return;
-    }
-
     trackEvent(ANALYTICS_EVENTS.auditStarted, {
       cta_location: 'audit_public_hero',
-      cta_text: 'Connect Amazon',
+      cta_text: 'Start Free Audit',
     });
     trackEvent(ANALYTICS_EVENTS.auditAccountStepStarted, {
       cta_location: 'audit_public_hero',
@@ -257,11 +249,6 @@ export default function Audit() {
   };
 
   const startAudit = async () => {
-    if (AUDIT_ACCESS_PAUSED) {
-      setError('Recovery audits reopen tomorrow.');
-      return;
-    }
-
     if (!isAuthenticated) {
       startAccountStep();
       return;
@@ -464,9 +451,7 @@ export default function Audit() {
   const runAudit = () => runAuditForAudit();
 
   const statusCopy = {
-    public: AUDIT_ACCESS_PAUSED
-      ? 'Recovery audits are paused tonight while Margin finishes the live Amazon recovery path.'
-      : 'Create an account first. The audit is free, and activation only happens after you see the locked summary.',
+    public: 'Create an account first. The audit is free, and activation only happens after you see the locked summary.',
     ready: 'Your account is ready. Start the audit and Margin will check whether Amazon data is connected.',
     connect: 'Connect Amazon securely so Margin can scan FBA data and prepare the recovery scope.',
     syncing: 'Margin is syncing Amazon data. If Amazon is still blocked, this step will fail gracefully.',
@@ -477,8 +462,8 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-      <Button onClick={startAccountStep} disabled={AUDIT_ACCESS_PAUSED} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A] disabled:cursor-not-allowed disabled:opacity-70">
-        {AUDIT_ACCESS_PAUSED ? 'Audits reopen tomorrow' : 'Connect Amazon'}
+      <Button onClick={startAccountStep} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">
+        Start Free Audit
       </Button>
     ) : step === 'connect' ? (
       <Button onClick={connectAmazon} disabled={isBusy} className="h-8 rounded-none bg-[#182026] px-4 font-mono text-[10px] font-medium tracking-tight text-white hover:bg-[#25313A]">

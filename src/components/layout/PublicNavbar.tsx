@@ -31,6 +31,9 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     const desktopNavLinkClass = isLight
         ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-[background-color,color,border-color] duration-150 hover:bg-[#F3F6F8] hover:text-[#182026]"
         : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-[background-color,color,border-color] duration-150 hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
+    const desktopActionClass = isLight
+        ? "hidden md:inline-flex h-10 items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8]"
+        : "hidden md:inline-flex h-10 items-center justify-center rounded-[6px] border border-white/10 bg-white/[0.025] px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-colors hover:bg-white/5";
 
     // Close mobile menu on resize
     useEffect(() => {
@@ -137,7 +140,11 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         </Link>
                     </nav>
 
-                    <nav className="hidden md:flex items-center gap-2" aria-hidden="true" />
+                    <nav className="hidden md:flex items-center gap-2">
+                        <Link to="/login" className={desktopActionClass}>
+                            Login
+                        </Link>
+                    </nav>
 
                     <button
                         type="button"
@@ -237,6 +244,17 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={mobileMenuItemClass}>
                                     Pricing
+                                </Link>
+                                <Link
+                                    to="/login"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={cn(
+                                        mobileMenuItemClass,
+                                        isLight
+                                            ? "mt-2 justify-center border border-[#DCE8EE] bg-white text-[#25313A]"
+                                            : "mt-2 justify-center border border-white/10 bg-white/[0.025] text-white"
+                                    )}>
+                                    Login
                                 </Link>
                             </div>
                         </motion.div>

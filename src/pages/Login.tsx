@@ -222,7 +222,7 @@ const formatLoginError = (error: unknown, step: LoginStep) => {
   }
 
   if (step === 'workspace' && normalized.includes('unable to resolve a workspace')) {
-    return 'Your account sign-in succeeded, but this account is not assigned to active Margin access yet. Use the reviewer credentials Margin supplied, or request Early Access.';
+    return 'Your account sign-in succeeded, but Margin could not prepare your audit workspace yet. Please retry, or use the reviewer credentials Margin supplied if you are reviewing the demo.';
   }
 
   const retryableAuthIssue =
@@ -374,7 +374,7 @@ const Login = () => {
   const heading = mode === 'signup'
     ? isAuditIntent
       ? 'Create your audit account'
-      : 'Create your reservation account'
+      : 'Create your Margin account'
     : mode === 'recovery'
       ? 'Reset your password'
     : 'Log in to your account';
@@ -1133,7 +1133,7 @@ const Login = () => {
                   : isAuditIntent
                     ? 'Create access for your free recovery audit. Amazon connects after account setup, and activation only happens after you see the locked summary.'
                   : intent === 'onboarding'
-                    ? 'Your Founding 500 seat is reserved first. Platform activation begins after payment reconciliation and founder onboarding readiness.'
+                    ? 'Create your Margin account first. Amazon authorization and audit setup happen after account access is ready.'
                     : 'Your Margin account gets you into the workspace first. Amazon, Gmail, and other providers are connected after that from inside the product.'}
               </p>
             </div>
@@ -1153,7 +1153,7 @@ const Login = () => {
                     {mode === 'signup'
                       ? isAuditIntent
                         ? 'Create your audit access'
-                        : 'Create your reservation access'
+                        : 'Create your account'
                       : mode === 'recovery'
                         ? 'Set your new password'
                         : 'Enter your details'}
@@ -1312,14 +1312,14 @@ const Login = () => {
                     We're preparing your account.
                   </h3>
                   <p className="mx-auto mt-3 max-w-[440px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">
-                    Margin is currently in final setup before our official launch. If you've secured Early Access, your account will be ready shortly. We'll notify you the moment you're in.
+                    Margin could not finish preparing your workspace automatically. Retry account setup, or start again from the free audit path.
                   </p>
                   <Button
                     asChild
                     className="mt-5 h-11 rounded-[5px] bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
                   >
-                    <Link to="/early-access">
-                      Join the Founding 500
+                    <Link to="/audit">
+                      Start Free Audit
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
