@@ -290,7 +290,21 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [internalError, setInternalError] = useState('');
+  const setError = (message: string) => {
+    if (message === '__SERVICE_PREPARING__') {
+      setInternalError(message);
+    } else if (message) {
+      toast({
+        variant: 'destructive',
+        description: message,
+      });
+      setInternalError('');
+    } else {
+      setInternalError('');
+    }
+  };
+  const error = internalError;
   const [loginStep, setLoginStep] = useState<LoginStep | null>(null);
   const [workspaceRetryAvailable, setWorkspaceRetryAvailable] = useState(false);
   const [sessionChecked, setSessionChecked] = useState(false);
@@ -1387,7 +1401,7 @@ const Login = () => {
                 </div>
               ) : null}
 
-              {error && error === '__SERVICE_PREPARING__' ? (
+              {error === '__SERVICE_PREPARING__' ? (
                 <div className="rounded-[12px] border border-[#CFE0EA] bg-[#F8FAFC] px-5 py-6 text-center">
                   <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#182026] md:text-[26px]">
                     We're preparing your account.
@@ -1405,37 +1419,30 @@ const Login = () => {
                     </Link>
                   </Button>
                 </div>
-              ) : error ? (
-                <div className="rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                  <p>{error}</p>
-                  {loginStep ? (
-                    <p className="mt-2 text-[11px] font-semibold uppercase tracking-tight text-red-500">
-                      Failed step: {loginStep === 'account' ? 'Account sign-in' : 'Access setup'}
-                    </p>
-                  ) : null}
-                  {workspaceRetryAvailable && mode === 'login' ? (
-                    <Button
-                      type="button"
-                      onClick={() => void handleRetryWorkspaceRouting()}
-                      disabled={loading}
-                      className="mt-3 h-9 rounded-[5px] bg-[#0B74DE] px-3 text-[11px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
-                    >
-                      Retry access setup
-                      <ArrowRight className="ml-2 h-3.5 w-3.5" />
-                    </Button>
-                  ) : null}
-                  {!workspaceRetryAvailable && loginStep === 'account' && mode === 'login' ? (
-                    <Button
-                      type="button"
-                      onClick={() => void handleClearBrowserSession()}
-                      disabled={loading}
-                      variant="outline"
-                      className="mt-3 h-9 rounded-[5px] border-red-200 bg-white px-3 text-[11px] font-semibold tracking-tight text-red-700 hover:bg-red-100"
-                    >
-                      Clear browser session
-                    </Button>
-                  ) : null}
-                </div>
+              ) : null}
+
+              {workspaceRetryAvailable && mode === 'login' ? (
+                <Button
+                  type="button"
+                  onClick={() => void handleRetryWorkspaceRouting()}
+                  disabled={loading}
+                  className="w-full mt-3 h-9 rounded-[5px] bg-[#0B74DE] px-3 text-[11px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
+                >
+                  Retry access setup
+                  <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                </Button>
+              ) : null}
+
+              {!workspaceRetryAvailable && loginStep === 'account' && mode === 'login' ? (
+                <Button
+                  type="button"
+                  onClick={() => void handleClearBrowserSession()}
+                  disabled={loading}
+                  variant="outline"
+                  className="w-full mt-3 h-9 rounded-[5px] border-red-200 bg-white px-3 text-[11px] font-semibold tracking-tight text-red-700 hover:bg-red-100"
+                >
+                  Clear browser session
+                </Button>
               ) : null}
 
               <div className="flex flex-col gap-3 pt-2 sm:flex-row">
