@@ -487,21 +487,21 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-      <Button onClick={startAccountStep} className="h-10 rounded-md bg-gray-900 px-5 font-mono text-[12px] font-medium text-white hover:bg-gray-800">
+      <Button onClick={startAccountStep} className="h-10 rounded-md bg-gray-900 px-5 text-[13px] font-medium text-white hover:bg-gray-800">
         Start Free Audit
       </Button>
     ) : step === 'connect' ? (
-      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 font-mono text-[12px] font-medium text-white hover:bg-gray-800">
+      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 text-[13px] font-medium text-white hover:bg-gray-800">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
-      <Button onClick={activateAudit} className="h-10 rounded-md bg-blue-600 px-5 font-mono text-[12px] font-medium text-white hover:bg-blue-700">
+      <Button onClick={activateAudit} className="h-10 rounded-md bg-blue-600 px-5 text-[13px] font-medium text-white hover:bg-blue-700">
         Activate Your Recovery Workspace
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     ) : (
-      <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 font-mono text-[12px] font-medium text-white hover:bg-gray-800">
+      <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 text-[13px] font-medium text-white hover:bg-gray-800">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         {audit?.sync_id ? 'Continue Audit' : 'Run Audit'}
       </Button>
@@ -515,24 +515,24 @@ export default function Audit() {
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-              <span className="font-semibold tracking-tight text-gray-900">Margin</span>
+              <span className="text-[15px] font-semibold tracking-[-0.01em] text-gray-900">Margin</span>
             </div>
           </div>
 
           <header className="mb-10">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">Audit workspace</h1>
-            <p className="mt-2 text-[15px] text-gray-500">
+            <h1 className="text-[32px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-4xl">Audit workspace</h1>
+            <p className="mt-2 text-[15px] leading-relaxed text-gray-500">
               Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
             </p>
 
             <div className="mt-6 flex items-center gap-8 border-b border-gray-200 pb-6">
               <div>
-                <div className="font-mono text-[10px] font-medium uppercase tracking-wider text-gray-500">Scope value</div>
-                <div className="mt-1 font-mono text-2xl font-medium tracking-tight text-gray-900">{formatMoney(teaser.scopeValue)}</div>
+                <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Scope value</div>
+                <div className="mt-1 text-[26px] font-semibold tracking-[-0.02em] text-gray-900">{formatMoney(teaser.scopeValue)}</div>
               </div>
               <div>
-                <div className="font-mono text-[10px] font-medium uppercase tracking-wider text-gray-500">Findings</div>
-                <div className="mt-1 font-mono text-2xl font-medium tracking-tight text-gray-900">{teaser.findingsCount}</div>
+                <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Findings</div>
+                <div className="mt-1 text-[26px] font-semibold tracking-[-0.02em] text-gray-900">{teaser.findingsCount}</div>
               </div>
             </div>
           </header>
@@ -572,17 +572,17 @@ export default function Audit() {
 
                   <div className="flex flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-3">
-                      <div className="font-mono text-[11px] font-medium text-gray-400">00:{String(index * 4 + 3).padStart(2, '0')}</div>
-                      <div className="font-mono text-[11px] font-medium text-gray-400">AUDIT-0{index + 1}</div>
+                      <div className="font-mono text-[12px] text-gray-400">00:{String(index * 4 + 3).padStart(2, '0')}</div>
+                      <div className="font-mono text-[12px] text-gray-400">AUDIT-0{index + 1}</div>
 
-                      <div className={`ml-auto rounded-md px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${
+                      <div className={`ml-auto rounded-md px-2 py-0.5 font-mono text-[11px] font-medium uppercase ${
                         isActive ? 'bg-blue-50 text-blue-700' :
                         isCompleted ? 'bg-gray-100 text-gray-700' : 'bg-gray-50 text-gray-400'
                       }`}>
                         {value}
                       </div>
                     </div>
-                    <h3 className="mt-1 text-base font-semibold text-gray-900">{item.label}</h3>
+                    <h3 className="mt-1 text-[16px] font-semibold tracking-[-0.01em] text-gray-900">{item.label}</h3>
                     <p className="text-[14px] leading-relaxed text-gray-500">{item.description}</p>
                   </div>
                 </div>
@@ -594,14 +594,14 @@ export default function Audit() {
           <div className="mt-8">
             <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-6 sm:p-8`}>
               <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Workspace report</h2>
-                {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-gray-500">Locked</span>}
+                <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-gray-900">Workspace report</h2>
+                {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-[11px] font-medium uppercase text-gray-500">Locked</span>}
               </div>
 
               {step === 'completed' && teaser.categories.length ? (
                 <div className="mb-8 flex flex-wrap gap-2">
                   {teaser.categories.map((category) => (
-                    <span key={category} className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 font-mono text-[11px] font-medium text-gray-600">
+                    <span key={category} className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 font-mono text-[12px] text-gray-600">
                       {category}
                     </span>
                   ))}
@@ -609,12 +609,12 @@ export default function Audit() {
               ) : null}
 
               <div className="flex flex-col items-center justify-center text-center">
-                 <p className="mb-6 max-w-sm font-mono text-[12px] leading-relaxed text-gray-500">
+                 <p className="mb-6 max-w-sm text-[14px] leading-relaxed text-gray-500">
                   {statusCopy[step]} Seller approval stays required. Margin prepares the path; the seller decides what moves.
                  </p>
                  <div className="flex items-center justify-center gap-3">
                    {step === 'completed' && (
-                     <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-10 rounded-md border-gray-200 bg-white px-4 font-mono text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                     <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-700 hover:bg-gray-50">
                        Refresh
                      </Button>
                    )}
