@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useAuth, useSignIn } from '@clerk/react';
+import { useAuth, useClerk, useSignIn, useUser } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -250,7 +250,14 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
-  const { isLoaded: clerkAuthLoaded, userId: clerkUserId } = useAuth();
+  const {
+    isLoaded: clerkAuthLoaded,
+    isSignedIn: clerkSignedIn,
+    userId: clerkUserId,
+    getToken: getClerkToken,
+  } = useAuth();
+  const clerk = useClerk();
+  const { user: clerkUser } = useUser();
   const {
     signIn,
     errors: clerkSignInErrors,
@@ -320,7 +327,11 @@ const Login = () => {
       }
 
       const recoveryMode = searchParams.get('type') === 'recovery' || searchParams.get('mode') === 'recovery';
-      if (!recoveryMode && session?.access_token) {
+      const clerkEmail = clerkUser?.primaryEmailAddress?.emailAddress || null;
+      if (!recoveryMode && clerkAuthLoaded && clerkSignedIn && clerkUserId) {
+        const nextEmail = clerkEmail || localStorage.getItem('user_email') || null;
+        setActiveSessionEmail(nextEmail);
+      } else if (!recoveryMode && session?.access_token) {
         const nextEmail = session.user?.email || localStorage.getItem('user_email') || null;
         setActiveSessionEmail(nextEmail);
       } else {
@@ -335,7 +346,7 @@ const Login = () => {
     return () => {
       isMounted = false;
     };
-  }, [searchParams]);
+  }, [clerkAuthLoaded, clerkSignedIn, clerkUser, clerkUserId, searchParams]);
 
   useEffect(() => {
     const urlType = searchParams.get('type');
@@ -746,6 +757,21 @@ const Login = () => {
 
   const routeExistingSession = async () => {
     const sessionEmail = activeSessionEmail || localStorage.getItem('user_email') || '';
+    if (clerkAuthLoaded && clerkSignedIn && clerkUserId) {
+      const sessionToken = await getClerkToken({ skipCache: true });
+      const clerkEmail = clerkUser?.primaryEmailAddress?.emailAddress || sessionEmail || email.trim();
+      if (!sessionToken || !clerkEmail) {
+        throw new Error('No active Clerk session is available for workspace routing.');
+      }
+
+      const resolvedTenantSlug = await bootstrapWorkspaceWithClerkToken(clerkEmail, sessionToken);
+      const targetPath = nextPath !== '/app'
+        ? bindPathToTenant(nextPath, resolvedTenantSlug)
+        : getDefaultWorkspaceLanding(resolvedTenantSlug);
+      await routeWithCapacityGate(targetPath);
+      return;
+    }
+
     const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
     const targetPath = nextPath !== '/app'
       ? bindPathToTenant(nextPath, resolvedTenantSlug)
@@ -806,6 +832,9 @@ const Login = () => {
     setWorkspaceRetryAvailable(false);
 
     try {
+      if (clerkAuthLoaded && clerkSignedIn) {
+        await clerk.signOut();
+      }
       await supabase.auth.signOut({ scope: 'local' });
     } catch {
       // Even if sign-out reports an issue, clear local auth state so the form is usable.
@@ -824,6 +853,9 @@ const Login = () => {
 
   const resetBrowserAuthForFreshLogin = async () => {
     try {
+      if (clerkAuthLoaded && clerkSignedIn) {
+        await clerk.signOut();
+      }
       await supabase.auth.signOut({ scope: 'local' });
     } catch {
       // Local cleanup below is still enough to prevent stale app context from poisoning login.
