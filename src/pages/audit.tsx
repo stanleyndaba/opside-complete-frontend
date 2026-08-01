@@ -516,21 +516,21 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-      <Button onClick={startAccountStep} className="h-10 rounded-md bg-gray-900 px-5 text-[13px] font-medium text-white hover:bg-gray-800">
+      <Button onClick={startAccountStep} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
         Start Free Audit
       </Button>
     ) : step === 'connect' ? (
-      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 text-[13px] font-medium text-white hover:bg-gray-800">
+      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
-      <Button onClick={activateAudit} className="h-10 rounded-md bg-blue-600 px-5 text-[13px] font-medium text-white hover:bg-blue-700">
+      <Button onClick={activateAudit} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
         Activate Your Recovery Workspace
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     ) : (
-      <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-gray-900 px-5 text-[13px] font-medium text-white hover:bg-gray-800">
+      <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         {audit?.sync_id ? 'Continue Audit' : 'Run Audit'}
       </Button>
