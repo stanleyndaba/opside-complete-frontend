@@ -11,6 +11,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AMAZON_MARKETPLACES } from '@/lib/amazonMarketplaces';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
+type AmazonConnectResponseData = {
+  auth_url?: string;
+  authUrl?: string;
+  state?: string;
+  capacity_full?: boolean;
+};
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : '';
+}
+
 export default function ConnectAmazonAccount() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
@@ -64,11 +75,11 @@ export default function ConnectAmazonAccount() {
             return;
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (mounted) {
           toast({
             title: 'Workspace setup incomplete',
-            description: error?.message || 'We could not finish preparing your workspace yet.',
+            description: getErrorMessage(error) || 'We could not finish preparing your workspace yet.',
             variant: 'destructive',
           });
         }
@@ -114,16 +125,17 @@ export default function ConnectAmazonAccount() {
 
     try {
       const response = await api.connectAmazon(selectedMarketplace, false, resolvedTenantSlug);
-      const authUrl = response.data?.auth_url || response.data?.authUrl;
-      const stateParam = (response.data as any)?.state;
+      const responseData = response.data as AmazonConnectResponseData | undefined;
+      const authUrl = responseData?.auth_url || responseData?.authUrl;
+      const stateParam = responseData?.state;
 
       if (!response.ok || !authUrl) {
         const rawError = typeof response.error === 'string' ? response.error : '';
-        const isCapacityFull = rawError.includes('capacity_full') || (response.data as any)?.capacity_full;
+        const isCapacityFull = rawError.includes('capacity_full') || responseData?.capacity_full;
         toast({
-          title: isCapacityFull ? 'Batch 01 is currently onboarding' : 'Amazon connection failed',
+          title: isCapacityFull ? 'Audit capacity is temporarily full' : 'Amazon connection failed',
           description: isCapacityFull
-            ? 'Margin is onboarding our first cohort of founding members. Join the waitlist and we’ll notify you the moment a spot opens.'
+            ? 'Margin is processing the current audit queue. Join the waitlist and we will notify you when more audit capacity opens.'
             : (response.error || 'We could not start Amazon authorization. Please try again.'),
           variant: 'destructive',
         });
@@ -150,13 +162,13 @@ export default function ConnectAmazonAccount() {
       });
 
       window.location.assign(authUrl);
-    } catch (error: any) {
-      const rawMsg = error?.message || '';
+    } catch (error: unknown) {
+      const rawMsg = getErrorMessage(error);
       const isCapacityFull = rawMsg.includes('capacity_full');
       toast({
-        title: isCapacityFull ? 'Batch 01 is currently onboarding' : 'Amazon connection failed',
+        title: isCapacityFull ? 'Audit capacity is temporarily full' : 'Amazon connection failed',
         description: isCapacityFull
-          ? 'Margin is onboarding our first cohort of founding members. Join the waitlist and we’ll notify you the moment a spot opens.'
+          ? 'Margin is processing the current audit queue. Join the waitlist and we will notify you when more audit capacity opens.'
           : (rawMsg || 'We could not start Amazon authorization. Please try again.'),
         variant: 'destructive',
       });
@@ -168,7 +180,7 @@ export default function ConnectAmazonAccount() {
   };
 
   return (
-    <PageLayout title="Founder Onboarding" hideNavbar hideSidebar hideLogo plainBackground noPadding>
+    <PageLayout title="Connect Amazon | Margin" hideNavbar hideSidebar hideLogo plainBackground noPadding>
       <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] py-12 text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         <div className="pointer-events-none absolute inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
@@ -177,17 +189,17 @@ export default function ConnectAmazonAccount() {
         <div className="relative mx-auto max-w-[860px] space-y-8 px-4 pt-20 md:px-6">
           <section className="space-y-5">
             <div className="inline-flex items-center gap-3 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
-              <span>Founder onboarding</span>
+              <span>Free Recovery Audit</span>
               <span className="h-1 w-1 rounded-full bg-[#0B74DE]/80" />
-              <span className="text-[#66737F]">Activation preparation</span>
+              <span className="text-[#66737F]">Amazon authorization</span>
             </div>
 
             <div className="space-y-4">
               <h1 className="max-w-[620px] text-[38px] font-semibold leading-[0.95] tracking-[-0.06em] text-[#182026] md:text-[60px]">
-                Founder onboarding begins soon.
+                Connect Amazon to run your recovery audit.
               </h1>
               <p className="max-w-[560px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
-                Your Founding 500 seat is secured. Margin will prepare infrastructure, confirm readiness, and guide marketplace setup during founder-led onboarding.
+                Margin needs secure Amazon authorization before it can analyze shipments, inventory events, settlement lines, refunds, fees, and reimbursement history.
               </p>
             </div>
           </section>
@@ -200,18 +212,18 @@ export default function ConnectAmazonAccount() {
               <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
                   <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
-                    Activation preparation
+                    Amazon connection
                   </div>
                   <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
-                    Setup is scheduled through founder onboarding.
+                    Authorize read access for the Free Recovery Audit.
                   </h2>
                   <p className="max-w-[520px] text-[14px] leading-6 text-[#66737F] md:text-[15px]">
-                    Amazon authorization is not an immediate self-serve step for Founding 500 reservations. A founder or team member will confirm activation readiness before connection begins.
+                    Select the marketplace you want Margin to review. Amazon will ask you to approve the connection, then Margin can sync the data required to surface recovery opportunities.
                   </p>
                 </div>
 
                 <div className="rounded-full border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
-                  Reserved seat
+                  Secure OAuth
                 </div>
               </div>
 
@@ -224,10 +236,10 @@ export default function ConnectAmazonAccount() {
                 <div className="space-y-5 rounded-[22px] border border-[#DCE8EE] bg-[#F8FAFC] p-5 text-[#182026]">
                   <div className="space-y-2">
                     <p className="text-[12px] font-semibold tracking-tight text-[#182026]">
-                      Margin is currently onboarding our first cohort of founding members.
+                      Margin is processing the current audit queue.
                     </p>
                     <p className="text-[12px] text-[#66737F]">
-                      We’ll open the next batch soon — join the waitlist and we’ll notify you the moment a spot opens.
+                      Join the waitlist and we will notify you when more Free Recovery Audit capacity opens.
                     </p>
                   </div>
                   <Button
@@ -251,7 +263,7 @@ export default function ConnectAmazonAccount() {
                       disabled={connecting}
                     >
                       <SelectTrigger className="h-14 rounded-[20px] border-[#CFE0EA] bg-white px-4 text-left text-[14px] tracking-tight text-[#182026] focus:border-[#0B74DE]/50 focus:ring-0">
-                        <SelectValue placeholder="Marketplace will be confirmed during onboarding" />
+                        <SelectValue placeholder="Select the Amazon marketplace to audit" />
                       </SelectTrigger>
                       <SelectContent className="rounded-[20px] border-[#CFE0EA] bg-white text-[#182026] shadow-[0_22px_70px_rgba(37,49,58,0.14)]">
                         {AMAZON_MARKETPLACES.map((marketplace) => (
@@ -269,7 +281,7 @@ export default function ConnectAmazonAccount() {
 
                   <Button
                     type="button"
-                    onClick={() => navigate('/early-access')}
+                    onClick={handleConnectAmazon}
                     disabled={connecting}
                     className="h-12 w-full justify-between rounded-full bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:bg-[#BFD8EA] disabled:text-white"
                   >
@@ -282,7 +294,7 @@ export default function ConnectAmazonAccount() {
                       </>
                     ) : (
                       <>
-                        Founder Onboarding Begins Soon
+                        Connect Amazon Account
                         <ArrowRight className="h-4 w-4" />
                       </>
                     )}
