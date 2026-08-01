@@ -55,7 +55,7 @@ const getPricingTiers = (interval: BillingView): PricingTier[] => [
       'No card required',
     ],
     ctaLabel: 'Get Started',
-    checkoutUrl: '/register',
+    checkoutUrl: '/audit',
   },
   {
     name: 'Recovery Workspace',
@@ -93,7 +93,7 @@ const getPricingTiers = (interval: BillingView): PricingTier[] => [
       'Priority onboarding and support',
       'Custom accounting or API workflows',
     ],
-    ctaLabel: 'Talk to team',
+    ctaLabel: 'Talk to Sales',
     salesLed: true,
   },
 ];
@@ -330,6 +330,11 @@ export default function PricingAdjust() {
                   cta_text: ctaText,
                 });
                 if (tier.checkoutUrl) {
+                  if (tier.checkoutUrl.startsWith('/')) {
+                    navigate(tier.checkoutUrl);
+                    return;
+                  }
+
                   openPaymentCheckout(tier.checkoutUrl, {
                     cta_location: ctaLocation,
                     cta_text: ctaText,
@@ -338,6 +343,10 @@ export default function PricingAdjust() {
                 }
                 if (tier.salesLed || !tier.planKey) {
                   openSalesPage();
+                  return;
+                }
+                if (!isInAppOverlay) {
+                  navigate('/audit');
                   return;
                 }
                 startSubscribeIntent(tier.planKey, billingInterval);
