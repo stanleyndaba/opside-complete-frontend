@@ -247,6 +247,7 @@ export default function Audit() {
   }, [step, teaser.finalStatus, teaser.recordsReviewed]);
   const hasFindings = step === 'completed' && teaser.findingsCount > 0;
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
+  const hasRecoveryOpportunity = hasFindings || hasScopeValue;
 
   const ensureFreshAuditAuth = async (): Promise<string | null> => {
     if (!isClerkLoaded || !isClerkSignedIn) {
@@ -579,6 +580,30 @@ export default function Audit() {
 
   const runAudit = () => runAuditForAudit();
 
+  const workspaceOffer = (() => {
+    if (isZeroRecordLimitedAudit) {
+      return {
+        heading: 'Your first audit had limited Amazon coverage.',
+        body: 'Margin connected successfully, but some Amazon activity was not available for review. Retry the audit, or activate the Recovery Workspace so Margin keeps monitoring eligible activity as new data becomes available.',
+        cta: 'Activate Recovery Workspace',
+      };
+    }
+
+    if (hasRecoveryOpportunity) {
+      return {
+        heading: 'Recovery opportunities found. Keep them moving.',
+        body: 'Activate the Recovery Workspace to prepare evidence, track deadlines, manage Amazon responses, and verify that the correct payouts reach settlement. Margin will also keep monitoring for new recoveries as Amazon activity changes.',
+        cta: 'Activate Recovery Workspace',
+      };
+    }
+
+    return {
+      heading: 'No recoveries found in this audit. Keep Margin watching.',
+      body: 'Your account may be clear today, but new shipments, returns, reimbursements, fees, and settlement activity create new recovery exposure over time. Activate the Recovery Workspace so Margin continues checking as your Amazon operation changes.',
+      cta: 'Start Continuous Monitoring',
+    };
+  })();
+
   const statusCopy = {
     public: 'Create an account first. The audit is free, and activation only happens after you see the locked summary.',
     ready: 'Your account is ready. Start the audit and Margin will check whether Amazon data is connected.',
@@ -604,19 +629,14 @@ export default function Audit() {
       </Button>
     ) : step === 'completed' ? (
       isZeroRecordLimitedAudit ? (
-        <Button onClick={teaser.retryable ? runAudit : loadResults} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+        <Button onClick={teaser.retryable ? runAudit : activateAudit} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
           {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          {teaser.retryable ? 'Retry Audit' : 'Return Later'}
-        </Button>
-      ) : hasFindings || hasScopeValue ? (
-        <Button onClick={activateAudit} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
-          Activate Your Recovery Workspace
-          <ArrowRight className="ml-2 h-4 w-4" />
+          {teaser.retryable ? 'Retry Audit' : workspaceOffer.cta}
         </Button>
       ) : (
-        <Button onClick={loadResults} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
-          {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Check Again Later
+        <Button onClick={activateAudit} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+          {workspaceOffer.cta}
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       )
     ) : (
@@ -745,6 +765,52 @@ export default function Audit() {
               </div>
             </div>
           </div>
+
+          {step === 'completed' ? (
+            <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-6">
+              <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+                <div>
+                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">What happens now</div>
+                  <h2 className="mt-2 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{workspaceOffer.heading}</h2>
+                  <p className="mt-2 text-[14px] leading-relaxed text-gray-500">{workspaceOffer.body}</p>
+                  {isZeroRecordLimitedAudit && teaser.retryable ? (
+                    <Button variant="outline" onClick={runAudit} disabled={isBusy} className="mt-4 h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-700 hover:bg-gray-50">
+                      {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                      Retry Audit
+                    </Button>
+                  ) : null}
+                </div>
+
+                <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Recovery Workspace</div>
+                  <div className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-gray-900">$99/month</div>
+                  <p className="mt-1 text-[13px] font-medium text-gray-600">0% recovery commission | Cancel anytime | Nothing filed without approval</p>
+                  <ul className="mt-4 space-y-2 text-[13px] leading-relaxed text-gray-500">
+                    {[
+                      'continuous Amazon monitoring',
+                      'scheduled Recovery Audits',
+                      'new opportunity alerts',
+                      'evidence preparation',
+                      'seller approvals',
+                      'Amazon response continuity',
+                      'payout and reversal tracking',
+                      'accounting-ready history',
+                    ].map((item) => (
+                      <li key={item} className="flex gap-2">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--margin-blue)]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-10 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+                    {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    {workspaceOffer.cta}
+                    {!isBusy ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
+                  </Button>
+                </div>
+              </div>
+            </section>
+          ) : null}
 
         </div>
       </section>
