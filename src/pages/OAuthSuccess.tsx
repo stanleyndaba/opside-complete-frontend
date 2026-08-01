@@ -132,8 +132,7 @@ export default function OAuthSuccess() {
   return (
     <PageLayout title={heading} noPadding hideNavbar hideSidebar hideLogo>
       <main className="relative min-h-screen overflow-hidden bg-white text-slate-950">
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.045)_1px,transparent_1px)] bg-[size:42px_42px]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(37,99,235,0.13),transparent_34%),radial-gradient(circle_at_90%_30%,rgba(14,165,233,0.1),transparent_30%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(37,99,235,0.12),transparent_34%),radial-gradient(circle_at_90%_30%,rgba(14,165,233,0.08),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)]" />
 
         <section className="relative z-10 flex min-h-screen items-center justify-center px-5 py-12">
           <div className="w-full max-w-3xl rounded-2xl border border-slate-200 bg-white/90 px-7 py-8 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur md:px-10 md:py-10">
