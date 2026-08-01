@@ -671,21 +671,21 @@ export default function Audit() {
           </div>
 
           <header className="mb-6">
-            <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[25px]">Panel Workspace</h1>
-            <p className="mt-2 text-[15px] leading-relaxed text-gray-500">
+            <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">Seller Audit Workspace</h1>
+            <p className="mt-2 text-[14px] leading-relaxed text-gray-500">
               Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
             </p>
 
             <div className="mt-4 flex items-center gap-8 border-b border-gray-200 pb-4">
               <div>
                 <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Scope value</div>
-                <div className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[26px]">
+                <div className="mt-1 text-[16px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">
                   {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}
                 </div>
               </div>
               <div>
                 <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Findings</div>
-                <div className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[26px]">
+                <div className="mt-1 text-[16px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">
                   {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}
                 </div>
               </div>
@@ -698,7 +698,7 @@ export default function Audit() {
                 <span className={`inline-flex rounded-md px-2 py-1 text-[11px] font-medium uppercase ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-blue-50 text-blue-700'}`}>
                   {auditState.label}
                 </span>
-                <h2 className={`mt-3 font-semibold tracking-[-0.025em] text-gray-900 ${isZeroRecordLimitedAudit ? 'text-[14px] sm:text-[15px]' : 'text-[22px] sm:text-[26px]'}`}>
+                <h2 className={`mt-3 font-semibold tracking-[-0.025em] text-gray-900 ${step === 'completed' ? (isZeroRecordLimitedAudit ? 'text-[14px] sm:text-[15px]' : 'text-[22px] sm:text-[26px]') : 'text-[15px] sm:text-[17px]'}`}>
                   {auditState.title}
                 </h2>
                 <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-gray-500">
@@ -716,7 +716,7 @@ export default function Audit() {
           <div className="mt-6">
             <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-5 sm:p-6`}>
               <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-3">
-                <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-gray-900">Workspace panel report</h2>
+                <h2 className="text-[13px] font-semibold tracking-[-0.02em] text-gray-900">Workspace report</h2>
                 {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-[11px] font-medium uppercase text-gray-500">Locked</span>}
               </div>
 
