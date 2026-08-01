@@ -44,6 +44,7 @@ export default {
 				sans: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
 				brand: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
 				playfair: ['"Playfair Display"', 'Georgia', 'serif'],
+				inter: ['Inter', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
