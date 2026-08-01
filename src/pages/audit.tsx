@@ -648,13 +648,13 @@ export default function Audit() {
               <div>
                 <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Scope value</div>
                 <div className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[26px]">
-                  {isZeroRecordLimitedAudit ? 'Not calculated' : formatMoney(teaser.scopeValue)}
+                  {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}
                 </div>
               </div>
               <div>
                 <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Findings</div>
                 <div className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[26px]">
-                  {isZeroRecordLimitedAudit ? 'Not evaluated' : teaser.findingsCount}
+                  {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}
                 </div>
               </div>
             </div>
@@ -663,7 +663,7 @@ export default function Audit() {
           <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-5">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <span className={`inline-flex rounded-md px-2 py-1 text-[11px] font-medium uppercase ${isZeroRecordLimitedAudit ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}`}>
+                <span className={`inline-flex rounded-md px-2 py-1 text-[11px] font-medium uppercase ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-blue-50 text-blue-700'}`}>
                   {auditState.label}
                 </span>
                 <h2 className="mt-3 text-[22px] font-semibold tracking-[-0.025em] text-gray-900 sm:text-[26px]">
@@ -673,8 +673,8 @@ export default function Audit() {
                   {auditState.description}
                 </p>
               </div>
-              <div className={`flex items-center gap-2 rounded-full px-3 py-2 text-[12px] font-medium ${isZeroRecordLimitedAudit ? 'bg-amber-50 text-amber-700' : 'bg-gray-50 text-gray-500'}`}>
-                <span className={`h-2 w-2 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-amber-500' : step === 'completed' ? 'bg-emerald-500' : 'bg-blue-600'}`} />
+              <div className={`flex items-center gap-2 rounded-full px-3 py-2 text-[12px] font-medium ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-gray-50 text-gray-500'}`}>
+                <span className={`h-2 w-2 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-slate-400' : step === 'completed' ? 'bg-emerald-500' : 'bg-blue-600'}`} />
                 {isBusy ? 'Working' : isZeroRecordLimitedAudit ? 'Limited coverage' : step === 'completed' ? 'Ready' : step === 'failed' ? 'Needs retry' : 'Waiting'}
               </div>
             </div>
@@ -692,15 +692,15 @@ export default function Audit() {
                 <div className="mb-6 grid gap-3 sm:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
                     <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
-                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? 'Not calculated' : formatMoney(teaser.scopeValue)}</div>
+                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}</div>
                   </div>
                   <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
                     <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
-                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? 'Not evaluated' : teaser.findingsCount}</div>
+                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}</div>
                   </div>
                   <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
                     <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Evidence ready</div>
-                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? 'Not evaluated' : teaser.evidenceReadyCount}</div>
+                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.evidenceReadyCount}</div>
                   </div>
                 </div>
               ) : null}
