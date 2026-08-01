@@ -756,6 +756,19 @@ const Login = () => {
         return finalizeClerkSignUp(normalizedEmail);
       }
 
+      if (signUp.status === 'missing_requirements' && signUp.unverifiedFields?.includes('email_address')) {
+        const sendResult = await signUp.verifications.sendEmailCode();
+        if (sendResult.error) {
+          throw new Error(extractClerkSignalErrorMessage(sendResult.error) || 'Unable to send the verification code.');
+        }
+
+        setClerkVerificationStep('signup_email_code');
+        setClerkVerificationCode('');
+        setClerkVerificationMessage('Enter the verification code sent to your email to finish account creation.');
+        setError('Enter the verification code sent to your email to finish account creation.');
+        return { status: 'verification_required' };
+      }
+
       throw new Error(import.meta.env.DEV
         ? `Clerk signup stopped at unsupported status: ${signUp.status || 'unknown'}.`
         : 'This signup needs an additional authentication step Margin does not support yet.');
@@ -774,7 +787,7 @@ const Login = () => {
       return finalizeClerkSignUp(normalizedEmail);
     }
 
-    if (signUp.status === 'needs_verification') {
+    if (signUp.status === 'missing_requirements' && signUp.unverifiedFields?.includes('email_address')) {
       const sendResult = await signUp.verifications.sendEmailCode();
       if (sendResult.error) {
         throw new Error(extractClerkSignalErrorMessage(sendResult.error) || 'Unable to send the verification code.');
