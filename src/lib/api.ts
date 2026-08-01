@@ -919,7 +919,7 @@ export const api = {
   }>(`/api/auth/me${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
 
-  startAudit: () => requestJson<{
+  startAudit: (authToken?: string | null) => requestJson<{
     success: boolean;
     audit: AuditRunRecord;
     tenant: {
@@ -930,28 +930,46 @@ export const api = {
       status?: string;
     };
     amazonConnected: boolean;
-  }>('/api/audits/start', { method: 'POST' }),
+  }>('/api/audits/start', authToken ? {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    },
+  } : { method: 'POST' }),
 
-  getAudit: (auditId: string) => requestJson<{
+  getAudit: (auditId: string, authToken?: string | null) => requestJson<{
     success: boolean;
     audit: AuditRunRecord;
-  }>(`/api/audits/${encodeURIComponent(auditId)}`),
+  }>(`/api/audits/${encodeURIComponent(auditId)}`, authToken ? {
+    headers: { Authorization: `Bearer ${authToken}` },
+  } : undefined),
 
-  getLatestAudit: () => requestJson<{
+  getLatestAudit: (authToken?: string | null) => requestJson<{
     success: boolean;
     audit: AuditRunRecord | null;
-  }>('/api/audits/latest'),
+  }>('/api/audits/latest', authToken ? {
+    headers: { Authorization: `Bearer ${authToken}` },
+  } : undefined),
 
-  runAudit: (auditId: string) => requestJson<{
+  runAudit: (auditId: string, authToken?: string | null) => requestJson<{
     success: boolean;
     audit: AuditRunRecord;
-  }>(`/api/audits/${encodeURIComponent(auditId)}/run`, { method: 'POST' }),
+  }>(`/api/audits/${encodeURIComponent(auditId)}/run`, authToken ? {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    },
+  } : { method: 'POST' }),
 
-  getAuditResults: (auditId: string) => requestJson<{
+  getAuditResults: (auditId: string, authToken?: string | null) => requestJson<{
     success: boolean;
     audit: Pick<AuditRunRecord, 'id' | 'status' | 'activation_status' | 'sync_id' | 'started_at' | 'completed_at'>;
     teaser: AuditTeaserSummary;
-  }>(`/api/audits/${encodeURIComponent(auditId)}/results`),
+  }>(`/api/audits/${encodeURIComponent(auditId)}/results`, authToken ? {
+    headers: { Authorization: `Bearer ${authToken}` },
+  } : undefined),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
   connectAmazon(marketplaceId?: string, bypassOAuth = false, tenantSlug?: string) {

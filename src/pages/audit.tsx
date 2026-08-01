@@ -553,7 +553,7 @@ export default function Audit() {
 
               const isActive = value === 'Running' || (item.label === 'Connect your Amazon account' && step === 'connect') || (item.label === 'Create your workspace' && step === 'public');
               const isCompleted = value === 'Ready' || value === 'In place' || value === 'Started' || value === 'Complete' || value === 'Unlocked';
-              
+
               return (
                 <div key={item.label} className="relative mb-10 last:mb-0">
                   {/* Node */}
@@ -574,7 +574,7 @@ export default function Audit() {
                     <div className="flex flex-wrap items-center gap-3">
                       <div className="font-mono text-[11px] font-medium text-gray-400">00:{String(index * 4 + 3).padStart(2, '0')}</div>
                       <div className="font-mono text-[11px] font-medium text-gray-400">AUDIT-0{index + 1}</div>
-                      
+
                       <div className={`ml-auto rounded-md px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${
                         isActive ? 'bg-blue-50 text-blue-700' :
                         isCompleted ? 'bg-gray-100 text-gray-700' : 'bg-gray-50 text-gray-400'
