@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { ArrowRight, Download, Loader2, Share2 } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -286,7 +286,6 @@ export default function Audit() {
     });
 
     if (!response.data.amazonConnected || response.data.audit.status === 'amazon_connection_required') {
-      await connectAmazonForAudit(response.data.audit, response.data.tenant.slug);
       return;
     }
 
@@ -494,22 +493,7 @@ export default function Audit() {
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                aria-label="Download audit"
-                className="inline-flex h-8 w-8 items-center justify-center border border-[#DCE8EE] bg-white text-[#25313A] transition-colors hover:bg-[#F8FAFC]"
-              >
-                <Download className="h-3.5 w-3.5" strokeWidth={1.8} />
-              </button>
-              <button
-                type="button"
-                aria-label="Share audit"
-                className="inline-flex h-8 w-8 items-center justify-center border border-[#DCE8EE] bg-white text-[#25313A] transition-colors hover:bg-[#F8FAFC]"
-              >
-                <Share2 className="h-3.5 w-3.5" strokeWidth={1.8} />
-              </button>
-            </div>
+            <div />
           </div>
 
         <div className="mx-auto grid max-h-none min-h-0 w-full grid-rows-[auto_minmax(0,1fr)] overflow-hidden border border-[#CFE0EA] bg-white md:max-h-[505px]">

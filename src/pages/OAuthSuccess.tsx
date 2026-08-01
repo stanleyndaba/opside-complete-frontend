@@ -78,6 +78,18 @@ function StatusBlock({
   );
 }
 
+function hasPendingAmazonAudit() {
+  if (typeof window === 'undefined') return false;
+  try {
+    const raw = localStorage.getItem('margin_pending_audit');
+    if (!raw) return false;
+    const parsed = JSON.parse(raw) as { auditId?: string; tenantSlug?: string; phase?: string };
+    return Boolean(parsed.auditId && parsed.tenantSlug && parsed.phase === 'amazon_oauth_started');
+  } catch {
+    return false;
+  }
+}
+
 export default function OAuthSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -107,6 +119,14 @@ export default function OAuthSuccess() {
   useEffect(() => {
     if (isError) {
       return;
+    }
+
+    if (provider === 'amazon' && hasPendingAmazonAudit()) {
+      const timer = window.setTimeout(() => {
+        navigate('/audit?amazon_connected=1', { replace: true });
+      }, 900);
+
+      return () => window.clearTimeout(timer);
     }
 
     const timer = setInterval(() => {

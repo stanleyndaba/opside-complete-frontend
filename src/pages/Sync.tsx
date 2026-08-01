@@ -94,6 +94,19 @@ export default function Sync() {
   const logsFinishedRef = useRef(false);
   const logContainerRef = useRef<HTMLDivElement>(null);
   const nextLogIdRef = useRef(0);
+
+  useEffect(() => {
+    if (params.get('connected') !== 'amazon') return;
+    try {
+      const raw = localStorage.getItem('margin_pending_audit');
+      if (!raw) return;
+      const pending = JSON.parse(raw) as { auditId?: string; tenantSlug?: string; phase?: string };
+      if (!pending.auditId || !pending.tenantSlug || pending.phase !== 'amazon_oauth_started') return;
+      navigate('/audit?amazon_connected=1', { replace: true });
+    } catch {
+      // Ignore malformed local resume state and let the normal sync page continue.
+    }
+  }, [navigate, params]);
   const latestHydratedTimestampRef = useRef<number | null>(null);
 
   useEffect(() => {
