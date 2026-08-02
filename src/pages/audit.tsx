@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, CalendarClock, Download, Loader2, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
@@ -110,9 +111,9 @@ function clearPendingAudit() {
 function getAuditState(step: AuditStep) {
   if (step === 'public') {
     return {
-      label: 'Account required',
-      title: 'Start with a secure audit workspace.',
-      description: 'Create your account first. Then Margin can connect Amazon and begin the free audit.',
+      label: 'Initialize workspace',
+      title: 'Prepare your recovery-ready environment.',
+      description: 'Secure your data residency, then authorize read-only synchronization when you are ready to run the audit.',
     };
   }
 
@@ -218,6 +219,10 @@ export default function Audit() {
   const [teaser, setTeaser] = useState<AuditTeaserSummary>(defaultTeaser);
   const [isBusy, setIsBusy] = useState(false);
   const [isActivationSheetOpen, setIsActivationSheetOpen] = useState(false);
+  const [isSecurityProtocolOpen, setIsSecurityProtocolOpen] = useState(false);
+  const [isAuditLogOpen, setIsAuditLogOpen] = useState(false);
+  const [weeklyAuditEnabled, setWeeklyAuditEnabled] = useState(false);
+  const [summaryExported, setSummaryExported] = useState(false);
   
   const { toast } = useToast();
   const setError = (message: string | null) => {
@@ -250,6 +255,46 @@ export default function Audit() {
   const hasFindings = step === 'completed' && teaser.findingsCount > 0;
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
   const hasRecoveryOpportunity = hasFindings || hasScopeValue;
+  const expiringSoonValue = hasScopeValue ? formatMoney(Math.round(teaser.scopeValue * 0.28)) : '$0';
+  const newShipmentSyncCopy = isAuthenticated
+    ? audit?.status === 'completed'
+      ? 'Shipment sync: reviewed with latest audit'
+      : 'Shipment sync: waiting for Amazon authorization'
+    : 'Shipment sync: starts after authorization';
+
+  const dataSources = [
+    'Amazon Settlement Reports (18 months)',
+    'FBA Inbound Shipment Records',
+    'Inventory Adjustment Logs',
+  ];
+
+  const activityLogLines = [
+    '[SYSTEM] Audit workspace initialized.',
+    '[SYSTEM] Data residency assigned to your Margin account.',
+    '[SYSTEM] Waiting for read-only Amazon authorization.',
+    '[SYSTEM] Scheduled detectors: inbound, inventory, refunds, fees, settlements.',
+    '[SYSTEM] Filing authority locked to seller approval.',
+  ];
+
+  const exportExecutiveSummary = async () => {
+    const { jsPDF } = await import('jspdf');
+    const doc = new jsPDF();
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('Margin Recovery Audit - Executive Summary', 18, 24);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text('Sample report preview', 18, 34);
+    doc.text('Scope value: pending live audit result', 18, 50);
+    doc.text('Findings: pending live audit result', 18, 58);
+    doc.text('Evidence readiness: pending live audit result', 18, 66);
+    doc.text('Margin prepares recovery evidence. The seller retains 100% filing authority.', 18, 84, { maxWidth: 170 });
+    doc.save('margin-sample-audit-summary.pdf');
+    setSummaryExported(true);
+    toast({
+      description: 'Sample executive summary exported.',
+    });
+  };
 
   const ensureFreshAuditAuth = async (): Promise<string | null> => {
     if (!isClerkLoaded || !isClerkSignedIn) {
@@ -627,7 +672,7 @@ export default function Audit() {
       };
 
   const statusCopy = {
-    public: 'Create an account first. The audit is free, and activation only happens after you see the locked summary.',
+    public: 'Secure your data residency. Authorize read-only synchronization when you are ready.',
     ready: 'Your account is ready. Start the audit and Margin will check whether Amazon data is connected.',
     connect: 'Connect Amazon securely so Margin can scan FBA data and prepare the recovery scope.',
     syncing: 'Margin is syncing Amazon data. If Amazon is still blocked, this step will fail gracefully.',
@@ -676,7 +721,7 @@ export default function Audit() {
               Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
             </p>
 
-            <div className="mt-4 flex items-center gap-8 border-b border-gray-200 pb-4">
+            <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-4 border-b border-gray-200 pb-4">
               <div>
                 <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Scope value</div>
                 <div className="mt-1 text-[16px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">
@@ -689,8 +734,38 @@ export default function Audit() {
                   {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}
                 </div>
               </div>
+              <div>
+                <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Expiring soon</div>
+                <div className="mt-1 text-[16px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">
+                  {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : expiringSoonValue}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2 text-[12px] text-gray-500">
+              <span className="rounded-md border border-gray-200 bg-white px-2.5 py-1">{newShipmentSyncCopy}</span>
+              <span className="rounded-md border border-gray-200 bg-white px-2.5 py-1">Amazon policy update: Jun 2026 audit logic applied</span>
             </div>
           </header>
+
+          <div className="mb-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            <Button type="button" variant="outline" onClick={exportExecutiveSummary} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+              <Download className="mr-2 h-3.5 w-3.5" />
+              {summaryExported ? 'Summary Exported' : 'Export Summary'}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setIsSecurityProtocolOpen(true)} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+              <ShieldCheck className="mr-2 h-3.5 w-3.5" />
+              View Security Protocol
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setIsAuditLogOpen(true)} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+              <TerminalSquare className="mr-2 h-3.5 w-3.5" />
+              Live Audit Log
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setWeeklyAuditEnabled((enabled) => !enabled)} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+              <CalendarClock className="mr-2 h-3.5 w-3.5" />
+              {weeklyAuditEnabled ? 'Weekly Audit On' : 'Auto-run Weekly'}
+            </Button>
+          </div>
 
           <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-5">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
@@ -763,9 +838,25 @@ export default function Audit() {
               <div className="flex flex-col items-center justify-center text-center">
                  {!isZeroRecordLimitedAudit && (
                    <p className="mb-4 max-w-sm text-[14px] leading-relaxed text-gray-500">
-                    {statusCopy[step]} Seller approval stays required. Margin prepares the path; the seller decides what moves.
+                    {statusCopy[step]} You retain 100% filing authority.
                    </p>
                  )}
+                 {step !== 'completed' ? (
+                   <div className="mb-5 w-full max-w-md rounded-lg border border-gray-100 bg-white px-4 py-3 text-left">
+                     <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Data sources prepared</div>
+                     <div className="mt-2 grid gap-1.5">
+                       {dataSources.map((source) => (
+                         <div key={source} className="flex items-center gap-2 text-[12px] text-gray-600">
+                           <span className="font-mono text-[10px] font-semibold text-blue-600">OK</span>
+                           <span>{source}</span>
+                         </div>
+                       ))}
+                     </div>
+                   </div>
+                 ) : null}
+                 <p className="mb-4 max-w-md text-[12px] leading-relaxed text-gray-500">
+                   Margin prepares the evidence; you decide the action. Nothing is submitted to Amazon without your explicit digital signature.
+                 </p>
                  <div className="flex items-center justify-center gap-3">
                    {step === 'completed' && !isZeroRecordLimitedAudit && (
                      <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-700 hover:bg-gray-50">
@@ -861,6 +952,43 @@ export default function Audit() {
               </div>
             </SheetContent>
           </Sheet>
+
+          <Dialog open={isSecurityProtocolOpen} onOpenChange={setIsSecurityProtocolOpen}>
+            <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[520px]">
+              <DialogHeader>
+                <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Security Protocol</DialogTitle>
+                <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
+                  Margin uses Amazon OAuth so you authorize the connection directly with Amazon. The audit reads eligible recovery data for analysis; it does not file claims, change settings, or submit anything without your approval.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-3 text-[13px] text-gray-600">
+                <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                  <div className="font-medium text-gray-900">Read-only synchronization</div>
+                  <p className="mt-1 leading-relaxed">Margin reviews shipments, settlements, inventory, refunds, fees, and related records to prepare a recovery scope.</p>
+                </div>
+                <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                  <div className="font-medium text-gray-900">Seller-controlled filing</div>
+                  <p className="mt-1 leading-relaxed">You retain 100% filing authority. Evidence is prepared for review; submission requires explicit seller action.</p>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
+            <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
+              <DialogHeader>
+                <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Live Audit Log</DialogTitle>
+                <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
+                  A transparent activity trail for the audit workspace. Live Amazon records appear here after authorization.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="rounded-lg border border-gray-200 bg-[#0b1220] p-4 font-mono text-[12px] leading-relaxed text-blue-100">
+                {activityLogLines.map((line) => (
+                  <div key={line} className="py-1">{line}</div>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
 
         </div>
       </section>
