@@ -1035,7 +1035,7 @@ export default function Audit() {
                     <div className="grid gap-3 md:grid-cols-2">
                       <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
                         <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Recover Once</div>
-                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">Approx. $89 / $179 / $299</h3>
+                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">Fixed quote after your audit</h3>
                         <p className="mt-1.5 text-[12px] leading-relaxed text-gray-500">
                           Margin manages the specific actionable recovery opportunities identified in this completed audit.
                         </p>
@@ -1047,11 +1047,11 @@ export default function Audit() {
 
                       <div className="rounded-lg border border-blue-100 bg-blue-50/40 p-4">
                         <div className="font-mono text-[10px] font-medium uppercase text-blue-600">Recovery Workspace</div>
-                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">$109/month</h3>
+                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">Approximately $109/month</h3>
                         <p className="mt-1.5 text-[12px] leading-relaxed text-gray-500">
                           Continuous monitoring, scheduled audits, evidence preparation, case continuity, payout validation, and reconciliation.
                         </p>
-                        <p className="mt-2 text-[12px] font-medium text-gray-700">0% recovery commission.</p>
+                        <p className="mt-2 text-[12px] font-medium text-gray-700">Billed as R1,799 monthly. 0% recovery commission.</p>
                         <Button onClick={openActivationSheet} disabled={isBusy} className="mt-3 h-9 rounded-md bg-[var(--margin-blue)] px-4 text-[12px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
                           Activate Recovery Workspace
                           <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -1124,8 +1124,8 @@ export default function Audit() {
           </div>
 
           <div className="mt-auto border-t border-gray-100 bg-gray-50 px-6 py-5">
-            <div className="text-[28px] font-semibold tracking-[-0.04em] text-gray-900">$109/month</div>
-            <p className="mt-1 text-[13px] leading-relaxed text-gray-600">0% recovery commission | Cancel anytime | Nothing filed without approval</p>
+            <div className="text-[28px] font-semibold tracking-[-0.04em] text-gray-900">Approximately $109/month</div>
+            <p className="mt-1 text-[13px] leading-relaxed text-gray-600">Billed as R1,799 monthly | 0% recovery commission | Cancel anytime | Nothing filed without approval</p>
             <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
               {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Continue to Secure Checkout
