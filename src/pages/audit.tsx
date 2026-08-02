@@ -708,7 +708,7 @@ export default function Audit() {
   return (
     <main className="flex min-h-screen bg-[#FAFAFA] font-inter text-gray-900 selection:bg-blue-100">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[310px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-gray-200 bg-white transition-[width] duration-200 md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[288px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-gray-200 bg-white transition-[width] duration-200 md:flex`}>
         {sidebarOpen && (
           <div className="flex h-full flex-col">
             {/* Sidebar header */}
@@ -762,6 +762,19 @@ export default function Audit() {
             <div className="flex items-center gap-2 md:hidden">
               <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
               <span className="brand-wordmark font-merriweather text-[14px] tracking-tight text-[#182026]">Margin</span>
+            </div>
+            
+            {/* Version Dropdown */}
+            <div className="relative hidden items-center md:flex ml-2">
+              <select className="h-8 appearance-none rounded-md border border-gray-200 bg-white py-0 pl-3 pr-8 text-[12px] font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer">
+                <option value="2.1">Margin 2.1</option>
+                <option value="2.2" disabled>Margin 2.2 (Releases August 19)</option>
+              </select>
+              <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L5 5L9 1" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-1">
