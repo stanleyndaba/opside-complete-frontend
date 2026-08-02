@@ -708,7 +708,7 @@ export default function Audit() {
   return (
     <main className="flex min-h-screen bg-[#FAFAFA] font-inter text-gray-900 selection:bg-blue-100">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[220px]' : 'w-0'} hidden shrink-0 flex-col border-r border-gray-200 bg-white transition-[width] duration-200 md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[310px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-gray-200 bg-white transition-[width] duration-200 md:flex`}>
         {sidebarOpen && (
           <div className="flex h-full flex-col">
             {/* Sidebar header */}
