@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { ArrowRight, Calendar, CalendarClock, Columns2, Download, HeartHandshake, Loader2, ShieldCheck, TerminalSquare } from 'lucide-react';
+import { ArrowRight, Calendar, CalendarClock, Columns2, Download, HeartHandshake, Loader2, Microscope, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -732,6 +732,13 @@ export default function Audit() {
                 <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-blue-500' : 'text-gray-400'}`} />
                 Auto-run audit schedule
               </button>
+
+              <div className="mt-4 px-1">
+                <div className="relative">
+                  <Microscope className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+                  <input type="text" placeholder="Search audit month" className="h-8 w-full rounded-md border border-gray-200 bg-gray-50 pl-8 pr-3 text-[12px] text-gray-700 placeholder:text-gray-400 focus:border-[var(--margin-blue)] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[var(--margin-blue)] transition-colors" />
+                </div>
+              </div>
             </nav>
 
             {/* Bottom banner */}
@@ -801,7 +808,7 @@ export default function Audit() {
         <section className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
           <div className="mx-auto w-full max-w-3xl">
             <header className="mb-4">
-              <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[17px]">Seller Audit Workspace</h1>
+              <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[17px]">Amazon Recovery Audit</h1>
               <p className="mt-1.5 text-[13px] leading-relaxed text-gray-500">
                 Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
               </p>
@@ -810,19 +817,19 @@ export default function Audit() {
                 <div>
                   <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
                   <div className="mt-0.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
-                    {isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}
+                    {step !== 'completed' ? <span className="text-[13px] font-medium text-slate-400">Waiting for data</span> : isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}
                   </div>
                 </div>
                 <div>
                   <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
                   <div className="mt-0.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
-                    {isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}
+                    {step !== 'completed' ? <span className="text-[13px] font-medium text-slate-400">Waiting for data</span> : isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}
                   </div>
                 </div>
                 <div>
                   <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Expiring soon</div>
                   <div className="mt-0.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
-                    {isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : expiringSoonValue}
+                    {step !== 'completed' ? <span className="text-[13px] font-medium text-slate-400">Waiting for data</span> : isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : expiringSoonValue}
                   </div>
                 </div>
               </div>
@@ -857,8 +864,8 @@ export default function Audit() {
             <div className="mb-4">
               <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-4 sm:p-5`}>
                 <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-2.5">
-                  <h2 className="text-[13px] font-semibold tracking-[-0.02em] text-gray-900">Workspace report</h2>
-                  {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-0.5 font-mono text-[10px] font-medium uppercase text-gray-500">Locked</span>}
+                  <h2 className="text-[13px] font-semibold tracking-[-0.02em] text-gray-900">{step !== 'completed' ? 'Recovery report' : 'Workspace report'}</h2>
+                  {step !== 'completed' && <span className="rounded-md bg-amber-50 px-2 py-0.5 font-mono text-[10px] font-medium uppercase text-amber-600">Waiting for Amazon authorization</span>}
                 </div>
 
                 {step === 'completed' ? (
@@ -876,7 +883,22 @@ export default function Audit() {
                       <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.evidenceReadyCount}</div>
                     </div>
                   </div>
-                ) : null}
+                ) : (
+                  <div className="mb-4 grid gap-2.5 sm:grid-cols-3">
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
+                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
+                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900"><span className="text-[14px] font-medium text-slate-400">Waiting for data</span></div>
+                    </div>
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
+                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
+                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900"><span className="text-[14px] font-medium text-slate-400">Waiting for data</span></div>
+                    </div>
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
+                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Evidence ready</div>
+                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900"><span className="text-[14px] font-medium text-slate-400">Waiting for data</span></div>
+                    </div>
+                  </div>
+                )}
 
                 {step === 'completed' && teaser.categories.length ? (
                   <div className="mb-4 flex flex-wrap gap-1.5">
@@ -901,13 +923,43 @@ export default function Audit() {
                   </div>
                 ) : null}
 
-                <div className="flex flex-col items-center justify-center text-center">
+                <div className="flex flex-col items-center justify-center text-center mt-6">
+                   <p className="mb-4 max-w-md text-[13px] font-medium text-[var(--margin-blue)]">
+                     Nothing is submitted to Amazon without your explicit digital signature.
+                   </p>
+                   
                    {!isZeroRecordLimitedAudit && (
-                     <p className="mb-3 max-w-sm text-[13px] leading-relaxed text-gray-500">
-                      {statusCopy[step]} You retain 100% filing authority.
+                     <p className="mb-5 max-w-sm text-[13px] leading-relaxed text-gray-500">
+                      {statusCopy[step]}
                      </p>
                    )}
-                   <div className="mb-4 flex items-center justify-center gap-3">
+
+                   {step !== 'completed' ? (
+                     <div className="mb-6 w-full max-w-xs text-left">
+                       <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">What happens next</h3>
+                       <div className="relative flex flex-col gap-4 text-[13px] text-gray-600">
+                         <div className="absolute bottom-2 left-[7px] top-2 w-px bg-gray-200" />
+                         <div className="relative flex items-center gap-3">
+                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-600">1</div>
+                           <p>Connect Amazon.</p>
+                         </div>
+                         <div className="relative flex items-center gap-3">
+                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">2</div>
+                           <p>Margin reviews your records.</p>
+                         </div>
+                         <div className="relative flex items-center gap-3">
+                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">3</div>
+                           <p>We build recovery-ready findings.</p>
+                         </div>
+                         <div className="relative flex items-center gap-3">
+                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">4</div>
+                           <p>You decide what happens next.</p>
+                         </div>
+                       </div>
+                     </div>
+                   ) : null}
+
+                   <div className="mb-5 flex items-center justify-center gap-3">
                      {step === 'completed' && !isZeroRecordLimitedAudit && (
                        <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
                          Refresh
@@ -915,8 +967,9 @@ export default function Audit() {
                      )}
                      {primaryAction}
                    </div>
+                   
                    {step !== 'completed' ? (
-                     <div className="mb-4 w-full max-w-md rounded-lg border border-gray-100 bg-white px-3 py-2.5 text-left">
+                     <div className="w-full max-w-md rounded-lg border border-gray-100 bg-white px-3 py-2.5 text-left">
                        <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Data sources prepared</div>
                        <div className="mt-1.5 grid gap-1">
                          {dataSources.map((source) => (
@@ -928,9 +981,6 @@ export default function Audit() {
                        </div>
                      </div>
                    ) : null}
-                   <p className="mb-3 max-w-md text-[11px] leading-relaxed text-gray-500">
-                     Margin prepares the evidence; you decide the action. Nothing is submitted to Amazon without your explicit digital signature.
-                   </p>
                 </div>
               </div>
             </div>
