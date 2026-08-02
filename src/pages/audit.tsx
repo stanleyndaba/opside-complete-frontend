@@ -238,6 +238,7 @@ export default function Audit() {
 
   const trackedViewRef = useRef(false);
   const trackedCompletionRef = useRef(false);
+  const trackedOfferViewRef = useRef(false);
   const restoredAuditRef = useRef(false);
   const autoRunAfterOAuthRef = useRef(false);
 
@@ -257,6 +258,7 @@ export default function Audit() {
   const hasFindings = step === 'completed' && teaser.findingsCount > 0;
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
   const hasRecoveryOpportunity = hasFindings || hasScopeValue;
+  const canShowRecoverOnce = hasFindings && hasScopeValue && !isZeroRecordLimitedAudit;
   const expiringSoonValue = hasScopeValue ? formatMoney(Math.round(teaser.scopeValue * 0.28)) : '$0';
   const newShipmentSyncCopy = isAuthenticated
     ? audit?.status === 'completed'
@@ -332,6 +334,27 @@ export default function Audit() {
       source_page: '/audit',
     });
   }, [audit?.id, audit?.status]);
+
+  useEffect(() => {
+    if (step !== 'completed' || trackedOfferViewRef.current) return;
+    trackedOfferViewRef.current = true;
+    trackEvent('recovery_workspace_offer_viewed', {
+      source_page: '/audit',
+      audit_id: audit?.id || null,
+      audit_outcome: teaser.finalStatus || 'unknown',
+      findings_count: teaser.findingsCount,
+    });
+
+    if (canShowRecoverOnce) {
+      trackEvent('recover_once_offer_viewed', {
+        source_page: '/audit',
+        audit_id: audit?.id || null,
+        audit_outcome: teaser.finalStatus || 'unknown',
+        findings_count: teaser.findingsCount,
+        quote_eligibility: 'frontend_pending_server_quote',
+      });
+    }
+  }, [audit?.id, canShowRecoverOnce, step, teaser.finalStatus, teaser.findingsCount]);
 
   useEffect(() => {
     if (!isAuthenticated || restoredAuditRef.current) return;
@@ -578,11 +601,6 @@ export default function Audit() {
       return;
     }
 
-    if (!hasFindings && !hasScopeValue) {
-      setError('No recovery candidates are ready from this audit yet. Margin will keep this workspace available for future checks.');
-      return;
-    }
-
     setIsBusy(true);
     setError(null);
     trackEvent(ANALYTICS_EVENTS.auditActivationClicked, {
@@ -601,6 +619,14 @@ export default function Audit() {
     });
     trackEvent(ANALYTICS_EVENTS.subscriptionCheckoutStarted, {
       offer: 'recovery_workspace',
+      value: 1799,
+      currency: 'ZAR',
+    });
+    trackEvent('recovery_workspace_checkout_started', {
+      source_page: '/audit',
+      audit_id: audit?.id || null,
+      audit_outcome: teaser.finalStatus || 'unknown',
+      findings_count: teaser.findingsCount,
       value: 1799,
       currency: 'ZAR',
     });
@@ -630,12 +656,23 @@ export default function Audit() {
   const runAudit = () => runAuditForAudit();
 
   const openActivationSheet = () => setIsActivationSheetOpen(true);
+  const requestRecoverOnceQuote = () => {
+    trackEvent('recover_once_quote_unavailable', {
+      source_page: '/audit',
+      audit_id: audit?.id || null,
+      audit_outcome: teaser.finalStatus || 'unknown',
+      findings_count: teaser.findingsCount,
+    });
+    toast({
+      description: 'A personalized Recover Once quote requires server-side scope confirmation. Recovery Workspace is available now.',
+    });
+  };
 
   const workspaceOffer = (() => {
     if (isZeroRecordLimitedAudit) {
       return {
         heading: 'Your first audit had limited Amazon coverage.',
-        bridge: 'Continue monitoring as eligible Amazon activity becomes available.',
+        bridge: 'Activate continuous monitoring as eligible Amazon activity becomes available.',
         sheetBody: 'Your first audit had limited coverage. Recovery Workspace continues monitoring eligible Amazon activity as new shipments, reimbursements, refunds, fees, and settlements become available.',
         cta: 'Activate Recovery Workspace',
       };
@@ -643,8 +680,8 @@ export default function Audit() {
 
     if (hasRecoveryOpportunity) {
       return {
-        heading: 'Recovery opportunities found. Keep them moving.',
-        bridge: 'Keep these recoveries moving and continue watching for new ones.',
+        heading: 'Choose how Margin should help.',
+        bridge: 'Recover the opportunities from this audit, or keep Margin monitoring future activity continuously.',
         sheetBody: 'Activate the Recovery Workspace to prepare evidence, track deadlines, manage Amazon responses, and verify that the correct payouts reach settlement.',
         cta: 'Activate Recovery Workspace',
       };
@@ -654,7 +691,7 @@ export default function Audit() {
       heading: 'No recoveries found in this audit. Keep Margin watching.',
       bridge: 'Your account may be clear today. Keep Margin watching as your Amazon activity changes.',
       sheetBody: 'No recoveries were found today. Recovery Workspace keeps checking new shipments, returns, reimbursements, fees, and settlement activity as your Amazon operation changes.',
-      cta: 'Start Continuous Monitoring',
+      cta: 'Activate Recovery Workspace',
     };
   })();
 
@@ -987,13 +1024,42 @@ export default function Audit() {
 
             {step === 'completed' ? (
               <section className="mb-4 rounded-xl border border-gray-200 bg-white p-4 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-5">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="max-w-xl">
-                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Keep Margin watching</div>
+                <div className="flex flex-col gap-4">
+                  <div className="max-w-2xl">
+                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">{canShowRecoverOnce ? 'Choose how Margin should help' : 'Keep Margin watching'}</div>
                     <h2 className="mt-1.5 text-[16px] font-semibold tracking-[-0.02em] text-gray-900">{workspaceOffer.heading}</h2>
                     <p className="mt-1.5 text-[13px] leading-relaxed text-gray-500">{workspaceOffer.bridge}</p>
-                    <p className="mt-2 text-[12px] font-medium text-gray-700">$99/month | 0% recovery commission</p>
                   </div>
+
+                  {canShowRecoverOnce ? (
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                        <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Recover Once</div>
+                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">Approx. $89 / $179 / $299</h3>
+                        <p className="mt-1.5 text-[12px] leading-relaxed text-gray-500">
+                          Margin manages the specific actionable recovery opportunities identified in this completed audit.
+                        </p>
+                        <p className="mt-2 text-[12px] font-medium text-gray-700">Final fixed quote after your audit. No recovery commission.</p>
+                        <Button variant="outline" onClick={requestRecoverOnceQuote} disabled={isBusy} className="mt-3 h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                          Review Fixed Quote
+                        </Button>
+                      </div>
+
+                      <div className="rounded-lg border border-blue-100 bg-blue-50/40 p-4">
+                        <div className="font-mono text-[10px] font-medium uppercase text-blue-600">Recovery Workspace</div>
+                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">$109/month</h3>
+                        <p className="mt-1.5 text-[12px] leading-relaxed text-gray-500">
+                          Continuous monitoring, scheduled audits, evidence preparation, case continuity, payout validation, and reconciliation.
+                        </p>
+                        <p className="mt-2 text-[12px] font-medium text-gray-700">0% recovery commission.</p>
+                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-3 h-9 rounded-md bg-[var(--margin-blue)] px-4 text-[12px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+                          Activate Recovery Workspace
+                          <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="flex flex-col gap-2 sm:flex-row md:shrink-0">
                     {isZeroRecordLimitedAudit && teaser.retryable ? (
                       <Button variant="outline" onClick={runAudit} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
@@ -1001,10 +1067,12 @@ export default function Audit() {
                         Retry Audit
                       </Button>
                     ) : null}
-                    <Button onClick={openActivationSheet} disabled={isBusy} className="h-9 rounded-md bg-[var(--margin-blue)] px-4 text-[12px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
-                      {workspaceOffer.cta}
-                      <ArrowRight className="ml-2 h-3.5 w-3.5" />
-                    </Button>
+                    {!canShowRecoverOnce ? (
+                      <Button onClick={openActivationSheet} disabled={isBusy} className="h-9 rounded-md bg-[var(--margin-blue)] px-4 text-[12px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+                        {workspaceOffer.cta}
+                        <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                      </Button>
+                    ) : null}
                   </div>
                 </div>
               </section>
@@ -1056,7 +1124,7 @@ export default function Audit() {
           </div>
 
           <div className="mt-auto border-t border-gray-100 bg-gray-50 px-6 py-5">
-            <div className="text-[28px] font-semibold tracking-[-0.04em] text-gray-900">$99/month</div>
+            <div className="text-[28px] font-semibold tracking-[-0.04em] text-gray-900">$109/month</div>
             <p className="mt-1 text-[13px] leading-relaxed text-gray-600">0% recovery commission | Cancel anytime | Nothing filed without approval</p>
             <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
               {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
