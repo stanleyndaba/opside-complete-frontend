@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
-import { api, AuditRunRecord, AuditTeaserSummary } from '@/lib/api';
+import { api, AuditRunRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 
@@ -223,6 +223,8 @@ export default function Audit() {
   const [isAuditLogOpen, setIsAuditLogOpen] = useState(false);
   const [weeklyAuditEnabled, setWeeklyAuditEnabled] = useState(false);
   const [summaryExported, setSummaryExported] = useState(false);
+  const [recoverOnceQuote, setRecoverOnceQuote] = useState<RecoverOnceQuote | null>(null);
+  const [isRecoverOnceQuoteLoading, setIsRecoverOnceQuoteLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [auditMonths, setAuditMonths] = useState(18);
   
@@ -239,6 +241,7 @@ export default function Audit() {
   const trackedViewRef = useRef(false);
   const trackedCompletionRef = useRef(false);
   const trackedOfferViewRef = useRef(false);
+  const requestedRecoverOnceQuoteRef = useRef<string | null>(null);
   const restoredAuditRef = useRef(false);
   const autoRunAfterOAuthRef = useRef(false);
 
@@ -355,6 +358,55 @@ export default function Audit() {
       });
     }
   }, [audit?.id, canShowRecoverOnce, step, teaser.finalStatus, teaser.findingsCount]);
+
+  useEffect(() => {
+    if (!audit?.id || !canShowRecoverOnce || requestedRecoverOnceQuoteRef.current === audit.id) return;
+    requestedRecoverOnceQuoteRef.current = audit.id;
+    setRecoverOnceQuote(null);
+    setIsRecoverOnceQuoteLoading(true);
+    trackEvent('recover_once_quote_requested', {
+      source_page: '/audit',
+      audit_id: audit.id,
+      audit_outcome: teaser.finalStatus || 'unknown',
+      findings_count: teaser.findingsCount,
+    });
+
+    api.generateRecoverOnceQuote(audit.id, tenantSlug || undefined)
+      .then((response) => {
+        if (response.ok && response.data?.quote) {
+          setRecoverOnceQuote(response.data.quote);
+          trackEvent(
+            response.data.quote.status === 'available' || response.data.quote.status === 'accepted'
+              ? 'recover_once_quote_generated'
+              : response.data.quote.status === 'manual_review_required'
+                ? 'recover_once_quote_manual_review'
+                : 'recover_once_quote_unavailable',
+            {
+              source_page: '/audit',
+              audit_id: audit.id,
+              quote_id: response.data.quote.id,
+              quote_status: response.data.quote.status,
+              amount_subunits: response.data.quote.amount_subunits,
+              currency: response.data.quote.currency,
+            }
+          );
+        } else {
+          trackEvent('recover_once_quote_unavailable', {
+            source_page: '/audit',
+            audit_id: audit.id,
+            reason: response.error || 'quote_request_failed',
+          });
+        }
+      })
+      .catch(() => {
+        trackEvent('recover_once_quote_unavailable', {
+          source_page: '/audit',
+          audit_id: audit.id,
+          reason: 'quote_request_error',
+        });
+      })
+      .finally(() => setIsRecoverOnceQuoteLoading(false));
+  }, [audit?.id, canShowRecoverOnce, teaser.finalStatus, teaser.findingsCount, tenantSlug]);
 
   useEffect(() => {
     if (!isAuthenticated || restoredAuditRef.current) return;
@@ -656,16 +708,41 @@ export default function Audit() {
   const runAudit = () => runAuditForAudit();
 
   const openActivationSheet = () => setIsActivationSheetOpen(true);
-  const requestRecoverOnceQuote = () => {
-    trackEvent('recover_once_quote_unavailable', {
+  const startRecoverOnceCheckout = async () => {
+    if (!recoverOnceQuote?.id) {
+      toast({ description: 'Margin is still preparing your fixed quote.' });
+      return;
+    }
+
+    setIsBusy(true);
+    setError(null);
+    trackEvent('recover_once_quote_accepted', {
       source_page: '/audit',
       audit_id: audit?.id || null,
-      audit_outcome: teaser.finalStatus || 'unknown',
-      findings_count: teaser.findingsCount,
+      quote_id: recoverOnceQuote.id,
+      amount_subunits: recoverOnceQuote.amount_subunits,
+      currency: recoverOnceQuote.currency,
     });
-    toast({
-      description: 'A personalized Recover Once quote requires server-side scope confirmation. Recovery Workspace is available now.',
+
+    const response = await api.initializeRecoverOnceCheckout(recoverOnceQuote.id, tenantSlug || undefined);
+    setIsBusy(false);
+
+    if (!response.ok || !response.data?.success || !response.data.authorization_url) {
+      setError(response.error || 'Margin could not open Recover Once checkout yet.');
+      return;
+    }
+
+    trackEvent('recover_once_checkout_started', {
+      source_page: '/audit',
+      audit_id: audit?.id || null,
+      quote_id: recoverOnceQuote.id,
+      reference: response.data.reference || null,
+      amount_subunits: recoverOnceQuote.amount_subunits,
+      currency: recoverOnceQuote.currency,
+      payment_provider: 'paystack_one_time',
     });
+
+    window.location.assign(response.data.authorization_url);
   };
 
   const workspaceOffer = (() => {
@@ -1035,14 +1112,35 @@ export default function Audit() {
                     <div className="grid gap-3 md:grid-cols-2">
                       <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
                         <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Recover Once</div>
-                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">Fixed quote after your audit</h3>
+                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
+                          {isRecoverOnceQuoteLoading
+                            ? 'Preparing your fixed quote...'
+                            : recoverOnceQuote?.status === 'available' || recoverOnceQuote?.status === 'accepted'
+                              ? `${recoverOnceQuote.display_amount} once`
+                              : 'Fixed quote after your audit'}
+                        </h3>
                         <p className="mt-1.5 text-[12px] leading-relaxed text-gray-500">
-                          Margin manages the specific actionable recovery opportunities identified in this completed audit.
+                          {recoverOnceQuote?.status === 'manual_review_required'
+                            ? 'This scope needs a manual quote before Margin can offer a fixed Recover Once engagement.'
+                            : recoverOnceQuote?.status === 'unavailable'
+                              ? 'Recover Once is not available for this audit scope yet.'
+                              : 'Margin manages the specific actionable recovery opportunities identified in this completed audit.'}
                         </p>
-                        <p className="mt-2 text-[12px] font-medium text-gray-700">Final fixed quote after your audit. No recovery commission.</p>
-                        <Button variant="outline" onClick={requestRecoverOnceQuote} disabled={isBusy} className="mt-3 h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
-                          Review Fixed Quote
-                        </Button>
+                        <p className="mt-2 text-[12px] font-medium text-gray-700">
+                          {recoverOnceQuote?.amount_subunits
+                            ? `Billed as ${recoverOnceQuote.display_amount}. Fixed price. No recovery commission.`
+                            : 'Final fixed quote after your audit. No recovery commission.'}
+                        </p>
+                        {recoverOnceQuote?.status === 'available' || recoverOnceQuote?.status === 'accepted' ? (
+                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-3 h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                            {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            Continue with Recover Once
+                          </Button>
+                        ) : (
+                          <Button variant="outline" disabled className="mt-3 h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-400">
+                            {isRecoverOnceQuoteLoading ? 'Preparing Quote' : recoverOnceQuote?.status === 'manual_review_required' ? 'Manual Quote Needed' : 'Quote Unavailable'}
+                          </Button>
+                        )}
                       </div>
 
                       <div className="rounded-lg border border-blue-100 bg-blue-50/40 p-4">

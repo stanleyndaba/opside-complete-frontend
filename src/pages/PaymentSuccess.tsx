@@ -11,7 +11,7 @@ import { api, RecoveryWorkspaceSubscriptionStatus } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 
-type VerifyState = 'verifying' | 'subscription_pending' | 'active' | 'failed' | 'error';
+type VerifyState = 'verifying' | 'subscription_pending' | 'active' | 'recover_once_active' | 'failed' | 'error';
 
 function readLocalStorage(key: string): string | null {
   if (typeof window === 'undefined') return null;
@@ -32,6 +32,7 @@ export default function PaymentSuccess() {
   const [state, setState] = useState<VerifyState>('verifying');
   const [message, setMessage] = useState('Margin is verifying your Recovery Workspace subscription.');
   const [subscriptionStatus, setSubscriptionStatus] = useState<RecoveryWorkspaceSubscriptionStatus | null>(null);
+  const isRecoverOnceReference = Boolean(reference?.startsWith('MGN-RO-'));
 
   useEffect(() => {
     let cancelled = false;
@@ -40,6 +41,33 @@ export default function PaymentSuccess() {
       if (!reference) {
         setState('error');
         setMessage('Payment reference is missing. Open Billing to refresh your subscription status.');
+        return;
+      }
+
+      if (isRecoverOnceReference) {
+        const recoverOnceResponse = await api.verifyRecoverOncePayment(reference, tenantSlug || undefined);
+        if (cancelled) return;
+
+        if (!recoverOnceResponse.ok || !recoverOnceResponse.data?.success) {
+          setState('failed');
+          setMessage(recoverOnceResponse.error || 'Recover Once payment verification failed.');
+          trackEvent('recover_once_payment_failed', {
+            payment_provider: 'paystack_one_time',
+            reference_present: true,
+          });
+          return;
+        }
+
+        setState('recover_once_active');
+        setMessage('Your Recover Once engagement is active.');
+        trackEvent('recover_once_payment_verified', {
+          payment_provider: 'paystack_one_time',
+          reference_present: true,
+        });
+        trackEvent('recover_once_engagement_created', {
+          payment_provider: 'paystack_one_time',
+          reference_present: true,
+        });
         return;
       }
 
@@ -101,7 +129,7 @@ export default function PaymentSuccess() {
     return () => {
       cancelled = true;
     };
-  }, [reference, tenantSlug]);
+  }, [isRecoverOnceReference, reference, tenantSlug]);
 
   usePageMeta({
     title: 'Payment Verification | Margin',
@@ -109,7 +137,7 @@ export default function PaymentSuccess() {
   });
 
   const isLoading = state === 'verifying' || state === 'subscription_pending';
-  const icon = state === 'active'
+  const icon = state === 'active' || state === 'recover_once_active'
     ? <CheckCircle2 className="h-6 w-6" strokeWidth={1.8} />
     : state === 'failed' || state === 'error'
       ? <XCircle className="h-6 w-6" strokeWidth={1.8} />
@@ -127,7 +155,7 @@ export default function PaymentSuccess() {
               {icon}
             </div>
             <h1 className="max-w-3xl text-4xl font-semibold leading-[1.02] tracking-[-0.05em] text-[#182026] md:text-6xl">
-              {state === 'active' ? 'Recovery Workspace is active.' : isLoading ? 'Verifying subscription.' : 'Payment needs attention.'}
+              {state === 'recover_once_active' ? 'Recover Once is active.' : state === 'active' ? 'Recovery Workspace is active.' : isLoading ? 'Verifying payment.' : 'Payment needs attention.'}
             </h1>
             <p className="mt-5 max-w-2xl text-sm leading-7 tracking-tight text-[#66737F] md:text-base">
               {message}
@@ -150,12 +178,13 @@ export default function PaymentSuccess() {
               <Button
                 onClick={() => {
                   if (state === 'active' && tenantSlug) navigate(`/app/${tenantSlug}/dashboard`);
+                  else if (state === 'recover_once_active') navigate('/audit');
                   else if (tenantSlug) navigate(`/app/${tenantSlug}/billing`);
                   else navigate('/audit');
                 }}
                 className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
               >
-                {state === 'active' ? 'Open Recovery Workspace' : 'Open Billing'}
+                {state === 'active' ? 'Open Recovery Workspace' : state === 'recover_once_active' ? 'Return to Audit' : 'Open Billing'}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

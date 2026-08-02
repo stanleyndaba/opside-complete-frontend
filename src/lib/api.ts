@@ -198,6 +198,28 @@ export interface PaystackSubscriptionInitializeResponse {
   entitlement?: RecoveryWorkspaceSubscriptionStatus['entitlement'];
 }
 
+export interface RecoverOnceQuote {
+  id: string;
+  status: 'available' | 'accepted' | 'paid' | 'expired' | 'manual_review_required' | 'unavailable' | 'cancelled';
+  currency: 'ZAR';
+  amount_subunits: number | null;
+  display_amount: string | null;
+  expires_at: string;
+  accepted_at: string | null;
+  paid_at: string | null;
+  included_opportunity_count: number;
+  estimated_recoverable_subunits: number;
+  manual_review_reason: string | null;
+}
+
+export interface RecoverOnceInitializeResponse {
+  success: boolean;
+  quote: RecoverOnceQuote;
+  payment_id?: string;
+  reference?: string;
+  authorization_url?: string;
+}
+
 import { getFrontendAuthContext } from './authSession';
 import { buildFirstPartyAnalyticsPayload } from './analytics';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
@@ -2980,6 +3002,27 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ audit_run_id: auditRunId }),
     });
+  },
+
+  generateRecoverOnceQuote: (auditRunId: string, tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<{ success: boolean; quote: RecoverOnceQuote }>(`/api/paystack/recover-once/quotes${query}`, {
+      method: 'POST',
+      body: JSON.stringify({ audit_run_id: auditRunId }),
+    });
+  },
+
+  initializeRecoverOnceCheckout: (quoteId: string, tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<RecoverOnceInitializeResponse>(`/api/paystack/recover-once/checkout/initialize${query}`, {
+      method: 'POST',
+      body: JSON.stringify({ quote_id: quoteId }),
+    });
+  },
+
+  verifyRecoverOncePayment: (reference: string, tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<any>(`/api/paystack/recover-once/verify/${encodeURIComponent(reference)}${query}`);
   },
 
   verifyPaystackPayment: (reference: string, tenantSlug?: string) => {
