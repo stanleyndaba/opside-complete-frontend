@@ -907,6 +907,14 @@ export default function Audit() {
                       {statusCopy[step]} You retain 100% filing authority.
                      </p>
                    )}
+                   <div className="mb-4 flex items-center justify-center gap-3">
+                     {step === 'completed' && !isZeroRecordLimitedAudit && (
+                       <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                         Refresh
+                       </Button>
+                     )}
+                     {primaryAction}
+                   </div>
                    {step !== 'completed' ? (
                      <div className="mb-4 w-full max-w-md rounded-lg border border-gray-100 bg-white px-3 py-2.5 text-left">
                        <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Data sources prepared</div>
@@ -923,14 +931,6 @@ export default function Audit() {
                    <p className="mb-3 max-w-md text-[11px] leading-relaxed text-gray-500">
                      Margin prepares the evidence; you decide the action. Nothing is submitted to Amazon without your explicit digital signature.
                    </p>
-                   <div className="flex items-center justify-center gap-3">
-                     {step === 'completed' && !isZeroRecordLimitedAudit && (
-                       <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
-                         Refresh
-                       </Button>
-                     )}
-                     {primaryAction}
-                   </div>
                 </div>
               </div>
             </div>
