@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { ArrowRight, CalendarClock, Download, Loader2, ShieldCheck, TerminalSquare } from 'lucide-react';
+import { ArrowRight, Calendar, CalendarClock, Columns2, Download, HeartHandshake, Loader2, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -223,6 +223,8 @@ export default function Audit() {
   const [isAuditLogOpen, setIsAuditLogOpen] = useState(false);
   const [weeklyAuditEnabled, setWeeklyAuditEnabled] = useState(false);
   const [summaryExported, setSummaryExported] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [auditMonths, setAuditMonths] = useState(18);
   
   const { toast } = useToast();
   const setError = (message: string | null) => {
@@ -704,294 +706,346 @@ export default function Audit() {
     );
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] font-inter text-gray-900 selection:bg-blue-100">
-      <section className="flex min-h-screen items-start justify-center px-4 py-8 sm:px-6 lg:px-8">
-        <div className="w-full max-w-3xl">
-          {/* Header */}
-          <div className="mb-8 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-              <span className="brand-wordmark font-merriweather text-base tracking-tight text-[#182026] md:text-lg">Margin</span>
-            </div>
-          </div>
-
-          <header className="mb-6">
-            <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">Seller Audit Workspace</h1>
-            <p className="mt-2 text-[14px] leading-relaxed text-gray-500">
-              Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
-            </p>
-
-            <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-4 border-b border-gray-200 pb-4">
-              <div>
-                <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Scope value</div>
-                <div className="mt-1 text-[16px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">
-                  {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}
-                </div>
+    <main className="flex min-h-screen bg-[#FAFAFA] font-inter text-gray-900 selection:bg-blue-100">
+      {/* Sidebar */}
+      <aside className={`${sidebarOpen ? 'w-[220px]' : 'w-0'} hidden shrink-0 flex-col border-r border-gray-200 bg-white transition-[width] duration-200 md:flex`}>
+        {sidebarOpen && (
+          <div className="flex h-full flex-col">
+            {/* Sidebar header */}
+            <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+                <span className="brand-wordmark font-merriweather text-[14px] tracking-tight text-[#182026]">Margin</span>
               </div>
-              <div>
-                <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Findings</div>
-                <div className="mt-1 text-[16px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">
-                  {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}
-                </div>
-              </div>
-              <div>
-                <div className="font-mono text-[11px] font-medium uppercase text-gray-400">Expiring soon</div>
-                <div className="mt-1 text-[16px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[18px]">
-                  {isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : expiringSoonValue}
-                </div>
-              </div>
+              <button type="button" onClick={() => setSidebarOpen(false)} className="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600">
+                <Columns2 className="h-4 w-4" />
+              </button>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-2 text-[12px] text-gray-500">
-              <span className="rounded-md border border-gray-200 bg-white px-2.5 py-1">{newShipmentSyncCopy}</span>
-              <span className="rounded-md border border-gray-200 bg-white px-2.5 py-1">Amazon policy update: Jun 2026 audit logic applied</span>
-            </div>
-          </header>
+            {/* Nav items */}
+            <nav className="flex flex-col gap-0.5 px-2 pt-3">
+              <button type="button" onClick={() => setIsAuditLogOpen(true)} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900">
+                <TerminalSquare className="h-4 w-4 text-gray-400" />
+                Live audit log
+              </button>
+              <button type="button" onClick={() => setWeeklyAuditEnabled((v) => !v)} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors hover:bg-gray-50 ${weeklyAuditEnabled ? 'bg-blue-50/60 text-blue-700' : 'text-gray-600 hover:text-gray-900'}`}>
+                <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-blue-500' : 'text-gray-400'}`} />
+                Auto-run audit schedule
+              </button>
+            </nav>
 
-          <div className="mb-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            <Button type="button" variant="outline" onClick={exportExecutiveSummary} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
-              <Download className="mr-2 h-3.5 w-3.5" />
-              {summaryExported ? 'Summary Exported' : 'Export Summary'}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => setIsSecurityProtocolOpen(true)} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
-              <ShieldCheck className="mr-2 h-3.5 w-3.5" />
-              View Security Protocol
-            </Button>
-            <Button type="button" variant="outline" onClick={() => setIsAuditLogOpen(true)} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
-              <TerminalSquare className="mr-2 h-3.5 w-3.5" />
-              Live Audit Log
-            </Button>
-            <Button type="button" variant="outline" onClick={() => setWeeklyAuditEnabled((enabled) => !enabled)} className="h-10 justify-start rounded-md border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
-              <CalendarClock className="mr-2 h-3.5 w-3.5" />
-              {weeklyAuditEnabled ? 'Weekly Audit On' : 'Auto-run Weekly'}
-            </Button>
-          </div>
-
-          <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-5">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <span className={`inline-flex rounded-md px-2 py-1 text-[11px] font-medium uppercase ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-blue-50 text-blue-700'}`}>
-                  {auditState.label}
-                </span>
-                <h2 className={`mt-3 font-semibold tracking-[-0.025em] text-gray-900 ${step === 'completed' ? (isZeroRecordLimitedAudit ? 'text-[14px] sm:text-[15px]' : 'text-[22px] sm:text-[26px]') : 'text-[15px] sm:text-[17px]'}`}>
-                  {auditState.title}
-                </h2>
-                <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-gray-500">
-                  {auditState.description}
-                </p>
-              </div>
-              <div className={`flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-[12px] font-medium ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-gray-50 text-gray-500'}`}>
-                <span className={`h-2 w-2 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-slate-400' : step === 'completed' ? 'bg-emerald-500' : 'bg-blue-600'}`} />
-                {isBusy ? 'Working' : isZeroRecordLimitedAudit ? 'Limited' : step === 'completed' ? 'Ready' : step === 'failed' ? 'Needs retry' : 'Waiting'}
+            {/* Bottom banner */}
+            <div className="mt-auto border-t border-gray-100 px-3 py-4">
+              <div className="rounded-lg bg-gray-50 px-3 py-3">
+                <div className="flex items-center gap-2 text-[13px] font-medium text-gray-700">
+                  <HeartHandshake className="h-4 w-4 text-rose-400" />
+                  Share Margin with a seller
+                </div>
+                <p className="mt-1 text-[11px] leading-relaxed text-gray-400">Help a seller</p>
               </div>
             </div>
           </div>
+        )}
+      </aside>
 
-          {/* Workspace Report (Locked / Unlocked state) */}
-          <div className="mt-6">
-            <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-5 sm:p-6`}>
-              <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-3">
-                <h2 className="text-[13px] font-semibold tracking-[-0.02em] text-gray-900">Workspace report</h2>
-                {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-[11px] font-medium uppercase text-gray-500">Locked</span>}
+      {/* Main content */}
+      <div className="flex min-h-screen flex-1 flex-col">
+        {/* Top bar */}
+        <div className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2 sm:px-6">
+          <div className="flex items-center gap-2">
+            {!sidebarOpen && (
+              <button type="button" onClick={() => setSidebarOpen(true)} className="mr-2 rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 md:inline-flex hidden">
+                <Columns2 className="h-4 w-4" />
+              </button>
+            )}
+            {/* Mobile logo */}
+            <div className="flex items-center gap-2 md:hidden">
+              <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+              <span className="brand-wordmark font-merriweather text-[14px] tracking-tight text-[#182026]">Margin</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="relative flex items-center">
+              <Calendar className="pointer-events-none absolute left-2 h-3.5 w-3.5 text-gray-400" />
+              <select value={auditMonths} onChange={(e) => setAuditMonths(Number(e.target.value))} className="h-8 appearance-none rounded-md border-0 bg-transparent py-0 pl-7 pr-6 text-[12px] font-medium text-gray-600 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-0">
+                <option value={3}>3 months</option>
+                <option value={6}>6 months</option>
+                <option value={9}>9 months</option>
+                <option value={12}>12 months</option>
+                <option value={18}>18 months</option>
+              </select>
+            </div>
+            <button type="button" onClick={exportExecutiveSummary} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="Export Summary">
+              <Download className="h-4 w-4" />
+            </button>
+            <button type="button" onClick={() => setIsSecurityProtocolOpen(true)} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="View Security Protocol">
+              <ShieldCheck className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Content area */}
+        <section className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+          <div className="mx-auto w-full max-w-3xl">
+            <header className="mb-4">
+              <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-gray-900 sm:text-[17px]">Seller Audit Workspace</h1>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-gray-500">
+                Shipments, inventory events, settlement lines, support replies, and proof documents are being matched into recovery-ready findings.
+              </p>
+
+              <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-gray-200 pb-3">
+                <div>
+                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
+                  <div className="mt-0.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
+                    {isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}
+                  </div>
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
+                  <div className="mt-0.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
+                    {isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}
+                  </div>
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Expiring soon</div>
+                  <div className="mt-0.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
+                    {isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : expiringSoonValue}
+                  </div>
+                </div>
               </div>
 
-              {step === 'completed' ? (
-                <div className="mb-6 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
-                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
-                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}</div>
-                  </div>
-                  <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
-                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
-                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}</div>
-                  </div>
-                  <div className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
-                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Evidence ready</div>
-                    <div className="mt-1 text-[20px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[15px] font-medium text-slate-600">Not evaluated</span> : teaser.evidenceReadyCount}</div>
-                  </div>
-                </div>
-              ) : null}
+              <div className="mt-3 flex flex-wrap gap-1.5 text-[11px] text-gray-500">
+                <span className="rounded-md border border-gray-200 bg-white px-2 py-0.5">{newShipmentSyncCopy}</span>
+                <span className="rounded-md border border-gray-200 bg-white px-2 py-0.5">Amazon policy update: Jun 2026 audit logic applied</span>
+              </div>
+            </header>
 
-              {step === 'completed' && teaser.categories.length ? (
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {teaser.categories.map((category) => (
-                    <span key={category} className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 font-mono text-[12px] text-gray-600">
-                      {category}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-
-              {step === 'completed' && (teaser.recordsReviewed != null || teaser.sourcesUnavailable?.length) ? (
-                <div className="mb-6 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-left">
-                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Audit coverage</div>
-                  <p className="mt-1 text-[13px] leading-relaxed text-gray-500">
-                    {teaser.recordsReviewed != null
-                      ? `${teaser.recordsReviewed.toLocaleString()} Amazon record${teaser.recordsReviewed === 1 ? '' : 's'} reviewed.`
-                      : 'Amazon record coverage is being prepared.'}
-                    {teaser.sourcesReviewed?.length ? ` Sources reviewed: ${teaser.sourcesReviewed.join(', ')}.` : ''}
-                    {teaser.sourcesUnavailable?.length ? ` Unavailable: ${teaser.sourcesUnavailable.join(', ')}.` : ''}
+            <div className="mb-4 rounded-xl border border-gray-200 bg-white p-3.5 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-medium uppercase ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-blue-50 text-blue-700'}`}>
+                    {auditState.label}
+                  </span>
+                  <h2 className={`mt-2 font-semibold tracking-[-0.025em] text-gray-900 ${step === 'completed' ? (isZeroRecordLimitedAudit ? 'text-[13px] sm:text-[14px]' : 'text-[18px] sm:text-[22px]') : 'text-[14px] sm:text-[15px]'}`}>
+                    {auditState.title}
+                  </h2>
+                  <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-gray-500">
+                    {auditState.description}
                   </p>
                 </div>
-              ) : null}
-
-              <div className="flex flex-col items-center justify-center text-center">
-                 {!isZeroRecordLimitedAudit && (
-                   <p className="mb-4 max-w-sm text-[14px] leading-relaxed text-gray-500">
-                    {statusCopy[step]} You retain 100% filing authority.
-                   </p>
-                 )}
-                 {step !== 'completed' ? (
-                   <div className="mb-5 w-full max-w-md rounded-lg border border-gray-100 bg-white px-4 py-3 text-left">
-                     <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Data sources prepared</div>
-                     <div className="mt-2 grid gap-1.5">
-                       {dataSources.map((source) => (
-                         <div key={source} className="flex items-center gap-2 text-[12px] text-gray-600">
-                           <span className="font-mono text-[10px] font-semibold text-blue-600">OK</span>
-                           <span>{source}</span>
-                         </div>
-                       ))}
-                     </div>
-                   </div>
-                 ) : null}
-                 <p className="mb-4 max-w-md text-[12px] leading-relaxed text-gray-500">
-                   Margin prepares the evidence; you decide the action. Nothing is submitted to Amazon without your explicit digital signature.
-                 </p>
-                 <div className="flex items-center justify-center gap-3">
-                   {step === 'completed' && !isZeroRecordLimitedAudit && (
-                     <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-700 hover:bg-gray-50">
-                       Refresh
-                     </Button>
-                   )}
-                   {primaryAction}
-                 </div>
+                <div className={`flex items-center gap-2 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[11px] font-medium ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-gray-50 text-gray-500'}`}>
+                  <span className={`h-2 w-2 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-slate-400' : step === 'completed' ? 'bg-emerald-500' : 'bg-blue-600'}`} />
+                  {isBusy ? 'Working' : isZeroRecordLimitedAudit ? 'Limited' : step === 'completed' ? 'Ready' : step === 'failed' ? 'Needs retry' : 'Waiting'}
+                </div>
               </div>
+            </div>
+
+            {/* Workspace Report */}
+            <div className="mb-4">
+              <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-4 sm:p-5`}>
+                <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-2.5">
+                  <h2 className="text-[13px] font-semibold tracking-[-0.02em] text-gray-900">Workspace report</h2>
+                  {step !== 'completed' && <span className="rounded-md bg-gray-100 px-2 py-0.5 font-mono text-[10px] font-medium uppercase text-gray-500">Locked</span>}
+                </div>
+
+                {step === 'completed' ? (
+                  <div className="mb-4 grid gap-2.5 sm:grid-cols-3">
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
+                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
+                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}</div>
+                    </div>
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
+                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
+                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}</div>
+                    </div>
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
+                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Evidence ready</div>
+                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.evidenceReadyCount}</div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {step === 'completed' && teaser.categories.length ? (
+                  <div className="mb-4 flex flex-wrap gap-1.5">
+                    {teaser.categories.map((category) => (
+                      <span key={category} className="rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 font-mono text-[11px] text-gray-600">
+                        {category}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+
+                {step === 'completed' && (teaser.recordsReviewed != null || teaser.sourcesUnavailable?.length) ? (
+                  <div className="mb-4 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
+                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Audit coverage</div>
+                    <p className="mt-1 text-[12px] leading-relaxed text-gray-500">
+                      {teaser.recordsReviewed != null
+                        ? `${teaser.recordsReviewed.toLocaleString()} Amazon record${teaser.recordsReviewed === 1 ? '' : 's'} reviewed.`
+                        : 'Amazon record coverage is being prepared.'}
+                      {teaser.sourcesReviewed?.length ? ` Sources reviewed: ${teaser.sourcesReviewed.join(', ')}.` : ''}
+                      {teaser.sourcesUnavailable?.length ? ` Unavailable: ${teaser.sourcesUnavailable.join(', ')}.` : ''}
+                    </p>
+                  </div>
+                ) : null}
+
+                <div className="flex flex-col items-center justify-center text-center">
+                   {!isZeroRecordLimitedAudit && (
+                     <p className="mb-3 max-w-sm text-[13px] leading-relaxed text-gray-500">
+                      {statusCopy[step]} You retain 100% filing authority.
+                     </p>
+                   )}
+                   {step !== 'completed' ? (
+                     <div className="mb-4 w-full max-w-md rounded-lg border border-gray-100 bg-white px-3 py-2.5 text-left">
+                       <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Data sources prepared</div>
+                       <div className="mt-1.5 grid gap-1">
+                         {dataSources.map((source) => (
+                           <div key={source} className="flex items-center gap-2 text-[11px] text-gray-600">
+                             <span className="font-mono text-[10px] font-semibold text-blue-600">OK</span>
+                             <span>{source}</span>
+                           </div>
+                         ))}
+                       </div>
+                     </div>
+                   ) : null}
+                   <p className="mb-3 max-w-md text-[11px] leading-relaxed text-gray-500">
+                     Margin prepares the evidence; you decide the action. Nothing is submitted to Amazon without your explicit digital signature.
+                   </p>
+                   <div className="flex items-center justify-center gap-3">
+                     {step === 'completed' && !isZeroRecordLimitedAudit && (
+                       <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                         Refresh
+                       </Button>
+                     )}
+                     {primaryAction}
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            {step === 'completed' ? (
+              <section className="mb-4 rounded-xl border border-gray-200 bg-white p-4 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-5">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="max-w-xl">
+                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Keep Margin watching</div>
+                    <h2 className="mt-1.5 text-[16px] font-semibold tracking-[-0.02em] text-gray-900">{workspaceOffer.heading}</h2>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-gray-500">{workspaceOffer.bridge}</p>
+                    <p className="mt-2 text-[12px] font-medium text-gray-700">$99/month | 0% recovery commission</p>
+                  </div>
+                  <div className="flex flex-col gap-2 sm:flex-row md:shrink-0">
+                    {isZeroRecordLimitedAudit && teaser.retryable ? (
+                      <Button variant="outline" onClick={runAudit} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        Retry Audit
+                      </Button>
+                    ) : null}
+                    <Button onClick={openActivationSheet} disabled={isBusy} className="h-9 rounded-md bg-[var(--margin-blue)] px-4 text-[12px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+                      {workspaceOffer.cta}
+                      <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              </section>
+            ) : null}
+          </div>
+        </section>
+      </div>
+
+      {/* Keep all dialogs and sheets exactly as they are */}
+      <Sheet open={isActivationSheetOpen} onOpenChange={setIsActivationSheetOpen}>
+        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-gray-200 bg-white p-0 text-gray-900 shadow-[0_24px_90px_rgba(15,23,42,0.18)] sm:max-w-[460px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-l-0 max-sm:border-t">
+          <div className="px-6 pb-6 pt-7">
+            <SheetHeader className="text-left">
+              <div className="mb-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
+                <div className="font-mono text-[10px] font-medium uppercase text-gray-400">First audit</div>
+                <div className="mt-2 grid grid-cols-1 gap-2 text-[13px] text-gray-600">
+                  <div className="flex items-center justify-between gap-3">
+                    <span>{auditSheetSummary.label}</span>
+                    <span className="font-medium text-gray-900">{auditSheetSummary.metric}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span>Monitoring</span>
+                    <span className="font-medium text-gray-900">Not active</span>
+                  </div>
+                </div>
+              </div>
+              <div className="font-mono text-[10px] font-medium uppercase text-blue-600">Recovery Workspace</div>
+              <SheetTitle className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.03em] text-gray-900">
+                One audit shows what is visible today. Margin keeps watching what happens next.
+              </SheetTitle>
+              <SheetDescription className="mt-3 text-[14px] leading-relaxed text-gray-500">
+                {workspaceOffer.sheetBody}
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="mt-7 grid gap-4">
+              {[
+                ['Continuous monitoring', 'Scheduled Recovery Audits and new-opportunity alerts.'],
+                ['Evidence readiness', 'Records connected and missing proof surfaced before deadlines.'],
+                ['Recovery continuity', 'Seller approvals, Amazon responses, and case history kept together.'],
+                ['Payout control', 'Underpayments, reversals, and settlement outcomes monitored through reconciliation.'],
+              ].map(([title, body]) => (
+                <div key={title} className="border-t border-gray-100 pt-4">
+                  <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-gray-900">{title}</h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-gray-500">{body}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          {step === 'completed' ? (
-            <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-6">
-              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-                <div className="max-w-xl">
-                  <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Keep Margin watching</div>
-                  <h2 className="mt-2 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{workspaceOffer.heading}</h2>
-                  <p className="mt-2 text-[14px] leading-relaxed text-gray-500">{workspaceOffer.bridge}</p>
-                  <p className="mt-3 text-[13px] font-medium text-gray-700">$99/month | 0% recovery commission</p>
-                </div>
+          <div className="mt-auto border-t border-gray-100 bg-gray-50 px-6 py-5">
+            <div className="text-[28px] font-semibold tracking-[-0.04em] text-gray-900">$99/month</div>
+            <p className="mt-1 text-[13px] leading-relaxed text-gray-600">0% recovery commission | Cancel anytime | Nothing filed without approval</p>
+            <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+              {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Continue to Secure Checkout
+              {!isBusy ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
+            </Button>
+            <SheetClose asChild>
+              <Button variant="ghost" className="mt-2 h-10 w-full rounded-md text-[13px] font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                Not now
+              </Button>
+            </SheetClose>
+          </div>
+        </SheetContent>
+      </Sheet>
 
-                <div className="flex flex-col gap-3 sm:flex-row md:shrink-0">
-                  {isZeroRecordLimitedAudit && teaser.retryable ? (
-                    <Button variant="outline" onClick={runAudit} disabled={isBusy} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-700 hover:bg-gray-50">
-                      {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                      Retry Audit
-                    </Button>
-                  ) : null}
-                  <Button onClick={openActivationSheet} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
-                    {workspaceOffer.cta}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </section>
-          ) : null}
+      <Dialog open={isSecurityProtocolOpen} onOpenChange={setIsSecurityProtocolOpen}>
+        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[520px]">
+          <DialogHeader>
+            <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Security Protocol</DialogTitle>
+            <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
+              Margin uses Amazon OAuth so you authorize the connection directly with Amazon. The audit reads eligible recovery data for analysis; it does not file claims, change settings, or submit anything without your approval.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-3 text-[13px] text-gray-600">
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div className="font-medium text-gray-900">Read-only synchronization</div>
+              <p className="mt-1 leading-relaxed">Margin reviews shipments, settlements, inventory, refunds, fees, and related records to prepare a recovery scope.</p>
+            </div>
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div className="font-medium text-gray-900">Seller-controlled filing</div>
+              <p className="mt-1 leading-relaxed">You retain 100% filing authority. Evidence is prepared for review; submission requires explicit seller action.</p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-          <Sheet open={isActivationSheetOpen} onOpenChange={setIsActivationSheetOpen}>
-            <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-gray-200 bg-white p-0 text-gray-900 shadow-[0_24px_90px_rgba(15,23,42,0.18)] sm:max-w-[460px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-l-0 max-sm:border-t">
-              <div className="px-6 pb-6 pt-7">
-                <SheetHeader className="text-left">
-                  <div className="mb-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
-                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">First audit</div>
-                    <div className="mt-2 grid grid-cols-1 gap-2 text-[13px] text-gray-600">
-                      <div className="flex items-center justify-between gap-3">
-                        <span>{auditSheetSummary.label}</span>
-                        <span className="font-medium text-gray-900">{auditSheetSummary.metric}</span>
-                      </div>
-                      <div className="flex items-center justify-between gap-3">
-                        <span>Monitoring</span>
-                        <span className="font-medium text-gray-900">Not active</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="font-mono text-[10px] font-medium uppercase text-blue-600">Recovery Workspace</div>
-                  <SheetTitle className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.03em] text-gray-900">
-                    One audit shows what is visible today. Margin keeps watching what happens next.
-                  </SheetTitle>
-                  <SheetDescription className="mt-3 text-[14px] leading-relaxed text-gray-500">
-                    {workspaceOffer.sheetBody}
-                  </SheetDescription>
-                </SheetHeader>
-
-                <div className="mt-7 grid gap-4">
-                  {[
-                    ['Continuous monitoring', 'Scheduled Recovery Audits and new-opportunity alerts.'],
-                    ['Evidence readiness', 'Records connected and missing proof surfaced before deadlines.'],
-                    ['Recovery continuity', 'Seller approvals, Amazon responses, and case history kept together.'],
-                    ['Payout control', 'Underpayments, reversals, and settlement outcomes monitored through reconciliation.'],
-                  ].map(([title, body]) => (
-                    <div key={title} className="border-t border-gray-100 pt-4">
-                      <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-gray-900">{title}</h3>
-                      <p className="mt-1 text-[13px] leading-relaxed text-gray-500">{body}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-auto border-t border-gray-100 bg-gray-50 px-6 py-5">
-                <div className="text-[28px] font-semibold tracking-[-0.04em] text-gray-900">$99/month</div>
-                <p className="mt-1 text-[13px] leading-relaxed text-gray-600">0% recovery commission | Cancel anytime | Nothing filed without approval</p>
-                <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
-                  {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                  Continue to Secure Checkout
-                  {!isBusy ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
-                </Button>
-                <SheetClose asChild>
-                  <Button variant="ghost" className="mt-2 h-10 w-full rounded-md text-[13px] font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                    Not now
-                  </Button>
-                </SheetClose>
-              </div>
-            </SheetContent>
-          </Sheet>
-
-          <Dialog open={isSecurityProtocolOpen} onOpenChange={setIsSecurityProtocolOpen}>
-            <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[520px]">
-              <DialogHeader>
-                <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Security Protocol</DialogTitle>
-                <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
-                  Margin uses Amazon OAuth so you authorize the connection directly with Amazon. The audit reads eligible recovery data for analysis; it does not file claims, change settings, or submit anything without your approval.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-3 text-[13px] text-gray-600">
-                <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-                  <div className="font-medium text-gray-900">Read-only synchronization</div>
-                  <p className="mt-1 leading-relaxed">Margin reviews shipments, settlements, inventory, refunds, fees, and related records to prepare a recovery scope.</p>
-                </div>
-                <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-                  <div className="font-medium text-gray-900">Seller-controlled filing</div>
-                  <p className="mt-1 leading-relaxed">You retain 100% filing authority. Evidence is prepared for review; submission requires explicit seller action.</p>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-
-          <Dialog open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
-            <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
-              <DialogHeader>
-                <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Live Audit Log</DialogTitle>
-                <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
-                  A transparent activity trail for the audit workspace. Live Amazon records appear here after authorization.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="rounded-lg border border-gray-200 bg-[#0b1220] p-4 font-mono text-[12px] leading-relaxed text-blue-100">
-                {activityLogLines.map((line) => (
-                  <div key={line} className="py-1">{line}</div>
-                ))}
-              </div>
-            </DialogContent>
-          </Dialog>
-
-        </div>
-      </section>
+      <Dialog open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
+        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
+          <DialogHeader>
+            <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Live Audit Log</DialogTitle>
+            <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
+              A transparent activity trail for the audit workspace. Live Amazon records appear here after authorization.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="rounded-lg border border-gray-200 bg-[#0b1220] p-4 font-mono text-[12px] leading-relaxed text-blue-100">
+            {activityLogLines.map((line) => (
+              <div key={line} className="py-1">{line}</div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
+
 }
