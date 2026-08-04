@@ -1298,31 +1298,6 @@ export default function Audit() {
                      </p>
                    )}
 
-                   {step !== 'completed' ? (
-                     <div className="mb-6 w-full max-w-xs text-left">
-                       <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">What happens next</h3>
-                       <div className="relative flex flex-col gap-4 text-[13px] text-gray-600">
-                         <div className="absolute bottom-2 left-[7px] top-2 w-px bg-gray-200" />
-                         <div className="relative flex items-center gap-3">
-                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-600">1</div>
-                           <p>Connect Amazon.</p>
-                         </div>
-                         <div className="relative flex items-center gap-3">
-                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">2</div>
-                           <p>Margin reviews your records.</p>
-                         </div>
-                         <div className="relative flex items-center gap-3">
-                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">3</div>
-                           <p>We build recovery-ready findings.</p>
-                         </div>
-                         <div className="relative flex items-center gap-3">
-                           <div className="z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">4</div>
-                           <p>You decide what happens next.</p>
-                         </div>
-                       </div>
-                     </div>
-                   ) : null}
-
                    <div className="mb-5 flex items-center justify-center gap-3">
                      {step === 'completed' && !isZeroRecordLimitedAudit && (
                        <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
