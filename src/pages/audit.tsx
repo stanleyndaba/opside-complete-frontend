@@ -1583,12 +1583,12 @@ export default function Audit() {
             Next scheduled run: {auditSchedule?.next_run_at && !scheduleForm.is_paused ? new Date(auditSchedule.next_run_at).toLocaleString() : 'Not scheduled'}
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">
+            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white disabled:bg-blue-200 disabled:text-white disabled:opacity-100">
               {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Save schedule
             </Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 px-4 text-[13px]">Pause</Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 px-4 text-[13px]">Turn off</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Pause</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Turn off</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -1606,11 +1606,11 @@ export default function Audit() {
           </div>
           <input readOnly value={getShareLink()} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[12px] text-gray-600" />
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={copyShareLink} variant="outline" className="h-10 rounded-md border-gray-200 px-4 text-[13px]">
+            <Button onClick={copyShareLink} variant="outline" className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900">
               {shareCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
               {shareCopied ? 'Copied' : 'Copy link'}
             </Button>
-            <Button asChild variant="outline" className="h-10 rounded-md border-gray-200 px-4 text-[13px]" onClick={() => trackEvent('share_email_clicked', { source_page: '/audit' })}>
+            <Button asChild variant="outline" className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900" onClick={() => trackEvent('share_email_clicked', { source_page: '/audit' })}>
               <a href={`mailto:?subject=${encodeURIComponent('Run a free Amazon Recovery Audit with Margin')}&body=${encodeURIComponent(`Margin helps Amazon sellers audit reimbursement activity, prepare evidence, track recoveries, and verify payouts. Run a free Recovery Audit:\n\n${getShareLink()}`)}`}>
                 <Mail className="mr-2 h-4 w-4" /> Email
               </a>
