@@ -220,6 +220,71 @@ export interface RecoverOnceInitializeResponse {
   authorization_url?: string;
 }
 
+export interface AuditHistoryItem {
+  id: string;
+  month: string;
+  monthLabel?: string;
+  label: string;
+  status: string;
+  finalStatus: string | null;
+  created_at: string;
+  completed_at: string | null;
+  recordsReviewed: number | null;
+  findingsCount: number;
+  scopeValue: number;
+  isLatest: boolean;
+}
+
+export interface AuditActivityEvent {
+  timestamp: string;
+  category: 'Amazon' | 'Evidence' | 'Findings' | 'Payment' | string;
+  status: string;
+  message: string;
+}
+
+export interface AuditScheduleRecord {
+  id: string;
+  cadence: 'off' | 'weekly' | 'biweekly' | 'monthly';
+  preferred_day_of_week: number | null;
+  preferred_day_of_month: number | null;
+  preferred_time: string;
+  timezone: string;
+  is_paused: boolean;
+  next_run_at: string | null;
+}
+
+export interface AuditExportSummary {
+  success: boolean;
+  audit: {
+    id: string;
+    status: string;
+    started_at: string | null;
+    completed_at: string | null;
+    selected_period: string;
+    source_type: string;
+  };
+  summary: {
+    completion_state: string;
+    records_reviewed: number;
+    sources_reviewed: string[];
+    sources_unavailable: string[];
+    estimated_recoverable_value: number;
+    actionable_findings: number;
+    evidence_ready: number;
+    evidence_required: number;
+    categories: string[];
+    limitations: string | null;
+    recommended_next_actions: string[];
+  };
+  findings: Array<{
+    category: string;
+    estimated_value: number;
+    readiness: string;
+  }>;
+  generated_at: string;
+  disclaimer: string;
+}
+
 import { getFrontendAuthContext } from './authSession';
 import { buildFirstPartyAnalyticsPayload } from './analytics';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
@@ -978,6 +1043,55 @@ export const api = {
   }>('/api/audits/latest', authToken ? {
     headers: { Authorization: `Bearer ${authToken}` },
   } : undefined),
+
+  getAuditHistory: (authToken?: string | null) => requestJson<{
+    success: boolean;
+    audits: AuditHistoryItem[];
+  }>('/api/audits/history?limit=18', authToken ? {
+    headers: { Authorization: `Bearer ${authToken}` },
+  } : undefined),
+
+  getAuditActivity: (auditId: string, authToken?: string | null) => requestJson<{
+    success: boolean;
+    events: AuditActivityEvent[];
+  }>(`/api/audits/${encodeURIComponent(auditId)}/activity`, authToken ? {
+    headers: { Authorization: `Bearer ${authToken}` },
+  } : undefined),
+
+  getAuditExportSummary: (auditId: string, authToken?: string | null) => requestJson<AuditExportSummary>(
+    `/api/audits/${encodeURIComponent(auditId)}/export-summary`,
+    authToken ? { headers: { Authorization: `Bearer ${authToken}` } } : undefined
+  ),
+
+  getAuditSchedule: (authToken?: string | null) => requestJson<{
+    success: boolean;
+    schedule: AuditScheduleRecord | null;
+    entitlement: { entitled: boolean; state: string; access_until?: string | null };
+  }>('/api/audits/schedule', authToken ? {
+    headers: { Authorization: `Bearer ${authToken}` },
+  } : undefined),
+
+  saveAuditSchedule: (payload: {
+    cadence: 'off' | 'weekly' | 'biweekly' | 'monthly';
+    preferred_day_of_week?: number | null;
+    preferred_day_of_month?: number | null;
+    preferred_time: string;
+    timezone: string;
+    is_paused?: boolean;
+  }, authToken?: string | null) => requestJson<{
+    success: boolean;
+    schedule: AuditScheduleRecord;
+    entitlement: { entitled: boolean; state: string; access_until?: string | null };
+  }>('/api/audits/schedule', {
+    method: 'PUT',
+    headers: authToken ? {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    } : {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  }),
 
   runAudit: (auditId: string, authToken?: string | null) => requestJson<{
     success: boolean;

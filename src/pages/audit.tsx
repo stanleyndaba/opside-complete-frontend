@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { ArrowRight, Calendar, CalendarClock, Columns2, Download, HeartHandshake, Loader2, Microscope, ShieldCheck, TerminalSquare } from 'lucide-react';
+import { ArrowRight, Calendar, CalendarClock, Check, Columns2, Copy, Download, HeartHandshake, Loader2, Mail, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
-import { api, AuditRunRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
+import { api, AuditActivityEvent, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 
@@ -19,6 +19,8 @@ type PendingAuditContext = {
   phase: 'account_ready' | 'amazon_connection_required' | 'amazon_oauth_started' | 'syncing' | 'completed';
   updatedAt: string;
 };
+
+type AuditScheduleCadence = AuditScheduleRecord['cadence'];
 
 const PENDING_AUDIT_KEY = 'margin_pending_audit';
 
@@ -221,12 +223,35 @@ export default function Audit() {
   const [isActivationSheetOpen, setIsActivationSheetOpen] = useState(false);
   const [isSecurityProtocolOpen, setIsSecurityProtocolOpen] = useState(false);
   const [isAuditLogOpen, setIsAuditLogOpen] = useState(false);
+  const [isPeriodSelectorOpen, setIsPeriodSelectorOpen] = useState(false);
+  const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [weeklyAuditEnabled, setWeeklyAuditEnabled] = useState(false);
   const [summaryExported, setSummaryExported] = useState(false);
+  const [auditHistory, setAuditHistory] = useState<AuditHistoryItem[]>([]);
+  const [auditHistoryQuery, setAuditHistoryQuery] = useState('');
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [auditLogEvents, setAuditLogEvents] = useState<AuditActivityEvent[]>([]);
+  const [auditLogFilter, setAuditLogFilter] = useState('All');
+  const [isAuditLogLoading, setIsAuditLogLoading] = useState(false);
+  const [auditSchedule, setAuditSchedule] = useState<AuditScheduleRecord | null>(null);
+  const [scheduleEntitled, setScheduleEntitled] = useState(false);
+  const [scheduleForm, setScheduleForm] = useState({
+    cadence: 'off' as 'off' | 'weekly' | 'biweekly' | 'monthly',
+    preferred_day_of_week: 1,
+    preferred_day_of_month: 1,
+    preferred_time: '09:00',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Johannesburg',
+    is_paused: false,
+  });
+  const [isScheduleSaving, setIsScheduleSaving] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
   const [recoverOnceQuote, setRecoverOnceQuote] = useState<RecoverOnceQuote | null>(null);
   const [isRecoverOnceQuoteLoading, setIsRecoverOnceQuoteLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [auditMonths, setAuditMonths] = useState(18);
   
   const { toast } = useToast();
   const setError = (message: string | null) => {
@@ -262,6 +287,7 @@ export default function Audit() {
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
   const hasRecoveryOpportunity = hasFindings || hasScopeValue;
   const canShowRecoverOnce = hasFindings && hasScopeValue && !isZeroRecordLimitedAudit;
+  const selectedAuditPeriodLabel = auditHistory.find((item) => item.id === audit?.id)?.label || 'Current audit';
   const expiringSoonValue = hasScopeValue ? formatMoney(Math.round(teaser.scopeValue * 0.28)) : '$0';
   const newShipmentSyncCopy = isAuthenticated
     ? audit?.status === 'completed'
@@ -275,32 +301,239 @@ export default function Audit() {
     'Inventory Adjustment Logs',
   ];
 
-  const activityLogLines = [
-    '[SYSTEM] Audit workspace initialized.',
-    '[SYSTEM] Data residency assigned to your Margin account.',
-    '[SYSTEM] Waiting for read-only Amazon authorization.',
-    '[SYSTEM] Scheduled detectors: inbound, inventory, refunds, fees, settlements.',
-    '[SYSTEM] Filing authority locked to seller approval.',
-  ];
-
   const exportExecutiveSummary = async () => {
-    const { jsPDF } = await import('jspdf');
-    const doc = new jsPDF();
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.text('Margin Recovery Audit - Executive Summary', 18, 24);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.text('Sample report preview', 18, 34);
-    doc.text('Scope value: pending live audit result', 18, 50);
-    doc.text('Findings: pending live audit result', 18, 58);
-    doc.text('Evidence readiness: pending live audit result', 18, 66);
-    doc.text('Margin prepares recovery evidence. The seller retains 100% filing authority.', 18, 84, { maxWidth: 170 });
-    doc.save('margin-sample-audit-summary.pdf');
-    setSummaryExported(true);
-    toast({
-      description: 'Sample executive summary exported.',
+    if (!audit?.id || step !== 'completed') {
+      setExportError('Complete an audit before exporting the summary.');
+      return;
+    }
+
+    setIsExporting(true);
+    setExportError(null);
+    trackEvent('audit_summary_export_started', {
+      source_page: '/audit',
+      audit_id: audit.id,
     });
+
+    const { jsPDF } = await import('jspdf');
+    try {
+      const freshToken = await ensureFreshAuditAuth();
+      const response = await api.getAuditExportSummary(audit.id, freshToken);
+      if (!response.ok || !response.data?.success) {
+        throw new Error('Margin could not prepare the audit summary.');
+      }
+
+      const exportData = response.data;
+      const doc = new jsPDF();
+      const period = exportData.audit?.selected_period || selectedAuditPeriodLabel;
+      const filenamePeriod = String(period).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const filename = `margin-recovery-audit-${filenamePeriod || 'summary'}.pdf`;
+      const summary = exportData.summary || {};
+      const findings: AuditExportSummary['findings'] = Array.isArray(exportData.findings) ? exportData.findings : [];
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(18);
+      doc.text('Margin Recovery Audit', 18, 22);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.text(`Audit period: ${period}`, 18, 32);
+      doc.text(`Generated: ${new Date(exportData.generated_at || Date.now()).toLocaleString()}`, 18, 39);
+
+      const rows = [
+        ['Completion state', String(summary.completion_state || 'Not available')],
+        ['Records reviewed', Number(summary.records_reviewed || 0).toLocaleString()],
+        ['Estimated recoverable value', formatMoney(Number(summary.estimated_recoverable_value || 0))],
+        ['Actionable findings', String(summary.actionable_findings || 0)],
+        ['Evidence ready', String(summary.evidence_ready || 0)],
+        ['Evidence required', String(summary.evidence_required || 0)],
+        ['Sources reviewed', (summary.sources_reviewed || []).join(', ') || 'Not available'],
+        ['Unavailable sources', (summary.sources_unavailable || []).join(', ') || 'None recorded'],
+      ];
+
+      let y = 54;
+      rows.forEach(([label, value]) => {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}:`, 18, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(String(value), 70, y, { maxWidth: 120 });
+        y += 8;
+      });
+
+      if (findings.length) {
+        y += 5;
+        doc.setFont('helvetica', 'bold');
+        doc.text('Finding summaries', 18, y);
+        y += 8;
+        findings.slice(0, 10).forEach((finding, index) => {
+          doc.setFont('helvetica', 'normal');
+          doc.text(`${index + 1}. ${finding.category || 'Recovery finding'} - ${formatMoney(Number(finding.estimated_value || 0))}`, 18, y, { maxWidth: 170 });
+          y += 7;
+        });
+      }
+
+      y += 7;
+      doc.setFont('helvetica', 'bold');
+      doc.text('Recommended next actions', 18, y);
+      y += 8;
+      (summary.recommended_next_actions || []).forEach((action: string) => {
+        doc.setFont('helvetica', 'normal');
+        doc.text(`- ${action}`, 18, y, { maxWidth: 170 });
+        y += 7;
+      });
+
+      y += 7;
+      doc.setFontSize(9);
+      doc.text(exportData.disclaimer || 'Estimated values are not guaranteed recoveries.', 18, y, { maxWidth: 170 });
+      doc.save(filename);
+      setSummaryExported(true);
+      trackEvent('audit_summary_export_completed', {
+        source_page: '/audit',
+        audit_id: audit.id,
+      });
+      toast({ description: 'Audit summary exported.' });
+    } catch {
+      setExportError('The audit summary could not be exported. Please retry in a moment.');
+      trackEvent('audit_summary_export_failed', {
+        source_page: '/audit',
+        audit_id: audit.id,
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const loadAuditHistory = async () => {
+    if (!isAuthenticated) return;
+    setIsHistoryLoading(true);
+    try {
+      const freshToken = await ensureFreshAuditAuth();
+      const response = await api.getAuditHistory(freshToken);
+      if (response.ok && response.data?.audits) setAuditHistory(response.data.audits);
+    } finally {
+      setIsHistoryLoading(false);
+    }
+  };
+
+  const selectAuditPeriod = async (item: AuditHistoryItem) => {
+    const freshToken = await ensureFreshAuditAuth();
+    const response = await api.getAudit(item.id, freshToken);
+    if (!response.ok || !response.data?.audit) {
+      setError('This audit period is not available.');
+      return;
+    }
+    setAudit(response.data.audit);
+    if (response.data.audit.status === 'completed') {
+      const results = await api.getAuditResults(response.data.audit.id, freshToken);
+      if (results.ok && results.data?.teaser) setTeaser(results.data.teaser);
+    }
+    setRecoverOnceQuote(null);
+    requestedRecoverOnceQuoteRef.current = null;
+    setIsPeriodSelectorOpen(false);
+    trackEvent('audit_period_selected', {
+      source_page: '/audit',
+      audit_id: item.id,
+      status: item.status,
+    });
+  };
+
+  const openAuditLog = async () => {
+    setIsAuditLogOpen(true);
+    trackEvent('audit_log_opened', { source_page: '/audit', audit_id: audit?.id || null });
+    if (!audit?.id) return;
+    setIsAuditLogLoading(true);
+    try {
+      const freshToken = await ensureFreshAuditAuth();
+      const response = await api.getAuditActivity(audit.id, freshToken);
+      if (response.ok && response.data?.events) setAuditLogEvents(response.data.events);
+    } finally {
+      setIsAuditLogLoading(false);
+    }
+  };
+
+  const openScheduleDialog = async () => {
+    setIsScheduleDialogOpen(true);
+    trackEvent('audit_schedule_opened', { source_page: '/audit' });
+    try {
+      const freshToken = await ensureFreshAuditAuth();
+      const response = await api.getAuditSchedule(freshToken);
+      if (response.ok && response.data) {
+        setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
+        setAuditSchedule(response.data.schedule);
+        if (response.data.schedule) {
+          setScheduleForm({
+            cadence: response.data.schedule.cadence,
+            preferred_day_of_week: response.data.schedule.preferred_day_of_week ?? 1,
+            preferred_day_of_month: response.data.schedule.preferred_day_of_month ?? 1,
+            preferred_time: response.data.schedule.preferred_time || '09:00',
+            timezone: response.data.schedule.timezone || scheduleForm.timezone,
+            is_paused: Boolean(response.data.schedule.is_paused),
+          });
+          setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused);
+        }
+      }
+    } catch {
+      setScheduleEntitled(false);
+    }
+  };
+
+  const saveSchedule = async (override?: Partial<typeof scheduleForm>) => {
+    setIsScheduleSaving(true);
+    const nextForm = { ...scheduleForm, ...override };
+    try {
+      const freshToken = await ensureFreshAuditAuth();
+      const response = await api.saveAuditSchedule(nextForm, freshToken);
+      if (!response.ok || !response.data?.success) throw new Error('Schedule unavailable');
+      setAuditSchedule(response.data.schedule);
+      setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
+      setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused);
+      trackEvent(nextForm.cadence === 'off' ? 'audit_schedule_disabled' : nextForm.is_paused ? 'audit_schedule_paused' : 'audit_schedule_saved', {
+        source_page: '/audit',
+        cadence: nextForm.cadence,
+      });
+      toast({ description: 'Audit schedule updated.' });
+    } catch {
+      setError('Automatic audits are available after Recovery Workspace is active.');
+    } finally {
+      setIsScheduleSaving(false);
+    }
+  };
+
+  const openShareDialog = () => {
+    setIsShareDialogOpen(true);
+    setShareCopied(false);
+    trackEvent('share_dialog_opened', { source_page: '/audit' });
+  };
+
+  const getShareLink = () => {
+    const origin = typeof window === 'undefined' ? 'https://margin-finance.com' : window.location.origin;
+    return `${origin}/audit?utm_source=customer_referral&utm_medium=share&utm_campaign=audit`;
+  };
+
+  const copyShareLink = async () => {
+    const link = getShareLink();
+    try {
+      await navigator.clipboard.writeText(link);
+      setShareCopied(true);
+      trackEvent('share_link_copied', { source_page: '/audit' });
+    } catch {
+      setError('Copy was unavailable. You can select and copy the link manually.');
+    }
+  };
+
+  const nativeShare = async () => {
+    if (!navigator.share) {
+      await copyShareLink();
+      return;
+    }
+    try {
+      await navigator.share({
+        title: 'Run a free Amazon Recovery Audit with Margin',
+        text: 'Margin helps Amazon sellers audit reimbursement activity, prepare evidence, track recoveries, and verify payouts.',
+        url: getShareLink(),
+      });
+      trackEvent('share_native_clicked', { source_page: '/audit' });
+    } catch {
+      // The seller can cancel the native share sheet without it being an error.
+    }
   };
 
   const ensureFreshAuditAuth = async (): Promise<string | null> => {
@@ -337,6 +570,11 @@ export default function Audit() {
       source_page: '/audit',
     });
   }, [audit?.id, audit?.status]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    void loadAuditHistory();
+  }, [isAuthenticated, audit?.id]);
 
   useEffect(() => {
     if (step !== 'completed' || trackedOfferViewRef.current) return;
@@ -838,19 +1076,28 @@ export default function Audit() {
 
             {/* Nav items */}
             <nav className="flex flex-col gap-0.5 px-2 pt-3">
-              <button type="button" onClick={() => setIsAuditLogOpen(true)} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900">
+              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900">
                 <TerminalSquare className="h-4 w-4 text-gray-400" />
                 Live audit log
               </button>
-              <button type="button" onClick={() => setWeeklyAuditEnabled((v) => !v)} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors hover:bg-gray-50 ${weeklyAuditEnabled ? 'bg-blue-50/60 text-blue-700' : 'text-gray-600 hover:text-gray-900'}`}>
+              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors hover:bg-gray-50 ${weeklyAuditEnabled ? 'bg-blue-50/60 text-blue-700' : 'text-gray-600 hover:text-gray-900'}`}>
                 <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-blue-500' : 'text-gray-400'}`} />
                 Auto-run audit schedule
               </button>
 
               <div className="mt-4 px-1">
                 <div className="relative">
-                  <Microscope className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-                  <input type="text" placeholder="Search audit month" className="h-8 w-full rounded-md border border-gray-200 bg-gray-50 pl-8 pr-3 text-[12px] text-gray-700 placeholder:text-gray-400 focus:border-[var(--margin-blue)] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[var(--margin-blue)] transition-colors" />
+                  <Search className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsPeriodSelectorOpen(true);
+                      trackEvent('audit_period_selector_opened', { source_page: '/audit' });
+                    }}
+                    className="h-8 w-full rounded-md border border-gray-200 bg-gray-50 pl-8 pr-3 text-left text-[12px] text-gray-700 transition-colors hover:bg-white focus:border-[var(--margin-blue)] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[var(--margin-blue)]"
+                  >
+                    {selectedAuditPeriodLabel}
+                  </button>
                 </div>
               </div>
             </nav>
@@ -858,10 +1105,10 @@ export default function Audit() {
             {/* Bottom banner */}
             <div className="mt-auto border-t border-gray-100 px-3 py-4">
               <div className="rounded-lg bg-gray-50 px-3 py-3">
-                <div className="flex items-center gap-2 text-[13px] font-medium text-gray-700">
+                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2 text-left text-[13px] font-medium text-gray-700">
                   <HeartHandshake className="h-4 w-4 text-rose-400" />
                   Share Margin with a seller
-                </div>
+                </button>
                 <p className="mt-1 text-[11px] leading-relaxed text-gray-400">Help a seller</p>
               </div>
             </div>
@@ -901,18 +1148,21 @@ export default function Audit() {
           <div className="flex items-center gap-1">
             <div className="relative flex items-center">
               <Calendar className="pointer-events-none absolute left-2 h-3.5 w-3.5 text-gray-400" />
-              <select value={auditMonths} onChange={(e) => setAuditMonths(Number(e.target.value))} className="h-8 appearance-none rounded-md border-0 bg-transparent py-0 pl-7 pr-6 text-[12px] font-medium text-gray-600 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-0">
-                <option value={3}>3 months</option>
-                <option value={6}>6 months</option>
-                <option value={9}>9 months</option>
-                <option value={12}>12 months</option>
-                <option value={18}>18 months</option>
-              </select>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsPeriodSelectorOpen(true);
+                  trackEvent('audit_period_selector_opened', { source_page: '/audit' });
+                }}
+                className="h-8 rounded-md py-0 pl-7 pr-3 text-[12px] font-medium text-gray-600 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                {selectedAuditPeriodLabel}
+              </button>
             </div>
-            <button type="button" onClick={exportExecutiveSummary} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="Export Summary">
+            <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="Export Summary" aria-label="Export Summary">
               <Download className="h-4 w-4" />
             </button>
-            <button type="button" onClick={() => setIsSecurityProtocolOpen(true)} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="View Security Protocol">
+            <button type="button" onClick={() => { setIsSecurityProtocolOpen(true); trackEvent('security_protocol_opened', { source_page: '/audit' }); }} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="View Security Protocol" aria-label="View Security Protocol">
               <ShieldCheck className="h-4 w-4" />
             </button>
           </div>
@@ -1238,12 +1488,169 @@ export default function Audit() {
         </SheetContent>
       </Sheet>
 
+      <Dialog open={isPeriodSelectorOpen} onOpenChange={setIsPeriodSelectorOpen}>
+        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
+          <DialogHeader>
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Audit period</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+              Select from actual audit history. Empty months are not shown.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              value={auditHistoryQuery}
+              onChange={(event) => setAuditHistoryQuery(event.target.value)}
+              placeholder="Search month, year, or status"
+              className="h-10 w-full rounded-md border border-gray-200 bg-gray-50 pl-9 pr-3 text-[13px] outline-none transition-colors focus:border-[var(--margin-blue)] focus:bg-white focus:ring-1 focus:ring-[var(--margin-blue)]"
+            />
+          </div>
+          <div className="max-h-[320px] overflow-y-auto">
+            {isHistoryLoading ? (
+              <div className="flex items-center gap-2 py-6 text-[13px] text-gray-500">
+                <Loader2 className="h-4 w-4 animate-spin" /> Loading audit history
+              </div>
+            ) : auditHistory.length ? (
+              <div className="grid gap-2">
+                {auditHistory
+                  .filter((item) => {
+                    const q = auditHistoryQuery.trim().toLowerCase();
+                    if (!q) return true;
+                    return [item.label, item.month, item.status, item.finalStatus].join(' ').toLowerCase().includes(q);
+                  })
+                  .map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => void selectAuditPeriod(item)}
+                      className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-3 text-left transition-colors hover:border-blue-100 hover:bg-blue-50/30 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    >
+                      <span>
+                        <span className="block text-[13px] font-medium text-gray-900">{item.label}{item.isLatest ? ' — Latest' : ''}</span>
+                        <span className="mt-1 block text-[11px] text-gray-500">{item.finalStatus || item.status} · {item.findingsCount} findings · {formatMoney(item.scopeValue)}</span>
+                      </span>
+                      {audit?.id === item.id ? <Check className="h-4 w-4 text-blue-600" /> : null}
+                    </button>
+                  ))}
+              </div>
+            ) : (
+              <p className="py-6 text-[13px] text-gray-500">No previous audits are available yet.</p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[480px]">
+          <DialogHeader>
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Export summary</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+              Download a PDF summary for {selectedAuditPeriodLabel}. Sensitive identifiers, tokens, raw payloads, and payment references are excluded.
+            </DialogDescription>
+          </DialogHeader>
+          {step !== 'completed' ? (
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[13px] text-gray-500">
+              Complete the selected audit before exporting a summary.
+            </div>
+          ) : null}
+          {exportError ? <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-[13px] text-red-700">{exportError}</div> : null}
+          {summaryExported ? <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-[13px] text-emerald-700">Last export completed successfully.</div> : null}
+          <Button onClick={exportExecutiveSummary} disabled={isExporting || step !== 'completed'} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">
+            {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+            Download PDF
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
+        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
+          <DialogHeader>
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Auto-run audit schedule</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+              Automatic audits are available with Recovery Workspace. The schedule is tenant-owned and only one audit runs at a time.
+            </DialogDescription>
+          </DialogHeader>
+          {!scheduleEntitled ? (
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[13px] text-gray-600">
+              Activate Recovery Workspace before saving an automatic audit schedule.
+            </div>
+          ) : null}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+              Frequency
+              <select value={scheduleForm.cadence} onChange={(event) => setScheduleForm((current) => ({ ...current, cadence: event.target.value as AuditScheduleCadence }))} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800">
+                <option value="off">Off</option>
+                <option value="weekly">Weekly</option>
+                <option value="biweekly">Every two weeks</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </label>
+            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+              Preferred time
+              <input value={scheduleForm.preferred_time} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_time: event.target.value }))} type="time" className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800" />
+            </label>
+            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+              Day of week
+              <select value={scheduleForm.preferred_day_of_week} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_week: Number(event.target.value) }))} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800">
+                {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, index) => <option key={day} value={index}>{day}</option>)}
+              </select>
+            </label>
+            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+              Day of month
+              <input value={scheduleForm.preferred_day_of_month} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_month: Number(event.target.value) }))} min={1} max={28} type="number" className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800" />
+            </label>
+            <label className="grid gap-1 text-[12px] font-medium text-gray-600 sm:col-span-2">
+              Timezone
+              <input value={scheduleForm.timezone} onChange={(event) => setScheduleForm((current) => ({ ...current, timezone: event.target.value }))} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800" />
+            </label>
+          </div>
+          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[12px] text-gray-500">
+            Next scheduled run: {auditSchedule?.next_run_at && !scheduleForm.is_paused ? new Date(auditSchedule.next_run_at).toLocaleString() : 'Not scheduled'}
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">
+              {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Save schedule
+            </Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 px-4 text-[13px]">Pause</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 px-4 text-[13px]">Turn off</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
+        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[520px]">
+          <DialogHeader>
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Share Margin with a seller</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+              Share only the public audit entry point. No audit, tenant, Amazon, or recovery data is included.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[13px] leading-relaxed text-gray-600">
+            Margin helps Amazon sellers audit reimbursement activity, prepare evidence, track recoveries, and verify payouts. Run a free Recovery Audit.
+          </div>
+          <input readOnly value={getShareLink()} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[12px] text-gray-600" />
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button onClick={copyShareLink} variant="outline" className="h-10 rounded-md border-gray-200 px-4 text-[13px]">
+              {shareCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+              {shareCopied ? 'Copied' : 'Copy link'}
+            </Button>
+            <Button asChild variant="outline" className="h-10 rounded-md border-gray-200 px-4 text-[13px]" onClick={() => trackEvent('share_email_clicked', { source_page: '/audit' })}>
+              <a href={`mailto:?subject=${encodeURIComponent('Run a free Amazon Recovery Audit with Margin')}&body=${encodeURIComponent(`Margin helps Amazon sellers audit reimbursement activity, prepare evidence, track recoveries, and verify payouts. Run a free Recovery Audit:\n\n${getShareLink()}`)}`}>
+                <Mail className="mr-2 h-4 w-4" /> Email
+              </a>
+            </Button>
+            <Button onClick={() => void nativeShare()} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">Share</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={isSecurityProtocolOpen} onOpenChange={setIsSecurityProtocolOpen}>
         <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[520px]">
           <DialogHeader>
             <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Security Protocol</DialogTitle>
             <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
-              Margin uses Amazon OAuth so you authorize the connection directly with Amazon. The audit reads eligible recovery data for analysis; it does not file claims, change settings, or submit anything without your approval.
+              Margin uses the permissions and controls described below.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 text-[13px] text-gray-600">
@@ -1255,25 +1662,62 @@ export default function Audit() {
               <div className="font-medium text-gray-900">Seller-controlled filing</div>
               <p className="mt-1 leading-relaxed">You retain 100% filing authority. Evidence is prepared for review; submission requires explicit seller action.</p>
             </div>
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div className="font-medium text-gray-900">Account ownership</div>
+              <p className="mt-1 leading-relaxed">One Amazon seller account is bound to one Margin workspace. Cross-workspace reuse is blocked during authorization.</p>
+            </div>
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+              <div className="font-medium text-gray-900">Payment separation</div>
+              <p className="mt-1 leading-relaxed">Amazon authorization and Paystack checkout are separate flows. Payment details are verified through Paystack, not through Amazon credentials.</p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
-        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
+      <Sheet open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
+        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-gray-200 bg-white p-6 text-gray-900 sm:max-w-[520px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-l-0 max-sm:border-t">
           <DialogHeader>
             <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Live Audit Log</DialogTitle>
             <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
               A transparent activity trail for the audit workspace. Live Amazon records appear here after authorization.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-lg border border-gray-200 bg-[#0b1220] p-4 font-mono text-[12px] leading-relaxed text-blue-100">
-            {activityLogLines.map((line) => (
-              <div key={line} className="py-1">{line}</div>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {['All', 'Amazon', 'Evidence', 'Findings', 'Payment'].map((filter) => (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => {
+                  setAuditLogFilter(filter);
+                  trackEvent('audit_log_filter_changed', { source_page: '/audit', filter });
+                }}
+                className={`rounded-md px-2.5 py-1 text-[12px] font-medium ${auditLogFilter === filter ? 'bg-blue-50 text-blue-700' : 'bg-gray-50 text-gray-500 hover:bg-gray-100'}`}
+              >
+                {filter}
+              </button>
             ))}
           </div>
-        </DialogContent>
-      </Dialog>
+          <div className="mt-5 grid gap-3">
+            {isAuditLogLoading ? (
+              <div className="flex items-center gap-2 text-[13px] text-gray-500"><Loader2 className="h-4 w-4 animate-spin" /> Loading audit activity</div>
+            ) : auditLogEvents.filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter).length ? (
+              auditLogEvents
+                .filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter)
+                .map((event, index) => (
+                  <div key={`${event.timestamp}-${index}`} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[11px] font-medium uppercase text-gray-400">{event.category}</span>
+                      <span className="text-[11px] text-gray-400">{new Date(event.timestamp).toLocaleString()}</span>
+                    </div>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-gray-700">{event.message}</p>
+                  </div>
+                ))
+            ) : (
+              <p className="rounded-lg border border-gray-100 bg-gray-50 p-4 text-[13px] text-gray-500">No audit activity has been recorded for this period yet.</p>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </main>
   );
 
