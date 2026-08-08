@@ -3504,38 +3504,6 @@ export default function Index() {
                     ))}{" "}
                   </div>{" "}
                 </motion.div>{" "}
-                <motion.div {...revealProps} className="mt-12">
-                  {" "}
-                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">You stay in control</div>{" "}
-                  <div className="mt-4 border-y border-[var(--margin-border)]">
-                    {" "}
-                    {[
-                      "Read-only Amazon access",
-                      "Seller approval before recovery submission",
-                      "Clear recovery status",
-                      "Payout verification",
-                      "No hidden recovery percentage",
-                      "No payment required to run the audit",
-                    ].map((item, index) => (
-                      <motion.div
-                        key={item}
-                        {...revealProps}
-                        transition={{
-                          ...revealProps.transition,
-                          delay: index * 0.03,
-                        }}
-                        className="flex items-center gap-3 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
-                      >
-                        {" "}
-                        <Check className="h-4 w-4 shrink-0 text-[var(--margin-success)]" strokeWidth={2.2} />{" "}
-                        <span className="text-[15px] font-medium leading-6 tracking-tight text-[var(--margin-text-primary)] md:text-[16px]">
-                          {" "}
-                          {item}{" "}
-                        </span>{" "}
-                      </motion.div>
-                    ))}{" "}
-                  </div>{" "}
-                </motion.div>{" "}
               </div>{" "}
             </div>{" "}
           </div>{" "}
