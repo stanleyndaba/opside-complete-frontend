@@ -4,20 +4,15 @@
   "description": "The Recovery Operations Center for Amazon FBA Sellers.",
   "icons": [
     {
-      "src": "favicon-margin.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "logo-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
     },
     {
-      "src": "favicon-margin.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "favicon-margin.svg",
+      "src": "logo-512.png",
+      "type": "image/png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "purpose": "any maskable"
     }
   ],
   "start_url": "/",
