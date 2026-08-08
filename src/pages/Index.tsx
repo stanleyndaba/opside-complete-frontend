@@ -2253,9 +2253,8 @@ function KineticHeroSection({
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 1.15 }}
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-3.5 py-1.5 text-[11px] font-medium text-slate-400 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md sm:mt-5"
+            className="mt-4 inline-flex items-center gap-2 rounded-[2px] bg-white/[0.06] px-3.5 py-1.5 text-[11px] font-medium text-slate-400 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md sm:mt-5"
           >
-            <Monitor className="h-3.5 w-3.5 text-slate-500" />
             Desktop version for MacOS & Windows launches soon
           </motion.div>{" "}
           {isFull ? (
