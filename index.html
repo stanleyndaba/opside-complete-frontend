@@ -14,13 +14,32 @@
       send_page_view: false
     });
   </script>
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Mobile/Desktop Aura Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Margin">
+  <link rel="apple-touch-icon" href="/logo-192.png">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('Margin App: Desktop Ready'))
+          .catch(err => console.log('PWA registration failed:', err));
+      });
+    }
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Margin | Amazon FBA Reimbursement Workflow Automation</title>
   <meta name="description"
     content="Margin manages Amazon FBA reimbursement workflows after discrepancies are identified: evidence collection, filing, disputes, and payout reconciliation." />
-  <meta name="author" content="Margin" />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://margin-finance.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Margin" />
