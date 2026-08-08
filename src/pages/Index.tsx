@@ -363,74 +363,49 @@ const outperformanceCards = [
 ];
 const faqs = [
   {
-    question: "What does the free audit access?",
+    question: "Is the Recovery Audit really free?",
     answer:
-      "The audit reviews reimbursement-related Amazon activity such as shipments, inventory events, settlement lines, fees, refunds, case signals, and supporting proof. It is designed to show what Margin finds before you activate the recovery workspace.",
+      "Yes. You can run the audit without paying. The audit shows what Margin finds before you decide whether you want any recovery work managed.",
   },
   {
-    question: "Is the Amazon connection read-only?",
+    question: "What access does Margin need?",
     answer:
-      "Yes. Margin begins with read-only audit access through Amazon's official authorization process. The audit does not change your seller account.",
+      "Margin uses read-only access to the Amazon data required for the audit. You remain in control of your account.",
   },
   {
-    question: "Can Margin file anything without my approval?",
+    question: "What if Margin finds nothing?",
     answer:
-      "No. Margin can prepare the recovery path, evidence trail, and filing package, but no claim is filed without seller approval.",
+      "That's okay. You still get the audit result. There is no charge simply because you ran the audit.",
   },
   {
-    question: "How long does the audit take?",
+    question: "Does Margin automatically submit claims?",
     answer:
-      "Most sellers can start the audit in minutes after connecting Amazon. The full picture depends on account history, data volume, and how many recoveries need evidence review.",
+      "No recovery should be submitted without the required seller approval. The audit shows you what was found first.",
   },
   {
-    question: "What happens when Margin finds a recovery?",
+    question: "What happens if I want Margin to handle a recovery?",
     answer:
-      "Margin shows the finding, the estimated recovery context, the proof already connected, what is missing, and whether the recovery is ready for seller review.",
+      "You can choose Recover Once after the audit. The price is based on the scope and complexity of the recovery work identified.",
   },
   {
-    question: "Can I use Margin alongside another recovery provider?",
+    question: "What is Recovery Workspace?",
     answer:
-      "Yes. Margin is built around evidence control, response continuity, and payout reconciliation, so it can sit alongside another provider or internal recovery process.",
+      "Workspace is for sellers who want Margin to continuously monitor recovery opportunities instead of handling each problem individually.",
   },
   {
-    question: "Which Amazon marketplaces does Margin support?",
+    question: "Can I cancel Recovery Workspace?",
     answer:
-      "Margin currently supports sellers across the United States, Canada, Mexico, United Kingdom, Germany, France, Italy, Spain, Netherlands, Poland, Japan, and Australia. Additional regions will be added over time.",
+      "Yes. Workspace is a monthly subscription and can be cancelled. Ongoing monitoring stops when the subscription ends.",
   },
   {
-    question: "What if Amazon rejects my claim?",
+    question: "Does Margin take a percentage of my reimbursement?",
     answer:
-      "Margin keeps the proof, timeline, and response trail attached so the case can be rebuilt instead of starting from scratch.",
+      "No. Recover Once uses a fixed price agreed before the work begins. Margin does not take a percentage of the final reimbursement.",
   },
   {
-    question: "What if Amazon asks for more proof?",
+    question: "Do I have to use Recover Once or Workspace?",
     answer:
-      "Margin flags the missing proof, links the right records, and keeps the case moving until the response can be answered.",
-  },
-  {
-    question: "What if Amazon approves less than expected?",
-    answer:
-      "Margin keeps the payout in view so the approved amount can be compared against what actually reached the seller balance.",
-  },
-  {
-    question: "What is an evidence pack?",
-    answer:
-      "An evidence pack is the claim-ready set of records behind a reimbursement case: invoices, BOLs, PODs, shipment records, cost data, Amazon case history, seller approval, and payout context.",
-  },
-  {
-    question: "What happens if my invoice, POD, or BOL is missing?",
-    answer:
-      "Margin flags the missing proof before filing so the case can be completed, held, or reviewed instead of submitting weak evidence and risking rejection.",
-  },
-  {
-    question: "Does Margin connect to QuickBooks or Xero?",
-    answer:
-      "Yes. Margin is adding QuickBooks and Xero support so recovered reimbursements can be tied back to payout records and prepared for accounting review. The goal is to keep the recovery trail clean from Amazon case evidence to settlement reconciliation to accounting export.",
-  },
-  {
-    question: "Will Margin change my accounting records automatically?",
-    answer:
-      "No. Margin's accounting workflow is designed around visibility, reconciliation, and seller approval. Accounting exports or synced records should only move when the seller approves the action.",
+      "No. You can run the audit, review the findings, and decide what makes sense for you.",
   },
 ];
 const integrationLogos = [
@@ -2775,7 +2750,7 @@ function TrustedConnectionGraphic() {
 }
 
 export default function Index() {
-  const [showMoreFaqs, setShowMoreFaqs] = useState(false);
+
   const [isMobileLayout, setIsMobileLayout] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const navigate = useNavigate();
@@ -2809,7 +2784,7 @@ export default function Index() {
     });
     setIsDemoOpen(true);
   };
-  const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 4 : 5;
+
   const primaryCtaLabel = "Run Free Audit";
   return (
     <div className="min-h-screen overflow-x-clip bg-[var(--margin-canvas)] font-sans text-[var(--margin-text-primary)] selection:bg-[rgba(23,92,211,0.16)] selection:text-[var(--margin-text-primary)]">
@@ -3477,19 +3452,23 @@ export default function Index() {
             {" "}
             <motion.div {...revealProps}>
               {" "}
-              <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]">
-                <span className="text-[var(--margin-text-primary)]">Frequently asked</span> <span className="text-[var(--margin-text-muted)]">questions</span>
+              <div className="mb-4 inline-flex items-center rounded-full bg-[var(--margin-blue)]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-[var(--margin-blue)]">
+                Before you start
+              </div>
+              <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px] text-[var(--margin-text-primary)]">
+                A few things you might want to know.
               </h2>{" "}
             </motion.div>{" "}
-            <div className="mt-10 md:mt-14">
+            <div className="mt-10 md:mt-14 max-w-4xl">
               {" "}
               <Accordion
                 type="single"
                 collapsible
+                defaultValue="faq-0"
                 className="w-full border-t border-[var(--margin-border)]"
               >
                 {" "}
-                {faqs.slice(0, visibleFaqCount).map((item, index) => (
+                {faqs.map((item, index) => (
                   <AccordionItem
                     key={item.question}
                     value={`faq-${index}`}
@@ -3500,26 +3479,13 @@ export default function Index() {
                       {" "}
                       {item.question}{" "}
                     </AccordionTrigger>{" "}
-                    <AccordionContent className="max-w-[860px] pb-7 pr-10 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+                    <AccordionContent className="pb-7 pr-10 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
                       {" "}
                       <p>{item.answer}</p>{" "}
                     </AccordionContent>{" "}
                   </AccordionItem>
                 ))}{" "}
               </Accordion>{" "}
-              {!showMoreFaqs ? (
-                <div className="mt-9 flex justify-start md:mt-11">
-                  {" "}
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-[5px] border-[var(--margin-border)] bg-white px-6 text-sm font-semibold text-[var(--margin-text-secondary)] hover:bg-[var(--margin-section-alt)]"
-                  >
-                    {" "}
-                    Show more questions{" "}
-                  </Button>{" "}
-                </div>
-              ) : null}{" "}
             </div>{" "}
           </div>{" "}
         </section>{" "}
