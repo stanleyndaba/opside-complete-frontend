@@ -369,7 +369,7 @@ export function Sidebar({
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-[#D8E3E8]",
+          "border-b border-[#D8E3E8] pwa-drag-region",
           isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
         )}>
         <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-2")}>

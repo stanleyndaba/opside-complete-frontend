@@ -2,6 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   PWA DESKTOP POLISH — "Website → App" native feel
+   Only activates in standalone PWA mode (installed app).
+   ============================================================ */
+
+/* 1. Drag Area — Makes the top header bar draggable like a native window */
+@media all and (display-mode: standalone) {
+  .pwa-drag-region {
+    -webkit-app-region: drag;
+    app-region: drag;
+    user-select: none;
+  }
+
+  .pwa-drag-region button,
+  .pwa-drag-region a,
+  .pwa-drag-region input,
+  .pwa-drag-region [role="button"] {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+}
+
+/* 2. Kill "Web-isms" — Remove blue outlines, tap highlights, rubber-band bounce */
+@media all and (display-mode: standalone) {
+  html, body {
+    overscroll-behavior: none;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  a,
+  [role="button"],
+  [role="tab"],
+  .nav-link {
+    user-select: none;
+  }
+}
+
+/* 3. Premium Scrollbars — Thin, minimalist, "Linear" look (PWA only) */
+@media all and (display-mode: standalone) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(136, 136, 136, 0.2);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(136, 136, 136, 0.5);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(136, 136, 136, 0.2) transparent;
+  }
+}
+
+/* 5. Window Controls Overlay — Offset content from Mac traffic lights / Win close buttons */
+@media all and (display-mode: window-controls-overlay) {
+  .pwa-drag-region {
+    padding-left: env(titlebar-area-x, 0);
+    padding-right: calc(100% - env(titlebar-area-width, 100%) - env(titlebar-area-x, 0));
+    height: env(titlebar-area-height, 40px);
+  }
+}
+
 @keyframes system-log-marquee-left {
   from {
     transform: translate3d(0, 0, 0);
