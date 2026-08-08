@@ -27,6 +27,7 @@ import {
   ReceiptText,
   SearchCheck,
   UserCheck,
+  Square,
 } from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
@@ -2141,7 +2142,7 @@ function KineticHeroSection({
             {" "}
             AMAZON FBA REVENUE RECOVERY &amp; RECONCILIATION{" "}
           </motion.div>{" "}
-          <h1
+          <div
             id="margin-hero-title"
             className="mt-6 font-serif-headline max-w-[880px] text-[34px] font-bold leading-[1.02] tracking-[-0.045em] min-[390px]:text-[40px] sm:mt-7 sm:text-[52px] sm:tracking-[-0.055em] md:text-[58px] lg:text-[64px]"
           >
@@ -2156,10 +2157,10 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Your FBA operation is too large
+              Amazon just...
             </motion.span>{" "}
-            <motion.span
-              className="block text-slate-400"
+            <motion.div
+              className="mt-6 sm:mt-8 flex flex-col gap-3 sm:gap-4 text-[24px] sm:text-[32px] md:text-[40px] font-medium tracking-tight text-slate-400"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -2168,9 +2169,26 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <span className="block">to rebuild every recovery by hand.</span>
+              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Lost inventory</div>
+              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Denied a reimbursement</div>
+              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Asked for proof you don't have</div>
+              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Reimbursed less than expected</div>
+              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Reversed a reimbursement</div>
+              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Closed a case without resolving it</div>
+            </motion.div>{" "}
+            <motion.span
+              className="block mt-8 sm:mt-10 text-white"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.58,
+                delay: 0.28,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              Find out what happened.
             </motion.span>{" "}
-          </h1>{" "}
+          </div>{" "}
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -2206,7 +2224,7 @@ function KineticHeroSection({
             >
               {" "}
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-              Audit Seller Account <ArrowRight className="ml-2 h-4 w-4" />{" "}
+              Run Free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
           </motion.div>{" "}
           <motion.div
