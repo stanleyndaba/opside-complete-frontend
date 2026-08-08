@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/accordion';
 import { ProductsMegaMenu, productMenuGroups, ProductServiceItem } from '@/components/landing/ProductsMegaMenu';
 import { ApisMegaMenu, apiMenuGroups, ApiServiceItem } from '@/components/landing/ApisMegaMenu';
+import { PwaInstallButton } from '@/components/PwaInstallButton';
 
 type PublicNavbarProps = {
     variant?: 'dark' | 'light';
@@ -141,6 +142,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                     </nav>
 
                     <div className="flex items-center gap-3 sm:gap-4">
+                        <PwaInstallButton />
                         <Link
                             to="/login"
                             className={cn(
