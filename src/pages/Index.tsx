@@ -34,6 +34,7 @@ import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
+import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate } from "react-router-dom";
 import { InhaleSection } from "@/components/landing/InhaleSection";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
@@ -2252,6 +2253,10 @@ function KineticHeroSection({
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
               Run Free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
+            <PwaInstallButton
+              className="h-[52px] w-full justify-center rounded-[8px] border border-white/14 bg-transparent px-6 text-sm font-semibold text-white/78 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:w-auto"
+              label="Install Margin Desktop"
+            />
           </motion.div>{" "}
           <motion.div
             initial={{ opacity: 0 }}
@@ -2267,14 +2272,6 @@ function KineticHeroSection({
             <span>Seller approval before filing</span>
             <span className="text-slate-600">·</span>
             <span>0% recovery commission</span>
-          </motion.div>{" "}
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.15 }}
-            className="mt-4 inline-flex items-center gap-2 rounded-[2px] bg-white/[0.06] px-3.5 py-1.5 text-[11px] font-medium text-slate-400 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md sm:mt-5"
-          >
-            Desktop version for MacOS & Windows launches soon
           </motion.div>{" "}
           {isFull ? (
             <div className="mt-5 max-w-[430px] rounded-2xl bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
