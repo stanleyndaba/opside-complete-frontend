@@ -140,25 +140,39 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                         </Link>
                     </nav>
 
-                    <nav className="hidden md:flex items-center gap-2">
-                        <Link to="/login" className={desktopActionClass}>
-                            Login
+                    <div className="flex items-center gap-3 sm:gap-4">
+                        <Link
+                            to="/login"
+                            className={cn(
+                                "text-[13px] font-medium transition-colors",
+                                isLight ? "text-[#66737F] hover:text-[#182026]" : "text-white/70 hover:text-white"
+                            )}
+                        >
+                            Log in
                         </Link>
-                    </nav>
-
-                    <button
-                        type="button"
-                        className={cn(
-                            "absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 flex-col items-center justify-center gap-1.5 px-2 transition-colors focus-visible:outline-none md:hidden",
-                            isLight
-                                ? "rounded-[6px] border border-[#DCE8EE] bg-white text-[#25313A] hover:bg-[#F3F6F8]"
-                                : "rounded-[6px] border border-white/10 bg-white/[0.025] hover:bg-white/5"
-                        )}
-                        aria-label="Toggle menu"
-                        aria-expanded={mobileMenuOpen}
-                        onClick={() => setMobileMenuOpen((prev) => !prev)}>
-                        <Menu className={cn("h-4 w-4", isLight ? "text-[#25313A]" : "text-white")} />
-                    </button>
+                        <Link
+                            to="/login?mode=signup"
+                            className={cn(
+                                "flex h-[32px] items-center justify-center rounded-full px-3.5 text-[13px] font-medium transition-colors",
+                                isLight
+                                    ? "bg-[#F3F6F8] text-[#182026] hover:bg-[#E1E7EC]"
+                                    : "bg-white text-black hover:bg-white/90"
+                            )}
+                        >
+                            Sign up
+                        </Link>
+                        <button
+                            type="button"
+                            className={cn(
+                                "flex items-center justify-center transition-colors focus-visible:outline-none md:hidden",
+                                isLight ? "text-[#25313A]" : "text-white/80"
+                            )}
+                            aria-label="Toggle menu"
+                            aria-expanded={mobileMenuOpen}
+                            onClick={() => setMobileMenuOpen((prev) => !prev)}>
+                            <Menu className="h-[18px] w-[18px]" strokeWidth={1.5} />
+                        </button>
+                    </div>
                 </div>
 
                 <AnimatePresence>
