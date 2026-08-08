@@ -2180,7 +2180,7 @@ function KineticHeroSection({
               Amazon just...
             </motion.span>{" "}
             <motion.div
-              className="mt-2 sm:mt-3 h-[48px] min-[390px]:h-[56px] sm:h-[72px] md:h-[80px] text-[30px] min-[390px]:text-[36px] sm:text-[46px] md:text-[52px] font-semibold tracking-tight text-[#888888] relative overflow-hidden"
+              className="mt-1 sm:mt-2 h-[88px] sm:h-[64px] md:h-[76px] text-[30px] min-[390px]:text-[36px] sm:text-[46px] md:text-[52px] font-bold tracking-tight text-slate-400 relative overflow-hidden"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -2196,14 +2196,14 @@ function KineticHeroSection({
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -40, filter: "blur(2px)" }}
                   transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-                  className="absolute inset-0 whitespace-nowrap overflow-hidden text-ellipsis"
+                  className="absolute inset-0 w-full pr-4 leading-tight"
                 >
                   {problems[currentProblemIndex]}
                 </motion.div>
               </AnimatePresence>
             </motion.div>{" "}
             <motion.span
-              className="block mt-8 sm:mt-10 text-white"
+              className="block mt-2 sm:mt-4 text-white"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
