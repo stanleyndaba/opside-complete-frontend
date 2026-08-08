@@ -22,6 +22,7 @@ import {
   FileCheck2,
   Landmark,
   MessagesSquare,
+  Monitor,
   PlayCircle,
   ReceiptText,
   SearchCheck,
@@ -2247,6 +2248,15 @@ function KineticHeroSection({
             <span>Seller approval before filing</span>
             <span className="text-slate-600">·</span>
             <span>0% recovery commission</span>
+          </motion.div>{" "}
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.15 }}
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-3.5 py-1.5 text-[11px] font-medium text-slate-400 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md sm:mt-5"
+          >
+            <Monitor className="h-3.5 w-3.5 text-slate-500" />
+            Desktop version for MacOS & Windows launches soon
           </motion.div>{" "}
           {isFull ? (
             <div className="mt-5 max-w-[430px] rounded-2xl bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
