@@ -2114,12 +2114,12 @@ function KineticHeroSection({
   const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0.82]);
 
   const problems = [
-    "Lost inventory",
-    "Denied a reimbursement",
-    "Asked for proof you don't have",
-    "Reimbursed less than expected",
-    "Reversed a reimbursement",
-    "Closed a case without resolving it"
+    "lost inventory",
+    "denied your claim",
+    "asked for proof",
+    "underpaid you",
+    "reversed a refund",
+    "closed your case"
   ];
   const [currentProblemIndex, setCurrentProblemIndex] = useState(() => Math.floor(Math.random() * problems.length));
 
@@ -2180,7 +2180,7 @@ function KineticHeroSection({
               Amazon just...
             </motion.span>{" "}
             <motion.div
-              className="h-[40px] min-[390px]:h-[48px] sm:h-[56px] md:h-[68px] text-[22px] min-[390px]:text-[26px] sm:text-[36px] md:text-[44px] font-bold tracking-[-0.045em] text-slate-400 relative overflow-hidden"
+              className="h-[38px] min-[390px]:h-[44px] sm:h-[56px] md:h-[64px] lg:h-[70px] text-slate-400 relative overflow-hidden"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
