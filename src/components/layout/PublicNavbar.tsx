@@ -260,7 +260,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     Pricing
                                 </Link>
                                 <Link
-                                    to="/login"
+                                    to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={cn(
                                         mobileMenuItemClass,
@@ -268,7 +268,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             ? "mt-2 justify-center border border-[#DCE8EE] bg-white text-[#25313A]"
                                             : "mt-2 justify-center border border-white/10 bg-white/[0.025] text-white"
                                     )}>
-                                    Login
+                                    Enterprise Sales
                                 </Link>
                             </div>
                         </motion.div>
