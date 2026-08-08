@@ -3452,11 +3452,8 @@ export default function Index() {
             {" "}
             <motion.div {...revealProps}>
               {" "}
-              <div className="mb-4 inline-flex items-center rounded-full bg-[var(--margin-blue)]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-[var(--margin-blue)]">
-                Before you start
-              </div>
-              <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px] text-[var(--margin-text-primary)]">
-                A few things you might want to know.
+              <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]">
+                <span className="text-[var(--margin-text-primary)]">Before you start.</span> <span className="text-[var(--margin-text-muted)]">A few things you might want to know.</span>
               </h2>{" "}
             </motion.div>{" "}
             <div className="mt-10 md:mt-14 max-w-4xl">
@@ -3583,46 +3580,58 @@ export default function Index() {
           className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-18"
         >
           {" "}
-          <div className={containerClass}>
-            {" "}
-            <div className="relative py-12 md:py-20 text-center flex flex-col items-center">
-              <motion.div {...revealProps} className="flex flex-col items-center">
-                <div className="mb-4 inline-flex items-center rounded-full bg-[var(--margin-blue)]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-[var(--margin-blue)]">
-                  Ready to check your account?
-                </div>
-                <h2 className="font-serif-headline mt-2 max-w-[760px] text-[36px] font-semibold leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px] text-[var(--margin-text-primary)]">
-                  See what Amazon may have missed.
-                </h2>
-                <p className="mt-5 max-w-[540px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
-                  Run a free Recovery Audit to see what Margin finds in your account.
-                </p>
-
-                <div className="mt-8 flex flex-col sm:flex-row items-center gap-x-6 gap-y-3 text-[14px] font-medium text-[var(--margin-text-secondary)]">
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[var(--margin-success)]" /> No payment required.
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[var(--margin-success)]" /> Read-only access.
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[var(--margin-success)]" /> See findings before deciding.
-                  </div>
-                </div>
-
-                <div className="mt-10 w-full max-w-sm">
-                  <Button
-                    onClick={() => handleClaimAccessClick("homepage_early_access_section")}
-                    className="landing-pressable group relative h-14 w-full rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow,transform] duration-150 max-md:shadow-none"
-                  >
-                    <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                    Run Free Recovery Audit
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+          <div className={containerClass}>            <div className="relative border-y border-[var(--margin-border)] py-8 md:py-10">
+              {" "}
+              <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+                {" "}
+                <motion.div {...revealProps}>
+                  {" "}
+                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[36px] font-semibold leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]">
+                    <span className="text-[var(--margin-text-primary)]">Ready to check your account?</span> <span className="text-[var(--margin-text-muted)]">See what Amazon may have missed.</span>
+                  </h2>{" "}
+                  <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px]">
+                    {" "}
+                    Run a free Recovery Audit to see what Margin finds in your account.{" "}
+                  </p>{" "}
+                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                    {" "}
+                    <Button
+                      onClick={() =>
+                        handleClaimAccessClick("homepage_early_access_section")
+                      }
+                      className="landing-pressable group relative h-14 w-full rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-bold text-white shadow-[0_18px_40px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow,transform] duration-150 max-md:shadow-none sm:w-auto"
+                    >
+                      {" "}
+                      <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
+                      Run Free Recovery Audit{" "}
+                      <ArrowRight className="ml-2 h-4 w-4" />{" "}
+                    </Button>{" "}
+                  </div>{" "}
                   <p className="mt-4 text-[13px] italic text-[var(--margin-text-muted)]">
                     You stay in control of your account and decide what happens next.
                   </p>
-                </div>
-              </motion.div>
+                </motion.div>{" "}
+                <motion.div {...revealProps} className="border-y border-[var(--margin-border)]">
+                  {" "}
+                  {[
+                    "No payment required.",
+                    "Read-only access.",
+                    "See findings before deciding."
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="relative flex items-center gap-3 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
+                    >
+                      {" "}
+                      <Check className="h-4 w-4 shrink-0 text-[var(--margin-success)]" strokeWidth={2.2} />{" "}
+                      <span className="text-[15px] font-medium leading-6 tracking-tight text-[var(--margin-text-primary)] md:text-[16px]">
+                        {" "}
+                        {item}{" "}
+                      </span>{" "}
+                    </div>
+                  ))}{" "}
+                </motion.div>{" "}
+              </div>{" "}
             </div>
           </div>{" "}
         </section>{" "}
