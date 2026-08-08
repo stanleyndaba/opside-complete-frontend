@@ -3446,6 +3446,100 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
+        <section className="relative border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-14 max-md:py-16 md:py-24">
+          {" "}
+          <div className={containerClass}>
+            {" "}
+            <div className="grid gap-14 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+              {" "}
+              <motion.div {...revealProps} className="max-w-[560px]">
+                {" "}
+                <div className={sectionLabelClass}>Built around your records</div>{" "}
+                <h2 className={sectionHeadingClass}>
+                  <span className="text-[var(--margin-text-primary)]">See exactly what Margin found.</span>
+                </h2>{" "}
+                <p className={sectionBodyClass}>
+                  {" "}
+                  Margin doesn&apos;t ask you to take a recovery on faith. Every finding is tied back to the records used to identify it.{" "}
+                </p>{" "}
+              </motion.div>{" "}
+              <div className="w-full">
+                {" "}
+                <motion.div {...revealProps}>
+                  {" "}
+                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">Your Audit</div>{" "}
+                  <div className="mt-4 border-t border-[var(--margin-border)]">
+                    {" "}
+                    {[
+                      { label: "Records reviewed", detail: "See what Margin actually examined." },
+                      { label: "Why it was flagged", detail: "Understand why a recovery was identified." },
+                      { label: "Evidence status", detail: "See what is ready and what is still missing." },
+                      { label: "Recovery value", detail: "See how the estimated amount was calculated." },
+                      { label: "Case status", detail: "Know what has been submitted, answered, or still needs attention." },
+                    ].map((item, index) => (
+                      <motion.div
+                        key={item.label}
+                        {...revealProps}
+                        transition={{
+                          ...revealProps.transition,
+                          delay: index * 0.04,
+                        }}
+                        className="flex items-start gap-4 border-b border-[var(--margin-border)] py-5 md:py-6"
+                      >
+                        {" "}
+                        <div className="text-[12px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)] pt-0.5 shrink-0 w-[28px]">
+                          {" "}
+                          {String(index + 1).padStart(2, "0")}{" "}
+                        </div>{" "}
+                        <div>
+                          {" "}
+                          <h3 className="text-[16px] font-semibold tracking-[-0.025em] text-[var(--margin-text-primary)] md:text-[18px]">
+                            {item.label}
+                          </h3>{" "}
+                          <p className="mt-1.5 text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+                            {item.detail}
+                          </p>{" "}
+                        </div>{" "}
+                      </motion.div>
+                    ))}{" "}
+                  </div>{" "}
+                </motion.div>{" "}
+                <motion.div {...revealProps} className="mt-12">
+                  {" "}
+                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">You stay in control</div>{" "}
+                  <div className="mt-4 border-y border-[var(--margin-border)]">
+                    {" "}
+                    {[
+                      "Read-only Amazon access",
+                      "Seller approval before recovery submission",
+                      "Clear recovery status",
+                      "Payout verification",
+                      "No hidden recovery percentage",
+                      "No payment required to run the audit",
+                    ].map((item, index) => (
+                      <motion.div
+                        key={item}
+                        {...revealProps}
+                        transition={{
+                          ...revealProps.transition,
+                          delay: index * 0.03,
+                        }}
+                        className="flex items-center gap-3 border-b border-[var(--margin-border)] py-4 last:border-b-0 md:py-5"
+                      >
+                        {" "}
+                        <Check className="h-4 w-4 shrink-0 text-[var(--margin-success)]" strokeWidth={2.2} />{" "}
+                        <span className="text-[15px] font-medium leading-6 tracking-tight text-[var(--margin-text-primary)] md:text-[16px]">
+                          {" "}
+                          {item}{" "}
+                        </span>{" "}
+                      </motion.div>
+                    ))}{" "}
+                  </div>{" "}
+                </motion.div>{" "}
+              </div>{" "}
+            </div>{" "}
+          </div>{" "}
+        </section>{" "}
         <section className="relative border-t border-[var(--margin-border)] bg-[var(--margin-surface)] py-14 max-md:py-16 md:py-20">
           {" "}
           <div className={containerClass}>
