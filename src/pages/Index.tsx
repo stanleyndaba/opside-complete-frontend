@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   animate,
   motion,
+  AnimatePresence,
   useInView,
   useMotionValue,
   useReducedMotion,
@@ -2111,6 +2112,25 @@ function KineticHeroSection({
   const { scrollYProgress } = useScroll();
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0.82]);
+
+  const problems = [
+    "lost inventory",
+    "denied a reimbursement",
+    "asked for proof you don't have",
+    "reimbursed less than expected",
+    "reversed a reimbursement",
+    "closed a case without resolving it"
+  ];
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const interval = setInterval(() => {
+      setCurrentProblemIndex((prev) => (prev + 1) % problems.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, [reduceMotion]);
+
   return (
     <motion.section
       style={{
@@ -2160,7 +2180,7 @@ function KineticHeroSection({
               Amazon just...
             </motion.span>{" "}
             <motion.div
-              className="mt-6 sm:mt-8 flex flex-col gap-3 sm:gap-4 text-[24px] sm:text-[32px] md:text-[40px] font-medium tracking-tight text-slate-400"
+              className="mt-2 sm:mt-3 h-[48px] min-[390px]:h-[56px] sm:h-[72px] md:h-[80px] text-[30px] min-[390px]:text-[36px] sm:text-[46px] md:text-[52px] font-bold tracking-tight text-slate-400 relative"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -2169,12 +2189,18 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Lost inventory</div>
-              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Denied a reimbursement</div>
-              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Asked for proof you don't have</div>
-              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Reimbursed less than expected</div>
-              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Reversed a reimbursement</div>
-              <div className="flex items-center gap-4"><Square className="h-6 w-6 sm:h-8 sm:w-8 text-slate-500 shrink-0" strokeWidth={2.5} /> Closed a case without resolving it</div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentProblemIndex}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0 whitespace-nowrap overflow-hidden text-ellipsis"
+                >
+                  {problems[currentProblemIndex]}.
+                </motion.div>
+              </AnimatePresence>
             </motion.div>{" "}
             <motion.span
               className="block mt-8 sm:mt-10 text-white"
