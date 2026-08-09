@@ -69,7 +69,6 @@
   <link rel="preload" as="image" href="/logoimagetwo.png" fetchpriority="high">
   <link rel="icon" href="/favicon-margin.svg?v=margin-2" type="image/svg+xml">
   <link rel="shortcut icon" href="/favicon-margin.svg?v=margin-2" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/logoimagetwo.png">
   <style>
     .seo-shell {
       box-sizing: border-box;
@@ -232,15 +231,6 @@
   </div>
   <script type="module" src="/src/main.tsx"></script>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        for (let registration of registrations) {
-          registration.unregister();
-        }
-      });
-    }
-  </script>
 </body>
 
 </html>

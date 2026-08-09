@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { promptPwaInstall, subscribeToPwaInstall } from '@/lib/pwaInstall';
 
 type PwaInstallButtonProps = {
   className?: string;
@@ -9,49 +10,16 @@ type PwaInstallButtonProps = {
 };
 
 export function PwaInstallButton({ className, label = 'Install Margin Desktop' }: PwaInstallButtonProps) {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstallable, setIsInstallable] = useState(false);
 
   useEffect(() => {
-    const handleBeforeInstallPrompt = (e: any) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e);
-      // Update UI to notify the user they can add to home screen
-      setIsInstallable(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    // If already installed, don't show the button
-    window.addEventListener('appinstalled', () => {
-      setIsInstallable(false);
-      setDeferredPrompt(null);
+    return subscribeToPwaInstall(({ canInstall }) => {
+      setIsInstallable(canInstall);
     });
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      return;
-    }
-    // Show the install prompt
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    // We've used the prompt, and can't use it again, throw it away
-    setDeferredPrompt(null);
-    setIsInstallable(false);
+    await promptPwaInstall();
   };
 
   if (!isInstallable) {

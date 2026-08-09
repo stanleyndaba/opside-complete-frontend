@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ClerkProvider } from '@clerk/react'
 import App from './App.tsx'
 import './index.css'
+import { startPwaInstallManager } from '@/lib/pwaInstall'
 
 // Core Web Vitals reporting (LCP, FID/INP, CLS, TTFB, FCP)
 import { onLCP, onFID, onCLS, onTTFB, onFCP, onINP } from 'web-vitals'
@@ -43,6 +44,8 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary';
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+startPwaInstallManager();
 
 createRoot(document.getElementById("root")!).render(
   <ClerkProvider publishableKey={clerkPublishableKey}>
