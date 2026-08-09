@@ -30,38 +30,6 @@ import {
   UserCheck,
   Square,
 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  animate,
-  motion,
-  AnimatePresence,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Check,
-  FileCheck2,
-  Landmark,
-  MessagesSquare,
-  Monitor,
-  PlayCircle,
-  ReceiptText,
-  SearchCheck,
-  UserCheck,
-  Square,
-} from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
@@ -71,6 +39,8 @@ import { useNavigate } from "react-router-dom";
 import { SystemPerformanceTicker } from "@/components/landing/SystemPerformanceTicker";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
+import { PUBLIC_ROUTE_META } from "@/config/seo";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
