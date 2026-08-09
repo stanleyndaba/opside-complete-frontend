@@ -23,7 +23,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
         <div className="mb-20 max-w-[720px]">
           <motion.div {...revealProps} className="mb-6 flex items-center gap-3">
             <div className="h-[1px] w-8 bg-[var(--margin-border-strong)]" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--margin-text-secondary)]">
+            <span className="text-[11px] font-bold uppercase tracking-tight text-[var(--margin-text-secondary)]">
               How it works
             </span>
           </motion.div>

@@ -2150,6 +2150,61 @@ function KineticHeroSection({
             "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E\")",
         }}
       />{" "}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute left-[-16%] top-[42%] h-px w-[62%] origin-left bg-gradient-to-r from-transparent via-[rgba(11,116,222,0.52)] to-transparent opacity-60"
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  x: ["0%", "118%"],
+                  opacity: [0, 0.62, 0],
+                }
+          }
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{ rotate: "-8deg" }}
+        />
+        <motion.div
+          className="absolute left-[42%] top-[18%] h-2 w-2 rounded-full bg-[rgba(11,116,222,0.62)] shadow-[0_0_24px_rgba(11,116,222,0.38)]"
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  opacity: [0.18, 0.62, 0.18],
+                  scale: [0.88, 1.12, 0.88],
+                }
+          }
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute right-[22%] top-[27%] h-2.5 w-2.5 rounded-full bg-[rgba(46,125,91,0.42)] shadow-[0_0_28px_rgba(46,125,91,0.28)]"
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  opacity: [0.14, 0.5, 0.14],
+                  scale: [0.9, 1.18, 0.9],
+                }
+          }
+          transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
+        />
+        <motion.div
+          className="absolute bottom-[22%] right-[15%] h-1.5 w-1.5 rounded-full bg-[rgba(11,116,222,0.5)] shadow-[0_0_18px_rgba(11,116,222,0.32)]"
+          animate={
+            reduceMotion
+              ? undefined
+              : {
+                  opacity: [0.12, 0.52, 0.12],
+                  scale: [0.8, 1.2, 0.8],
+                }
+          }
+          transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+        />
+      </div>
       <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center">
         {" "}
         <div className="max-w-[980px]">
@@ -2826,7 +2881,25 @@ export default function Index() {
 
   const primaryCtaLabel = "Run Free Audit";
   return (
-    <div className="min-h-screen overflow-x-clip bg-[var(--margin-canvas)] font-sans text-[var(--margin-text-primary)] selection:bg-[rgba(23,92,211,0.16)] selection:text-[var(--margin-text-primary)]">
+    <div
+      className="min-h-screen overflow-x-clip bg-[#FAFAF7] font-sans text-[var(--margin-text-primary)] selection:bg-[rgba(23,92,211,0.16)] selection:text-[var(--margin-text-primary)]"
+      style={
+        {
+          "--margin-canvas": "#FAFAF7",
+          "--margin-surface": "rgba(255,255,255,0.78)",
+          "--margin-border": "#D8E3E8",
+          "--margin-border-subtle": "#E7EEF2",
+          "--margin-border-strong": "#CFE0EA",
+          "--margin-text-primary": "#182026",
+          "--margin-text-secondary": "#4D5B66",
+          "--margin-text-muted": "#66737F",
+          "--margin-primary": "#0B74DE",
+          "--margin-primary-hover": "#0967C8",
+          "--margin-blue": "#0B74DE",
+          "--margin-blue-hover": "#0967C8",
+        } as React.CSSProperties
+      }
+    >
       {" "}
       <PublicNavbar variant="light" />{" "}
       <main className="relative">
@@ -2836,6 +2909,15 @@ export default function Index() {
           isFull={isFull}
           nextBatchHours={capacity?.nextBatchHours}
         />{" "}
+        <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.42] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
+        <div
+          className="pointer-events-none fixed inset-0 z-0 opacity-[0.035]"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
+          }}
+        />
+        <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
         <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-4">
           <div className={containerClass}>
             <div className="space-y-2 text-center">
@@ -2880,8 +2962,9 @@ export default function Index() {
             </motion.p>{" "}
           </div>{" "}
         </section>{" "}
-        <RecoveryPreviewSection />
-        <SupportingEvidencePreviewSection />
+        {/* Earlier outcome demos are hidden while the page focuses on the new audit-to-recovery flow. */}
+        {/* <RecoveryPreviewSection /> */}
+        {/* <SupportingEvidencePreviewSection /> */}
         <section className="hidden relative overflow-hidden border-y border-[var(--margin-border-subtle)] bg-white py-16 max-md:border-t-0 max-md:py-16 md:py-28">
           {" "}
           <div className={containerClass}>
@@ -2966,8 +3049,8 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <RepliesPreviewSection />
-        <PayoutReconciliationPreviewSection />
+        {/* <RepliesPreviewSection /> */}
+        {/* <PayoutReconciliationPreviewSection /> */}
         <ExistingOperationFitSection />
         {/* Legacy pricing choice is hidden; Section 5 now owns the commercial choice. */}
         {/* <RecoveryWorkspacePricingSection
