@@ -38,6 +38,8 @@ import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate } from "react-router-dom";
 import { SystemPerformanceTicker } from "@/components/landing/SystemPerformanceTicker";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
+import { RecoveryTimelineSection } from "@/components/landing/RecoveryTimelineSection";
+import { RecoveryDecisionSections } from "@/components/landing/RecoveryDecisionSections";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -2854,6 +2856,8 @@ export default function Index() {
           </div>
         </section>
         <HowItWorksSection onCtaClick={() => handleClaimAccessClick("homepage_how_it_works")} />
+        <RecoveryTimelineSection />
+        <RecoveryDecisionSections onAuditCta={handleClaimAccessClick} />
         {/* Recovery Control Loop and Free Recovery Audit are temporarily hidden. */}
         <section className="hidden relative border-b border-[var(--margin-border-subtle)] bg-[var(--margin-canvas)] py-8 max-md:bg-[var(--margin-canvas)] max-md:py-14">
           {" "}
@@ -2965,11 +2969,12 @@ export default function Index() {
         <RepliesPreviewSection />
         <PayoutReconciliationPreviewSection />
         <ExistingOperationFitSection />
-        <RecoveryWorkspacePricingSection
+        {/* Legacy pricing choice is hidden; Section 5 now owns the commercial choice. */}
+        {/* <RecoveryWorkspacePricingSection
           onActivate={() =>
             handleClaimAccessClick("homepage_recovery_workspace_pricing")
           }
-        />
+        /> */}
         {/* Additional mini-demo sections are intentionally hidden for the launch page. */}
         {/* <MarginOrchestrationFlow /> */}
         {/* Summary identity cards are hidden so the page focuses on three outcomes. */}
@@ -3484,7 +3489,7 @@ export default function Index() {
             </div>{" "}
           </div>{" "}
         </section>{" "}
-        <section className="relative border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-14 max-md:py-16 md:py-24">
+        <section className="hidden relative border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-14 max-md:py-16 md:py-24">
           {" "}
           <div className={containerClass}>
             {" "}
