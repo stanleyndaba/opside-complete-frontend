@@ -30,19 +30,46 @@ import {
   UserCheck,
   Square,
 } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  animate,
+  motion,
+  AnimatePresence,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  Check,
+  FileCheck2,
+  Landmark,
+  MessagesSquare,
+  Monitor,
+  PlayCircle,
+  ReceiptText,
+  SearchCheck,
+  UserCheck,
+  Square,
+} from "lucide-react";
 import { BrandFooter } from "@/components/layout/BrandFooter";
 import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate } from "react-router-dom";
-import { InhaleSection } from "@/components/landing/InhaleSection";
-import { PUBLIC_ROUTE_META } from "@/config/seo";
-import { usePageMeta } from "@/hooks/usePageMeta";
-import { ScrollytellingCoverage } from "@/components/landing/ScrollytellingCoverage";
-import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
-import { ProgressiveNarrativeTabs } from "@/components/landing/ProgressiveNarrativeTabs";
 import { SystemPerformanceTicker } from "@/components/landing/SystemPerformanceTicker";
+import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
@@ -2249,7 +2276,7 @@ function KineticHeroSection({
             >
               {" "}
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-              Run Free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
+              Seller Central Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
             <PwaInstallButton
               className="h-[52px] w-full justify-center rounded-[8px] border border-white/14 bg-transparent px-6 text-sm font-semibold text-white/78 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:w-auto"
@@ -2855,6 +2882,7 @@ export default function Index() {
             </div>
           </div>
         </section>
+        <HowItWorksSection onCtaClick={() => handleClaimAccessClick("homepage_how_it_works")} />
         {/* Recovery Control Loop and Free Recovery Audit are temporarily hidden. */}
         <section className="hidden relative border-b border-[var(--margin-border-subtle)] bg-[var(--margin-canvas)] py-8 max-md:bg-[var(--margin-canvas)] max-md:py-14">
           {" "}
@@ -3704,7 +3732,7 @@ export default function Index() {
                     >
                       {" "}
                       <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-                      Run Free Recovery Audit{" "}
+                      Seller Central Audit{" "}
                       <ArrowRight className="ml-2 h-4 w-4" />{" "}
                     </Button>{" "}
                   </div>{" "}
