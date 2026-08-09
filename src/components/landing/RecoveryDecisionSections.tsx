@@ -94,16 +94,16 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
 
   return (
     <>
-      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-20 md:py-28">
+      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-28 md:py-44">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <motion.div {...revealProps} className="max-w-[780px]">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-primary)]">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
                 Your next step
               </span>
             </div>
-            <h2 className="text-[36px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[54px]">
+            <h2 className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[64px]">
               Found something? Choose how you want to handle it.
             </h2>
             <p className="mt-6 max-w-[720px] text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
@@ -112,36 +112,36 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
             </p>
           </motion.div>
 
-          <div className="mt-12 grid gap-5 lg:grid-cols-2">
+          <div className="mt-16 grid gap-0 border-y border-[var(--margin-border)] lg:grid-cols-2">
             {pathOptions.map((option, index) => (
               <motion.div
                 key={option.label}
                 {...revealProps}
                 transition={{ ...revealProps.transition, delay: index * 0.08 }}
-                className="rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-canvas)] p-6 shadow-[0_24px_80px_rgba(15,23,42,0.05)] md:p-8"
+                className={`relative p-6 md:p-9 ${index > 0 ? "border-t border-[var(--margin-border)] lg:border-l lg:border-t-0" : ""}`}
               >
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                   {option.label}
                 </p>
-                <h3 className="mt-5 text-[28px] font-semibold leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] md:text-[34px]">
+                <h3 className="mt-5 text-[30px] font-semibold leading-tight tracking-[-0.055em] text-[var(--margin-text-primary)] md:text-[40px]">
                   {option.title}
                 </h3>
                 <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
                   {option.copy}
                 </p>
-                <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                <div className="mt-8 grid gap-0 border-y border-[var(--margin-border-subtle)] sm:grid-cols-2">
                   {option.items.map((item) => (
                     <div
                       key={item}
-                      className="flex items-start gap-2 text-[14px] leading-6 text-[var(--margin-text-secondary)]"
+                      className="flex items-start gap-2 border-b border-[var(--margin-border-subtle)] py-3 text-[14px] leading-6 text-[var(--margin-text-secondary)] last:border-b-0 sm:pr-5"
                     >
                       <Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[var(--margin-primary)]" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
-                <div className="mt-8 border-t border-[var(--margin-border)] pt-6">
-                  <p className="text-[22px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)]">
+                <div className="mt-8 pt-2">
+                  <p className="text-[26px] font-semibold tracking-[-0.055em] text-[var(--margin-text-primary)]">
                     {option.price}
                   </p>
                   <Button
@@ -171,17 +171,17 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
         </div>
       </section>
 
-      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
+      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-28 md:py-44">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-primary)]">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
                   Where recoveries break down
                 </span>
               </div>
-              <h2 className="text-[36px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[54px]">
+              <h2 className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[64px]">
                 Finding the problem is only the beginning.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
@@ -194,10 +194,10 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
             <motion.div
               {...revealProps}
               transition={{ ...revealProps.transition, delay: 0.08 }}
-              className="rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] shadow-[0_24px_80px_rgba(15,23,42,0.05)]"
+              className="border-y border-[var(--margin-border)] bg-transparent"
             >
               <div className="border-b border-[var(--margin-border)] px-5 py-4 md:px-7">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                   Amazon may ask for
                 </p>
               </div>
@@ -222,7 +222,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 ))}
               </div>
               <div className="border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] px-5 py-5 md:px-7">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-primary)]">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
                   Margin organizes the recovery
                 </p>
                 <p className="mt-3 text-[20px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)]">
@@ -238,17 +238,17 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
         </div>
       </section>
 
-      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-20 md:py-28">
+      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-28 md:py-44">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-primary)]">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
                   Built around your records
                 </span>
               </div>
-              <h2 className="text-[36px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[54px]">
+              <h2 className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[64px]">
                 See exactly what Margin found.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
@@ -267,10 +267,10 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
             <motion.div
               {...revealProps}
               transition={{ ...revealProps.transition, delay: 0.08 }}
-              className="grid gap-5 lg:grid-cols-2"
+              className="grid gap-0 border-y border-[var(--margin-border)] lg:grid-cols-2"
             >
-              <div className="rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-canvas)] p-6">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
+              <div className="p-6 lg:border-r lg:border-[var(--margin-border)]">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                   Your audit
                 </p>
                 <div className="mt-5 divide-y divide-[var(--margin-border-subtle)]">
@@ -287,8 +287,8 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 </div>
               </div>
 
-              <div className="rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-canvas)] p-6">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
+              <div className="border-t border-[var(--margin-border)] p-6 lg:border-t-0">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                   You stay in control
                 </p>
                 <div className="mt-5 space-y-3">

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   animate,
   motion,
-  AnimatePresence,
   useInView,
   useMotionValue,
   useReducedMotion,
@@ -2114,24 +2113,6 @@ function KineticHeroSection({
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0.82]);
 
-  const problems = [
-    "lost inventory",
-    "denied your claim",
-    "asked for proof",
-    "underpaid you",
-    "reversed a refund",
-    "closed your case"
-  ];
-  const [currentProblemIndex, setCurrentProblemIndex] = useState(() => Math.floor(Math.random() * problems.length));
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const interval = setInterval(() => {
-      setCurrentProblemIndex((prev) => (prev + 1) % problems.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [reduceMotion]);
-
   return (
     <motion.section
       style={{
@@ -2220,7 +2201,7 @@ function KineticHeroSection({
           </motion.div>{" "}
           <div
             id="margin-hero-title"
-            className="mt-6 font-serif-headline max-w-[880px] text-[34px] font-bold leading-[1.02] tracking-[-0.045em] min-[390px]:text-[40px] sm:mt-7 sm:text-[52px] sm:tracking-[-0.055em] md:text-[58px] lg:text-[64px]"
+            className="mt-6 max-w-[1040px] text-[42px] font-bold leading-[0.96] tracking-[-0.075em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] sm:tracking-[-0.085em] md:text-[82px] lg:text-[96px]"
           >
             {" "}
             <motion.span
@@ -2233,10 +2214,10 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Amazon just...
+              Amazon just lost inventory.
             </motion.span>{" "}
-            <motion.div
-              className="h-[38px] min-[390px]:h-[44px] sm:h-[56px] md:h-[64px] lg:h-[70px] text-slate-400 relative overflow-hidden"
+            <motion.span
+              className="block text-slate-400"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -2245,21 +2226,10 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <AnimatePresence>
-                <motion.div
-                  key={currentProblemIndex}
-                  initial={{ opacity: 0, y: 40, filter: "blur(2px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -40, filter: "blur(2px)" }}
-                  transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-                  className="absolute inset-0 flex items-center"
-                >
-                  {problems[currentProblemIndex]}
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>{" "}
+              Margin handles the recovery.
+            </motion.span>{" "}
             <motion.span
-              className="block text-white"
+              className="block text-white/72"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -2268,7 +2238,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Find out what happened.
+              Evidence. Approval. Payout.
             </motion.span>{" "}
           </div>{" "}
           <motion.p
@@ -2279,12 +2249,11 @@ function KineticHeroSection({
               delay: 0.58,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
+            className="mt-6 max-w-[720px] text-[16px] leading-[1.75] text-slate-300 sm:mt-8 sm:text-[18px] md:text-[20px]"
           >
             {" "}
-            Margin checks your Amazon account for reimbursement issues, shows
-            what happened, what may be recoverable, and what evidence is
-            missing.{" "}
+            Margin checks your Amazon account for reimbursement issues, shows what
+            happened, what may be recoverable, and what evidence is missing.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -2338,6 +2307,36 @@ function KineticHeroSection({
         </div>{" "}
       </div>{" "}
     </motion.section>
+  );
+}
+
+function RecoveryProgressRail() {
+  const stages = ["Found", "Evidence", "Approval", "Response", "Payout"];
+
+  return (
+    <aside
+      aria-hidden="true"
+      className="pointer-events-none fixed left-6 top-1/2 z-20 hidden -translate-y-1/2 md:block"
+    >
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-16 w-px bg-gradient-to-b from-transparent to-[var(--margin-border-strong)]" />
+        {stages.map((stage, index) => (
+          <div key={stage} className="group flex items-center gap-3">
+            <div
+              className={`h-2 w-2 rounded-full border ${
+                index === 0
+                  ? "border-[var(--margin-primary)] bg-[var(--margin-primary)] shadow-[0_0_18px_rgba(11,116,222,0.28)]"
+                  : "border-[var(--margin-border-strong)] bg-[var(--margin-canvas)]"
+              }`}
+            />
+            <span className="absolute left-5 whitespace-nowrap font-mono text-[9px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)] opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+              {stage}
+            </span>
+          </div>
+        ))}
+        <div className="h-16 w-px bg-gradient-to-b from-[var(--margin-border-strong)] to-transparent" />
+      </div>
+    </aside>
   );
 }
 function SystemLogMarquee() {
@@ -2918,14 +2917,15 @@ export default function Index() {
           }}
         />
         <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
-        <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-4">
+        <RecoveryProgressRail />
+        <section className="relative border-b border-[var(--margin-border)] bg-[rgba(255,255,255,0.72)] py-5 backdrop-blur-xl">
           <div className={containerClass}>
-            <div className="space-y-2 text-center">
-              <p className="text-[13px] font-medium tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[14px]">
+            <div className="grid gap-4 md:grid-cols-[0.85fr_1.15fr] md:items-center">
+              <p className="max-w-[520px] text-[13px] font-medium tracking-[-0.025em] text-[var(--margin-text-secondary)] md:text-[14px]">
                 Built for established FBA brands, agencies, aggregators, and
                 the operations and finance teams responsible for recovery cash.
               </p>
-              <div className="flex flex-col gap-3 text-[13px] font-semibold tracking-[-0.015em] text-[var(--margin-text-secondary)] sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-5 md:text-[14px]">
+              <div className="flex flex-col gap-3 border-t border-[var(--margin-border)] pt-4 text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 md:justify-end md:border-t-0 md:pt-0 md:text-[14px]">
                 <span>Official Amazon connection</span>
                 <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
                 <span>Read-only audit</span>
