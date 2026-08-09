@@ -2227,11 +2227,9 @@ function KineticHeroSection({
             className="mt-5 max-w-[680px] text-[15px] leading-[1.65] text-slate-300 sm:mt-7 sm:text-[17px] md:text-[18px]"
           >
             {" "}
-            Margin verifies what Amazon may owe across shipments, inventory,
-            fees, reimbursements and settlements, connects every valid recovery
-            to the evidence behind it, and keeps the case moving until the
-            payout is verified and reconciled—with your approval before
-            anything is filed.{" "}
+            Margin checks your Amazon account for reimbursement issues, shows
+            what happened, what may be recoverable, and what evidence is
+            missing.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
