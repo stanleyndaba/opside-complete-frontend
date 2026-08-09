@@ -70,6 +70,7 @@ import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate } from "react-router-dom";
 import { SystemPerformanceTicker } from "@/components/landing/SystemPerformanceTicker";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
+import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
