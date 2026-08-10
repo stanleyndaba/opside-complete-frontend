@@ -16,42 +16,43 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
   };
 
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-28 md:py-44 overflow-hidden">
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
       <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
         
         {/* Header */}
-        <div className="mb-24 max-w-[780px]">
+        <div className="mb-28 max-w-[860px]">
           <motion.div {...revealProps} className="mb-6 flex items-center gap-3">
             <div className="h-[1px] w-8 bg-[var(--margin-border-strong)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-secondary)]">
-              How it works
+              Recovery operating surface
             </span>
           </motion.div>
           
           <motion.h2 
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.1 }}
-            className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[58px] lg:text-[72px]"
+            className="text-[44px] font-bold leading-[0.96] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[66px] lg:text-[86px]"
           >
-            Margin checks what Amazon says happened against what actually happened.
+            Margin turns Amazon noise into an inspectable recovery record.
           </motion.h2>
         </div>
 
-        {/* Ledger rows */}
+        {/* Evidence surface */}
         <div className="mb-24 border-y border-[var(--margin-border)]">
           
           {/* Step 1 */}
           <motion.div 
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.2 }}
-            className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-8 md:grid-cols-[120px_minmax(0,0.9fr)_minmax(0,1fr)] md:items-start md:py-10"
+            className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium text-[var(--margin-text-muted)]">01 / CONNECT</span>
-            <h3 className="text-[24px] font-semibold tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[30px]">
-              Connect Amazon
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">OP-01 / DISCOVERY</span>
+            <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
+              14 units missing.
             </h3>
-            <p className="max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              Give Margin read-only access to your account.
+            <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
+              SHIPMENT FBA15JK82: 60 shipped / 46 received. Receiving variance
+              detected against Amazon inbound movement.
             </p>
           </motion.div>
 
@@ -59,54 +60,48 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
           <motion.div 
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.3 }}
-            className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-8 md:grid-cols-[120px_minmax(0,0.9fr)_minmax(0,1fr)] md:items-start md:py-10"
+            className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium text-[var(--margin-text-muted)]">02 / AUDIT</span>
-            <h3 className="text-[24px] font-semibold tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[30px]">
-              Margin audits your records
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">OP-02 / EVIDENCE</span>
+            <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
+              Proof connected.
             </h3>
-            <ul className="grid max-w-[520px] grid-cols-2 gap-x-6 gap-y-2 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              <li>Shipment records</li>
-              <li>Inventory events</li>
-              <li>Settlements</li>
-              <li>Case history</li>
-              <li>Evidence files</li>
-            </ul>
+            <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
+              INVOICE linked. SHIPMENT record matched. SKU, quantity, cost basis,
+              and deadline attached to one recovery case.
+            </p>
           </motion.div>
 
           {/* Step 3 */}
           <motion.div 
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.4 }}
-            className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-8 md:grid-cols-[120px_minmax(0,0.9fr)_minmax(0,1fr)] md:items-start md:py-10"
+            className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium text-[var(--margin-text-muted)]">03 / FIND</span>
-            <h3 className="text-[24px] font-semibold tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[30px]">
-              See what needs attention
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">OP-03 / CONTROL</span>
+            <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
+              Approval required.
             </h3>
-            <ul className="grid max-w-[520px] grid-cols-2 gap-x-6 gap-y-2 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              <li>Recoverable findings</li>
-              <li>Evidence gaps</li>
-              <li>Deadlines</li>
-              <li>Payout discrepancies</li>
-            </ul>
+            <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
+              CASE READY: seller review required before filing. Nothing moves
+              to Amazon without approval.
+            </p>
           </motion.div>
 
           {/* Step 4 */}
           <motion.div 
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.5 }}
-            className="group grid gap-5 py-8 md:grid-cols-[120px_minmax(0,0.9fr)_minmax(0,1fr)] md:items-start md:py-10"
+            className="group grid gap-5 py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium text-[var(--margin-text-muted)]">04 / DECIDE</span>
-            <h3 className="text-[24px] font-semibold tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[30px]">
-              Decide what happens next
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">OP-04 / RECONCILE</span>
+            <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
+              Payout verified.
             </h3>
-            <ul className="grid max-w-[520px] gap-y-2 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              <li>Handle it yourself</li>
-              <li>Recover Once</li>
-              <li>Recovery Workspace</li>
-            </ul>
+            <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
+              AMAZON REIMBURSEMENT: USD 1,247. Settlement matched. Recovery
+              closed with payout trail preserved.
+            </p>
           </motion.div>
           
         </div>
@@ -122,7 +117,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             onClick={onCtaClick}
             className="h-14 rounded-[8px] bg-[var(--margin-primary)] px-8 text-[15px] font-semibold tracking-[-0.01em] text-white transition-transform hover:scale-[1.02] hover:bg-[var(--margin-primary-hover)] active:scale-[0.98] shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_4px_12px_rgba(0,0,0,0.2)]"
           >
-            Seller Central Audit <ArrowRight className="ml-2 h-5 w-5" />
+            Audit Seller Account <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </motion.div>
 

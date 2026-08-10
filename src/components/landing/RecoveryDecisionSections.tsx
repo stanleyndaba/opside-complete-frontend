@@ -12,7 +12,7 @@ const pathOptions = [
     label: "RECOVER ONCE",
     title: "One problem. One engagement.",
     copy: "Have Margin manage the recovery opportunities identified in your audit.",
-    price: "Starting from R1,499",
+    price: "Starting from $99",
     cta: "Recover These Issues",
     ctaLocation: "homepage_recover_once",
     items: [
@@ -28,7 +28,7 @@ const pathOptions = [
     label: "RECOVERY WORKSPACE",
     title: "Keep Margin working.",
     copy: "For sellers who want ongoing recovery monitoring instead of dealing with each issue as it appears.",
-    price: "R1,799/month",
+    price: "$119/month",
     cta: "Activate Recovery Workspace",
     ctaLocation: "homepage_recovery_workspace",
     items: [
@@ -94,7 +94,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
 
   return (
     <>
-      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-28 md:py-44">
+      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-32 md:py-56">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <motion.div {...revealProps} className="max-w-[780px]">
             <div className="mb-5 flex items-center gap-3">
@@ -103,7 +103,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 Your next step
               </span>
             </div>
-            <h2 className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[64px]">
+            <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[76px]">
               Found something? Choose how you want to handle it.
             </h2>
             <p className="mt-6 max-w-[720px] text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
@@ -118,12 +118,12 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 key={option.label}
                 {...revealProps}
                 transition={{ ...revealProps.transition, delay: index * 0.08 }}
-                className={`relative p-6 md:p-9 ${index > 0 ? "border-t border-[var(--margin-border)] lg:border-l lg:border-t-0" : ""}`}
+                className={`relative p-6 md:p-10 ${index > 0 ? "border-t border-[var(--margin-border)] lg:border-l lg:border-t-0" : ""}`}
               >
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
                   {option.label}
                 </p>
-                <h3 className="mt-5 text-[30px] font-semibold leading-tight tracking-[-0.055em] text-[var(--margin-text-primary)] md:text-[40px]">
+                <h3 className="mt-5 text-[34px] font-semibold leading-[1.02] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[48px]">
                   {option.title}
                 </h3>
                 <p className="mt-4 max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
@@ -141,7 +141,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   ))}
                 </div>
                 <div className="mt-8 pt-2">
-                  <p className="text-[26px] font-semibold tracking-[-0.055em] text-[var(--margin-text-primary)]">
+                  <p className="text-[30px] font-semibold tracking-[-0.065em] text-[var(--margin-text-primary)]">
                     {option.price}
                   </p>
                   <Button
@@ -171,7 +171,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
         </div>
       </section>
 
-      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-28 md:py-44">
+      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
             <motion.div {...revealProps}>
@@ -181,7 +181,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   Where recoveries break down
                 </span>
               </div>
-              <h2 className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[64px]">
+              <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[76px]">
                 Finding the problem is only the beginning.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
@@ -238,7 +238,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
         </div>
       </section>
 
-      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-28 md:py-44">
+      <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-32 md:py-56">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
             <motion.div {...revealProps}>
@@ -248,7 +248,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   Built around your records
                 </span>
               </div>
-              <h2 className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] md:text-[64px]">
+              <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[76px]">
                 See exactly what Margin found.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">

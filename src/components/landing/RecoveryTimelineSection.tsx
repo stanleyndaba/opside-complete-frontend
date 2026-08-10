@@ -49,7 +49,7 @@ export const RecoveryTimelineSection: React.FC = () => {
   };
 
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[#101827] py-28 text-white md:py-44">
+    <section className="relative overflow-hidden border-b border-white/10 bg-[#101827] py-32 text-white md:py-56">
       <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
         <div className="grid gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
           <motion.div {...revealProps} className="max-w-[560px]">
@@ -59,7 +59,7 @@ export const RecoveryTimelineSection: React.FC = () => {
                 From finding to recovery
               </span>
             </div>
-            <h2 className="text-[42px] font-semibold leading-[0.98] tracking-[-0.065em] text-white md:text-[64px]">
+            <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-white md:text-[76px]">
               Every recovery has a next step.
             </h2>
             <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">
@@ -81,7 +81,7 @@ export const RecoveryTimelineSection: React.FC = () => {
             transition={{ ...revealProps.transition, delay: 0.12 }}
             className="relative"
           >
-            <div className="relative overflow-hidden rounded-[12px] border border-white/10 bg-white/[0.035] shadow-[0_38px_120px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+            <div className="agentic-scan relative overflow-hidden rounded-[8px] border border-white/10 bg-white/[0.035] shadow-[0_38px_120px_rgba(0,0,0,0.18)] backdrop-blur-xl">
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent" />
               <div className="border-b border-white/10 px-5 py-4 md:px-7">
                 <div className="flex items-center justify-between gap-4">

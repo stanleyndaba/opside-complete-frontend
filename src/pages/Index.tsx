@@ -437,21 +437,21 @@ const integrationLogos = [
 const containerClass = "mx-auto w-full max-w-[1180px] px-5 sm:px-6 md:px-8";
 const demoContainerClass = "mx-auto w-full max-w-[1240px] px-5 sm:px-6 md:px-8";
 const postHeroSectionClass =
-  "relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-20";
+  "relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-28 md:py-44";
 const demoFrameClass =
-  "margin-product-surface relative -mx-5 overflow-hidden border-y border-[var(--margin-border)] bg-[var(--margin-surface)] shadow-[0_18px_48px_rgba(27,28,32,0.045)] sm:mx-0 sm:rounded-[12px] sm:border";
+  "margin-product-surface agentic-scan relative -mx-5 overflow-hidden border-y border-[var(--margin-border)] bg-[var(--margin-surface)] sm:mx-0 sm:rounded-[8px] sm:border";
 const demoTitleClass =
-  "mt-3 text-[28px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[40px]";
+  "mt-3 text-[34px] font-bold leading-[0.98] tracking-[-0.065em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]";
 const demoBodyClass =
-  "mt-4 max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8";
+  "mt-5 max-w-[560px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8";
 const demoClosingClass =
-  "mt-4 max-w-[500px] text-[18px] font-semibold leading-[1.18] tracking-[-0.035em] text-[var(--margin-text-muted)] md:text-[21px]";
+  "mt-5 max-w-[520px] text-[18px] font-semibold leading-[1.18] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[22px]";
 const sectionLabelClass =
-  "text-[11px] font-semibold tracking-tight text-[var(--margin-text-muted)]";
+  "font-mono text-[11px] font-semibold tracking-tight text-[var(--margin-text-muted)]";
 const sectionHeadingClass =
-  "mt-4 max-w-[880px] text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[58px]";
+  "mt-4 max-w-[920px] text-[44px] font-bold leading-[0.98] tracking-[-0.07em] text-[var(--margin-text-primary)] sm:text-[58px] md:text-[78px]";
 const sectionBodyClass =
-  "mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8";
+  "mt-6 max-w-[740px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9";
 const revealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -546,7 +546,7 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
           {[...integrationLogos, ...integrationLogos].map((logo, index) => (
             <div
               key={`${logo.name}-${index}`}
-              className="flex h-12 w-[78px] shrink-0 items-center justify-center rounded-2xl border border-[var(--margin-border-subtle)] bg-white/82 shadow-[0_12px_28px_rgba(37,49,58,0.04)] md:h-16 md:w-[116px]"
+              className="flex h-12 w-[78px] shrink-0 items-center justify-center rounded-[8px] border border-[var(--margin-border-subtle)] bg-white/82 shadow-[0_12px_28px_rgba(37,49,58,0.04)] md:h-16 md:w-[116px]"
               aria-label={logo.name}
               title={logo.name}
             >
@@ -1902,7 +1902,7 @@ function RecoveryWorkspacePricingSection({
                   $99/month
                 </div>
                 <p className="mt-3 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
-                  Charged as R1,799 ZAR. 0% recovery commission. One fixed
+                  Charged as $119/month. 0% recovery commission. One fixed
                   monthly subscription. Keep 100% of the recovery.
                 </p>
               </div>
@@ -2273,7 +2273,7 @@ function KineticHeroSection({
             >
               {" "}
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-              Seller Central Audit <ArrowRight className="ml-2 h-4 w-4" />{" "}
+              Audit Seller Account <ArrowRight className="ml-2 h-4 w-4" />{" "}
             </Button>{" "}
             <PwaInstallButton
               className="h-[52px] w-full justify-center rounded-[8px] border border-white/14 bg-transparent px-6 text-sm font-semibold text-white/78 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:w-auto"
@@ -2296,7 +2296,7 @@ function KineticHeroSection({
             <span>0% recovery commission</span>
           </motion.div>{" "}
           {isFull ? (
-            <div className="mt-5 max-w-[430px] rounded-2xl bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
+            <div className="mt-5 max-w-[430px] rounded-[8px] bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
               {" "}
               <div>
                 We are onboarding a small batch of sellers right now.
@@ -2339,6 +2339,31 @@ function RecoveryProgressRail() {
     </aside>
   );
 }
+
+function OperatorProofSection() {
+  return (
+    <section className="relative border-b border-[var(--margin-border)] bg-[#101827] py-32 text-white md:py-52">
+      <div className={containerClass}>
+        <div className="max-w-[920px]">
+          <div className="h-0.5 w-12 bg-[var(--margin-blue)]" />
+          <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-300/80">
+            Anonymous operator | approx $120k/month Amazon revenue
+          </p>
+          <blockquote className="mt-8 text-[31px] font-semibold leading-[1.08] tracking-[-0.055em] text-white md:text-[48px] lg:text-[58px]">
+            “The audit did not just show a discrepancy. It showed what happened,
+            what proof was connected, and what needed a decision.”
+          </blockquote>
+          <p className="mt-8 max-w-[660px] text-[16px] leading-8 text-slate-400 md:text-[18px]">
+            Margin is designed for operators who need recovery work to become
+            visible, traceable, and ready for approval without rebuilding every
+            case by hand.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SystemLogMarquee() {
   return (
     <section className="system-log-marquee relative overflow-hidden bg-[var(--margin-canvas)] py-16 md:py-24">
@@ -2443,7 +2468,7 @@ function EvidenceReadinessBlueprint() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[28px] border border-[var(--margin-border)] bg-[linear-gradient(135deg,#FFFFFF_0%,#F4FAFF_52%,var(--margin-section-alt)_100%)] p-7 shadow-[0_28px_90px_rgba(37,49,58,0.10)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-9"
+      className="relative overflow-hidden rounded-[8px] border border-[var(--margin-border)] bg-[linear-gradient(135deg,#FFFFFF_0%,#F4FAFF_52%,var(--margin-section-alt)_100%)] p-7 shadow-[0_18px_56px_rgba(37,49,58,0.06)] max-md:rounded-none max-md:border-0 max-md:bg-white max-md:p-0 max-md:shadow-none md:p-9"
     >
       {" "}
       <div
@@ -2938,6 +2963,7 @@ export default function Index() {
           </div>
         </section>
         <HowItWorksSection onCtaClick={() => handleClaimAccessClick("homepage_how_it_works")} />
+        <OperatorProofSection />
         <RecoveryTimelineSection />
         <RecoveryDecisionSections onAuditCta={handleClaimAccessClick} />
         {/* Recovery Control Loop and Free Recovery Audit are temporarily hidden. */}
