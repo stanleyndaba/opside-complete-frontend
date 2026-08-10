@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -194,39 +194,36 @@ export default function Sales() {
 
                         {/* Inquiry Form */}
                         <div className="lg:col-start-3 lg:col-span-8">
-                            <div className="relative overflow-hidden rounded-[18px] border border-[#CFE0EA] bg-white p-6 shadow-[0_34px_100px_rgba(37,49,58,0.1)] sm:p-10">
-                                <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
-                                <div className="pointer-events-none absolute -right-12 top-10 h-28 w-28 rounded-full bg-[#0B74DE]/10 blur-3xl" />
+                            <div className="relative border-t border-[#D8E3E8] pt-10">
                                 {isSubmitted ? (
-                                    <div className="text-center py-20">
-                                        <div className="w-20 h-20 rounded-full bg-[#EAF6EF] flex items-center justify-center mx-auto mb-8">
-                                            <CheckCircle2 className="h-10 w-10 text-[#2E7D5B]" />
-                                        </div>
-                                        <h2 className="text-2xl font-semibold text-[#182026] font-sans tracking-[-0.035em] mb-3">
+                                    <div className="py-16 text-center">
+                                        <h2 className="mb-3 font-sans text-3xl font-bold tracking-[-0.065em] text-[#182026]">
                                             Inquiry Prepared
                                         </h2>
-                                        <p className="text-[#66737F] font-sans mb-10 max-w-sm mx-auto text-sm leading-relaxed tracking-tight">
+                                        <p className="mx-auto mb-10 max-w-sm font-sans text-sm leading-relaxed tracking-tight text-[#66737F]">
                                             Your enterprise profile has been prepared for review. Send the email from your client so the Margin team can follow up directly.
                                         </p>
                                         <Button
                                             onClick={() => setIsSubmitted(false)}
                                             variant="outline"
-                                            className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-6 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F8FAFC] hover:text-[#182026]">
+                                            className="h-11 rounded-sm border-[#182026]/20 bg-transparent px-8 text-[12px] font-semibold tracking-tight text-[#182026] hover:bg-[#182026] hover:text-white">
                                             Start Another Inquiry
                                         </Button>
                                     </div>
                                 ) : (
-                                    <form onSubmit={handleSubmit} className="space-y-10">
+                                    <form onSubmit={handleSubmit} className="space-y-8">
                                         <div className="space-y-2">
-                                            <h3 className="text-[10px] font-semibold text-[#0B74DE] font-sans tracking-tight uppercase">
+                                            <h3 className="font-sans text-3xl font-bold leading-none tracking-[-0.065em] text-[#182026]">
                                                 Enterprise Recovery Briefing
                                             </h3>
-                                            <p className="text-xs text-[#66737F] font-sans tracking-tight">Priority onboarding capacity is reviewed manually for larger recovery operations.</p>
+                                            <p className="max-w-[520px] font-sans text-sm leading-6 tracking-tight text-[#66737F]">
+                                                Priority onboarding capacity is reviewed manually for larger recovery operations.
+                                            </p>
                                         </div>
 
-                                        <div className="grid md:grid-cols-2 gap-10">
+                                        <div className="grid gap-8 md:grid-cols-2">
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
+                                                <label className="block font-sans text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                                                     Contact Name
                                                 </label>
                                                 <Input
@@ -234,12 +231,12 @@ export default function Sales() {
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                                     placeholder="Full name"
-                                                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                    className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                                                     required
                                                 />
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
+                                                <label className="block font-sans text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                                                     Work Email
                                                 </label>
                                                 <Input
@@ -247,14 +244,14 @@ export default function Sales() {
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                                     placeholder="partner@company.com"
-                                                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                    className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                                                     required
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
+                                            <label className="block font-sans text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                                                 Company
                                             </label>
                                             <Input
@@ -262,21 +259,21 @@ export default function Sales() {
                                                 value={form.company}
                                                 onChange={(e) => setForm({ ...form, company: e.target.value })}
                                                 placeholder="Legal entity or brand group"
-                                                className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                                                 required
                                             />
                                         </div>
 
-                                        <div className="grid md:grid-cols-2 gap-10">
+                                        <div className="grid gap-8 md:grid-cols-2">
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
+                                                <label className="block font-sans text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                                                     Annual Portfolio GMV
                                                 </label>
                                                 <Select value={form.revenue} onValueChange={(value) => setForm({ ...form, revenue: value })}>
-                                                    <SelectTrigger className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/20">
+                                                    <SelectTrigger className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[13px] tracking-tight text-[#182026] focus-visible:border-[#182026] focus-visible:ring-0">
                                                         <SelectValue placeholder="Select range" />
                                                     </SelectTrigger>
-                                                    <SelectContent className="rounded-[10px] border-[#CFE0EA] bg-white text-xs font-sans text-[#182026] shadow-[0_22px_70px_rgba(37,49,58,0.14)]">
+                                                    <SelectContent className="rounded-sm border-[#182026]/20 bg-white text-xs font-sans text-[#182026] shadow-[0_22px_70px_rgba(37,49,58,0.14)]">
                                                         <SelectItem value="$1M - $5M">$1M - $5M</SelectItem>
                                                         <SelectItem value="$5M - $10M">$5M - $10M</SelectItem>
                                                         <SelectItem value="$10M - $25M">$10M - $25M</SelectItem>
@@ -286,7 +283,7 @@ export default function Sales() {
                                                 </Select>
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
+                                                <label className="block font-sans text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                                                     Amazon Seller ID
                                                 </label>
                                                 <Input
@@ -294,27 +291,27 @@ export default function Sales() {
                                                     value={form.sellerId}
                                                     onChange={(e) => setForm({ ...form, sellerId: e.target.value })}
                                                     placeholder="Optional"
-                                                className="h-14 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                                                className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[11px] font-semibold text-[#66737F] font-sans tracking-tight uppercase block">
+                                            <label className="block font-sans text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                                                 Recovery Operation Notes
                                             </label>
                                             <Textarea
                                                 value={form.message}
                                                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                                                 placeholder="Tell us about marketplace coverage, SKU volume, current reimbursement workflow, or operational leakage concerns."
-                                                className="min-h-[120px] rounded-[5px] border-[#CFE0EA] bg-white px-4 py-4 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20 resize-none"
+                                                className="min-h-[118px] resize-none rounded-sm border-[#182026]/20 bg-transparent px-3 py-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                                             />
                                         </div>
 
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="w-full h-12 rounded-[5px] bg-[#0B74DE] text-white text-[13px] font-semibold font-sans tracking-tight transition-all hover:bg-[#0869C9] shadow-[0_18px_40px_rgba(11,116,222,0.2)]">
+                                            className="h-11 rounded-sm bg-[#182026] px-8 font-sans text-[13px] font-semibold tracking-tight text-white transition-colors hover:bg-black active:scale-[0.98]">
                                             {isSubmitting ? (
                                                 <>Preparing Inquiry...</>
                                             ) : (

@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth, useClerk, useSignIn, useSignUp, useUser } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PublicNavbar } from '@/components/layout/PublicNavbar';
-import { BrandFooter } from '@/components/layout/BrandFooter';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/supabaseClient';
 import { normalizeTenantSlug } from '@/lib/routes';
@@ -390,15 +388,13 @@ const Login = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const subtitle = 'User access and marketplace OAuth are separate flows. Your account login gets you into the workspace. Amazon, Gmail, and the other providers are connected after that from Integrations Hub.';
-
   const heading = mode === 'signup'
     ? isAuditIntent
-      ? 'Create your audit account'
+      ? 'Create audit access'
       : 'Create your Margin account'
     : mode === 'recovery'
       ? 'Reset your password'
-    : 'Log in to your account';
+    : 'Sign in to Margin';
 
   const resetLocalAuthError = () => {
     setError('');
@@ -1055,6 +1051,9 @@ const Login = () => {
     try {
       if (mode === 'signup') {
         failureStep = 'account';
+        if (!clerkVerificationStep) {
+          await resetBrowserAuthForFreshLogin();
+        }
         const signupResult = await authenticateSignupWithClerk();
         if (signupResult.status === 'verification_required') {
           setLoading(false);
@@ -1205,88 +1204,36 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
-      <div
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]"
-      />
-      <div
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.04]"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
-      />
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_34%),radial-gradient(circle_at_84%_0%,rgba(46,125,91,0.1),transparent_32%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-[720px] bg-[radial-gradient(circle_at_18%_100%,rgba(191,216,234,0.24),transparent_44%),radial-gradient(circle_at_76%_88%,rgba(255,255,255,0.7),transparent_48%)]" />
-      </div>
-
-      <PublicNavbar variant="light" />
-
-      <main className="relative z-10 px-4 pb-24 pt-28 md:px-6 md:pb-28 md:pt-32">
-        <div className="mx-auto max-w-[860px] space-y-8">
-          <section className="space-y-5">
-            <div className="inline-flex items-center gap-3 rounded-full border border-[#DCE8EE] bg-white/78 px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#0B74DE] shadow-[0_14px_40px_rgba(37,49,58,0.06)] backdrop-blur">
-              <span>Workspace access</span>
-              <span className="h-1 w-1 rounded-full bg-[#0B74DE]/80" />
-              <span className="text-[#66737F]">
-                {mode === 'signup' ? 'Create account' : mode === 'recovery' ? 'Reset password' : 'Sign in'}
-              </span>
+    <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white selection:bg-white/20 selection:text-white">
+      <main className="relative z-10 flex min-h-screen items-center justify-center px-5 py-12">
+        <div className="w-full max-w-[390px]">
+          <div className="mb-12 flex justify-center">
+            <div className="flex items-center gap-3">
+              <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto object-contain invert" />
+              <span className="font-serif text-[20px] font-semibold tracking-[-0.04em] text-white">Margin</span>
             </div>
+          </div>
 
-            <div className="space-y-4">
-              <h1 className="max-w-[620px] text-[38px] font-semibold leading-[0.95] tracking-[-0.06em] text-[#182026] md:text-[60px]">
-                {heading}
-              </h1>
-              <p className="max-w-[560px] text-[16px] leading-7 text-[#4D5B66] md:text-lg md:leading-8">
-                {intent === 'upload-csv' && mode === 'login'
-                  ? 'Sign in to upload files into your workspace. Data import starts after account access, not before.'
-                  : isAuditIntent
-                    ? 'Create access for your free recovery audit. Amazon connects after account setup, and activation only happens after you see the locked summary.'
-                  : intent === 'onboarding'
-                    ? 'Create your Margin account first. Amazon authorization and audit setup happen after account access is ready.'
-                    : 'Your Margin account gets you into the workspace first. Amazon, Gmail, and other providers are connected after that from inside the product.'}
-              </p>
-            </div>
-          </section>
+          <section>
+            <h1 className="text-center text-[32px] font-bold leading-none tracking-[-0.065em] text-white">
+              {heading}
+            </h1>
 
-          <section className="relative overflow-hidden rounded-[18px] border border-[#CFE0EA] bg-white p-5 shadow-[0_34px_100px_rgba(37,49,58,0.11)] md:p-7">
-            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/24 to-transparent" />
-            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#0B74DE]/10 blur-3xl" />
-
-            <div className="relative">
-              <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-                <div className="space-y-2">
-                  <div className="text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
-                    {mode === 'signup' ? 'New account' : mode === 'recovery' ? 'Password recovery' : 'Existing account'}
-                  </div>
-                  <h2 className="text-[28px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] md:text-[34px]">
-                    {mode === 'signup'
-                      ? isAuditIntent
-                        ? 'Create your audit access'
-                        : 'Create your account'
-                      : mode === 'recovery'
-                        ? 'Set your new password'
-                        : 'Enter your details'}
-                  </h2>
-                </div>
-
-                <div className="rounded-full border border-[#DCE8EE] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold tracking-tight text-[#66737F]">
-                  Account step
-                </div>
-              </div>
-
+            <div className="mt-10">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                <div className="mb-5 rounded-[12px] border border-[#DCE8EE] bg-[#F8FAFC] px-4 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
+                <div className="mb-6 border border-white/12 bg-white/[0.03] px-4 py-4">
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
                     Active session found
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#4D5B66]">
-                    You are already signed in as <span className="font-semibold text-[#182026]">{activeSessionEmail}</span>.
+                  <p className="mt-2 text-sm leading-6 text-zinc-400">
+                    You are already signed in as <span className="font-medium text-white">{activeSessionEmail}</span>.
                   </p>
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                     <Button
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-11 justify-between rounded-[5px] bg-[#0B74DE] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
+                      className="h-10 justify-between rounded-sm bg-white px-4 text-[12px] font-semibold tracking-tight text-black hover:bg-zinc-200 active:scale-[0.98]"
                     >
                       Continue with this account
                       <ArrowRight className="h-4 w-4" />
@@ -1296,7 +1243,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void handleUseDifferentAccount()}
                       disabled={loading}
-                      className="h-11 rounded-[5px] border-[#CFE0EA] bg-white px-4 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]"
+                      className="h-10 rounded-sm border-white/12 bg-transparent px-4 text-[12px] font-semibold tracking-tight text-zinc-300 hover:bg-white/[0.04] hover:text-white active:scale-[0.98]"
                     >
                       Use different account
                     </Button>
@@ -1306,11 +1253,10 @@ const Login = () => {
 
               <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
+                <Label htmlFor="email" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
                   Email
                 </Label>
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
                   <Input
                     id="email"
                     type="email"
@@ -1322,17 +1268,16 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder="you@company.com"
-                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20 disabled:opacity-50"
+                    className="h-12 rounded-sm border-white/15 bg-transparent px-3 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0 disabled:opacity-50"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
+                <Label htmlFor="password" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
                   {mode === 'recovery' ? 'New Password' : 'Password'}
                 </Label>
                 <div className="relative">
-                  <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -1343,12 +1288,12 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder={mode === 'recovery' ? 'Enter your new password' : 'Enter your password'}
-                    className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                    className="h-12 rounded-sm border-white/15 bg-transparent px-3 pr-11 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((value) => !value)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 transition-colors hover:text-white"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -1358,11 +1303,10 @@ const Login = () => {
 
               {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
                 <div className="space-y-2">
-                  <Label htmlFor="clerkVerificationCode" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
+                  <Label htmlFor="clerkVerificationCode" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
                     Verification Code
                   </Label>
                   <div className="relative">
-                    <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
                     <Input
                       id="clerkVerificationCode"
                       type="text"
@@ -1374,22 +1318,21 @@ const Login = () => {
                         setError('');
                       }}
                       placeholder="Enter verification code"
-                      className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                      className="h-12 rounded-sm border-white/15 bg-transparent px-3 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0"
                     />
                   </div>
                   {clerkVerificationMessage ? (
-                    <p className="text-xs leading-5 text-[#66737F]">{clerkVerificationMessage}</p>
+                    <p className="text-xs leading-5 text-zinc-500">{clerkVerificationMessage}</p>
                   ) : null}
                 </div>
               ) : null}
 
               {mode === 'recovery' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-[11px] font-semibold tracking-tight text-[#66737F]">
+                  <Label htmlFor="confirmPassword" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
                     Confirm Password
                   </Label>
                   <div className="relative">
-                    <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A4]" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
@@ -1400,12 +1343,12 @@ const Login = () => {
                         resetLocalAuthError();
                       }}
                       placeholder="Confirm your new password"
-                      className="h-14 rounded-[5px] border-[#CFE0EA] bg-white pl-11 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/20"
+                      className="h-12 rounded-sm border-white/15 bg-transparent px-3 pr-11 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword((value) => !value)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 transition-colors hover:text-white"
                       aria-label={showConfirmPassword ? 'Hide confirmed password' : 'Show confirmed password'}
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -1415,16 +1358,16 @@ const Login = () => {
               ) : null}
 
               {error === '__SERVICE_PREPARING__' ? (
-                <div className="rounded-[12px] border border-[#CFE0EA] bg-[#F8FAFC] px-5 py-6 text-center">
-                  <h3 className="text-[22px] font-semibold tracking-[-0.03em] text-[#182026] md:text-[26px]">
+                <div className="border border-white/12 bg-white/[0.03] px-5 py-6 text-center">
+                  <h3 className="text-[20px] font-semibold tracking-[-0.04em] text-white">
                     We're preparing your account.
                   </h3>
-                  <p className="mx-auto mt-3 max-w-[440px] text-[14px] leading-6 text-[#4D5B66] md:text-[15px] md:leading-7">
+                  <p className="mx-auto mt-3 max-w-[320px] text-[13px] leading-6 text-zinc-500">
                     Margin could not finish preparing your workspace automatically. Retry account setup, or start again from the free audit path.
                   </p>
                   <Button
                     asChild
-                    className="mt-5 h-11 rounded-[5px] bg-[#0B74DE] px-6 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
+                    className="mt-5 h-10 rounded-sm bg-white px-5 text-[12px] font-semibold text-black hover:bg-zinc-200 active:scale-[0.98]"
                   >
                     <Link to="/audit">
                       Start Free Audit
@@ -1439,7 +1382,7 @@ const Login = () => {
                   type="button"
                   onClick={() => void handleRetryWorkspaceRouting()}
                   disabled={loading}
-                  className="w-full mt-3 h-9 rounded-[5px] bg-[#0B74DE] px-3 text-[11px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
+                  className="mt-3 h-10 rounded-sm bg-white px-4 text-[12px] font-semibold tracking-tight text-black hover:bg-zinc-200 active:scale-[0.98]"
                 >
                   Retry access setup
                   <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -1452,17 +1395,17 @@ const Login = () => {
                   onClick={() => void handleClearBrowserSession()}
                   disabled={loading}
                   variant="outline"
-                  className="w-full mt-3 h-9 rounded-[5px] border-red-200 bg-white px-3 text-[11px] font-semibold tracking-tight text-red-700 hover:bg-red-100"
+                  className="mt-3 h-10 rounded-sm border-red-400/30 bg-transparent px-4 text-[12px] font-semibold tracking-tight text-red-300 hover:bg-red-500/10"
                 >
                   Clear browser session
                 </Button>
               ) : null}
 
-              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+              <div className="pt-2">
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-12 flex-1 justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
+                  className="h-11 rounded-sm bg-white px-8 text-[13px] font-semibold tracking-tight text-black hover:bg-zinc-200 active:scale-[0.98]"
                 >
                   {loading ? (
                     mode === 'signup'
@@ -1483,14 +1426,9 @@ const Login = () => {
                   )}
                   {!loading ? <ArrowRight className="h-4 w-4" /> : null}
                 </Button>
-                <Button asChild variant="outline" className="h-12 rounded-[5px] border-[#CFE0EA] bg-white px-5 text-[13px] font-semibold tracking-tight text-[#25313A] hover:bg-[#F3F6F8]">
-                  <Link to="/">
-                    Back Home
-                  </Link>
-                </Button>
               </div>
 
-              <div className="flex flex-col gap-3 border-t border-[#D8E3E8] pt-4 text-sm text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 pt-2 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   onClick={() => {
@@ -1505,7 +1443,7 @@ const Login = () => {
                       return nextMode;
                     });
                   }}
-                  className="text-left transition-colors hover:text-[#182026]"
+                  className="text-left transition-colors hover:text-white"
                 >
                   {mode === 'signup' ? 'Already have an account? Log in' : 'No account yet? Create one'}
                 </button>
@@ -1514,7 +1452,7 @@ const Login = () => {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={loading}
-                    className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
+                    className="text-left transition-colors hover:text-white disabled:opacity-50"
                   >
                     Forgot password?
                   </button>
@@ -1530,7 +1468,7 @@ const Login = () => {
                       setClerkVerificationCode('');
                       setClerkVerificationMessage('');
                     }}
-                    className="text-left transition-colors hover:text-[#182026]"
+                    className="text-left transition-colors hover:text-white"
                   >
                     Back to login
                   </button>
@@ -1540,13 +1478,8 @@ const Login = () => {
               </form>
             </div>
           </section>
-
-          <p className="mx-auto max-w-[720px] text-center text-[14px] leading-6 text-[#66737F] md:text-[15px]">
-            {subtitle}
-          </p>
         </div>
       </main>
-      <BrandFooter />
     </div>
   );
 };
