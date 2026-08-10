@@ -1204,36 +1204,36 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white selection:bg-white/20 selection:text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       <main className="relative z-10 flex min-h-screen items-center justify-center px-5 py-12">
         <div className="w-full max-w-[390px]">
           <div className="mb-12 flex justify-center">
             <div className="flex items-center gap-3">
-              <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto object-contain invert" />
-              <span className="font-serif text-[20px] font-semibold tracking-[-0.04em] text-white">Margin</span>
+              <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto object-contain" />
+              <span className="brand-wordmark font-merriweather text-[20px] font-semibold tracking-tight text-[#182026]">Margin</span>
             </div>
           </div>
 
           <section>
-            <h1 className="text-center text-[32px] font-bold leading-none tracking-[-0.065em] text-white">
+            <h1 className="text-center text-[32px] font-bold leading-none tracking-[-0.065em] text-[#182026]">
               {heading}
             </h1>
 
             <div className="mt-10">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                <div className="mb-6 border border-white/12 bg-white/[0.03] px-4 py-4">
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
+                <div className="mb-6 border border-[#D8E3E8] bg-white/55 px-4 py-4">
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                     Active session found
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-zinc-400">
-                    You are already signed in as <span className="font-medium text-white">{activeSessionEmail}</span>.
+                  <p className="mt-2 text-sm leading-6 text-[#4D5B66]">
+                    You are already signed in as <span className="font-medium text-[#182026]">{activeSessionEmail}</span>.
                   </p>
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                     <Button
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-10 justify-between rounded-sm bg-white px-4 text-[12px] font-semibold tracking-tight text-black hover:bg-zinc-200 active:scale-[0.98]"
+                      className="h-10 justify-between rounded-sm bg-[#182026] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-black active:scale-[0.98]"
                     >
                       Continue with this account
                       <ArrowRight className="h-4 w-4" />
@@ -1243,7 +1243,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void handleUseDifferentAccount()}
                       disabled={loading}
-                      className="h-10 rounded-sm border-white/12 bg-transparent px-4 text-[12px] font-semibold tracking-tight text-zinc-300 hover:bg-white/[0.04] hover:text-white active:scale-[0.98]"
+                      className="h-10 rounded-sm border-[#182026]/20 bg-transparent px-4 text-[12px] font-semibold tracking-tight text-[#25313A] hover:bg-white hover:text-[#182026] active:scale-[0.98]"
                     >
                       Use different account
                     </Button>
@@ -1253,7 +1253,7 @@ const Login = () => {
 
               <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
+                <Label htmlFor="email" className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                   Email
                 </Label>
                 <div className="relative">
@@ -1268,13 +1268,13 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder="you@company.com"
-                    className="h-12 rounded-sm border-white/15 bg-transparent px-3 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0 disabled:opacity-50"
+                    className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0 disabled:opacity-50"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
+                <Label htmlFor="password" className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                   {mode === 'recovery' ? 'New Password' : 'Password'}
                 </Label>
                 <div className="relative">
@@ -1288,12 +1288,12 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder={mode === 'recovery' ? 'Enter your new password' : 'Enter your password'}
-                    className="h-12 rounded-sm border-white/15 bg-transparent px-3 pr-11 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0"
+                    className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((value) => !value)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 transition-colors hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -1303,7 +1303,7 @@ const Login = () => {
 
               {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
                 <div className="space-y-2">
-                  <Label htmlFor="clerkVerificationCode" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
+                  <Label htmlFor="clerkVerificationCode" className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                     Verification Code
                   </Label>
                   <div className="relative">
@@ -1318,18 +1318,18 @@ const Login = () => {
                         setError('');
                       }}
                       placeholder="Enter verification code"
-                      className="h-12 rounded-sm border-white/15 bg-transparent px-3 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0"
+                      className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                     />
                   </div>
                   {clerkVerificationMessage ? (
-                    <p className="text-xs leading-5 text-zinc-500">{clerkVerificationMessage}</p>
+                    <p className="text-xs leading-5 text-[#66737F]">{clerkVerificationMessage}</p>
                   ) : null}
                 </div>
               ) : null}
 
               {mode === 'recovery' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">
+                  <Label htmlFor="confirmPassword" className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
                     Confirm Password
                   </Label>
                   <div className="relative">
@@ -1343,12 +1343,12 @@ const Login = () => {
                         resetLocalAuthError();
                       }}
                       placeholder="Confirm your new password"
-                      className="h-12 rounded-sm border-white/15 bg-transparent px-3 pr-11 text-[14px] tracking-tight text-white placeholder:text-zinc-700 focus-visible:border-white/70 focus-visible:ring-0"
+                      className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword((value) => !value)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 transition-colors hover:text-white"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
                       aria-label={showConfirmPassword ? 'Hide confirmed password' : 'Show confirmed password'}
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -1358,16 +1358,16 @@ const Login = () => {
               ) : null}
 
               {error === '__SERVICE_PREPARING__' ? (
-                <div className="border border-white/12 bg-white/[0.03] px-5 py-6 text-center">
-                  <h3 className="text-[20px] font-semibold tracking-[-0.04em] text-white">
+                <div className="border border-[#D8E3E8] bg-white/55 px-5 py-6 text-center">
+                  <h3 className="text-[20px] font-semibold tracking-[-0.04em] text-[#182026]">
                     We're preparing your account.
                   </h3>
-                  <p className="mx-auto mt-3 max-w-[320px] text-[13px] leading-6 text-zinc-500">
+                  <p className="mx-auto mt-3 max-w-[320px] text-[13px] leading-6 text-[#66737F]">
                     Margin could not finish preparing your workspace automatically. Retry account setup, or start again from the free audit path.
                   </p>
                   <Button
                     asChild
-                    className="mt-5 h-10 rounded-sm bg-white px-5 text-[12px] font-semibold text-black hover:bg-zinc-200 active:scale-[0.98]"
+                    className="mt-5 h-10 rounded-sm bg-[#182026] px-5 text-[12px] font-semibold text-white hover:bg-black active:scale-[0.98]"
                   >
                     <Link to="/audit">
                       Start Free Audit
@@ -1382,7 +1382,7 @@ const Login = () => {
                   type="button"
                   onClick={() => void handleRetryWorkspaceRouting()}
                   disabled={loading}
-                  className="mt-3 h-10 rounded-sm bg-white px-4 text-[12px] font-semibold tracking-tight text-black hover:bg-zinc-200 active:scale-[0.98]"
+                  className="mt-3 h-10 rounded-sm bg-[#182026] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-black active:scale-[0.98]"
                 >
                   Retry access setup
                   <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -1395,7 +1395,7 @@ const Login = () => {
                   onClick={() => void handleClearBrowserSession()}
                   disabled={loading}
                   variant="outline"
-                  className="mt-3 h-10 rounded-sm border-red-400/30 bg-transparent px-4 text-[12px] font-semibold tracking-tight text-red-300 hover:bg-red-500/10"
+                  className="mt-3 h-10 rounded-sm border-red-200 bg-transparent px-4 text-[12px] font-semibold tracking-tight text-red-700 hover:bg-red-50"
                 >
                   Clear browser session
                 </Button>
@@ -1405,7 +1405,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-11 rounded-sm bg-white px-8 text-[13px] font-semibold tracking-tight text-black hover:bg-zinc-200 active:scale-[0.98]"
+                  className="h-11 rounded-sm bg-[#182026] px-8 text-[13px] font-semibold tracking-tight text-white hover:bg-black active:scale-[0.98]"
                 >
                   {loading ? (
                     mode === 'signup'
@@ -1428,7 +1428,7 @@ const Login = () => {
                 </Button>
               </div>
 
-              <div className="flex flex-col gap-3 pt-2 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 pt-2 text-xs text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   onClick={() => {
@@ -1443,7 +1443,7 @@ const Login = () => {
                       return nextMode;
                     });
                   }}
-                  className="text-left transition-colors hover:text-white"
+                  className="text-left transition-colors hover:text-[#182026]"
                 >
                   {mode === 'signup' ? 'Already have an account? Log in' : 'No account yet? Create one'}
                 </button>
@@ -1452,7 +1452,7 @@ const Login = () => {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={loading}
-                    className="text-left transition-colors hover:text-white disabled:opacity-50"
+                    className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
                   >
                     Forgot password?
                   </button>
@@ -1468,7 +1468,7 @@ const Login = () => {
                       setClerkVerificationCode('');
                       setClerkVerificationMessage('');
                     }}
-                    className="text-left transition-colors hover:text-white"
+                    className="text-left transition-colors hover:text-[#182026]"
                   >
                     Back to login
                   </button>
