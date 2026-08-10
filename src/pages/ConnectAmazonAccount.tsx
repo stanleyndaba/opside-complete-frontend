@@ -169,13 +169,11 @@ export default function ConnectAmazonAccount() {
       const rawMsg = getErrorMessage(error);
       const isCapacityFull = rawMsg.includes('capacity_full');
       toast({
+
         title: isCapacityFull ? 'Audit capacity is temporarily full' : 'Amazon connection failed',
         description: isCapacityFull
           ? 'Margin is processing the current audit queue. Join the waitlist and we will notify you when more audit capacity opens.'
           : (rawMsg || 'We could not start Amazon authorization. Please try again.'),
-        variant: 'destructive',
-      });
-      if (isCapacityFull) {
         variant: 'destructive',
       });
       if (isCapacityFull) {
