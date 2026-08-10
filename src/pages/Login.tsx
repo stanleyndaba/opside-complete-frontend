@@ -1233,7 +1233,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-10 justify-between rounded-sm bg-[#182026] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-black active:scale-[0.98]"
+                      className="h-10 justify-between rounded-sm bg-[#0B74DE] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9] active:scale-[0.98]"
                     >
                       Continue with this account
                       <ArrowRight className="h-4 w-4" />
@@ -1367,7 +1367,7 @@ const Login = () => {
                   </p>
                   <Button
                     asChild
-                    className="mt-5 h-10 rounded-sm bg-[#182026] px-5 text-[12px] font-semibold text-white hover:bg-black active:scale-[0.98]"
+                    className="mt-5 h-10 rounded-sm bg-[#0B74DE] px-5 text-[12px] font-semibold text-white hover:bg-[#0869C9] active:scale-[0.98]"
                   >
                     <Link to="/audit">
                       Start Free Audit
@@ -1382,7 +1382,7 @@ const Login = () => {
                   type="button"
                   onClick={() => void handleRetryWorkspaceRouting()}
                   disabled={loading}
-                  className="mt-3 h-10 rounded-sm bg-[#182026] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-black active:scale-[0.98]"
+                  className="mt-3 h-10 rounded-sm bg-[#0B74DE] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9] active:scale-[0.98]"
                 >
                   Retry access setup
                   <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -1405,7 +1405,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-11 rounded-sm bg-[#182026] px-8 text-[13px] font-semibold tracking-tight text-white hover:bg-black active:scale-[0.98]"
+                  className="h-11 rounded-sm bg-[#0B74DE] px-8 text-[13px] font-semibold tracking-tight text-white hover:bg-[#0869C9] active:scale-[0.98]"
                 >
                   {loading ? (
                     mode === 'signup'

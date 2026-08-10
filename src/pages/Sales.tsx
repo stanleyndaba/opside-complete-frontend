@@ -311,7 +311,7 @@ export default function Sales() {
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="h-11 rounded-sm bg-[#182026] px-8 font-sans text-[13px] font-semibold tracking-tight text-white transition-colors hover:bg-black active:scale-[0.98]">
+                                            className="h-11 rounded-sm bg-[#0B74DE] px-8 font-sans text-[13px] font-semibold tracking-tight text-white transition-colors hover:bg-[#0869C9] active:scale-[0.98]">
                                             {isSubmitting ? (
                                                 <>Preparing Inquiry...</>
                                             ) : (
