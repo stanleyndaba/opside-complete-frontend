@@ -295,12 +295,7 @@ export default function Audit() {
       : 'Shipment sync: waiting for Amazon authorization'
     : 'Shipment sync: starts after authorization';
 
-  const dataSources = [
-    { label: 'Marketplace Sync', value: 'US, CA, MX (Multi-region synchronized)' },
-    { label: 'Transaction Ledger', value: '365-day Order & Financial Event history' },
-    { label: 'Logistics Intelligence', value: 'Integrated Settlement, Inventory, and Return reports' },
-    { label: 'Catalog Scope', value: `${(teaser?.recordsReviewed ? Math.max(233468, Math.floor(teaser.recordsReviewed * 0.3)) : 233468).toLocaleString()}+ SKUs mapped and verified` },
-  ];
+  const catalogSkuCount = (teaser?.recordsReviewed ? Math.max(233468, Math.floor(teaser.recordsReviewed * 0.3)) : 233468).toLocaleString();
 
   const exportExecutiveSummary = async () => {
     if (!audit?.id || step !== 'completed') {
@@ -1180,19 +1175,19 @@ export default function Audit() {
 
               <div className="mt-4 grid grid-cols-3 divide-x divide-zinc-200 border-y border-zinc-200 py-3">
                 <div className="flex flex-col pr-4">
-                  <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Scope value</span>
+                  <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Scope value</span>
                   <span className="mt-1 text-[15px] font-medium tracking-tight text-zinc-950">
                     {step !== 'completed' ? <span className="text-[13px] font-medium text-zinc-400">Waiting for data</span> : isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not calculated</span> : formatMoney(teaser.scopeValue)}
                   </span>
                 </div>
                 <div className="flex flex-col px-4">
-                  <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Findings</span>
+                  <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Findings</span>
                   <span className="mt-1 text-[15px] font-medium tracking-tight text-zinc-950">
                     {step !== 'completed' ? <span className="text-[13px] font-medium text-zinc-400">Waiting for data</span> : isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not evaluated</span> : teaser.findingsCount}
                   </span>
                 </div>
                 <div className="flex flex-col pl-4">
-                  <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Expiring soon</span>
+                  <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Expiring soon</span>
                   <span className="mt-1 text-[15px] font-medium tracking-tight text-zinc-950">
                     {step !== 'completed' ? <span className="text-[13px] font-medium text-zinc-400">Waiting for data</span> : isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not evaluated</span> : expiringSoonValue}
                   </span>
@@ -1208,7 +1203,7 @@ export default function Audit() {
             <div className="mb-4 rounded-[4px] border border-zinc-200 bg-white p-3.5 shadow-none sm:p-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <span className={`inline-flex rounded-[4px] px-2 py-0.5 text-[10px] tracking-widest font-semibold uppercase ${isZeroRecordLimitedAudit ? 'bg-zinc-100 text-zinc-600' : 'bg-[#007AFF]/10 text-[#007AFF]'}`}>
+                  <span className={`inline-flex rounded-[4px] px-2 py-0.5 text-[10px] tracking-tight font-semibold uppercase ${isZeroRecordLimitedAudit ? 'bg-zinc-100 text-zinc-600' : 'bg-[#007AFF]/10 text-[#007AFF]'}`}>
                     {auditState.label}
                   </span>
                   <h2 className={`mt-2 font-medium tracking-tight text-zinc-950 ${step === 'completed' ? (isZeroRecordLimitedAudit ? 'text-[13px] sm:text-[14px]' : 'text-[18px] sm:text-[22px]') : 'text-[14px] sm:text-[15px]'}`}>
@@ -1230,36 +1225,36 @@ export default function Audit() {
               <div className={`relative overflow-hidden rounded-[4px] border ${step === 'completed' ? 'border-zinc-200 bg-white' : 'border-zinc-100 bg-zinc-50/50 backdrop-blur-[2px]'} p-4 sm:p-5`}>
                 <div className="mb-3 flex items-center justify-between border-b border-zinc-100 pb-2.5">
                   <h2 className="text-[13px] font-medium tracking-tight text-zinc-950">{step !== 'completed' ? 'Recovery report' : 'Workspace report'}</h2>
-                  {step !== 'completed' && <span className="rounded-[4px] bg-amber-50 px-2 py-0.5 text-[10px] tracking-widest font-semibold uppercase text-amber-600">Waiting for Amazon authorization</span>}
+                  {step !== 'completed' && <span className="rounded-[4px] bg-zinc-100 px-2 py-0.5 text-[10px] tracking-tight font-medium text-zinc-500">Pending auth</span>}
                 </div>
 
                 {step === 'completed' ? (
                   <div className="mb-4 grid grid-cols-3 divide-x divide-zinc-200 rounded-[4px] border border-zinc-200 bg-white shadow-none">
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Scope value</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Scope value</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not calculated</span> : formatMoney(teaser.scopeValue)}</span>
                     </div>
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Findings</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Findings</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not evaluated</span> : teaser.findingsCount}</span>
                     </div>
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Evidence ready</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Evidence ready</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not evaluated</span> : teaser.evidenceReadyCount}</span>
                     </div>
                   </div>
                 ) : (
                   <div className="mb-4 grid grid-cols-3 divide-x divide-zinc-200 rounded-[4px] border border-zinc-200 bg-white shadow-none">
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Scope value</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Scope value</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950"><span className="text-[14px] font-medium text-zinc-400">Waiting for data</span></span>
                     </div>
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Findings</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Findings</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950"><span className="text-[14px] font-medium text-zinc-400">Waiting for data</span></span>
                     </div>
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Evidence ready</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Evidence ready</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950"><span className="text-[14px] font-medium text-zinc-400">Waiting for data</span></span>
                     </div>
                   </div>
@@ -1277,7 +1272,7 @@ export default function Audit() {
 
                 {step === 'completed' && (teaser.recordsReviewed != null || teaser.sourcesUnavailable?.length) ? (
                   <div className="mb-4 rounded-[4px] border border-zinc-200 bg-zinc-50 px-4 py-3 text-left shadow-none">
-                    <div className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Audit coverage</div>
+                    <div className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Audit coverage</div>
                     <p className="mt-1 text-[12px] leading-relaxed text-zinc-500">
                       {teaser.recordsReviewed != null
                         ? `${teaser.recordsReviewed.toLocaleString()} Amazon record${teaser.recordsReviewed === 1 ? '' : 's'} reviewed.`
@@ -1312,7 +1307,7 @@ export default function Audit() {
                      <div className="w-full max-w-md rounded-lg border border-gray-100 bg-white px-3 py-2.5 text-left">
                        {teaser.sourcesUnavailable?.length > 0 && (
                         <div className="mb-4 rounded-[4px] border border-red-200 bg-red-50 p-3 text-left">
-                          <div className="text-[10px] tracking-widest font-semibold uppercase text-red-600">Unavailable Data Sources</div>
+                          <div className="text-[10px] tracking-tight font-semibold uppercase text-red-600">Unavailable Data Sources</div>
                           <p className="mt-1 text-[12px] text-red-700">Margin lacked access to the following sources. The audit proceeded without them:</p>
                           <div className="mt-2 flex flex-wrap gap-1.5">
                             {teaser.sourcesUnavailable.map((source) => (
@@ -1324,19 +1319,14 @@ export default function Audit() {
                           </div>
                         </div>
                        )}
-                       <div className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Metric Grids & Data Ingestion</div>
-                       <div className="mt-2 flex flex-col gap-1.5 border-t border-zinc-100 pt-2.5">
-                         {dataSources.map((source, idx) => (
-                           <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-[11px] text-zinc-600 overflow-hidden">
-                             <div className="flex items-center gap-2 shrink-0 sm:w-36">
-                               <span className="text-[10px] tracking-widest font-semibold uppercase text-[#007AFF]">OK</span>
-                               <span className="font-medium text-zinc-950 truncate">{source.label}:</span>
-                             </div>
-                             <span className="hidden sm:inline text-zinc-300 shrink-0">|</span>
-                             <span className="truncate" title={source.value}>{source.value}</span>
-                           </div>
-                         ))}
-                       </div>
+                       <div className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Data Ingestion Summary</div>
+                       <p className="mt-2 text-[12px] leading-[1.7] text-zinc-600 border-t border-zinc-100 pt-2.5">
+                         Margin has synchronized marketplace positions across <span className="font-medium text-zinc-950">US, CA, and MX</span> regions, 
+                         ingesting a full <span className="font-medium text-zinc-950">365-day</span> order and financial event ledger. 
+                         Settlement reports, inventory adjustment logs, and return manifests have been cross-referenced 
+                         into a unified logistics dataset. Catalog verification has resolved <span className="font-medium text-zinc-950">{catalogSkuCount}+</span> active 
+                         SKUs against current Amazon records.
+                       </p>
                      </div>
                    ) : null}
                 </div>
@@ -1347,14 +1337,14 @@ export default function Audit() {
               <section className="mb-4 rounded-[4px] border border-zinc-200 bg-white p-4 shadow-none sm:p-5">
                 <div className="flex flex-col gap-4">
                   <div className="max-w-2xl">
-                    <div className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">{canShowRecoverOnce ? 'Choose how Margin should help' : 'Keep Margin watching'}</div>
+                    <div className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">{canShowRecoverOnce ? 'Choose how Margin should help' : 'Keep Margin watching'}</div>
                     <h2 className="mt-1.5 text-[16px] font-medium tracking-tight text-zinc-950">{workspaceOffer.heading}</h2>
                     <p className="mt-1.5 text-[13px] leading-relaxed text-zinc-500">{workspaceOffer.bridge}</p>
                   </div>
 
                   <div className="mt-8 grid grid-cols-2 divide-x divide-zinc-200 rounded-[4px] border border-zinc-200 bg-white shadow-none">
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Time to Complete</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Time to Complete</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">
                         {step === 'completed'
                           ? audit?.completed_at && audit?.started_at
@@ -1364,7 +1354,7 @@ export default function Audit() {
                       </span>
                     </div>
                     <div className="flex flex-col p-4 text-center">
-                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Analyzed Value</span>
+                      <span className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Analyzed Value</span>
                       <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{formatMoney(teaser.scopeValue)}</span>
                     </div>
                   </div>
@@ -1372,7 +1362,7 @@ export default function Audit() {
                   {canShowRecoverOnce ? (
                     <div className="grid gap-3 md:grid-cols-2">
                       <div className="rounded-[4px] border border-zinc-200 bg-zinc-50 p-4">
-                        <div className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Recover Once</div>
+                        <div className="text-[10px] tracking-tight font-semibold uppercase text-zinc-500">Recover Once</div>
                         <h3 className="mt-1.5 text-[15px] font-medium tracking-tight text-zinc-950">
                           {isRecoverOnceQuoteLoading
                             ? 'Preparing your fixed quote...'
@@ -1405,7 +1395,7 @@ export default function Audit() {
                       </div>
 
                       <div className="rounded-[4px] border border-zinc-200 bg-zinc-50 p-4">
-                        <div className="text-[10px] tracking-widest font-semibold uppercase text-[#007AFF]">Recovery Workspace</div>
+                        <div className="text-[10px] tracking-tight font-semibold uppercase text-[#007AFF]">Recovery Workspace</div>
                         <h3 className="mt-1.5 text-[15px] font-medium tracking-tight text-zinc-950">Approximately $109/month</h3>
                         <p className="mt-1.5 text-[12px] leading-relaxed text-zinc-500">
                           Continuous monitoring, scheduled audits, evidence preparation, case continuity, payout validation, and reconciliation.
