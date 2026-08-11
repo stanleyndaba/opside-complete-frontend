@@ -1058,9 +1058,9 @@ export default function Audit() {
     );
 
   return (
-    <main className="flex min-h-screen bg-[#FAFAFA] font-inter text-gray-900 selection:bg-blue-100">
+    <main className="flex min-h-screen bg-white font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF]">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[288px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-gray-200 bg-white transition-[width] duration-200 md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[288px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-zinc-200 bg-white transition-[width] duration-200 md:flex`}>
         {sidebarOpen && (
           <div className="flex h-full flex-col">
             {/* Sidebar header */}
@@ -1076,12 +1076,12 @@ export default function Audit() {
 
             {/* Nav items */}
             <nav className="flex flex-col gap-0.5 px-2 pt-3">
-              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900">
-                <TerminalSquare className="h-4 w-4 text-gray-400" />
+              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-none px-2.5 py-2 text-[13px] text-zinc-500 transition-colors hover:bg-zinc-50/50 hover:text-zinc-950">
+                <TerminalSquare className="h-4 w-4 text-zinc-400" />
                 Live audit log
               </button>
-              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] transition-colors hover:bg-gray-50 ${weeklyAuditEnabled ? 'bg-blue-50/60 text-blue-700' : 'text-gray-600 hover:text-gray-900'}`}>
-                <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-blue-500' : 'text-gray-400'}`} />
+              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-none px-2.5 py-2 text-[13px] transition-colors ${weeklyAuditEnabled ? 'bg-zinc-100 border-l-2 border-[#007AFF] text-zinc-950' : 'text-zinc-500 hover:bg-zinc-50/50 hover:text-zinc-950'}`}>
+                <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-[#007AFF]' : 'text-zinc-400'}`} />
                 Auto-run audit schedule
               </button>
 
@@ -1103,13 +1103,13 @@ export default function Audit() {
             </nav>
 
             {/* Bottom banner */}
-            <div className="mt-auto border-t border-gray-100 px-3 py-4">
-              <div className="rounded-lg bg-gray-50 px-3 py-3">
-                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2 text-left text-[13px] font-medium text-gray-700">
-                  <HeartHandshake className="h-4 w-4 text-rose-400" />
+            <div className="mt-auto border-t border-zinc-200 px-3 py-4">
+              <div className="rounded-none border border-zinc-200 bg-zinc-50 px-3 py-3">
+                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2 text-left text-[13px] font-medium text-zinc-950">
+                  <HeartHandshake className="h-4 w-4 text-[#007AFF]" />
                   Share Margin with a seller
                 </button>
-                <p className="mt-1 text-[11px] leading-relaxed text-gray-400">Help a seller</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-zinc-500">Help a seller</p>
               </div>
             </div>
           </div>
@@ -1119,10 +1119,10 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex min-h-screen flex-1 flex-col">
         {/* Top bar */}
-        <div className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2 sm:px-6">
+        <div className="flex items-center justify-between border-b border-zinc-200 bg-white px-4 py-2 sm:px-6">
           <div className="flex items-center gap-2">
             {!sidebarOpen && (
-              <button type="button" onClick={() => setSidebarOpen(true)} className="mr-2 rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 md:inline-flex hidden">
+              <button type="button" onClick={() => setSidebarOpen(true)} className="mr-2 rounded-none p-1 text-zinc-500 transition-colors hover:bg-zinc-50/50 hover:text-zinc-950 md:inline-flex hidden">
                 <Columns2 className="h-4 w-4" />
               </button>
             )}
@@ -1134,35 +1134,35 @@ export default function Audit() {
             
             {/* Version Dropdown */}
             <div className="relative hidden items-center md:flex ml-2">
-              <select className="h-8 appearance-none rounded-md border border-gray-200 bg-white py-0 pl-3 pr-8 text-[12px] font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer">
+              <select className="h-8 appearance-none rounded-none border border-zinc-200 bg-white py-0 pl-3 pr-8 text-[12px] font-medium text-zinc-950 transition-colors hover:bg-zinc-50/50 focus:outline-none focus:ring-1 focus:ring-zinc-200 cursor-pointer">
                 <option value="2.1">Margin 2.1</option>
                 <option value="2.2" disabled>Margin 2.2 (Releases August 19)</option>
               </select>
               <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2">
-                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L5 5L9 1" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L4 4L7 1" stroke="#71717A" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-1">
             <div className="relative flex items-center">
-              <Calendar className="pointer-events-none absolute left-2 h-3.5 w-3.5 text-gray-400" />
+              <Calendar className="pointer-events-none absolute left-2 h-3.5 w-3.5 text-zinc-400" />
               <button
                 type="button"
                 onClick={() => {
                   setIsPeriodSelectorOpen(true);
                   trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                 }}
-                className="h-8 rounded-md py-0 pl-7 pr-3 text-[12px] font-medium text-gray-600 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="h-8 rounded-none py-0 pl-7 pr-3 text-[12px] font-medium text-zinc-500 transition-colors hover:bg-zinc-50/50 focus:outline-none focus:ring-1 focus:ring-zinc-200"
               >
                 {selectedAuditPeriodLabel}
               </button>
             </div>
-            <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="Export Summary" aria-label="Export Summary">
+            <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-none p-2 text-zinc-500 transition-colors hover:bg-zinc-50/50 hover:text-zinc-950" title="Export Summary" aria-label="Export Summary">
               <Download className="h-4 w-4" />
             </button>
-            <button type="button" onClick={() => { setIsSecurityProtocolOpen(true); trackEvent('security_protocol_opened', { source_page: '/audit' }); }} className="rounded-md p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" title="View Security Protocol" aria-label="View Security Protocol">
+            <button type="button" onClick={() => { setIsSecurityProtocolOpen(true); trackEvent('security_protocol_opened', { source_page: '/audit' }); }} className="rounded-none p-2 text-zinc-500 transition-colors hover:bg-zinc-50/50 hover:text-zinc-950" title="View Security Protocol" aria-label="View Security Protocol">
               <ShieldCheck className="h-4 w-4" />
             </button>
           </div>
@@ -1204,21 +1204,21 @@ export default function Audit() {
               </div>
             </header>
 
-            <div className="mb-4 rounded-xl border border-gray-200 bg-white p-3.5 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-4">
+            <div className="mb-4 rounded-[4px] border border-zinc-200 bg-white p-3.5 shadow-none sm:p-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-medium uppercase ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-blue-50 text-blue-700'}`}>
+                  <span className={`inline-flex rounded-[4px] px-2 py-0.5 text-[10px] tracking-widest font-semibold uppercase ${isZeroRecordLimitedAudit ? 'bg-zinc-100 text-zinc-600' : 'bg-[#007AFF]/10 text-[#007AFF]'}`}>
                     {auditState.label}
                   </span>
-                  <h2 className={`mt-2 font-semibold tracking-[-0.025em] text-gray-900 ${step === 'completed' ? (isZeroRecordLimitedAudit ? 'text-[13px] sm:text-[14px]' : 'text-[18px] sm:text-[22px]') : 'text-[14px] sm:text-[15px]'}`}>
+                  <h2 className={`mt-2 font-medium tracking-tight text-zinc-950 ${step === 'completed' ? (isZeroRecordLimitedAudit ? 'text-[13px] sm:text-[14px]' : 'text-[18px] sm:text-[22px]') : 'text-[14px] sm:text-[15px]'}`}>
                     {auditState.title}
                   </h2>
-                  <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-gray-500">
+                  <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-zinc-500">
                     {auditState.description}
                   </p>
                 </div>
-                <div className={`flex items-center gap-2 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[11px] font-medium ${isZeroRecordLimitedAudit ? 'bg-slate-100 text-slate-600' : 'bg-gray-50 text-gray-500'}`}>
-                  <span className={`h-2 w-2 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-slate-400' : step === 'completed' ? 'bg-emerald-500' : 'bg-blue-600'}`} />
+                <div className={`flex items-center gap-2 whitespace-nowrap rounded-[4px] px-2.5 py-1.5 text-[11px] font-medium ${isZeroRecordLimitedAudit ? 'bg-zinc-100 text-zinc-600' : 'bg-zinc-50 text-zinc-500'}`}>
+                  <span className={`h-2 w-2 rounded-none ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-zinc-400' : step === 'completed' ? 'bg-[#007AFF]' : 'bg-[#007AFF]'}`} />
                   {isBusy ? 'Working' : isZeroRecordLimitedAudit ? 'Limited' : step === 'completed' ? 'Ready' : step === 'failed' ? 'Needs retry' : 'Waiting'}
                 </div>
               </div>
@@ -1226,40 +1226,40 @@ export default function Audit() {
 
             {/* Workspace Report */}
             <div className="mb-4">
-              <div className={`relative overflow-hidden rounded-xl border ${step === 'completed' ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50/50 backdrop-blur-[2px]'} p-4 sm:p-5`}>
-                <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-2.5">
-                  <h2 className="text-[13px] font-semibold tracking-[-0.02em] text-gray-900">{step !== 'completed' ? 'Recovery report' : 'Workspace report'}</h2>
-                  {step !== 'completed' && <span className="rounded-md bg-amber-50 px-2 py-0.5 font-mono text-[10px] font-medium uppercase text-amber-600">Waiting for Amazon authorization</span>}
+              <div className={`relative overflow-hidden rounded-[4px] border ${step === 'completed' ? 'border-zinc-200 bg-white' : 'border-zinc-100 bg-zinc-50/50 backdrop-blur-[2px]'} p-4 sm:p-5`}>
+                <div className="mb-3 flex items-center justify-between border-b border-zinc-100 pb-2.5">
+                  <h2 className="text-[13px] font-medium tracking-tight text-zinc-950">{step !== 'completed' ? 'Recovery report' : 'Workspace report'}</h2>
+                  {step !== 'completed' && <span className="rounded-[4px] bg-amber-50 px-2 py-0.5 text-[10px] tracking-widest font-semibold uppercase text-amber-600">Waiting for Amazon authorization</span>}
                 </div>
 
                 {step === 'completed' ? (
-                  <div className="mb-4 grid gap-2.5 sm:grid-cols-3">
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
-                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
-                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not calculated</span> : formatMoney(teaser.scopeValue)}</div>
+                  <div className="mb-4 grid grid-cols-3 divide-x divide-zinc-200 rounded-[4px] border border-zinc-200 bg-white shadow-none">
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Scope value</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not calculated</span> : formatMoney(teaser.scopeValue)}</span>
                     </div>
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
-                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
-                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.findingsCount}</div>
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Findings</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not evaluated</span> : teaser.findingsCount}</span>
                     </div>
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
-                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Evidence ready</div>
-                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-slate-600">Not evaluated</span> : teaser.evidenceReadyCount}</div>
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Evidence ready</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{isZeroRecordLimitedAudit ? <span className="text-[14px] font-medium text-zinc-600">Not evaluated</span> : teaser.evidenceReadyCount}</span>
                     </div>
                   </div>
                 ) : (
-                  <div className="mb-4 grid gap-2.5 sm:grid-cols-3">
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
-                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Scope value</div>
-                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900"><span className="text-[14px] font-medium text-slate-400">Waiting for data</span></div>
+                  <div className="mb-4 grid grid-cols-3 divide-x divide-zinc-200 rounded-[4px] border border-zinc-200 bg-white shadow-none">
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Scope value</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950"><span className="text-[14px] font-medium text-zinc-400">Waiting for data</span></span>
                     </div>
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
-                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Findings</div>
-                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900"><span className="text-[14px] font-medium text-slate-400">Waiting for data</span></div>
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Findings</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950"><span className="text-[14px] font-medium text-zinc-400">Waiting for data</span></span>
                     </div>
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
-                      <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Evidence ready</div>
-                      <div className="mt-0.5 text-[18px] font-semibold tracking-[-0.02em] text-gray-900"><span className="text-[14px] font-medium text-slate-400">Waiting for data</span></div>
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Evidence ready</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950"><span className="text-[14px] font-medium text-zinc-400">Waiting for data</span></span>
                     </div>
                   </div>
                 )}
@@ -1267,7 +1267,7 @@ export default function Audit() {
                 {step === 'completed' && teaser.categories.length ? (
                   <div className="mb-4 flex flex-wrap gap-1.5">
                     {teaser.categories.map((category) => (
-                      <span key={category} className="rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 font-mono text-[11px] text-gray-600">
+                      <span key={category} className="rounded-[4px] border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[11px] font-medium text-zinc-600">
                         {category}
                       </span>
                     ))}
@@ -1275,9 +1275,9 @@ export default function Audit() {
                 ) : null}
 
                 {step === 'completed' && (teaser.recordsReviewed != null || teaser.sourcesUnavailable?.length) ? (
-                  <div className="mb-4 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5 text-left">
-                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Audit coverage</div>
-                    <p className="mt-1 text-[12px] leading-relaxed text-gray-500">
+                  <div className="mb-4 rounded-[4px] border border-zinc-200 bg-zinc-50 px-4 py-3 text-left shadow-none">
+                    <div className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Audit coverage</div>
+                    <p className="mt-1 text-[12px] leading-relaxed text-zinc-500">
                       {teaser.recordsReviewed != null
                         ? `${teaser.recordsReviewed.toLocaleString()} Amazon record${teaser.recordsReviewed === 1 ? '' : 's'} reviewed.`
                         : 'Amazon record coverage is being prepared.'}
@@ -1309,6 +1309,20 @@ export default function Audit() {
                    
                    {step !== 'completed' ? (
                      <div className="w-full max-w-md rounded-lg border border-gray-100 bg-white px-3 py-2.5 text-left">
+                       {teaser.sourcesUnavailable?.length > 0 && (
+                        <div className="mb-4 rounded-[4px] border border-red-200 bg-red-50 p-3 text-left">
+                          <div className="text-[10px] tracking-widest font-semibold uppercase text-red-600">Unavailable Data Sources</div>
+                          <p className="mt-1 text-[12px] text-red-700">Margin lacked access to the following sources. The audit proceeded without them:</p>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {teaser.sourcesUnavailable.map((source) => (
+                              <div key={source} className="flex items-center gap-1.5 rounded-[4px] border border-red-200 bg-white px-2 py-1 text-[11px] font-medium text-red-700">
+                                <AlertTriangle className="h-3 w-3" />
+                                <span>{source}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                       )}
                        <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Data sources prepared</div>
                        <div className="mt-1.5 grid gap-1">
                          {dataSources.map((source) => (
@@ -1325,57 +1339,74 @@ export default function Audit() {
             </div>
 
             {step === 'completed' ? (
-              <section className="mb-4 rounded-xl border border-gray-200 bg-white p-4 shadow-[0_18px_70px_rgba(15,23,42,0.04)] sm:p-5">
+              <section className="mb-4 rounded-[4px] border border-zinc-200 bg-white p-4 shadow-none sm:p-5">
                 <div className="flex flex-col gap-4">
                   <div className="max-w-2xl">
-                    <div className="font-mono text-[10px] font-medium uppercase text-gray-400">{canShowRecoverOnce ? 'Choose how Margin should help' : 'Keep Margin watching'}</div>
-                    <h2 className="mt-1.5 text-[16px] font-semibold tracking-[-0.02em] text-gray-900">{workspaceOffer.heading}</h2>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-gray-500">{workspaceOffer.bridge}</p>
+                    <div className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">{canShowRecoverOnce ? 'Choose how Margin should help' : 'Keep Margin watching'}</div>
+                    <h2 className="mt-1.5 text-[16px] font-medium tracking-tight text-zinc-950">{workspaceOffer.heading}</h2>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-zinc-500">{workspaceOffer.bridge}</p>
+                  </div>
+
+                  <div className="mt-8 grid grid-cols-2 divide-x divide-zinc-200 rounded-[4px] border border-zinc-200 bg-white shadow-none">
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Time to Complete</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">
+                        {step === 'completed'
+                          ? audit?.completed_at && audit?.started_at
+                            ? formatDuration(audit.completed_at, audit.started_at)
+                            : '2 minutes'
+                          : '~2 mins'}
+                      </span>
+                    </div>
+                    <div className="flex flex-col p-4 text-center">
+                      <span className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Analyzed Value</span>
+                      <span className="mt-1 text-[16px] font-medium tracking-tight text-zinc-950">{formatMoney(teaser.scopeValue)}</span>
+                    </div>
                   </div>
 
                   {canShowRecoverOnce ? (
                     <div className="grid gap-3 md:grid-cols-2">
-                      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                        <div className="font-mono text-[10px] font-medium uppercase text-gray-400">Recover Once</div>
-                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">
+                      <div className="rounded-[4px] border border-zinc-200 bg-zinc-50 p-4">
+                        <div className="text-[10px] tracking-widest font-semibold uppercase text-zinc-500">Recover Once</div>
+                        <h3 className="mt-1.5 text-[15px] font-medium tracking-tight text-zinc-950">
                           {isRecoverOnceQuoteLoading
                             ? 'Preparing your fixed quote...'
                             : recoverOnceQuote?.status === 'available' || recoverOnceQuote?.status === 'accepted'
                               ? `${recoverOnceQuote.display_amount} once`
                               : 'Fixed quote after your audit'}
                         </h3>
-                        <p className="mt-1.5 text-[12px] leading-relaxed text-gray-500">
+                        <p className="mt-1.5 text-[12px] leading-relaxed text-zinc-500">
                           {recoverOnceQuote?.status === 'manual_review_required'
                             ? 'This scope needs a manual quote before Margin can offer a fixed Recover Once engagement.'
                             : recoverOnceQuote?.status === 'unavailable'
                               ? 'Recover Once is not available for this audit scope yet.'
                               : 'Margin manages the specific actionable recovery opportunities identified in this completed audit.'}
                         </p>
-                        <p className="mt-2 text-[12px] font-medium text-gray-700">
+                        <p className="mt-2 text-[12px] font-medium text-zinc-700">
                           {recoverOnceQuote?.amount_subunits
                             ? `Billed as ${recoverOnceQuote.display_amount}. Fixed price. No recovery commission.`
                             : 'Final fixed quote after your audit. No recovery commission.'}
                         </p>
                         {recoverOnceQuote?.status === 'available' || recoverOnceQuote?.status === 'accepted' ? (
-                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-3 h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-3 h-9 rounded-[4px] border-zinc-200 bg-white px-3.5 text-[12px] font-medium text-zinc-700 hover:bg-zinc-50">
                             {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                             Continue with Recover Once
                           </Button>
                         ) : (
-                          <Button variant="outline" disabled className="mt-3 h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-400">
+                          <Button variant="outline" disabled className="mt-3 h-9 rounded-[4px] border-zinc-200 bg-white px-3.5 text-[12px] font-medium text-zinc-400">
                             {isRecoverOnceQuoteLoading ? 'Preparing Quote' : recoverOnceQuote?.status === 'manual_review_required' ? 'Manual Quote Needed' : 'Quote Unavailable'}
                           </Button>
                         )}
                       </div>
 
-                      <div className="rounded-lg border border-blue-100 bg-blue-50/40 p-4">
-                        <div className="font-mono text-[10px] font-medium uppercase text-blue-600">Recovery Workspace</div>
-                        <h3 className="mt-1.5 text-[15px] font-semibold tracking-[-0.02em] text-gray-900">Approximately $109/month</h3>
-                        <p className="mt-1.5 text-[12px] leading-relaxed text-gray-500">
+                      <div className="rounded-[4px] border border-zinc-200 bg-zinc-50 p-4">
+                        <div className="text-[10px] tracking-widest font-semibold uppercase text-[#007AFF]">Recovery Workspace</div>
+                        <h3 className="mt-1.5 text-[15px] font-medium tracking-tight text-zinc-950">Approximately $109/month</h3>
+                        <p className="mt-1.5 text-[12px] leading-relaxed text-zinc-500">
                           Continuous monitoring, scheduled audits, evidence preparation, case continuity, payout validation, and reconciliation.
                         </p>
-                        <p className="mt-2 text-[12px] font-medium text-gray-700">Billed as R1,799 monthly. 0% recovery commission.</p>
-                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-3 h-9 rounded-md bg-[var(--margin-blue)] px-4 text-[12px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+                        <p className="mt-2 text-[12px] font-medium text-zinc-700">Billed as R1,799 monthly. 0% recovery commission.</p>
+                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-3 h-9 rounded-[4px] bg-[#007AFF] px-4 text-[12px] font-medium text-white shadow-none transition-colors hover:bg-[#005bb5]">
                           Activate Recovery Workspace
                           <ArrowRight className="ml-2 h-3.5 w-3.5" />
                         </Button>
@@ -1385,13 +1416,13 @@ export default function Audit() {
 
                   <div className="flex flex-col gap-2 sm:flex-row md:shrink-0">
                     {isZeroRecordLimitedAudit && teaser.retryable ? (
-                      <Button variant="outline" onClick={runAudit} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
+                      <Button variant="outline" onClick={runAudit} disabled={isBusy} className="h-9 rounded-[4px] border-zinc-200 bg-white px-3.5 text-[12px] font-medium text-zinc-700 hover:bg-zinc-50">
                         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                         Retry Audit
                       </Button>
                     ) : null}
                     {!canShowRecoverOnce ? (
-                      <Button onClick={openActivationSheet} disabled={isBusy} className="h-9 rounded-md bg-[var(--margin-blue)] px-4 text-[12px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+                      <Button onClick={openActivationSheet} disabled={isBusy} className="h-9 rounded-[4px] bg-[#007AFF] px-4 text-[12px] font-medium text-white shadow-none transition-colors hover:bg-[#005bb5]">
                         {workspaceOffer.cta}
                         <ArrowRight className="ml-2 h-3.5 w-3.5" />
                       </Button>
