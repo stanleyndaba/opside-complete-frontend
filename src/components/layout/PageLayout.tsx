@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
+
 interface PageLayoutProps {
   children: React.ReactNode;
   title: string;
@@ -13,15 +14,14 @@ interface PageLayoutProps {
   hideLogo?: boolean;
   noPadding?: boolean;
 }
+
 export function PageLayout({
   children,
   title,
   hideNavbar,
   hideSidebar,
   forceTransparent,
-  midnight,
   plainBackground,
-  logoFontFamily,
   hideLogo,
   noPadding
 }: PageLayoutProps) {
@@ -29,40 +29,31 @@ export function PageLayout({
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
   };
-  const isAuthView = !!hideNavbar && !!hideSidebar;
-  const shouldShowMidnightBg = !plainBackground && (isAuthView || midnight);
-  const mainIndent = hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-60');
-  const isPlatformPage = !hideNavbar || !hideSidebar;
-  return <div className={`min-h-screen h-full flex flex-col platform ${isPlatformPage ? 'platform-authenticated-shell' : ''} ${shouldShowMidnightBg ? 'relative bg-background' : plainBackground ? 'bg-white' : 'bg-[#FAFAF7] text-[#111827]'}`}>
-    {shouldShowMidnightBg && (
-      <>
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#070707]" />
-      </>
-    )}
-    {!hideNavbar && (
-      <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} forceTransparent={forceTransparent} />
-    )}
 
-    <div className={`flex-1 flex ${shouldShowMidnightBg ? 'bg-[#070707]' : 'bg-[#FAFAF7]'}`}>
-      {!hideSidebar && (
-        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+  const isPlatformPage = !hideNavbar || !hideSidebar;
+
+  return (
+    <div className={`min-h-screen h-full flex flex-col platform ${isPlatformPage ? 'platform-authenticated-shell' : ''} bg-[#FAFAF7] text-[#111827]`}>
+      {!hideNavbar && (
+        <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} forceTransparent={forceTransparent} />
       )}
 
-      <main className={`flex-1 transition-all duration-300 ${mainIndent} overflow-hidden ${shouldShowMidnightBg ? 'bg-[#070707]' : 'bg-[#FAFAF7]'}`}>
-        <div className={`w-full max-w-full mx-auto ${noPadding ? '' : 'px-4 lg:px-6 pb-4 lg:pb-6'} animate-fade-in overflow-x-hidden ${shouldShowMidnightBg ? 'bg-[#070707] min-h-screen' : 'min-h-screen'}`}>
-          {(hideNavbar && hideSidebar && !hideLogo) && (
-            <div className="fixed top-4 left-5 z-50 pointer-events-none">
-              <img
-                src="/logoimagetwo.png"
-                alt="Margin"
-                className="h-4 w-auto object-contain invert brightness-0 opacity-80"
-              />
-            </div>
-          )}
-          {children}
-        </div>
-      </main>
+      <div className="flex-1 flex bg-[#FAFAF7]">
+        {!hideSidebar && (
+          <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+        )}
+
+        <main className={`flex-1 transition-all duration-300 ${hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-60')} overflow-hidden bg-[#FAFAF7]`}>
+          <div className={`w-full max-w-full mx-auto ${noPadding ? '' : 'px-4 lg:px-6 pb-4 lg:pb-6'} animate-fade-in overflow-x-hidden min-h-screen bg-[#FAFAF7]`}>
+            {hideNavbar && hideSidebar && !hideLogo && (
+              <div className="fixed top-4 left-5 z-50 pointer-events-none">
+                <span className="brand-wordmark font-merriweather text-xl tracking-tight text-[#111827]">Margin</span>
+              </div>
+            )}
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
-  </div>;
+  );
 }

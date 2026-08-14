@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { AlertCircle, CheckCircle2, CreditCard, RefreshCw } from 'lucide-react';
 
@@ -13,20 +13,16 @@ import { trackEvent } from '@/lib/analytics';
 
 const NOT_AVAILABLE = 'Not Available';
 
-function formatMoneySubunits(value?: number | null, currency = 'ZAR') {
-  if (!Number.isFinite(Number(value))) return NOT_AVAILABLE;
-  return new Intl.NumberFormat('en-ZA', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-  }).format(Number(value) / 100);
+function formatMoneyUSD(value?: number | null) {
+  if (!Number.isFinite(Number(value))) return '$99/mo';
+  return `$${(Number(value) / 100).toFixed(0)}/mo`;
 }
 
 function formatDate(value?: string | null) {
   if (!value) return NOT_AVAILABLE;
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return NOT_AVAILABLE;
-  return parsed.toLocaleDateString('en-ZA', {
+  return parsed.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -134,17 +130,17 @@ export default function Billing() {
 
   return (
     <PageLayout title="Billing">
-      <div className="min-h-screen bg-[#F9FAFB] text-[#111827]">
+      <div className="min-h-screen bg-[#FAFAF7] text-[#111827]">
         <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
           <header className="border-b border-[#DCE8EE] pb-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Recovery Workspace</div>
+                <div className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Recovery OS</div>
                 <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-[#182026] md:text-5xl">
                   Billing
                 </h1>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-[#66737F]">
-                  Recovery Workspace is billed through Paystack at R1,799/month in ZAR with 0% recovery commission.
+                  Recovery OS is billed at $99/month with 0% recovery commission.
                 </p>
               </div>
               <Badge variant="outline" className={`w-fit rounded-none px-3 py-1 text-[11px] font-semibold ${toneForState(state)}`}>
@@ -170,8 +166,8 @@ export default function Billing() {
             <>
               <section className="grid gap-4 md:grid-cols-4">
                 {[
-                  { label: 'Product', value: product?.name || 'Recovery Workspace' },
-                  { label: 'Price', value: formatMoneySubunits(product?.amount_subunits ?? 179900, product?.currency || 'ZAR') },
+                  { label: 'Product', value: product?.name || 'Recovery OS' },
+                  { label: 'Price', value: formatMoneyUSD(product?.amount_subunits ?? 9900) },
                   { label: 'Interval', value: product?.interval || 'monthly' },
                   { label: 'Commission', value: '0%' },
                 ].map((item) => (
@@ -182,97 +178,56 @@ export default function Billing() {
                 ))}
               </section>
 
-              <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-                <div className="border border-[#DCE8EE] bg-white p-6">
+              <section className="border border-[#DCE8EE] bg-white p-6 space-y-6">
+                <div className="flex items-center justify-between border-b border-[#DCE8EE] pb-4">
+                  <div>
+                    <h2 className="text-lg font-semibold tracking-tight text-[#182026]">Subscription Details</h2>
+                    <p className="text-xs text-[#66737F]">Flat-fee recovery operations with no hidden success fees.</p>
+                  </div>
                   <div className="flex items-center gap-3">
-                    {isActive ? <CheckCircle2 className="h-5 w-5 text-[#2E7D5B]" /> : <CreditCard className="h-5 w-5 text-[#0B74DE]" />}
-                    <h2 className="text-xl font-semibold tracking-tight text-[#182026]">Subscription truth</h2>
-                  </div>
-
-                  <div className="mt-6 grid gap-4 text-sm md:grid-cols-2">
-                    <div className="border-t border-[#E8EFF3] pt-4">
-                      <div className="text-[#66737F]">Status</div>
-                      <div className="mt-1 font-semibold text-[#182026]">{labelForState(state)}</div>
-                    </div>
-                    <div className="border-t border-[#E8EFF3] pt-4">
-                      <div className="text-[#66737F]">Current period</div>
-                      <div className="mt-1 font-semibold text-[#182026]">
-                        {formatDate(subscription?.current_period_start)} - {formatDate(subscription?.current_period_end)}
-                      </div>
-                    </div>
-                    <div className="border-t border-[#E8EFF3] pt-4">
-                      <div className="text-[#66737F]">Next payment</div>
-                      <div className="mt-1 font-semibold text-[#182026]">{formatDate(subscription?.next_payment_at)}</div>
-                    </div>
-                    <div className="border-t border-[#E8EFF3] pt-4">
-                      <div className="text-[#66737F]">Access until</div>
-                      <div className="mt-1 font-semibold text-[#182026]">{formatDate(entitlement?.access_until)}</div>
-                    </div>
-                    <div className="border-t border-[#E8EFF3] pt-4">
-                      <div className="text-[#66737F]">Grace deadline</div>
-                      <div className="mt-1 font-semibold text-[#182026]">{formatDate(subscription?.grace_expires_at)}</div>
-                    </div>
-                    <div className="border-t border-[#E8EFF3] pt-4">
-                      <div className="text-[#66737F]">Cancellation</div>
-                      <div className="mt-1 font-semibold text-[#182026]">{subscription?.cancel_at_period_end ? 'Scheduled' : 'Not scheduled'}</div>
-                    </div>
+                    <Button
+                      variant="outline"
+                      className="rounded-none border-[#DCE8EE] text-xs font-semibold uppercase tracking-tight"
+                      onClick={() => void runAction('manage')}
+                      disabled={busyAction !== null}
+                    >
+                      <CreditCard className="mr-2 h-3.5 w-3.5" />
+                      Manage Payment Method
+                    </Button>
+                    {isActive ? (
+                      <Button
+                        variant="outline"
+                        className="rounded-none border-rose-200 text-xs font-semibold uppercase tracking-tight text-rose-700 hover:bg-rose-50"
+                        onClick={() => void runAction('cancel')}
+                        disabled={busyAction !== null}
+                      >
+                        Cancel Plan
+                      </Button>
+                    ) : (
+                      <Button
+                        className="rounded-none bg-[#0B74DE] text-xs font-semibold uppercase tracking-tight text-white hover:bg-[#005FBA]"
+                        onClick={() => void runAction('resume')}
+                        disabled={busyAction !== null}
+                      >
+                        Resume Plan
+                      </Button>
+                    )}
                   </div>
                 </div>
 
-                <aside className="border border-[#DCE8EE] bg-white p-6">
-                  <h2 className="text-lg font-semibold tracking-tight text-[#182026]">Actions</h2>
-                  <div className="mt-5 space-y-3">
-                    {subscription?.status === 'active' || subscription?.status === 'past_due' ? (
-                      <Button className="w-full rounded-none bg-[#182026] text-white hover:bg-[#25313A]" disabled={Boolean(busyAction)} onClick={() => void runAction('manage')}>
-                        Manage payment method
-                      </Button>
-                    ) : null}
-                    {subscription?.status === 'active' || subscription?.status === 'past_due' ? (
-                      <Button variant="outline" className="w-full rounded-none" disabled={Boolean(busyAction)} onClick={() => void runAction('cancel')}>
-                        Cancel subscription
-                      </Button>
-                    ) : null}
-                    {subscription?.status === 'non_renewing' ? (
-                      <Button className="w-full rounded-none bg-[#0B74DE] text-white hover:bg-[#0869C9]" disabled={Boolean(busyAction)} onClick={() => void runAction('resume')}>
-                        Resume subscription
-                      </Button>
-                    ) : null}
-                    {!subscription || ['cancelled', 'expired', 'suspended'].includes(subscription.status) ? (
-                      <div className="text-sm leading-6 text-[#66737F]">
-                        Start from the free audit page to activate Recovery Workspace.
-                      </div>
-                    ) : null}
+                <div className="grid gap-6 md:grid-cols-3 text-sm">
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Current Status</div>
+                    <div className="mt-1 font-semibold text-[#182026]">{labelForState(state)}</div>
                   </div>
-                </aside>
-              </section>
-
-              <section className="border border-[#DCE8EE] bg-white">
-                <div className="border-b border-[#DCE8EE] p-5">
-                  <h2 className="text-lg font-semibold tracking-tight text-[#182026]">Payment history</h2>
-                </div>
-                <div className="divide-y divide-[#E8EFF3]">
-                  {(status?.payments || []).length > 0 ? status.payments.map((payment, index) => (
-                    <div key={`${payment.reference || index}`} className="grid gap-3 p-5 text-sm md:grid-cols-4">
-                      <div>
-                        <div className="text-[#66737F]">Reference</div>
-                        <div className="mt-1 font-mono text-xs text-[#182026]">{String(payment.reference || '').slice(0, 14)}...</div>
-                      </div>
-                      <div>
-                        <div className="text-[#66737F]">Status</div>
-                        <div className="mt-1 font-semibold text-[#182026]">{payment.status || NOT_AVAILABLE}</div>
-                      </div>
-                      <div>
-                        <div className="text-[#66737F]">Amount</div>
-                        <div className="mt-1 font-semibold text-[#182026]">{formatMoneySubunits(payment.amount_subunits, payment.currency || 'ZAR')}</div>
-                      </div>
-                      <div>
-                        <div className="text-[#66737F]">Paid at</div>
-                        <div className="mt-1 font-semibold text-[#182026]">{formatDate(payment.paid_at)}</div>
-                      </div>
-                    </div>
-                  )) : (
-                    <div className="p-8 text-sm text-[#66737F]">No Paystack subscription payments recorded yet.</div>
-                  )}
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Current Period Ends</div>
+                    <div className="mt-1 font-semibold text-[#182026]">{formatDate(subscription?.current_period_end)}</div>
+                  </div>
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Auto Renewal</div>
+                    <div className="mt-1 font-semibold text-[#182026]">{subscription?.cancel_at_period_end ? 'Scheduled for cancellation' : 'Active (renews monthly)'}</div>
+                  </div>
                 </div>
               </section>
             </>
