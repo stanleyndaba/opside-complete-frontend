@@ -1226,8 +1226,8 @@ export default function Audit() {
               <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                 <div className="max-w-3xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
-                  <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.04em] text-[#182026] sm:text-[36px]">
-                    Amazon Recovery Audit
+                  <h1 className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">
+                    Integrity Audit
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
                     Review a read-only 365-day period across US, CA, and MX. Current phase: <span className="font-medium text-[#182026]">{auditState.label}</span>.
