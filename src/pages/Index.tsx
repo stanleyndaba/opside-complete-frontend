@@ -2236,8 +2236,8 @@ function KineticHeroSection({
             className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12px] font-medium text-slate-400 sm:mt-8"
           >
             {" "}
-            <span>Read-only audit</span>
-            <span className="text-slate-600">·</span>
+            <span className="hidden sm:inline">Read-only audit</span>
+            <span className="hidden sm:inline text-slate-600">·</span>
             <span>No payment required</span>
             <span className="text-slate-600">·</span>
             <span>Seller approval before filing</span>
