@@ -1204,10 +1204,10 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#DCEEFF]">
-      <main className="relative z-10 flex min-h-screen items-center justify-center px-5 py-12 sm:px-6 sm:py-16">
-        <div className="w-full max-w-[420px]">
-          <div className="mb-12 flex flex-col items-center sm:mb-14">
+    <div className="relative min-h-screen overflow-y-auto bg-[#FAFAF7] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <main className="relative z-10 flex min-h-screen items-center justify-center px-6 py-10 sm:px-8 sm:py-16">
+        <div className="w-full max-w-[380px]">
+          <div className="mb-10 flex flex-col items-center sm:mb-12">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
               <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
               <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
@@ -1215,7 +1215,7 @@ const Login = () => {
           </div>
 
           <section>
-            <div className="mb-8 flex justify-center sm:mb-9">
+            <div className="mb-6 flex justify-start sm:mb-7">
               <Link 
                 to={isAuditIntent ? "/audit" : "/"} 
                 className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
@@ -1225,11 +1225,11 @@ const Login = () => {
               </Link>
             </div>
 
-            <h1 className="text-center text-[32px] font-bold leading-[1.1] tracking-[-0.035em] text-[#182026] sm:text-[36px]">
+            <h1 className="text-left text-[28px] font-bold leading-[1.1] tracking-[-0.035em] text-[#182026] sm:text-[32px]">
               {heading}
             </h1>
 
-            <div className="mt-9 sm:mt-10">
+            <div className="mt-6 sm:mt-8">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
                 <div className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-6">
                   <p className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
@@ -1260,7 +1260,7 @@ const Login = () => {
                 </div>
               ) : null}
 
-              <form onSubmit={handleLogin} className="space-y-6">
+              <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
                   Email Address

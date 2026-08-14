@@ -1310,3 +1310,17 @@ html.lenis body {
   --audit-canvas: #ffffff;
   background-color: var(--audit-canvas);
 }
+
+/* ============================================================
+   SURGICAL UTILITIES
+   ============================================================ */
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
