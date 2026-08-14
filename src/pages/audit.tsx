@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { AlertTriangle, ArrowRight, Calendar, CalendarClock, Check, Columns2, Copy, Download, HeartHandshake, Loader2, Mail, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Calendar, CalendarClock, Check, Copy, Download, HeartHandshake, Loader2, Mail, PanelLeft, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -1105,21 +1105,21 @@ export default function Audit() {
   ];
 
   return (
-    <main className="platform-audit-workspace flex min-h-screen bg-white font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
+    <main className="platform-audit-workspace flex min-h-screen bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[260px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-zinc-100 bg-white transition-[width] duration-200 md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-[#D8E3EA] bg-[#FAFAF7] transition-[width] duration-200 md:flex`}>
         {sidebarOpen && (
           <div className="flex h-full flex-col">
             {/* Sidebar header */}
-            <div className="flex items-center justify-between border-b border-zinc-50 px-4 py-4">
+            <div className="flex items-center justify-between border-b border-[#D8E3EA] px-4 py-4">
               <div className="flex items-center gap-2.5">
                 <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
                   <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
                   <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
                 </Link>
               </div>
-              <button type="button" onClick={() => setSidebarOpen(false)} className="rounded-none p-1 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900">
-                <Columns2 className="h-3.5 w-3.5" />
+              <button type="button" onClick={() => setSidebarOpen(false)} className="rounded-none p-1 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900">
+                <PanelLeft className="h-3.5 w-3.5" />
               </button>
             </div>
 
@@ -1172,7 +1172,7 @@ export default function Audit() {
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               {!sidebarOpen && (
                 <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-none p-1 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900 md:inline-flex">
-                  <Columns2 className="h-3.5 w-3.5" />
+                  <PanelLeft className="h-3.5 w-3.5" />
                 </button>
               )}
               <div className="flex items-center gap-2 md:hidden">
@@ -1183,9 +1183,9 @@ export default function Audit() {
               </div>
               <div className="flex items-center gap-2 border-l border-[#D8E3EA] pl-3 text-[12px] text-zinc-700 md:border-l-0 md:pl-0">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                <span className="font-medium">Seller workspace</span>
+                <span className="font-medium">Global scope</span>
               </div>
-              <span className="text-[12px] text-zinc-500">US / CA / MX</span>
+              <span className="text-[12px] text-zinc-500">All active regions</span>
               <button
                 type="button"
                 onClick={() => {
@@ -1204,7 +1204,6 @@ export default function Audit() {
               </span>
             </div>
             <div className="flex items-center gap-2 text-[12px]">
-              <span className="hidden text-zinc-500 sm:inline">Freshness: live workspace state</span>
               <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-none border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]">
                 <TerminalSquare className="h-3 w-3" />
                 Audit log
@@ -1230,7 +1229,7 @@ export default function Audit() {
                     Integrity Audit
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
-                    Review a read-only 365-day period across US, CA, and MX. Current phase: <span className="font-medium text-[#182026]">{auditState.label}</span>.
+                    Review a read-only 365-day period across all active regions. Current phase: <span className="font-medium text-[#182026]">{auditState.label}</span>.
                   </p>
                 </div>
                 <button
