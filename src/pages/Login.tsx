@@ -1204,46 +1204,46 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white text-zinc-900 selection:bg-zinc-100 tracking-tight">
-      <main className="relative z-10 flex min-h-screen items-center justify-center px-6 py-12">
-        <div className="w-full max-w-[360px]">
-          <div className="mb-16 flex flex-col items-center">
+    <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#DCEEFF]">
+      <main className="relative z-10 flex min-h-screen items-center justify-center px-5 py-12 sm:px-6 sm:py-16">
+        <div className="w-full max-w-[420px]">
+          <div className="mb-12 flex flex-col items-center sm:mb-14">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
               <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-              <span className="brand-wordmark font-merriweather text-[20px] font-semibold tracking-tight text-zinc-900">Margin</span>
+              <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
             </Link>
           </div>
 
           <section>
-            <div className="mb-6 flex justify-center">
+            <div className="mb-8 flex justify-center sm:mb-9">
               <Link 
                 to={isAuditIntent ? "/audit" : "/"} 
-                className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-tight text-zinc-400 hover:text-zinc-900 transition-colors"
+                className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
               >
                 <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
                 Back to Margin
               </Link>
             </div>
 
-            <h1 className="text-center text-[28px] font-bold leading-none tracking-tight text-zinc-900">
+            <h1 className="text-center text-[32px] font-bold leading-[1.1] tracking-[-0.035em] text-[#182026] sm:text-[36px]">
               {heading}
             </h1>
 
-            <div className="mt-10">
+            <div className="mt-9 sm:mt-10">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                <div className="mb-8 border border-zinc-100 bg-zinc-50/30 p-5 rounded-none">
-                  <p className="text-[9px] font-bold uppercase tracking-tight text-zinc-400">
+                <div className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-6">
+                  <p className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
                     Active Session Detected
                   </p>
-                  <p className="mt-3 text-[13px] leading-relaxed text-zinc-500">
-                    You are signed in as <span className="font-bold text-zinc-900">{activeSessionEmail}</span>.
+                  <p className="mt-3 text-[15px] leading-6 text-[#66737F]">
+                    You are signed in as <span className="font-semibold text-[#182026]">{activeSessionEmail}</span>.
                   </p>
                   <div className="mt-6 flex flex-col gap-2">
                     <Button
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-10 w-full rounded-none bg-[#007AFF] px-4 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF]"
+                      className="h-12 w-full rounded-[3px] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                     >
                       Continue
                     </Button>
@@ -1252,7 +1252,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void handleUseDifferentAccount()}
                       disabled={loading}
-                      className="h-10 w-full rounded-none border-zinc-200 bg-white px-4 text-[11px] font-bold uppercase tracking-tight text-zinc-600 hover:bg-zinc-50"
+                      className="h-12 w-full rounded-[3px] border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
                     >
                       Switch Account
                     </Button>
@@ -1260,9 +1260,9 @@ const Login = () => {
                 </div>
               ) : null}
 
-              <form onSubmit={handleLogin} className="space-y-5">
+              <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[9px] font-bold uppercase tracking-tight text-zinc-400">
+                <Label htmlFor="email" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
                   Email Address
                 </Label>
                 <div className="relative">
@@ -1277,13 +1277,13 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder="name@company.com"
-                    className="h-11 rounded-none border-zinc-100 bg-zinc-50/30 px-3 text-[13px] text-zinc-900 placeholder:text-zinc-300 focus-visible:border-zinc-900 focus-visible:ring-0 disabled:opacity-50 transition-colors"
+                    className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-[9px] font-bold uppercase tracking-tight text-zinc-400">
+                <Label htmlFor="password" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
                   {mode === 'recovery' ? 'New Password' : 'Password'}
                 </Label>
                 <div className="relative">
@@ -1297,12 +1297,12 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder={mode === 'recovery' ? 'Enter new password' : 'Enter password'}
-                    className="h-11 rounded-none border-zinc-100 bg-zinc-50/30 px-3 pr-11 text-[13px] text-zinc-900 placeholder:text-zinc-300 focus-visible:border-zinc-900 focus-visible:ring-0 transition-colors"
+                    className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((value) => !value)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-300 transition-colors hover:text-zinc-900"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
@@ -1312,7 +1312,7 @@ const Login = () => {
 
               {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
                 <div className="space-y-2">
-                  <Label htmlFor="clerkVerificationCode" className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
+                  <Label htmlFor="clerkVerificationCode" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
                     Verification Code
                   </Label>
                   <div className="relative">
@@ -1327,18 +1327,18 @@ const Login = () => {
                         setError('');
                       }}
                       placeholder="Enter verification code"
-                      className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
+                      className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                     />
                   </div>
                   {clerkVerificationMessage ? (
-                    <p className="text-xs leading-5 text-[#66737F]">{clerkVerificationMessage}</p>
+                    <p className="text-[14px] leading-6 text-[#66737F]">{clerkVerificationMessage}</p>
                   ) : null}
                 </div>
               ) : null}
 
               {mode === 'recovery' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
+                  <Label htmlFor="confirmPassword" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
                     Confirm Password
                   </Label>
                   <div className="relative">
@@ -1352,7 +1352,7 @@ const Login = () => {
                         resetLocalAuthError();
                       }}
                       placeholder="Confirm your new password"
-                      className="h-12 rounded-sm border-[#182026]/20 bg-transparent px-3 pr-11 text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:border-[#182026] focus-visible:ring-0"
+                      className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                     />
                     <button
                       type="button"
@@ -1367,16 +1367,16 @@ const Login = () => {
               ) : null}
 
               {error === '__SERVICE_PREPARING__' ? (
-                <div className="border border-zinc-100 bg-zinc-50/30 p-8 text-center rounded-none">
-                  <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">
+                <div className="border border-[#D8E3EA] bg-white p-6 text-center sm:p-8">
+                  <h3 className="text-[22px] font-bold tracking-[-0.025em] text-[#182026]">
                     Preparing Account
                   </h3>
-                  <p className="mx-auto mt-3 max-w-[320px] text-[13px] leading-relaxed text-zinc-500">
+                  <p className="mx-auto mt-3 max-w-[340px] text-[15px] leading-6 text-[#66737F]">
                     Margin could not finish preparing your workspace automatically. Retry setup or start from the free audit path.
                   </p>
                   <Button
                     asChild
-                    className="mt-6 h-11 rounded-none bg-[#007AFF] px-6 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF]"
+                    className="mt-6 h-12 rounded-[3px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                   >
                     <Link to="/audit">
                       Start Free Audit
@@ -1390,7 +1390,7 @@ const Login = () => {
                   type="button"
                   onClick={() => void handleRetryWorkspaceRouting()}
                   disabled={loading}
-                  className="mt-3 h-11 w-full rounded-none bg-[#007AFF] px-4 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF]"
+                  className="mt-3 h-12 w-full rounded-[3px] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                 >
                   Retry Access Setup
                 </Button>
@@ -1402,7 +1402,7 @@ const Login = () => {
                   onClick={() => void handleClearBrowserSession()}
                   disabled={loading}
                   variant="outline"
-                  className="mt-3 h-10 rounded-sm border-red-200 bg-transparent px-4 text-[12px] font-semibold tracking-tight text-red-700 hover:bg-red-50"
+                  className="mt-3 h-11 rounded-[3px] border-[#E8B6B6] bg-white px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
                 >
                   Clear browser session
                 </Button>
@@ -1412,7 +1412,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-11 w-full rounded-none bg-[#007AFF] px-8 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF] transition-all shadow-[0_1px_2px_rgba(0,122,255,0.1)]"
+                  className="h-12 w-full rounded-[3px] bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA]"
                 >
                   {loading ? (
                     'Processing...'
@@ -1428,7 +1428,7 @@ const Login = () => {
                 </Button>
               </div>
 
-              <div className="flex flex-col gap-4 pt-6 text-[10px] font-bold uppercase tracking-tight text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-4 pt-7 text-[13px] font-medium tracking-tight text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   onClick={() => {
@@ -1443,7 +1443,7 @@ const Login = () => {
                       return nextMode;
                     });
                   }}
-                  className="text-left transition-colors hover:text-zinc-900"
+                  className="text-left transition-colors hover:text-[#182026]"
                 >
                   {mode === 'signup' ? 'Log In' : 'Create Account'}
                 </button>
@@ -1452,7 +1452,7 @@ const Login = () => {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={loading}
-                    className="text-left transition-colors hover:text-zinc-900 disabled:opacity-50"
+                    className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
                   >
                     Forgot Password?
                   </button>
@@ -1468,7 +1468,7 @@ const Login = () => {
                       setClerkVerificationCode('');
                       setClerkVerificationMessage('');
                     }}
-                    className="text-left transition-colors hover:text-zinc-900"
+                    className="text-left transition-colors hover:text-[#182026]"
                   >
                     Back
                   </button>
