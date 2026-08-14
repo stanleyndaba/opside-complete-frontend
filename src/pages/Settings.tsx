@@ -278,9 +278,9 @@ const Settings = () => {
       <PageLayout title="Account Control Center" noPadding>
         <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
           <div className="container mx-auto px-8 pt-10 pb-20">
-            <div className="border-t border-white/10 pt-8 space-y-3">
-              <h1 className="text-xl font-sans font-bold text-white tracking-tight">Settings unavailable</h1>
-              <p className="text-sm text-white/50 font-sans">
+            <div className="border-t border-[#D8E3EA] pt-8 space-y-3">
+              <h1 className="text-[20px] font-sans font-bold text-[#182026] tracking-tight">Settings unavailable</h1>
+              <p className="text-[15px] text-[#66737F] font-sans">
                 A tenant workspace is required before account settings can be loaded.
               </p>
             </div>
@@ -304,12 +304,12 @@ const Settings = () => {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
 
         <div className="relative z-10 container mx-auto px-8 pt-8 pb-14">
-          <div className="border-b border-white/10 pb-6">
-            <div className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
+          <div className="border-b border-[#D8E3EA] pb-6">
+            <div className="text-[12px] text-[#66737F]/40 font-sans font-bold uppercase tracking-tight">
               ACCOUNT CONTROLS · LIVE DATA
             </div>
-            <h1 className="mt-2 text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Settings</h1>
-            <p className="mt-3 max-w-3xl text-sm text-white/45 font-sans leading-relaxed">
+            <h1 className="mt-2 text-[22px] font-sans font-semibold text-[#111827] tracking-tight">Settings</h1>
+            <p className="mt-3 max-w-3xl text-[15px] text-[#66737F] font-sans leading-relaxed">
               Inspect account identity, source connections, filing authority, and controls that are backed by live persistence.
             </p>
           </div>
@@ -318,9 +318,9 @@ const Settings = () => {
             <div className="lg:col-span-1">
               <div className="lg:sticky lg:top-24 space-y-5">
                 <nav className="space-y-1">
-                  <div className="group relative w-full flex items-center gap-4 px-0 py-2.5 text-white/80 border-b border-white/10">
-                    <Building2 className="h-4.5 w-4.5 text-white/50" />
-                    <span className="text-[11px] font-sans font-bold uppercase tracking-tight">
+                  <div className="group relative w-full flex items-center gap-4 px-0 py-2.5 text-[#182026] border-b border-[#D8E3EA]">
+                    <Building2 className="h-4.5 w-4.5 text-[#66737F]" />
+                    <span className="text-[13px] font-sans font-bold uppercase tracking-tight">
                       Account Identity
                     </span>
                   </div>
@@ -337,31 +337,31 @@ const Settings = () => {
               >
                 <div>
                   <h2 className="text-[18px] font-sans font-semibold text-[#111827] tracking-tight">Account Identity</h2>
-                  <p className="text-sm text-white/50 font-sans mt-2 max-w-2xl">
+                  <p className="text-[15px] text-[#66737F] font-sans mt-2 max-w-2xl">
                     This section shows authenticated user and workspace identity only.
                   </p>
                 </div>
 
-                <div className="relative overflow-hidden border-t border-white/10 pt-6 group transition-all duration-500">
+                <div className="relative overflow-hidden border-t border-[#D8E3EA] pt-6 group transition-all duration-500">
                   <div className="absolute top-0 right-0 p-6 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
-                    <Building2 className="h-48 w-48 text-white rotate-12" />
+                    <Building2 className="h-48 w-48 text-[#182026] rotate-12" />
                   </div>
 
                   <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                       <div className="space-y-4">
                         <div>
-                          <h3 className="text-2xl font-sans font-bold text-white tracking-tight">
+                          <h3 className="text-2xl font-sans font-bold text-[#182026] tracking-tight">
                             {identityName}
                           </h3>
                           <div className="flex items-center gap-3 mt-2">
                             <Badge
                               variant="outline"
                               className={cn(
-                                'text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1 rounded-none',
+                                'text-[12px] font-sans font-bold uppercase tracking-tight px-3 py-1 rounded-none',
                                 sellerProfile.id
-                                  ? 'bg-white/5 text-white border-white/10'
-                                  : 'bg-white/5 text-white/40 border-white/10'
+                                  ? 'bg-[#F3F6F8] text-[#182026] border-[#D8E3EA]'
+                                  : 'bg-[#F3F6F8] text-[#66737F]/70 border-[#D8E3EA]'
                               )}
                             >
                               {sellerProfile.id ? 'AUTHENTICATED_USER' : 'IDENTITY_UNAVAILABLE'}
@@ -372,8 +372,8 @@ const Settings = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
                           {identityFields.map((field) => (
                             <div key={field.label} className="space-y-2">
-                              <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">{field.label}</p>
-                              <p className="text-sm font-sans font-bold text-white/80 tracking-tight break-all">{field.value}</p>
+                              <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">{field.label}</p>
+                              <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight break-all">{field.value}</p>
                             </div>
                           ))}
                         </div>
@@ -381,7 +381,7 @@ const Settings = () => {
 
                       <div className="flex flex-col gap-3">
                         <Button
-                          className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] transition-all active:scale-[0.98] rounded-none h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_12px_28px_rgba(0,82,255,0.16)]"
+                          className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] transition-all active:scale-[0.98] rounded-none h-12 px-8 font-sans font-bold uppercase tracking-tight text-[13px] shadow-[0_12px_28px_rgba(0,82,255,0.16)]"
                           onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/integrations-hub'))}
                           disabled={!activeTenantSlug}
                         >
@@ -392,41 +392,41 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/10 pt-7">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-[#D8E3EA] pt-7">
                   <section className="space-y-4">
-                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Platform Connectivity</div>
+                    <div className="text-[12px] font-sans font-bold text-[#66737F]/60 uppercase tracking-tight">Platform Connectivity</div>
 
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between py-2.5 border-b border-white/10">
+                      <div className="flex items-center justify-between py-2.5 border-b border-[#D8E3EA]">
                         <div className="flex items-center gap-3">
-                          <Store className="h-4 w-4 text-white/40" />
-                          <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Amazon SP-API</span>
+                          <Store className="h-4 w-4 text-[#66737F]/70" />
+                          <span className="text-[13px] font-sans font-bold text-[#182026] tracking-tight">Amazon SP-API</span>
                         </div>
                         <Badge
                           variant="outline"
                           className={cn(
-                            'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
+                            'text-[12px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
                             isAmazonConnected
-                              ? 'bg-white/5 text-white border-white/10'
-                              : 'bg-white/5 text-white/40 border-white/10'
+                              ? 'bg-[#F3F6F8] text-[#182026] border-[#D8E3EA]'
+                              : 'bg-[#F3F6F8] text-[#66737F]/70 border-[#D8E3EA]'
                           )}
                         >
                           {isAmazonConnected ? 'Linked' : 'Unverified'}
                         </Badge>
                       </div>
 
-                      <div className="flex items-center justify-between py-2.5 border-b border-white/10">
+                      <div className="flex items-center justify-between py-2.5 border-b border-[#D8E3EA]">
                         <div className="flex items-center gap-3">
-                          <CreditCard className="h-4 w-4 text-white/40" />
-                          <span className="text-xs font-sans font-bold text-white/80 tracking-tight">PayPal Billing</span>
+                          <CreditCard className="h-4 w-4 text-[#66737F]/70" />
+                          <span className="text-[13px] font-sans font-bold text-[#182026] tracking-tight">PayPal Billing</span>
                         </div>
                         <Badge
                           variant="outline"
                           className={cn(
-                            'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
+                            'text-[12px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
                             paypalActive
-                              ? 'bg-white/5 text-white border-white/10'
-                              : 'bg-white/5 text-white/40 border-white/10'
+                              ? 'bg-[#F3F6F8] text-[#182026] border-[#D8E3EA]'
+                              : 'bg-[#F3F6F8] text-[#66737F]/70 border-[#D8E3EA]'
                           )}
                         >
                           {paypalActive ? 'Active' : 'Not available'}
@@ -434,43 +434,43 @@ const Settings = () => {
                       </div>
 
                       <div className="space-y-2 pt-2">
-                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Ingest</p>
-                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">
+                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Last Ingest</p>
+                        <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight">
                           {sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
                         </p>
                       </div>
 
                       <div className="space-y-2">
-                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Marketplaces</p>
+                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Marketplaces</p>
                         <div className="flex flex-wrap gap-2">
                           {linkedMarketplaces.length > 0 ? (
                             linkedMarketplaces.map((marketplaceId) => {
                               const marketplace = marketplaceNames[marketplaceId] || { name: marketplaceId, flag: 'GL' };
                               return (
-                                <Badge key={marketplaceId} variant="outline" className="text-[9px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/70 rounded-none">
+                                <Badge key={marketplaceId} variant="outline" className="text-[12px] font-sans font-bold uppercase tracking-tight border-[#D8E3EA] text-[#4B5A64] rounded-none">
                                   {marketplace.flag} {marketplace.name}
                                 </Badge>
                               );
                             })
                           ) : (
-                            <span className="text-sm font-sans font-bold text-white/50 tracking-tight">Not available</span>
+                            <span className="text-[15px] font-sans font-bold text-[#66737F] tracking-tight">Not available</span>
                           )}
                         </div>
                       </div>
                     </div>
                   </section>
 
-                  <section className="space-y-4 border-t border-white/10 pt-6 md:border-t-0 md:border-l md:pl-8">
-                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Filing Controls</div>
+                  <section className="space-y-4 border-t border-[#D8E3EA] pt-6 md:border-t-0 md:border-l md:pl-8">
+                    <div className="text-[12px] font-sans font-bold text-[#66737F]/60 uppercase tracking-tight">Filing Controls</div>
 
                     <div className="space-y-4">
-                      <div className="flex items-start justify-between gap-5 py-2.5 border-b border-white/10">
+                      <div className="flex items-start justify-between gap-5 py-2.5 border-b border-[#D8E3EA]">
                         <div className="space-y-2 max-w-md">
-                          <p className="text-sm font-sans font-bold text-white tracking-tight">Auto-File</p>
-                          <p className="text-xs text-white/45 font-sans leading-relaxed">
+                          <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight">Auto-File</p>
+                          <p className="text-[13px] text-[#66737F] font-sans leading-relaxed">
                             {autoFileIntentCopy}
                           </p>
-                          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+                          <p className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/25">
                             {loadingAutoFile
                               ? 'Loading saved seller intent'
                               : savingAutoFile
@@ -479,21 +479,21 @@ const Settings = () => {
                                   ? 'Seller intent: automatic submission allowed'
                                   : 'Seller intent: review before filing'}
                           </p>
-                          <div className="border border-white/10 bg-white/[0.03] px-3 py-2">
-                            <p className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/25">
+                          <div className="border border-[#D8E3EA] bg-[#F9FBFC] px-3 py-2">
+                            <p className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/25">
                               Submission Gate Status
                             </p>
-                            <p className="mt-1 text-xs text-white/50 font-sans leading-relaxed">
+                            <p className="mt-1 text-[13px] text-[#66737F] font-sans leading-relaxed">
                               {autoFileGateCopy}
                             </p>
                             {autoFileGateMeta && (
-                              <p className="mt-1.5 text-[9px] font-sans font-bold uppercase tracking-tight text-white/25">
+                              <p className="mt-1.5 text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/25">
                                 {autoFileGateMeta}
                               </p>
                             )}
                           </div>
                           {autoFileError && (
-                            <p className="text-xs text-[#d0b673] font-sans leading-relaxed">
+                            <p className="text-[13px] text-[#d0b673] font-sans leading-relaxed">
                               {autoFileError}
                             </p>
                           )}
@@ -507,35 +507,35 @@ const Settings = () => {
                             }}
                             disabled={loadingAutoFile || savingAutoFile}
                             aria-label="Auto-File seller-controlled filing switch"
-                            className="data-[state=checked]:bg-[#0052FF] data-[state=unchecked]:bg-[#E5E7EB]"
+                            className="data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#E5E7EB]"
                           />
-                          <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                          <span className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/35">
                             {savingAutoFile ? 'Saving' : autoFileEnabled ? 'On' : 'Off'}
                           </span>
                         </div>
                       </div>
 
-                      <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Support Tier</div>
+                      <div className="text-[12px] font-sans font-bold text-[#66737F]/60 uppercase tracking-tight">Support Tier</div>
 
                       <div className="space-y-2">
-                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Current Tier</p>
-                        <p className="text-lg font-sans font-bold text-white tracking-tight">{supportTier}</p>
+                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Current Tier</p>
+                        <p className="text-[18px] font-sans font-bold text-[#182026] tracking-tight">{supportTier}</p>
                       </div>
 
                       <div className="space-y-2">
-                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Workspace</p>
-                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">
+                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Workspace</p>
+                        <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight">
                           {tenant?.name || 'Not available'}
                         </p>
                       </div>
 
-                      <p className="text-xs text-white/40 font-sans leading-relaxed">
+                      <p className="text-[13px] text-[#66737F]/70 font-sans leading-relaxed">
                         Support guidance is based on your current tenant plan limits. For direct help, use the support page.
                       </p>
 
                       <Button
                         variant="outline"
-                        className="w-full h-10 rounded-none border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF] font-sans font-bold text-[10px] uppercase tracking-tight"
+                        className="w-full h-11 rounded-[3px] border-[#C8D6DF] bg-white text-[#4B5A64] hover:bg-[#F3F6F8] font-sans font-semibold text-[13px] uppercase tracking-tight"
                         onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
                         disabled={!activeTenantSlug}
                       >

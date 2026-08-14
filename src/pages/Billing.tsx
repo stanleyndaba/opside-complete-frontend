@@ -135,27 +135,27 @@ export default function Billing() {
           <header className="border-b border-[#DCE8EE] pb-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Recovery OS</div>
+                <div className="text-[12px] font-bold uppercase tracking-tight text-[#0B74DE]">Recovery OS</div>
                 <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-[#182026] md:text-5xl">
                   Billing
                 </h1>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-[#66737F]">
+                <p className="mt-3 max-w-2xl text-[15px] leading-6 text-[#66737F]">
                   Recovery OS is billed at $99/month with 0% recovery commission.
                 </p>
               </div>
-              <Badge variant="outline" className={`w-fit rounded-none px-3 py-1 text-[11px] font-semibold ${toneForState(state)}`}>
+              <Badge variant="outline" className={`w-fit rounded-[3px] px-3 py-1 text-[13px] font-semibold ${toneForState(state)}`}>
                 {labelForState(state)}
               </Badge>
             </div>
           </header>
 
           {loading ? (
-            <div className="flex items-center gap-3 border border-[#DCE8EE] bg-white p-6 text-sm text-[#66737F]">
+            <div className="flex items-center gap-3 border border-[#DCE8EE] bg-white p-6 text-[15px] text-[#66737F]">
               <RefreshCw className="h-4 w-4 animate-spin" />
               Loading subscription truth...
             </div>
           ) : error ? (
-            <div className="flex items-start gap-3 border border-rose-200 bg-rose-50 p-6 text-sm text-rose-700">
+            <div className="flex items-start gap-3 border border-rose-200 bg-rose-50 p-6 text-[15px] text-rose-700">
               <AlertCircle className="mt-0.5 h-4 w-4" />
               <div>
                 <div className="font-semibold">Subscription status unavailable</div>
@@ -172,8 +172,8 @@ export default function Billing() {
                   { label: 'Commission', value: '0%' },
                 ].map((item) => (
                   <div key={item.label} className="border border-[#DCE8EE] bg-white p-5">
-                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">{item.label}</div>
-                    <div className="mt-2 text-xl font-semibold tracking-tight text-[#182026]">{item.value}</div>
+                    <div className="font-mono text-[12px] uppercase tracking-tight text-[#66737F]">{item.label}</div>
+                    <div className="mt-2 text-[20px] font-semibold tracking-tight text-[#182026]">{item.value}</div>
                   </div>
                 ))}
               </section>
@@ -181,13 +181,13 @@ export default function Billing() {
               <section className="border border-[#DCE8EE] bg-white p-6 space-y-6">
                 <div className="flex items-center justify-between border-b border-[#DCE8EE] pb-4">
                   <div>
-                    <h2 className="text-lg font-semibold tracking-tight text-[#182026]">Subscription Details</h2>
-                    <p className="text-xs text-[#66737F]">Flat-fee recovery operations with no hidden success fees.</p>
+                    <h2 className="text-[18px] font-semibold tracking-tight text-[#182026]">Subscription Details</h2>
+                    <p className="text-[13px] text-[#66737F]">Flat-fee recovery operations with no hidden success fees.</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button
                       variant="outline"
-                      className="rounded-none border-[#DCE8EE] text-xs font-semibold uppercase tracking-tight"
+                      className="rounded-[3px] border-[#DCE8EE] text-[13px] font-semibold uppercase tracking-tight"
                       onClick={() => void runAction('manage')}
                       disabled={busyAction !== null}
                     >
@@ -197,7 +197,7 @@ export default function Billing() {
                     {isActive ? (
                       <Button
                         variant="outline"
-                        className="rounded-none border-rose-200 text-xs font-semibold uppercase tracking-tight text-rose-700 hover:bg-rose-50"
+                        className="rounded-[3px] border-rose-200 text-[13px] font-semibold uppercase tracking-tight text-rose-700 hover:bg-rose-50"
                         onClick={() => void runAction('cancel')}
                         disabled={busyAction !== null}
                       >
@@ -205,7 +205,7 @@ export default function Billing() {
                       </Button>
                     ) : (
                       <Button
-                        className="rounded-none bg-[#0B74DE] text-xs font-semibold uppercase tracking-tight text-white hover:bg-[#005FBA]"
+                        className="rounded-[3px] bg-[#0B74DE] text-[13px] font-semibold uppercase tracking-tight text-white hover:bg-[#005FBA]"
                         onClick={() => void runAction('resume')}
                         disabled={busyAction !== null}
                       >
@@ -215,17 +215,17 @@ export default function Billing() {
                   </div>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-3 text-sm">
+                <div className="grid gap-6 md:grid-cols-3 text-[15px]">
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Current Status</div>
+                    <div className="font-mono text-[12px] uppercase tracking-tight text-[#66737F]">Current Status</div>
                     <div className="mt-1 font-semibold text-[#182026]">{labelForState(state)}</div>
                   </div>
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Current Period Ends</div>
+                    <div className="font-mono text-[12px] uppercase tracking-tight text-[#66737F]">Current Period Ends</div>
                     <div className="mt-1 font-semibold text-[#182026]">{formatDate(subscription?.current_period_end)}</div>
                   </div>
                   <div>
-                    <div className="font-mono text-[10px] uppercase tracking-tight text-[#66737F]">Auto Renewal</div>
+                    <div className="font-mono text-[12px] uppercase tracking-tight text-[#66737F]">Auto Renewal</div>
                     <div className="mt-1 font-semibold text-[#182026]">{subscription?.cancel_at_period_end ? 'Scheduled for cancellation' : 'Active (renews monthly)'}</div>
                   </div>
                 </div>

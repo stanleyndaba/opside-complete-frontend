@@ -1176,7 +1176,7 @@ export default function Audit() {
             <header className="mb-8">
               <div className="flex items-center gap-2 mb-2">
                 <div className="h-px w-6 bg-zinc-900" />
-                <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-900">Forensic Audit</span>
+                <span className="text-[12px] font-semibold uppercase tracking-tight text-[#182026]">Forensic Audit</span>
               </div>
               <h1 className="text-[24px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">Amazon Recovery Audit</h1>
               <p className="mt-2 text-[14px] leading-relaxed text-zinc-500 max-w-2xl">
@@ -1185,19 +1185,19 @@ export default function Audit() {
 
               <div className="mt-8 grid grid-cols-3 border-y border-zinc-100 py-6">
                 <div className="flex flex-col pr-6 border-r border-zinc-100">
-                  <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400">Scope Value</span>
+                  <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">Scope Value</span>
                   <span className="mt-2 text-[20px] font-bold tracking-tight text-zinc-900 sm:text-[24px]">
                     {step !== 'completed' ? <span className="text-zinc-200">--</span> : isZeroRecordLimitedAudit ? <span className="text-zinc-400 text-[16px]">Not calculated</span> : formatMoney(teaser.scopeValue)}
                   </span>
                 </div>
                 <div className="flex flex-col px-6 border-r border-zinc-100">
-                  <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400">Findings</span>
+                  <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">Findings</span>
                   <span className="mt-2 text-[20px] font-bold tracking-tight text-zinc-900 sm:text-[24px]">
                     {step !== 'completed' ? <span className="text-zinc-200">--</span> : isZeroRecordLimitedAudit ? <span className="text-zinc-400 text-[16px]">Not evaluated</span> : teaser.findingsCount}
                   </span>
                 </div>
                 <div className="flex flex-col pl-6">
-                  <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400">Expiring Soon</span>
+                  <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">Expiring Soon</span>
                   <span className="mt-2 text-[20px] font-bold tracking-tight text-zinc-900 sm:text-[24px]">
                     {step !== 'completed' ? <span className="text-zinc-200">--</span> : isZeroRecordLimitedAudit ? <span className="text-zinc-400 text-[16px]">Not evaluated</span> : expiringSoonValue}
                   </span>
@@ -1215,7 +1215,7 @@ export default function Audit() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-3">
                     <span className={`h-1.5 w-1.5 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-zinc-300' : 'bg-[#007AFF] animate-pulse'}`} />
-                    <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400">
+                    <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
                       {auditState.label}
                     </span>
                   </div>
@@ -1237,7 +1237,7 @@ export default function Audit() {
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-px bg-zinc-100 hidden sm:block" />
                   <div className="text-right">
-                    <div className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-1">Status</div>
+                    <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-1">Status</div>
                     <div className={`text-[12px] font-bold tracking-tight ${isZeroRecordLimitedAudit ? 'text-zinc-500' : 'text-[#007AFF]'}`}>
                       {isBusy ? 'SYNCING_DATA' : isZeroRecordLimitedAudit ? 'LIMITED_SCOPE' : step === 'completed' ? 'AUDIT_READY' : 'PENDING'}
                     </div>
@@ -1265,15 +1265,15 @@ export default function Audit() {
                 {step === 'completed' ? (
                   <div className="mb-8 grid grid-cols-3 border border-zinc-100 bg-white">
                     <div className="flex flex-col p-6 border-r border-zinc-100">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-2">Recovery Exposure</span>
+                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Recovery Exposure</span>
                       <span className="text-[24px] font-bold tracking-tight text-zinc-900 tabular-nums">{isZeroRecordLimitedAudit ? '$0.00' : formatMoney(teaser.scopeValue)}</span>
                     </div>
                     <div className="flex flex-col p-6 border-r border-zinc-100">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-2">Material Findings</span>
+                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Material Findings</span>
                       <span className="text-[24px] font-bold tracking-tight text-zinc-900 tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</span>
                     </div>
                     <div className="flex flex-col p-6">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-2">Evidence Ready</span>
+                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Evidence Ready</span>
                       <span className="text-[24px] font-bold tracking-tight text-zinc-900 tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</span>
                     </div>
                   </div>
@@ -1382,7 +1382,7 @@ export default function Audit() {
                           </div>
                         </div>
                        )}
-                       <div className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-4">Examination Scope</div>
+                       <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Examination Scope</div>
                        <div className="mt-4 space-y-2 border-t border-zinc-50 pt-4">
                          {[
                            ['Marketplace positions', 'US · CA · MX'],
@@ -1411,7 +1411,7 @@ export default function Audit() {
                   <div className="max-w-2xl">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="h-px w-6 bg-zinc-900" />
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-900">{canShowRecoverOnce ? 'Engagement Options' : 'Continuous Intelligence'}</span>
+                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#182026]">{canShowRecoverOnce ? 'Engagement Options' : 'Continuous Intelligence'}</span>
                     </div>
                     <h2 className="text-[22px] font-bold tracking-tight text-zinc-900">{workspaceOffer.heading}</h2>
                     <p className="mt-3 text-[14px] leading-relaxed text-zinc-500">{workspaceOffer.bridge}</p>
@@ -1419,7 +1419,7 @@ export default function Audit() {
 
                   <div className="grid grid-cols-2 border-y border-zinc-50 py-8">
                     <div className="flex flex-col pr-8 border-r border-zinc-50">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-2">Audit Duration</span>
+                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Audit Duration</span>
                       <span className="text-[18px] font-bold tracking-tight text-zinc-900 tabular-nums">
                         {step === 'completed'
                           ? audit?.completed_at && audit?.started_at
@@ -1429,7 +1429,7 @@ export default function Audit() {
                       </span>
                     </div>
                     <div className="flex flex-col pl-8">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-2">Verified Value</span>
+                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Verified Value</span>
                       <span className="text-[18px] font-bold tracking-tight text-zinc-900 tabular-nums">{formatMoney(teaser.scopeValue)}</span>
                     </div>
                   </div>
@@ -1437,7 +1437,7 @@ export default function Audit() {
                   {canShowRecoverOnce ? (
                     <div className="grid gap-6 md:grid-cols-2">
                       <div className="rounded-none border border-zinc-100 bg-zinc-50/30 p-8 flex flex-col">
-                        <div className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-4">Engagement 01 / One-Time</div>
+                        <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Engagement 01 / One-Time</div>
                         <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">
                           {isRecoverOnceQuoteLoading
                             ? 'Analyzing...'
@@ -1451,34 +1451,34 @@ export default function Audit() {
                             : 'Margin manages the specific actionable recovery opportunities identified in this audit.'}
                         </p>
                         <div className="mt-6 pt-6 border-t border-zinc-100">
-                          <p className="text-[11px] font-bold text-zinc-900 uppercase tracking-tight">
+                          <p className="text-[13px] font-semibold text-[#182026] uppercase tracking-tight">
                             0% Success Commission
                           </p>
                         </div>
                         {recoverOnceQuote?.status === 'available' || recoverOnceQuote?.status === 'accepted' ? (
-                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-6 w-full h-11 rounded-none border-zinc-200 bg-white text-[11px] font-bold uppercase tracking-tight text-zinc-900 hover:bg-zinc-50 transition-all">
+                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-6 w-full h-12 rounded-[3px] border-zinc-200 bg-white text-[13px] font-semibold uppercase tracking-tight text-[#182026] hover:bg-zinc-50 transition-all">
                             {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
                             Initialize Recovery
                           </Button>
                         ) : (
-                          <Button variant="outline" disabled className="mt-6 w-full h-11 rounded-none border-zinc-100 bg-zinc-50/50 text-[11px] font-bold uppercase tracking-tight text-zinc-300">
+                          <Button variant="outline" disabled className="mt-6 w-full h-12 rounded-[3px] border-zinc-100 bg-zinc-50/50 text-[13px] font-semibold uppercase tracking-tight text-[#8A99A4]">
                             {isRecoverOnceQuoteLoading ? 'Processing' : 'Unavailable'}
                           </Button>
                         )}
                       </div>
 
                       <div className="rounded-none border border-zinc-100 bg-white p-8 text-zinc-900 flex flex-col shadow-2xl shadow-zinc-100">
-                        <div className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-4">Engagement 02 / Continuous</div>
+                        <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Engagement 02 / Continuous</div>
                         <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">$99 / Month</h3>
                         <p className="mt-3 text-[13px] leading-relaxed text-zinc-400 flex-1">
                           Full operational surface. Margin monitors every shipment, detects discrepancies daily, and handles all Amazon responses.
                         </p>
                         <div className="mt-6 pt-6 border-t border-zinc-100">
-                          <p className="text-[11px] font-bold text-zinc-900 uppercase tracking-tight">
+                          <p className="text-[13px] font-semibold text-[#182026] uppercase tracking-tight">
                             Unlimited Recoveries
                           </p>
                         </div>
-                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-11 rounded-none bg-[#007AFF] text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600 border-none transition-all">
+                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-[3px] bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
                           {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
                           Activate Workspace
                         </Button>
@@ -1486,17 +1486,17 @@ export default function Audit() {
                     </div>
                   ) : (
                     <div className="rounded-none border border-zinc-100 bg-white p-8 text-zinc-900 flex flex-col shadow-2xl shadow-zinc-100">
-                      <div className="text-[10px] font-bold uppercase tracking-tight text-zinc-400 mb-4">Recovery Surface / Continuous</div>
+                      <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Recovery Surface / Continuous</div>
                       <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">$99 / Month</h3>
                       <p className="mt-3 text-[13px] leading-relaxed text-zinc-500 flex-1">
                         Our agents monitor your account daily for new lost inventory, damaged items, and settlement gaps.
                       </p>
                       <div className="mt-6 pt-6 border-t border-zinc-100">
-                        <p className="text-[11px] font-bold text-zinc-900 uppercase tracking-tight">
+                        <p className="text-[13px] font-semibold text-[#182026] uppercase tracking-tight">
                           0% Recovery Commission
                         </p>
                       </div>
-                      <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-11 rounded-none bg-[#007AFF] text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600 border-none transition-all">
+                      <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-[3px] bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
                         {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
                         Activate Workspace
                       </Button>
@@ -1552,8 +1552,8 @@ export default function Audit() {
           </div>
 
           <div className="mt-auto border-t border-gray-100 bg-gray-50 px-6 py-5">
-            <div className="text-[28px] font-semibold tracking-[-0.04em] text-gray-900">Approximately $109/month</div>
-            <p className="mt-1 text-[13px] leading-relaxed text-gray-600">Billed as R1,799 monthly | 0% recovery commission | Cancel anytime | Nothing filed without approval</p>
+            <div className="text-[28px] font-semibold tracking-[-0.04em] text-[#182026]">$99 / Month</div>
+            <p className="mt-1 text-[13px] leading-relaxed text-gray-600">Flat-fee Recovery OS | 0% recovery commission | Cancel anytime | Nothing filed without approval</p>
             <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
               {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Continue to Secure Checkout
