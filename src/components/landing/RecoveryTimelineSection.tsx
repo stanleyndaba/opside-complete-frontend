@@ -102,7 +102,7 @@ export const RecoveryTimelineSection: React.FC = () => {
               </div>
 
               <div className="relative px-5 py-3 md:px-7">
-                <div className="absolute bottom-8 left-[34px] top-8 w-px bg-white/12 md:left-[42px]" />
+                
                 <div className="divide-y divide-white/10">
                   {recoverySteps.map((step, index) => (
                     <motion.div
@@ -115,11 +115,9 @@ export const RecoveryTimelineSection: React.FC = () => {
                         delay: index * 0.045,
                         ease: [0.16, 1, 0.3, 1],
                       }}
-                      className="relative grid gap-4 py-5 pl-12 md:grid-cols-[1fr_auto] md:items-center md:pl-16"
+                      className="relative grid gap-4 py-5 md:grid-cols-[1fr_auto] md:items-center"
                     >
-                      <div className="absolute left-0 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/14 bg-[#101827] font-mono text-[11px] font-semibold text-slate-300 shadow-[0_0_0_4px_rgba(16,24,39,0.9)] md:h-10 md:w-10">
-                        {step.number}
-                      </div>
+
                       <div>
                         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                           <h3 className="text-[18px] font-semibold tracking-[-0.025em] text-white">

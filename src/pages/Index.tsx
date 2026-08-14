@@ -2133,42 +2133,7 @@ function KineticHeroSection({
           }}
           style={{ rotate: "-8deg" }}
         />
-        <motion.div
-          className="absolute left-[42%] top-[18%] h-2 w-2 rounded-full bg-[rgba(11,116,222,0.62)] shadow-[0_0_24px_rgba(11,116,222,0.38)]"
-          animate={
-            reduceMotion
-              ? undefined
-              : {
-                  opacity: [0.18, 0.62, 0.18],
-                  scale: [0.88, 1.12, 0.88],
-                }
-          }
-          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute right-[22%] top-[27%] h-2.5 w-2.5 rounded-full bg-[rgba(46,125,91,0.42)] shadow-[0_0_28px_rgba(46,125,91,0.28)]"
-          animate={
-            reduceMotion
-              ? undefined
-              : {
-                  opacity: [0.14, 0.5, 0.14],
-                  scale: [0.9, 1.18, 0.9],
-                }
-          }
-          transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
-        />
-        <motion.div
-          className="absolute bottom-[22%] right-[15%] h-1.5 w-1.5 rounded-full bg-[rgba(11,116,222,0.5)] shadow-[0_0_18px_rgba(11,116,222,0.32)]"
-          animate={
-            reduceMotion
-              ? undefined
-              : {
-                  opacity: [0.12, 0.52, 0.12],
-                  scale: [0.8, 1.2, 0.8],
-                }
-          }
-          transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
-        />
+
       </div>
       <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center">
         {" "}
@@ -2881,7 +2846,10 @@ export default function Index() {
       }
     >
       {" "}
-      <PublicNavbar variant="light" />{" "}
+      <PublicNavbar variant="light" />
+      <div className="fixed bottom-4 right-4 z-[9999] rounded-full bg-black/80 px-3 py-1 text-[10px] font-mono text-white/40 backdrop-blur-sm pointer-events-none">
+        V2.0.0-SURGICAL
+      </div>{" "}
       <main className="relative">
         {" "}
         <KineticHeroSection
