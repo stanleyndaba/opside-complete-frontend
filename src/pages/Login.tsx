@@ -1227,7 +1227,7 @@ const Login = () => {
             <div className="mt-6 sm:mt-8">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
                 <div className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-6">
-                  <p className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
+                  <p className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                     Active Session Detected
                   </p>
                   <p className="mt-3 text-[15px] leading-6 text-[#66737F]">
@@ -1257,7 +1257,7 @@ const Login = () => {
 
               <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
+                <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                   Email Address
                 </Label>
                 <div className="relative">
@@ -1278,7 +1278,7 @@ const Login = () => {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
+                <Label htmlFor="password" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                   {mode === 'recovery' ? 'New Password' : 'Password'}
                 </Label>
                 <div className="relative">
@@ -1307,7 +1307,7 @@ const Login = () => {
 
               {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
                 <div className="space-y-2">
-                  <Label htmlFor="clerkVerificationCode" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
+                  <Label htmlFor="clerkVerificationCode" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                     Verification Code
                   </Label>
                   <div className="relative">
@@ -1333,7 +1333,7 @@ const Login = () => {
 
               {mode === 'recovery' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
+                  <Label htmlFor="confirmPassword" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                     Confirm Password
                   </Label>
                   <div className="relative">
