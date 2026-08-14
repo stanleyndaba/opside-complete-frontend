@@ -1221,6 +1221,14 @@ export default function Audit() {
                   <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-zinc-500">
                     {auditState.description}
                   </p>
+                  {(step === 'public' || step === 'ready' || step === 'connect') && (
+                    <div className="mt-4 flex items-center gap-3">
+                      <div className="h-px w-4 bg-zinc-200" />
+                      <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#007AFF]">
+                        READ-ONLY · NO FILINGS · NO ACCOUNT CHANGES
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-px bg-zinc-100 hidden sm:block" />
@@ -1320,6 +1328,29 @@ export default function Audit() {
                      <p className="mb-5 max-w-sm text-[13px] leading-relaxed text-gray-500">
                       {statusCopy[step]}
                      </p>
+                   )}
+
+                   {(step === 'syncing' || step === 'detecting') && (
+                     <div className="w-full max-w-sm mb-8 space-y-3">
+                       {[
+                         { id: '01', label: 'Account records', status: step === 'syncing' ? 'Verifying' : 'Verified' },
+                         { id: '02', label: 'Shipment movements', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
+                         { id: '03', label: 'Inventory adjustments', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
+                         { id: '04', label: 'Settlement lines', status: step === 'detecting' ? 'Matching' : 'Pending' },
+                         { id: '05', label: 'Recovery evidence', status: step === 'detecting' ? 'Checking' : 'Pending' },
+                         { id: '06', label: 'Recovery exposure', status: step === 'detecting' ? 'Calculating' : 'Pending' },
+                       ].map((progress) => (
+                         <div key={progress.id} className="flex items-center justify-between text-[11px] border-b border-zinc-50 pb-2">
+                           <div className="flex items-center gap-2">
+                             <span className="text-zinc-300 font-mono">{progress.id}</span>
+                             <span className="text-zinc-500 font-medium uppercase tracking-tight">{progress.label}</span>
+                           </div>
+                           <span className={`font-bold tabular-nums ${progress.status === 'Verified' || progress.status === 'Reconciled' ? 'text-emerald-500' : progress.status === 'Pending' ? 'text-zinc-200' : 'text-[#007AFF] animate-pulse'}`}>
+                             {progress.status.toUpperCase()}
+                           </span>
+                         </div>
+                       ))}
+                     </div>
                    )}
 
                    <div className="mb-5 flex items-center justify-center gap-3">
