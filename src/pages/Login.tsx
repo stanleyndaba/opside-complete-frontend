@@ -1209,20 +1209,20 @@ const Login = () => {
         <div className="w-full max-w-[360px]">
           <div className="mb-16 flex justify-center">
             <div className="flex items-center gap-2.5">
-              <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto grayscale contrast-125" />
-              <span className="text-[14px] font-bold tracking-tighter uppercase">Margin</span>
+              <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+              <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
             </div>
           </div>
 
           <section>
-            <h1 className="text-center text-[28px] font-bold leading-none tracking-tighter text-zinc-900">
+            <h1 className="text-center text-[28px] font-bold leading-none tracking-tight text-zinc-900">
               {heading}
             </h1>
 
             <div className="mt-12">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
                 <div className="mb-8 border border-zinc-100 bg-zinc-50/30 p-5 rounded-none">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                  <p className="text-[9px] font-bold uppercase tracking-tight text-zinc-400">
                     Active Session Detected
                   </p>
                   <p className="mt-3 text-[13px] leading-relaxed text-zinc-500">
@@ -1233,7 +1233,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-10 w-full rounded-none bg-zinc-900 px-4 text-[11px] font-bold uppercase tracking-wider text-white hover:bg-zinc-800"
+                      className="h-10 w-full rounded-none bg-[#007AFF] px-4 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600"
                     >
                       Continue
                     </Button>
@@ -1242,7 +1242,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void handleUseDifferentAccount()}
                       disabled={loading}
-                      className="h-10 w-full rounded-none border-zinc-200 bg-white px-4 text-[11px] font-bold uppercase tracking-wider text-zinc-600 hover:bg-zinc-50"
+                      className="h-10 w-full rounded-none border-zinc-200 bg-white px-4 text-[11px] font-bold uppercase tracking-tight text-zinc-600 hover:bg-zinc-50"
                     >
                       Switch Account
                     </Button>
@@ -1252,7 +1252,7 @@ const Login = () => {
 
               <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">
+                <Label htmlFor="email" className="text-[9px] font-bold uppercase tracking-tight text-zinc-400">
                   Email Address
                 </Label>
                 <div className="relative">
@@ -1273,7 +1273,7 @@ const Login = () => {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">
+                <Label htmlFor="password" className="text-[9px] font-bold uppercase tracking-tight text-zinc-400">
                   {mode === 'recovery' ? 'New Password' : 'Password'}
                 </Label>
                 <div className="relative">
@@ -1404,7 +1404,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-11 w-full rounded-none bg-zinc-900 px-8 text-[11px] font-bold uppercase tracking-[0.2em] text-white hover:bg-zinc-800 transition-all"
+                  className="h-11 w-full rounded-none bg-[#007AFF] px-8 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600 transition-all"
                 >
                   {loading ? (
                     'Processing...'
@@ -1420,7 +1420,7 @@ const Login = () => {
                 </Button>
               </div>
 
-              <div className="flex flex-col gap-4 pt-6 text-[10px] font-bold uppercase tracking-wider text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-4 pt-6 text-[10px] font-bold uppercase tracking-tight text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   onClick={() => {
