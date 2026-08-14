@@ -323,12 +323,7 @@ const Login = () => {
     }
   }, [demoBypassAvailable, enterDemoWorkspace, mode, nextPath]);
 
-  useEffect(() => {
-    const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('user_email') : '';
-    if (storedEmail) {
-      setEmail(storedEmail);
-    }
-  }, []);
+
 
   useEffect(() => {
     if (intent === 'onboarding') {
@@ -1269,7 +1264,7 @@ const Login = () => {
                   <Input
                     id="email"
                     type="email"
-                    autoComplete="email"
+                    autoComplete="off"
                     disabled={mode === 'recovery'}
                     value={email}
                     onChange={(event) => {
