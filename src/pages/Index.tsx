@@ -2867,22 +2867,18 @@ export default function Index() {
         />
         <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
 
-        <section className="relative border-b border-[var(--margin-border)] bg-[rgba(255,255,255,0.72)] py-5 backdrop-blur-xl">
+        <section className="relative border-b border-[var(--margin-border-subtle)] bg-[var(--margin-canvas)] py-20 sm:py-28 md:py-32">
           <div className={containerClass}>
-            <div className="grid gap-4 md:grid-cols-[0.85fr_1.15fr] md:items-center">
-              <p className="max-w-[520px] text-[13px] font-medium tracking-[-0.025em] text-[var(--margin-text-secondary)] md:text-[14px]">
-                Built for established FBA brands, agencies, aggregators, and
-                the operations and finance teams responsible for recovery cash.
-              </p>
-              <div className="flex flex-col gap-3 border-t border-[var(--margin-border)] pt-4 text-[13px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 md:justify-end md:border-t-0 md:pt-0 md:text-[14px]">
-                <span>Official Amazon connection</span>
-                <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
-                <span>Read-only audit</span>
-                <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
-                <span>Seller approval before filing</span>
-                <span className="hidden h-1 w-1 rounded-full bg-[#C4CED5] sm:block" />
-                <span>Disconnect anytime</span>
-              </div>
+            <div className="max-w-[920px]">
+              <motion.p
+                {...revealProps}
+                className="text-[28px] font-semibold leading-[1.22] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[48px] md:leading-[1.16]"
+              >
+                Margin is the standard for FBA recovery infrastructure.{" "}
+                <span className="text-[#66737F]">
+                  Eliminate manual reconciliation on a secure platform built for high-volume operations.
+                </span>
+              </motion.p>
             </div>
           </div>
         </section>
