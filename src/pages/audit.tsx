@@ -1072,8 +1072,10 @@ export default function Audit() {
             {/* Sidebar header */}
             <div className="flex items-center justify-between border-b border-zinc-50 px-4 py-4">
               <div className="flex items-center gap-2.5">
-                <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
-                <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
+                <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+                  <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+                  <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
+                </Link>
               </div>
               <button type="button" onClick={() => setSidebarOpen(false)} className="rounded-none p-1 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900">
                 <Columns2 className="h-3.5 w-3.5" />
@@ -1133,8 +1135,10 @@ export default function Audit() {
             )}
             {/* Mobile logo */}
             <div className="flex items-center gap-2 md:hidden">
-              <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
-              <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
+              <Link to="/" className="flex items-center gap-2.5">
+                <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+                <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
+              </Link>
             </div>
             
             {/* Version Dropdown */}

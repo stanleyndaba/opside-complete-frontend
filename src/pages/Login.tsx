@@ -1207,19 +1207,29 @@ const Login = () => {
     <div className="relative min-h-screen overflow-hidden bg-white text-zinc-900 selection:bg-zinc-100 tracking-tight">
       <main className="relative z-10 flex min-h-screen items-center justify-center px-6 py-12">
         <div className="w-full max-w-[360px]">
-          <div className="mb-16 flex justify-center">
-            <div className="flex items-center gap-2.5">
-              <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
-              <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
-            </div>
+          <div className="mb-16 flex flex-col items-center">
+            <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+              <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
+              <span className="brand-wordmark font-merriweather text-[20px] font-semibold tracking-tight text-zinc-900">Margin</span>
+            </Link>
           </div>
 
           <section>
+            <div className="mb-6 flex justify-center">
+              <Link 
+                to={isAuditIntent ? "/audit" : "/"} 
+                className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-tight text-zinc-400 hover:text-zinc-900 transition-colors"
+              >
+                <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
+                Back to Margin
+              </Link>
+            </div>
+
             <h1 className="text-center text-[28px] font-bold leading-none tracking-tight text-zinc-900">
               {heading}
             </h1>
 
-            <div className="mt-12">
+            <div className="mt-10">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
                 <div className="mb-8 border border-zinc-100 bg-zinc-50/30 p-5 rounded-none">
                   <p className="text-[9px] font-bold uppercase tracking-tight text-zinc-400">
@@ -1233,7 +1243,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-10 w-full rounded-none bg-[#007AFF] px-4 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600"
+                      className="h-10 w-full rounded-none bg-[#007AFF] px-4 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF]"
                     >
                       Continue
                     </Button>
@@ -1404,7 +1414,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-11 w-full rounded-none bg-[#007AFF] px-8 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600 transition-all"
+                  className="h-11 w-full rounded-none bg-[#007AFF] px-8 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF] transition-all shadow-[0_1px_2px_rgba(0,122,255,0.1)]"
                 >
                   {loading ? (
                     'Processing...'
