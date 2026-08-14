@@ -1395,7 +1395,7 @@ export default function Audit() {
                          ].map(([label, status]) => (
                            <div key={label} className="flex items-center justify-between text-[11px] py-1">
                              <span className="text-zinc-400 font-medium uppercase tracking-tight">{label}</span>
-                             <span className="font-bold text-zinc-900 tabular-nums">{status === 'Synchronized' ? '200_OK' : status}</span>
+                             <span className="font-bold text-zinc-900 tabular-nums">{status === 'Synchronized' ? 'Data synchronized' : status}</span>
                            </div>
                          ))}
                        </div>

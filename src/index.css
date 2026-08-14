@@ -443,7 +443,7 @@
     max-width: 100%;
     overflow-x: clip;
     min-height: 100vh;
-    background-color: #f9fafb;
+    background-color: #FAFAF7;
   }
 
   /* Ensure main content uses full width */
@@ -455,7 +455,7 @@
   body {
     /* Default body font - Stack Sans Text for entire platform */
     @apply bg-background text-foreground text-[16px];
-    background-color: #f9fafb !important;
+    background-color: #FAFAF7 !important;
     scrollbar-color: #cbd5e1 #f9fafb;
   }
 
@@ -463,13 +463,13 @@
   html.dark,
   html.dark body,
   html.dark #root {
-    background-color: #f9fafb !important;
+    background-color: #FAFAF7 !important;
   }
 
   html:not(.dark),
   html:not(.dark) body,
   html:not(.dark) #root {
-    background-color: #f9fafb !important;
+    background-color: #FAFAF7 !important;
   }
 
   /* All text elements use Inter - comprehensive coverage */
@@ -898,7 +898,7 @@ footer .brand-wordmark,
 /* Vitality Light Theme: app dashboard shell without layout changes */
 .platform-vitality-dashboard {
   color-scheme: light;
-  background: #f9fafb;
+  background: #FAFAF7;
 }
 
 .platform-vitality-dashboard main {
@@ -970,13 +970,13 @@ footer .brand-wordmark,
 .platform-vitality-dashboard main [class*="bg-sky"],
 .platform-vitality-dashboard main [class*="bg-blue"],
 .platform-vitality-dashboard main [class*="bg-violet"] {
-  background-color: rgba(0, 82, 255, 0.08) !important;
+  background-color: rgba(11, 116, 222, 0.08) !important;
 }
 
 .platform-vitality-dashboard main [class*="text-sky"],
 .platform-vitality-dashboard main [class*="text-blue"],
 .platform-vitality-dashboard main [class*="text-violet"] {
-  color: #0052ff !important;
+  color: #0B74DE !important;
 }
 
 .platform-vitality-dashboard main .shadow-3xl {
@@ -985,8 +985,8 @@ footer .brand-wordmark,
 
 /* Vitality Light Theme: dense platform pages without changing their layouts */
 .platform-vitality-page {
-  color-scheme: light;
-  background: #f9fafb;
+color-scheme: light;
+  background: #FAFAF7;
   color: #111827;
 }
 
@@ -999,7 +999,7 @@ footer .brand-wordmark,
 .platform-vitality-page[class*="bg-[#111111]"],
 .platform-vitality-page[class*="bg-[#141414]"],
 .platform-vitality-page[class*="bg-black"] {
-  background-color: #f9fafb !important;
+  background-color: #FAFAF7 !important;
 }
 
 .platform-vitality-page[class*="border-white"] {
@@ -1089,11 +1089,11 @@ footer .brand-wordmark,
 }
 
 .platform-vitality-page thead {
-  background-color: #f9fafb !important;
+  background-color: #FAFAF7 !important;
 }
 
 .platform-vitality-page tr:hover {
-  background-color: rgba(0, 82, 255, 0.035) !important;
+  background-color: rgba(11, 116, 222, 0.035) !important;
 }
 
 .platform-vitality-page [class*="bg-emerald"] {
@@ -1159,19 +1159,19 @@ footer .brand-wordmark,
 .platform-vitality-page [class*="bg-sky"],
 .platform-vitality-page [class*="bg-blue"],
 .platform-vitality-page [class*="bg-violet"] {
-  background-color: rgba(0, 82, 255, 0.08) !important;
+  background-color: rgba(11, 116, 222, 0.08) !important;
 }
 
 .platform-vitality-page [class*="text-sky"],
 .platform-vitality-page [class*="text-blue"],
 .platform-vitality-page [class*="text-violet"] {
-  color: #0052ff !important;
+  color: #0B74DE !important;
 }
 
 .platform-vitality-page [class*="border-sky"],
 .platform-vitality-page [class*="border-blue"],
 .platform-vitality-page [class*="border-violet"] {
-  border-color: rgba(0, 82, 255, 0.24) !important;
+  border-color: rgba(11, 116, 222, 0.24) !important;
 }
 
 .platform-vitality-page .shadow-2xl,
@@ -1213,7 +1213,7 @@ html.lenis body {
   --text-primary: #1b1c20;
   --text-secondary: #50525b;
   --text-muted: #858792;
-  --blue-primary: #007AFF;
+  --blue-primary: #0B74DE;
   
   background-color: var(--canvas-bg);
   color: var(--text-primary);
@@ -1240,8 +1240,8 @@ html.lenis body {
 }
 
 .platform-authenticated-shell .nav-active {
-  background-color: var(--border-subtle);
-  color: var(--text-primary);
+  background-color: #F2F7FF;
+  color: var(--blue-primary);
   font-weight: 600;
 }
 

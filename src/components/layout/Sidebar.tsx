@@ -230,19 +230,19 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "group relative flex items-center justify-center border-l transition-all duration-200",
+                  "group relative flex w-full items-center transition-all duration-200",
                   collapsedBaseClasses,
                   isActive
-                    ? "border-[#111827] bg-[#F8FAFB] text-[#111827]"
+                    ? "bg-[#F2F7FF] text-[#0B74DE]"
                     : variant === 'core'
-                      ? "border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
-                      : "border-transparent text-[#6B7280] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                      ? "text-[#4B5563] hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+                      : "text-[#6B7280] hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
                   <motion.span
                     layoutId="active-indicator-collapsed"
-                    className="absolute bottom-2 left-0 top-2 w-[2px] bg-[#111827]"
+                    className="absolute bottom-2 left-0 top-2 w-[2px] bg-[#0B74DE]"
                   />
                 )}
                 <item.icon
@@ -250,10 +250,10 @@ export function Sidebar({
                     "transition-colors duration-200",
                     variant === 'core' ? "h-[17px] w-[17px]" : "h-4 w-4",
                     isActive
-                      ? "text-[#111827]"
+                      ? "text-[#0B74DE]"
                       : variant === 'core'
-                        ? "text-[#4B5563] group-hover:text-[#111827]"
-                        : "text-[#6B7280] group-hover:text-[#111827]"
+                        ? "text-[#4B5563] group-hover:text-[#0B74DE]"
+                        : "text-[#6B7280] group-hover:text-[#0B74DE]"
                   )}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
@@ -273,22 +273,22 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "group relative flex w-full items-center border-l transition-all duration-200",
+          "group relative flex items-center transition-all duration-200",
           variant === 'core'
             ? "gap-2.5 px-3 py-2.5"
             : variant === 'utility'
               ? "gap-2 px-2.5 py-1.5"
               : "gap-2.5 px-3 py-2",
           isActive
-            ? "nav-active border-[#111827] bg-[#F9FAFB] text-[#111827]"
-            : "nav-hover border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F9FAFB] hover:text-[#111827]"
+            ? "nav-active bg-[#F2F7FF] text-[#0B74DE]"
+            : "nav-hover text-[#4B5563] hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
             className={cn(
-              "absolute left-0 w-[2px] bg-[#111827]",
+              "absolute left-0 w-[2px] bg-[#0B74DE]",
               variant === 'utility' ? "top-1.5 bottom-1.5" : "top-2 bottom-2"
             )}
           />
@@ -299,12 +299,12 @@ export function Sidebar({
             "h-4 w-4 shrink-0 transition-all duration-200",
             variant === 'core' ? "h-[17px] w-[17px]" : "",
             isActive
-              ? "text-[#111827]"
+              ? "text-[#0B74DE]"
               : variant === 'core'
-                ? "text-[#4B5563] group-hover:text-[#111827]"
+                ? "text-[#4B5563] group-hover:text-[#0B74DE]"
                 : variant === 'utility'
-                  ? "text-[#6B7280] group-hover:text-[#111827]"
-                : "text-[#6B7280] group-hover:text-[#111827]"
+                  ? "text-[#6B7280] group-hover:text-[#0B74DE]"
+                : "text-[#6B7280] group-hover:text-[#0B74DE]"
           )}
         />
         <div className="min-w-0 flex-1">
@@ -316,7 +316,7 @@ export function Sidebar({
                 : variant === 'utility'
                   ? "text-[13px] font-medium leading-5"
                   : "text-[13.5px] font-[300] leading-5",
-              isActive ? "text-[#111827]" : ""
+              isActive ? "text-[#0B74DE]" : ""
             )}>
               {item.title}
             </span>
@@ -327,18 +327,18 @@ export function Sidebar({
             className={cn(
               "h-3 w-3 shrink-0 transition-all duration-200",
             isActive
-                ? "translate-x-0 text-[#111827]/55"
-                : "translate-x-[-2px] text-[#9CA3AF] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[#111827]/55"
+                ? "translate-x-0 text-[#0B74DE]/70"
+                : "translate-x-[-2px] text-[#9CA3AF] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[#0B74DE]/70"
             )}
             strokeWidth={1.6}
           />
         ) : null}
         {item.count != null && !isCollapsed && (
           <span className={cn(
-            "ml-auto border-l px-1.5 text-[10px] font-sans font-medium tabular-nums tracking-tight",
+            "ml-auto rounded-[2px] bg-[#F2F7FF] px-1.5 text-[10px] font-sans font-semibold tabular-nums tracking-tight",
             isActive
-              ? "border-[#D8E3E8] text-[#111827]"
-              : "border-[#D8E3E8] text-[#6B7280]"
+              ? "text-[#0B74DE]"
+              : "text-[#6B7280]"
           )}>
             {item.count}
           </span>
@@ -374,11 +374,16 @@ export function Sidebar({
             )}
           >
             <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
-              <img
-                src="/logoimagetwo.png"
-                alt="Margin"
-                className="h-3.5 w-auto object-contain"
-              />
+              <div className="flex items-center gap-2">
+                <img
+                  src="/logoimagetwo.png"
+                  alt="Margin"
+                  className="h-3.5 w-auto object-contain"
+                />
+                {!isCollapsed && (
+                  <span className="font-merriweather text-sm font-bold tracking-tight text-[#111827]">Margin</span>
+                )}
+              </div>
               {!isCollapsed && subscriptionTierLabel ? (
                 <span className="border-l border-[#D8E3E8] pl-2 text-[10px] font-medium uppercase tracking-tight text-[#6B7280]">
                   {subscriptionTierLabel}
@@ -599,32 +604,31 @@ export function Sidebar({
 
       {/* Referral Popup - Institutional Style */}
       <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
-        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden backdrop-blur-3xl">
-          {/* Header - Institutional Dark */}
-          <div className="px-8 py-7 border-b border-white/5 bg-white/[0.01]">
+        <DialogContent className="max-w-md rounded-[2px] border border-[#D8E3E8] bg-white p-0 shadow-none overflow-hidden">
+          <div className="px-8 py-7 border-b border-[#D8E3E8] bg-[#FAFAFB]">
             <div className="flex items-center gap-3 mb-1">
               <Gift className="h-5 w-5 text-emerald-500" />
-              <h3 className="text-xl font-sans font-bold text-white tracking-tight">
-                Alpha_Provision
+              <h3 className="text-xl font-sans font-semibold text-[#111827] tracking-tight">
+                Invite a trusted seller
               </h3>
             </div>
-            <p className="text-[11px] text-emerald-500/50 font-sans font-bold uppercase tracking-tight">
-              COMMISSION-FREE_NETWORK_EXPANSION
+            <p className="text-[11px] text-[#2B7A5A] font-sans font-semibold uppercase tracking-tight">
+              WORKSPACE INVITATION
             </p>
           </div>
 
           <div className="p-8">
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="text-[14px] text-white/50 leading-relaxed font-sans font-light tracking-tight italic">
-                  "PROVISION: Integrate strategic allies into the Margin matrix to secure 100% of recovered artifacts without commission deductions."
+                <p className="text-[14px] text-[#50525B] leading-relaxed font-sans tracking-tight">
+                  Invite another seller to Margin and help them keep 100% of the funds recovered from their own Amazon account.
                 </p>
 
                 {/* Value Proposition */}
-                <div className="p-5 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl relative group overflow-hidden">
+                <div className="p-5 bg-[#F2F7FF] border border-[#C8D8FF] rounded-[2px] relative group overflow-hidden">
                   <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-emerald-500" />
-                  <p className="text-[10px] text-emerald-500/40 font-sans font-bold mb-2 uppercase tracking-tight">NETWORK_BENEFIT_PROTOCOL</p>
-                  <p className="text-base font-sans font-bold text-white tracking-tight uppercase">100%_RECOVERY_YIELD</p>
+                  <p className="text-[10px] text-[#0B74DE] font-sans font-semibold mb-2 uppercase tracking-tight">WORKSPACE BENEFIT</p>
+                  <p className="text-base font-sans font-semibold text-[#111827] tracking-tight">100% of recovered funds remain yours</p>
                 </div>
               </div>
 
@@ -634,8 +638,8 @@ export function Sidebar({
                   setShowReferralPopup(false);
                   setShowInviteForm(true);
                 }}
-                className="w-full bg-white text-black hover:bg-white/90 text-[11px] h-12 font-bold font-sans uppercase tracking-tight rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                Invoke_Invitation_Sequence
+                className="w-full rounded-[2px] bg-[#0B74DE] text-white hover:bg-[#005FBA] text-[11px] h-10 font-semibold font-sans uppercase tracking-tight transition-colors shadow-none">
+                Send invitation
               </Button>
             </div>
           </div>
@@ -692,7 +696,7 @@ export function Sidebar({
               onClick={async () => {
                 // ... (invite logic remains same)
               }}
-              className="w-full bg-white text-black hover:bg-white/90 text-[11px] h-12 font-bold font-sans uppercase tracking-tight rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              className="w-full rounded-[2px] bg-[#0B74DE] text-white hover:bg-[#005FBA] text-[11px] h-10 font-semibold font-sans uppercase tracking-tight transition-colors shadow-none">
               Execute_Transmission
             </Button>
           </div>

@@ -3784,9 +3784,9 @@ export default function FilingPipeline() {
           .filing-pipeline-ledger [class*="border-white"] { border-color: #D8E3E8 !important; }
           .filing-pipeline-ledger [class*="bg-white/"] { background-color: #F8FAFB !important; }
           .filing-pipeline-ledger [class*="bg-[#0052FF]"],
-          .filing-pipeline-ledger [class*="bg-[#111827]"] { background-color: #111827 !important; color: #FFFFFF !important; border-color: #111827 !important; }
+          .filing-pipeline-ledger [class*="bg-[#0B74DE]"] { background-color: #0B74DE !important; color: #FFFFFF !important; border-color: #0B74DE !important; }
           .filing-pipeline-ledger [class*="bg-[#0052FF]"] *,
-          .filing-pipeline-ledger [class*="bg-[#111827]"] * { color: #FFFFFF !important; }
+          .filing-pipeline-ledger [class*="bg-[#0B74DE]"] * { color: #FFFFFF !important; }
         `}</style>
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
@@ -3801,9 +3801,9 @@ export default function FilingPipeline() {
         <div className="relative z-10 mx-auto max-w-[1280px] px-5 pt-8 pb-16 sm:px-6 lg:px-8 space-y-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
-              <h1 className="text-4xl font-sans font-semibold text-[#111827] tracking-tight">Submissions and Payouts</h1>
+              <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Submissions and Payouts</h1>
               <p className="text-sm text-[#546575] font-sans max-w-3xl">
-                Show exactly what is proof-complete, actively submitting, filed with proof, blocked, waiting for payout, and fully recovered without asking sellers to interpret queue logic.
+                See what is proof-complete, submitting, with Amazon, blocked, awaiting payout, or confirmed recovered—without reconstructing queue logic.
               </p>
             </div>
             <div className="flex flex-col items-start gap-2 lg:items-end">
@@ -3902,7 +3902,7 @@ export default function FilingPipeline() {
                       <TabsTrigger
                         key={tab.value}
                         value={tab.value}
-                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[14px] font-sans font-semibold tracking-tight text-[#7B8A97] shadow-none ring-0 transition-colors hover:text-[#111827] data-[state=active]:border-[#111827] data-[state=active]:bg-transparent data-[state=active]:text-[#111827] data-[state=active]:shadow-none"
+                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[14px] font-sans font-semibold tracking-tight text-[#7B8A97] shadow-none ring-0 transition-colors hover:text-[#111827] data-[state=active]:border-[#0B74DE] data-[state=active]:bg-transparent data-[state=active]:text-[#0B74DE] data-[state=active]:shadow-none"
                       >
                         {tab.label}
                       </TabsTrigger>

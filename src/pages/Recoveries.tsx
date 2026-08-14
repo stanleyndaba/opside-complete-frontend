@@ -2352,13 +2352,9 @@ export default function Recoveries() {
   };
 
   return (
-    <PageLayout title="Reimbursements" midnight>
-      {/* Background Matrix Pattern / Noise */}
-      <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-
-      <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
-        <div className="relative w-full min-h-full bg-[#050505]">
+    <PageLayout title="Reimbursements">
+      <div className="relative w-full flex-1 overflow-x-hidden bg-[#FAFAF7]">
+        <div className="relative w-full min-h-full bg-[#FAFAF7]">
           <div className="relative w-full max-w-full px-8 pt-8 pb-24">
             {/* Header Section - Matrix Terminal Design */}
             <div className="border-b border-white/10 pb-8 mb-8 relative">
@@ -2366,12 +2362,12 @@ export default function Recoveries() {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-[10px] font-sans font-bold text-white/35 tracking-tight uppercase">Recovery view</span>
+                    <span className="text-[10px] font-sans font-semibold text-[#858792] tracking-tight uppercase">Recovery ledger</span>
                     <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
                   </div>
-                  <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Open Recoveries</h1>
+                  <h1 className="text-[24px] font-semibold font-sans text-[#111827] mb-2 tracking-tight">Open Recoveries</h1>
                   <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-md leading-relaxed">
-                    See what Margin found, what is already with Amazon, and what has already been paid back.
+                    Review detected opportunities, cases already with Amazon, payout posture, and confirmed recoveries.
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-3">
@@ -2747,13 +2743,13 @@ export default function Recoveries() {
                       {loading && (
                         <div className="py-24 flex flex-col items-center justify-center space-y-6">
                           <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
-                          <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">SYNCHRONIZING_DATA_NODES...</span>
+                          <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Checking recovery records…</span>
                         </div>
                       )}
                       {error && (
                         <div className="py-24 flex flex-col items-center justify-center space-y-4 text-center px-6">
                           <AlertTriangle className="w-8 h-8 text-red-500/50" />
-                          <span className="text-xs font-sans font-bold text-red-400">ERROR_OVERRIDE: {error}</span>
+                          <div className="space-y-1"><span className="text-xs font-sans font-semibold text-[#B42318]">Margin could not load this recovery ledger.</span><span className="block text-[11px] font-sans text-[#6B7280]">Refresh the workspace or reconnect Amazon before trying again.</span></div>
                         </div>
                       )}
                       {!loading && !error && rankedClaims.length === 0 && (
@@ -2763,11 +2759,11 @@ export default function Recoveries() {
                             <div className="absolute inset-0 bg-emerald-500/10 blur-xl rounded-full" />
                           </div>
                           <div className="flex flex-col items-center text-center max-w-sm px-6">
-                            <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">ZERO_NODES_IDENTIFIED</span>
+                            <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">No recovery cases in this view</span>
                             <span className="text-[10px] font-sans font-bold text-white/20 mt-3 leading-relaxed uppercase tracking-tighter">
                               {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
-                                ? 'SYNC_AMAZON_ACCOUNT_OR_RUN_ANALYSIS_TO_IDENTIFY_NODES'
-                                : 'ADJUST_PARAMETERS_TO_EXPAND_AUDIT_SPECTRUM'}
+                                ? 'Connect Amazon or run an audit to start a recovery review.'
+                                : 'Adjust the current filters to review a broader recovery scope.'}
                             </span>
                           </div>
                         </div>
@@ -2904,7 +2900,7 @@ export default function Recoveries() {
                                             <span className="text-sm font-sans font-bold italic text-white tracking-tight">
                                               {formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}
                                             </span>
-                                            <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">RECOVERY_VALUE</span>
+                                            <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">ESTIMATED RECOVERY VALUE</span>
                                           </div>
                                         </div>
 
@@ -3018,12 +3014,12 @@ export default function Recoveries() {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="resolve-notes" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CLOSURE_NARRATIVE</Label>
+                            <Label htmlFor="resolve-notes" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">Resolution note</Label>
                             <Textarea
                               id="resolve-notes"
                               value={resolveNotes}
                               onChange={(e) => setResolveNotes(e.target.value)}
-                              placeholder="INPUT_RESOLUTION_PROTOCOL_DATA..."
+                              placeholder="Add the payout confirmation or resolution details Margin should record."
                               className="mt-2 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
                             />
                           </div>
@@ -3039,7 +3035,7 @@ export default function Recoveries() {
                             setResolveAmount('');
                           }}
                           className="h-10 px-6 font-sans font-bold text-[10px] text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
-                          ABORT_SESSION
+                          Cancel
                         </Button>
                         <Button
                           onClick={async () => {
@@ -3315,8 +3311,8 @@ export default function Recoveries() {
                           {/* Advisory Note */}
                           <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl px-5 py-4">
                             <p className="text-[10px] font-sans font-bold text-amber-500/60 leading-relaxed uppercase tracking-tight italic">
-                              <span className="font-bold text-amber-500 not-italic mr-2">PROTOCOL ADVISORY:</span>
-                              OBTAIN SUPPLEMENTAL DATA NODES BEFORE EXECUTION TO ENSURE LEDGER INTEGRITY. MANUAL BYPASS REQUIRED.
+                              <span className="font-bold text-amber-500 not-italic mr-2">Review note:</span>
+                              Add the missing supporting records before Margin can safely move this recovery toward filing. Do not bypass the review gate.
                             </p>
                           </div>
                         </div>
@@ -3531,7 +3527,7 @@ export default function Recoveries() {
                                 <div className="p-6 space-y-6">
                                   {/* Quality Summary */}
                                   <div>
-                                    <div className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">PROTOCOL RECOMMENDATION</div>
+                                    <div className="text-[10px] font-sans font-semibold text-[#111827] uppercase tracking-tight">Recommended next step</div>
                                     <div className="text-[9px] font-sans font-bold text-white/20 uppercase mt-2 tracking-tight leading-relaxed">{validation.recommendationText}</div>
                                   </div>
 

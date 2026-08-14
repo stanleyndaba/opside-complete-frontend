@@ -471,15 +471,15 @@ export default function NotificationHub() {
 
   return (
     <PageLayout title="Notifications" noPadding>
-      <div className="platform-vitality-page relative min-h-screen bg-[#F9FAFB] text-[#111827]">
+      <div className="platform-vitality-page relative min-h-screen bg-[#FAFAF7] text-[#111827]">
         <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
         <div className="relative mx-auto max-w-[1500px] px-8 py-8">
           {/* Analysis Header */}
-          <div className="mb-5 border-b border-white/10 pb-5">
-            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Communication registry</div>
-            <h1 className="mt-2 text-[26px] font-sans font-medium tracking-tight text-white">Notifications</h1>
+          <div className="mb-5 border-b border-[#D8E3E8] pb-5">
+            <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#858792]">Operational notifications</div>
+            <h1 className="mt-2 text-[24px] font-sans font-semibold tracking-tight text-[#111827]">Notifications</h1>
             <p className="mt-2 max-w-xl text-[12px] font-sans leading-5 text-white/[0.52]">
-              Review updates clearly, then open preferences only when you need them.
+              Review unread operational events first; open preferences only when you need to change delivery controls.
             </p>
           </div>
 
@@ -487,7 +487,7 @@ export default function NotificationHub() {
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-6 border-y border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/[0.025]"
+                className="flex w-full items-center justify-between gap-6 border-y border-[#D8E3E8] px-4 py-3 text-left transition-colors hover:bg-[#F8FAFB]"
               >
                 <div className="min-w-0">
                   <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">Preferences</div>
@@ -499,7 +499,7 @@ export default function NotificationHub() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <div className="border-l border-white/12 pl-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
+                  <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                     {unreadCount} unread
                   </div>
                   <ChevronRight className="h-4 w-4 text-white/38" />
@@ -513,7 +513,7 @@ export default function NotificationHub() {
             {/* Fixed Header */}
             <div className="flex shrink-0 items-center justify-between border-b border-white/10 py-4">
               <div>
-                <h2 className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                <h2 className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#858792]">
                   History
                 </h2>
                 <p className="mt-1 text-[11px] font-sans leading-5 text-white/[0.48]">
@@ -524,13 +524,13 @@ export default function NotificationHub() {
                 <button
                   onClick={handleMarkAllRead}
                   disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
-                  className="border border-white/10 bg-transparent px-3 py-1.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/46 transition-colors hover:bg-white/[0.04] hover:text-white disabled:opacity-20">
+                  className="rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563] transition-colors hover:border-[#C8D8FF] hover:bg-[#F2F7FF] hover:text-[#0B74DE] disabled:opacity-40">
                   Mark read
                 </button>
                 <button
                   onClick={handleRefresh}
                   disabled={loading}
-                  className="border border-white/10 bg-transparent px-3 py-1.5 text-white/46 transition-colors hover:bg-white/[0.04] hover:text-white disabled:opacity-20">
+                  className="rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1.5 text-[#4B5563] transition-colors hover:border-[#C8D8FF] hover:bg-[#F2F7FF] hover:text-[#0B74DE] disabled:opacity-40">
                   <span className="text-[10px] font-sans font-medium uppercase tracking-tight">{loading ? 'Loading' : 'Refresh'}</span>
                 </button>
               </div>

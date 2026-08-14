@@ -1,0 +1,500 @@
+--- src/pages/Recoveries.tsx
+2360:      <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
+2361:        <div className="relative w-full min-h-full bg-[#050505]">
+2364:            <div className="border-b border-white/10 pb-8 mb-8 relative">
+2369:                    <span className="text-[10px] font-sans font-bold text-white/35 tracking-tight uppercase">Recovery view</span>
+2372:                  <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Open Recoveries</h1>
+2373:                  <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-md leading-relaxed">
+2381:                      "h-11 px-6 font-sans font-bold text-[10px] uppercase tracking-tight transition-all border border-white/5",
+2383:                        ? "text-white/20 bg-transparent"
+2384:                        : "text-white bg-white/5 border-white/15 hover:bg-white/10 hover:border-white/20"
+2416:                      <Loader2 className="h-4 w-4 animate-spin text-white" />
+2433:                    <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">{recoveriesHeroLabel}</span>
+2440:                            className="w-3.5 h-3.5 rounded-full border border-white/10 flex items-center justify-center hover:border-white/20 transition-colors group">
+2441:                            <span className="text-white/40 text-[8px] font-sans font-bold group-hover:text-white">i</span>
+2444:                        <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-lg shadow-2xl backdrop-blur-3xl uppercase tracking-tight">
+2453:                    <div className="text-6xl font-sans font-bold text-white tracking-tight shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
+2457:                      <span className="text-[10px] font-sans font-bold text-white/55 tracking-tight uppercase">
+2460:                      <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
+2465:                  <p className="mt-4 max-w-2xl text-[12px] font-sans leading-5 text-white/42">
+2477:                          : 'bg-white/5 border-white/10 text-white/60'
+2504:                    <Button variant="outline" className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-sans font-bold text-[9px] uppercase tracking-tight rounded-lg px-4 gap-3 group transition-all">
+2509:                      <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/30 tracking-tighter group-hover:border-emerald-500/30 group-hover:text-emerald-500">
+2512:                      <ChevronDown className="h-3 w-3 text-white/20 group-hover:text-emerald-500" />
+2515:                  <DropdownMenuContent align="end" className="w-80 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-2 outline-none">
+2516:                    <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-2 uppercase tracking-tight">
+2526:                            <span className="text-white/60 group-hover:text-white truncate uppercase tracking-tight">{label}</span>
+2527:                            <span className="text-white/20 group-hover:text-emerald-500 tabular-nums">[{String(count).padStart(3, '0')}]</span>
+2541:                <h2 className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Work queues</h2>
+2545:                <TabsList className="mb-8 flex h-14 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl">
+2548:                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+2552:                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+2561:                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+2565:                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+2574:                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+2578:                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+2591:                    <div className="relative overflow-hidden bg-white/5 border border-white/5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+2595:                      <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between">
+2597:                          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Open recovery queue</h3>
+2598:                          <p className="text-[10px] font-sans leading-5 text-white/35 mt-1 max-w-xl">Each row shows money still worth reviewing, evidence strength, and the next best move.</p>
+2600:                        <div className="flex items-center gap-1.5 font-sans font-bold text-[9px] text-white/20 uppercase tracking-tight">
+2611:                              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within/search:text-emerald-500 transition-colors" />
+2616:                                className="pl-12 h-14 bg-white/5 border-white/5 text-white font-sans font-bold text-[11px] placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-2xl transition-all shadow-inner"
+2633:                                    "h-8 px-4 text-[9px] font-sans font-bold border border-white/5 rounded-full transition-all uppercase tracking-tight",
+2636:                                      : "text-white/30 hover:text-white/60 hover:bg-white/5"
+2646:                          <div className="lg:col-span-12 flex flex-wrap gap-4 pt-4 border-t border-white/5">
+2653:                                    "h-12 bg-white/5 border-white/5 text-[10px] font-sans font-bold uppercase tracking-tight px-5 gap-4 rounded-xl hover:bg-white/10 transition-all",
+2654:                                    !dateRange ? "text-white/20" : "text-white/60"
+2668:                              <PopoverContent className="w-auto p-0 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl overflow-hidden" align="start">
+2676:                                  className="bg-transparent text-white font-sans font-bold text-[10px]"
+2683:                              className="h-12 bg-transparent border-0 text-[10px] font-sans font-bold uppercase tracking-tight px-4 gap-2 text-white/40 hover:text-white/60 transition-all"
+2693:                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl px-5 hover:bg-white/10 transition-all">
+2699:                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+2711:                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl px-5 hover:bg-white/10 transition-all">
+2717:                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+2734:                              className="h-12 text-[10px] font-sans font-bold text-white/20 hover:text-white/60 uppercase tracking-tight px-6 ml-auto">
+2745:                  <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
+2750:                          <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">SYNCHRONIZING_DATA_NODES...</span>
+2756:                          <span className="text-xs font-sans font-bold text-red-400">ERROR_OVERRIDE: {error}</span>
+2762:                            <Search className="w-12 h-12 text-white/5" />
+2766:                            <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">ZERO_NODES_IDENTIFIED</span>
+2767:                            <span className="text-[10px] font-sans font-bold text-white/20 mt-3 leading-relaxed uppercase tracking-tighter">
+2777:                          <div className="flex items-center px-8 py-4 bg-white/[0.02] border-b border-white/5">
+2784:                              className="mr-6 border-white/10 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+2786:                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">BATCH OPERATIONS TARGETING</span>
+2792:                              <div className="sticky top-[0px] z-10 bg-[#0c0c0c]/90 backdrop-blur-xl px-8 py-4 border-y border-white/5 flex items-center justify-between group/header">
+2795:                                  <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">
+2800:                                  <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight border border-white/5 px-3 py-1 rounded-full bg-white/5">
+2838:                                            className="border-white/10 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+2846:                                                "w-6 h-6 transition-all duration-500 text-white/5 group-hover/hex:text-white/20",
+2850:                                                "absolute inset-0 flex items-center justify-center text-[8px] font-sans font-bold text-white/20 transition-colors",
+2861:                                                <span className="text-[11px] font-sans font-bold text-white hover:text-emerald-500 transition-colors tracking-tight">
+2866:                                              <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
+2871:                                            <div className="flex items-center gap-3 text-[10px] font-sans font-bold text-white/40 mb-3">
+2873:                                              <span className="text-white/10">|</span>
+2874:                                              <span className="text-white/10 uppercase tracking-tight">SKU FIX: {claim.sku || 'N/A'}</span>
+2883:                                                      "bg-white/5 border-white/10 text-white/40"
+2894:                                                isCritical ? "text-red-500" : isUrgent ? "text-amber-500" : "text-white/20"
+2904:                                            <span className="text-sm font-sans font-bold italic text-white tracking-tight">
+2907:                                            <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">RECOVERY_VALUE</span>
+2914:                                              <Button variant="ghost" className="h-10 w-10 p-0 text-white/20 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+2918:                                            <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-1">
+--- src/pages/DisputeCases.tsx
+87:  default: 'bg-white/5 text-white/50 border-white/10'
+426:      return 'text-white/68';
+791:  if (eligibilityStatus === 'THREAD_ONLY') {
+1005:    resolved: 'border-white/15 bg-white/10 text-white/75',
+1019:    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+1020:      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{title}</div>
+1023:          <div key={`${title}-${row.label}`} className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-3 last:border-0 last:pb-0">
+1024:            <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{row.label}</span>
+1025:            <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-white/86">{row.value}</span>
+1825:              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Dispute Queue</h1>
+1826:              <p className="text-sm text-white/50 font-sans max-w-3xl">
+1832:                <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
+1834:                  <span className="ml-2 text-white/40">
+1839:              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
+1844:                className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"
+1852:          <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
+1853:            <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
+1857:                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
+1862:                      className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/25"
+1867:                    <SelectTrigger className="w-[160px] bg-white/5 border-white/10 text-white">
+1879:                    <SelectTrigger className="w-[200px] bg-white/5 border-white/10 text-white">
+1895:                    <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
+1911:                    <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
+1925:                    <SelectTrigger className="w-[180px] bg-white/5 border-white/10 text-white">
+1936:                    <SelectTrigger className="w-[180px] bg-white/5 border-white/10 text-white">
+1950:                    <SelectTrigger className="w-[200px] bg-white/5 border-white/10 text-white">
+1966:                    <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
+1980:                    <SelectTrigger className="w-[120px] bg-white/5 border-white/10 text-white">
+1991:                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+1995:                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+2006:                <div className="py-20 flex flex-col items-center justify-center gap-3 text-center text-white/40">
+2009:                    <span className="block text-sm font-sans font-bold text-white/70">{queueLoadingState.title}</span>
+2010:                    <span className="block text-xs font-sans text-white/40">{queueLoadingState.detail}</span>
+2015:                  <AlertCircle className="w-5 h-5 text-white/40" />
+2017:                    <p className="text-sm font-sans font-bold text-white/70">Failed to load dispute queue</p>
+2018:                    <p className="text-xs font-sans text-white/40">{error}</p>
+2023:                  <FileText className="w-5 h-5 text-white/20" />
+2024:                  <p className="text-sm font-sans font-bold text-white/60">No dispute queue records match the current filters.</p>
+2029:                    <thead className="bg-white/[0.02] border-b border-white/5">
+2032:                          <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
+2074:                                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
+2078:                                  <Link to={`/recoveries/${row.dispute_case_id}`} state={{ claim: row }} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
+2082:                                  <span className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white/60">
+2087:                                  <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+2091:                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+2096:                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+2101:                                <div className="space-y-1 text-[11px] text-white/50 font-sans">
+2109:                                <div className="border-t border-white/[0.06] pt-2 text-[10px] font-sans tracking-tight text-white/42">
+2110:                                  <span className="uppercase text-white/26">Case progress:</span>{' '}
+2125:                                  <div className="text-[11px] text-white/45 font-sans">
+2133:                              <div className="space-y-1 min-w-[220px] text-[12px] font-sans text-white/70">
+2134:                                <div className="flex justify-between gap-4"><span className="text-white/35">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
+2135:                                <div className="flex justify-between gap-4"><span className="text-white/35">Amazon approval</span><span>{formatMoney(approvedAmount, row.currency)}</span></div>
+2136:                                  <div className="flex justify-between gap-4"><span className="text-white/35">Paid back (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
+2142:                                <div className="text-[10px] text-white/40">{financialStatusDetail(financialSummary)}</div>
+2151:                                <div className="space-y-1.5 text-[11px] font-sans text-white/50">
+2153:                                    <span className="text-white/32">Source docs linked</span>
+2154:                                    <span className="text-right text-white/65">{row.matched_document_count ?? 0}</span>
+2157:                                    <div className="text-white/32">Needed now</div>
+2158:                                    <div className="break-words leading-snug text-white/62">
+2164:                                      <div className="text-white/32">Specific gaps</div>
+2165:                                      <div className="break-words leading-snug text-white/62">
+2177:                                  <p className="text-[13px] font-sans font-bold tracking-tight text-white">{nextActionLabel}</p>
+2182:                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+2187:                                <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
+2188:                                <p className="text-[11px] font-sans leading-5 text-white/42">
+2192:                                  <p className="text-[11px] font-sans leading-5 text-white/45">
+2197:                                  <p className="text-[11px] font-sans leading-5 text-white/38">
+2202:                                  <p className="text-[11px] font-sans leading-5 text-white/38">
+2223:                                        className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-semibold tracking-tight text-white/62"
+2234:                              <div className="min-w-[160px] space-y-1 text-[11px] text-white/50 font-sans">
+2235:                                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Last movement</div>
+2236:                                <div className="text-sm font-sans font-bold tracking-tight text-white">
+2241:                                  <Badge variant="outline" className="w-fit border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+2255:                                      className="h-9 w-9 rounded-lg text-white/35 hover:bg-white/5 hover:text-white"
+2261:                                    <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record Actions</div>
+2263:                                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+2269:                                        className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
+2276:                                      className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+2283:                                      className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+--- src/pages/EvidenceLocker.tsx
+--- src/pages/FilingPipeline.tsx
+2838:                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#047857]" />
+2852:              <Button asChild size="sm" className="h-9 w-full rounded-[2px] border border-[#111827] bg-[#111827] px-4 font-sans text-[10px] font-semibold uppercase tracking-tight text-white hover:bg-[#020617] hover:text-white">
+2899:              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
+2904:              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
+2905:              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+2917:                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+2925:          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+2928:                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Live stage</div>
+2940:            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+2942:                <span className="text-white/30">Amazon route</span>
+2943:                <span className="max-w-[72%] text-right text-white/68">{preview.amazonRoute}</span>
+2946:                <span className="text-white/30">Evidence packet</span>
+2947:                <span className="max-w-[72%] text-right text-white/68">{preview.evidencePacket}</span>
+2950:                <span className="text-white/30">Policy check</span>
+2951:                <span className="max-w-[72%] text-right text-white/68">{preview.policyWindow}</span>
+2957:                <div key={`${event}-${index}`} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+2981:                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+3021:              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
+3026:              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
+3027:              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+3039:                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+3047:          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+3050:                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Amazon case tracker</div>
+3062:            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+3064:                <span className="text-white/30">Amazon status</span>
+3065:                <span className="max-w-[72%] text-right text-white/68">{preview.amazonStatus}</span>
+3068:                <span className="text-white/30">Proof packet</span>
+3069:                <span className="max-w-[72%] text-right text-white/68">{preview.proofPacket}</span>
+3072:                <span className="text-white/30">Proof quality</span>
+3073:                <span className="max-w-[72%] text-right text-white/68">{preview.confidence}</span>
+3076:                <span className="text-white/30">Response window</span>
+3077:                <span className="max-w-[72%] text-right text-white/68">{preview.responseWindow}</span>
+3083:                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+3098:              <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+3101:              <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+3117:                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+3158:              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
+3163:              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{title}</h3>
+3164:              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(approvedAmount, row.currency)}</span>
+3176:                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+3184:          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+3187:                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Settlement tracker</div>
+3199:            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+3201:                <span className="text-white/30">Reconciliation source</span>
+3202:                <span className="max-w-[72%] text-right text-white/68">{preview.reconciliationSource}</span>
+3205:                <span className="text-white/30">Expected deposit</span>
+3206:                <span className="max-w-[72%] text-right text-white/68">{preview.expectedDeposit}</span>
+3209:                <span className="text-white/30">Variance</span>
+3210:                <span className="max-w-[72%] text-right text-white/68">{preview.variance}</span>
+3213:                <span className="text-white/30">Risk</span>
+3214:                <span className="max-w-[72%] text-right text-white/68">{preview.payoutRisk}</span>
+3220:                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+3236:                <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+3239:                <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+3256:                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+3296:              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
+3301:              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{title}</h3>
+3302:              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(recoveredAmount, row.currency)}</span>
+3314:                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+3322:          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+3325:                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Recovery closeout</div>
+3337:            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+3339:                <span className="text-white/30">Payout proof</span>
+3340:                <span className="max-w-[72%] text-right text-white/68">{preview.payoutProof}</span>
+3343:                <span className="text-white/30">Reconciliation source</span>
+3344:                <span className="max-w-[72%] text-right text-white/68">{preview.reconciliationSource}</span>
+3347:                <span className="text-white/30">Deposit trail</span>
+3348:                <span className="max-w-[72%] text-right text-white/68">{preview.depositTrail}</span>
+3351:                <span className="text-white/30">Variance</span>
+3352:                <span className="max-w-[72%] text-right text-white/68">{preview.variance}</span>
+3358:                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+3374:                <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+3377:                <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+3393:                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
+3592:        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+3676:        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+3765:          .filing-pipeline-ledger [class*="text-white"] { color: #111827 !important; }
+3766:          .filing-pipeline-ledger [class*="text-white/30"],
+3767:          .filing-pipeline-ledger [class*="text-white/32"],
+3768:          .filing-pipeline-ledger [class*="text-white/34"],
+--- src/pages/Appeals.tsx
+287:      return 'text-white/68';
+344:const tableHeaderClass = 'px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28';
+345:const tableMetaClass = 'text-[11px] font-sans leading-5 text-white/46';
+346:const tableSupportClass = 'text-[10px] font-sans font-medium uppercase tracking-tight text-white/36';
+347:const tablePrimaryValueClass = 'text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84';
+348:const tableSecondaryValueClass = 'text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/72';
+349:const detailCardClass = 'rounded-2xl border border-white/8 bg-white/[0.02]';
+350:const detailInsetCardClass = 'rounded-xl border border-white/[0.06] bg-white/[0.02]';
+485:            <Card className="rounded-2xl border-white/5 bg-[#0c0c0c] text-white">
+487:                <h1 className="text-xl font-sans font-bold tracking-tight text-white">Appeals unavailable</h1>
+488:                <p className="text-sm font-sans text-white/50">Open this page from a tenant workspace before loading verified Amazon response reviews.</p>
+504:              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Appeals workspace</div>
+505:              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Reimbursement appeals and Amazon responses</h1>
+506:              <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
+509:              <p className="text-[11px] font-sans font-medium tracking-tight text-white/32">
+516:                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
+530:          <Card className="overflow-hidden rounded-2xl border-white/8 bg-[#0c0c0c] text-white">
+532:              <div className="border-b border-white/8 px-6 py-5">
+535:                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Verified response queue</div>
+536:                    <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Responses that need review</h2>
+537:                    <p className="mt-2 max-w-3xl text-[12px] font-sans leading-5 text-white/42">
+545:                        <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/20" />
+550:                          className="h-10 min-w-[280px] rounded-lg border-white/10 bg-white/5 pl-9 text-sm text-white placeholder:text-white/15"
+555:                        <SelectTrigger className="h-10 w-full rounded-lg border-white/10 bg-white/5 text-white md:w-[180px]">
+568:                        <SelectTrigger className="h-10 w-full rounded-lg border-white/10 bg-white/5 text-white md:w-[190px]">
+580:                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
+589:                  <RefreshCw className="h-5 w-5 animate-spin text-white/25" />
+590:                  <p className="text-sm font-sans font-bold text-white/60">Loading verified response reviews...</p>
+594:                  <AlertCircle className="h-5 w-5 text-white/35" />
+595:                  <p className="text-sm font-sans font-bold text-white/70">Failed to load Appeals</p>
+596:                  <p className="max-w-xl text-xs font-sans text-white/40">{error}</p>
+600:                  <p className="text-sm font-sans font-bold text-white/70">
+603:                  <p className="max-w-xl text-xs font-sans text-white/40">
+621:                      <thead className="border-b border-white/8 bg-white/[0.02]">
+633:                          <tr key={row.dispute_case_id} className="border-b border-white/[0.06] align-top transition-colors hover:bg-white/[0.02]">
+637:                                  <div className="text-[15px] font-sans font-bold tracking-tight text-white">
+644:                                  <div className="text-[10px] font-sans tracking-tight text-white/42">
+645:                                    <span className="uppercase text-white/26">Case progress:</span>{' '}
+650:                                <div className="space-y-2 border-t border-white/[0.06] pt-3">
+651:                                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Amount at stake</div>
+652:                                  <div className="min-w-0 space-y-1 text-[12px] font-sans text-white/72">
+654:                                      <span className="text-white/34">Requested</span>
+655:                                      <span className="text-right text-white/84">{money(row.requested_amount, row.currency)}</span>
+658:                                      <span className="text-white/34">Amazon approval</span>
+659:                                      <span className="text-right text-white/84">{money(approvedAmount, row.currency)}</span>
+662:                                      <span className="text-white/34">Review gap</span>
+663:                                      <span className={cn('text-right', row.appealGap > 0 ? 'text-white' : 'text-white/58')}>
+668:                                  <div className="text-[10px] font-sans leading-5 text-white/40">
+689:                                    className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 transition-colors hover:text-white"
+733:                                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/78 transition-colors hover:bg-white/[0.08] hover:text-white"
+747:                  <div className="flex items-center justify-between border-t border-white/8 px-6 py-4">
+748:                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Page {page} of {totalPages}</div>
+754:                        className="h-9 rounded-lg border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white"
+762:                        className="h-9 rounded-lg border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white"
+777:                  <SheetHeader className="border-b border-white/8 px-5 py-3 pr-12">
+778:                    <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/28">Response detail</div>
+779:                    <SheetTitle className="mt-1 text-[12px] font-sans font-medium leading-4 tracking-tight text-white">
+782:                    <SheetDescription className="text-[10px] font-sans leading-4 text-white/46">
+791:                        <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/24">Review value</div>
+796:                              selectedRow.appealGap > 0 ? 'text-white' : 'text-white/58'
+801:                          <div className="mt-1.5 space-y-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/38">
+808:                      <div className="grid gap-2.5 border-t border-white/[0.06] px-4 py-3 sm:grid-cols-[132px_minmax(0,1fr)] sm:gap-5">
+809:                        <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/24">Review state</div>
+814:                          <div className="mt-2 text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+817:                          <div className="mt-1.5 text-[10px] font-sans leading-5 text-white/46">
+827:                      <div className="grid gap-2.5 border-t border-white/[0.06] px-4 py-3 sm:grid-cols-[132px_minmax(0,1fr)] sm:gap-5">
+828:                        <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/24">Required proof</div>
+830:                          <div className="text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+833:                          <div className="mt-1.5 text-[10px] font-sans leading-5 text-white/46">
+839:                      <div className="grid gap-2.5 border-t border-white/[0.06] px-4 py-3 sm:grid-cols-[132px_minmax(0,1fr)] sm:gap-5">
+840:                        <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/24">What happens next</div>
+842:                          <div className="text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+845:                          <div className="mt-1.5 text-[10px] font-sans leading-5 text-white/46">
+853:                      <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/24">Verified Amazon response</div>
+859:                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/36">
+864:                      <div className={cn('mt-3 p-3 text-[11px] font-sans leading-6 text-white/76', detailInsetCardClass)}>
+870:                      <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/24">Review plan</div>
+871:                      <div className="mt-2.5 text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+876:                          <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/24">Source records</div>
+877:                          <div className="mt-1.5 text-[11px] font-sans leading-5 text-white/72">
+--- src/pages/audit.tsx
+1049:      <Button onClick={startAccountStep} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+1053:      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+1060:      <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+1067:    <main className="platform-audit-workspace flex min-h-screen bg-white font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
+1080:              <button type="button" onClick={() => setSidebarOpen(false)} className="rounded-none p-1 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900">
+1087:              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-none px-2.5 py-2 text-[12px] font-medium text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-900">
+1091:              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-none px-2.5 py-2 text-[12px] font-medium transition-colors ${weeklyAuditEnabled ? 'bg-zinc-50 border-l border-[#007AFF] text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}>
+1105:                    className="h-7 w-full rounded-none border border-zinc-100 bg-zinc-50/50 pl-7 pr-2 text-left text-[11px] font-medium text-zinc-600 transition-colors hover:bg-white hover:border-zinc-200 focus:outline-none"
+1115:              <div className="rounded-none border border-zinc-100 bg-zinc-50/30 p-3">
+1132:              <button type="button" onClick={() => setSidebarOpen(true)} className="mr-2 rounded-none p-1 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900 md:inline-flex hidden">
+1146:              <div className="flex items-center gap-1.5 rounded-none border border-zinc-100 bg-zinc-50/50 px-2.5 py-1 text-[11px] font-semibold text-zinc-600">
+1157:                className="flex items-center gap-2 h-8 rounded-none px-3 text-[11px] font-bold text-zinc-500 uppercase tracking-tight transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+1163:            <div className="h-4 w-px bg-zinc-100 mx-1" />
+1164:            <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-none p-2 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900" title="Export Summary">
+1167:            <button type="button" onClick={() => setIsSecurityProtocolOpen(true)} className="rounded-none p-2 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900" title="Security Protocol">
+1178:                <div className="h-px w-6 bg-zinc-900" />
+1208:                <span className="border border-zinc-100 bg-zinc-50 px-2 py-1 text-zinc-500">{newShipmentSyncCopy}</span>
+1209:                <span className="border border-zinc-100 bg-zinc-50 px-2 py-1 text-zinc-500">Logic: Jun 2026 Policy applied</span>
+1217:                    <span className={`h-1.5 w-1.5 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-zinc-300' : 'bg-[#007AFF] animate-pulse'}`} />
+1230:                      <div className="h-px w-4 bg-zinc-200" />
+1238:                  <div className="h-8 w-px bg-zinc-100 hidden sm:block" />
+1251:              <div className={`relative overflow-hidden rounded-none border ${step === 'completed' ? 'border-zinc-100 bg-white' : 'border-zinc-50 bg-zinc-50/30'} p-6 sm:p-8`}>
+1254:                    <div className="h-4 w-0.5 bg-[#007AFF]" />
+1259:                      <span className="h-1.5 w-1.5 rounded-full bg-zinc-200" />
+1306:                      <span key={category} className="rounded-[4px] border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[11px] font-medium text-zinc-600">
+1314:                  <div className="mb-8 rounded-none border border-zinc-100 bg-zinc-50/30 px-6 py-4 text-left">
+1398:                             <span className="font-bold text-zinc-900 tabular-nums">{status === 'Synchronized' ? '200_OK' : status}</span>
+1413:                      <div className="h-px w-6 bg-zinc-900" />
+1439:                      <div className="rounded-none border border-zinc-100 bg-zinc-50/30 p-8 flex flex-col">
+1459:                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-6 w-full h-11 rounded-none border-zinc-200 bg-white text-[11px] font-bold uppercase tracking-tight text-zinc-900 hover:bg-zinc-50 transition-all">
+1464:                          <Button variant="outline" disabled className="mt-6 w-full h-11 rounded-none border-zinc-100 bg-zinc-50/50 text-[11px] font-bold uppercase tracking-tight text-zinc-300">
+1481:                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-11 rounded-none bg-[#007AFF] text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600 border-none transition-all">
+1499:                      <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-11 rounded-none bg-[#007AFF] text-[11px] font-bold uppercase tracking-tight text-white hover:bg-blue-600 border-none transition-all">
+1557:            <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+1638:          <Button onClick={exportExecutiveSummary} disabled={isExporting || step !== 'completed'} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">
+1691:            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white disabled:bg-blue-200 disabled:text-white disabled:opacity-100">
+1723:            <Button onClick={() => void nativeShare()} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">Share</Button>
+--- src/pages/Settings.tsx
+281:            <div className="border-t border-white/10 pt-8 space-y-3">
+282:              <h1 className="text-xl font-sans font-bold text-white tracking-tight">Settings unavailable</h1>
+283:              <p className="text-sm text-white/50 font-sans">
+307:          <div className="border-b border-white/10 pb-6">
+308:            <div className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
+309:              SYSTEM_CONFIG // READ_ONLY
+311:            <h1 className="mt-2 text-4xl font-sans font-light text-white tracking-tight">Settings</h1>
+312:            <p className="mt-3 max-w-3xl text-sm text-white/45 font-sans leading-relaxed">
+321:                  <div className="group relative w-full flex items-center gap-4 px-0 py-2.5 text-white/80 border-b border-white/10">
+322:                    <Building2 className="h-4.5 w-4.5 text-white/50" />
+339:                  <h2 className="text-xl font-sans font-bold text-white tracking-tight">Account Identity</h2>
+340:                  <p className="text-sm text-white/50 font-sans mt-2 max-w-2xl">
+345:                <div className="relative overflow-hidden border-t border-white/10 pt-6 group transition-all duration-500">
+347:                    <Building2 className="h-48 w-48 text-white rotate-12" />
+354:                          <h3 className="text-2xl font-sans font-bold text-white tracking-tight">
+363:                                  ? 'bg-white/5 text-white border-white/10'
+364:                                  : 'bg-white/5 text-white/40 border-white/10'
+375:                              <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">{field.label}</p>
+376:                              <p className="text-sm font-sans font-bold text-white/80 tracking-tight break-all">{field.value}</p>
+384:                          className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] transition-all active:scale-[0.98] rounded-none h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_12px_28px_rgba(0,82,255,0.16)]"
+395:                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/10 pt-7">
+397:                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Platform Connectivity</div>
+400:                      <div className="flex items-center justify-between py-2.5 border-b border-white/10">
+402:                          <Store className="h-4 w-4 text-white/40" />
+403:                          <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Amazon SP-API</span>
+410:                              ? 'bg-white/5 text-white border-white/10'
+411:                              : 'bg-white/5 text-white/40 border-white/10'
+418:                      <div className="flex items-center justify-between py-2.5 border-b border-white/10">
+420:                          <CreditCard className="h-4 w-4 text-white/40" />
+421:                          <span className="text-xs font-sans font-bold text-white/80 tracking-tight">PayPal Billing</span>
+428:                              ? 'bg-white/5 text-white border-white/10'
+429:                              : 'bg-white/5 text-white/40 border-white/10'
+437:                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Ingest</p>
+438:                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">
+444:                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Marketplaces</p>
+450:                                <Badge key={marketplaceId} variant="outline" className="text-[9px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/70 rounded-none">
+456:                            <span className="text-sm font-sans font-bold text-white/50 tracking-tight">Not available</span>
+463:                  <section className="space-y-4 border-t border-white/10 pt-6 md:border-t-0 md:border-l md:pl-8">
+464:                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Filing Controls</div>
+467:                      <div className="flex items-start justify-between gap-5 py-2.5 border-b border-white/10">
+469:                          <p className="text-sm font-sans font-bold text-white tracking-tight">Auto-File</p>
+470:                          <p className="text-xs text-white/45 font-sans leading-relaxed">
+473:                          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+482:                          <div className="border border-white/10 bg-white/[0.03] px-3 py-2">
+483:                            <p className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/25">
+486:                            <p className="mt-1 text-xs text-white/50 font-sans leading-relaxed">
+490:                              <p className="mt-1.5 text-[9px] font-sans font-bold uppercase tracking-tight text-white/25">
+510:                            className="data-[state=checked]:bg-[#0052FF] data-[state=unchecked]:bg-[#E5E7EB]"
+512:                          <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+518:                      <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Support Tier</div>
+521:                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Current Tier</p>
+522:                        <p className="text-lg font-sans font-bold text-white tracking-tight">{supportTier}</p>
+526:                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Workspace</p>
+527:                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">
+532:                      <p className="text-xs text-white/40 font-sans leading-relaxed">
+--- src/pages/IntegrationsHub.tsx
+1010:          <div className="max-w-xl w-full bg-white/[0.02] border border-white/10 rounded-2xl p-8 text-center">
+1011:            <h1 className="text-2xl font-sans font-bold text-white tracking-tight mb-3">Workspace context required</h1>
+1032:              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-white font-sans font-bold tracking-tight">
+1041:                    <div className="text-6xl font-sans font-bold text-white tracking-tighter">
+1044:                    <div className="text-sm font-sans font-bold text-white/35 uppercase tracking-tight">
+1048:                      <Badge variant="outline" className="bg-white/10 border-white/20 text-white/70 font-sans font-bold text-[10px] uppercase tracking-tight px-3 py-1">
+1055:                    <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
+1058:                      <div className="text-sm font-bold text-white tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
+1060:                    <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
+1063:                      <div className="text-sm font-bold text-white tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
+1065:                    <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
+1068:                      <div className="text-sm font-bold text-white tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
+1079:              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-[#0052FF] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-xs hover:bg-[#0047DD] transition-colors">
+1090:              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-white font-sans font-bold tracking-tight">
+1091:                <Shield className="h-8 w-8 text-white/70" />
+1101:                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-white/20 transition-all group">
+1102:                  <Mail className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-white/70 transition-colors" />
+1119:                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-white/20 transition-all group">
+1120:                  <Cloud className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-white/70 transition-colors" />
+1139:                <div className="flex items-center justify-center gap-2 text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">
+1146:                  className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-white"
+1166:                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Connections</span>
+1168:                <h1 className="text-4xl md:text-5xl font-sans font-light text-white mb-4 leading-tight tracking-tight">
+1181:                    <span className="text-sm font-medium text-white tracking-tight">{pageOperationalState}</span>
+1190:              <div className="relative flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-white/20 transition-all duration-300">
+1191:                <SearchIcon className="h-4 w-4 text-gray-500 ml-4 group-hover:text-white/70 transition-colors" />
+1196:                  className="bg-transparent border-none text-white font-sans font-bold text-xs h-12 placeholder:text-gray-600 focus-visible:ring-0 tracking-tight"
+1211:              <div className="h-full border-y border-white/10 bg-transparent px-5 py-5 flex flex-col relative group transition-colors duration-300 hover:border-white/20">
+1213:                  <Database className="w-12 h-12 text-white/10 group-hover:text-white/20 transition-colors" />
+1216:                <div className="flex flex-col gap-5 border-b border-white/10 pb-5 md:flex-row md:items-center md:justify-between">
+1226:                      <h3 className="text-[22px] font-sans font-medium text-white tracking-tight">Amazon Connection</h3>
+1236:                          className="h-9 rounded-none border border-white/10 bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-300 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white gap-2"
+1256:                                className="bg-white/5 border-white/10 focus:border-white/20 text-white h-12 font-sans font-bold tracking-tight"
+1265:                                className="bg-white/5 border-white/10 focus:border-white/20 text-white h-12 font-sans font-bold tracking-tight"
+1271:                                className="w-full h-12 px-3 bg-white/5 border-white/10 rounded-md text-sm border focus:border-white/20 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight"
+1286:                            className="bg-transparent text-gray-400 hover:text-white font-sans font-bold uppercase text-[10px] py-1 tracking-tight"
+1293:                            className="bg-[#0052FF] hover:bg-[#0047DD] text-[#FFFFFF] font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
+1311:                          className="h-9 rounded-none bg-[#0052FF] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#0047DD] hover:text-[#FFFFFF]"
+1337:                        className="h-9 rounded-none bg-[#0052FF] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#0047DD] hover:text-[#FFFFFF]"
+1345:                <div className="grid grid-cols-1 border-b border-white/10 md:grid-cols-2 xl:grid-cols-4">
+1346:                  <div className="border-b border-white/8 px-0 py-4 md:border-r xl:border-b-0 xl:pr-5">
+1348:                    <span className="text-[13px] text-white font-sans font-medium tracking-tight">{describeProviderState(amazonProviderState)}</span>
+1350:                  <div className="border-b border-white/8 px-0 py-4 md:border-b-0 xl:border-r xl:px-5">
+1352:                    <span className="text-[13px] text-white font-sans font-medium tracking-tight break-all">{connectedSellerId || 'Not resolved'}</span>
+1354:                  <div className="border-b border-white/8 px-0 py-4 md:border-r md:pr-5 xl:border-b-0 xl:px-5">
+1356:                    <span className="text-[13px] text-white font-sans font-medium tracking-tight">{connectedAmazonName || 'Not available'}</span>
+1360:                    <span className="text-[13px] text-white font-sans font-medium tracking-tight">
+1369:                      <RefreshCw className="w-8 h-8 text-white/25 animate-spin" />
+1373:                      <div key={store.id} className="border-y border-white/10 px-0 py-4 relative group/card transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.025]">
+1376:                            <span className="text-white font-sans font-medium text-[13px] mb-1 truncate max-w-[150px] tracking-tight">{store.name}</span>
+1382:                        <div className="space-y-3 pt-4 border-t border-white/8">
+1404:                    <div className="col-span-full border border-dashed border-white/10 px-5 py-10 text-center font-sans font-light tracking-tight">
+1410:                <div className="mt-5 pt-4 border-t border-white/10 flex flex-col gap-3 text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500 md:flex-row md:items-center md:justify-between">
+1413:                    <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-white/35" /> Encrypted</span>
+1422:              <div className="bg-white/[0.01] border border-dashed border-white/10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-white/20 transition-all duration-500">
+1424:                  <div className="h-14 w-14 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500">
+1425:                    <Plus className="h-6 w-6 text-gray-400 group-hover:text-white transition-colors" />
+1428:                    <h3 className="text-xl font-sans font-bold text-white tracking-tight mb-1">Can't find a specific integration?</h3>
+1435:                  className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 hover:text-white font-sans font-bold uppercase tracking-tight text-[10px] px-10 transition-all duration-300"
+1459:                        className="bg-white/5 border-white/10 focus:border-white/20 text-white h-12 font-sans font-bold tracking-tight"
+1468:                        className="w-full h-32 px-3 py-2 bg-white/5 border-white/10 rounded-md text-sm border focus:border-white/20 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight resize-none"
+1472:                  <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 flex items-start gap-3">
+1473:                    <Info className="h-5 w-5 text-white/60 shrink-0 mt-0.5" />
+1474:                    <p className="text-[10px] text-white/55 font-sans font-bold leading-relaxed uppercase tracking-tight">
+1483:                    className="bg-transparent text-gray-400 hover:text-white font-sans font-bold uppercase text-[10px] py-1 tracking-tight"
+1529:                    <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-white/15' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 ${isParked ? 'grayscale opacity-55' : 'hover:bg-white/[0.04]'}`}>
+1536:                      <h4 className="text-lg font-sans font-bold text-white tracking-tight mb-1">{meta.name}</h4>
+1542:                            <div className="bg-black/40 rounded-lg p-3 border border-white/5">
+1552:                              className="w-full h-10 bg-white/5 border border-white/10 text-white/45 text-[10px] font-sans font-bold uppercase tracking-tight gap-2 cursor-not-allowed"
+1560:                            <div className="bg-black/40 rounded-lg p-3 border border-white/5">
+1605:                              className="w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-sans font-bold uppercase tracking-tight gap-2"
+1609:                              {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Link2 className="w-3.5 h-3.5 text-white/70" /> Connect</>}
+1621:              <div className="border-y border-white/10 bg-transparent px-5 py-5">
+1622:                <div className="flex flex-col gap-4 border-b border-white/10 pb-5 md:flex-row md:items-end md:justify-between">
+1624:                    <h3 className="text-[20px] font-sans font-medium text-white tracking-tight">Evidence Intake Status</h3>
+1634:                <div className="grid grid-cols-2 border-b border-white/10 md:grid-cols-3 xl:grid-cols-6">
+1647:                        index % 2 === 0 ? "border-r border-white/8 pr-4" : "pl-4",
+1648:                        index < 4 ? "border-b border-white/8 md:border-b-0" : "",
+1649:                        index < 3 ? "md:border-r md:border-white/8" : "",
+1651:                        index < 5 ? "xl:border-r xl:border-white/8" : ""

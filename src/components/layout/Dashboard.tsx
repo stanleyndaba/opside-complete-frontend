@@ -744,7 +744,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Ready to file',
         detail: 'Policy and identifier checks passed, so this can move into a recovery case.',
         actionLabel: 'View finding',
-        tone: 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-200',
+        tone: 'border-[#B9E6D3] bg-[#F4FBF7] text-[#047857]',
         Icon: CheckCircle,
       };
     case 'filed':
@@ -752,7 +752,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Filed with Amazon',
         detail: 'This discrepancy is already in Amazon review through a filed case.',
         actionLabel: 'Open cases',
-        tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+        tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]',
         Icon: Send,
       };
     case 'converted':
@@ -760,7 +760,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Moved to case',
         detail: 'This finding has already been turned into a recovery case for follow-through.',
         actionLabel: 'Open cases',
-        tone: 'border-violet-500/20 bg-violet-500/[0.08] text-violet-100',
+        tone: 'border-[#D9D1FF] bg-[#F7F5FF] text-[#5B4BB7]',
         Icon: ArrowRight,
       };
     case 'resolved':
@@ -768,7 +768,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Closed',
         detail: 'This finding is already tied off and no further filing is needed.',
         actionLabel: 'Open cases',
-        tone: 'border-white/10 bg-white/[0.03] text-white/58',
+        tone: 'border-[#E9E9EC] bg-[#FAFAFB] text-[#50525B]',
         Icon: CheckCircle,
       };
     case 'pending':
@@ -776,7 +776,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Pending review',
         detail: 'Margin is still checking whether this discrepancy should move forward.',
         actionLabel: 'View finding',
-        tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+        tone: 'border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]',
         Icon: Clock,
       };
     case 'detected':
@@ -784,7 +784,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Issue found',
         detail: 'Margin found a discrepancy, but it still needs review before it becomes a case.',
         actionLabel: 'View finding',
-        tone: 'border-sky-500/20 bg-sky-500/[0.08] text-sky-100',
+        tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]',
         Icon: Info,
       };
     default:
@@ -792,7 +792,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: formatIssueStatusLabel(status),
         detail: 'Review this discrepancy to decide whether it should move into a case.',
         actionLabel: 'View finding',
-        tone: 'border-white/10 bg-white/[0.04] text-white/68',
+        tone: 'border-[#E9E9EC] bg-[#FAFAFB] text-[#50525B]',
         Icon: Info,
       };
   }
@@ -814,39 +814,39 @@ const getFindingMovementMeta = (
 
   const movementMeta: Record<string, { tone: string; Icon: typeof Info }> = {
     preview_finding: {
-      tone: 'border-sky-500/20 bg-sky-500/[0.08] text-sky-100',
+      tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]',
       Icon: Info,
     },
     preparing_case: {
-      tone: 'border-violet-500/20 bg-violet-500/[0.08] text-violet-100',
+      tone: 'border-[#D9D1FF] bg-[#F7F5FF] text-[#5B4BB7]',
       Icon: ArrowRight,
     },
     evidence_needed: {
-      tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+      tone: 'border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]',
       Icon: Clock,
     },
     ready_to_file: {
-      tone: 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-200',
+      tone: 'border-[#B9E6D3] bg-[#F4FBF7] text-[#047857]',
       Icon: CheckCircle,
     },
     queued_for_filing: {
-      tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+      tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]',
       Icon: Send,
     },
     filed: {
-      tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+      tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]',
       Icon: Send,
     },
     awaiting_payout: {
-      tone: 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-100',
+      tone: 'border-[#B9E6D3] bg-[#F4FBF7] text-[#047857]',
       Icon: CircleDollarSign,
     },
     completed: {
-      tone: 'border-emerald-500/20 bg-emerald-500/[0.1] text-emerald-100',
+      tone: 'border-[#B9E6D3] bg-[#F4FBF7] text-[#047857]',
       Icon: CheckCircle,
     },
     blocked: {
-      tone: 'border-red-500/20 bg-red-500/[0.08] text-red-100',
+      tone: 'border-[#FECDCA] bg-[#FEF3F2] text-[#B42318]',
       Icon: X,
     },
   };
@@ -1785,8 +1785,8 @@ export function Dashboard() {
 
       if (!hasResults && !hasStatusTruth && !options.suppressErrorToast) {
         toast({
-          title: 'FETCH_PROTOCOL_ERROR',
-          description: 'Failed to retrieve forensic discrepancy data.',
+          title: 'Recovery data is unavailable',
+          description: 'Margin could not load the latest findings for this workspace. Refresh the account or open Integrations to check the connection.',
           variant: 'destructive'
         });
       }
@@ -1800,8 +1800,8 @@ export function Dashboard() {
       }
       if (!options.suppressErrorToast) {
         toast({
-          title: 'FETCH_PROTOCOL_ERROR',
-          description: 'Failed to retrieve forensic discrepancy data.',
+          title: 'Recovery data is unavailable',
+          description: 'Margin could not load the latest findings for this workspace. Refresh the account or open Integrations to check the connection.',
           variant: 'destructive'
         });
       }
@@ -2416,7 +2416,7 @@ export function Dashboard() {
       default:
         return {
           label: 'Not Available',
-          tone: 'border-white/10 bg-white/[0.03] text-white/60'
+          tone: 'border-[#E9E9EC] bg-[#FAFAFB] text-[#50525B]'
         };
     }
   }, [syncScopedDetectionStatus]);
@@ -3152,8 +3152,8 @@ export function Dashboard() {
         label: 'Found',
         value: pluralize(detectedOpportunitiesCount, 'issue'),
         detail: detectedOpportunitiesCount > 0 ? `${overviewFoundValueLabel} detected in view` : 'No issues in view',
-        tone: detectedOpportunitiesCount > 0 ? 'border-sky-500/20 bg-sky-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
-        dotTone: detectedOpportunitiesCount > 0 ? 'bg-sky-300' : 'bg-white/18',
+        tone: detectedOpportunitiesCount > 0 ? 'border-[#C8D8FF] bg-[#F2F7FF]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
+        dotTone: detectedOpportunitiesCount > 0 ? 'bg-[#0B74DE]' : 'bg-[#D1D5DB]',
         active: detectedOpportunitiesCount > 0,
         onClick: () => handleTabChange('discrepancies')
       },
@@ -3161,8 +3161,8 @@ export function Dashboard() {
         label: 'Needs proof',
         value: pluralize(blockedPipelineCount, 'case'),
         detail: blockedDetail,
-        tone: blockedPipelineCount > 0 ? 'border-amber-500/20 bg-amber-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
-        dotTone: blockedPipelineCount > 0 ? 'bg-amber-300' : 'bg-white/18',
+        tone: blockedPipelineCount > 0 ? 'border-[#FEDF89] bg-[#FFFAEB]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
+        dotTone: blockedPipelineCount > 0 ? 'bg-[#B54708]' : 'bg-[#D1D5DB]',
         active: blockedPipelineCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
       },
@@ -3171,8 +3171,8 @@ export function Dashboard() {
         value: pluralize(filedClaimsCount, 'case'),
         detail: filedClaimsCount > 0 ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in review` : 'No filed cases in review',
         footerDetail: 'Oldest waiting 5 days',
-        tone: filedClaimsCount > 0 ? 'border-sky-500/20 bg-sky-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
-        dotTone: filedClaimsCount > 0 ? 'bg-sky-300' : 'bg-white/18',
+        tone: filedClaimsCount > 0 ? 'border-[#C8D8FF] bg-[#F2F7FF]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
+        dotTone: filedClaimsCount > 0 ? 'bg-[#0B74DE]' : 'bg-[#D1D5DB]',
         active: filedClaimsCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
       },
@@ -3180,8 +3180,8 @@ export function Dashboard() {
         label: 'Waiting for payout',
         value: pluralize(approvedClaimsCount, 'case'),
         detail: approvedClaimsCount > 0 ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} approved` : 'No approved cases awaiting payout',
-        tone: approvedClaimsCount > 0 ? 'border-violet-500/20 bg-violet-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
-        dotTone: approvedClaimsCount > 0 ? 'bg-violet-300' : 'bg-white/18',
+        tone: approvedClaimsCount > 0 ? 'border-[#D9D1FF] bg-[#F7F5FF]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
+        dotTone: approvedClaimsCount > 0 ? 'bg-[#5B4BB7]' : 'bg-[#D1D5DB]',
         active: approvedClaimsCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
       },
@@ -3189,8 +3189,8 @@ export function Dashboard() {
         label: 'Paid back',
         value: overviewPaidBackValueLabel,
         detail: recoveredCashTotal > 0 ? `${pluralize(recoveredClaimsCount, 'case')} confirmed` : 'Nothing confirmed yet',
-        tone: recoveredCashTotal > 0 ? 'border-emerald-500/20 bg-emerald-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
-        dotTone: recoveredCashTotal > 0 ? 'bg-emerald-300' : 'bg-white/18',
+        tone: recoveredCashTotal > 0 ? 'border-[#B9E6D3] bg-[#F4FBF7]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
+        dotTone: recoveredCashTotal > 0 ? 'bg-[#2B7A5A]' : 'bg-[#D1D5DB]',
         active: recoveredCashTotal > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
       }
@@ -3410,15 +3410,12 @@ export function Dashboard() {
                             <button
                               key={stage.label}
                               onClick={stage.onClick}
-                              className="group/stage relative min-h-[108px] overflow-hidden rounded-none surgical-border bg-white px-4 py-3.5 text-left surgical-shadow transition-colors duration-200 hover:bg-[#F8FAFB] hover:border-[#8FA0AD]"
+                              className={cn("group/stage relative min-h-[108px] overflow-hidden rounded-none px-4 py-3.5 text-left shadow-none transition-colors duration-200 hover:border-[#8FA0AD]", stage.active ? stage.tone : "border border-[#E9E9EC] bg-white")}
                             >
                               <div className="absolute inset-x-0 top-0 h-px bg-[#D8E3E8] opacity-0 transition-opacity duration-200 group-hover/stage:opacity-100" />
                               <div className="flex items-center gap-2">
                                 <span className="relative flex h-2.5 w-2.5 items-center justify-center">
-                                  {stage.active ? (
-                                    <span className="absolute h-2.5 w-2.5 animate-ping rounded-full bg-[#111827]/20" />
-                                  ) : null}
-                                  <span className={cn("relative h-2 w-2 rounded-full", stage.active ? "bg-[#111827]" : "bg-[#B8C4CE]")} />
+                                  <span className={cn("relative h-2 w-2 rounded-full", stage.dotTone)} />
                                 </span>
                                 <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                                   {stage.label}
@@ -3662,14 +3659,14 @@ export function Dashboard() {
 
                   {/* System Activity - Audit Registry Sidebar */}
                   <div className="hidden lg:col-span-1">
-                    <div className="bg-[#111111]/90 border border-white/10 rounded-2xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
+                    <div className="bg-[#111111]/90 border border-[#E9E9EC] rounded-2xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
-                      <div className="px-5 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full transition-all group">
+                      <div className="px-5 py-5 border-b border-[#F0F0F2] bg-[#FAFAFB] flex items-center justify-between w-full transition-all group">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h3 className="text-[12px] font-medium text-white tracking-tight">Your Notifications</h3>
-                            <p className="text-[10px] font-sans font-bold text-white/25 uppercase tracking-tight mt-1">
+                            <h3 className="text-[12px] font-medium text-[#1B1C20] tracking-tight">Your Notifications</h3>
+                            <p className="text-[10px] font-sans font-bold text-[#9CA3AF] uppercase tracking-tight mt-1">
                               User-scoped activity
                             </p>
                           </div>
@@ -3682,10 +3679,10 @@ export function Dashboard() {
                             {displayNotifications.length === 0 ? (
                               <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
                                 <div className="relative flex h-3 w-3 mb-6">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/25 opacity-20"></span>
-                                  <span className="relative inline-flex rounded-full h-3 w-3 bg-white/35"></span>
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E9E9EC] opacity-20"></span>
+                                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#B8C4CE]"></span>
                                 </div>
-                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-tight">No recent notifications</p>
+                                <p className="text-[10px] text-[#858792] font-mono uppercase tracking-tight">No recent notifications</p>
                               </div>
                             ) : (
                               <div className="flex flex-col">
@@ -3704,8 +3701,8 @@ export function Dashboard() {
                                       <HoverCardTrigger asChild>
                                         <div
                                           className={cn(
-                                            "group relative px-5 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-white/[0.03]",
-                                            isUnread ? "bg-white/[0.02]" : "bg-transparent"
+                                            "group relative px-5 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-[#FAFAFB]",
+                                            isUnread ? "bg-[#FAFAFB]" : "bg-transparent"
                                           )}
                                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}>
 
@@ -3716,7 +3713,7 @@ export function Dashboard() {
                                             <div className="flex items-center justify-between gap-4">
                                               <p className={cn(
                                                 "text-[11px] tracking-tight truncate font-semibold",
-                                                isUnread ? "text-white" : "text-white/40 group-hover:text-white transition-colors"
+                                                isUnread ? "text-white" : "text-[#6B7280] group-hover:text-[#0B74DE] transition-colors"
                                               )}>
                                                 {notificationLabel}
                                               </p>
@@ -3726,16 +3723,16 @@ export function Dashboard() {
                                               <div className="flex items-center gap-2">
                                                 <span className={cn(
                                                   "text-[9px] font-mono font-bold",
-                                                  isUnread ? "text-white/45" : "text-white/10"
+                                                  isUnread ? "text-[#6B7280]" : "text-[#9CA3AF]"
                                                 )}>
                                                   {typeLabel}
                                                 </span>
-                                                <span className="text-white/5 h-2 w-[1px] bg-white/10" />
-                                                <span className="text-[9px] text-white/10 font-mono uppercase">
+                                                <span className="text-[#D8D8DE] h-2 w-[1px] bg-[#E9E9EC]" />
+                                                <span className="text-[9px] text-[#9CA3AF] font-mono uppercase">
                                                   {notification.id.substring(0, 8).toUpperCase()}
                                                 </span>
                                               </div>
-                                              <span className="text-[9px] text-white/20 font-mono tabular-nums">
+                                              <span className="text-[9px] text-[#858792] font-mono tabular-nums">
                                                 {formatLedgerDate(notification.created_at)}
                                               </span>
                                             </div>
@@ -3795,12 +3792,12 @@ export function Dashboard() {
                             )}
                           </div>
 
-                          <div className="border-t border-white/5 p-4 bg-white/[0.02]">
+                          <div className="border-t border-[#F0F0F2] p-4 bg-[#FAFAFB]">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => navigate(tenantRoute(activeSlug, '/notifications'))}
-                              className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-tight transition-colors"
+                              className="w-full h-8 text-[10px] font-mono font-bold text-[#6B7280] hover:text-[#0B74DE] uppercase tracking-tight transition-colors"
                             >
                               All Notifications
                             </Button>
@@ -3815,40 +3812,40 @@ export function Dashboard() {
                 <div className="space-y-4">
                   {/* Issues Found View */}
                   <div className="relative space-y-4">
-                    <div className="border-b border-white/10 pb-4">
+                    <div className="border-b border-[#E9E9EC] pb-4">
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                         <div className="max-w-3xl">
-                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Issues found</div>
+                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Issues found</div>
                           <h2 className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
                             {issuesFoundHeading}
                           </h2>
-                          <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.72]">
+                          <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-[#50525B]">
                             {issuesFoundProofHeadline}
                           </p>
-                          <p className="mt-2 max-w-3xl text-[11px] font-sans leading-5 text-white/[0.44]">
+                          <p className="mt-2 max-w-3xl text-[11px] font-sans leading-5 text-[#6B7280]">
                             {issuesFoundDescription}
                           </p>
                         </div>
                         {latestDashboardSignalLabel ? (
-                          <div className="flex shrink-0 items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.58]">
+                          <div className="flex shrink-0 items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
                             {latestDashboardSignalLabel}
                           </div>
                         ) : null}
                       </div>
 
-                      <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2 border-t border-white/8 pt-3">
+                      <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2 border-t border-[#F0F0F2] pt-3">
                         {issuesFoundSummaryRows.map((item) => (
                           <div key={item.label} className="min-w-[140px]">
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                               {item.label}
                             </div>
                             <div
                               className={cn(
                                 "mt-1 text-[13px] font-sans font-medium leading-none tracking-tight",
                                 item.valueTone === 'muted'
-                                  ? 'text-white/[0.55]'
-                                  : 'text-white/[0.9]'
+                                  ? 'text-[#50525B]'
+                                  : 'text-[#1B1C20]'
                               )}
                             >
                               {item.value}
@@ -3858,10 +3855,10 @@ export function Dashboard() {
                       </div>
 
                       {isSyncScopedDetections ? (
-                        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-sans tracking-tight text-white/[0.42]">
+                        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-sans tracking-tight text-[#6B7280]">
                           {syncScopedDetectionMetaRows.map((item) => (
                             <span key={item.label}>
-                              {item.label}: <span className="text-white/[0.68]">{item.value}</span>
+                              {item.label}: <span className="text-[#50525B]">{item.value}</span>
                             </span>
                           ))}
                         </div>
@@ -3869,24 +3866,24 @@ export function Dashboard() {
                     </div>
 
                     {loadingDetections ? (
-                      <div className="border-y border-white/10 py-12 flex flex-col items-center justify-center gap-4">
-                        <Loader2 className="h-6 w-6 text-white/45 animate-spin" />
+                      <div className="border-y border-[#E9E9EC] py-12 flex flex-col items-center justify-center gap-4">
+                        <Loader2 className="h-6 w-6 text-[#6B7280] animate-spin" />
                         <div className="text-center">
-                          <div className="text-[11px] font-sans font-medium text-white/[0.45] tracking-tight animate-pulse">
+                          <div className="text-[11px] font-sans font-medium text-[#6B7280] tracking-tight animate-pulse">
                             {issuesFoundLoadingState.title}
                           </div>
-                          <div className="mt-2 text-[11px] font-sans leading-5 text-white/30 tracking-tight">
+                          <div className="mt-2 text-[11px] font-sans leading-5 text-[#858792] tracking-tight">
                             {issuesFoundLoadingState.detail}
                           </div>
                         </div>
                       </div>
                     ) : visibleDetectionResults.length === 0 ? (
-                      <div className="border-y border-white/10 py-12 flex flex-col items-center justify-center text-center">
-                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">No rows</div>
-                        <h3 className="mt-3 text-[15px] font-sans font-medium text-white tracking-tight">
+                      <div className="border-y border-[#E9E9EC] py-12 flex flex-col items-center justify-center text-center">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">No rows</div>
+                        <h3 className="mt-3 text-[15px] font-sans font-medium text-[#1B1C20] tracking-tight">
                           {isSyncScopedDetections ? syncScopedEmptyState?.title : 'No open issues right now'}
                         </h3>
-                        <p className="text-[11px] text-white/[0.45] mt-2 font-sans max-w-sm mx-auto leading-5">
+                        <p className="text-[11px] text-[#6B7280] mt-2 font-sans max-w-sm mx-auto leading-5">
                           {isSyncScopedDetections
                             ? syncScopedEmptyState?.description
                             : 'Margin is not holding any unresolved findings in this view right now.'}
@@ -3897,43 +3894,43 @@ export function Dashboard() {
                               pathname: tenantRoute(activeSlug, '/dashboard'),
                               search: '?tab=discrepancies',
                             })}
-                            className="mt-6 flex h-8 items-center gap-3 border border-white/10 px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/80 transition-colors hover:bg-white/[0.04] group"
+                            className="mt-6 flex h-8 items-center gap-3 border border-[#E9E9EC] px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-[#1B1C20] transition-colors hover:bg-[#FAFAFB] group"
                           >
                             <span>View all detections</span>
-                            <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="h-3 w-3 text-[#858792] group-hover:translate-x-1 transition-transform" />
                           </button>
                         ) : !isSyncScopedDetections ? (
                           <button
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                            className="mt-6 flex h-8 items-center gap-3 border border-white/10 px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/80 transition-colors hover:bg-white/[0.04] group"
+                            className="mt-6 flex h-8 items-center gap-3 border border-[#E9E9EC] px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-[#1B1C20] transition-colors hover:bg-[#FAFAFB] group"
                           >
                             <span>View {filedClaimsCount} filed {filedClaimsCount === 1 ? 'case' : 'cases'}</span>
-                            <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="h-3 w-3 text-[#858792] group-hover:translate-x-1 transition-transform" />
                           </button>
                         ) : null}
                       </div>
                     ) : (
                       <div>
-                        <div className="border-b border-white/10 py-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                          <div className="text-[11px] font-sans tracking-tight text-white/[0.48]">
+                        <div className="border-b border-[#E9E9EC] py-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="text-[11px] font-sans tracking-tight text-[#6B7280]">
                             {isSyncScopedDetections
                               ? 'Review the findings currently shown for this upload. Processed rows and active filters can make the table count smaller than the upload total above.'
                               : 'Open the findings below to review what is ready, what is filed, and what still needs attention.'}
                           </div>
                           <div className="flex items-center gap-4">
                             {isRefreshingFindings ? (
-                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.52]">
+                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
                                 <Loader2 className="h-3 w-3 animate-spin" />
                                 Refreshing findings
                               </div>
                             ) : null}
                             <div className="flex items-center gap-3">
-                              <span className="text-[11px] font-sans font-medium text-white/[0.38] tracking-tight">Show processed</span>
+                              <span className="text-[11px] font-sans font-medium text-[#858792] tracking-tight">Show processed</span>
                               <button
                                 onClick={() => setShowProcessed(!showProcessed)}
                                 className={cn(
                                   "w-8 h-4 rounded-full relative transition-colors duration-300",
-                                  showProcessed ? "bg-white/35" : "bg-white/10"
+                                  showProcessed ? "bg-[#B8C4CE]" : "bg-[#E9E9EC]"
                                 )}
                               >
                                 <div className={cn(
@@ -3945,7 +3942,7 @@ export function Dashboard() {
                           <Button
                             onClick={handleBatchExport}
                             disabled={isExporting}
-                            className={`h-8 rounded-none px-4 bg-transparent hover:bg-white/[0.04] text-white/70 hover:text-white border border-white/10 text-[10px] font-sans font-medium uppercase tracking-tight transition-all ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`h-8 rounded-none px-4 bg-transparent hover:bg-[#FAFAFB] text-[#50525B] hover:text-[#0B74DE] border border-[#E9E9EC] text-[10px] font-sans font-medium uppercase tracking-tight transition-all ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             {isExporting ? (
                               <Loader2 className="h-3 w-3 mr-2 animate-spin" />
@@ -3962,15 +3959,15 @@ export function Dashboard() {
                           </div>
                         ) : null}
 
-                        <div className="border-y border-white/10 bg-transparent">
-                          <div className="hidden border-b border-white/8 px-5 py-3 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:gap-5">
+                        <div className="border-y border-[#E9E9EC] bg-transparent">
+                          <div className="hidden border-b border-[#F0F0F2] px-5 py-3 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:gap-5">
                             {['Issue', 'Value', 'Movement', 'Action'].map((label) => (
-                              <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+                              <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                                 {label}
                               </div>
                             ))}
                           </div>
-                          <div className="divide-y divide-white/8">
+                          <div className="divide-y divide-[#F0F0F2]">
                             {visibleDetectionResults.map((result, index) => {
                               const isProcessed = isProcessedFindingStatus(result.status);
                               const stateMeta = getFindingMovementMeta(result.filing_movement, result.status, result);
@@ -4067,7 +4064,7 @@ export function Dashboard() {
                                 <div
                                   key={result.id}
                                   className={cn(
-                                    "px-5 py-3.5 transition-colors hover:bg-white/[0.025]",
+                                    "px-5 py-3.5 transition-colors hover:bg-[#F8FAFB]",
                                     isProcessed ? "opacity-70" : ""
                                   )}
                                 >
@@ -4076,15 +4073,15 @@ export function Dashboard() {
                                     <button
                                       type="button"
                                       onClick={openLinkedRecoveryCase}
-                                      className="block max-w-full text-left text-[12px] font-sans font-medium tracking-tight text-white/[0.92] transition-colors hover:text-white hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-1 focus-visible:outline-white/35"
+                                      className="block max-w-full text-left text-[12px] font-sans font-medium tracking-tight text-[#1B1C20] transition-colors hover:text-[#0B74DE] hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#C8D8FF]"
                                     >
                                       {issueCopy.title}
-                                      <span className="text-white/[0.48]"> — {issueLifecycleStateLabel}</span>
+                                      <span className="text-[#6B7280]"> — {issueLifecycleStateLabel}</span>
                                     </button>
-                                    <p className="mt-1.5 max-w-2xl text-[11px] font-sans leading-5 tracking-tight text-white/[0.54]">
+                                    <p className="mt-1.5 max-w-2xl text-[11px] font-sans leading-5 tracking-tight text-[#6B7280]">
                                       {issueCopy.summary}
                                     </p>
-                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
+                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-[#6B7280]">
                                       <span>Ref {findingReference}</span>
                                       <span>Found {foundOnLabel}</span>
                                       <span>{readinessLabel}</span>
@@ -4097,10 +4094,10 @@ export function Dashboard() {
                                   </div>
 
                                   <div className="xl:text-right">
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                                       {valueLabel}
                                     </div>
-                                    <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-white/90">
+                                    <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-[#1B1C20]">
                                       {result.value_label === 'no_recovery_value'
                                         ? 'Review'
                                         : formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
@@ -4108,16 +4105,16 @@ export function Dashboard() {
                                   </div>
 
                                   <div className="min-w-0">
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                                       Filing movement
                                     </div>
                                     <div className={cn(
-                                      "mt-1.5 inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.76]"
+                                      "mt-1.5 inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#50525B]"
                                     )}>
                                       <StateIcon className="h-3.5 w-3.5" />
                                       <span>{stateMeta.label}</span>
                                     </div>
-                                    <p className="mt-1.5 max-w-md text-[10px] font-sans leading-5 text-white/[0.48]">
+                                    <p className="mt-1.5 max-w-md text-[10px] font-sans leading-5 text-[#6B7280]">
                                       {stateMeta.detail}
                                     </p>
                                   </div>
@@ -4127,7 +4124,7 @@ export function Dashboard() {
                                       <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="h-7 rounded-none px-2.5 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.55] hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all"
+                                        className="h-7 rounded-none px-2.5 text-[9px] font-sans font-medium uppercase tracking-tight text-[#50525B] hover:text-[#0B74DE] hover:bg-[#FAFAFB] border border-transparent hover:border-[#E9E9EC] transition-all"
                                         onClick={openLinkedRecoveryCase}
                                       >
                                         Open cases
@@ -4138,7 +4135,7 @@ export function Dashboard() {
                                         <Button
                                           variant="ghost"
                                           size="icon"
-                                          className="h-7 w-7 rounded-none text-white/25 hover:text-white hover:bg-white/[0.04] transition-all border border-transparent hover:border-white/10"
+                                          className="h-7 w-7 rounded-none text-[#9CA3AF] hover:text-[#0B74DE] hover:bg-[#FAFAFB] transition-all border border-transparent hover:border-[#E9E9EC]"
                                         >
                                           <MoreVertical className="h-3.5 w-3.5" />
                                         </Button>
@@ -4172,32 +4169,32 @@ export function Dashboard() {
                         </div>
 
                         {/* Heartbeat / Audit Log Footer */}
-                        <div className="mt-4 flex flex-col gap-3 border-t border-white/5 pt-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="mt-4 flex flex-col gap-3 border-t border-[#F0F0F2] pt-4 lg:flex-row lg:items-center lg:justify-between">
                           <div className="flex flex-wrap items-center gap-6">
                             <div className="flex items-center gap-2">
-                              <div className="h-1 w-1 rounded-full bg-white/40" />
-                              <span className="text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
-                                {isSyncScopedDetections ? 'Findings currently shown:' : 'Open issues loaded:'} <span className="text-white/[0.55]">{visibleDetectionResults.length}</span>
+                              <div className="h-1 w-1 rounded-full bg-[#B8C4CE]" />
+                              <span className="text-[10px] font-sans font-medium text-[#858792] tracking-tight">
+                                {isSyncScopedDetections ? 'Findings currently shown:' : 'Open issues loaded:'} <span className="text-[#50525B]">{visibleDetectionResults.length}</span>
                               </span>
                             </div>
-                            <span className="text-white/10">|</span>
-                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
-                              {isSyncScopedDetections ? 'Upload processed:' : 'Last updated:'} <span className="text-white/[0.55]">{isSyncScopedDetections ? syncScopedIssuesUpdatedLabel : formattedLastUpdated}</span>
+                            <span className="text-[#9CA3AF]">|</span>
+                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-[#858792] tracking-tight">
+                              {isSyncScopedDetections ? 'Upload processed:' : 'Last updated:'} <span className="text-[#50525B]">{isSyncScopedDetections ? syncScopedIssuesUpdatedLabel : formattedLastUpdated}</span>
                             </div>
-                            <span className="text-white/10">|</span>
-                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
-                              Scope: <span className="text-white/[0.55]">{isSyncScopedDetections ? 'This upload' : 'Account summary'}</span>
+                            <span className="text-[#9CA3AF]">|</span>
+                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-[#858792] tracking-tight">
+                              Scope: <span className="text-[#50525B]">{isSyncScopedDetections ? 'This upload' : 'Account summary'}</span>
                             </div>
                             {isSyncScopedDetections ? (
                               <>
-                                <span className="text-white/10">|</span>
-                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
-                                  Sync: <span className="text-white/[0.55]">{uploadSyncId}</span>
+                                <span className="text-[#9CA3AF]">|</span>
+                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-[#858792] tracking-tight">
+                                  Sync: <span className="text-[#50525B]">{uploadSyncId}</span>
                                 </div>
                               </>
                             ) : null}
                           </div>
-                          <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white tracking-tight">
+                          <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-[#1B1C20] tracking-tight">
                             Showing findings with backend filing movement and next action
                           </div>
                         </div>
@@ -4213,7 +4210,7 @@ export function Dashboard() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                  <div className="bg-white border border-[#E9E9EC] rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
                     <DisputeCasesTable />
                   </div>
                 </div>
@@ -4224,16 +4221,16 @@ export function Dashboard() {
       </div>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
-        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
-          <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
+        <DialogContent className="max-w-md bg-white border border-[#E9E9EC] p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
+          <DialogHeader className="px-6 py-5 border-b border-[#F0F0F2] bg-[#FAFAFB]">
             <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">CONFIGURE_TERMINAL_OVERRIDE</DialogTitle>
-            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-tight">Select active operational modules for the command grid.</DialogDescription>
+            <DialogDescription className="text-[10px] text-[#858792] font-serif mt-1 uppercase tracking-tight">Select active operational modules for the command grid.</DialogDescription>
           </DialogHeader>
           <div className="p-6 max-h-[400px] overflow-y-auto space-y-2">
             {QUICK_ActionS.map((a) => (
-              <label key={a.id} className="flex items-center gap-4 p-4 hover:bg-white/[0.03] transition-colors cursor-pointer group rounded-lg border border-transparent hover:border-white/5">
+              <label key={a.id} className="flex items-center gap-4 p-4 hover:bg-[#FAFAFB] transition-colors cursor-pointer group rounded-lg border border-transparent hover:border-[#F0F0F2]">
                 <Checkbox
-                  className="border-white/20 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-none"
+                  className="border-[#C8D8FF] data-[state=checked]:bg-emerald-500 data-[state=checked]:border-none"
                   checked={selectedQuickActions.includes(a.id)}
                   onCheckedChange={(c) => {
                     setSelectedQuickActions(prev => {
@@ -4245,21 +4242,21 @@ export function Dashboard() {
                 />
                 <div className="flex flex-col">
                   <span className="text-[11px] font-mono font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">{a.label.replace('_', ' ')}</span>
-                  <span className="text-[9px] text-white/20 font-mono uppercase tracking-tight">{a.subtitle.replace('_', ' ')}</span>
+                  <span className="text-[9px] text-[#858792] font-mono uppercase tracking-tight">{a.subtitle.replace('_', ' ')}</span>
                 </div>
               </label>
             ))}
           </div>
-          <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-end gap-3">
+          <div className="px-6 py-4 border-t border-[#F0F0F2] bg-[#FAFAFB] flex justify-end gap-3">
             <button
               onClick={() => setQuickActionsEditOpen(false)}
-              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-tight transition-colors"
+              className="px-4 py-2 text-[10px] font-mono font-bold text-[#858792] hover:text-[#0B74DE] uppercase tracking-tight transition-colors"
             >
               ABORT_CHANGES
             </button>
             <button
               className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
-              onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'PROTOCOL_UPDATED_SECURELY' }); } catch { } setQuickActionsEditOpen(false); }}
+              onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Quick actions updated', description: 'Your workspace shortcuts were saved.' }); } catch { } setQuickActionsEditOpen(false); }}
             >
               SAVE_CONFIGURATION
             </button>
@@ -4344,10 +4341,10 @@ export function Dashboard() {
       </Dialog>
 
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-        <DialogContent className="max-w-sm bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
-          <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
+        <DialogContent className="max-w-sm bg-white border border-[#E9E9EC] p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
+          <DialogHeader className="px-6 py-5 border-b border-[#F0F0F2] bg-[#FAFAFB]">
             <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">PROVISION_ACCESS_INVITE</DialogTitle>
-            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-tight">Authorize read-only access for internal personnel.</DialogDescription>
+            <DialogDescription className="text-[10px] text-[#858792] font-serif mt-1 uppercase tracking-tight">Authorize read-only access for internal personnel.</DialogDescription>
           </DialogHeader>
           <div className="p-6">
             <Input
@@ -4355,19 +4352,19 @@ export function Dashboard() {
               placeholder="IDENTITY@CORPORATION.SYS"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
-              className="h-10 bg-white/5 border-white/10 text-[11px] font-mono text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+              className="h-10 bg-[#FAFAFB] border-[#E9E9EC] text-[11px] font-mono text-white placeholder:text-[#9CA3AF] focus:border-emerald-500/30 rounded-lg"
             />
           </div>
-          <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-end gap-3">
+          <div className="px-6 py-4 border-t border-[#F0F0F2] bg-[#FAFAFB] flex justify-end gap-3">
             <button
               onClick={() => setInviteOpen(false)}
-              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-tight transition-colors"
+              className="px-4 py-2 text-[10px] font-mono font-bold text-[#858792] hover:text-[#0B74DE] uppercase tracking-tight transition-colors"
             >
               CANCEL_AUTHORIZATION
             </button>
             <button
               className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
-              onClick={async () => { if (!inviteEmail) return; try { await api.post(`/api/team/invite?tenantSlug=${activeSlug}`, { email: inviteEmail }); toast({ title: 'INVITATION_PROTOCOL_INITIATED' }); } catch (e: any) { toast({ title: 'INVITE_FAILURE', description: e?.message || 'Access provision failed.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}
+              onClick={async () => { if (!inviteEmail) return; try { await api.post(`/api/team/invite?tenantSlug=${activeSlug}`, { email: inviteEmail }); toast({ title: 'Invite sent', description: 'The workspace invitation is being prepared.' }); } catch (e: any) { toast({ title: 'Invite could not be sent', description: e?.message || 'Access provision failed.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}
             >
               SEND_CREDENTIALS
             </button>
@@ -4380,16 +4377,16 @@ export function Dashboard() {
         <DialogContent className="platform-vitality-page max-h-[72vh] w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-lg border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="border-b border-white/10 px-4 pb-2.5 pt-3">
+              <DialogHeader className="border-b border-[#E9E9EC] px-4 pb-2.5 pt-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
-                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                       Finding detail
                     </div>
                     <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
                       {activeDiscrepancyCopy?.title || formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
-                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                       {activeDiscrepancyCopy?.summary || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
                     </DialogDescription>
                     {aiExplainEnabled && activeDiscrepancy?.id ? (
@@ -4402,7 +4399,7 @@ export function Dashboard() {
                           }
                           void findingExplanation.openFor(String(activeDiscrepancy.id));
                         }}
-                        className="mt-2 text-[11px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                        className="mt-2 text-[11px] font-sans font-medium tracking-tight text-[#50525B] underline decoration-white/20 underline-offset-4 transition-colors hover:text-[#0B74DE]"
                       >
                         Explain
                       </button>
@@ -4412,7 +4409,7 @@ export function Dashboard() {
               </DialogHeader>
 
               {findingExplanation.open ? (
-                <div className="border-b border-white/10 bg-white/[0.02]">
+                <div className="border-b border-[#E9E9EC] bg-[#FAFAFB]">
                   <AiExplanationContent
                     loading={findingExplanation.loading}
                     error={findingExplanation.error}
@@ -4423,10 +4420,10 @@ export function Dashboard() {
               ) : null}
 
               <div className="grid max-h-[52vh] gap-0 overflow-y-auto lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.58fr)]">
-                <div className="border-b border-white/10 px-4 py-3 lg:border-b-0 lg:border-r">
-                  <div className="grid border-y border-white/10 md:grid-cols-3 md:divide-x md:divide-white/[0.08]">
+                <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r">
+                  <div className="grid border-y border-[#E9E9EC] md:grid-cols-3 md:divide-x md:divide-[#F0F0F2]">
                     <div className="py-2 md:pr-4">
-                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                         {activeDiscrepancy.valueLabel === 'potential_exposure'
                           ? 'Potential exposure'
                           : activeDiscrepancy.valueLabel === 'no_recovery_value'
@@ -4441,14 +4438,14 @@ export function Dashboard() {
                           : 'Not available'}
                       </div>
                     </div>
-                    <div className="border-t border-white/10 py-3 md:border-t-0 md:px-5">
-                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Found on</div>
-                      <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.8]">
+                    <div className="border-t border-[#E9E9EC] py-3 md:border-t-0 md:px-5">
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">Found on</div>
+                      <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-[#1B1C20]">
                         {formatFindingDateTimeLabel(activeDiscrepancy.occurrenceDate)}
                       </div>
                     </div>
-                    <div className="border-t border-white/10 py-3 md:border-t-0 md:pl-5">
-                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Filing movement</div>
+                    <div className="border-t border-[#E9E9EC] py-3 md:border-t-0 md:pl-5">
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">Filing movement</div>
                       <span
                         className={cn(
                           "mt-1 inline-flex items-center gap-2 border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
@@ -4463,24 +4460,24 @@ export function Dashboard() {
 
                   <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
                     <div>
-                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">What Margin found</div>
-                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.76]">
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">What Margin found</div>
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
                         {activeDiscrepancyCopy?.summary || 'Amazon records do not reconcile with the expected seller outcome for this finding.'}
                       </p>
-                      <div className="mt-2 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
+                      <div className="mt-2 inline-flex items-center border border-[#E9E9EC] bg-[#FAFAFB] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-[#50525B]">
                         {activeDiscrepancyCopy?.eventLabel || 'Detected discrepancy'}
                       </div>
-                      <div className="mt-3 border-t border-white/10 pt-2.5">
-                        <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence used</div>
-                        <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.62]">
+                      <div className="mt-3 border-t border-[#E9E9EC] pt-2.5">
+                        <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Evidence used</div>
+                        <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
                           {activeDiscrepancyCopy?.evidenceSummary || 'Structured evidence is available on the backend detection record.'}
                         </p>
                       </div>
                     </div>
 
-                    <div className="border-t border-white/10 pt-2.5 xl:border-l xl:border-t-0 xl:pl-3 xl:pt-0">
-                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Current filing movement</div>
-                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.68]">
+                    <div className="border-t border-[#E9E9EC] pt-2.5 xl:border-l xl:border-t-0 xl:pl-3 xl:pt-0">
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Current filing movement</div>
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
                         {activeDiscrepancyBlockContext
                           ? 'Margin is not filing this finding yet. The hold prevents weak or unsupported submissions from being sent to Amazon.'
                           : activeDiscrepancy.movementDetail || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
@@ -4493,12 +4490,12 @@ export function Dashboard() {
                           <p className="mt-1 text-[11px] font-sans leading-4 tracking-tight text-red-50/80">
                             {activeDiscrepancyBlockContext.reason}
                           </p>
-                          <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.48]">
+                          <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                             {activeDiscrepancyBlockContext.nextStep}
                           </p>
                         </div>
                       ) : (
-                        <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+                        <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                           {activeDiscrepancy.isProcessed
                             ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
                             : activeDiscrepancy.whyNotClaimReady
@@ -4520,37 +4517,37 @@ export function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-3 border-y border-white/10 py-2.5">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Why this may be recoverable</div>
-                    <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.64]">
+                  <div className="mt-3 border-y border-[#E9E9EC] py-2.5">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Why this may be recoverable</div>
+                    <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#6B7280]">
                       {activeDiscrepancyCopy?.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.'}
                     </p>
                   </div>
                 </div>
 
                 <div className="px-4 py-3">
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Backend detection record</div>
-                  <div className="mt-2 grid grid-cols-2 border-y border-white/10">
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Backend detection record</div>
+                  <div className="mt-2 grid grid-cols-2 border-y border-[#E9E9EC]">
                     {activeDiscrepancyMetaRows.map((item) => (
-                      <div key={item.label} className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
-                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
-                        <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                      <div key={item.label} className="border-b border-[#F0F0F2] py-1.5 pr-2.5 odd:border-r odd:border-[#F0F0F2] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">{item.label}</div>
+                        <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-[#50525B]">{item.value}</div>
                       </div>
                     ))}
                   </div>
 
                   <div className="mt-3">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Amazon policy basis</div>
-                    <div className="mt-2 grid grid-cols-2 border-y border-white/10">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Amazon policy basis</div>
+                    <div className="mt-2 grid grid-cols-2 border-y border-[#E9E9EC]">
                       {activeDiscrepancyPolicyRows.map((item) => (
-                        <div key={item.label} className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
-                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
-                          <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                        <div key={item.label} className="border-b border-[#F0F0F2] py-1.5 pr-2.5 odd:border-r odd:border-[#F0F0F2] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">{item.label}</div>
+                          <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-[#50525B]">{item.value}</div>
                         </div>
                       ))}
                     </div>
                     {activeDiscrepancyPolicyBasis?.summary ? (
-                      <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.45]">
+                      <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                         {activeDiscrepancyPolicyBasis.summary}
                       </p>
                     ) : null}
@@ -4559,7 +4556,7 @@ export function Dashboard() {
                         href={activeDiscrepancyPolicyBasis.source_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-2 inline-flex text-[10px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                        className="mt-2 inline-flex text-[10px] font-sans font-medium tracking-tight text-[#50525B] underline decoration-white/20 underline-offset-4 transition-colors hover:text-[#0B74DE]"
                       >
                         Open Amazon policy reference
                       </a>
@@ -4567,18 +4564,18 @@ export function Dashboard() {
                   </div>
 
                   <div className="mt-3">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence fields</div>
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Evidence fields</div>
                     {activeDiscrepancyEvidenceItems.length > 0 ? (
-                      <div className="mt-2 grid grid-cols-2 border-y border-white/10">
+                      <div className="mt-2 grid grid-cols-2 border-y border-[#E9E9EC]">
                         {activeDiscrepancyEvidenceItems.map((item) => (
-                          <div key={`${item.label}-${item.value}`} className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
-                            <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                          <div key={`${item.label}-${item.value}`} className="border-b border-[#F0F0F2] py-1.5 pr-2.5 odd:border-r odd:border-[#F0F0F2] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">{item.label}</div>
+                            <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-[#50525B]">{item.value}</div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="mt-2 border-y border-white/10 py-3 text-[11px] font-sans leading-5 text-white/[0.44]">
+                      <div className="mt-2 border-y border-[#E9E9EC] py-3 text-[11px] font-sans leading-5 text-[#6B7280]">
                         No structured evidence fields were returned with this backend detection row.
                       </div>
                     )}
@@ -4586,8 +4583,8 @@ export function Dashboard() {
                 </div>
               </div>
 
-              <DialogFooter className="flex flex-col gap-2 border-t border-white/10 px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
+              <DialogFooter className="flex flex-col gap-2 border-t border-[#E9E9EC] px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[10px] font-sans leading-4 tracking-tight text-[#6B7280]">
                   Populated from the persisted backend detection result. Margin files only what can be supported by evidence and policy.
                 </div>
                 <div className="flex items-center gap-3">
@@ -4625,16 +4622,16 @@ export function Dashboard() {
         <DialogContent className="platform-vitality-page max-h-[70vh] w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-lg border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="border-b border-white/10 px-4 pb-2.5 pt-3">
+              <DialogHeader className="border-b border-[#E9E9EC] px-4 pb-2.5 pt-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
-                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                       Proof needed (Documentation)
                     </div>
                     <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
                       Evidence required for this finding
                     </DialogTitle>
-                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                       Margin checks connected sources first. If the proof cannot be found automatically, upload it in Evidence Locker so the case can keep moving.
                     </DialogDescription>
                   </div>
@@ -4642,9 +4639,9 @@ export function Dashboard() {
               </DialogHeader>
 
               <div className="grid max-h-[50vh] gap-0 overflow-y-auto lg:grid-cols-[minmax(0,0.86fr)_minmax(360px,0.62fr)]">
-                <div className="border-b border-white/10 px-4 py-3 lg:border-b-0 lg:border-r lg:border-white/10">
+                <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r lg:border-[#E9E9EC]">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.72]">
+                    <span className="border border-[#E9E9EC] bg-[#FAFAFB] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-[#50525B]">
                       {activeDiscrepancyCopy?.title || 'Detected finding'}
                     </span>
                     <span className={cn(
@@ -4661,28 +4658,28 @@ export function Dashboard() {
                     </span>
                   </div>
 
-                  <div className="mt-3 border-y border-white/10 py-2.5">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                  <div className="mt-3 border-y border-[#E9E9EC] py-2.5">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                       Required documentation
                     </div>
                     {activeDiscrepancyRequiredDocumentationItems.length > 0 ? (
-                      <div className="mt-2 divide-y divide-white/[0.08] border-y border-white/[0.08]">
+                      <div className="mt-2 divide-y divide-[#F0F0F2] border-y border-[#F0F0F2]">
                         {activeDiscrepancyRequiredDocumentationItems.map((item) => (
                           <div
                             key={`${item.label}-${item.detail}`}
                             className="grid gap-1 px-2.5 py-2 sm:grid-cols-[minmax(130px,0.44fr)_minmax(0,1fr)] sm:gap-3"
                           >
-                            <div className="text-[11px] font-sans font-medium leading-4 tracking-tight text-white/[0.84]">
+                            <div className="text-[11px] font-sans font-medium leading-4 tracking-tight text-[#1B1C20]">
                               {item.label}
                             </div>
-                            <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+                            <div className="text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                               {item.detail || 'Required for this detector family before the finding can be treated as supported.'}
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.6]">
+                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-[#50525B]">
                         Policy basis pending verification. Margin will not treat this as filing-ready until the required documentation checklist is confirmed.
                       </p>
                     )}
@@ -4690,23 +4687,23 @@ export function Dashboard() {
 
                   <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div>
-                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                         What Margin already found
                       </div>
-                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
                         {activeDiscrepancyCopy?.evidenceSummary || 'Structured detection fields are available, but Margin is still checking whether they are enough to support filing.'}
                       </p>
                       {activeDiscrepancyEvidenceItems.length > 0 ? (
-                        <div className="mt-2 grid grid-cols-2 border-y border-white/10">
+                        <div className="mt-2 grid grid-cols-2 border-y border-[#E9E9EC]">
                           {activeDiscrepancyEvidenceItems.slice(0, 4).map((item) => (
                             <div
                               key={`${item.label}-${item.value}`}
-                              className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0"
+                              className="border-b border-[#F0F0F2] py-1.5 pr-2.5 odd:border-r odd:border-[#F0F0F2] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0"
                             >
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                                 {item.label}
                               </div>
-                              <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">
+                              <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-[#50525B]">
                                 {item.value}
                               </div>
                             </div>
@@ -4715,11 +4712,11 @@ export function Dashboard() {
                       ) : null}
                     </div>
 
-                    <div className="border-t border-white/10 pt-3 md:border-l md:border-t-0 md:pl-3 md:pt-0">
-                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                    <div className="border-t border-[#E9E9EC] pt-3 md:border-l md:border-t-0 md:pl-3 md:pt-0">
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                         If proof is missing
                       </div>
-                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
                         Margin keeps looking across connected repositories before asking the seller. If one required document is not found, upload it in Evidence Locker and Margin can attach it to the filing workflow.
                       </p>
                       {activeDiscrepancy.whyNotClaimReady ? (
@@ -4732,72 +4729,72 @@ export function Dashboard() {
                 </div>
 
                 <div className="px-4 py-3">
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                     Why this proof matters
                   </div>
-                  <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
+                  <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
                     {activeDiscrepancyCopy?.recoverabilityReason || 'Margin only advances a finding when the identifiers, evidence, and policy basis line up clearly enough to support seller review or filing.'}
                   </p>
 
-                  <div className="mt-3 border-y border-white/10 py-2.5">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                  <div className="mt-3 border-y border-[#E9E9EC] py-2.5">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                       Amazon policy basis
                     </div>
-                    <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white/[0.86]">
+                    <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-[#1B1C20]">
                       {activeDiscrepancyPolicyBasis?.title || 'Policy basis pending verification'}
                     </div>
-                    <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.5]">
+                    <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                       {activeDiscrepancyPolicyBasis?.summary || 'Margin will keep this proof requirement conservative until an official policy reference is available for this detector family.'}
                     </p>
-                    <div className="mt-2 divide-y divide-white/[0.08] border-y border-white/[0.08]">
+                    <div className="mt-2 divide-y divide-[#F0F0F2] border-y border-[#F0F0F2]">
                       <div className="grid gap-1 px-2.5 py-2 sm:grid-cols-[120px_minmax(0,1fr)]">
-                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                           Policy rule
                         </div>
-                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+                        <div className="text-[11px] font-sans leading-4 tracking-tight text-[#50525B]">
                           {activeDiscrepancyPolicyBasis?.amazon_policy_rule || 'Official policy rule pending verification for this detector family.'}
                         </div>
                       </div>
                       <div className="grid gap-1 px-2.5 py-2 sm:grid-cols-[120px_minmax(0,1fr)]">
-                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                           Claim window
                         </div>
-                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+                        <div className="text-[11px] font-sans leading-4 tracking-tight text-[#50525B]">
                           {activeDiscrepancyPolicyBasis?.policy_window?.rule || 'Window pending verification.'}
                         </div>
                       </div>
                       <div className="grid gap-1 px-2.5 py-2 sm:grid-cols-[120px_minmax(0,1fr)]">
-                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                           Starts from
                         </div>
-                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+                        <div className="text-[11px] font-sans leading-4 tracking-tight text-[#50525B]">
                           {activeDiscrepancyPolicyBasis?.policy_window?.start_event || 'Detector-specific event date.'}
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 divide-x divide-white/[0.08]">
+                      <div className="grid grid-cols-2 divide-x divide-[#F0F0F2]">
                         <div className="px-2.5 py-2">
-                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                             Days left
                           </div>
-                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.82]">
+                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-[#1B1C20]">
                             {activeDiscrepancyDaysRemainingLabel}
                           </div>
                         </div>
                         <div className="px-2.5 py-2">
-                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                             Deadline
                           </div>
-                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.82]">
+                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-[#1B1C20]">
                             {formatFindingDateLabel(activeDiscrepancy.deadlineDate)}
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                      <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
+                      <span className="border border-[#E9E9EC] bg-[#FAFAFB] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-[#6B7280]">
                         {activeDiscrepancyPolicyBasis?.source_name || 'Amazon Seller Central Help'}
                       </span>
-                      <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
+                      <span className="border border-[#E9E9EC] bg-[#FAFAFB] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-[#6B7280]">
                         {activeDiscrepancyPolicyBasis?.last_verified_at
                           ? `Verified ${formatFindingDateLabel(activeDiscrepancyPolicyBasis.last_verified_at)}`
                           : 'Verification pending'}
@@ -4807,7 +4804,7 @@ export function Dashboard() {
                           href={activeDiscrepancyPolicyBasis.source_url}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.64] transition-colors hover:border-white/20 hover:text-white"
+                          className="inline-flex items-center gap-1 border border-[#E9E9EC] bg-[#FAFAFB] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-[#6B7280] transition-colors hover:border-[#C8D8FF] hover:text-[#0B74DE]"
                         >
                           <Link2 className="h-2.5 w-2.5" />
                           Amazon reference
@@ -4817,28 +4814,28 @@ export function Dashboard() {
                   </div>
 
                   <div className="mt-3">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">
                       Where Margin checks first
                     </div>
                     <div className="mt-2 grid grid-cols-2 gap-1.5">
                       {['Connected email', 'Cloud storage', 'Team repositories', 'Uploaded documents'].map((source) => (
                         <div
                           key={source}
-                          className="border border-white/[0.08] bg-white/[0.018] px-2.5 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.62]"
+                          className="border border-[#F0F0F2] bg-[#FAFAFB] px-2.5 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#50525B]"
                         >
                           {source}
                         </div>
                       ))}
                     </div>
-                    <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+                    <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
                       This does not mean every connected source already contains the proof. It means Margin checks the repositories first and only asks for upload when the required document is still missing.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <DialogFooter className="flex flex-col gap-2 border-t border-white/10 px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
+              <DialogFooter className="flex flex-col gap-2 border-t border-[#E9E9EC] px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[10px] font-sans leading-4 tracking-tight text-[#6B7280]">
                   Proof guidance is derived from configured Amazon references, backend finding truth, and the stored deadline. It is not a filing guarantee.
                 </div>
                 <div className="flex items-center gap-3">
@@ -4871,12 +4868,12 @@ export function Dashboard() {
 
       {/* Enter Amazon Case ID Modal */}
       <Dialog open={caseIdModalOpen} onOpenChange={setCaseIdModalOpen}>
-        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-xl p-6 backdrop-blur-3xl">
+        <DialogContent className="max-w-md bg-white border border-[#E9E9EC] shadow-3xl rounded-xl p-6 backdrop-blur-3xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-serif font-medium text-white uppercase tracking-tight">
               Link Amazon Case ID
             </DialogTitle>
-            <DialogDescription className="text-xs text-white/50 font-serif mt-2">
+            <DialogDescription className="text-xs text-[#D8D8DE]0 font-serif mt-2">
               Enter the Case ID provided by Amazon Seller Support to track this claim.
             </DialogDescription>
           </DialogHeader>
@@ -4886,7 +4883,7 @@ export function Dashboard() {
               value={caseIdInput}
               onChange={(e) => setCaseIdInput(e.target.value)}
               placeholder="e.g. CASE-123456789"
-              className="bg-white/5 border-white/10 text-white placeholder:text-white/20 font-mono h-12"
+              className="bg-[#FAFAFB] border-[#E9E9EC] text-white placeholder:text-[#858792] font-mono h-12"
               disabled={isLinkingCase}
             />
           </div>
@@ -4895,7 +4892,7 @@ export function Dashboard() {
             <Button
               variant="outline"
               onClick={() => setCaseIdModalOpen(false)}
-              className="px-4 py-2 bg-white/5 border-white/10 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-tight h-10"
+              className="px-4 py-2 bg-[#FAFAFB] border-[#E9E9EC] text-[10px] font-mono font-bold text-[#6B7280] hover:text-[#0B74DE] uppercase tracking-tight h-10"
               disabled={isLinkingCase}
             >
               Cancel

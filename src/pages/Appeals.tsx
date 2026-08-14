@@ -480,12 +480,12 @@ export default function Appeals() {
   if (isReady && !activeTenantSlug) {
     return (
       <PageLayout title="Appeals">
-        <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
+        <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#111827]">
           <div className="container mx-auto px-8 pb-20 pt-10">
-            <Card className="rounded-2xl border-white/5 bg-[#0c0c0c] text-white">
+            <Card className="rounded-[2px] border border-[#D8E3E8] bg-white text-[#111827] shadow-none">
               <CardContent className="space-y-3 p-8">
-                <h1 className="text-xl font-sans font-bold tracking-tight text-white">Appeals unavailable</h1>
-                <p className="text-sm font-sans text-white/50">Open this page from a tenant workspace before loading verified Amazon response reviews.</p>
+                <h1 className="text-[18px] font-sans font-semibold tracking-tight text-[#111827]">Appeals unavailable</h1>
+                <p className="text-sm font-sans text-[#4B5563]">Open this page from a tenant workspace before loading verified Amazon response reviews.</p>
               </CardContent>
             </Card>
           </div>
@@ -496,15 +496,14 @@ export default function Appeals() {
 
   return (
     <PageLayout title="Appeals">
-      <div className="platform-vitality-page relative min-h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
+      <div className="platform-vitality-page relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#111827]">
         <div className="relative z-10 container mx-auto space-y-6 px-8 pb-20 pt-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Appeals workspace</div>
-              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Reimbursement appeals and Amazon responses</h1>
+              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#858792]">Verified response workspace</div>
+              <h1 className="max-w-3xl text-[24px] font-sans font-semibold tracking-tight text-[#111827]">Reimbursement appeals and Amazon responses</h1>
               <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
-                When a filed case has a recorded Amazon response, Margin shows the response, the support gaps, and whether a retry is safe.
+                Margin shows only recorded Amazon responses, the evidence gaps attached to them, and whether a retry is safe.
               </p>
               <p className="text-[11px] font-sans font-medium tracking-tight text-white/32">
                 Internal estimates do not appear here as Amazon approvals or denials.
@@ -527,13 +526,13 @@ export default function Appeals() {
             </div>
           </div>
 
-          <Card className="overflow-hidden rounded-2xl border-white/8 bg-[#0c0c0c] text-white">
+          <Card className="overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white text-[#111827] shadow-none">
             <CardContent className="p-0">
-              <div className="border-b border-white/8 px-6 py-5">
+              <div className="border-b border-[#D8E3E8] bg-[#FAFAFB] px-6 py-5">
                 <div className="flex flex-col gap-4">
                   <div>
                     <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Verified response queue</div>
-                    <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Responses that need review</h2>
+                    <h2 className="mt-2 text-[18px] font-sans font-semibold tracking-tight text-[#111827]">Responses that need review</h2>
                     <p className="mt-2 max-w-3xl text-[12px] font-sans leading-5 text-white/42">
                       Margin only shows filed cases here when a recorded Amazon response creates a denial or approved-value gap.
                     </p>

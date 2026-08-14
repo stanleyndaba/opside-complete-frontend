@@ -1810,7 +1810,7 @@ export default function DisputeCases() {
 
   return (
     <PageLayout title="Dispute Queue" noPadding>
-      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
+      <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -1822,14 +1822,14 @@ export default function DisputeCases() {
         <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Dispute Queue</h1>
+              <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Dispute Queue</h1>
               <p className="text-sm text-white/50 font-sans max-w-3xl">
-                Track dispute cases, detection-only queue rows, approvals, and payout follow-up without assuming every record is already filed.
+                Review cases by queue state, evidence gate, Amazon response, approval, and payout posture. Detection does not mean filing.
               </p>
             </div>
             <div className="flex flex-col items-start gap-2 lg:items-end">
               {latestQueueSignal ? (
-                <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
+                <div className="inline-flex items-center rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
                   {latestQueueSignal.label}
                   <span className="ml-2 text-white/40">
                     {formatDistanceToNow(new Date(latestQueueSignal.timestamp), { addSuffix: true })}
@@ -1841,7 +1841,7 @@ export default function DisputeCases() {
               </div>
               <Button
                 onClick={refresh}
-                className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"
+                className="h-9 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans font-semibold text-[10px] text-[#4B5563] hover:border-[#C8D8FF] hover:bg-[#F2F7FF] hover:text-[#0B74DE] uppercase tracking-tight"
               >
                 <RefreshCw className="w-3 h-3 mr-2" />
                 Refresh
@@ -1849,8 +1849,8 @@ export default function DisputeCases() {
             </div>
           </div>
 
-          <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-            <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
+          <Card className="rounded-[2px] border border-[#D8E3E8] bg-white text-[#111827] shadow-none overflow-hidden">
+            <CardHeader className="border-b border-[#D8E3E8] bg-[#FAFAFB] px-6 py-5">
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col xl:flex-row xl:items-center gap-3">
                   <div className="relative flex-1">

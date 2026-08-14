@@ -1,0 +1,143 @@
+755:        tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+763:        tone: 'border-violet-500/20 bg-violet-500/[0.08] text-violet-100',
+771:        tone: 'border-white/10 bg-white/[0.03] text-white/58',
+779:        tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+787:        tone: 'border-sky-500/20 bg-sky-500/[0.08] text-sky-100',
+795:        tone: 'border-white/10 bg-white/[0.04] text-white/68',
+817:      tone: 'border-sky-500/20 bg-sky-500/[0.08] text-sky-100',
+821:      tone: 'border-violet-500/20 bg-violet-500/[0.08] text-violet-100',
+825:      tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+833:      tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+837:      tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+1788:          title: 'FETCH_PROTOCOL_ERROR',
+1803:          title: 'FETCH_PROTOCOL_ERROR',
+2409:          tone: 'border-sky-500/25 bg-sky-500/[0.08] text-sky-100'
+2419:          tone: 'border-white/10 bg-white/[0.03] text-white/60'
+3665:                    <div className="bg-[#111111]/90 border border-white/10 rounded-2xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
+3671:                            <h3 className="text-[12px] font-medium text-white tracking-tight">Your Notifications</h3>
+3672:                            <p className="text-[10px] font-sans font-bold text-white/25 uppercase tracking-tight mt-1">
+3688:                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-tight">No recent notifications</p>
+3719:                                                isUnread ? "text-white" : "text-white/40 group-hover:text-white transition-colors"
+3729:                                                  isUnread ? "text-white/45" : "text-white/10"
+3733:                                                <span className="text-white/5 h-2 w-[1px] bg-white/10" />
+3734:                                                <span className="text-[9px] text-white/10 font-mono uppercase">
+3738:                                              <span className="text-[9px] text-white/20 font-mono tabular-nums">
+3803:                              className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-tight transition-colors"
+3822:                          <h2 className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+3825:                          <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.72]">
+3828:                          <p className="mt-2 max-w-3xl text-[11px] font-sans leading-5 text-white/[0.44]">
+3833:                          <div className="flex shrink-0 items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.58]">
+3843:                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">
+3850:                                  ? 'text-white/[0.55]'
+3851:                                  : 'text-white/[0.9]'
+3861:                        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-sans tracking-tight text-white/[0.42]">
+3864:                              {item.label}: <span className="text-white/[0.68]">{item.value}</span>
+3873:                        <Loader2 className="h-6 w-6 text-white/45 animate-spin" />
+3875:                          <div className="text-[11px] font-sans font-medium text-white/[0.45] tracking-tight animate-pulse">
+3878:                          <div className="mt-2 text-[11px] font-sans leading-5 text-white/30 tracking-tight">
+3886:                        <h3 className="mt-3 text-[15px] font-sans font-medium text-white tracking-tight">
+3889:                        <p className="text-[11px] text-white/[0.45] mt-2 font-sans max-w-sm mx-auto leading-5">
+3900:                            className="mt-6 flex h-8 items-center gap-3 border border-white/10 px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/80 transition-colors hover:bg-white/[0.04] group"
+3903:                            <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
+3908:                            className="mt-6 flex h-8 items-center gap-3 border border-white/10 px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/80 transition-colors hover:bg-white/[0.04] group"
+3911:                            <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
+3918:                          <div className="text-[11px] font-sans tracking-tight text-white/[0.48]">
+3925:                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.52]">
+3931:                              <span className="text-[11px] font-sans font-medium text-white/[0.38] tracking-tight">Show processed</span>
+3948:                            className={`h-8 rounded-none px-4 bg-transparent hover:bg-white/[0.04] text-white/70 hover:text-white border border-white/10 text-[10px] font-sans font-medium uppercase tracking-tight transition-all ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+3968:                              <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+4079:                                      className="block max-w-full text-left text-[12px] font-sans font-medium tracking-tight text-white/[0.92] transition-colors hover:text-white hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-1 focus-visible:outline-white/35"
+4082:                                      <span className="text-white/[0.48]"> — {issueLifecycleStateLabel}</span>
+4084:                                    <p className="mt-1.5 max-w-2xl text-[11px] font-sans leading-5 tracking-tight text-white/[0.54]">
+4087:                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
+4100:                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+4103:                                    <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-white/90">
+4111:                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+4115:                                      "mt-1.5 inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.76]"
+4120:                                    <p className="mt-1.5 max-w-md text-[10px] font-sans leading-5 text-white/[0.48]">
+4130:                                        className="h-7 rounded-none px-2.5 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.55] hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all"
+4141:                                          className="h-7 w-7 rounded-none text-white/25 hover:text-white hover:bg-white/[0.04] transition-all border border-transparent hover:border-white/10"
+4179:                              <span className="text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+4180:                                {isSyncScopedDetections ? 'Findings currently shown:' : 'Open issues loaded:'} <span className="text-white/[0.55]">{visibleDetectionResults.length}</span>
+4183:                            <span className="text-white/10">|</span>
+4184:                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+4185:                              {isSyncScopedDetections ? 'Upload processed:' : 'Last updated:'} <span className="text-white/[0.55]">{isSyncScopedDetections ? syncScopedIssuesUpdatedLabel : formattedLastUpdated}</span>
+4187:                            <span className="text-white/10">|</span>
+4188:                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+4189:                              Scope: <span className="text-white/[0.55]">{isSyncScopedDetections ? 'This upload' : 'Account summary'}</span>
+4193:                                <span className="text-white/10">|</span>
+4194:                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+4195:                                  Sync: <span className="text-white/[0.55]">{uploadSyncId}</span>
+4200:                          <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white tracking-tight">
+4229:            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">CONFIGURE_TERMINAL_OVERRIDE</DialogTitle>
+4230:            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-tight">Select active operational modules for the command grid.</DialogDescription>
+4247:                  <span className="text-[11px] font-mono font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">{a.label.replace('_', ' ')}</span>
+4248:                  <span className="text-[9px] text-white/20 font-mono uppercase tracking-tight">{a.subtitle.replace('_', ' ')}</span>
+4256:              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-tight transition-colors"
+4338:              className="h-9 min-w-[154px] rounded-full border border-[#0B74DE] bg-[#0B74DE] px-4 text-[10px] font-sans font-semibold uppercase tracking-tight text-white transition-colors hover:bg-[#005FBA] disabled:cursor-not-allowed disabled:opacity-50"
+4349:            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">PROVISION_ACCESS_INVITE</DialogTitle>
+4350:            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-tight">Authorize read-only access for internal personnel.</DialogDescription>
+4358:              className="h-10 bg-white/5 border-white/10 text-[11px] font-mono text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+4364:              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-tight transition-colors"
+4389:                    <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
+4392:                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+4405:                        className="mt-2 text-[11px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+4429:                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+4436:                      <div className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
+4445:                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Found on</div>
+4446:                      <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.8]">
+4451:                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Filing movement</div>
+4467:                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.76]">
+4470:                      <div className="mt-2 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
+4475:                        <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.62]">
+4483:                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.68]">
+4496:                          <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.48]">
+4501:                        <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+4525:                    <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.64]">
+4536:                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
+4537:                        <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+4547:                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
+4548:                          <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+4553:                      <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.45]">
+4562:                        className="mt-2 inline-flex text-[10px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+4575:                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
+4576:                            <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+4581:                      <div className="mt-2 border-y border-white/10 py-3 text-[11px] font-sans leading-5 text-white/[0.44]">
+4590:                <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
+4600:                      className="h-8 rounded-md border border-[#0052FF] bg-[#0052FF] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#003DBF]"
+4617:              <Loader2 className="h-6 w-6 text-white animate-spin" />
+4634:                    <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
+4637:                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+4647:                    <span className="border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.72]">
+4675:                            <div className="text-[11px] font-sans font-medium leading-4 tracking-tight text-white/[0.84]">
+4678:                            <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+4685:                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.6]">
+4696:                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
+4706:                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">
+4709:                              <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">
+4722:                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
+4738:                  <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
+4746:                    <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white/[0.86]">
+4749:                    <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.5]">
+4754:                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+4757:                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+4762:                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+4765:                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+4770:                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+4773:                        <div className="text-[11px] font-sans leading-4 tracking-tight text-white/[0.7]">
+4779:                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+4782:                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.82]">
+4787:                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">
+4790:                          <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.82]">
+4797:                      <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
+4800:                      <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
+4810:                          className="inline-flex items-center gap-1 border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.64] transition-colors hover:border-white/20 hover:text-white"
+4827:                          className="border border-white/[0.08] bg-white/[0.018] px-2.5 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.62]"
+4833:                    <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+4841:                <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
+4850:                    className="h-8 rounded-md border border-[#0052FF] bg-[#0052FF] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#003DBF]"
+4866:              <Loader2 className="h-6 w-6 animate-spin text-white" />
+4876:            <DialogTitle className="text-xl font-serif font-medium text-white uppercase tracking-tight">
+4879:            <DialogDescription className="text-xs text-white/50 font-serif mt-2">
+4889:              className="bg-white/5 border-white/10 text-white placeholder:text-white/20 font-mono h-12"
+4898:              className="px-4 py-2 bg-white/5 border-white/10 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-tight h-10"

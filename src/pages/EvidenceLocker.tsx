@@ -821,7 +821,7 @@ export default function EvidenceLocker() {
             <div className="relative pt-8">
               <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-[#111827]">
                 <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none p-10">
-                  <h1 className="text-3xl font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
+                  <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
                   <p className="text-[#6B7280] text-sm font-sans font-semibold uppercase tracking-tight">Tenant context required</p>
                   <p className="text-[#4B5563] mt-3 font-sans text-sm max-w-xl">
                     Claim Documents only renders inside a real tenant workspace. Open this page from a tenant-scoped route to load document inventory truthfully.
@@ -847,7 +847,7 @@ export default function EvidenceLocker() {
             <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-[#111827]">
               <div className="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
+                  <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
                   <p className="text-sm text-[#4B5563] font-sans max-w-3xl">
                     Review stored files, parsing progress, and case links that can support recoveries, filings, and payout follow-up.
                   </p>
@@ -889,7 +889,7 @@ export default function EvidenceLocker() {
                 <div className="px-6 py-4 border-b border-[#D8E3E8] bg-white flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Terminal className="h-3 w-3 text-[#4B5563]" />
-                    <h2 className="text-[10px] font-sans font-bold text-[#111827] uppercase tracking-tight">Document History</h2>
+                    <h2 className="text-[10px] font-sans font-bold text-[#111827] uppercase tracking-tight">Evidence history</h2>
                   </div>
                   <span className="text-[9px] font-sans font-bold text-[#111827] uppercase tracking-tight">{filteredDocLogs.length} entries</span>
                 </div>
@@ -997,12 +997,12 @@ export default function EvidenceLocker() {
                 </div>
               </div>
 
-              {/* Audit Registry Ledger - Document Library */}
+              {/* Audit Registry Ledger - Evidence library */}
               <div className="relative border-y border-[#D8E3E8] bg-white">
                 {/* Ledger Header */}
                 <div className="px-5 py-4 border-b border-[#D8E3E8] flex flex-col gap-4 bg-white lg:flex-row lg:items-end lg:justify-between">
                   <div>
-                    <h2 className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Document Library</h2>
+                    <h2 className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Evidence library</h2>
                     <div className="flex items-center gap-3 mt-1.5">
                       <span className="text-[15px] font-sans font-medium text-[#111827] tracking-tight">{displayMetrics.filteredResults} results</span>
                       <div className="h-1.5 w-[1px] bg-[#D8E3E8]" />

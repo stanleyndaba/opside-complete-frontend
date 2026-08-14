@@ -1020,7 +1020,7 @@ export default function IntegrationsHub() {
 
   return (
     <PageLayout title="Integrations" noPadding>
-      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
+      <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
         {/* Aesthetic Background Elements */}
         <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(0,82,255,0.06),transparent_70%)] pointer-events-none" />
         <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
@@ -1031,7 +1031,7 @@ export default function IntegrationsHub() {
             <DialogHeader>
               <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-white font-sans font-bold tracking-tight">
                 <Zap className="h-8 w-8 animate-pulse" />
-                Potential Recoveries Found!
+                Estimated recovery opportunities detected
               </DialogTitle>
             </DialogHeader>
             <div className="text-center space-y-6 py-4">
@@ -1042,11 +1042,11 @@ export default function IntegrationsHub() {
                       {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
                     </div>
                     <div className="text-sm font-sans font-bold text-white/35 uppercase tracking-tight">
-                      in Potential Amazon Recoveries Identified
+                      estimated value from detected opportunities
                     </div>
                     <div className="mt-4">
                       <Badge variant="outline" className="bg-white/10 border-white/20 text-white/70 font-sans font-bold text-[10px] uppercase tracking-tight px-3 py-1">
-                        {recoveryData.claimCount} Distinct Recovery Opportunities
+                        {recoveryData.claimCount} Detected opportunities
                       </Badge>
                     </div>
                   </div>
@@ -1070,13 +1070,13 @@ export default function IntegrationsHub() {
                   </div>
 
                   <p className="text-sm text-gray-400 font-sans font-light tracking-tight italic">
-                    "Our discovery agents identified these anomalies by triangulating your FBA structural data."
+                    "Margin compared connected FBA records to identify opportunities that still need evidence review."
                   </p>
                 </>
               )}
             </div>
             <DialogFooter>
-              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-[#0052FF] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-xs hover:bg-[#0047DD] transition-colors">
+              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-[#0B74DE] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-xs hover:bg-[#005FBA] transition-colors">
                 Continue to Dashboard
               </Button>
             </DialogFooter>
@@ -1099,14 +1099,14 @@ export default function IntegrationsHub() {
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-6">
                 <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-white/20 transition-all group">
-                  <Mail className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-white/70 transition-colors" />
+                  <Mail className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-[#0B74DE] transition-colors" />
                   <h3 className="font-sans font-bold text-lg mb-2 tracking-tight">Connect Email</h3>
                   <p className="text-xs text-gray-500 mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
                     AUTOMATICALLY SCAN REPOSITORIES FOR INVOICES, POs, AND SHIPMENT CONFIRMATIONS.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-[#D8E7FF] text-[#0052FF] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[10px] uppercase tracking-tight"
+                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                       handleConnectDocSource('gmail');
@@ -1117,14 +1117,14 @@ export default function IntegrationsHub() {
                 </div>
 
                 <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-white/20 transition-all group">
-                  <Cloud className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-white/70 transition-colors" />
+                  <Cloud className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-[#0B74DE] transition-colors" />
                   <h3 className="font-sans font-bold text-lg mb-2 tracking-tight">Cloud Storage</h3>
                   <p className="text-xs text-gray-500 mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
                     INTEGRATE GOOGLE DRIVE AND DROPBOX TO POOL YOUR BUSINESS DOCUMENTS.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-[#D8E7FF] text-[#0052FF] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[10px] uppercase tracking-tight"
+                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                       handleConnectDocSource('gdrive');
@@ -1162,22 +1162,22 @@ export default function IntegrationsHub() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px w-8 bg-white/20" />
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Connections</span>
+                  <div className="h-px w-8 bg-[#D8E3E8]" />
+                  <span className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#858792]">Evidence sources</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-sans font-light text-white mb-4 leading-tight tracking-tight">
+                <h1 className="text-[24px] md:text-[28px] font-sans font-semibold text-[#111827] mb-4 leading-tight tracking-tight">
                   Integrations
                 </h1>
                 <p className="text-gray-400 max-w-xl text-lg font-sans font-light leading-relaxed tracking-tight">
-                  Management of tenant-scoped connection truth, store records, and evidence repositories.
+                  Inspect which sources are connected, stored, parsed, matched, and ready to support a recovery case.
                 </p>
               </div>
 
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-end">
-                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Operational State</span>
+                  <span className="text-[10px] font-sans font-semibold text-[#858792] uppercase tracking-tight mb-1">Current account state</span>
                   <div className="flex items-center gap-2">
-                    <div className={`h-1.5 w-1.5 rounded-full ${pageOperationalState === 'Attention required' || pageOperationalState === 'Amazon connection required' ? 'bg-orange-400' : 'bg-white/70'}`} />
+                    <div className={`h-1.5 w-1.5 rounded-full ${pageOperationalState === 'Attention required' || pageOperationalState === 'Amazon connection required' ? 'bg-orange-400' : 'bg-[#0B74DE]'}`} />
                     <span className="text-sm font-medium text-white tracking-tight">{pageOperationalState}</span>
                   </div>
                 </div>
@@ -1187,13 +1187,13 @@ export default function IntegrationsHub() {
             {/* Restored Unified Search */}
             <div className="max-w-2xl mt-4 relative group">
               <div className="absolute inset-0 bg-white/[0.03] rounded-xl blur-lg group-hover:bg-white/[0.05] transition-all duration-500" />
-              <div className="relative flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-white/20 transition-all duration-300">
-                <SearchIcon className="h-4 w-4 text-gray-500 ml-4 group-hover:text-white/70 transition-colors" />
+              <div className="relative flex items-center bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden focus-within:border-[#0B74DE] transition-colors duration-300">
+                <SearchIcon className="h-4 w-4 text-gray-500 ml-4 group-hover:text-[#0B74DE] transition-colors" />
                 <Input
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Query Infrastructure (Amazon, Gmail, Financial Repositories...)"
-                  className="bg-transparent border-none text-white font-sans font-bold text-xs h-12 placeholder:text-gray-600 focus-visible:ring-0 tracking-tight"
+                  placeholder="Search connected sources, stores, and evidence repositories"
+                  className="bg-transparent border-none text-[#111827] font-sans text-xs h-12 placeholder:text-[#9CA3AF] focus-visible:ring-0 tracking-tight"
                 />
               </div>
             </div>
@@ -1290,7 +1290,7 @@ export default function IntegrationsHub() {
                           <Button
                             onClick={handleAddStore}
                             disabled={addingStore}
-                            className="bg-[#0052FF] hover:bg-[#0047DD] text-[#FFFFFF] font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
+                            className="bg-[#0B74DE] hover:bg-[#005FBA] text-[#FFFFFF] font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
                           >
                             {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Store Record"}
                           </Button>
@@ -1308,7 +1308,7 @@ export default function IntegrationsHub() {
                           </div>
                         <Button
                           onClick={() => navigate('/waitlist?reason=capacity')}
-                          className="h-9 rounded-none bg-[#0052FF] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#0047DD] hover:text-[#FFFFFF]"
+                          className="h-9 rounded-none bg-[#0B74DE] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#005FBA] hover:text-[#FFFFFF]"
                         >
                           Join Waitlist
                         </Button>
@@ -1334,7 +1334,7 @@ export default function IntegrationsHub() {
                             toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
                           }
                         }}
-                        className="h-9 rounded-none bg-[#0052FF] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#0047DD] hover:text-[#FFFFFF]"
+                        className="h-9 rounded-none bg-[#0B74DE] px-6 text-[#FFFFFF] font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-[#005FBA] hover:text-[#FFFFFF]"
                       >
                         Connect Amazon
                       </Button>
@@ -1835,7 +1835,7 @@ export default function IntegrationsHub() {
                       setSavingFilters(false);
                     }}
                     disabled={savingFilters}
-                    className="h-12 bg-[#0052FF] hover:bg-[#0047DD] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-[10px] px-10"
+                    className="h-12 bg-[#0B74DE] hover:bg-[#005FBA] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-[10px] px-10"
                   >
                     {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Changes"}
                   </Button>

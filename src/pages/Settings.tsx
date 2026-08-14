@@ -292,7 +292,7 @@ const Settings = () => {
 
   return (
     <PageLayout title="Account Control Center" noPadding>
-      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
+      <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -306,11 +306,11 @@ const Settings = () => {
         <div className="relative z-10 container mx-auto px-8 pt-8 pb-14">
           <div className="border-b border-white/10 pb-6">
             <div className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
-              SYSTEM_CONFIG // READ_ONLY
+              ACCOUNT CONTROLS · LIVE DATA
             </div>
-            <h1 className="mt-2 text-4xl font-sans font-light text-white tracking-tight">Settings</h1>
+            <h1 className="mt-2 text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Settings</h1>
             <p className="mt-3 max-w-3xl text-sm text-white/45 font-sans leading-relaxed">
-              This page shows live account details and only the controls that are backed by real persistence.
+              Inspect account identity, source connections, filing authority, and controls that are backed by live persistence.
             </p>
           </div>
 
@@ -336,7 +336,7 @@ const Settings = () => {
                 className="space-y-7"
               >
                 <div>
-                  <h2 className="text-xl font-sans font-bold text-white tracking-tight">Account Identity</h2>
+                  <h2 className="text-[18px] font-sans font-semibold text-[#111827] tracking-tight">Account Identity</h2>
                   <p className="text-sm text-white/50 font-sans mt-2 max-w-2xl">
                     This section shows authenticated user and workspace identity only.
                   </p>
