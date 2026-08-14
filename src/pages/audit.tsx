@@ -1126,7 +1126,7 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex min-h-screen flex-1 flex-col">
         {/* Top bar */}
-        <div className="flex items-center justify-between border-b border-zinc-100 bg-white px-4 py-3 sm:px-8">
+        <div className="flex items-center justify-between border-b border-zinc-100 bg-[#FAFAF7] px-4 py-3 sm:px-8">
           <div className="flex items-center gap-3">
             {!sidebarOpen && (
               <button type="button" onClick={() => setSidebarOpen(true)} className="mr-2 rounded-none p-1 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900 md:inline-flex hidden">
@@ -1456,12 +1456,12 @@ export default function Audit() {
                           </p>
                         </div>
                         {recoverOnceQuote?.status === 'available' || recoverOnceQuote?.status === 'accepted' ? (
-                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-6 w-full h-12 rounded-[3px] border-zinc-200 bg-white text-[13px] font-semibold uppercase tracking-tight text-[#182026] hover:bg-zinc-50 transition-all">
+                          <Button variant="outline" onClick={startRecoverOnceCheckout} disabled={isBusy || isRecoverOnceQuoteLoading} className="mt-6 w-full h-12 rounded-md border-zinc-200 bg-white text-[13px] font-semibold uppercase tracking-tight text-[#182026] hover:bg-zinc-50 transition-all">
                             {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
                             Initialize Recovery
                           </Button>
                         ) : (
-                          <Button variant="outline" disabled className="mt-6 w-full h-12 rounded-[3px] border-zinc-100 bg-zinc-50/50 text-[13px] font-semibold uppercase tracking-tight text-[#8A99A4]">
+                          <Button variant="outline" disabled className="mt-6 w-full h-12 rounded-md border-zinc-100 bg-zinc-50/50 text-[13px] font-semibold uppercase tracking-tight text-[#8A99A4]">
                             {isRecoverOnceQuoteLoading ? 'Processing' : 'Unavailable'}
                           </Button>
                         )}
@@ -1478,7 +1478,7 @@ export default function Audit() {
                             Unlimited Recoveries
                           </p>
                         </div>
-                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-[3px] bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
+                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
                           {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
                           Activate Workspace
                         </Button>
@@ -1496,7 +1496,7 @@ export default function Audit() {
                           0% Recovery Commission
                         </p>
                       </div>
-                      <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-[3px] bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
+                      <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
                         {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
                         Activate Workspace
                       </Button>
@@ -1692,8 +1692,8 @@ export default function Audit() {
               {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Save schedule
             </Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Pause</Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Turn off</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Pause</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Turn off</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -1711,11 +1711,11 @@ export default function Audit() {
           </div>
           <input readOnly value={getShareLink()} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[12px] text-gray-600" />
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={copyShareLink} variant="outline" className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+            <Button onClick={copyShareLink} variant="outline" className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900">
               {shareCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
               {shareCopied ? 'Copied' : 'Copy link'}
             </Button>
-            <Button asChild variant="outline" className="h-10 rounded-md border-gray-200 bg-white px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900" onClick={() => trackEvent('share_email_clicked', { source_page: '/audit' })}>
+            <Button asChild variant="outline" className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900" onClick={() => trackEvent('share_email_clicked', { source_page: '/audit' })}>
               <a href={`mailto:?subject=${encodeURIComponent('Run a free Amazon Recovery Audit with Margin')}&body=${encodeURIComponent(`Margin helps Amazon sellers audit reimbursement activity, prepare evidence, track recoveries, and verify payouts. Run a free Recovery Audit:\n\n${getShareLink()}`)}`}>
                 <Mail className="mr-2 h-4 w-4" /> Email
               </a>

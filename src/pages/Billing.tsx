@@ -143,7 +143,7 @@ export default function Billing() {
                   Recovery OS is billed at $99/month with 0% recovery commission.
                 </p>
               </div>
-              <Badge variant="outline" className={`w-fit rounded-[3px] px-3 py-1 text-[13px] font-semibold ${toneForState(state)}`}>
+              <Badge variant="outline" className={`w-fit rounded-md px-3 py-1 text-[13px] font-semibold ${toneForState(state)}`}>
                 {labelForState(state)}
               </Badge>
             </div>
@@ -187,7 +187,7 @@ export default function Billing() {
                   <div className="flex items-center gap-3">
                     <Button
                       variant="outline"
-                      className="rounded-[3px] border-[#DCE8EE] text-[13px] font-semibold uppercase tracking-tight"
+                      className="rounded-md border-[#DCE8EE] text-[13px] font-semibold uppercase tracking-tight"
                       onClick={() => void runAction('manage')}
                       disabled={busyAction !== null}
                     >
@@ -197,7 +197,7 @@ export default function Billing() {
                     {isActive ? (
                       <Button
                         variant="outline"
-                        className="rounded-[3px] border-rose-200 text-[13px] font-semibold uppercase tracking-tight text-rose-700 hover:bg-rose-50"
+                        className="rounded-md border-rose-200 text-[13px] font-semibold uppercase tracking-tight text-rose-700 hover:bg-rose-50"
                         onClick={() => void runAction('cancel')}
                         disabled={busyAction !== null}
                       >
@@ -205,7 +205,7 @@ export default function Billing() {
                       </Button>
                     ) : (
                       <Button
-                        className="rounded-[3px] bg-[#0B74DE] text-[13px] font-semibold uppercase tracking-tight text-white hover:bg-[#005FBA]"
+                        className="rounded-md bg-[#0B74DE] text-[13px] font-semibold uppercase tracking-tight text-white hover:bg-[#005FBA]"
                         onClick={() => void runAction('resume')}
                         disabled={busyAction !== null}
                       >

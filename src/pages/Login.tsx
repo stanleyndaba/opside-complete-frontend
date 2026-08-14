@@ -1226,7 +1226,7 @@ const Login = () => {
 
             <div className="mt-6 sm:mt-8">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                <div className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-6">
+                <div className="mb-8 border border-[#D8E3EA] bg-[#FAFAF7] p-5 sm:p-6">
                   <p className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                     Active Session Detected
                   </p>
@@ -1238,7 +1238,7 @@ const Login = () => {
                       type="button"
                       onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
-                      className="h-12 w-full rounded-[3px] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                      className="h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                     >
                       Continue
                     </Button>
@@ -1247,7 +1247,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void handleUseDifferentAccount()}
                       disabled={loading}
-                      className="h-12 w-full rounded-[3px] border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
+                      className="h-12 w-full rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
                     >
                       Switch Account
                     </Button>
@@ -1272,7 +1272,7 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder="name@company.com"
-                    className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
+                    className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
                   />
                 </div>
               </div>
@@ -1292,7 +1292,7 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder={mode === 'recovery' ? 'Enter new password' : 'Enter password'}
-                    className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                    className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                   />
                   <button
                     type="button"
@@ -1322,7 +1322,7 @@ const Login = () => {
                         setError('');
                       }}
                       placeholder="Enter verification code"
-                      className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                      className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                     />
                   </div>
                   {clerkVerificationMessage ? (
@@ -1347,7 +1347,7 @@ const Login = () => {
                         resetLocalAuthError();
                       }}
                       placeholder="Confirm your new password"
-                      className="h-13 rounded-[3px] border-[#C8D6DF] bg-white px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                      className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                     />
                     <button
                       type="button"
@@ -1362,7 +1362,7 @@ const Login = () => {
               ) : null}
 
               {error === '__SERVICE_PREPARING__' ? (
-                <div className="border border-[#D8E3EA] bg-white p-6 text-center sm:p-8">
+                <div className="border border-[#D8E3EA] bg-[#FAFAF7] p-6 text-center sm:p-8">
                   <h3 className="text-[22px] font-bold tracking-[-0.025em] text-[#182026]">
                     Preparing Account
                   </h3>
@@ -1371,7 +1371,7 @@ const Login = () => {
                   </p>
                   <Button
                     asChild
-                    className="mt-6 h-12 rounded-[3px] bg-[#0B74DE] px-6 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                    className="mt-6 h-12 rounded-md bg-[#0B74DE] px-6 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                   >
                     <Link to="/audit">
                       Start Free Audit
@@ -1385,7 +1385,7 @@ const Login = () => {
                   type="button"
                   onClick={() => void handleRetryWorkspaceRouting()}
                   disabled={loading}
-                  className="mt-3 h-12 w-full rounded-[3px] bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                  className="mt-3 h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
                 >
                   Retry Access Setup
                 </Button>
@@ -1397,7 +1397,7 @@ const Login = () => {
                   onClick={() => void handleClearBrowserSession()}
                   disabled={loading}
                   variant="outline"
-                  className="mt-3 h-11 rounded-[3px] border-[#E8B6B6] bg-white px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
+                  className="mt-3 h-11 rounded-md border-[#E8B6B6] bg-[#FAFAF7] px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
                 >
                   Clear browser session
                 </Button>
@@ -1407,7 +1407,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-12 w-full rounded-[3px] bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA]"
+                  className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA]"
                 >
                   {loading ? (
                     'Processing...'

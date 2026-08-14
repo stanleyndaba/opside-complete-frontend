@@ -535,7 +535,7 @@ const Settings = () => {
 
                       <Button
                         variant="outline"
-                        className="w-full h-11 rounded-[3px] border-[#C8D6DF] bg-white text-[#4B5A64] hover:bg-[#F3F6F8] font-sans font-semibold text-[13px] uppercase tracking-tight"
+                        className="w-full h-11 rounded-md border-[#C8D6DF] bg-white text-[#4B5A64] hover:bg-[#F3F6F8] font-sans font-semibold text-[13px] uppercase tracking-tight"
                         onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
                         disabled={!activeTenantSlug}
                       >

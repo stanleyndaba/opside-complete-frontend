@@ -1007,7 +1007,7 @@ export default function IntegrationsHub() {
     return (
       <PageLayout title="Integrations" noPadding>
         <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] flex items-center justify-center px-6">
-          <div className="max-w-xl w-full bg-white border border-[#D8E3EA] rounded-[3px] p-8 text-center">
+          <div className="max-w-xl w-full bg-white border border-[#D8E3EA] rounded-md p-8 text-center">
             <h1 className="text-2xl font-sans font-bold text-[#182026] tracking-tight mb-3">Workspace context required</h1>
             <p className="text-sm text-gray-400 font-sans leading-relaxed">
               Integration status is tenant-scoped. Select a real workspace before viewing or changing connection state.
@@ -1052,17 +1052,17 @@ export default function IntegrationsHub() {
                   </div>
 
                   <div className="grid grid-cols-3 gap-4 mt-8">
-                    <div className="text-center p-4 bg-white/[0.03] rounded-[3px] border border-[#D8E3EA] backdrop-blur-sm">
+                    <div className="text-center p-4 bg-white/[0.03] rounded-md border border-[#D8E3EA] backdrop-blur-sm">
                       <FileText className="h-6 w-6 mx-auto mb-2 text-blue-400" />
                       <div className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-1">Lost Inventory</div>
                       <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
                     </div>
-                    <div className="text-center p-4 bg-white/[0.03] rounded-[3px] border border-[#D8E3EA] backdrop-blur-sm">
+                    <div className="text-center p-4 bg-white/[0.03] rounded-md border border-[#D8E3EA] backdrop-blur-sm">
                       <Calculator className="h-6 w-6 mx-auto mb-2 text-orange-400" />
                       <div className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-1">Fee Errors</div>
                       <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
                     </div>
-                    <div className="text-center p-4 bg-white/[0.03] rounded-[3px] border border-[#D8E3EA] backdrop-blur-sm">
+                    <div className="text-center p-4 bg-white/[0.03] rounded-md border border-[#D8E3EA] backdrop-blur-sm">
                       <Package className="h-6 w-6 mx-auto mb-2 text-purple-400" />
                       <div className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-1">Shipments</div>
                       <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
@@ -1098,7 +1098,7 @@ export default function IntegrationsHub() {
 
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-6">
-                <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-[3px] p-6 text-center hover:border-white/20 transition-all group">
+                <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-md p-6 text-center hover:border-white/20 transition-all group">
                   <Mail className="h-12 w-12 mx-auto mb-4 text-[#182026]/35 group-hover:text-[#0B74DE] transition-colors" />
                   <h3 className="font-sans font-bold text-[18px] mb-2 tracking-tight">Connect Email</h3>
                   <p className="text-xs text-[#66737F] mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
@@ -1116,7 +1116,7 @@ export default function IntegrationsHub() {
                   </Button>
                 </div>
 
-                <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-[3px] p-6 text-center hover:border-white/20 transition-all group">
+                <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-md p-6 text-center hover:border-white/20 transition-all group">
                   <Cloud className="h-12 w-12 mx-auto mb-4 text-[#182026]/35 group-hover:text-[#0B74DE] transition-colors" />
                   <h3 className="font-sans font-bold text-[18px] mb-2 tracking-tight">Cloud Storage</h3>
                   <p className="text-xs text-[#66737F] mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
@@ -1186,7 +1186,7 @@ export default function IntegrationsHub() {
 
             {/* Restored Unified Search */}
             <div className="max-w-2xl mt-4 relative group">
-              <div className="absolute inset-0 bg-white/[0.03] rounded-[3px] blur-lg group-hover:bg-white/[0.05] transition-all duration-500" />
+              <div className="absolute inset-0 bg-white/[0.03] rounded-md blur-lg group-hover:bg-white/[0.05] transition-all duration-500" />
               <div className="relative flex items-center bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden focus-within:border-[#0B74DE] transition-colors duration-300">
                 <SearchIcon className="h-4 w-4 text-[#66737F] ml-4 group-hover:text-[#0B74DE] transition-colors" />
                 <Input
@@ -1268,7 +1268,7 @@ export default function IntegrationsHub() {
                             <div className="space-y-2">
                               <label className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">Marketplace Region</label>
                               <select
-                                className="w-full h-12 px-3 bg-[#F3F6F8] border-[#D8E3EA] rounded-[3px] text-sm border focus:border-white/20 focus:ring-0 outline-none text-[#182026] font-sans font-bold tracking-tight"
+                                className="w-full h-12 px-3 bg-[#F3F6F8] border-[#D8E3EA] rounded-md text-sm border focus:border-white/20 focus:ring-0 outline-none text-[#182026] font-sans font-bold tracking-tight"
                                 value={newStoreData.marketplace}
                                 onChange={e => setNewStoreData({ ...newStoreData, marketplace: e.target.value })}
                               >
@@ -1419,7 +1419,7 @@ export default function IntegrationsHub() {
 
             {/* INTEGRATION REQUEST: Can't find what you need? */}
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12 mt-6">
-              <div className="bg-white/[0.01] border border-dashed border-[#D8E3EA] rounded-[3px] p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-white/20 transition-all duration-500">
+              <div className="bg-white/[0.01] border border-dashed border-[#D8E3EA] rounded-md p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-white/20 transition-all duration-500">
                 <div className="flex items-center gap-6 text-center md:text-left">
                   <div className="h-14 w-14 rounded-full bg-[#F3F6F8] flex items-center justify-center border border-[#D8E3EA] group-hover:scale-110 transition-transform duration-500">
                     <Plus className="h-6 w-6 text-gray-400 group-hover:text-[#182026] transition-colors" />
@@ -1465,11 +1465,11 @@ export default function IntegrationsHub() {
                         placeholder="What data nodes should we extract?"
                         value={requestFormData.description}
                         onChange={e => setRequestFormData({ ...requestFormData, description: e.target.value })}
-                        className="w-full h-32 px-3 py-2 bg-[#F3F6F8] border-[#D8E3EA] rounded-[3px] text-sm border focus:border-white/20 focus:ring-0 outline-none text-[#182026] font-sans font-bold tracking-tight resize-none"
+                        className="w-full h-32 px-3 py-2 bg-[#F3F6F8] border-[#D8E3EA] rounded-md text-sm border focus:border-white/20 focus:ring-0 outline-none text-[#182026] font-sans font-bold tracking-tight resize-none"
                       />
                     </div>
                   </div>
-                  <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-[3px] p-4 flex items-start gap-3">
+                  <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-md p-4 flex items-start gap-3">
                     <Info className="h-5 w-5 text-[#182026]/60 shrink-0 mt-0.5" />
                     <p className="text-[12px] text-[#182026]/55 font-sans font-bold leading-relaxed uppercase tracking-tight">
                       Custom integration request capture is not wired in this build. Contact support if you need a new provider added.
@@ -1526,7 +1526,7 @@ export default function IntegrationsHub() {
 
                 return (
                   <motion.div key={p} variants={itemVariants} className="flex-shrink-0 w-[300px]">
-                    <div className={`h-full bg-white backdrop-blur-md rounded-[3px] border ${connected ? 'border-[#C8D6DF]' : 'border-[#D8E3EA]'} p-6 flex flex-col relative group transition-all duration-300 ${isParked ? 'grayscale opacity-55' : 'hover:bg-[#F3F6F8]'}`}>
+                    <div className={`h-full bg-white backdrop-blur-md rounded-md border ${connected ? 'border-[#C8D6DF]' : 'border-[#D8E3EA]'} p-6 flex flex-col relative group transition-all duration-300 ${isParked ? 'grayscale opacity-55' : 'hover:bg-[#F3F6F8]'}`}>
                       <div className="flex items-start justify-between mb-6">
                         <div className={`flex h-12 w-12 items-center justify-center ${isParked ? '' : 'group-hover:scale-110'} transition-transform duration-500`}>
                           <img src={meta.icon} alt={meta.name} className="h-9 w-9 object-contain" />
@@ -1539,7 +1539,7 @@ export default function IntegrationsHub() {
                       <div className="flex-1">
                         {isParked ? (
                           <div className="space-y-4">
-                            <div className="bg-[#F9FBFC] rounded-[3px] p-3 border border-[#D8E3EA]">
+                            <div className="bg-[#F9FBFC] rounded-md p-3 border border-[#D8E3EA]">
                               <span className="text-[12px] font-sans font-bold text-[#66737F] uppercase block mb-1 tracking-tight">Availability</span>
                               <span className="text-[13px] text-[#4B5A64] block font-sans font-bold tracking-tight">
                                 Available {PARKED_PROVIDER_AVAILABLE_DATE}
@@ -1557,7 +1557,7 @@ export default function IntegrationsHub() {
                           </div>
                         ) : connected ? (
                           <div className="space-y-4">
-                            <div className="bg-[#F9FBFC] rounded-[3px] p-3 border border-[#D8E3EA]">
+                            <div className="bg-[#F9FBFC] rounded-md p-3 border border-[#D8E3EA]">
                               <span className="text-[12px] font-sans font-bold text-[#66737F] uppercase block mb-1 tracking-tight">Operational State</span>
                               <span className="text-[13px] text-[#4B5A64] truncate block font-sans font-bold tracking-tight">
                                 {describeProviderState(providerState)}
@@ -1749,7 +1749,7 @@ export default function IntegrationsHub() {
             </motion.div>
 
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-8">
-              <div className="bg-white backdrop-blur-md rounded-[3px] border border-[#D8E3EA] p-8">
+              <div className="bg-white backdrop-blur-md rounded-md border border-[#D8E3EA] p-8">
                 <div className="flex items-center gap-4 mb-8">
                   <div>
                     <h4 className="text-[18px] font-sans font-bold text-[#182026] tracking-tight">Harvesting Parameters</h4>
@@ -1757,7 +1757,7 @@ export default function IntegrationsHub() {
                   </div>
                 </div>
 
-                <div className="mb-8 rounded-[3px] border border-[#D8E3EA] bg-black/30 p-4">
+                <div className="mb-8 rounded-md border border-[#D8E3EA] bg-black/30 p-4">
                   <p className="text-xs text-gray-400 font-sans tracking-tight leading-relaxed">
                     This panel actively controls sender, subject, exclusion, date, and file-type filtering. Duplicate suppression stays enforced automatically in the ingestion services, and provider folder scope is only honored when a provider route explicitly supports it.
                   </p>
@@ -1789,7 +1789,7 @@ export default function IntegrationsHub() {
                       <button
                         key={type}
                         onClick={() => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, [type]: !enabled } }))}
-                        className={`p-4 rounded-[3px] border font-sans font-bold text-[12px] uppercase tracking-tight transition-all duration-300 ${enabled ? 'bg-white/10 border-white/20 text-[#182026]' : 'bg-[#F3F6F8] border-[#D8E3EA] text-[#66737F] hover:border-[#D8E3EA]'}`}
+                        className={`p-4 rounded-md border font-sans font-bold text-[12px] uppercase tracking-tight transition-all duration-300 ${enabled ? 'bg-white/10 border-white/20 text-[#182026]' : 'bg-[#F3F6F8] border-[#D8E3EA] text-[#66737F] hover:border-[#D8E3EA]'}`}
                       >
                         {type}
                       </button>
@@ -1844,7 +1844,7 @@ export default function IntegrationsHub() {
             </motion.div>
 
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-4">
-              <div className="bg-white backdrop-blur-md rounded-[3px] border border-[#D8E3EA] p-8 h-full flex flex-col">
+              <div className="bg-white backdrop-blur-md rounded-md border border-[#D8E3EA] p-8 h-full flex flex-col">
                 <div className="flex items-center gap-4 mb-8">
                   <div>
                     <h4 className="text-[18px] font-sans font-bold text-[#182026] tracking-tight">Schedules</h4>
@@ -1873,7 +1873,7 @@ export default function IntegrationsHub() {
                         }
                         setUpdatingSchedule(false);
                       }}
-                      className={`w-full p-4 rounded-[3px] border text-left transition-all duration-300 ${schedule === opt.value ? 'bg-white/10 border-white/20' : 'bg-[#F3F6F8] border-[#D8E3EA] hover:border-[#D8E3EA]'}`}
+                      className={`w-full p-4 rounded-md border text-left transition-all duration-300 ${schedule === opt.value ? 'bg-white/10 border-white/20' : 'bg-[#F3F6F8] border-[#D8E3EA] hover:border-[#D8E3EA]'}`}
                     >
                       <div className="flex items-center justify-between">
                         <span className={`text-sm font-bold tracking-tight ${schedule === opt.value ? 'text-[#182026]' : 'text-gray-400'}`}>{opt.label}</span>
@@ -1915,7 +1915,7 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12">
               <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_320px] gap-4">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-white/15 to-white/5 rounded-[3px] blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-white/15 to-white/5 rounded-md blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
                   <button
                     onClick={async () => {
                       setIngestingAll(true);
@@ -1945,7 +1945,7 @@ export default function IntegrationsHub() {
                       setIngestingAll(false);
                     }}
                     disabled={ingestingAll}
-                    className="relative w-full h-32 bg-black rounded-[3px] border border-[#D8E3EA] flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-white/20"
+                    className="relative w-full h-32 bg-black rounded-md border border-[#D8E3EA] flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-white/20"
                   >
                     {ingestingAll ? (
                       <RefreshCw className="w-10 h-10 text-[#182026]/70 animate-spin" />
@@ -1960,7 +1960,7 @@ export default function IntegrationsHub() {
                   </button>
                 </div>
 
-                <div className="bg-white rounded-[3px] border border-[#D8E3EA] p-5 flex flex-col justify-between gap-4">
+                <div className="bg-white rounded-md border border-[#D8E3EA] p-5 flex flex-col justify-between gap-4">
                   <div>
                     <span className="block text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-2">Provider-Specific Control</span>
                     <h4 className="text-base font-sans font-bold text-[#182026] tracking-tight">Ingest Gmail Only</h4>
