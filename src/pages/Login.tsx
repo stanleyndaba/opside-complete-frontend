@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth, useClerk, useSignIn, useSignUp, useUser } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -1367,20 +1367,19 @@ const Login = () => {
               ) : null}
 
               {error === '__SERVICE_PREPARING__' ? (
-                <div className="border border-[#D8E3E8] bg-white/55 px-5 py-6 text-center">
-                  <h3 className="text-[20px] font-semibold tracking-[-0.04em] text-[#182026]">
-                    We're preparing your account.
+                <div className="border border-zinc-100 bg-zinc-50/30 p-8 text-center rounded-none">
+                  <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">
+                    Preparing Account
                   </h3>
-                  <p className="mx-auto mt-3 max-w-[320px] text-[13px] leading-6 text-[#66737F]">
-                    Margin could not finish preparing your workspace automatically. Retry account setup, or start again from the free audit path.
+                  <p className="mx-auto mt-3 max-w-[320px] text-[13px] leading-relaxed text-zinc-500">
+                    Margin could not finish preparing your workspace automatically. Retry setup or start from the free audit path.
                   </p>
                   <Button
                     asChild
-                    className="mt-5 h-10 rounded-sm bg-[#0B74DE] px-5 text-[12px] font-semibold text-white hover:bg-[#0869C9] active:scale-[0.98]"
+                    className="mt-6 h-11 rounded-none bg-[#007AFF] px-6 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF]"
                   >
                     <Link to="/audit">
                       Start Free Audit
-                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </div>
@@ -1391,10 +1390,9 @@ const Login = () => {
                   type="button"
                   onClick={() => void handleRetryWorkspaceRouting()}
                   disabled={loading}
-                  className="mt-3 h-10 rounded-sm bg-[#0B74DE] px-4 text-[12px] font-semibold tracking-tight text-white hover:bg-[#0869C9] active:scale-[0.98]"
+                  className="mt-3 h-11 w-full rounded-none bg-[#007AFF] px-4 text-[11px] font-bold uppercase tracking-tight text-white hover:bg-[#0066FF]"
                 >
-                  Retry access setup
-                  <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                  Retry Access Setup
                 </Button>
               ) : null}
 

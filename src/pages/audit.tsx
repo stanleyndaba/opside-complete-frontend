@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
 import { ArrowRight, Calendar, CalendarClock, Check, Columns2, Copy, Download, HeartHandshake, Loader2, Mail, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
