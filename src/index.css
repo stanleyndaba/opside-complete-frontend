@@ -1221,7 +1221,13 @@ html.lenis body {
   -webkit-font-smoothing: antialiased;
 }
 
-.platform-authenticated-shell * {
+/* Only apply borders to explicit elements to prevent navbar clutter */
+.platform-authenticated-shell .surgical-border,
+.platform-authenticated-shell .border,
+.platform-authenticated-shell .border-b,
+.platform-authenticated-shell .border-t,
+.platform-authenticated-shell .border-l,
+.platform-authenticated-shell .border-r {
   border-color: var(--border-color);
 }
 

@@ -374,7 +374,7 @@ export function NotificationBell({
           {shouldShowLabel && <span className="text-xs font-sans font-bold uppercase tracking-tight">{label}</span>}
           {displayUnreadCount > 0 && (
             <span className={cn(
-              "pointer-events-none absolute z-10 flex h-4 min-w-4 select-none items-center justify-center rounded-full border border-white bg-[#0052FF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-[0_8px_18px_rgba(0,82,255,0.22)]",
+              "pointer-events-none absolute z-10 flex h-4 min-w-4 select-none items-center justify-center rounded-full border border-white bg-[#007AFF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-[0_8px_18px_rgba(0,122,255,0.1)]",
               isSidebarStyle ? "right-2 top-1" : "right-0 top-0 translate-x-1/4 -translate-y-1/4"
             )}>
               {displayUnreadCount > 9 ? '9+' : displayUnreadCount}
@@ -391,10 +391,10 @@ export function NotificationBell({
         <div className="bg-[#F9FAFB] px-6 py-4 border-b border-[#E5E7EB] flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1 pr-4">
-              <h3 className="text-[11px] font-sans font-bold uppercase tracking-tight text-white">
+              <h3 className="text-[11px] font-sans font-bold uppercase tracking-tight text-[#111827]">
                 Updates
               </h3>
-              <p className="mt-1 text-[10px] font-sans leading-4 text-white/38">
+              <p className="mt-1 text-[10px] font-sans leading-4 text-[#6B7280]">
                 Recent activity across your Amazon account and recoveries.
               </p>
             </div>
@@ -402,11 +402,11 @@ export function NotificationBell({
               {displayUnreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] transition-colors hover:text-[#0052FF]">
+                  className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] transition-colors hover:text-[#007AFF]">
                   Mark all read
                 </button>
               )}
-              <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0052FF]">
+              <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#007AFF]">
                 {displayUnreadCount > 0 ? `${displayUnreadCount} unread` : 'All caught up'}
               </div>
             </div>
@@ -416,10 +416,10 @@ export function NotificationBell({
         <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {displayNotifications.length === 0 ? (
             <div className="px-6 py-10 text-center">
-              <p className="text-[11px] font-sans font-medium uppercase tracking-tight text-white/42">
+              <p className="text-[11px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">
                 No recent updates
               </p>
-              <p className="mt-2 text-[11px] font-sans leading-5 text-white/34">
+              <p className="mt-2 text-[11px] font-sans leading-5 text-[#9CA3AF]">
                 New account activity will appear here as Margin finds, files, and tracks recoveries.
               </p>
             </div>
@@ -435,7 +435,7 @@ export function NotificationBell({
                   <div
                     className={cn(
                       'absolute left-0 top-3 bottom-3 w-[2px] rounded-full transition-opacity',
-                      !notification.read ? 'bg-[#0052FF] opacity-100' : 'bg-[#0052FF]/20 opacity-0 group-hover:opacity-100'
+                      !notification.read ? 'bg-[#007AFF] opacity-100' : 'bg-[#007AFF]/20 opacity-0 group-hover:opacity-100'
                     )}
                   />
 
@@ -450,7 +450,7 @@ export function NotificationBell({
                               : notification.tone === 'warning'
                                 ? 'border-amber-500/20 bg-amber-500/10 text-amber-700'
                                 : notification.tone === 'progress'
-                                  ? 'border-[#D8E7FF] bg-[#F3F7FF] text-[#0052FF]'
+                                  ? 'border-[#D8E7FF] bg-[#F3F7FF] text-[#007AFF]'
                                   : 'border-[#E5E7EB] bg-white text-[#4B5563]'
                           )}
                         >
@@ -461,7 +461,7 @@ export function NotificationBell({
                       <p
                         className={cn(
                           'mt-3 text-[13px] font-sans font-semibold leading-5 tracking-tight',
-                          !notification.read ? 'text-white' : 'text-white/72 group-hover:text-white/84'
+                          !notification.read ? 'text-[#111827]' : 'text-[#4B5563] group-hover:text-[#111827]'
                         )}
                         style={{
                           display: '-webkit-box',
@@ -476,7 +476,7 @@ export function NotificationBell({
                       <p
                         className={cn(
                           'mt-2 pr-3 text-[11px] font-sans leading-5 tracking-tight',
-                          !notification.read ? 'text-white/60' : 'text-white/38 group-hover:text-white/52'
+                          !notification.read ? 'text-[#4B5563]' : 'text-[#6B7280] group-hover:text-[#4B5563]'
                         )}
                         style={{
                           display: '-webkit-box',
@@ -489,7 +489,7 @@ export function NotificationBell({
                       </p>
                     </div>
 
-                    <span className="shrink-0 whitespace-nowrap pt-0.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                    <span className="shrink-0 whitespace-nowrap pt-0.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">
                       {notification.timestamp}
                     </span>
                   </div>
@@ -516,7 +516,7 @@ export function NotificationBell({
 
         <div className="bg-[#F9FAFB] px-6 py-4 border-t border-[#E5E7EB] flex-shrink-0">
           <Link to={tenantRoute(activeSlug, '/notifications')} onClick={() => setIsOpen(false)}>
-            <button className="w-full rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-4 py-2 text-center text-[10px] font-sans font-medium uppercase tracking-tight text-[#0052FF] transition-colors hover:border-[#0052FF]/30 hover:bg-white">
+            <button className="w-full rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-4 py-2 text-center text-[10px] font-sans font-medium uppercase tracking-tight text-[#007AFF] transition-colors hover:border-[#007AFF]/30 hover:bg-white">
               View all updates
             </button>
           </Link>

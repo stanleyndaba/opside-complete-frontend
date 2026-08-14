@@ -618,7 +618,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/data-upload'))}
-                      className="relative flex h-10 w-10 items-center justify-center rounded-[2px] border border-transparent text-[#6B7280] transition-all hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                      className="relative flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#007AFF]"
                       aria-label="Upload CSV">
                       <Upload className="h-5 w-5" />
                     </button>
@@ -646,7 +646,7 @@ export function Navbar({
                 <NotificationBell
                   label="Alert"
                   showLabel={false}
-                  className="flex h-10 w-10 items-center justify-center rounded-[2px] border border-transparent text-[#6B7280] transition-all hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                  className="flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#007AFF]"
                   iconClassName="h-5 w-5"
                 />
 
@@ -655,7 +655,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                      className="relative flex h-10 w-10 items-center justify-center rounded-[2px] border border-transparent text-[#6B7280] transition-all hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                      className="relative flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#007AFF]"
                       aria-label="Approved reimbursements">
                       <CircleCheck className="h-5 w-5" />
                     </button>
@@ -734,10 +734,10 @@ export function Navbar({
               <HoverCardTrigger asChild>
                 <button
                   onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                  className="relative flex h-10 w-10 items-center justify-center rounded-[2px] border border-transparent text-[#6B7280] transition-all hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#007AFF]"
                   aria-label="Integrations Hub">
                   <Box className="h-5 w-5" />
-                  <span className="pointer-events-none absolute right-0 top-0 z-10 flex h-4 min-w-4 translate-x-1/4 -translate-y-1/4 select-none items-center justify-center rounded-full border border-white bg-[#111827] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-none">
+                  <span className="pointer-events-none absolute right-0 top-0 z-10 flex h-4 min-w-4 translate-x-1/4 -translate-y-1/4 select-none items-center justify-center rounded-full border border-white bg-[#007AFF] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-none">
                     {connectedPlatformsCount}
                   </span>
                 </button>
@@ -768,15 +768,15 @@ export function Navbar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="group/marketplace flex items-center gap-2 rounded-[2px] border border-transparent px-2.5 py-1.5 text-[11px] font-sans font-semibold tracking-tight text-[#4B5563] transition-all hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                  className="group/marketplace flex items-center gap-2 rounded-none px-2.5 py-1.5 text-[11px] font-sans font-semibold tracking-tight text-[#4B5563] transition-all hover:bg-[#F8FAFB] hover:text-[#007AFF]"
                   aria-label="Select marketplace"
                 >
                   <span className="hidden sm:inline">Marketplace</span>
-                  <span className="flex h-6 w-6 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] text-[10px] font-bold leading-none text-[#365B7D]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-none border border-[#E5E7EB] bg-[#F9FAFB] text-[9px] font-bold leading-none text-[#365B7D]">
                     {activeMarketplace.code.toLowerCase()}
                   </span>
                   <span className="font-semibold uppercase">{activeMarketplace.code}</span>
-                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/marketplace:text-[#111827]" />
+                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/marketplace:text-[#007AFF]" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[220px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-2 shadow-none">
@@ -809,10 +809,10 @@ export function Navbar({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="group/account flex items-center gap-3 rounded-[2px] border border-transparent px-3 py-1.5 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]">
-                  <User className="h-5 w-5 text-[#9CA3AF] transition-colors group-hover/account:text-[#111827]" />
+                <button className="group/account flex items-center gap-3 rounded-none px-3 py-1.5 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:bg-[#F8FAFB] hover:text-[#007AFF]">
+                  <User className="h-5 w-5 text-[#9CA3AF] transition-colors group-hover/account:text-[#007AFF]" />
                   <span className="hidden sm:inline">Account</span>
-                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/account:text-[#111827]" />
+                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/account:text-[#007AFF]" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[360px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-0 shadow-none">
