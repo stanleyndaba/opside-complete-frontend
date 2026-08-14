@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { ArrowRight, Calendar, CalendarClock, Check, Columns2, Copy, Download, HeartHandshake, Loader2, Mail, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Calendar, CalendarClock, Check, Columns2, Copy, Download, HeartHandshake, Loader2, Mail, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -1063,6 +1063,47 @@ export default function Audit() {
       </Button>
     );
 
+  const auditPhaseMarker = {
+    public: '01 / INITIALIZE WORKSPACE',
+    ready: '02 / READY TO AUDIT',
+    connect: '02 / AWAITING AUTHORIZATION',
+    syncing: '03 / SYNCING',
+    detecting: '04 / RECONCILING',
+    completed: '05 / FINDINGS READY',
+    failed: '!! / BLOCKED',
+  }[step];
+
+  const readinessItems = [
+    {
+      label: 'Data connection',
+      value: step === 'public' || step === 'ready'
+        ? 'Not connected'
+        : step === 'connect'
+          ? 'Awaiting authorization'
+          : step === 'syncing' || step === 'detecting'
+            ? 'Syncing'
+            : step === 'completed'
+              ? 'Connected'
+              : 'Blocked',
+    },
+    {
+      label: 'Evidence',
+      value: step === 'completed'
+        ? teaser.evidenceReadyCount > 0 ? `${teaser.evidenceReadyCount} ready` : 'Incomplete'
+        : step === 'syncing' || step === 'detecting' ? 'Processing' : 'Waiting for sync',
+    },
+    {
+      label: 'Findings',
+      value: step === 'completed'
+        ? teaser.findingsCount > 0 ? `${teaser.findingsCount} found` : 'No findings'
+        : step === 'syncing' || step === 'detecting' ? 'Reviewing' : 'Not evaluated',
+    },
+    {
+      label: 'Seller control',
+      value: step === 'completed' && !hasRecoveryOpportunity ? 'No filing required' : 'Approval required',
+    },
+  ];
+
   return (
     <main className="platform-audit-workspace flex min-h-screen bg-white font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
@@ -1125,285 +1166,223 @@ export default function Audit() {
 
       {/* Main content */}
       <div className="flex min-h-screen flex-1 flex-col">
-        {/* Top bar */}
-        <div className="flex items-center justify-between border-b border-zinc-100 bg-[#FAFAF7] px-4 py-3 sm:px-8">
-          <div className="flex items-center gap-3">
-            {!sidebarOpen && (
-              <button type="button" onClick={() => setSidebarOpen(true)} className="mr-2 rounded-none p-1 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900 md:inline-flex hidden">
-                <Columns2 className="h-3.5 w-3.5" />
-              </button>
-            )}
-            {/* Mobile logo */}
-            <div className="flex items-center gap-2 md:hidden">
-              <Link to="/" className="flex items-center gap-2.5">
-                <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
-                <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
-              </Link>
-            </div>
-            
-            {/* Version Dropdown */}
-            <div className="relative hidden items-center md:flex">
-              <div className="flex items-center gap-1.5 rounded-none border border-zinc-100 bg-zinc-50/50 px-2.5 py-1 text-[11px] font-semibold text-zinc-600">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                v2.1 / PRODUCTION
+        {/* Persistent audit context */}
+        <div className="border-b border-[#D8E3EA] bg-[#FAFAF7] px-4 py-3 sm:px-8">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              {!sidebarOpen && (
+                <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-none p-1 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900 md:inline-flex">
+                  <Columns2 className="h-3.5 w-3.5" />
+                </button>
+              )}
+              <div className="flex items-center gap-2 md:hidden">
+                <Link to="/" className="flex items-center gap-2.5">
+                  <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+                  <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
+                </Link>
               </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="relative flex items-center">
+              <div className="flex items-center gap-2 border-l border-[#D8E3EA] pl-3 text-[12px] text-zinc-700 md:border-l-0 md:pl-0">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                <span className="font-medium">Seller workspace</span>
+              </div>
+              <span className="text-[12px] text-zinc-500">US / CA / MX</span>
               <button
                 type="button"
-                onClick={() => setIsPeriodSelectorOpen(true)}
-                className="flex items-center gap-2 h-8 rounded-none px-3 text-[11px] font-bold text-zinc-500 uppercase tracking-tight transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+                onClick={() => {
+                  setIsPeriodSelectorOpen(true);
+                  trackEvent('audit_period_selector_opened', { source_page: '/audit' });
+                }}
+                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-4 text-[12px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE]"
               >
-                <Calendar className="h-3 w-3" />
+                <Calendar className="h-3 w-3 text-zinc-400" />
                 {selectedAuditPeriodLabel}
               </button>
+              <span className="hidden text-[12px] text-zinc-500 sm:inline">365-day review</span>
+              <span className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-4 text-[12px] font-medium text-zinc-700">
+                <span className={`h-1.5 w-1.5 rounded-full ${step === 'failed' ? 'bg-red-500' : step === 'completed' ? 'bg-emerald-500' : 'bg-[#0B74DE]'}`} />
+                {auditState.label}
+              </span>
             </div>
-            <div className="h-4 w-px bg-zinc-100 mx-1" />
-            <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-none p-2 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900" title="Export Summary">
-              <Download className="h-3.5 w-3.5" />
-            </button>
-            <button type="button" onClick={() => setIsSecurityProtocolOpen(true)} className="rounded-none p-2 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900" title="Security Protocol">
-              <ShieldCheck className="h-3.5 w-3.5" />
-            </button>
+            <div className="flex items-center gap-2 text-[12px]">
+              <span className="hidden text-zinc-500 sm:inline">Freshness: live workspace state</span>
+              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-none border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]">
+                <TerminalSquare className="h-3 w-3" />
+                Audit log
+              </button>
+              <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-none border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-white hover:text-zinc-900" title="Export summary">
+                <Download className="h-3.5 w-3.5" />
+              </button>
+              <button type="button" onClick={() => setIsSecurityProtocolOpen(true)} className="rounded-none border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-white hover:text-zinc-900" title="Security protocol">
+                <ShieldCheck className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Content area */}
         <section className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
-          <div className="mx-auto w-full max-w-3xl">
-            <header className="mb-8">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-px w-6 bg-zinc-900" />
-                <span className="text-[12px] font-semibold uppercase tracking-tight text-[#182026]">Forensic Audit</span>
-              </div>
-              <h1 className="text-[24px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">Amazon Recovery Audit</h1>
-              <p className="mt-2 text-[14px] leading-relaxed text-zinc-500 max-w-2xl">
-                Shipments, inventory events, settlement lines, support replies, and proof documents are being cross-referenced into recovery-ready findings.
-              </p>
-
-              <div className="mt-8 grid grid-cols-3 border-y border-zinc-100 py-6">
-                <div className="flex flex-col pr-6 border-r border-zinc-100">
-                  <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">Scope Value</span>
-                  <span className="mt-2 text-[20px] font-bold tracking-tight text-zinc-900 sm:text-[24px]">
-                    {step !== 'completed' ? <span className="text-zinc-200">--</span> : isZeroRecordLimitedAudit ? <span className="text-zinc-400 text-[16px]">Not calculated</span> : formatMoney(teaser.scopeValue)}
-                  </span>
+          <div className="mx-auto w-full max-w-5xl">
+            <header className="mb-6 pt-2">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                <div className="max-w-3xl">
+                  <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
+                  <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.04em] text-[#182026] sm:text-[36px]">
+                    Amazon Recovery Audit
+                  </h1>
+                  <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
+                    Review a read-only 365-day period across US, CA, and MX. Current phase: <span className="font-medium text-[#182026]">{auditState.label}</span>.
+                  </p>
                 </div>
-                <div className="flex flex-col px-6 border-r border-zinc-100">
-                  <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">Findings</span>
-                  <span className="mt-2 text-[20px] font-bold tracking-tight text-zinc-900 sm:text-[24px]">
-                    {step !== 'completed' ? <span className="text-zinc-200">--</span> : isZeroRecordLimitedAudit ? <span className="text-zinc-400 text-[16px]">Not evaluated</span> : teaser.findingsCount}
-                  </span>
-                </div>
-                <div className="flex flex-col pl-6">
-                  <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">Expiring Soon</span>
-                  <span className="mt-2 text-[20px] font-bold tracking-tight text-zinc-900 sm:text-[24px]">
-                    {step !== 'completed' ? <span className="text-zinc-200">--</span> : isZeroRecordLimitedAudit ? <span className="text-zinc-400 text-[16px]">Not evaluated</span> : expiringSoonValue}
-                  </span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsPeriodSelectorOpen(true);
+                    trackEvent('audit_period_selector_opened', { source_page: '/audit' });
+                  }}
+                  className="inline-flex h-9 shrink-0 items-center justify-center gap-2 border border-[#D8E3EA] bg-white px-3.5 text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]"
+                >
+                  <Calendar className="h-3.5 w-3.5 text-zinc-400" />
+                  View scope
+                </button>
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-medium uppercase tracking-tight">
-                <span className="border border-zinc-100 bg-zinc-50 px-2 py-1 text-zinc-500">{newShipmentSyncCopy}</span>
-                <span className="border border-zinc-100 bg-zinc-50 px-2 py-1 text-zinc-500">Logic: Jun 2026 Policy applied</span>
+              <div className="mt-7 grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] sm:grid-cols-2 lg:grid-cols-4">
+                {readinessItems.map((item) => (
+                  <div key={item.label} className="bg-white px-4 py-3.5">
+                    <div className="text-[12px] font-medium text-[#66737F]">{item.label}</div>
+                    <div className="mt-1 text-[13px] font-semibold tracking-[-0.01em] text-[#182026]">{item.value}</div>
+                  </div>
+                ))}
               </div>
             </header>
 
-            <div className="mb-6 rounded-none border border-zinc-100 bg-white p-6">
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className={`h-1.5 w-1.5 rounded-full ${step === 'failed' ? 'bg-red-500' : isZeroRecordLimitedAudit ? 'bg-zinc-300' : 'bg-[#007AFF] animate-pulse'}`} />
-                    <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F]">
-                      {auditState.label}
-                    </span>
+            <section className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-7">
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="max-w-2xl">
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="text-[11px] font-semibold tracking-[0.01em] text-[#0B74DE]">{auditPhaseMarker}</span>
+                      <span className={`h-1.5 w-1.5 rounded-full ${step === 'failed' ? 'bg-red-500' : step === 'completed' ? 'bg-emerald-500' : 'bg-[#0B74DE]'}`} />
+                    </div>
+                    <h2 className="text-[22px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:text-[26px]">
+                      {auditState.title}
+                    </h2>
+                    <p className="mt-3 text-[14px] leading-6 text-[#4D5B66]">{auditState.description}</p>
                   </div>
-                  <h2 className={`font-bold tracking-tight text-zinc-900 ${step === 'completed' ? (isZeroRecordLimitedAudit ? 'text-[16px]' : 'text-[24px]') : 'text-[18px]'}`}>
-                    {auditState.title}
-                  </h2>
-                  <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-zinc-500">
-                    {auditState.description}
-                  </p>
-                  {(step === 'public' || step === 'ready' || step === 'connect') && (
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className="h-px w-4 bg-zinc-200" />
-                      <span className="text-[9px] font-bold uppercase tracking-tight text-[#007AFF]">
-                        READ-ONLY · NO FILINGS · NO ACCOUNT CHANGES
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-px bg-zinc-100 hidden sm:block" />
-                  <div className="text-right">
-                    <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-1">Status</div>
-                    <div className={`text-[12px] font-bold tracking-tight ${isZeroRecordLimitedAudit ? 'text-zinc-500' : 'text-[#007AFF]'}`}>
-                      {isBusy ? 'SYNCING_DATA' : isZeroRecordLimitedAudit ? 'LIMITED_SCOPE' : step === 'completed' ? 'AUDIT_READY' : 'PENDING'}
-                    </div>
+                  <div className="shrink-0 border border-[#D8E3EA] bg-[#FAFAF7] px-3 py-2 text-[12px] font-medium text-[#4D5B66]">
+                    {isBusy ? 'Working' : auditState.label}
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Workspace Report */}
-            <div className="mb-8">
-              <div className={`relative overflow-hidden rounded-none border ${step === 'completed' ? 'border-zinc-100 bg-white' : 'border-zinc-50 bg-zinc-50/30'} p-6 sm:p-8`}>
-                <div className="mb-8 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-4 w-0.5 bg-[#007AFF]" />
-                    <h2 className="text-[12px] font-bold tracking-tight text-zinc-900 uppercase">{step !== 'completed' ? 'Audit findings' : 'Audit findings'}</h2>
-                  </div>
-                  {step !== 'completed' && (
-                    <div className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-zinc-200" />
-                      <span className="text-[10px] font-bold tracking-tight text-zinc-400 uppercase">Audit Pending</span>
-                    </div>
-                  )}
-                </div>
-
-                {step === 'completed' ? (
-                  <div className="mb-8 grid grid-cols-3 border border-zinc-100 bg-white">
-                    <div className="flex flex-col p-6 border-r border-zinc-100">
-                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Recovery Exposure</span>
-                      <span className="text-[24px] font-bold tracking-tight text-zinc-900 tabular-nums">{isZeroRecordLimitedAudit ? '$0.00' : formatMoney(teaser.scopeValue)}</span>
-                    </div>
-                    <div className="flex flex-col p-6 border-r border-zinc-100">
-                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Material Findings</span>
-                      <span className="text-[24px] font-bold tracking-tight text-zinc-900 tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</span>
-                    </div>
-                    <div className="flex flex-col p-6">
-                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Evidence Ready</span>
-                      <span className="text-[24px] font-bold tracking-tight text-zinc-900 tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="mb-8 grid grid-cols-3 border border-zinc-50 bg-white/50">
-                    <div className="flex flex-col p-6 border-r border-zinc-50">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-300 mb-2">Recovery Exposure</span>
-                      <span className="text-[24px] font-bold tracking-tight text-zinc-200">
-                        {step === 'syncing' || step === 'detecting' ? 'Calculating' : 'Pending audit'}
-                      </span>
-                    </div>
-                    <div className="flex flex-col p-6 border-r border-zinc-50">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-300 mb-2">Material Findings</span>
-                      <span className="text-[24px] font-bold tracking-tight text-zinc-200">
-                        {step === 'syncing' || step === 'detecting' ? 'Examining' : 'Pending audit'}
-                      </span>
-                    </div>
-                    <div className="flex flex-col p-6">
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-zinc-300 mb-2">Evidence Ready</span>
-                      <span className="text-[24px] font-bold tracking-tight text-zinc-200">
-                        {step === 'syncing' || step === 'detecting' ? 'Matching' : 'Pending audit'}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {step === 'completed' && teaser.categories.length ? (
-                  <div className="mb-4 flex flex-wrap gap-1.5">
-                    {teaser.categories.map((category) => (
-                      <span key={category} className="rounded-[4px] border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[11px] font-medium text-zinc-600">
-                        {category}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-
-                {step === 'completed' && (teaser.recordsReviewed != null || teaser.sourcesUnavailable?.length) ? (
-                  <div className="mb-8 rounded-none border border-zinc-100 bg-zinc-50/30 px-6 py-4 text-left">
-                    <div className="text-[9px] font-bold uppercase tracking-tight text-zinc-400 mb-2">Audit Coverage Details</div>
-                    <p className="text-[12px] leading-relaxed text-zinc-500">
-                      {teaser.recordsReviewed != null
-                        ? `A total of ${teaser.recordsReviewed.toLocaleString()} Amazon records were synchronized and reviewed.`
-                        : 'Amazon record coverage analysis is in progress.'}
-                      {teaser.sourcesReviewed?.length ? ` Primary sources: ${teaser.sourcesReviewed.join(', ')}.` : ''}
-                      {teaser.sourcesUnavailable?.length ? ` Restricted access: ${teaser.sourcesUnavailable.join(', ')}.` : ''}
-                    </p>
-                  </div>
-                ) : null}
-
-                <div className="flex flex-col items-center justify-center text-center mt-6">
-                   <p className="mb-4 max-w-md text-[13px] font-medium text-[var(--margin-blue)]">
-                     Nothing is submitted to Amazon without your explicit digital signature.
-                   </p>
-                   
-                   {!isZeroRecordLimitedAudit && (
-                     <p className="mb-5 max-w-sm text-[13px] leading-relaxed text-gray-500">
-                      {statusCopy[step]}
-                     </p>
-                   )}
-
-                   {(step === 'syncing' || step === 'detecting') && (
-                     <div className="w-full max-w-sm mb-8 space-y-3">
-                       {[
-                         { id: '01', label: 'Account records', status: step === 'syncing' ? 'Verifying' : 'Verified' },
-                         { id: '02', label: 'Shipment movements', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
-                         { id: '03', label: 'Inventory adjustments', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
-                         { id: '04', label: 'Settlement lines', status: step === 'detecting' ? 'Matching' : 'Pending' },
-                         { id: '05', label: 'Recovery evidence', status: step === 'detecting' ? 'Checking' : 'Pending' },
-                         { id: '06', label: 'Recovery exposure', status: step === 'detecting' ? 'Calculating' : 'Pending' },
-                       ].map((progress) => (
-                         <div key={progress.id} className="flex items-center justify-between text-[11px] border-b border-zinc-50 pb-2">
-                           <div className="flex items-center gap-2">
-                             <span className="text-zinc-300 font-mono">{progress.id}</span>
-                             <span className="text-zinc-500 font-medium uppercase tracking-tight">{progress.label}</span>
-                           </div>
-                           <span className={`font-bold tabular-nums ${progress.status === 'Verified' || progress.status === 'Reconciled' ? 'text-emerald-500' : progress.status === 'Pending' ? 'text-zinc-200' : 'text-[#007AFF] animate-pulse'}`}>
-                             {progress.status.toUpperCase()}
-                           </span>
-                         </div>
-                       ))}
-                     </div>
-                   )}
-
-                   <div className="mb-5 flex items-center justify-center gap-3">
-                     {step === 'completed' && !isZeroRecordLimitedAudit && (
-                       <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-9 rounded-md border-gray-200 bg-white px-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50">
-                         Refresh
-                       </Button>
-                     )}
-                     {primaryAction}
-                   </div>
-                   
-                   {step !== 'completed' ? (
-                     <div className="w-full max-w-md rounded-lg border border-gray-100 bg-white px-3 py-2.5 text-left">
-                       {teaser.sourcesUnavailable?.length > 0 && (
-                        <div className="mb-4 rounded-[4px] border border-red-200 bg-red-50 p-3 text-left">
-                          <div className="text-[10px] tracking-tight font-semibold uppercase text-red-600">Unavailable Data Sources</div>
-                          <p className="mt-1 text-[12px] text-red-700">Margin lacked access to the following sources. The audit proceeded without them:</p>
-                          <div className="mt-2 flex flex-wrap gap-1.5">
-                            {teaser.sourcesUnavailable.map((source) => (
-                              <div key={source} className="flex items-center gap-1.5 rounded-[4px] border border-red-200 bg-white px-2 py-1 text-[11px] font-medium text-red-700">
-                                <AlertTriangle className="h-3 w-3" />
-                                <span>{source}</span>
-                              </div>
-                            ))}
+                <div className="border-t border-[#E6EEF2] pt-5">
+                  <p className="text-[13px] font-medium text-[#182026]">Seller approval remains required before any Amazon filing.</p>
+                  <p className="mt-1.5 max-w-2xl text-[13px] leading-5 text-[#66737F]">{statusCopy[step]}</p>
+                  {(step === 'syncing' || step === 'detecting') && (
+                    <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                      {[
+                        { id: '01', label: 'Account records', status: step === 'syncing' ? 'Verifying' : 'Verified' },
+                        { id: '02', label: 'Shipment movements', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
+                        { id: '03', label: 'Inventory adjustments', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
+                        { id: '04', label: 'Settlement lines', status: step === 'detecting' ? 'Matching' : 'Pending' },
+                        { id: '05', label: 'Recovery evidence', status: step === 'detecting' ? 'Checking' : 'Pending' },
+                        { id: '06', label: 'Recovery exposure', status: step === 'detecting' ? 'Calculating' : 'Pending' },
+                      ].map((progress) => (
+                        <div key={progress.id} className="flex items-center justify-between border-b border-[#E6EEF2] py-2 text-[12px]">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[#9AA8B2]">{progress.id}</span>
+                            <span className="font-medium text-[#4D5B66]">{progress.label}</span>
                           </div>
+                          <span className={`font-semibold ${progress.status === 'Verified' || progress.status === 'Reconciled' ? 'text-emerald-600' : progress.status === 'Pending' ? 'text-[#9AA8B2]' : 'text-[#0B74DE]'}`}>
+                            {progress.status}
+                          </span>
                         </div>
-                       )}
-                       <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Examination Scope</div>
-                       <div className="mt-4 space-y-2 border-t border-zinc-50 pt-4">
-                         {[
-                           ['Marketplace positions', 'US · CA · MX'],
-                           ['Audit period', '365 days reviewed'],
-                           ['Source records', 'Orders · shipments · inventory'],
-                           ['Financial records', 'Settlements · returns · reimbursements'],
-                           ['Records cross-referenced', 'Synchronized'],
-                           ['SKUs reconciled', `${catalogSkuCount}+ items resolved`],
-                           ['Recovery rules applied', '26 active'],
-                         ].map(([label, status]) => (
-                           <div key={label} className="flex items-center justify-between text-[11px] py-1">
-                             <span className="text-zinc-400 font-medium uppercase tracking-tight">{label}</span>
-                             <span className="font-bold text-zinc-900 tabular-nums">{status === 'Synchronized' ? 'Data synchronized' : status}</span>
-                           </div>
-                         ))}
-                       </div>
-                     </div>
-                   ) : null}
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-5 flex flex-wrap items-center gap-3">
+                    {step === 'completed' && !isZeroRecordLimitedAudit && (
+                      <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-10 rounded-md border-[#D8E3EA] bg-white px-4 text-[13px] font-medium text-[#4D5B66] hover:border-[#0B74DE] hover:text-[#0B74DE]">
+                        Refresh results
+                      </Button>
+                    )}
+                    {primaryAction}
+                  </div>
                 </div>
+
+                <details className="border-t border-[#E6EEF2] pt-4">
+                  <summary className="cursor-pointer text-[13px] font-medium text-[#4D5B66] marker:text-[#0B74DE]">View scope and technical details</summary>
+                  <div className="mt-4 grid gap-4 border-t border-[#E6EEF2] pt-4 sm:grid-cols-2">
+                    <div>
+                      <div className="text-[12px] font-medium text-[#66737F]">Data scope</div>
+                      <div className="mt-1 text-[13px] text-[#182026]">Orders, shipments, inventory, settlements, returns, and reimbursements</div>
+                    </div>
+                    <div>
+                      <div className="text-[12px] font-medium text-[#66737F]">Policy and sync</div>
+                      <div className="mt-1 text-[13px] text-[#182026]">June 2026 policy · {newShipmentSyncCopy}</div>
+                    </div>
+                    <div>
+                      <div className="text-[12px] font-medium text-[#66737F]">Marketplaces</div>
+                      <div className="mt-1 text-[13px] text-[#182026]">US · CA · MX</div>
+                    </div>
+                    <div>
+                      <div className="text-[12px] font-medium text-[#66737F]">Catalog coverage</div>
+                      <div className="mt-1 text-[13px] text-[#182026]">{catalogSkuCount}+ items in scope</div>
+                    </div>
+                    {teaser.sourcesUnavailable?.length > 0 && (
+                      <div className="sm:col-span-2 border border-[#E9C7C7] bg-[#FFF8F8] p-3">
+                        <div className="flex items-center gap-2 text-[12px] font-semibold text-[#A43A3A]"><AlertTriangle className="h-3.5 w-3.5" />Unavailable data sources</div>
+                        <p className="mt-1 text-[12px] leading-5 text-[#8E4A4A]">The audit proceeded without: {teaser.sourcesUnavailable.join(', ')}.</p>
+                      </div>
+                    )}
+                  </div>
+                </details>
               </div>
-            </div>
+            </section>
+
+            {step === 'completed' ? (
+              <section className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-7">
+                <div className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-[13px] font-medium text-[#0B74DE]">Recovery findings</p>
+                      <h2 className="mt-1 text-[20px] font-semibold tracking-[-0.03em] text-[#182026]">Your review scope</h2>
+                    </div>
+                    <span className="border border-[#D8E3EA] bg-[#FAFAF7] px-3 py-1.5 text-[12px] font-medium text-[#4D5B66]">{isZeroRecordLimitedAudit ? 'Limited coverage' : 'Ready for review'}</span>
+                  </div>
+                  <div className="grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] sm:grid-cols-3">
+                    <div className="bg-white p-4">
+                      <div className="text-[12px] font-medium text-[#66737F]">Recovery exposure</div>
+                      <div className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#182026] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</div>
+                    </div>
+                    <div className="bg-white p-4">
+                      <div className="text-[12px] font-medium text-[#66737F]">Material findings</div>
+                      <div className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#182026] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</div>
+                    </div>
+                    <div className="bg-white p-4">
+                      <div className="text-[12px] font-medium text-[#66737F]">Evidence ready</div>
+                      <div className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#182026] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</div>
+                    </div>
+                  </div>
+                  {teaser.categories.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {teaser.categories.map((category) => (
+                        <span key={category} className="border border-[#D8E3EA] bg-[#FAFAF7] px-2.5 py-1 text-[12px] font-medium text-[#4D5B66]">{category}</span>
+                      ))}
+                    </div>
+                  ) : null}
+                  {(teaser.recordsReviewed != null || teaser.sourcesUnavailable?.length) ? (
+                    <div className="border-t border-[#E6EEF2] pt-4">
+                      <div className="text-[12px] font-medium text-[#66737F]">Coverage details</div>
+                      <p className="mt-1.5 text-[13px] leading-5 text-[#4D5B66]">
+                        {teaser.recordsReviewed != null ? `${teaser.recordsReviewed.toLocaleString()} Amazon records were synchronized and reviewed.` : 'Amazon record coverage analysis is in progress.'}
+                        {teaser.sourcesReviewed?.length ? ` Primary sources: ${teaser.sourcesReviewed.join(', ')}.` : ''}
+                        {teaser.sourcesUnavailable?.length ? ` Restricted access: ${teaser.sourcesUnavailable.join(', ')}.` : ''}
+                      </p>
+                    </div>
+                  ) : null}
+                </div>
+              </section>
+            ) : null}
 
             {step === 'completed' ? (
               <section className="mb-12 rounded-none border border-zinc-100 bg-white p-8">
@@ -1755,12 +1734,23 @@ export default function Audit() {
       </Dialog>
 
       <Sheet open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
-        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-gray-200 bg-white p-6 text-gray-900 sm:max-w-[520px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-l-0 max-sm:border-t">
-          <DialogHeader>
-            <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Live Audit Log</DialogTitle>
-            <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
-              A transparent activity trail for the audit workspace. Live Amazon records appear here after authorization.
-            </DialogDescription>
+        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-l border-[#D8E3EA] bg-[#FAFAF7] p-5 text-[#182026] sm:max-w-[520px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-none max-sm:border-t max-sm:border-l-0">
+          <DialogHeader className="border-b border-[#D8E3EA] pb-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-[#182026]">Live Audit Log</DialogTitle>
+                <DialogDescription className="mt-1.5 text-[13px] leading-5 text-[#66737F]">
+                  A context-aware record of the current audit workspace.
+                </DialogDescription>
+              </div>
+              <span className="border border-[#D8E3EA] bg-white px-2.5 py-1 text-[11px] font-medium text-[#4D5B66]">{auditState.label}</span>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[12px]">
+              <div><span className="text-[#66737F]">Scope</span><span className="ml-2 font-medium text-[#182026]">US / CA / MX</span></div>
+              <div><span className="text-[#66737F]">Period</span><span className="ml-2 font-medium text-[#182026]">{selectedAuditPeriodLabel}</span></div>
+              <div><span className="text-[#66737F]">Freshness</span><span className="ml-2 font-medium text-[#182026]">Live workspace state</span></div>
+              <div><span className="text-[#66737F]">Phase</span><span className="ml-2 font-medium text-[#182026]">{auditPhaseMarker}</span></div>
+            </div>
           </DialogHeader>
           <div className="mt-5 flex flex-wrap gap-2">
             {['All', 'Amazon', 'Evidence', 'Findings', 'Payment'].map((filter) => (
@@ -1771,29 +1761,41 @@ export default function Audit() {
                   setAuditLogFilter(filter);
                   trackEvent('audit_log_filter_changed', { source_page: '/audit', filter });
                 }}
-                className={`rounded-md px-2.5 py-1 text-[12px] font-medium ${auditLogFilter === filter ? 'bg-blue-50 text-blue-700' : 'bg-gray-50 text-gray-500 hover:bg-gray-100'}`}
+                className={`border px-2.5 py-1 text-[12px] font-medium transition-colors ${auditLogFilter === filter ? 'border-[#0B74DE] bg-[#EAF3FF] text-[#0B74DE]' : 'border-[#D8E3EA] bg-white text-[#66737F] hover:border-[#0B74DE] hover:text-[#0B74DE]'}`}
               >
                 {filter}
               </button>
             ))}
           </div>
-          <div className="mt-5 grid gap-3">
+          <div className="mt-5 flex-1">
             {isAuditLogLoading ? (
-              <div className="flex items-center gap-2 text-[13px] text-gray-500"><Loader2 className="h-4 w-4 animate-spin" /> Loading audit activity</div>
+              <div className="flex items-center gap-2 border-t border-[#D8E3EA] pt-4 text-[13px] text-[#66737F]"><Loader2 className="h-4 w-4 animate-spin text-[#0B74DE]" /> Loading audit activity</div>
             ) : auditLogEvents.filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter).length ? (
-              auditLogEvents
-                .filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter)
-                .map((event, index) => (
-                  <div key={`${event.timestamp}-${index}`} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[11px] font-medium uppercase text-gray-400">{event.category}</span>
-                      <span className="text-[11px] text-gray-400">{new Date(event.timestamp).toLocaleString()}</span>
+              <div className="relative border-l border-[#D8E3EA] pl-5">
+                {auditLogEvents
+                  .filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter)
+                  .map((event, index) => (
+                    <div key={`${event.timestamp}-${index}`} className="relative border-b border-[#E6EEF2] pb-4 pt-1 first:pt-0 last:border-b-0">
+                      <span className="absolute -left-[25px] top-1.5 h-2 w-2 rounded-full border-2 border-[#FAFAF7] bg-[#0B74DE]" />
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-[12px] font-medium text-[#0B74DE]">{event.category}</span>
+                        <span className="text-[11px] text-[#9AA8B2]">{new Date(event.timestamp).toLocaleString()}</span>
+                      </div>
+                      <p className="mt-1.5 text-[13px] leading-5 text-[#4D5B66]">{event.message}</p>
                     </div>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-gray-700">{event.message}</p>
-                  </div>
-                ))
+                  ))}
+              </div>
             ) : (
-              <p className="rounded-lg border border-gray-100 bg-gray-50 p-4 text-[13px] text-gray-500">No audit activity has been recorded for this period yet.</p>
+              <div className="border-t border-[#D8E3EA] pt-4">
+                <p className="text-[14px] font-medium text-[#182026]">No audit activity yet</p>
+                <p className="mt-1.5 max-w-sm text-[13px] leading-5 text-[#66737F]">
+                  {step === 'public' || step === 'ready' || step === 'connect'
+                    ? 'The audit log will populate after read-only synchronization begins. Your current workspace is waiting for authorization.'
+                    : step === 'syncing' || step === 'detecting'
+                      ? 'Activity will appear as Margin synchronizes records and reconciles the audit scope.'
+                      : 'No activity has been recorded for this audit period.'}
+                </p>
+              </div>
             )}
           </div>
         </SheetContent>
