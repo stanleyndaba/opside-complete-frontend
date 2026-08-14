@@ -33,7 +33,7 @@ export function PageLayout({
   const isPlatformPage = !hideNavbar || !hideSidebar;
 
   return (
-    <div className={`min-h-screen h-full flex flex-col platform ${isPlatformPage ? 'platform-authenticated-shell' : ''} bg-[#FAFAF7] text-[#111827]`}>
+    <div className={`min-h-screen h-full flex flex-col platform platform-vitality-page ${isPlatformPage ? 'platform-authenticated-shell' : ''} bg-[#FAFAF7] text-[#111827]`}>
       {!hideNavbar && (
         <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} forceTransparent={forceTransparent} />
       )}

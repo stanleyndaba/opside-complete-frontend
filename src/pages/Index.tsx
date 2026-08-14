@@ -2294,35 +2294,7 @@ function KineticHeroSection({
   );
 }
 
-function RecoveryProgressRail() {
-  const stages = ["Found", "Evidence", "Approval", "Response", "Payout"];
 
-  return (
-    <aside
-      aria-hidden="true"
-      className="pointer-events-none fixed left-6 top-1/2 z-20 hidden -translate-y-1/2 md:block"
-    >
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-16 w-px bg-gradient-to-b from-transparent to-[var(--margin-border-strong)]" />
-        {stages.map((stage, index) => (
-          <div key={stage} className="group flex items-center gap-3">
-            <div
-              className={`h-2 w-2 rounded-full border ${
-                index === 0
-                  ? "border-[var(--margin-primary)] bg-[var(--margin-primary)] shadow-[0_0_18px_rgba(11,116,222,0.28)]"
-                  : "border-[var(--margin-border-strong)] bg-[var(--margin-canvas)]"
-              }`}
-            />
-            <span className="absolute left-5 whitespace-nowrap font-mono text-[9px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)] opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-              {stage}
-            </span>
-          </div>
-        ))}
-        <div className="h-16 w-px bg-gradient-to-b from-[var(--margin-border-strong)] to-transparent" />
-      </div>
-    </aside>
-  );
-}
 
 function OperatorProofSection() {
   return (
@@ -2926,7 +2898,7 @@ export default function Index() {
           }}
         />
         <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
-        <RecoveryProgressRail />
+
         <section className="relative border-b border-[var(--margin-border)] bg-[rgba(255,255,255,0.72)] py-5 backdrop-blur-xl">
           <div className={containerClass}>
             <div className="grid gap-4 md:grid-cols-[0.85fr_1.15fr] md:items-center">
