@@ -5,13 +5,13 @@ const recoverySteps = [
   {
     number: "01",
     title: "Issue Found",
-    body: "A potential discrepancy is identified in your Amazon records.",
+    body: "A potential recovery issue is identified in your Amazon records.",
     state: "FOUND",
   },
   {
     number: "02",
     title: "Evidence Ready",
-    body: "Relevant shipment, inventory, settlement and supporting records are matched to the finding.",
+    body: "Relevant shipment, inventory, settlement and supporting records are matched to the finding so the recovery can be substantiated.",
     state: "EVIDENCE",
   },
   {
@@ -29,13 +29,13 @@ const recoverySteps = [
   {
     number: "05",
     title: "Amazon Response",
-    body: "Margin tracks the response and identifies what needs to happen next.",
+    body: "Margin tracks Amazon's response and identifies what needs to happen next.",
     state: "RESPONSE",
   },
   {
     number: "06",
     title: "Payout Verified",
-    body: "The reimbursement is checked against the expected outcome and recorded.",
+    body: "The reimbursement is checked against the expected outcome, including any shortfall, reversal or unresolved amount.",
     state: "VERIFIED",
   },
 ];
@@ -60,18 +60,20 @@ export const RecoveryTimelineSection: React.FC = () => {
               </span>
             </div>
             <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-white md:text-[76px]">
-              Every recovery has a next step.
+              Once Margin finds a recovery, the work keeps moving.
             </h2>
             <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">
               Margin turns a potential recovery into an evidence-backed case,
-              keeps the process moving, and verifies the outcome.
+              moves it through the required steps, and verifies what Amazon
+              ultimately pays.
             </p>
             <div className="mt-10 border-l border-blue-400/45 pl-5">
               <p className="text-[18px] font-semibold leading-7 tracking-[-0.025em] text-white">
                 Margin prepares the evidence. You decide the action.
               </p>
               <p className="mt-2 text-[14px] leading-6 text-slate-400">
-                You remain in control while Margin handles the recovery work.
+                You remain in control while Margin handles the recovery work
+                behind the decision.
               </p>
             </div>
           </motion.div>

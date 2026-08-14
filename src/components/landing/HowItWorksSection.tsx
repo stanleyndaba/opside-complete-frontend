@@ -18,7 +18,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
       <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
-        
+
         {/* Header */}
         <div className="mb-28 max-w-[860px]">
           <motion.div {...revealProps} className="mb-6 flex items-center gap-3">
@@ -27,21 +27,21 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
               Recovery operating surface
             </span>
           </motion.div>
-          
-          <motion.h2 
+
+          <motion.h2
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.1 }}
             className="text-[44px] font-bold leading-[0.96] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[66px] lg:text-[86px]"
           >
-            Margin turns Amazon noise into an inspectable recovery record.
+            Margin turns an Amazon discrepancy into a recovery record you can act on.
           </motion.h2>
         </div>
 
         {/* Evidence surface */}
         <div className="mb-24 border-y border-[var(--margin-border)]">
-          
+
           {/* Step 1 */}
-          <motion.div 
+          <motion.div
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.2 }}
             className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
@@ -51,13 +51,13 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
               14 units missing.
             </h3>
             <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
-              SHIPMENT FBA15JK82: 60 shipped / 46 received. Receiving variance
-              detected against Amazon inbound movement.
+              Amazon received 46 of 60 shipped. A 14-unit receiving variance was
+              detected.
             </p>
           </motion.div>
 
           {/* Step 2 */}
-          <motion.div 
+          <motion.div
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.3 }}
             className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
@@ -67,13 +67,13 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
               Proof connected.
             </h3>
             <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
-              INVOICE linked. SHIPMENT record matched. SKU, quantity, cost basis,
-              and deadline attached to one recovery case.
+              Invoice linked. Shipment record matched. SKU, quantity, cost basis
+              and deadline attached to the recovery case.
             </p>
           </motion.div>
 
           {/* Step 3 */}
-          <motion.div 
+          <motion.div
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.4 }}
             className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
@@ -83,13 +83,13 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
               Approval required.
             </h3>
             <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
-              CASE READY: seller review required before filing. Nothing moves
-              to Amazon without approval.
+              CASE READY: seller review required before filing. Nothing is
+              submitted to Amazon without your approval.
             </p>
           </motion.div>
 
           {/* Step 4 */}
-          <motion.div 
+          <motion.div
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.5 }}
             className="group grid gap-5 py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
@@ -103,11 +103,11 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
               closed with payout trail preserved.
             </p>
           </motion.div>
-          
+
         </div>
 
         {/* CTA */}
-        <motion.div 
+        <motion.div
           {...revealProps}
           transition={{ ...revealProps.transition, delay: 0.6 }}
           className="flex justify-start"

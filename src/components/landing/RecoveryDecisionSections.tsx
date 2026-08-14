@@ -11,14 +11,14 @@ const pathOptions = [
   {
     label: "RECOVER ONCE",
     title: "One problem. One engagement.",
-    copy: "Have Margin manage the recovery opportunities identified in your audit.",
-    price: "Starting from $99",
+    copy: "Have Margin manage the eligible recovery opportunities identified in your Audit.",
+    price: "Personalized one-time quote after your Audit",
     cta: "Recover These Issues",
     ctaLocation: "homepage_recover_once",
     items: [
-      "Fixed one-time price",
       "Evidence preparation",
       "Claim preparation",
+      "Filing",
       "Follow-up",
       "Eligible appeal handling",
       "Payout verification",
@@ -27,12 +27,12 @@ const pathOptions = [
   {
     label: "RECOVERY WORKSPACE",
     title: "Keep Margin working.",
-    copy: "For sellers who want ongoing recovery monitoring instead of dealing with each issue as it appears.",
-    price: "$119/month",
+    copy: "For sellers who want Margin continuously monitoring recovery exposure instead of turning each new issue into another manual project.",
+    price: "$99/month",
     cta: "Activate Recovery Workspace",
     ctaLocation: "homepage_recovery_workspace",
     items: [
-      "Continuous monitoring",
+      "Continuous recovery monitoring",
       "Recurring audits",
       "New recovery opportunities",
       "Evidence readiness",
@@ -67,10 +67,13 @@ const evidenceRequests = [
 
 const auditTrustItems = [
   ["Records reviewed", "See what Margin actually examined."],
-  ["Why it was flagged", "Understand why a recovery was identified."],
+  ["Why it was flagged", "Understand exactly why the recovery was identified."],
   ["Evidence status", "See what is ready and what is still missing."],
   ["Recovery value", "See how the estimated amount was calculated."],
-  ["Case status", "Know what has been submitted, answered, or still needs attention."],
+  [
+    "Case status",
+    "Know what has been submitted, what Amazon answered, and what still needs attention.",
+  ],
 ];
 
 const controlItems = [
@@ -78,8 +81,8 @@ const controlItems = [
   "Seller approval before recovery submission",
   "Clear recovery status",
   "Payout verification",
-  "No hidden recovery percentage",
-  "No payment required to run the audit",
+  "0% recovery commission",
+  "No payment required to run the Audit",
 ];
 
 export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> = ({
@@ -104,11 +107,11 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               </span>
             </div>
             <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[76px]">
-              Found something? Choose how you want to handle it.
+              Found a recovery? Choose what happens next.
             </h2>
             <p className="mt-6 max-w-[720px] text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-              Some sellers want one problem handled. Others want Margin
-              watching for the next one. Choose what fits your account.
+              Some sellers need one recovery handled. Others want Margin working
+              continuously so the next one doesn't become another manual project.
             </p>
           </motion.div>
 
@@ -161,11 +164,11 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
             className="mt-8 border-l border-[var(--margin-border)] pl-5"
           >
             <p className="text-[17px] font-semibold tracking-[-0.025em] text-[var(--margin-text-primary)]">
-              Not ready to pay?
+              Not ready to continue?
             </p>
             <p className="mt-2 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
-              Your Recovery Audit is free. Review the findings and decide what
-              makes sense for you.
+              Your Recovery Audit is free. Review what Margin found and decide
+              whether you want recovery work managed.
             </p>
           </motion.div>
         </div>
@@ -185,9 +188,10 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 Finding the problem is only the beginning.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-                Amazon may ask for the right evidence, the right quantities,
-                the right dates, or the right case history. The hard part is
-                putting everything together before the opportunity disappears.
+                Amazon may require specific evidence, quantities, dates, or case
+                history before a recovery can move forward. The hard part is
+                assembling the right record, keeping it together, and acting
+                before the opportunity goes stale.
               </p>
             </motion.div>
 
@@ -223,14 +227,15 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               </div>
               <div className="border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] px-5 py-5 md:px-7">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                  Margin organizes the recovery
+                  Margin organizes the recovery record
                 </p>
                 <p className="mt-3 text-[20px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)]">
                   {"Issue -> Evidence -> Case -> Response -> Payout"}
                 </p>
                 <p className="mt-3 text-[14px] leading-6 text-[var(--margin-text-secondary)]">
-                  So you&apos;re not rebuilding the same evidence trail every
-                  time Amazon asks for it.
+                  So the recovery record stays together instead of being rebuilt
+                  across spreadsheets, files, case history and someone&apos;s
+                  memory.
                 </p>
               </div>
             </motion.div>
@@ -253,7 +258,8 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
                 Margin doesn&apos;t ask you to take a recovery on faith. Every
-                finding is tied back to the records used to identify it.
+                finding is tied back to the records used to identify and assess
+                it.
               </p>
               <Button
                 onClick={() => onAuditCta("homepage_inspectability")}

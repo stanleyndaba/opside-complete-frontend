@@ -365,49 +365,34 @@ const outperformanceCards = [
 ];
 const faqs = [
   {
-    question: "Is the Recovery Audit really free?",
+    question: "Does the Recovery Audit cost anything?",
     answer:
-      "Yes. You can run the audit without paying. The audit shows what Margin finds before you decide whether you want any recovery work managed.",
+      "No. The Recovery Audit is free. Margin reviews your account and shows what it found before you decide whether you want any recovery work managed. No payment is required to run the Audit.",
   },
   {
     question: "What access does Margin need?",
     answer:
-      "Margin uses read-only access to the Amazon data required for the audit. You remain in control of your account.",
+      "Margin uses an official Amazon connection and the Audit is read-only. The Audit is designed to examine the records needed to identify and assess potential recovery issues. You can disconnect your account when you choose.",
   },
   {
-    question: "What if Margin finds nothing?",
+    question: "Can Margin submit something without me?",
     answer:
-      "That's okay. You still get the audit result. There is no charge simply because you ran the audit.",
+      "No. Seller approval is required before recovery submission. Margin can prepare the recovery, organize the evidence and move the case to a ready state, but sensitive filing decisions remain under your control.",
   },
   {
-    question: "Does Margin automatically submit claims?",
+    question: "What happens if Margin doesn't find anything?",
     answer:
-      "No recovery should be submitted without the required seller approval. The audit shows you what was found first.",
+      "You still keep the Audit. If no meaningful recovery opportunity is identified, there is nothing you are required to purchase. You can review the findings and decide whether continued monitoring makes sense.",
   },
   {
-    question: "What happens if I want Margin to handle a recovery?",
+    question: "How does Recover Once pricing work?",
     answer:
-      "You can choose Recover Once after the audit. The price is based on the scope and complexity of the recovery work identified.",
+      "Recover Once is quoted after the Audit. The price reflects the recovery work required for the specific opportunities identified in your account. 0% recovery commission.",
   },
   {
-    question: "What is Recovery Workspace?",
+    question: "What if I want Margin to keep looking?",
     answer:
-      "Workspace is for sellers who want Margin to continuously monitor recovery opportunities instead of handling each problem individually.",
-  },
-  {
-    question: "Can I cancel Recovery Workspace?",
-    answer:
-      "Yes. Workspace is a monthly subscription and can be cancelled. Ongoing monitoring stops when the subscription ends.",
-  },
-  {
-    question: "Does Margin take a percentage of my reimbursement?",
-    answer:
-      "No. Recover Once uses a fixed price agreed before the work begins. Margin does not take a percentage of the final reimbursement.",
-  },
-  {
-    question: "Do I have to use Recover Once or Workspace?",
-    answer:
-      "No. You can run the audit, review the findings, and decide what makes sense for you.",
+      "That's what the Recovery Workspace is for. Continuous recovery monitoring, recurring audits, new recovery opportunities, evidence readiness, case continuity and payout tracking for $99/month.",
   },
 ];
 const integrationLogos = [
@@ -1958,10 +1943,9 @@ function ExistingOperationFitSection() {
             Operations sees the case. Finance sees the money.
           </h2>
           <p className="mx-auto mt-5 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
-            Margin keeps the evidence, deadline, seller decision, Amazon
-            response, expected value, paid value and settlement status attached
-            to one recovery, so the story does not have to be reconstructed
-            every time responsibility changes hands.
+            Margin keeps the evidence, deadlines, decisions, Amazon responses,
+            expected value and payout attached to one recovery record—so
+            operations and finance work from the same story.
           </p>
         </motion.div>
 
@@ -1975,7 +1959,7 @@ function ExistingOperationFitSection() {
               <div className="relative space-y-4">
                 {[
                   "Amazon synced",
-                  "Shipment variance detected",
+                  "Variance detected",
                   "Settlement checked",
                   "Recovery surfaced",
                 ].map((item, index) => (
@@ -2047,9 +2031,9 @@ function ExistingOperationFitSection() {
               Finance knows what Amazon approved and what it actually paid.
             </h3>
             <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              Compare expected, approved, paid, underpaid, reversed and
-              unreconciled values from the same recovery record operations uses
-              to manage the case.
+              Compare expected, approved and paid values—and identify
+              underpayments, reversals and unreconciled amounts—from the same
+              recovery record operations uses to manage the case.
             </p>
           </motion.article>
 
@@ -2253,7 +2237,7 @@ function KineticHeroSection({
           >
             {" "}
             Margin checks your Amazon account for reimbursement issues, shows what
-            happened, what may be recoverable, and what evidence is missing.{" "}
+            happened, what may be recoverable, and what you need to prove it.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -2289,7 +2273,7 @@ function KineticHeroSection({
             {" "}
             <span>Read-only audit</span>
             <span className="text-slate-600">·</span>
-            <span>No card required</span>
+            <span>No payment required</span>
             <span className="text-slate-600">·</span>
             <span>Seller approval before filing</span>
             <span className="text-slate-600">·</span>
@@ -3667,7 +3651,7 @@ export default function Index() {
             <motion.div {...revealProps}>
               {" "}
               <h2 className="text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]">
-                <span className="text-[var(--margin-text-primary)]">Before you start.</span> <span className="text-[var(--margin-text-muted)]">A few things you might want to know.</span>
+                <span className="text-[var(--margin-text-primary)]">Before you connect.</span> <span className="text-[var(--margin-text-muted)]">A few things to know.</span>
               </h2>{" "}
             </motion.div>{" "}
             <div className="mt-10 md:mt-14 max-w-4xl">
@@ -3801,11 +3785,11 @@ export default function Index() {
                 <motion.div {...revealProps}>
                   {" "}
                   <h2 className="font-serif-headline mt-2 max-w-[760px] text-[36px] font-semibold leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]">
-                    <span className="text-[var(--margin-text-primary)]">Ready to check your account?</span> <span className="text-[var(--margin-text-muted)]">See what Amazon may have missed.</span>
+                    <span className="text-[var(--margin-text-primary)]">See what Amazon may have missed.</span>
                   </h2>{" "}
                   <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px]">
                     {" "}
-                    Run a free Recovery Audit to see what Margin finds in your account.{" "}
+                    Run a free Recovery Audit to see what Margin finds, what may be recoverable, and what evidence is missing.{" "}
                   </p>{" "}
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                     {" "}
@@ -3817,7 +3801,7 @@ export default function Index() {
                     >
                       {" "}
                       <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />{" "}
-                      Seller Central Audit{" "}
+                      Run Free Recovery Audit{" "}
                       <ArrowRight className="ml-2 h-4 w-4" />{" "}
                     </Button>{" "}
                   </div>{" "}
