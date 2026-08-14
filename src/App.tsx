@@ -27,7 +27,7 @@ const Login = lazy(() => import("./pages/Login"));
 const ConnectAmazonAccount = lazy(() => import("./pages/ConnectAmazonAccount"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
-const Recoveries = lazy(() => import("./pages/RecoveryPipelineAgent8"));
+const Recoveries = lazy(() => import("./pages/Recoveries"));
 const ApprovedReimbursements = lazy(() => import("./pages/ApprovedReimbursements"));
 const FilingPipeline = lazy(() => import("./pages/FilingPipeline"));
 const DisputeCases = lazy(() => import("./pages/DisputeCases"));

@@ -3659,10 +3659,10 @@ export function Dashboard() {
 
                   {/* System Activity - Audit Registry Sidebar */}
                   <div className="hidden lg:col-span-1">
-                    <div className="bg-[#111111]/90 border border-[#E9E9EC] rounded-2xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                    <div className="bg-white border border-[#D8E3E8] rounded-[2px] h-full flex flex-col shadow-none relative overflow-hidden">
+                      
 
-                      <div className="px-5 py-5 border-b border-[#F0F0F2] bg-[#FAFAFB] flex items-center justify-between w-full transition-all group">
+                      <div className="px-5 py-4 border-b border-[#D8E3E8] bg-[#FAFAFB] flex items-center justify-between w-full transition-all group">
                         <div className="flex items-center gap-4">
                           <div>
                             <h3 className="text-[12px] font-medium text-[#1B1C20] tracking-tight">Your Notifications</h3>
@@ -3701,8 +3701,8 @@ export function Dashboard() {
                                       <HoverCardTrigger asChild>
                                         <div
                                           className={cn(
-                                            "group relative px-5 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-[#FAFAFB]",
-                                            isUnread ? "bg-[#FAFAFB]" : "bg-transparent"
+                                            "group relative px-5 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-[#F2F7FF]",
+                                            isUnread ? "bg-[#F2F7FF] border-l-[#0B74DE]" : "bg-transparent"
                                           )}
                                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}>
 
@@ -3713,7 +3713,7 @@ export function Dashboard() {
                                             <div className="flex items-center justify-between gap-4">
                                               <p className={cn(
                                                 "text-[11px] tracking-tight truncate font-semibold",
-                                                isUnread ? "text-white" : "text-[#6B7280] group-hover:text-[#0B74DE] transition-colors"
+                                                isUnread ? "text-[#111827]" : "text-[#6B7280] group-hover:text-[#0B74DE] transition-colors"
                                               )}>
                                                 {notificationLabel}
                                               </p>
@@ -3723,7 +3723,7 @@ export function Dashboard() {
                                               <div className="flex items-center gap-2">
                                                 <span className={cn(
                                                   "text-[9px] font-mono font-bold",
-                                                  isUnread ? "text-[#6B7280]" : "text-[#9CA3AF]"
+                                                  isUnread ? "text-[#0B74DE]" : "text-[#9CA3AF]"
                                                 )}>
                                                   {typeLabel}
                                                 </span>
@@ -4594,7 +4594,7 @@ export function Dashboard() {
                         setShowDiscrepancyModal(false);
                         navigate(tenantRoute(activeSlug, '/recoveries'));
                       }}
-                      className="h-8 rounded-md border border-[#0052FF] bg-[#0052FF] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#003DBF]"
+                      className="h-8 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#005FBA]"
                     >
                       Open cases
                     </Button>
@@ -4844,7 +4844,7 @@ export function Dashboard() {
                       setShowProofNeededModal(false);
                       navigate(tenantRoute(activeSlug, '/evidence-locker'));
                     }}
-                    className="h-8 rounded-md border border-[#0052FF] bg-[#0052FF] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#003DBF]"
+                    className="h-8 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#005FBA]"
                   >
                     Open Evidence Locker
                   </Button>
