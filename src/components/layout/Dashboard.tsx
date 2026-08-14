@@ -3383,7 +3383,7 @@ export function Dashboard() {
                   <div className="space-y-5">
                     <div className="relative group/pipeline-grid space-y-4">
                       <div className="hidden" />
-                      <div className="relative overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-5 shadow-none transition-colors duration-200 hover:bg-white">
+                      <div className="relative overflow-hidden rounded-none surgical-border bg-white p-5 surgical-shadow transition-colors duration-200 hover:bg-white">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                           <div>
                             <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
@@ -3410,7 +3410,7 @@ export function Dashboard() {
                             <button
                               key={stage.label}
                               onClick={stage.onClick}
-                              className="group/stage relative min-h-[108px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white px-4 py-3.5 text-left shadow-none transition-colors duration-200 hover:bg-[#F8FAFB]"
+                              className="group/stage relative min-h-[108px] overflow-hidden rounded-none surgical-border bg-white px-4 py-3.5 text-left surgical-shadow transition-colors duration-200 hover:bg-[#F8FAFB] hover:border-[#8FA0AD]"
                             >
                               <div className="absolute inset-x-0 top-0 h-px bg-[#D8E3E8] opacity-0 transition-opacity duration-200 group-hover/stage:opacity-100" />
                               <div className="flex items-center gap-2">
@@ -3448,7 +3448,7 @@ export function Dashboard() {
                       </div>
 
                       <div className="relative grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_repeat(2,minmax(220px,0.55fr))]">
-                        <div className="relative overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-6 shadow-none transition-colors duration-200 hover:bg-white">
+                        <div className="relative overflow-hidden rounded-none surgical-border bg-white p-6 surgical-shadow transition-colors duration-200 hover:bg-white">
                           <div className="hidden" />
                           <div className="relative">
                             <div className="flex flex-wrap items-center justify-between gap-3">

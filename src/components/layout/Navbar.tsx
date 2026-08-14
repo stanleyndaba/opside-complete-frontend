@@ -436,6 +436,18 @@ export function Navbar({
     }
   }, [handleSearch, searchQuery]);
 
+  // Global Search Shortcut (Ctrl+K / Cmd+K)
+  useEffect(() => {
+    const handleGlobalSearchShortcut = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleGlobalSearchShortcut);
+    return () => window.removeEventListener('keydown', handleGlobalSearchShortcut);
+  }, []);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -480,13 +492,19 @@ export function Navbar({
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
-                  placeholder="Search cases, ASINs, case IDs..."
+                  placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="h-10 rounded-[2px] border-[#D8E3E8] bg-[#FAFAF7] pl-10 pr-10 text-[11px] font-sans font-semibold tracking-tight text-[#111827] placeholder:font-normal placeholder:text-[#9CA3AF] transition-all focus:border-[#8FA0AD] focus:bg-white focus:ring-0"
+                  className="h-9 rounded-none border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-12 text-[12px] font-medium tracking-tight text-[#111827] placeholder:font-normal placeholder:text-[#9CA3AF] transition-all focus:border-[#007AFF] focus:bg-white focus:ring-0"
                 />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+                  <div className="search-shortcut-hint">
+                    <span className="text-[9px]">{navigator.platform.indexOf('Mac') > -1 ? '⌘' : 'Ctrl'}</span>
+                    <span>K</span>
+                  </div>
+                </div>
                 {/* Clear button */}
                 {searchQuery && (
                   <button

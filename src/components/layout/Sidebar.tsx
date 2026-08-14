@@ -280,16 +280,8 @@ export function Sidebar({
               ? "gap-2 px-2.5 py-1.5"
               : "gap-2.5 px-3 py-2",
           isActive
-            ? variant === 'core'
-              ? "border-[#111827] bg-[#F8FAFB] text-[#111827]"
-              : variant === 'utility'
-                ? "border-[#111827] bg-transparent text-[#111827]"
-                : "border-[#111827] bg-[#F8FAFB] text-[#111827]"
-            : variant === 'core'
-              ? "border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
-              : variant === 'utility'
-                ? "border-transparent text-[#6B7280] hover:border-[#D8E3E8] hover:text-[#111827]"
-                : "border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+            ? "nav-active border-[#111827] bg-[#F9FAFB] text-[#111827]"
+            : "nav-hover border-transparent text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F9FAFB] hover:text-[#111827]"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (

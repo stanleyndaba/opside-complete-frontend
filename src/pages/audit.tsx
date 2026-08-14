@@ -1064,7 +1064,7 @@ export default function Audit() {
     );
 
   return (
-    <main className="flex min-h-screen bg-white font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
+    <main className="platform-audit-workspace flex min-h-screen bg-white font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? 'w-[260px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-zinc-100 bg-white transition-[width] duration-200 md:flex`}>
         {sidebarOpen && (

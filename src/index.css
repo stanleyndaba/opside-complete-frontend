@@ -1200,3 +1200,107 @@ html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+/* ============================================================
+   AUTHENTICATED PLATFORM ENHANCEMENTS — "Surgical" UI
+   ============================================================ */
+
+.platform-authenticated-shell {
+  --canvas-bg: #fcfcfd;
+  --surface-bg: #ffffff;
+  --border-color: #e9e9ec;
+  --border-subtle: #f0f0f2;
+  --text-primary: #1b1c20;
+  --text-secondary: #50525b;
+  --text-muted: #858792;
+  --blue-primary: #007AFF;
+  
+  background-color: var(--canvas-bg);
+  color: var(--text-primary);
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+}
+
+.platform-authenticated-shell * {
+  border-color: var(--border-color);
+}
+
+.platform-authenticated-shell .surgical-border {
+  border: 1px solid var(--border-color);
+}
+
+.platform-authenticated-shell .surgical-shadow {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.platform-authenticated-shell .nav-active {
+  background-color: var(--border-subtle);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.platform-authenticated-shell .nav-hover:hover {
+  background-color: #f7f7f8;
+  color: var(--text-primary);
+}
+
+.platform-authenticated-shell .table-header {
+  background-color: #fcfcfd;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.platform-authenticated-shell .table-row-hover:hover {
+  background-color: #fafafb;
+}
+
+.platform-authenticated-shell .status-pill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* Ctrl+K Search Shortcut Hint */
+.search-shortcut-hint {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px;
+  background-color: #f1f1f4;
+  border: 1px solid #e2e2e8;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #858792;
+  pointer-events: none;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .platform-authenticated-shell * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus States */
+.platform-authenticated-shell :focus-visible {
+  outline: 2px solid var(--blue-primary);
+  outline-offset: 2px;
+}
+
+/* Audit Workspace Polish */
+.platform-audit-workspace {
+  --audit-canvas: #ffffff;
+  background-color: var(--audit-canvas);
+}
