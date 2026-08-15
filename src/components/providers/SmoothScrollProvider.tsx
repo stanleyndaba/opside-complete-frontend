@@ -13,7 +13,7 @@ interface SmoothScrollProviderProps {
  */
 export const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
     const location = useLocation();
-    const isPlatformPage = location.pathname.startsWith('/app');
+    const isPlatformPage = location.pathname.startsWith('/app') || location.pathname === '/audit';
 
     // Return standard scroll for platform pages to ensure maximum utility and compatibility
     if (isPlatformPage) {
