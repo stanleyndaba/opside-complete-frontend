@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { AlertTriangle, ArrowRight, Calendar, CalendarClock, Check, CircleDollarSign, Copy, Database, Download, FileText, HeartHandshake, Loader2, Mail, PanelLeft, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
+import { AlertTriangle, ArrowRight, ArrowRightLeft, Calendar, CalendarClock, Check, CircleDollarSign, Copy, Database, Download, FileText, HeartHandshake, Loader2, Mail, PanelLeft, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -1167,11 +1167,11 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex min-h-screen flex-1 flex-col">
         {/* Persistent audit context */}
-        <div className="border-b border-[#D8E3EA] bg-[#FAFAF7] px-4 py-3 sm:px-8">
+        <div className="border-b border-[#D8E3EA] bg-white px-4 py-3 sm:px-8">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               {!sidebarOpen && (
-                <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-none p-1 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900 md:inline-flex">
+                <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-md p-1 text-zinc-400 transition-colors hover:bg-[#FAFAF7] hover:text-zinc-900 md:inline-flex">
                   <PanelLeft className="h-3.5 w-3.5" />
                 </button>
               )}
@@ -1198,13 +1198,9 @@ export default function Audit() {
                 {selectedAuditPeriodLabel}
               </button>
               <span className="hidden text-[12px] text-zinc-500 sm:inline">365-day review</span>
-              <span className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-4 text-[12px] font-medium text-zinc-700">
-                <span className={`h-1.5 w-1.5 rounded-full ${step === 'failed' ? 'bg-red-500' : step === 'completed' ? 'bg-emerald-500' : 'bg-[#0B74DE]'}`} />
-                {auditState.label}
-              </span>
             </div>
             <div className="flex items-center gap-2 text-[12px]">
-              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-none border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]">
+              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]">
                 <TerminalSquare className="h-3 w-3" />
                 Audit log
               </button>
@@ -1226,7 +1222,7 @@ export default function Audit() {
                 <div className="max-w-3xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
                   <h1 className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">
-                    Integrity Audit
+                    Selling Partner Audit
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
                     Review a read-only 365-day period across all active regions. Current phase: <span className="font-medium text-[#182026]">{auditState.label}</span>.
@@ -1239,7 +1235,7 @@ export default function Audit() {
                       setIsPeriodSelectorOpen(true);
                       trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                     }}
-                    className="inline-flex h-9 shrink-0 items-center justify-center gap-2 border border-[#D8E3EA] bg-white px-3.5 text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]"
+                    className="inline-flex h-9 shrink-0 items-center justify-center gap-2 border border-[#D8E3EA] bg-white px-3.5 rounded-md text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]"
                   >
                     <Calendar className="h-3.5 w-3.5 text-zinc-400" />
                     View scope
@@ -1248,7 +1244,7 @@ export default function Audit() {
                 </div>
               </div>
 
-              <div className="mt-7 grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-7 grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] rounded-lg overflow-hidden sm:grid-cols-2 lg:grid-cols-4">
                 {readinessItems.map((item) => (
                   <div key={item.label} className="bg-white px-4 py-3.5">
                     <div className="text-[12px] font-medium text-[#66737F]">{item.label}</div>
@@ -1263,44 +1259,44 @@ export default function Audit() {
                 <div className="mb-8">
                   <h2 className="text-[13px] font-medium text-[#0B74DE]">Audit workspace</h2>
                   <p className="mt-1 text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
-                    Margin examines the records behind your Amazon recovery position.
+                    Record reconciliation behind your selling partner account
                   </p>
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-3">
-                  {/* Card 1: Amazon SP-API */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-6 transition-all hover:bg-[#F3F6F8]">
-                    <div className="mb-5 flex h-10 w-10 items-center justify-center overflow-hidden">
-                      <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-8 w-8 object-contain" />
+                  {/* Card 1: Selling Partner API */}
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
+                    <div className="mb-4 flex h-9 w-9 items-center justify-center overflow-hidden">
+                      <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" />
                     </div>
-                    <h3 className="text-[15px] font-bold text-[#182026]">Amazon SP-API</h3>
-                    <p className="mt-1 text-[13px] font-medium text-[#4D5B66]">Inventory, shipments & reimbursements</p>
-                    <p className="mt-4 text-[12px] italic text-[#66737F]">Read-only account examination</p>
-                    <ArrowRight className="absolute right-6 top-6 h-3.5 w-3.5 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <h3 className="text-[14px] font-bold text-[#182026]">Selling Partner API</h3>
+                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Inventory, shipments & reimbursements</p>
+                    <p className="mt-3 text-[11px] italic text-[#66737F]">Read-only account examination</p>
+                    <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
                   {/* Card 2: Evidence & recovery history */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-6 transition-all hover:bg-[#F3F6F8]">
-                    <div className="mb-5 flex items-center gap-2.5">
-                      <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 object-contain" />
-                      <img src="/slack-icon-2019.png" alt="Slack" className="h-5 w-5 object-contain" />
-                      <img src="/gd.png" alt="Google Drive" className="h-5 w-5 object-contain" />
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
+                    <div className="mb-4 flex items-center gap-2">
+                      <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
+                      <img src="/slack-icon-2019.png" alt="Slack" className="h-4 w-4 object-contain" />
+                      <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />
                     </div>
-                    <h3 className="text-[15px] font-bold text-[#182026]">Evidence & recovery history</h3>
-                    <p className="mt-1 text-[13px] font-medium text-[#4D5B66]">Build the proof trail</p>
-                    <p className="mt-4 text-[12px] italic text-[#66737F]">Documents → cases → findings</p>
-                    <ArrowRight className="absolute right-6 top-6 h-3.5 w-3.5 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <h3 className="text-[14px] font-bold text-[#182026]">Evidence & recovery history</h3>
+                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Build the proof trail</p>
+                    <p className="mt-3 text-[11px] italic text-[#66737F]">Documents → cases → findings</p>
+                    <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
                   {/* Card 3: Settlements & transactions */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-6 transition-all hover:bg-[#F3F6F8]">
-                    <div className="mb-5 flex h-10 w-10 items-center justify-center bg-white rounded-full">
-                      <CircleDollarSign className="h-5 w-5 text-[#66737F] group-hover:text-[#0B74DE]" />
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
+                    <div className="mb-4 flex h-9 w-9 items-center justify-center bg-white rounded-full">
+                      <ArrowRightLeft className="h-4 w-4 text-[#66737F] group-hover:text-[#0B74DE]" />
                     </div>
-                    <h3 className="text-[15px] font-bold text-[#182026]">Settlements & transactions</h3>
-                    <p className="mt-1 text-[13px] font-medium text-[#4D5B66]">Follow the money</p>
-                    <p className="mt-4 text-[12px] italic text-[#66737F]">Expected → paid → reversed → unresolved</p>
-                    <ArrowRight className="absolute right-6 top-6 h-3.5 w-3.5 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <h3 className="text-[14px] font-bold text-[#182026]">Settlements & transactions</h3>
+                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Follow the money</p>
+                    <p className="mt-3 text-[11px] italic text-[#66737F]">Expected → paid → reversed → unresolved</p>
+                    <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
                 </div>
 
