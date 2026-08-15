@@ -1046,18 +1046,18 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-      <Button onClick={startAccountStep} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+      <Button onClick={startAccountStep} className="h-10 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)] sm:w-auto">
         Start Free Audit
       </Button>
     ) : step === 'connect' ? (
-      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)] sm:w-auto">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
       null
     ) : (
-      <Button onClick={runAudit} disabled={isBusy} className="h-10 rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+      <Button onClick={runAudit} disabled={isBusy} className="h-10 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)] sm:w-auto">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         {step === 'syncing' || step === 'detecting' ? 'Check Status' : audit?.sync_id ? 'Retry Audit' : 'Run Audit'}
       </Button>
@@ -1171,8 +1171,8 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex h-screen flex-1 flex-col overflow-y-auto">
         {/* Persistent audit context */}
-        <div className="flex h-[57px] items-center border-b border-[#D8E3EA] bg-white px-4 sm:px-8">
-          <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-h-[57px] border-b border-[#D8E3EA] bg-white px-4 py-3 sm:px-8 md:flex md:h-[57px] md:items-center md:py-0">
+          <div className="flex w-full flex-col gap-3 sm:gap-2 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               {!sidebarOpen && (
                 <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-md p-1 text-zinc-400 transition-colors hover:bg-[#FAFAF7] hover:text-zinc-900 md:inline-flex">
@@ -1189,7 +1189,7 @@ export default function Audit() {
                 <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                 <span className="font-medium">Global scope</span>
               </div>
-              <span className="text-[12px] text-zinc-500">All active regions</span>
+              <span className="hidden text-[12px] text-zinc-500 sm:inline">All active regions</span>
               <button
                 type="button"
                 onClick={() => {
@@ -1201,9 +1201,9 @@ export default function Audit() {
                 <Calendar className="h-3 w-3 text-zinc-400" />
                 {selectedAuditPeriodLabel}
               </button>
-              <span className="hidden text-[12px] text-zinc-500 sm:inline">365-day review</span>
+              <span className="hidden text-[12px] text-zinc-500 md:inline">365-day review</span>
             </div>
-            <div className="flex items-center gap-2 text-[12px]">
+              <div className="flex w-full items-center justify-between gap-2 text-[12px] sm:w-auto sm:justify-start">
               <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]">
                 <TerminalSquare className="h-3 w-3" />
                 Audit log
@@ -1222,24 +1222,24 @@ export default function Audit() {
         <section className="flex-1 px-4 py-5 sm:px-6">
           <div className="mx-auto w-full max-w-5xl">
             <header className="mb-6 pt-2">
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-end sm:justify-between">
                 <div className="max-w-3xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
-                  <h1 className="font-merriweather text-[24px] leading-tight tracking-tight text-[#182026]/75" style={{ fontWeight: 300 }}>
+                  <h1 className="break-words font-merriweather text-[21px] leading-[1.2] tracking-tight text-[#182026]/75 sm:text-[24px] sm:leading-tight" style={{ fontWeight: 300 }}>
                     Does what Amazon says match what happened?
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
                     Margin examines your Amazon records for reimbursement gaps, unresolved exceptions, reversals, evidence issues and financial discrepancies.
                   </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex w-full flex-col items-stretch gap-2.5 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                   <button
                     type="button"
                     onClick={() => {
                       setIsPeriodSelectorOpen(true);
                       trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                     }}
-                    className="inline-flex h-9 shrink-0 items-center justify-center gap-2 border border-[#D8E3EA] bg-white px-3.5 rounded-md text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]"
+                    className="inline-flex h-9 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-3.5 text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:w-auto"
                   >
                     <Calendar className="h-3.5 w-3.5 text-zinc-400" />
                     View scope
@@ -1269,17 +1269,17 @@ export default function Audit() {
             </header>
 
             {step !== 'completed' && (
-              <section className="mb-12 mt-12">
-                <div className="mb-8">
+              <section className="mb-8 mt-8 sm:mb-12 sm:mt-12">
+                <div className="mb-6 sm:mb-8">
                   <h2 className="text-[13px] font-medium text-[#0B74DE]">Operational surface</h2>
-                  <p className="mt-1 text-[18px] font-medium tracking-[-0.02em] text-[#182026]">
+                  <p className="mt-1 text-[16px] font-medium leading-6 tracking-[-0.02em] text-[#182026] sm:text-[18px]">
                     Record reconciliation behind your selling partner account
                   </p>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-3 sm:gap-6">
                   {/* Card 1: SP-API Node */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-4 transition-all hover:bg-[#F3F6F8] sm:p-5">
                     <div className="mb-5 flex h-9 items-center">
                       <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" />
                     </div>
@@ -1290,7 +1290,7 @@ export default function Audit() {
                   </div>
 
                   {/* Card 2: Proof Synthesis */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-4 transition-all hover:bg-[#F3F6F8] sm:p-5">
                     <div className="mb-5 flex h-9 items-center gap-2">
                       <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
                       <img src="/slack-icon-2019.png" alt="Slack" className="h-4 w-4 object-contain" />
@@ -1303,7 +1303,7 @@ export default function Audit() {
                   </div>
 
                   {/* Card 3: Financial Integrity */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-4 transition-all hover:bg-[#F3F6F8] sm:p-5">
                     <div className="mb-5 flex h-9 items-center">
                       <div className="flex h-7 w-7 items-center justify-center bg-white rounded-full">
                         <ArrowRightLeft className="h-3.5 w-3.5 text-[#66737F] group-hover:text-[#0B74DE]" />
@@ -1317,7 +1317,7 @@ export default function Audit() {
                 </div>
 
                 <div className="mt-8 border-t border-[#D8E3EA] pt-4">
-                  <p className="text-[12px] font-medium text-[#66737F]">
+                  <p className="text-[11px] leading-5 font-medium text-[#66737F] sm:text-[12px]">
                     Read-only examination · Evidence-backed findings · Seller approval before action
                   </p>
                 </div>
