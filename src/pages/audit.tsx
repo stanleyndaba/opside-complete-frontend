@@ -1518,27 +1518,27 @@ export default function Audit() {
 
       {/* Keep all dialogs and sheets exactly as they are */}
       <Sheet open={isActivationSheetOpen} onOpenChange={setIsActivationSheetOpen}>
-        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-gray-200 bg-white p-0 text-gray-900 shadow-[0_24px_90px_rgba(15,23,42,0.18)] sm:max-w-[460px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-l-0 max-sm:border-t">
+        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-[#D8E3EA] bg-white p-0 text-[#182026] shadow-[0_24px_90px_rgba(15,23,42,0.18)] sm:max-w-[460px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-l-0 max-sm:border-t">
           <div className="px-6 pb-6 pt-7">
             <SheetHeader className="text-left">
-              <div className="mb-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
-                <div className="font-mono text-[10px] font-medium uppercase text-gray-400">First audit</div>
-                <div className="mt-2 grid grid-cols-1 gap-2 text-[13px] text-gray-600">
+              <div className="mb-4 rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3">
+                <div className="font-mono text-[10px] font-medium uppercase text-[#94A3B8]">First audit</div>
+                <div className="mt-2 grid grid-cols-1 gap-2 text-[13px] text-[#4D5B66]">
                   <div className="flex items-center justify-between gap-3">
                     <span>{auditSheetSummary.label}</span>
-                    <span className="font-medium text-gray-900">{auditSheetSummary.metric}</span>
+                    <span className="font-medium text-[#182026]">{auditSheetSummary.metric}</span>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <span>Monitoring</span>
-                    <span className="font-medium text-gray-900">Not active</span>
+                    <span className="font-medium text-[#182026]">Not active</span>
                   </div>
                 </div>
               </div>
-              <div className="font-mono text-[10px] font-medium uppercase text-blue-600">Recovery Workspace</div>
-              <SheetTitle className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.03em] text-gray-900">
+              <div className="font-mono text-[10px] font-medium uppercase text-[#0B74DE]">Recovery Workspace</div>
+              <SheetTitle className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.03em] text-[#182026]">
                 One audit shows what is visible today. Margin keeps watching what happens next.
               </SheetTitle>
-              <SheetDescription className="mt-3 text-[14px] leading-relaxed text-gray-500">
+              <SheetDescription className="mt-3 text-[14px] leading-relaxed text-[#66737F]">
                 {workspaceOffer.sheetBody}
               </SheetDescription>
             </SheetHeader>
@@ -1550,24 +1550,24 @@ export default function Audit() {
                 ['Recovery continuity', 'Seller approvals, Amazon responses, and case history kept together.'],
                 ['Payout control', 'Underpayments, reversals, and settlement outcomes monitored through reconciliation.'],
               ].map(([title, body]) => (
-                <div key={title} className="border-t border-gray-100 pt-4">
-                  <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-gray-900">{title}</h3>
-                  <p className="mt-1 text-[13px] leading-relaxed text-gray-500">{body}</p>
+                <div key={title} className="border-t border-[#D8E3EA] pt-4">
+                  <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-[#182026]">{title}</h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-[#66737F]">{body}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="mt-auto border-t border-gray-100 bg-gray-50 px-6 py-5">
+          <div className="mt-auto border-t border-[#D8E3EA] bg-[#F5F5F5] px-6 py-5">
             <div className="text-[28px] font-semibold tracking-[-0.04em] text-[#182026]">$99 / Month</div>
-            <p className="mt-1 text-[13px] leading-relaxed text-gray-600">Flat-fee Recovery OS | 0% recovery commission | Cancel anytime | Nothing filed without approval</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-[#4D5B66]">Flat-fee Recovery OS | 0% recovery commission | Cancel anytime | Nothing filed without approval</p>
             <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
               {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Continue to Secure Checkout
               {!isBusy ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
             </Button>
             <SheetClose asChild>
-              <Button variant="ghost" className="mt-2 h-10 w-full rounded-md text-[13px] font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+              <Button variant="ghost" className="mt-2 h-10 w-full rounded-md text-[13px] font-medium text-[#66737F] hover:bg-[#F5F5F5] hover:text-[#4D5B66]">
                 Not now
               </Button>
             </SheetClose>
@@ -1578,23 +1578,23 @@ export default function Audit() {
       <Dialog open={isPeriodSelectorOpen} onOpenChange={setIsPeriodSelectorOpen}>
         <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[560px]">
           <DialogHeader>
-            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Audit period</DialogTitle>
-            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Audit period</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
               Select from actual audit history. Empty months are not shown.
             </DialogDescription>
           </DialogHeader>
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
             <input
               value={auditHistoryQuery}
               onChange={(event) => setAuditHistoryQuery(event.target.value)}
               placeholder="Search month, year, or status"
-              className="h-10 w-full rounded-md border border-gray-200 bg-gray-50 pl-9 pr-3 text-[13px] outline-none transition-colors focus:border-[var(--margin-blue)] focus:bg-white focus:ring-1 focus:ring-[var(--margin-blue)]"
+              className="h-10 w-full rounded-md border border-[#D8E3EA] bg-[#F5F5F5] pl-9 pr-3 text-[13px] outline-none transition-colors focus:border-[var(--margin-blue)] focus:bg-white focus:ring-1 focus:ring-[var(--margin-blue)]"
             />
           </div>
           <div className="max-h-[320px] overflow-y-auto">
             {isHistoryLoading ? (
-              <div className="flex items-center gap-2 py-6 text-[13px] text-gray-500">
+              <div className="flex items-center gap-2 py-6 text-[13px] text-[#66737F]">
                 <Loader2 className="h-4 w-4 animate-spin" /> Loading audit history
               </div>
             ) : auditHistory.length ? (
@@ -1610,18 +1610,18 @@ export default function Audit() {
                       key={item.id}
                       type="button"
                       onClick={() => void selectAuditPeriod(item)}
-                      className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-3 text-left transition-colors hover:border-blue-100 hover:bg-blue-50/30 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="flex items-center justify-between rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] px-3 py-3 text-left transition-colors hover:border-[#B8C8D4] hover:bg-[#F5F9FF] focus:outline-none focus:ring-2 focus:ring-[#0B74DE]/20"
                     >
                       <span>
-                        <span className="block text-[13px] font-medium text-gray-900">{item.label}{item.isLatest ? ' — Latest' : ''}</span>
-                        <span className="mt-1 block text-[11px] text-gray-500">{item.finalStatus || item.status} · {item.findingsCount} findings · {formatMoney(item.scopeValue)}</span>
+                        <span className="block text-[13px] font-medium text-[#182026]">{item.label}{item.isLatest ? ' — Latest' : ''}</span>
+                        <span className="mt-1 block text-[11px] text-[#66737F]">{item.finalStatus || item.status} · {item.findingsCount} findings · {formatMoney(item.scopeValue)}</span>
                       </span>
-                      {audit?.id === item.id ? <Check className="h-4 w-4 text-blue-600" /> : null}
+                      {audit?.id === item.id ? <Check className="h-4 w-4 text-[#0B74DE]" /> : null}
                     </button>
                   ))}
               </div>
             ) : (
-              <p className="py-6 text-[13px] text-gray-500">No previous audits are available yet.</p>
+              <p className="py-6 text-[13px] text-[#66737F]">No previous audits are available yet.</p>
             )}
           </div>
         </DialogContent>
@@ -1630,13 +1630,13 @@ export default function Audit() {
       <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
         <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[480px]">
           <DialogHeader>
-            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Export summary</DialogTitle>
-            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Export summary</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
               Download a PDF summary for {selectedAuditPeriodLabel}. Sensitive identifiers, tokens, raw payloads, and payment references are excluded.
             </DialogDescription>
           </DialogHeader>
           {step !== 'completed' ? (
-            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[13px] text-gray-500">
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] text-[#66737F]">
               Complete the selected audit before exporting a summary.
             </div>
           ) : null}
@@ -1652,55 +1652,55 @@ export default function Audit() {
       <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
         <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[560px]">
           <DialogHeader>
-            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Auto-run audit schedule</DialogTitle>
-            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Auto-run audit schedule</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
               Automatic audits are available with Recovery Workspace. The schedule is tenant-owned and only one audit runs at a time.
             </DialogDescription>
           </DialogHeader>
           {!scheduleEntitled ? (
-            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[13px] text-gray-600">
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] text-[#4D5B66]">
               Activate Recovery Workspace before saving an automatic audit schedule.
             </div>
           ) : null}
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
               Frequency
-              <select value={scheduleForm.cadence} onChange={(event) => setScheduleForm((current) => ({ ...current, cadence: event.target.value as AuditScheduleCadence }))} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800">
+              <select value={scheduleForm.cadence} onChange={(event) => setScheduleForm((current) => ({ ...current, cadence: event.target.value as AuditScheduleCadence }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]">
                 <option value="off">Off</option>
                 <option value="weekly">Weekly</option>
                 <option value="biweekly">Every two weeks</option>
                 <option value="monthly">Monthly</option>
               </select>
             </label>
-            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
               Preferred time
-              <input value={scheduleForm.preferred_time} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_time: event.target.value }))} type="time" className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800" />
+              <input value={scheduleForm.preferred_time} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_time: event.target.value }))} type="time" className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
             </label>
-            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
               Day of week
-              <select value={scheduleForm.preferred_day_of_week} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_week: Number(event.target.value) }))} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800">
+              <select value={scheduleForm.preferred_day_of_week} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_week: Number(event.target.value) }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]">
                 {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, index) => <option key={day} value={index}>{day}</option>)}
               </select>
             </label>
-            <label className="grid gap-1 text-[12px] font-medium text-gray-600">
+            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
               Day of month
-              <input value={scheduleForm.preferred_day_of_month} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_month: Number(event.target.value) }))} min={1} max={28} type="number" className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800" />
+              <input value={scheduleForm.preferred_day_of_month} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_month: Number(event.target.value) }))} min={1} max={28} type="number" className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
             </label>
-            <label className="grid gap-1 text-[12px] font-medium text-gray-600 sm:col-span-2">
+            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66] sm:col-span-2">
               Timezone
-              <input value={scheduleForm.timezone} onChange={(event) => setScheduleForm((current) => ({ ...current, timezone: event.target.value }))} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-800" />
+              <input value={scheduleForm.timezone} onChange={(event) => setScheduleForm((current) => ({ ...current, timezone: event.target.value }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
             </label>
           </div>
-          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[12px] text-gray-500">
+          <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[12px] text-[#66737F]">
             Next scheduled run: {auditSchedule?.next_run_at && !scheduleForm.is_paused ? new Date(auditSchedule.next_run_at).toLocaleString() : 'Not scheduled'}
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white disabled:bg-blue-200 disabled:text-white disabled:opacity-100">
+            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white disabled:bg-[#DCEBFA] disabled:text-white disabled:opacity-100">
               {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Save schedule
             </Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Pause</Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400 disabled:opacity-100">Turn off</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Pause</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Turn off</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -1708,21 +1708,21 @@ export default function Audit() {
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
         <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[520px]">
           <DialogHeader>
-            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Share Margin with a seller</DialogTitle>
-            <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Share Margin with a seller</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
               Share only the public audit entry point. No audit, tenant, Amazon, or recovery data is included.
             </DialogDescription>
           </DialogHeader>
-          <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-[13px] leading-relaxed text-gray-600">
+          <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] leading-relaxed text-[#4D5B66]">
             Margin helps Amazon sellers audit reimbursement activity, prepare evidence, track recoveries, and verify payouts. Run a free Recovery Audit.
           </div>
-          <input readOnly value={getShareLink()} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-[12px] text-gray-600" />
+          <input readOnly value={getShareLink()} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[12px] text-[#4D5B66]" />
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={copyShareLink} variant="outline" className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900">
+            <Button onClick={copyShareLink} variant="outline" className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] hover:bg-[#F5F5F5] hover:text-[#182026]">
               {shareCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
               {shareCopied ? 'Copied' : 'Copy link'}
             </Button>
-            <Button asChild variant="outline" className="h-10 rounded-md border-gray-200 bg-[#FAFAF7] px-4 text-[13px] text-gray-700 hover:bg-gray-50 hover:text-gray-900" onClick={() => trackEvent('share_email_clicked', { source_page: '/audit' })}>
+            <Button asChild variant="outline" className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] hover:bg-[#F5F5F5] hover:text-[#182026]" onClick={() => trackEvent('share_email_clicked', { source_page: '/audit' })}>
               <a href={`mailto:?subject=${encodeURIComponent('Run a free Amazon Recovery Audit with Margin')}&body=${encodeURIComponent(`Margin helps Amazon sellers audit reimbursement activity, prepare evidence, track recoveries, and verify payouts. Run a free Recovery Audit:\n\n${getShareLink()}`)}`}>
                 <Mail className="mr-2 h-4 w-4" /> Email
               </a>
@@ -1735,51 +1735,52 @@ export default function Audit() {
       <Dialog open={isSecurityProtocolOpen} onOpenChange={setIsSecurityProtocolOpen}>
         <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[520px]">
           <DialogHeader>
-            <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Security Protocol</DialogTitle>
-            <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
+            <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-[#182026]">Security Protocol</DialogTitle>
+            <DialogDescription className="text-[14px] leading-relaxed text-[#66737F]">
               Margin uses the permissions and controls described below.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-3 text-[13px] text-gray-600">
-            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-              <div className="font-medium text-gray-900">Read-only synchronization</div>
+          <div className="grid gap-3 text-[13px] text-[#4D5B66]">
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3">
+              <div className="font-medium text-[#182026]">Read-only synchronization</div>
               <p className="mt-1 leading-relaxed">Margin reviews shipments, settlements, inventory, refunds, fees, and related records to prepare a recovery scope.</p>
             </div>
-            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-              <div className="font-medium text-gray-900">Seller-controlled filing</div>
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3">
+              <div className="font-medium text-[#182026]">Seller-controlled filing</div>
               <p className="mt-1 leading-relaxed">You retain 100% filing authority. Evidence is prepared for review; submission requires explicit seller action.</p>
             </div>
-            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-              <div className="font-medium text-gray-900">Account ownership</div>
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3">
+              <div className="font-medium text-[#182026]">Account ownership</div>
               <p className="mt-1 leading-relaxed">One Amazon seller account is bound to one Margin workspace. Cross-workspace reuse is blocked during authorization.</p>
             </div>
-            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-              <div className="font-medium text-gray-900">Payment separation</div>
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3">
+              <div className="font-medium text-[#182026]">Payment separation</div>
               <p className="mt-1 leading-relaxed">Amazon authorization and Paystack checkout are separate flows. Payment details are verified through Paystack, not through Amazon credentials.</p>
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      <Sheet open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
-        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-l border-[#D8E3EA] bg-[#FAFAF7] p-5 text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[520px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-t max-sm:border-l-0">
-          <DialogHeader className="border-b border-[#D8E3EA] pb-5">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-[#182026]">Live Audit Log</DialogTitle>
-                <DialogDescription className="mt-1.5 text-[13px] leading-5 text-[#66737F]">
-                  A context-aware record of the current audit workspace.
+      <Dialog open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
+        <DialogContent className="flex max-h-[min(720px,calc(100vh-48px))] w-[calc(100%-32px)] max-w-[680px] flex-col gap-0 overflow-hidden rounded-xl border border-[#D8E3EA] bg-[#FAFAF7] p-0 text-[#182026] shadow-[0_24px_90px_rgba(24,32,38,0.16)]">
+          <DialogHeader className="border-b border-[#D8E3EA] px-6 pb-5 pt-6 pr-14">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="mb-2 text-[11px] font-medium text-[#0B74DE]">Operational record</p>
+                <DialogTitle className="text-[21px] font-semibold tracking-[-0.03em] text-[#182026]">Live Audit Log</DialogTitle>
+                <DialogDescription className="mt-2 max-w-lg text-[13px] leading-5 text-[#66737F]">
+                  A chronological record of what Margin has checked, found, and is waiting for in this audit.
                 </DialogDescription>
               </div>
-              <span className="border border-[#D8E3EA] bg-white px-2.5 py-1 text-[11px] font-medium text-[#4D5B66]">{auditState.label}</span>
+              <span className="inline-flex shrink-0 items-center gap-2 text-[12px] font-medium text-[#66737F]"><span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />Live state</span>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[12px]">
-              <div><span className="text-[#66737F]">Scope</span><span className="ml-2 font-medium text-[#182026]">Global scope</span></div>
-              <div><span className="text-[#66737F]">Period</span><span className="ml-2 font-medium text-[#182026]">{selectedAuditPeriodLabel}</span></div>
-              <div><span className="text-[#66737F]">Phase</span><span className="ml-2 font-medium text-[#182026]">{auditPhaseMarker}</span></div>
+            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#E6EEF2] pt-4 text-[12px]">
+              <span><span className="text-[#66737F]">Period</span><span className="ml-2 font-medium text-[#182026]">{selectedAuditPeriodLabel}</span></span>
+              <span><span className="text-[#66737F]">Phase</span><span className="ml-2 font-medium text-[#182026]">{auditPhaseMarker}</span></span>
             </div>
           </DialogHeader>
-          <div className="mt-5 flex flex-wrap gap-2">
+
+          <div className="flex items-center gap-1 overflow-x-auto border-b border-[#D8E3EA] px-6 py-3">
             {['All', 'Amazon', 'Evidence', 'Findings', 'Payment'].map((filter) => (
               <button
                 key={filter}
@@ -1788,45 +1789,47 @@ export default function Audit() {
                   setAuditLogFilter(filter);
                   trackEvent('audit_log_filter_changed', { source_page: '/audit', filter });
                 }}
-                className={`rounded-md border px-2.5 py-1 text-[12px] font-medium transition-colors ${auditLogFilter === filter ? 'border-[#0B74DE] bg-[#EAF3FF] text-[#0B74DE]' : 'border-[#D8E3EA] bg-white text-[#66737F] hover:border-[#0B74DE] hover:text-[#0B74DE]'}`}
+                className={`shrink-0 rounded-md px-3 py-1.5 text-[12px] font-medium transition-colors ${auditLogFilter === filter ? 'bg-[#EAF3FF] text-[#0B74DE]' : 'text-[#66737F] hover:bg-[#F5F5F5] hover:text-[#182026]'}`}
               >
                 {filter}
               </button>
             ))}
           </div>
-          <div className="mt-5 flex-1">
+
+          <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
             {isAuditLogLoading ? (
-              <div className="flex items-center gap-2 border-t border-[#D8E3EA] pt-4 text-[13px] text-[#66737F]"><Loader2 className="h-4 w-4 animate-spin text-[#0B74DE]" /> Loading audit activity</div>
+              <div className="flex items-center gap-2 py-8 text-[13px] text-[#66737F]"><Loader2 className="h-4 w-4 animate-spin text-[#0B74DE]" /> Loading audit activity</div>
             ) : auditLogEvents.filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter).length ? (
-              <div className="relative border-l border-[#D8E3EA] pl-5">
+              <div className="relative ml-1 border-l border-[#D8E3EA] pl-6">
                 {auditLogEvents
                   .filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter)
                   .map((event, index) => (
-                    <div key={`${event.timestamp}-${index}`} className="relative border-b border-[#E6EEF2] pb-4 pt-1 first:pt-0 last:border-b-0">
-                      <span className="absolute -left-[25px] top-1.5 h-2 w-2 rounded-full border-2 border-[#FAFAF7] bg-[#0B74DE]" />
-                      <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div key={`${event.timestamp}-${index}`} className="relative border-b border-[#E6EEF2] pb-5 pt-1 first:pt-0 last:border-b-0">
+                      <span className="absolute -left-[29px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-[#FAFAF7] bg-[#0B74DE]" />
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                         <span className="text-[12px] font-medium text-[#0B74DE]">{event.category}</span>
-                        <span className="text-[11px] text-[#9AA8B2]">{new Date(event.timestamp).toLocaleString()}</span>
+                        <span className="font-mono text-[10px] text-[#9AA8B2]">{new Date(event.timestamp).toLocaleString()}</span>
                       </div>
                       <p className="mt-1.5 text-[13px] leading-5 text-[#4D5B66]">{event.message}</p>
                     </div>
                   ))}
               </div>
             ) : (
-              <div className="border-t border-[#D8E3EA] pt-4">
-                <p className="text-[14px] font-medium text-[#182026]">No audit activity yet</p>
-                <p className="mt-1.5 max-w-sm text-[13px] leading-5 text-[#66737F]">
+              <div className="py-8">
+                <div className="mb-4 h-px w-10 bg-[#0B74DE]" />
+                <p className="text-[15px] font-medium tracking-[-0.01em] text-[#182026]">No audit activity yet</p>
+                <p className="mt-2 max-w-md text-[13px] leading-5 text-[#66737F]">
                   {step === 'public' || step === 'ready' || step === 'connect'
-                    ? 'The audit log will populate after read-only synchronization begins. Your current workspace is waiting for authorization.'
+                    ? 'This stream begins when read-only synchronization starts. The current workspace is waiting for authorization.'
                     : step === 'syncing' || step === 'detecting'
-                      ? 'Activity will appear as Margin synchronizes records and reconciles the audit scope.'
+                      ? 'This stream will update as Margin synchronizes records and reconciles the audit scope.'
                       : 'No activity has been recorded for this audit period.'}
                 </p>
               </div>
             )}
           </div>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 
