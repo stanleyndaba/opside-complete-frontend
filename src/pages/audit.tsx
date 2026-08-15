@@ -1051,18 +1051,18 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-      <Button onClick={startAccountStep} className="h-10 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)] sm:w-auto">
+      <Button onClick={startAccountStep} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
         Start Free Audit
       </Button>
     ) : step === 'connect' ? (
-      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)] sm:w-auto">
+      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         Connect Amazon
       </Button>
     ) : step === 'completed' ? (
       null
     ) : (
-      <Button onClick={runAudit} disabled={isBusy} className="h-10 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-colors hover:bg-[var(--margin-blue-hover)] sm:w-auto">
+      <Button onClick={runAudit} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         {step === 'syncing' || step === 'detecting' ? 'Check Status' : audit?.sync_id ? 'Retry Audit' : 'Run Audit'}
       </Button>
@@ -1567,7 +1567,7 @@ export default function Audit() {
           <div className="mt-auto border-t border-[#D8E3EA] bg-[#F5F5F5] px-6 py-5">
             <div className="text-[28px] font-semibold tracking-[-0.04em] text-[#182026]">$99 / Month</div>
             <p className="mt-1 text-[13px] leading-relaxed text-[#4D5B66]">Flat-fee Recovery OS | 0% recovery commission | Cancel anytime | Nothing filed without approval</p>
-            <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-md bg-[var(--margin-blue)] px-5 text-[13px] font-medium text-white shadow-[0_18px_48px_rgba(23,92,211,0.28)] transition-colors hover:bg-[var(--margin-blue-hover)]">
+            <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-[6px] bg-[#0B74DE] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8]">
               {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Continue to Secure Checkout
               {!isBusy ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
@@ -1595,7 +1595,7 @@ export default function Audit() {
               value={auditHistoryQuery}
               onChange={(event) => setAuditHistoryQuery(event.target.value)}
               placeholder="Search month, year, or status"
-              className="h-10 w-full rounded-md border border-[#D8E3EA] bg-[#F5F5F5] pl-9 pr-3 text-[13px] outline-none transition-colors focus:border-[var(--margin-blue)] focus:bg-white focus:ring-1 focus:ring-[var(--margin-blue)]"
+              className="h-10 w-full rounded-[6px] border border-[#D8E3EA] bg-[#F5F5F5] pl-9 pr-3 text-[13px] outline-none transition-colors focus:border-[#0B74DE] focus:bg-white focus:ring-1 focus:ring-[#0B74DE]"
             />
           </div>
           <div className="max-h-[320px] overflow-y-auto">
@@ -1648,7 +1648,7 @@ export default function Audit() {
           ) : null}
           {exportError ? <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-[13px] text-red-700">{exportError}</div> : null}
           {summaryExported ? <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-[13px] text-emerald-700">Last export completed successfully.</div> : null}
-          <Button onClick={exportExecutiveSummary} disabled={isExporting || step !== 'completed'} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">
+          <Button onClick={exportExecutiveSummary} disabled={isExporting || step !== 'completed'} className="h-10 rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8]">
             {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
             Download PDF
           </Button>
@@ -1701,7 +1701,7 @@ export default function Audit() {
             Next scheduled run: {auditSchedule?.next_run_at && !scheduleForm.is_paused ? new Date(auditSchedule.next_run_at).toLocaleString() : 'Not scheduled'}
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white disabled:bg-[#DCEBFA] disabled:text-white disabled:opacity-100">
+            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">
               {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Save schedule
             </Button>
@@ -1733,7 +1733,7 @@ export default function Audit() {
                 <Mail className="mr-2 h-4 w-4" /> Email
               </a>
             </Button>
-            <Button onClick={() => void nativeShare()} className="h-10 rounded-md bg-[var(--margin-blue)] px-4 text-[13px] font-medium text-white">Share</Button>
+            <Button onClick={() => void nativeShare()} className="h-10 rounded-[6px] bg-[#0B74DE] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8]">Share</Button>
           </div>
         </DialogContent>
       </Dialog>
