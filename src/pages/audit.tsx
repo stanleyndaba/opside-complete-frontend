@@ -1513,6 +1513,12 @@ export default function Audit() {
               </section>
             ) : null}
           </div>
+
+          <div className="mt-12 pb-8 text-center">
+            <p className="text-[11px] font-medium text-[#94A3B8]">
+              Margin Agents can make mistakes. Check important info
+            </p>
+          </div>
         </section>
       </div>
 
