@@ -272,7 +272,8 @@
   }
 
   /* Premium Redesign Utilities */
-  .font-serif-headline {
+  .font-serif-headline,
+  .font-playfair {
     font-family: 'Playfair Display', Georgia, serif !important;
   }
 
@@ -473,24 +474,24 @@
   }
 
   /* All text elements use Inter - comprehensive coverage */
-  /* Exception for .font-montserrat, .font-code, .font-merriweather which are used for specific branding */
-  *:not(.font-montserrat):not(.font-merriweather),
+  /* Exception for .font-montserrat, .font-code, .font-merriweather, .font-playfair which are used for specific branding */
+  *:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
   *::before,
   *::after,
-  h1:not(.font-montserrat):not(.font-merriweather),
-  h2:not(.font-montserrat):not(.font-merriweather),
-  h3:not(.font-montserrat):not(.font-merriweather),
-  h4:not(.font-montserrat):not(.font-merriweather),
-  h5:not(.font-montserrat):not(.font-merriweather),
-  h6:not(.font-montserrat):not(.font-merriweather),
-  p:not(.font-montserrat):not(.font-merriweather),
+  h1:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  h2:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  h3:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  h4:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  h5:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  h6:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  p:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
   label,
   input,
   textarea,
   select,
   button,
-  span:not(.font-montserrat):not(.font-merriweather),
-  div:not(.font-montserrat):not(.font-merriweather),
+  span:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  div:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
   a,
   li,
   td,
