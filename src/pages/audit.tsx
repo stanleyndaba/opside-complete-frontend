@@ -1169,7 +1169,7 @@ export default function Audit() {
       </aside>
 
       {/* Main content */}
-      <div className="flex min-h-screen flex-1 flex-col">
+      <div className="flex h-screen flex-1 flex-col overflow-y-auto">
         {/* Persistent audit context */}
         <div className="border-b border-[#D8E3EA] bg-white px-4 py-3 sm:px-8">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -1219,7 +1219,7 @@ export default function Audit() {
         </div>
 
         {/* Content area */}
-        <section className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+        <section className="flex-1 px-4 py-5 sm:px-6">
           <div className="mx-auto w-full max-w-5xl">
             <header className="mb-6 pt-2">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
