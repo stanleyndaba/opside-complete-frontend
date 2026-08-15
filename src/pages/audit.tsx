@@ -1085,22 +1085,26 @@ export default function Audit() {
             : step === 'completed'
               ? 'Operational'
               : 'Blocked',
+      status: step === 'completed' ? 'success' : step === 'failed' ? 'error' : step === 'public' || step === 'ready' ? 'neutral' : 'working',
     },
     {
       label: 'Evidence Depth',
       value: step === 'completed'
         ? teaser.evidenceReadyCount > 0 ? `${teaser.evidenceReadyCount} nodes` : 'Incomplete'
         : step === 'syncing' || step === 'detecting' ? 'Processing' : 'Awaiting sync',
+      status: step === 'completed' && teaser.evidenceReadyCount > 0 ? 'success' : step === 'syncing' || step === 'detecting' ? 'working' : 'neutral',
     },
     {
       label: 'Detected Exposure',
       value: step === 'completed'
         ? teaser.findingsCount > 0 ? `${teaser.findingsCount} discrepancies` : 'Zero'
         : step === 'syncing' || step === 'detecting' ? 'Reconciling' : 'Not evaluated',
+      status: step === 'completed' ? (teaser.findingsCount > 0 ? 'success' : 'neutral') : step === 'syncing' || step === 'detecting' ? 'working' : 'neutral',
     },
     {
       label: 'Filing Authority',
       value: step === 'completed' && !hasRecoveryOpportunity ? 'None required' : 'Seller controlled',
+      status: step === 'completed' ? 'success' : 'neutral',
     },
   ];
 
@@ -1244,13 +1248,22 @@ export default function Audit() {
                 </div>
               </div>
 
-              <div className="mt-9 flex flex-wrap items-center gap-x-12 gap-y-6">
-                {readinessItems.map((item) => (
-                  <div key={item.label}>
-                    <div className="text-[11px] font-semibold uppercase tracking-wider text-[#66737F]">{item.label}</div>
-                    <div className="mt-1.5 text-[14px] font-bold tracking-tight text-[#182026]">{item.value}</div>
-                  </div>
-                ))}
+              <div className="mt-10 border-y border-[#D8E3EA] bg-[#F8FAFC]/50 px-0 py-5">
+                <div className="flex flex-wrap items-center gap-x-16 gap-y-6">
+                  {readinessItems.map((item) => (
+                    <div key={item.label} className="flex flex-col gap-1.5">
+                      <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#66737F]">{item.label}</div>
+                      <div className="flex items-center gap-2">
+                        <span className={`h-1.5 w-1.5 rounded-full ${
+                          item.status === 'success' ? 'bg-emerald-500' : 
+                          item.status === 'working' ? 'bg-[#0B74DE] animate-pulse' : 
+                          item.status === 'error' ? 'bg-red-500' : 'bg-[#D8E3EA]'
+                        }`} />
+                        <span className="font-mono text-[13px] font-bold tracking-tight text-[#182026] uppercase">{item.value}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </header>
 
