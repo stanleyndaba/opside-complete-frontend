@@ -1129,25 +1129,25 @@ export default function Audit() {
 
             {/* Nav items */}
             <nav className="flex flex-col gap-0.5 px-2 pt-4">
-              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-none px-2.5 py-2 text-[12px] font-medium text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-900">
-                <TerminalSquare className="h-3.5 w-3.5 text-zinc-400" />
+              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 text-[#4D5B66] transition-colors hover:bg-zinc-50 hover:text-zinc-900">
+                <TerminalSquare className="h-4 w-4 text-zinc-400" />
                 Live audit log
               </button>
-              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-none px-2.5 py-2 text-[12px] font-medium transition-colors ${weeklyAuditEnabled ? 'bg-zinc-50 border-l border-[#007AFF] text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}>
-                <CalendarClock className={`h-3.5 w-3.5 ${weeklyAuditEnabled ? 'text-[#007AFF]' : 'text-zinc-400'}`} />
+              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 transition-colors ${weeklyAuditEnabled ? 'bg-zinc-50 border-l border-[#007AFF] text-zinc-900 font-medium' : 'text-[#4D5B66] hover:bg-zinc-50 hover:text-zinc-900'}`}>
+                <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-[#007AFF]' : 'text-zinc-400'}`} />
                 Auto-run schedule
               </button>
 
               <div className="mt-4 px-2">
                 <div className="relative">
-                  <Search className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-400" />
+                  <Search className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
                   <button
                     type="button"
                     onClick={() => {
                       setIsPeriodSelectorOpen(true);
                       trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                     }}
-                    className="h-7 w-full rounded-none border border-zinc-100 bg-zinc-50/50 pl-7 pr-2 text-left text-[11px] font-medium text-zinc-600 transition-colors hover:bg-white hover:border-zinc-200 focus:outline-none"
+                    className="h-8 w-full rounded-md border border-zinc-100 bg-zinc-50/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:bg-white hover:border-zinc-200 focus:outline-none"
                   >
                     {selectedAuditPeriodLabel}
                   </button>
@@ -1157,9 +1157,9 @@ export default function Audit() {
 
             {/* Bottom section */}
             <div className="mt-auto border-t border-zinc-50 p-4">
-              <div className="rounded-none border border-zinc-100 bg-zinc-50/30 p-3">
-                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2 text-left text-[11px] font-semibold text-zinc-900 uppercase tracking-tight">
-                  <HeartHandshake className="h-3 w-3 text-[#007AFF]" />
+              <div className="rounded-md border border-zinc-100 bg-zinc-50/30 p-3">
+                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2.5 text-left text-[14px] font-medium text-[#4D5B66] hover:text-zinc-900 transition-colors">
+                  <HeartHandshake className="h-4 w-4 text-[#007AFF]" />
                   Invite Seller
                 </button>
               </div>
@@ -1248,7 +1248,8 @@ export default function Audit() {
                 </div>
               </div>
 
-              <div className="mt-10 border-y border-[#D8E3EA] bg-[#F8FAFC]/50 px-0 py-5">
+              {/* Integrated Data Bar hidden per user request */}
+              {/* <div className="mt-10 border-y border-[#D8E3EA] bg-[#F8FAFC]/50 px-0 py-5">
                 <div className="flex flex-wrap items-center gap-x-16 gap-y-6">
                   {readinessItems.map((item) => (
                     <div key={item.label} className="flex flex-col gap-1.5">
@@ -1264,7 +1265,7 @@ export default function Audit() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </header>
 
             {step !== 'completed' && (
