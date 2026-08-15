@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@100..900&family=Playfair+Display:wght@400;700&display=swap');
+
 /* ============================================================
    PWA DESKTOP POLISH — "Website → App" native feel
    Only activates in standalone PWA mode (installed app).
@@ -423,7 +425,7 @@
   html,
   body,
   #root {
-    font-family: 'Inter', system-ui, sans-serif !important;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   html {
