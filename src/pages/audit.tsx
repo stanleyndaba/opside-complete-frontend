@@ -1223,20 +1223,20 @@ export default function Audit() {
                 <CalendarClock className="h-4 w-4 shrink-0 text-zinc-400" />
                 <span className="truncate">Schedules</span>
               </button>
+              <Link 
+                to={`${tenantRoute(activeTenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
+                title="Upload reports"
+              >
+                <FilePlus2 className="h-4 w-4 shrink-0 text-zinc-400" />
+                <span className="truncate">Upload reports</span>
+              </Link>
             </div>
               <div className="flex items-center gap-2 text-[13px] sm:text-[14px]">
               <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3">
                 <TerminalSquare className="h-4 w-4" />
                 <span className="hidden sm:inline">Audit log</span>
               </button>
-              <Link 
-                to={`${tenantRoute(activeTenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
-                className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3"
-                title="Upload reports"
-              >
-                <FilePlus2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Upload reports</span>
-              </Link>
               <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
                 <Download className="h-4 w-4" />
               </button>
