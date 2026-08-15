@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
+import { useTenant } from '@/contexts/TenantContext';
 import { api, AuditActivityEvent, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
@@ -219,6 +220,7 @@ export default function Audit() {
   const navigate = useNavigate();
   const location = useLocation();
   const { authToken, isAuthReady, isSessionValid } = useSession();
+  const { tenant } = useTenant();
   const {
     isLoaded: isClerkLoaded,
     isSignedIn: isClerkSignedIn,
@@ -229,6 +231,7 @@ export default function Audit() {
   const isAuthenticated = Boolean((isClerkLoaded && isClerkSignedIn) || hasDemoSession);
   const [audit, setAudit] = useState<AuditRunRecord | null>(null);
   const [tenantSlug, setTenantSlug] = useState<string | null>(null);
+  const activeTenantSlug = tenant?.slug || tenantSlug || localStorage.getItem('active_tenant_slug');
   const [teaser, setTeaser] = useState<AuditTeaserSummary>(defaultTeaser);
   const [isBusy, setIsBusy] = useState(false);
   const [isActivationSheetOpen, setIsActivationSheetOpen] = useState(false);
@@ -1227,7 +1230,7 @@ export default function Audit() {
                 <span className="hidden sm:inline">Audit log</span>
               </button>
               <Link 
-                to={`${tenantRoute(tenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+                to={`${tenantRoute(activeTenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                 className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3"
                 title="Upload reports"
               >
@@ -1266,7 +1269,7 @@ export default function Audit() {
                               : 'Margin needs additional Amazon reports to complete this examination.'}
                           </p>
                           <Link
-                            to={`${tenantRoute(tenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+                            to={`${tenantRoute(activeTenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                             className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#0B74DE] transition-colors hover:text-[#075EA8]"
                           >
                             Upload report <ArrowRight className="h-3.5 w-3.5" />
