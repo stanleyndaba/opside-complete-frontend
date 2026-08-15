@@ -1211,20 +1211,16 @@ export default function Audit() {
                   <img src="/logoimagetwo.png" alt="Margin" width="16" height="16" className="h-4 w-auto object-contain" />
                 </Link>
               </div>
-              <div className="flex items-center gap-2 border-[#D8E3EA] text-[13px] text-zinc-700 sm:text-[14px]">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#0B74DE]" />
-                <span className="truncate font-medium">Global scope</span>
-              </div>
               <button
                 type="button"
                 onClick={openScheduleDialog}
-                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
+                className="inline-flex items-center gap-1.5 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
               >
                 <CalendarClock className="h-4 w-4 shrink-0 text-zinc-400" />
                 <span className="truncate">Schedules</span>
               </button>
               <Link 
-                to={`${tenantRoute(activeTenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+                to={`/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                 className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
                 title="Upload reports"
               >
@@ -1269,7 +1265,7 @@ export default function Audit() {
                               : 'Margin needs additional Amazon reports to complete this examination.'}
                           </p>
                           <Link
-                            to={`${tenantRoute(activeTenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+                            to={`/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                             className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#0B74DE] transition-colors hover:text-[#075EA8]"
                           >
                             Upload report <ArrowRight className="h-3.5 w-3.5" />

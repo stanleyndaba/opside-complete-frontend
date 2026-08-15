@@ -146,15 +146,15 @@ export function TenantProvider({ children }: TenantProviderProps) {
      * Load current tenant context
      */
     const loadTenantContext = useCallback(async () => {
-        if (!isAppRoute) {
-            setIsLoading(false);
-            setIsReady(true);
-            setError(null);
+        if (!isAuthReady) {
+            setIsReady(false);
             return;
         }
 
-        if (!isAuthReady) {
-            setIsReady(false);
+        if (!isAppRoute && (!isSessionValid || !authToken)) {
+            setIsLoading(false);
+            setIsReady(true);
+            setError(null);
             return;
         }
 
