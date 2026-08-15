@@ -1111,31 +1111,27 @@ export default function Audit() {
   return (
     <main className="platform-audit-workspace flex h-screen max-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F3F6F8] transition-[width] duration-200 md:flex`}>
-        {sidebarOpen && (
+      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-[68px]'} sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F3F6F8] transition-[width] duration-200 md:flex`}>
+        {sidebarOpen ? (
           <div className="flex h-full flex-col">
-            {/* Sidebar header */}
             <div className="flex h-[57px] items-center justify-between border-b border-[#D8E3EA] bg-[#F3F6F8] px-4">
-              <div className="flex items-center gap-2.5">
-                <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-                  <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
-                  <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
-                </Link>
-              </div>
-              <button type="button" onClick={() => setSidebarOpen(false)} className="rounded-none p-1 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900">
-                <PanelLeft className="h-3.5 w-3.5" />
+              <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
+                <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+                <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
+              </Link>
+              <button type="button" onClick={() => setSidebarOpen(false)} aria-label="Collapse sidebar" className="rounded-md p-1 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900">
+                <PanelLeft className="h-4 w-4" />
               </button>
             </div>
 
-            {/* Nav items */}
             <nav className="flex flex-col gap-0.5 px-2 pt-4">
-              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 text-[#4D5B66] transition-colors hover:bg-white/50 hover:text-zinc-900">
+              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 text-[#4D5B66] transition-colors hover:bg-white/60 hover:text-zinc-900">
                 <TerminalSquare className="h-4 w-4 text-zinc-400" />
                 Live audit log
               </button>
-              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 transition-colors ${weeklyAuditEnabled ? 'bg-white/50 border-l border-[#007AFF] text-zinc-900 font-medium' : 'text-[#4D5B66] hover:bg-white/50 hover:text-zinc-900'}`}>
+              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 transition-colors ${weeklyAuditEnabled ? 'border-l border-[#007AFF] bg-white/50 font-medium text-zinc-900' : 'text-[#4D5B66] hover:bg-white/60 hover:text-zinc-900'}`}>
                 <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-[#007AFF]' : 'text-zinc-400'}`} />
-                Auto-run schedule
+                Schedules
               </button>
 
               <div className="mt-4 px-2">
@@ -1147,7 +1143,7 @@ export default function Audit() {
                       setIsPeriodSelectorOpen(true);
                       trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                     }}
-                    className="h-8 w-full rounded-md border border-[#D8E3EA] bg-white/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:bg-white hover:border-zinc-300 focus:outline-none"
+                    className="h-8 w-full rounded-md border border-[#D8E3EA] bg-white/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:border-zinc-300 hover:bg-white focus:outline-none"
                   >
                     {selectedAuditPeriodLabel}
                   </button>
@@ -1155,14 +1151,40 @@ export default function Audit() {
               </div>
             </nav>
 
-            {/* Bottom section */}
             <div className="mt-auto border-t border-[#D8E3EA] p-4">
               <div className="rounded-md border border-[#D8E3EA] bg-white/30 p-3">
-                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2.5 text-left text-[14px] text-[#4D5B66] hover:text-zinc-900 transition-colors">
+                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2.5 text-left text-[14px] text-[#4D5B66] transition-colors hover:text-zinc-900">
                   <HeartHandshake className="h-4 w-4 text-[#007AFF]" />
                   Invite Seller
                 </button>
               </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-full flex-col items-center">
+            <div className="flex h-[57px] w-full items-center justify-center border-b border-[#D8E3EA] bg-[#F3F6F8]">
+              <Link to="/" aria-label="Margin home" className="transition-opacity hover:opacity-80">
+                <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
+              </Link>
+            </div>
+            <nav className="flex flex-col items-center gap-2 pt-4">
+              <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Expand sidebar" title="Expand sidebar" className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900">
+                <PanelLeft className="h-4 w-4" />
+              </button>
+              <button type="button" onClick={openAuditLog} aria-label="Live audit log" title="Live audit log" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
+                <TerminalSquare className="h-4 w-4" />
+              </button>
+              <button type="button" onClick={openScheduleDialog} aria-label="Schedules" title="Schedules" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
+                <CalendarClock className="h-4 w-4" />
+              </button>
+              <button type="button" onClick={() => setIsPeriodSelectorOpen(true)} aria-label="Audit period" title="Audit period" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
+                <Calendar className="h-4 w-4" />
+              </button>
+            </nav>
+            <div className="mt-auto border-t border-[#D8E3EA] px-3 py-4">
+              <button type="button" onClick={openShareDialog} aria-label="Invite Seller" title="Invite Seller" className="rounded-md p-2 text-[#007AFF] transition-colors hover:bg-white hover:text-zinc-900">
+                <HeartHandshake className="h-4 w-4" />
+              </button>
             </div>
           </div>
         )}
@@ -1184,29 +1206,26 @@ export default function Audit() {
                   <img src="/logoimagetwo.png" alt="Margin" width="16" height="16" className="h-4 w-auto object-contain" />
                 </Link>
               </div>
-              <div className="flex items-center gap-2 border-[#D8E3EA] text-[12px] text-zinc-700">
+              <div className="flex items-center gap-2 border-[#D8E3EA] text-[13px] text-zinc-700 sm:text-[14px]">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#0B74DE]" />
                 <span className="truncate font-medium">Global scope</span>
               </div>
               <button
                 type="button"
-                onClick={() => {
-                  setIsPeriodSelectorOpen(true);
-                  trackEvent('audit_period_selector_opened', { source_page: '/audit' });
-                }}
-                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[12px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE]"
+                onClick={openScheduleDialog}
+                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
               >
-                <Calendar className="h-3 w-3 shrink-0 text-zinc-400" />
-                <span className="truncate">{selectedAuditPeriodLabel}</span>
+                <CalendarClock className="h-4 w-4 shrink-0 text-zinc-400" />
+                <span className="truncate">Schedules</span>
               </button>
             </div>
-              <div className="flex items-center gap-1.5 text-[12px]">
-              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-md border border-[#D8E3EA] bg-white px-2 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:px-2.5">
-                <TerminalSquare className="h-3 w-3" />
+              <div className="flex items-center gap-2 text-[13px] sm:text-[14px]">
+              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:px-3">
+                <TerminalSquare className="h-4 w-4" />
                 <span className="hidden sm:inline">Audit log</span>
               </button>
               <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
-                <Download className="h-3.5 w-3.5" />
+                <Download className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -1279,7 +1298,7 @@ export default function Audit() {
                     </div>
                     <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">SP-API Node</h3>
                     <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Operational Reconciliation</p>
-                    <p className="mt-2 text-[10px] italic text-[#66737F] sm:mt-3 sm:text-[11px]">Read-only account examination</p>
+                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Read-only account examination</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
@@ -1292,7 +1311,7 @@ export default function Audit() {
                     </div>
                     <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Proof Synthesis</h3>
                     <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Evidence Ledger</p>
-                    <p className="mt-2 text-[10px] italic text-[#66737F] sm:mt-3 sm:text-[11px]">Documents → cases → findings</p>
+                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Documents → cases → findings</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
@@ -1305,7 +1324,7 @@ export default function Audit() {
                     </div>
                     <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Financial Integrity</h3>
                     <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Transaction Mapping</p>
-                    <p className="mt-2 text-[10px] italic text-[#66737F] sm:mt-3 sm:text-[11px]">Expected → paid → unresolved</p>
+                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Expected → paid → unresolved</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
                 </div>
@@ -1527,7 +1546,7 @@ export default function Audit() {
       </Sheet>
 
       <Dialog open={isPeriodSelectorOpen} onOpenChange={setIsPeriodSelectorOpen}>
-        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
+        <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[560px]">
           <DialogHeader>
             <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Audit period</DialogTitle>
             <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
@@ -1579,7 +1598,7 @@ export default function Audit() {
       </Dialog>
 
       <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
-        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[480px]">
+        <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[480px]">
           <DialogHeader>
             <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Export summary</DialogTitle>
             <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
@@ -1601,7 +1620,7 @@ export default function Audit() {
       </Dialog>
 
       <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
-        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[560px]">
+        <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[560px]">
           <DialogHeader>
             <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Auto-run audit schedule</DialogTitle>
             <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
@@ -1657,7 +1676,7 @@ export default function Audit() {
       </Dialog>
 
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
-        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[520px]">
+        <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[520px]">
           <DialogHeader>
             <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-gray-900">Share Margin with a seller</DialogTitle>
             <DialogDescription className="text-[13px] leading-relaxed text-gray-500">
@@ -1684,7 +1703,7 @@ export default function Audit() {
       </Dialog>
 
       <Dialog open={isSecurityProtocolOpen} onOpenChange={setIsSecurityProtocolOpen}>
-        <DialogContent className="rounded-xl border-gray-200 bg-white text-gray-900 sm:max-w-[520px]">
+        <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[520px]">
           <DialogHeader>
             <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-gray-900">Security Protocol</DialogTitle>
             <DialogDescription className="text-[14px] leading-relaxed text-gray-500">
@@ -1713,7 +1732,7 @@ export default function Audit() {
       </Dialog>
 
       <Sheet open={isAuditLogOpen} onOpenChange={setIsAuditLogOpen}>
-        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-l border-[#D8E3EA] bg-[#FAFAF7] p-5 text-[#182026] sm:max-w-[520px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-none max-sm:border-t max-sm:border-l-0">
+        <SheetContent side="right" className="flex h-full w-full flex-col overflow-y-auto border-l border-[#D8E3EA] bg-[#FAFAF7] p-5 text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[520px] max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:h-[90vh] max-sm:w-full max-sm:rounded-t-2xl max-sm:border-t max-sm:border-l-0">
           <DialogHeader className="border-b border-[#D8E3EA] pb-5">
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -1725,9 +1744,8 @@ export default function Audit() {
               <span className="border border-[#D8E3EA] bg-white px-2.5 py-1 text-[11px] font-medium text-[#4D5B66]">{auditState.label}</span>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[12px]">
-              <div><span className="text-[#66737F]">Scope</span><span className="ml-2 font-medium text-[#182026]">US / CA / MX</span></div>
+              <div><span className="text-[#66737F]">Scope</span><span className="ml-2 font-medium text-[#182026]">Global scope</span></div>
               <div><span className="text-[#66737F]">Period</span><span className="ml-2 font-medium text-[#182026]">{selectedAuditPeriodLabel}</span></div>
-              <div><span className="text-[#66737F]">Freshness</span><span className="ml-2 font-medium text-[#182026]">Live workspace state</span></div>
               <div><span className="text-[#66737F]">Phase</span><span className="ml-2 font-medium text-[#182026]">{auditPhaseMarker}</span></div>
             </div>
           </DialogHeader>
@@ -1740,7 +1758,7 @@ export default function Audit() {
                   setAuditLogFilter(filter);
                   trackEvent('audit_log_filter_changed', { source_page: '/audit', filter });
                 }}
-                className={`border px-2.5 py-1 text-[12px] font-medium transition-colors ${auditLogFilter === filter ? 'border-[#0B74DE] bg-[#EAF3FF] text-[#0B74DE]' : 'border-[#D8E3EA] bg-white text-[#66737F] hover:border-[#0B74DE] hover:text-[#0B74DE]'}`}
+                className={`rounded-md border px-2.5 py-1 text-[12px] font-medium transition-colors ${auditLogFilter === filter ? 'border-[#0B74DE] bg-[#EAF3FF] text-[#0B74DE]' : 'border-[#D8E3EA] bg-white text-[#66737F] hover:border-[#0B74DE] hover:text-[#0B74DE]'}`}
               >
                 {filter}
               </button>
