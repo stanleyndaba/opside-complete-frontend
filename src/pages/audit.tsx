@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { AlertTriangle, ArrowRight, ArrowRightLeft, Calendar, CalendarClock, Check, CircleDollarSign, Copy, Database, Download, FileText, HeartHandshake, Loader2, Mail, PanelLeft, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
+import { AlertTriangle, ArrowRight, ArrowRightLeft, Calendar, CalendarClock, Check, CircleDollarSign, Copy, Database, Download, FilePlus2, FileText, HeartHandshake, Loader2, Mail, PanelLeft, Search, ShieldCheck, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { useSession } from '@/contexts/SessionContext';
 import { api, AuditActivityEvent, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
+import { tenantRoute } from '@/lib/routes';
 
 type AuditStep = 'public' | 'ready' | 'connect' | 'syncing' | 'detecting' | 'completed' | 'failed';
 type PendingAuditContext = {
@@ -1224,6 +1225,14 @@ export default function Audit() {
                 <TerminalSquare className="h-4 w-4" />
                 <span className="hidden sm:inline">Audit log</span>
               </button>
+              <Link 
+                to={tenantRoute(tenantSlug || '', '/data-upload')}
+                className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3"
+                title="Data upload"
+              >
+                <FilePlus2 className="h-4 w-4" />
+                <span className="hidden sm:inline">Upload</span>
+              </Link>
               <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
                 <Download className="h-4 w-4" />
               </button>
