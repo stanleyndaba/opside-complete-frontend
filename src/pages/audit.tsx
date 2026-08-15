@@ -1109,7 +1109,7 @@ export default function Audit() {
   ];
 
   return (
-    <main className="platform-audit-workspace flex min-h-screen bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
+    <main className="platform-audit-workspace flex h-screen max-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F3F6F8] transition-[width] duration-200 md:flex`}>
         {sidebarOpen && (
@@ -1169,79 +1169,73 @@ export default function Audit() {
       </aside>
 
       {/* Main content */}
-      <div className="flex h-screen flex-1 flex-col overflow-y-auto">
+      <div className="flex h-full flex-1 flex-col overflow-y-auto overflow-x-hidden scroll-smooth">
         {/* Persistent audit context */}
-        <div className="min-h-[57px] border-b border-[#D8E3EA] bg-white px-4 py-3 sm:px-8 md:flex md:h-[57px] md:items-center md:py-0">
-          <div className="flex w-full flex-col gap-3 sm:gap-2 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="sticky top-0 z-10 flex min-h-[57px] shrink-0 items-center border-b border-[#D8E3EA] bg-white px-4 py-2 sm:px-8 md:h-[57px] md:py-0">
+          <div className="flex w-full items-center justify-between gap-3 lg:flex-row lg:justify-between">
+            <div className="flex items-center gap-3 overflow-hidden">
               {!sidebarOpen && (
                 <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-md p-1 text-zinc-400 transition-colors hover:bg-[#FAFAF7] hover:text-zinc-900 md:inline-flex">
                   <PanelLeft className="h-3.5 w-3.5" />
                 </button>
               )}
               <div className="flex items-center gap-2 md:hidden">
-                <Link to="/" className="flex items-center gap-2.5">
-                  <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
-                  <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
+                <Link to="/" className="flex items-center">
+                  <img src="/logoimagetwo.png" alt="Margin" width="16" height="16" className="h-4 w-auto object-contain" />
                 </Link>
               </div>
-              <div className="flex items-center gap-2 border-l border-[#D8E3EA] pl-3 text-[12px] text-zinc-700 md:border-l-0 md:pl-0">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                <span className="font-medium">Global scope</span>
+              <div className="flex items-center gap-2 border-[#D8E3EA] text-[12px] text-zinc-700">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#0B74DE]" />
+                <span className="truncate font-medium">Global scope</span>
               </div>
-              <span className="hidden text-[12px] text-zinc-500 sm:inline">All active regions</span>
               <button
                 type="button"
                 onClick={() => {
                   setIsPeriodSelectorOpen(true);
                   trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                 }}
-                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-4 text-[12px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE]"
+                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[12px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE]"
               >
-                <Calendar className="h-3 w-3 text-zinc-400" />
-                {selectedAuditPeriodLabel}
+                <Calendar className="h-3 w-3 shrink-0 text-zinc-400" />
+                <span className="truncate">{selectedAuditPeriodLabel}</span>
               </button>
-              <span className="hidden text-[12px] text-zinc-500 md:inline">365-day review</span>
             </div>
-              <div className="flex w-full items-center justify-between gap-2 text-[12px] sm:w-auto sm:justify-start">
-              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]">
+              <div className="flex items-center gap-1.5 text-[12px]">
+              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-1.5 rounded-md border border-[#D8E3EA] bg-white px-2 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:px-2.5">
                 <TerminalSquare className="h-3 w-3" />
-                Audit log
+                <span className="hidden sm:inline">Audit log</span>
               </button>
-              <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-none border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-white hover:text-zinc-900" title="Export summary">
+              <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
                 <Download className="h-3.5 w-3.5" />
-              </button>
-              <button type="button" onClick={() => setIsSecurityProtocolOpen(true)} className="rounded-none border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-white hover:text-zinc-900" title="Security protocol">
-                <ShieldCheck className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Content area */}
-        <section className="flex-1 px-4 py-5 sm:px-6">
+        <section className="flex-1 px-4 py-6 sm:px-8 sm:py-8">
           <div className="mx-auto w-full max-w-5xl">
             <header className="mb-6 pt-2">
-              <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
                 <div className="max-w-3xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
-                  <h1 className="break-words font-merriweather text-[21px] leading-[1.2] tracking-tight text-[#182026]/75 sm:text-[24px] sm:leading-tight" style={{ fontWeight: 300 }}>
+                  <h1 className="break-words font-merriweather text-[22px] leading-[1.2] tracking-tight text-[#182026]/85 sm:text-[26px] sm:leading-tight" style={{ fontWeight: 300 }}>
                     Does what Amazon says match what happened?
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
                     Margin examines your Amazon records for reimbursement gaps, unresolved exceptions, reversals, evidence issues and financial discrepancies.
                   </p>
                 </div>
-                <div className="flex w-full flex-col items-stretch gap-2.5 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                   <button
                     type="button"
                     onClick={() => {
                       setIsPeriodSelectorOpen(true);
                       trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                     }}
-                    className="inline-flex h-9 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-3.5 text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:w-auto"
+                    className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-4 text-[13px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:h-9 sm:w-auto sm:px-3.5 sm:text-[12px]"
                   >
-                    <Calendar className="h-3.5 w-3.5 text-zinc-400" />
+                    <Calendar className="h-4 w-4 text-zinc-400 sm:h-3.5 sm:w-3.5" />
                     View scope
                   </button>
                   {primaryAction}
@@ -1269,49 +1263,49 @@ export default function Audit() {
             </header>
 
             {step !== 'completed' && (
-              <section className="mb-8 mt-8 sm:mb-12 sm:mt-12">
-                <div className="mb-6 sm:mb-8">
-                  <h2 className="text-[13px] font-medium text-[#0B74DE]">Operational surface</h2>
-                  <p className="mt-1 text-[16px] font-medium leading-6 tracking-[-0.02em] text-[#182026] sm:text-[18px]">
+              <section className="mb-6 mt-6 sm:mb-12 sm:mt-12">
+                <div className="mb-4 sm:mb-8">
+                  <h2 className="text-[12px] font-medium text-[#0B74DE] sm:text-[13px]">Operational surface</h2>
+                  <p className="mt-1 text-[15px] font-medium leading-6 tracking-[-0.02em] text-[#182026] sm:text-[18px]">
                     Record reconciliation behind your selling partner account
                   </p>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-3 sm:gap-6">
+                <div className="grid gap-3 sm:grid-cols-3 sm:gap-6">
                   {/* Card 1: SP-API Node */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-4 transition-all hover:bg-[#F3F6F8] sm:p-5">
-                    <div className="mb-5 flex h-9 items-center">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F3F6F8] sm:p-5">
+                    <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" />
                     </div>
-                    <h3 className="text-[14px] font-bold text-[#182026]">SP-API Node</h3>
-                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Operational Reconciliation</p>
-                    <p className="mt-3 text-[11px] italic text-[#66737F]">Read-only account examination</p>
+                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">SP-API Node</h3>
+                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Operational Reconciliation</p>
+                    <p className="mt-2 text-[10px] italic text-[#66737F] sm:mt-3 sm:text-[11px]">Read-only account examination</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
                   {/* Card 2: Proof Synthesis */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-4 transition-all hover:bg-[#F3F6F8] sm:p-5">
-                    <div className="mb-5 flex h-9 items-center gap-2">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F3F6F8] sm:p-5">
+                    <div className="mb-3 flex h-8 items-center gap-2 sm:mb-5 sm:h-9">
                       <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
                       <img src="/slack-icon-2019.png" alt="Slack" className="h-4 w-4 object-contain" />
                       <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />
                     </div>
-                    <h3 className="text-[14px] font-bold text-[#182026]">Proof Synthesis</h3>
-                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Evidence Ledger</p>
-                    <p className="mt-3 text-[11px] italic text-[#66737F]">Documents → cases → findings</p>
+                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Proof Synthesis</h3>
+                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Evidence Ledger</p>
+                    <p className="mt-2 text-[10px] italic text-[#66737F] sm:mt-3 sm:text-[11px]">Documents → cases → findings</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
                   {/* Card 3: Financial Integrity */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-4 transition-all hover:bg-[#F3F6F8] sm:p-5">
-                    <div className="mb-5 flex h-9 items-center">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F3F6F8] sm:p-5">
+                    <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <div className="flex h-7 w-7 items-center justify-center bg-white rounded-full">
                         <ArrowRightLeft className="h-3.5 w-3.5 text-[#66737F] group-hover:text-[#0B74DE]" />
                       </div>
                     </div>
-                    <h3 className="text-[14px] font-bold text-[#182026]">Financial Integrity</h3>
-                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Transaction Mapping</p>
-                    <p className="mt-3 text-[11px] italic text-[#66737F]">Expected → paid → unresolved</p>
+                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Financial Integrity</h3>
+                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Transaction Mapping</p>
+                    <p className="mt-2 text-[10px] italic text-[#66737F] sm:mt-3 sm:text-[11px]">Expected → paid → unresolved</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
                 </div>
