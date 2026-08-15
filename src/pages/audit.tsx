@@ -1232,17 +1232,20 @@ export default function Audit() {
                     Review a read-only 365-day period across all active regions. Current phase: <span className="font-medium text-[#182026]">{auditState.label}</span>.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsPeriodSelectorOpen(true);
-                    trackEvent('audit_period_selector_opened', { source_page: '/audit' });
-                  }}
-                  className="inline-flex h-9 shrink-0 items-center justify-center gap-2 border border-[#D8E3EA] bg-white px-3.5 text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]"
-                >
-                  <Calendar className="h-3.5 w-3.5 text-zinc-400" />
-                  View scope
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsPeriodSelectorOpen(true);
+                      trackEvent('audit_period_selector_opened', { source_page: '/audit' });
+                    }}
+                    className="inline-flex h-9 shrink-0 items-center justify-center gap-2 border border-[#D8E3EA] bg-white px-3.5 text-[12px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]"
+                  >
+                    <Calendar className="h-3.5 w-3.5 text-zinc-400" />
+                    View scope
+                  </button>
+                  {primaryAction}
+                </div>
               </div>
 
               <div className="mt-7 grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] sm:grid-cols-2 lg:grid-cols-4">
@@ -1255,88 +1258,7 @@ export default function Audit() {
               </div>
             </header>
 
-            <section className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-7">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="max-w-2xl">
-                    <div className="mb-3 flex items-center gap-2">
-                      <span className="text-[11px] font-semibold tracking-[0.01em] text-[#0B74DE]">{auditPhaseMarker}</span>
-                      <span className={`h-1.5 w-1.5 rounded-full ${step === 'failed' ? 'bg-red-500' : step === 'completed' ? 'bg-emerald-500' : 'bg-[#0B74DE]'}`} />
-                    </div>
-                    <h2 className="text-[22px] font-semibold leading-tight tracking-[-0.035em] text-[#182026] sm:text-[26px]">
-                      {auditState.title}
-                    </h2>
-                    <p className="mt-3 text-[14px] leading-6 text-[#4D5B66]">{auditState.description}</p>
-                  </div>
-                  <div className="shrink-0 border border-[#D8E3EA] bg-[#FAFAF7] px-3 py-2 text-[12px] font-medium text-[#4D5B66]">
-                    {isBusy ? 'Working' : auditState.label}
-                  </div>
-                </div>
 
-                <div className="border-t border-[#E6EEF2] pt-5">
-                  <p className="text-[13px] font-medium text-[#182026]">Seller approval remains required before any Amazon filing.</p>
-                  <p className="mt-1.5 max-w-2xl text-[13px] leading-5 text-[#66737F]">{statusCopy[step]}</p>
-                  {(step === 'syncing' || step === 'detecting') && (
-                    <div className="mt-5 grid gap-2 sm:grid-cols-2">
-                      {[
-                        { id: '01', label: 'Account records', status: step === 'syncing' ? 'Verifying' : 'Verified' },
-                        { id: '02', label: 'Shipment movements', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
-                        { id: '03', label: 'Inventory adjustments', status: step === 'syncing' ? 'Synchronizing' : 'Reconciled' },
-                        { id: '04', label: 'Settlement lines', status: step === 'detecting' ? 'Matching' : 'Pending' },
-                        { id: '05', label: 'Recovery evidence', status: step === 'detecting' ? 'Checking' : 'Pending' },
-                        { id: '06', label: 'Recovery exposure', status: step === 'detecting' ? 'Calculating' : 'Pending' },
-                      ].map((progress) => (
-                        <div key={progress.id} className="flex items-center justify-between border-b border-[#E6EEF2] py-2 text-[12px]">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[#9AA8B2]">{progress.id}</span>
-                            <span className="font-medium text-[#4D5B66]">{progress.label}</span>
-                          </div>
-                          <span className={`font-semibold ${progress.status === 'Verified' || progress.status === 'Reconciled' ? 'text-emerald-600' : progress.status === 'Pending' ? 'text-[#9AA8B2]' : 'text-[#0B74DE]'}`}>
-                            {progress.status}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <div className="mt-5 flex flex-wrap items-center gap-3">
-                    {step === 'completed' && !isZeroRecordLimitedAudit && (
-                      <Button variant="outline" onClick={loadResults} disabled={isBusy} className="h-10 rounded-md border-[#D8E3EA] bg-white px-4 text-[13px] font-medium text-[#4D5B66] hover:border-[#0B74DE] hover:text-[#0B74DE]">
-                        Refresh results
-                      </Button>
-                    )}
-                    {primaryAction}
-                  </div>
-                </div>
-
-                <details className="border-t border-[#E6EEF2] pt-4">
-                  <summary className="cursor-pointer text-[13px] font-medium text-[#4D5B66] marker:text-[#0B74DE]">View scope and technical details</summary>
-                  <div className="mt-4 grid gap-4 border-t border-[#E6EEF2] pt-4 sm:grid-cols-2">
-                    <div>
-                      <div className="text-[12px] font-medium text-[#66737F]">Data scope</div>
-                      <div className="mt-1 text-[13px] text-[#182026]">Orders, shipments, inventory, settlements, returns, and reimbursements</div>
-                    </div>
-                    <div>
-                      <div className="text-[12px] font-medium text-[#66737F]">Policy and sync</div>
-                      <div className="mt-1 text-[13px] text-[#182026]">June 2026 policy · {newShipmentSyncCopy}</div>
-                    </div>
-                    <div>
-                      <div className="text-[12px] font-medium text-[#66737F]">Marketplaces</div>
-                      <div className="mt-1 text-[13px] text-[#182026]">US · CA · MX</div>
-                    </div>
-                    <div>
-                      <div className="text-[12px] font-medium text-[#66737F]">Catalog coverage</div>
-                      <div className="mt-1 text-[13px] text-[#182026]">{catalogSkuCount}+ items in scope</div>
-                    </div>
-                    {teaser.sourcesUnavailable?.length > 0 && (
-                      <div className="sm:col-span-2 border border-[#E9C7C7] bg-[#FFF8F8] p-3">
-                        <div className="flex items-center gap-2 text-[12px] font-semibold text-[#A43A3A]"><AlertTriangle className="h-3.5 w-3.5" />Unavailable data sources</div>
-                        <p className="mt-1 text-[12px] leading-5 text-[#8E4A4A]">The audit proceeded without: {teaser.sourcesUnavailable.join(', ')}.</p>
-                      </div>
-                    )}
-                  </div>
-                </details>
-              </div>
-            </section>
 
             {step === 'completed' ? (
               <section className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-7">
