@@ -2163,7 +2163,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Amazon just lost inventory.
+              Amazon lost something.
             </motion.span>{" "}
             <motion.span
               className="block text-slate-400"
@@ -2175,19 +2175,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Margin handles the recovery.
-            </motion.span>{" "}
-            <motion.span
-              className="block text-white/72"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.58,
-                delay: 0.28,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              Evidence. Approval. Payout.
+              Margin finds out what happened.
             </motion.span>{" "}
           </div>{" "}
           <motion.p
