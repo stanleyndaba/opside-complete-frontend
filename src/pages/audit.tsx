@@ -1115,7 +1115,7 @@ export default function Audit() {
         {sidebarOpen && (
           <div className="flex h-full flex-col">
             {/* Sidebar header */}
-            <div className="flex items-center justify-between border-b border-[#D8E3EA] px-4 py-4">
+            <div className="flex h-[57px] items-center justify-between border-b border-[#D8E3EA] px-4">
               <div className="flex items-center gap-2.5">
                 <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
                   <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
@@ -1171,8 +1171,8 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex h-screen flex-1 flex-col overflow-y-auto">
         {/* Persistent audit context */}
-        <div className="border-b border-[#D8E3EA] bg-white px-4 py-3 sm:px-8">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex h-[57px] items-center border-b border-[#D8E3EA] bg-white px-4 sm:px-8">
+          <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               {!sidebarOpen && (
                 <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-md p-1 text-zinc-400 transition-colors hover:bg-[#FAFAF7] hover:text-zinc-900 md:inline-flex">
