@@ -1220,7 +1220,7 @@ export default function Audit() {
               </button>
             </div>
               <div className="flex items-center gap-2 text-[13px] sm:text-[14px]">
-              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:px-3">
+              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3">
                 <TerminalSquare className="h-4 w-4" />
                 <span className="hidden sm:inline">Audit log</span>
               </button>
