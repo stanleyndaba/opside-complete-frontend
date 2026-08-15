@@ -1225,7 +1225,7 @@ export default function Audit() {
               <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                 <div className="max-w-3xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
-                  <h1 className="font-merriweather text-[24px] leading-tight tracking-tight text-[#182026]" style={{ fontWeight: 200 }}>
+                  <h1 className="font-merriweather text-[24px] leading-tight tracking-tight text-[#182026]/75" style={{ fontWeight: 300 }}>
                     Does what Amazon says match what happened?
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
