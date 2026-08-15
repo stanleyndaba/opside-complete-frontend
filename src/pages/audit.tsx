@@ -1268,39 +1268,44 @@ export default function Audit() {
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-3">
-                  <div className="group relative border border-[#D8E3EA] bg-white p-6 transition-all hover:border-[#0B74DE]">
-                    <div className="mb-5 flex h-10 w-10 items-center justify-center bg-[#FAFAF7] transition-colors group-hover:bg-[#EAF3FF]">
-                      <Database className="h-5 w-5 text-[#66737F] group-hover:text-[#0B74DE]" />
+                  {/* Card 1: Amazon SP-API */}
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-6 transition-all hover:bg-[#F3F6F8]">
+                    <div className="mb-5 flex h-10 w-10 items-center justify-center overflow-hidden">
+                      <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-8 w-8 object-contain" />
                     </div>
                     <h3 className="text-[15px] font-bold text-[#182026]">Amazon SP-API</h3>
                     <p className="mt-1 text-[13px] font-medium text-[#4D5B66]">Inventory, shipments & reimbursements</p>
                     <p className="mt-4 text-[12px] italic text-[#66737F]">Read-only account examination</p>
-                    <ArrowRight className="absolute right-6 top-6 h-4 w-4 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <ArrowRight className="absolute right-6 top-6 h-3.5 w-3.5 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
-                  <div className="group relative border border-[#D8E3EA] bg-white p-6 transition-all hover:border-[#0B74DE]">
-                    <div className="mb-5 flex h-10 w-10 items-center justify-center bg-[#FAFAF7] transition-colors group-hover:bg-[#EAF3FF]">
+                  {/* Card 2: Evidence & recovery history */}
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-6 transition-all hover:bg-[#F3F6F8]">
+                    <div className="mb-5 flex items-center gap-2.5">
+                      <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 object-contain" />
+                      <img src="/slack-icon-2019.png" alt="Slack" className="h-5 w-5 object-contain" />
+                      <img src="/gd.png" alt="Google Drive" className="h-5 w-5 object-contain" />
+                    </div>
+                    <h3 className="text-[15px] font-bold text-[#182026]">Evidence & recovery history</h3>
+                    <p className="mt-1 text-[13px] font-medium text-[#4D5B66]">Build the proof trail</p>
+                    <p className="mt-4 text-[12px] italic text-[#66737F]">Documents → cases → findings</p>
+                    <ArrowRight className="absolute right-6 top-6 h-3.5 w-3.5 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                  </div>
+
+                  {/* Card 3: Settlements & transactions */}
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-6 transition-all hover:bg-[#F3F6F8]">
+                    <div className="mb-5 flex h-10 w-10 items-center justify-center bg-white rounded-full">
                       <CircleDollarSign className="h-5 w-5 text-[#66737F] group-hover:text-[#0B74DE]" />
                     </div>
                     <h3 className="text-[15px] font-bold text-[#182026]">Settlements & transactions</h3>
                     <p className="mt-1 text-[13px] font-medium text-[#4D5B66]">Follow the money</p>
                     <p className="mt-4 text-[12px] italic text-[#66737F]">Expected → paid → reversed → unresolved</p>
-                    <ArrowRight className="absolute right-6 top-6 h-4 w-4 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
-                  </div>
-
-                  <div className="group relative border border-[#D8E3EA] bg-white p-6 transition-all hover:border-[#0B74DE]">
-                    <div className="mb-5 flex h-10 w-10 items-center justify-center bg-[#FAFAF7] transition-colors group-hover:bg-[#EAF3FF]">
-                      <FileText className="h-5 w-5 text-[#66737F] group-hover:text-[#0B74DE]" />
-                    </div>
-                    <h3 className="text-[15px] font-bold text-[#182026]">Evidence & recovery history</h3>
-                    <p className="mt-1 text-[13px] font-medium text-[#4D5B66]">Build the proof trail</p>
-                    <p className="mt-4 text-[12px] italic text-[#66737F]">Documents → cases → findings</p>
-                    <ArrowRight className="absolute right-6 top-6 h-4 w-4 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <ArrowRight className="absolute right-6 top-6 h-3.5 w-3.5 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
                 </div>
 
                 <div className="mt-8 border-t border-[#D8E3EA] pt-4">
-                  <p className="text-[11px] font-medium uppercase tracking-wider text-[#66737F]">
+                  <p className="text-[12px] font-medium text-[#66737F]">
                     Read-only examination · Evidence-backed findings · Seller approval before action
                   </p>
                 </div>
