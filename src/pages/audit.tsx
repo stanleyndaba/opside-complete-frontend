@@ -298,6 +298,7 @@ export default function Audit() {
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
   const hasRecoveryOpportunity = hasFindings || hasScopeValue;
   const canShowRecoverOnce = hasFindings && hasScopeValue && !isZeroRecordLimitedAudit;
+  const needsAdditionalAmazonData = step === 'completed' && (isZeroRecordLimitedAudit || Boolean(teaser.sourcesUnavailable?.length));
   const selectedAuditPeriodLabel = auditHistory.find((item) => item.id === audit?.id)?.label || 'Current audit';
   const expiringSoonValue = hasScopeValue ? formatMoney(Math.round(teaser.scopeValue * 0.28)) : '$0';
   const newShipmentSyncCopy = isAuthenticated
@@ -1226,12 +1227,12 @@ export default function Audit() {
                 <span className="hidden sm:inline">Audit log</span>
               </button>
               <Link 
-                to={tenantRoute(tenantSlug || '', '/data-upload')}
+                to={`${tenantRoute(tenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                 className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3"
-                title="Data upload"
+                title="Upload reports"
               >
                 <FilePlus2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Upload</span>
+                <span className="hidden sm:inline">Upload reports</span>
               </Link>
               <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
                 <Download className="h-4 w-4" />
@@ -1253,6 +1254,27 @@ export default function Audit() {
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
                     Margin examines your Amazon records for reimbursement gaps, unresolved exceptions, reversals, evidence issues and financial discrepancies.
                   </p>
+                  {needsAdditionalAmazonData && (
+                    <div className="mt-4 max-w-2xl rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-4">
+                      <div className="flex items-start gap-3">
+                        <FilePlus2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0B74DE]" />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[13px] font-medium text-[#182026]">Additional Amazon data required</p>
+                          <p className="mt-1 text-[13px] leading-5 text-[#4D5B66]">
+                            {teaser.sourcesUnavailable?.length
+                              ? `Margin needs ${teaser.sourcesUnavailable.slice(0, 2).join(' or ')} to complete this examination.`
+                              : 'Margin needs additional Amazon reports to complete this examination.'}
+                          </p>
+                          <Link
+                            to={`${tenantRoute(tenantSlug || '', '/data-upload')}?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+                            className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#0B74DE] transition-colors hover:text-[#075EA8]"
+                          >
+                            Upload report <ArrowRight className="h-3.5 w-3.5" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                   <button

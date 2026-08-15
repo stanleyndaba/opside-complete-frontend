@@ -424,6 +424,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/admin/queue" element={appRoute(<AdminOnly><QueueDashboard /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/team" element={appRoute(<AdminOnly><TeamManagement /></AdminOnly>)} />
                         {/* LEGACY REDIRECTS */}
+                        <Route path="/data-upload" element={<TenantRedirect targetPath="/data-upload" />} />
                         <Route path="/integrations-hub" element={<TenantRedirect />} />
                         <Route path="/cases/:caseId" element={<TenantRedirect preservePath />} />
                         <Route path="/recoveries/:caseId" element={<TenantRedirect preservePath />} />
