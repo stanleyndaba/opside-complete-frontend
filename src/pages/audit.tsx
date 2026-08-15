@@ -1226,10 +1226,10 @@ export default function Audit() {
                 <div className="max-w-3xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
                   <h1 className="text-[24px] font-semibold leading-tight tracking-tight text-[#182026]">
-                    Selling Partner Audit
+                    Does what Amazon says match what happened?
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
-                    Review a read-only 365-day period across all active regions. Current phase: <span className="font-medium text-[#182026]">{auditState.label}</span>.
+                    Margin examines your Amazon records for reimbursement gaps, unresolved exceptions, reversals, evidence issues and financial discrepancies.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
