@@ -1111,11 +1111,11 @@ export default function Audit() {
   return (
     <main className="platform-audit-workspace flex min-h-screen bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-[#D8E3EA] bg-[#FAFAF7] transition-[width] duration-200 md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-0'} sticky top-0 h-screen hidden shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F3F6F8] transition-[width] duration-200 md:flex`}>
         {sidebarOpen && (
           <div className="flex h-full flex-col">
             {/* Sidebar header */}
-            <div className="flex h-[57px] items-center justify-between border-b border-[#D8E3EA] px-4">
+            <div className="flex h-[57px] items-center justify-between border-b border-[#D8E3EA] bg-[#F3F6F8] px-4">
               <div className="flex items-center gap-2.5">
                 <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
                   <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
@@ -1129,11 +1129,11 @@ export default function Audit() {
 
             {/* Nav items */}
             <nav className="flex flex-col gap-0.5 px-2 pt-4">
-              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 text-[#4D5B66] transition-colors hover:bg-zinc-50 hover:text-zinc-900">
+              <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 text-[#4D5B66] transition-colors hover:bg-white/50 hover:text-zinc-900">
                 <TerminalSquare className="h-4 w-4 text-zinc-400" />
                 Live audit log
               </button>
-              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 transition-colors ${weeklyAuditEnabled ? 'bg-zinc-50 border-l border-[#007AFF] text-zinc-900 font-medium' : 'text-[#4D5B66] hover:bg-zinc-50 hover:text-zinc-900'}`}>
+              <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 transition-colors ${weeklyAuditEnabled ? 'bg-white/50 border-l border-[#007AFF] text-zinc-900 font-medium' : 'text-[#4D5B66] hover:bg-white/50 hover:text-zinc-900'}`}>
                 <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-[#007AFF]' : 'text-zinc-400'}`} />
                 Auto-run schedule
               </button>
@@ -1147,7 +1147,7 @@ export default function Audit() {
                       setIsPeriodSelectorOpen(true);
                       trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                     }}
-                    className="h-8 w-full rounded-md border border-zinc-100 bg-zinc-50/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:bg-white hover:border-zinc-200 focus:outline-none"
+                    className="h-8 w-full rounded-md border border-[#D8E3EA] bg-white/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:bg-white hover:border-zinc-300 focus:outline-none"
                   >
                     {selectedAuditPeriodLabel}
                   </button>
@@ -1156,9 +1156,9 @@ export default function Audit() {
             </nav>
 
             {/* Bottom section */}
-            <div className="mt-auto border-t border-zinc-50 p-4">
-              <div className="rounded-md border border-zinc-100 bg-zinc-50/30 p-3">
-                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2.5 text-left text-[14px] font-medium text-[#4D5B66] hover:text-zinc-900 transition-colors">
+            <div className="mt-auto border-t border-[#D8E3EA] p-4">
+              <div className="rounded-md border border-[#D8E3EA] bg-white/30 p-3">
+                <button type="button" onClick={openShareDialog} className="flex w-full items-center gap-2.5 text-left text-[14px] text-[#4D5B66] hover:text-zinc-900 transition-colors">
                   <HeartHandshake className="h-4 w-4 text-[#007AFF]" />
                   Invite Seller
                 </button>
@@ -1272,7 +1272,7 @@ export default function Audit() {
               <section className="mb-12 mt-12">
                 <div className="mb-8">
                   <h2 className="text-[13px] font-medium text-[#0B74DE]">Operational surface</h2>
-                  <p className="mt-1 text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
+                  <p className="mt-1 text-[18px] font-medium tracking-[-0.02em] text-[#182026]">
                     Record reconciliation behind your selling partner account
                   </p>
                 </div>
