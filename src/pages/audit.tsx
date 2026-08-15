@@ -1111,10 +1111,10 @@ export default function Audit() {
   return (
     <main className="platform-audit-workspace flex h-screen max-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-[68px]'} sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F3F6F8] transition-[width] duration-200 md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-[68px]'} sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F5F5F5] transition-[width] duration-200 md:flex`}>
         {sidebarOpen ? (
           <div className="flex h-full flex-col">
-            <div className="flex h-[57px] items-center justify-between border-b border-[#D8E3EA] bg-[#F3F6F8] px-4">
+            <div className="flex h-[57px] items-center justify-between border-b border-[#D8E3EA] bg-[#F5F5F5] px-4">
               <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
                 <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
                 <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
@@ -1162,7 +1162,7 @@ export default function Audit() {
           </div>
         ) : (
           <div className="flex h-full flex-col items-center">
-            <div className="flex h-[57px] w-full items-center justify-center border-b border-[#D8E3EA] bg-[#F3F6F8]">
+            <div className="flex h-[57px] w-full items-center justify-center border-b border-[#D8E3EA] bg-[#F5F5F5]">
               <Link to="/" aria-label="Margin home" className="transition-opacity hover:opacity-80">
                 <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
               </Link>
@@ -1292,7 +1292,7 @@ export default function Audit() {
 
                 <div className="grid gap-3 sm:grid-cols-3 sm:gap-6">
                   {/* Card 1: SP-API Node */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F3F6F8] sm:p-5">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
                     <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" />
                     </div>
@@ -1303,7 +1303,7 @@ export default function Audit() {
                   </div>
 
                   {/* Card 2: Proof Synthesis */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F3F6F8] sm:p-5">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
                     <div className="mb-3 flex h-8 items-center gap-2 sm:mb-5 sm:h-9">
                       <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
                       <img src="/slack-icon-2019.png" alt="Slack" className="h-4 w-4 object-contain" />
@@ -1316,7 +1316,7 @@ export default function Audit() {
                   </div>
 
                   {/* Card 3: Financial Integrity */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F3F6F8] sm:p-5">
+                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
                     <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <div className="flex h-7 w-7 items-center justify-center bg-white rounded-full">
                         <ArrowRightLeft className="h-3.5 w-3.5 text-[#66737F] group-hover:text-[#0B74DE]" />
