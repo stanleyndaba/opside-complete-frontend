@@ -261,7 +261,7 @@ export default function Audit() {
   const [shareCopied, setShareCopied] = useState(false);
   const [recoverOnceQuote, setRecoverOnceQuote] = useState<RecoverOnceQuote | null>(null);
   const [isRecoverOnceQuoteLoading, setIsRecoverOnceQuoteLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const { toast } = useToast();
   const setError = (message: string | null) => {
