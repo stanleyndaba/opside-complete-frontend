@@ -534,8 +534,8 @@
   abbr,
   acronym,
   address,
-  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather) {
-    font-family: 'Inter', system-ui, sans-serif !important;
+  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather):not(.font-playfair) {
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   /* Inter for branding - explicitly override */
