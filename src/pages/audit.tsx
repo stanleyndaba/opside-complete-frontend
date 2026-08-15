@@ -1075,32 +1075,32 @@ export default function Audit() {
 
   const readinessItems = [
     {
-      label: 'Data connection',
+      label: 'Terminal Link',
       value: step === 'public' || step === 'ready'
         ? 'Not connected'
         : step === 'connect'
           ? 'Awaiting authorization'
           : step === 'syncing' || step === 'detecting'
-            ? 'Syncing'
+            ? 'Synchronizing'
             : step === 'completed'
-              ? 'Connected'
+              ? 'Operational'
               : 'Blocked',
     },
     {
-      label: 'Evidence',
+      label: 'Evidence Depth',
       value: step === 'completed'
-        ? teaser.evidenceReadyCount > 0 ? `${teaser.evidenceReadyCount} ready` : 'Incomplete'
-        : step === 'syncing' || step === 'detecting' ? 'Processing' : 'Waiting for sync',
+        ? teaser.evidenceReadyCount > 0 ? `${teaser.evidenceReadyCount} nodes` : 'Incomplete'
+        : step === 'syncing' || step === 'detecting' ? 'Processing' : 'Awaiting sync',
     },
     {
-      label: 'Findings',
+      label: 'Detected Exposure',
       value: step === 'completed'
-        ? teaser.findingsCount > 0 ? `${teaser.findingsCount} found` : 'No findings'
-        : step === 'syncing' || step === 'detecting' ? 'Reviewing' : 'Not evaluated',
+        ? teaser.findingsCount > 0 ? `${teaser.findingsCount} discrepancies` : 'Zero'
+        : step === 'syncing' || step === 'detecting' ? 'Reconciling' : 'Not evaluated',
     },
     {
-      label: 'Seller control',
-      value: step === 'completed' && !hasRecoveryOpportunity ? 'No filing required' : 'Approval required',
+      label: 'Filing Authority',
+      value: step === 'completed' && !hasRecoveryOpportunity ? 'None required' : 'Seller controlled',
     },
   ];
 
@@ -1244,11 +1244,11 @@ export default function Audit() {
                 </div>
               </div>
 
-              <div className="mt-7 grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] rounded-lg overflow-hidden sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-9 flex flex-wrap items-center gap-x-12 gap-y-6">
                 {readinessItems.map((item) => (
-                  <div key={item.label} className="bg-white px-4 py-3.5">
-                    <div className="text-[12px] font-medium text-[#66737F]">{item.label}</div>
-                    <div className="mt-1 text-[13px] font-semibold tracking-[-0.01em] text-[#182026]">{item.value}</div>
+                  <div key={item.label}>
+                    <div className="text-[11px] font-semibold uppercase tracking-wider text-[#66737F]">{item.label}</div>
+                    <div className="mt-1.5 text-[14px] font-bold tracking-tight text-[#182026]">{item.value}</div>
                   </div>
                 ))}
               </div>
@@ -1257,45 +1257,47 @@ export default function Audit() {
             {step !== 'completed' && (
               <section className="mb-12 mt-12">
                 <div className="mb-8">
-                  <h2 className="text-[13px] font-medium text-[#0B74DE]">Audit workspace</h2>
+                  <h2 className="text-[13px] font-medium text-[#0B74DE]">Operational surface</h2>
                   <p className="mt-1 text-[18px] font-semibold tracking-[-0.02em] text-[#182026]">
                     Record reconciliation behind your selling partner account
                   </p>
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-3">
-                  {/* Card 1: Selling Partner API */}
+                  {/* Card 1: SP-API Node */}
                   <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
-                    <div className="mb-4 flex h-9 w-9 items-center justify-center overflow-hidden">
+                    <div className="mb-5 flex h-9 items-center">
                       <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" />
                     </div>
-                    <h3 className="text-[14px] font-bold text-[#182026]">Selling Partner API</h3>
-                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Inventory, shipments & reimbursements</p>
+                    <h3 className="text-[14px] font-bold text-[#182026]">SP-API Node</h3>
+                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Operational Reconciliation</p>
                     <p className="mt-3 text-[11px] italic text-[#66737F]">Read-only account examination</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
-                  {/* Card 2: Evidence & recovery history */}
+                  {/* Card 2: Proof Synthesis */}
                   <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
-                    <div className="mb-4 flex items-center gap-2">
+                    <div className="mb-5 flex h-9 items-center gap-2">
                       <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
                       <img src="/slack-icon-2019.png" alt="Slack" className="h-4 w-4 object-contain" />
                       <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />
                     </div>
-                    <h3 className="text-[14px] font-bold text-[#182026]">Evidence & recovery history</h3>
-                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Build the proof trail</p>
+                    <h3 className="text-[14px] font-bold text-[#182026]">Proof Synthesis</h3>
+                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Evidence Ledger</p>
                     <p className="mt-3 text-[11px] italic text-[#66737F]">Documents → cases → findings</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
 
-                  {/* Card 3: Settlements & transactions */}
+                  {/* Card 3: Financial Integrity */}
                   <div className="group relative rounded-xl bg-[#FAFAF7] p-5 transition-all hover:bg-[#F3F6F8]">
-                    <div className="mb-4 flex h-9 w-9 items-center justify-center bg-white rounded-full">
-                      <ArrowRightLeft className="h-4 w-4 text-[#66737F] group-hover:text-[#0B74DE]" />
+                    <div className="mb-5 flex h-9 items-center">
+                      <div className="flex h-7 w-7 items-center justify-center bg-white rounded-full">
+                        <ArrowRightLeft className="h-3.5 w-3.5 text-[#66737F] group-hover:text-[#0B74DE]" />
+                      </div>
                     </div>
-                    <h3 className="text-[14px] font-bold text-[#182026]">Settlements & transactions</h3>
-                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Follow the money</p>
-                    <p className="mt-3 text-[11px] italic text-[#66737F]">Expected → paid → reversed → unresolved</p>
+                    <h3 className="text-[14px] font-bold text-[#182026]">Financial Integrity</h3>
+                    <p className="mt-1 text-[12px] font-medium text-[#4D5B66]">Transaction Mapping</p>
+                    <p className="mt-3 text-[11px] italic text-[#66737F]">Expected → paid → unresolved</p>
                     <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
                   </div>
                 </div>
