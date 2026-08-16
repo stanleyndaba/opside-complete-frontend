@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   animate,
   motion,
+  AnimatePresence,
   useInView,
   useMotionValue,
   useReducedMotion,
