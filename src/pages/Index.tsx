@@ -45,6 +45,7 @@ import { PUBLIC_ROUTE_META } from "@/config/seo";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
+import { cn } from "@/lib/utils";
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
 const RECOVERY_PREVIEW_VIDEO_URL = "/Evidentiary.mp4";
