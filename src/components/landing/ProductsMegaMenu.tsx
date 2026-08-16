@@ -64,17 +64,17 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[6px] bg-white shadow-[0_32px_80px_rgba(0,0,0,0.18)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[84px] lg:w-[96vw] lg:max-w-[1080px] lg:-translate-x-1/2">
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[6px] bg-white shadow-[0_32px_80px_rgba(0,0,0,0.18)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[76px] lg:w-[96vw] lg:max-w-[1080px] lg:-translate-x-1/2">
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {productMenuGroups.map((group, index) => (
                                     <div
                                         key={group.label}
                                         className={cn(
-                                            'p-6 lg:p-8',
+                                            'p-5 lg:p-6',
                                             index < productMenuGroups.length - 1 && 'border-b border-[#D8E3E8]/60 lg:border-b-0 lg:border-r'
                                         )}
                                     >
-                                        <div className="mb-6 flex items-center justify-between gap-3">
+                                        <div className="mb-4 flex items-center justify-between gap-3">
                                             <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#94A3B8]">
                                                 {group.label}
                                             </h4>
@@ -84,7 +84,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="grid grid-cols-1 gap-4">
+                                        <div className="grid grid-cols-1 gap-1">
                                             {group.items.map((item) => (
                                                 <ProductServiceItem
                                                     key={item.title}
