@@ -52,12 +52,22 @@ const socialLinks = [
 
 const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
   const className =
-    'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight text-[#94A3B8] transition-colors duration-200 hover:text-white focus-visible:text-white focus-visible:outline-none';
+    'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight transition-colors duration-200 focus-visible:outline-none';
 
   if (item.external) {
     return (
-      <a href={item.href} target="_blank" rel="noreferrer" className={className}>
-        <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]">
+      <a 
+        href={item.href} 
+        target="_blank" 
+        rel="noreferrer" 
+        className={className}
+        style={{ color: '#94A3B8' }}
+      >
+        <span 
+          className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]"
+          onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#FFFFFF')}
+          onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#94A3B8')}
+        >
           {item.label}
         </span>
       </a>
@@ -66,8 +76,16 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
 
   if (item.href.includes('#')) {
     return (
-      <a href={item.href} className={className}>
-        <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]">
+      <a 
+        href={item.href} 
+        className={className}
+        style={{ color: '#94A3B8' }}
+      >
+        <span 
+          className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]"
+          onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#FFFFFF')}
+          onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#94A3B8')}
+        >
           {item.label}
         </span>
       </a>
@@ -75,8 +93,12 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
   }
 
   return (
-    <Link to={item.href} className={className}>
-      <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]">
+    <Link to={item.href} className={className} style={{ color: '#94A3B8' }}>
+      <span 
+        className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-200 group-hover:bg-[length:100%_1px]"
+        onMouseEnter={(e) => (e.currentTarget.parentElement!.style.color = '#FFFFFF')}
+        onMouseLeave={(e) => (e.currentTarget.parentElement!.style.color = '#94A3B8')}
+      >
         {item.label}
       </span>
     </Link>
@@ -85,7 +107,7 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
 
 const FooterColumn: React.FC<{ title: string; links: FooterLink[] }> = ({ title, links }) => (
   <div>
-    <h3 className="text-lg font-medium tracking-tight text-white !important">{title}</h3>
+    <h3 className="text-lg font-medium tracking-tight" style={{ color: '#FFFFFF' }}>{title}</h3>
     <nav className="mt-5 flex flex-col gap-3" aria-label={title}>
       {links.map((item) => (
         <FooterLinkItem key={item.label} item={item} />
@@ -152,13 +174,13 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
           <div className="grid gap-10 border-t border-gray-700 pt-12 md:grid-cols-4 md:gap-8">
             <div className="max-w-[360px]">
               <Link to="/" className="inline-flex items-center gap-3 transition-opacity hover:opacity-85">
-                <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain invert brightness-0" />
-                <span className="brand-wordmark font-merriweather text-2xl tracking-tight text-white !important">Margin</span>
+                <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain brightness-0 invert" />
+                <span className="brand-wordmark font-merriweather text-2xl tracking-tight" style={{ color: '#FFFFFF' }}>Margin</span>
               </Link>
-              <p className="mt-5 text-sm leading-6 tracking-tight text-[#94A3B8]">
+              <p className="mt-5 text-sm leading-6 tracking-tight" style={{ color: '#94A3B8' }}>
                 Amazon FBA revenue recovery and reconciliation for established brands, agencies and operations teams.
               </p>
-              <p className="mt-4 text-sm leading-6 tracking-tight text-[#64748B]">
+              <p className="mt-4 text-sm leading-6 tracking-tight" style={{ color: '#64748B' }}>
                 Verify what Amazon owes, connect the evidence, control the response and reconcile the payout.
               </p>
             </div>
@@ -174,9 +196,15 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-700 pt-8 md:flex-row">
-            <div className="flex flex-col gap-2 text-sm tracking-tight text-[#64748B] md:flex-row md:items-center md:gap-5">
+            <div className="flex flex-col gap-2 text-sm tracking-tight md:flex-row md:items-center md:gap-5" style={{ color: '#64748B' }}>
               <span>© {new Date().getFullYear()} Margin. All rights reserved.</span>
-              <a href="mailto:support@margin-finance.com" className="w-fit transition-colors duration-200 hover:text-white focus-visible:text-white focus-visible:outline-none">
+              <a 
+                href="mailto:support@margin-finance.com" 
+                className="w-fit transition-colors duration-200 focus-visible:outline-none"
+                style={{ color: '#94A3B8' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+              >
                 support@margin-finance.com
               </a>
               {selectedLanguageLabel && (
@@ -195,7 +223,10 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={social.label}
-                  className="inline-flex items-center justify-center text-[#94A3B8] transition-colors duration-200 hover:text-white focus-visible:text-white focus-visible:outline-none"
+                  className="inline-flex items-center justify-center transition-colors duration-200 focus-visible:outline-none"
+                  style={{ color: '#94A3B8' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
                 >
                   {social.icon}
                 </a>
