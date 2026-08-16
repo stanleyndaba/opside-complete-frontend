@@ -1954,58 +1954,39 @@ export default function DataUpload() {
     return (
         <PageLayout title="Upload reports" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} plainBackground>
             <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#182026] relative">
-                {/* Noise Texture */}
-
-                {/* Aesthetic Background Elements */}
-                <div className="pointer-events-none absolute inset-0 bg-[#FAFAF7]" />
-
-                <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 sm:py-8">
+                <div className="relative z-10 mx-auto w-full max-w-5xl px-4 py-6 sm:px-8 sm:py-8">
                     {/* Header */}
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-8 flex flex-col md:flex-row md:items-start md:justify-between gap-6"
-                    >
-                        <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="rounded-md border border-[#D8E3EA] bg-[#F5F5F5] p-2">
-                                    <Upload className="h-5 w-5 text-[#0B74DE]" />
-                                </div>
-                                <h1 className="font-merriweather text-[24px] font-light tracking-tight text-[#182026]">Upload reports</h1>
-                                <Badge variant="outline" className="ml-2 rounded-md border border-[#D8E3EA] bg-[#F5F5F5] px-2 py-1 text-[11px] font-medium tracking-tight text-[#4D5B66]">
-                                    CSV Ingestion
-                                </Badge>
-                            </div>
-                            <p className="max-w-xl text-[14px] leading-6 text-[#4D5B66]">
+                    <header className="mb-8">
+                        <div className="flex flex-col gap-2">
+                            <p className="text-[13px] font-medium text-[#0B74DE]">Manual Ingestion</p>
+                            <h1 className="font-playfair text-[30px] font-medium leading-[1.15] tracking-tight text-[#182026] md:text-[40px]" style={{ fontFamily: "'Playfair Display', serif !important", fontWeight: 500 }}>
+                                Upload Reports
+                            </h1>
+                            <p className="max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
                                 Upload Amazon reports to supplement the Selling Partner API, backfill historical coverage, or provide the exact records Margin needs to complete an examination.
                             </p>
                             {returnToAudit && (
-                                <Link to={tenantRoute(currentTenantSlug, '/audit')} className="mt-3 inline-flex items-center text-[13px] font-medium text-[#0B74DE] transition-colors hover:text-[#075EA8]">
+                                <Link to={tenantRoute(currentTenantSlug, '/audit')} className="mt-2 inline-flex items-center text-[13px] font-medium text-[#0B74DE] transition-colors hover:text-[#075EA8]">
                                     ← Return to audit workspace
                                 </Link>
                             )}
                         </div>
-                        
-                    </motion.div>
+                    </header>
 
                     {/* Drop Zone */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.05 }}
-                    >
+                    <div className="relative">
                         <div
                             onClick={() => fileInputRef.current?.click()}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
                             className={`
-                relative cursor-pointer rounded-xl border border-dashed transition-all duration-300
+                relative cursor-pointer rounded-lg border border-dashed transition-all duration-200
                 ${isDragOver
-                                    ? 'border-[#0B74DE] bg-[#F5F5F5] scale-[1.01]'
-                                    : 'border-[#D8E3EA] bg-white hover:border-[#A9C7DF] hover:bg-[#F5F5F5]'
+                                    ? 'border-[#0B74DE] bg-[#F5F5F5]'
+                                    : 'border-[#D8E3EA] bg-white hover:border-zinc-300 hover:bg-[#FAFAF7]'
                                 }
-                ${files.length > 0 ? 'py-8 px-6' : 'py-16 px-6'}
+                ${files.length > 0 ? 'py-6 px-5' : 'py-12 px-5'}
               `}
                         >
                             <input
@@ -2019,20 +2000,20 @@ export default function DataUpload() {
 
                             {files.length === 0 ? (
                                 <div className="flex flex-col items-center gap-4">
-                                    <div className={`rounded-xl border border-[#D8E3EA] p-4 transition-all duration-300 ${isDragOver ? 'bg-[#F5F5F5]' : 'bg-white'}`}>
-                                        <FileSpreadsheet className={`h-10 w-10 ${isDragOver ? 'text-[#0B74DE]' : 'text-[#94A3B8]'}`} />
+                                    <div className={`rounded-lg border border-[#D8E3EA] p-3 transition-all duration-200 ${isDragOver ? 'bg-[#F5F5F5]' : 'bg-white'}`}>
+                                        <FileSpreadsheet className={`h-8 w-8 ${isDragOver ? 'text-[#0B74DE]' : 'text-[#94A3B8]'}`} />
                                     </div>
                                     <div className="text-center">
-                                        <p className="mb-1 text-sm font-medium text-[#182026]">
+                                        <p className="mb-1 text-[14px] font-medium text-[#182026]">
                                             Drop CSV files here or <span className="text-[#0B74DE] hover:text-[#075EA8]">browse</span>
                                         </p>
-                                        <p className="text-xs text-[#66737F]">
-                                            We auto-detect each Amazon report by its headers and ingest it for this workspace.
+                                        <p className="text-[12px] text-[#66737F]">
+                                            Margin auto-detects each Amazon report by its headers.
                                         </p>
-                                        <p className="mt-2 text-[11px] text-[#66737F]">
+                                        <p className="mt-2 text-[11px] text-[#94A3B8]">
                                             {supportedTypeNames.length > 0
-                                                ? `Supported now: ${supportedTypeNames.join(', ')}`
-                                                : 'Supported now: orders, shipments, returns, settlements, inventory, financial events, fees, transfers'}
+                                                ? `Supported: ${supportedTypeNames.join(', ')}`
+                                                : 'Supported: orders, shipments, returns, settlements, inventory, fees'}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-4 mt-2 font-sans text-[11px] font-medium tracking-tight text-[#66737F]">
@@ -2047,30 +2028,27 @@ export default function DataUpload() {
                                 <div className="space-y-2" onClick={e => e.stopPropagation()}>
                                     <AnimatePresence mode="popLayout">
                                         {files.map(f => (
-                                            <motion.div
+                                            <div
                                                 key={f.id}
-                                                initial={{ opacity: 0, y: 10, scale: 0.97 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, scale: 0.95 }}
-                                                className="flex items-center gap-3 py-2.5 px-3 rounded-xl border border-[#D8E3EA] bg-white"
+                                                className="flex items-center gap-3 py-2 px-3 rounded-lg border border-[#D8E3EA] bg-white"
                                             >
-                                                <FileSpreadsheet className="h-4 w-4 text-[#66737F] flex-shrink-0" />
+                                                <FileSpreadsheet className="h-4 w-4 text-[#94A3B8] flex-shrink-0" />
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="truncate font-sans text-sm tracking-tight text-[#182026]">{f.file.name}</p>
-                                                    <p className="text-[10px] text-[#66737F]">
+                                                    <p className="truncate text-[13px] font-medium text-[#182026]">{f.file.name}</p>
+                                                    <p className="text-[11px] text-[#66737F]">
                                                         {formatSize(f.file.size)}
-                                                        {f.detectedType && <span className="ml-2 text-[#4D5B66]">→ {f.detectedType}</span>}
-                                                        {f.rowsInserted !== undefined && <span className="ml-2 text-[#66737F]">{f.rowsInserted.toLocaleString()} rows</span>}
+                                                        {f.detectedType && <span className="ml-2 text-[#4D5B66]">· {f.detectedType}</span>}
+                                                        {f.rowsInserted !== undefined && <span className="ml-2 text-[#66737F]">· {f.rowsInserted.toLocaleString()} rows</span>}
                                                     </p>
                                                 </div>
 
                                                 {/* Status indicator */}
-                                                {f.status === 'uploading' && <Loader2 className="h-4 w-4 text-[#182026] animate-spin flex-shrink-0" />}
-                                                {f.status === 'success' && <CheckCircle2 className="h-4 w-4 text-[#182026] flex-shrink-0" />}
-                                                {f.status === 'skipped' && <Archive className="h-4 w-4 text-amber-400 flex-shrink-0" />}
+                                                {f.status === 'uploading' && <Loader2 className="h-3.5 w-3.5 text-[#0B74DE] animate-spin flex-shrink-0" />}
+                                                {f.status === 'success' && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />}
+                                                {f.status === 'skipped' && <Archive className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />}
                                                 {f.status === 'error' && (
                                                     <span title={f.error}>
-                                                        <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
+                                                        <AlertCircle className="h-3.5 w-3.5 text-red-500 flex-shrink-0" />
                                                     </span>
                                                 )}
 
@@ -2078,13 +2056,13 @@ export default function DataUpload() {
                                                 {!isUploading && !batchResult && f.status !== 'uploading' && (
                                                     <button
                                                         onClick={() => removeFile(f.id)}
-                                                        className="p-1 rounded-md hover:bg-[#F5F5F5] text-[#94A3B8] hover:text-[#4D5B66] transition-colors"
+                                                        className="p-1 rounded-md hover:bg-[#F5F5F5] text-[#94A3B8] transition-colors"
                                                         aria-label={`Remove ${f.file.name}`}
                                                     >
                                                         <X className="h-3.5 w-3.5" />
                                                     </button>
                                                 )}
-                                            </motion.div>
+                                            </div>
                                         ))}
                                     </AnimatePresence>
 
@@ -2100,39 +2078,35 @@ export default function DataUpload() {
                                 </div>
                             )}
                         </div>
-                    </motion.div>
+                    </div>
 
                     {pipelineStage && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mt-6 rounded-xl bg-[#FAFAF7] border border-[#D8E3EA] p-4"
-                        >
+                        <div className="mt-6 rounded-lg border border-[#D8E3EA] bg-[#FAFAF7] p-4">
                             <div className="flex items-start gap-3">
                                 {pipelineStage.tone === 'success' ? (
-                                    <CheckCircle2 className={`h-4 w-4 mt-0.5 flex-shrink-0 ${pipelineToneClasses.icon}`} />
+                                    <CheckCircle2 className="h-4 w-4 mt-0.5 flex-shrink-0 text-emerald-500" />
                                 ) : pipelineStage.tone === 'failed' ? (
-                                    <AlertCircle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${pipelineToneClasses.icon}`} />
+                                    <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-red-500" />
                                 ) : (
-                                    <Loader2 className={`h-4 w-4 mt-0.5 flex-shrink-0 ${pipelineToneClasses.icon} ${isUploading || isDetectionInFlight(previewState.status) ? 'animate-spin' : ''}`} />
+                                    <Loader2 className={`h-4 w-4 mt-0.5 flex-shrink-0 text-[#0B74DE] ${isUploading || isDetectionInFlight(previewState.status) ? 'animate-spin' : ''}`} />
                                 )}
                                 <div className="min-w-0 flex-1">
-                                    <p className={`text-[10px] font-sans font-bold uppercase tracking-tight ${pipelineToneClasses.eyebrow}`}>
+                                    <p className="text-[12px] font-medium text-[#0B74DE]">
                                         {pipelineStage.eyebrow}
                                     </p>
-                                    <p className={`mt-2 text-[14px] font-sans font-medium tracking-tight ${pipelineToneClasses.title}`}>
+                                    <p className="mt-1 text-[16px] font-medium tracking-tight text-[#182026]">
                                         {pipelineStage.title}
                                     </p>
-                                    <p className="mt-2 text-[11px] font-sans leading-5 text-[#4D5B66]">
+                                    <p className="mt-2 text-[13px] leading-6 text-[#4D5B66]">
                                         {pipelineStage.description}
                                     </p>
 
                                     {pipelineProofItems.length > 0 && (
-                                        <div className="mt-4 flex flex-wrap gap-2">
+                                        <div className="mt-4 flex flex-wrap gap-3">
                                             {pipelineProofItems.map((item) => (
                                                 <div
                                                     key={`${item.label}-${item.value}`}
-                                                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight ${pipelineToneClasses.chip}`}
+                                                    className="inline-flex items-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1 text-[11px] font-medium"
                                                 >
                                                     <span className="text-[#66737F]">{item.label}</span>
                                                     <span className="text-[#182026]">{item.value}</span>
@@ -2177,21 +2151,16 @@ export default function DataUpload() {
                                     )}
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     )}
 
                     {/* Action Buttons */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.15 }}
-                        className="mt-6 flex items-center gap-3"
-                    >
+                    <div className="mt-6 flex items-center gap-3">
                         {!batchResult && (
                             <Button
                                 onClick={handleUpload}
                                 disabled={files.length === 0 || isUploading}
-                                className="bg-[#0052FF] hover:bg-[#0047DD] border border-[#0052FF] text-[#FFFFFF] font-medium px-6 h-10 shadow-[0_14px_30px_rgba(0,82,255,0.18)] disabled:opacity-30 disabled:shadow-none"
+                                className="h-10 rounded-[6px] bg-[#182026] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] disabled:opacity-30"
                             >
                                 {isUploading ? (
                                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
@@ -2205,7 +2174,7 @@ export default function DataUpload() {
                             <Button
                                 onClick={handleReset}
                                 variant="outline"
-                                className="bg-white border-[#D8E3EA] text-[#4B5563] hover:bg-[#F3F4F6] h-10 px-6"
+                                className="h-10 rounded-[6px] border border-[#D8E3EA] bg-white px-6 text-[13px] font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-[#FAFAF7]"
                             >
                                 <X className="h-4 w-4 mr-2" />Clear & Restart
                             </Button>
@@ -2214,12 +2183,12 @@ export default function DataUpload() {
                         {canGoToDashboard && (
                             <Button
                                 onClick={goToDashboard}
-                                className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] h-10 px-6"
+                                className="h-10 rounded-[6px] bg-[#182026] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35]"
                             >
                                 {returnToAudit ? 'Return to Audit' : 'Go to Dashboard'} <ArrowRight className="h-4 w-4 ml-2" />
                             </Button>
                         )}
-                    </motion.div>
+                    </div>
 
                     {hasResettableWorkspaceState && !isUploading && (
                         <p className="mt-3 text-[11px] text-[#66737F] font-sans tracking-tight">
@@ -2229,11 +2198,7 @@ export default function DataUpload() {
 
                     {/* Results Summary */}
                     {batchResult && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mt-8"
-                        >
+                        <div className="mt-8">
                             {/* Success Banner */}
                             {totalRowsInserted > 0 && (
                                 <div className="rounded-xl bg-[#FAFAF7] border border-[#D8E3EA] p-5 mb-4">
@@ -2326,45 +2291,38 @@ export default function DataUpload() {
                                     )}
                                 </div>
                             ))}
-                        </motion.div>
+                        </div>
                     )}
 
                     {/* Info Section */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.25 }}
-                        className="mt-10 rounded-xl bg-white border border-[#D8E3EA] p-5"
-                    >
+                    <div className="mt-10 rounded-lg border border-[#D8E3EA] bg-[#FAFAF7] p-5">
                         <div className="flex items-start gap-3 mb-4">
-                            <Info className="h-4 w-4 text-[#94A3B8] mt-0.5" />
+                            <Info className="h-4 w-4 text-[#0B74DE] mt-0.5" />
                             <div>
-                                <h3 className="text-xs font-medium text-[#4D5B66] uppercase tracking-tight mb-1">How It Works</h3>
-                                <p className="text-xs text-[#66737F] leading-relaxed">
-                                    Upload CSV exports from Amazon Seller Central. The system auto-detects the report type,
-                                    maps columns to the internal schema, and inserts data into the database.
-                                    After ingestion, Agent 3 runs 7 flagship detectors to find recoverable claims.
+                                <h3 className="text-[13px] font-bold text-[#182026] uppercase tracking-wide mb-1">Forensic Protocol</h3>
+                                <p className="text-[13px] text-[#4D5B66] leading-relaxed">
+                                    Upload CSV exports from Amazon Seller Central. Margin auto-detects the report type, maps the internal schema, and triggers the detection suite.
                                 </p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                             {[
-                                { step: '1', label: 'Upload', desc: 'Drop CSV files' },
-                                { step: '2', label: 'Parse', desc: 'Auto-detect type' },
-                                { step: '3', label: 'Ingest', desc: 'Insert into DB' },
-                                { step: '4', label: 'Detect', desc: 'Run 7 detectors' },
+                                { step: '1', label: 'Upload', desc: 'CSV records' },
+                                { step: '2', label: 'Parse', desc: 'Header mapping' },
+                                { step: '3', label: 'Ingest', desc: 'Ledger entry' },
+                                { step: '4', label: 'Detect', desc: 'Reconciliation' },
                             ].map(s => (
-                                <div key={s.step} className="flex items-center gap-2 py-2 px-3 rounded-lg bg-[#FAFAF7] border border-[#D8E3EA]">
-                                    <span className="text-[10px] font-sans font-bold text-[#4D5B66] tracking-tight uppercase">{s.step}</span>
+                                <div key={s.step} className="flex items-center gap-2 py-2 px-3 rounded-md border border-[#D8E3EA] bg-white">
+                                    <span className="text-[11px] font-bold text-[#0B74DE]">{s.step}</span>
                                     <div>
-                                        <p className="text-[11px] text-[#4D5B66] font-sans font-bold tracking-tight uppercase">{s.label}</p>
-                                        <p className="text-[9px] text-[#94A3B8] font-sans tracking-tight uppercase">{s.desc}</p>
+                                        <p className="text-[12px] text-[#182026] font-medium">{s.label}</p>
+                                        <p className="text-[10px] text-[#66737F]">{s.desc}</p>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Preview Drawer */}
