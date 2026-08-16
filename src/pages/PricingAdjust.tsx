@@ -266,7 +266,7 @@ export default function PricingAdjust() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 + index * 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-        className={cardClasses}
+        className={cn(cardClasses, "mx-auto w-full max-w-md lg:max-w-none")}
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(11,116,222,0.1),_transparent_60%)]" />
 
@@ -280,12 +280,12 @@ export default function PricingAdjust() {
             </div>
             {featured || tier.badgeLabel ? (
               <Badge 
-                variant={tier.badgeLabel?.includes('Coming Soon') ? 'default' : 'outline'} 
+                variant="outline" 
                 className={cn(
-                  "text-[9px] uppercase whitespace-nowrap",
+                  "text-[9px] uppercase whitespace-nowrap rounded-[6px] px-2 py-0.5",
                   tier.badgeLabel?.includes('Coming Soon')
-                    ? "font-medium tracking-tight bg-[#007AFF] text-white border-transparent shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
-                    : "font-semibold tracking-tight border-transparent bg-[#007AFF] text-white shadow-[0_4px_14px_rgba(0,122,255,0.25)] hover:bg-[#007AFF]"
+                    ? "font-medium tracking-tight bg-slate-100 text-slate-500 border-[#D8E3EA]"
+                    : "font-bold tracking-tight border-[#D8E3EA] bg-white text-[#182026] shadow-sm"
                 )}
               >
                 {tier.badgeLabel || 'Most Popular'}
@@ -353,12 +353,12 @@ export default function PricingAdjust() {
               }}
               disabled={processingSelectionKey !== null || tier.badgeLabel?.includes('Coming Soon')}
               className={cn(
-                "h-12 rounded-full font-semibold",
+                "h-12 rounded-[6px] font-bold text-[13px] uppercase tracking-tight transition-all duration-200",
                 tier.badgeLabel?.includes('Coming Soon')
-                  ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed hover:bg-slate-100 opacity-80"
+                  ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed"
                   : featured
-                    ? "bg-[#0B74DE] text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9]"
-                    : "border border-[#CFE0EA] bg-white text-[#25313A] hover:bg-[#F8FAFC]"
+                    ? "bg-white text-[#182026] border border-[#182026] hover:bg-[#FAFAF7] shadow-sm"
+                    : "border border-[#D8E3EA] bg-white text-[#182026] hover:bg-[#FAFAF7]"
               )}
             >
               {tier.planKey && processingSelectionKey === `${tier.planKey}:${billingInterval}`
@@ -418,7 +418,7 @@ export default function PricingAdjust() {
             className="mb-16 flex flex-col items-start justify-between gap-10 md:flex-row md:items-end"
           >
             <div className="max-w-xl">
-              <h2 className="text-5xl font-semibold leading-none tracking-[-0.04em] text-[#182026] md:text-7xl">
+              <h2 className="text-4xl font-semibold leading-tight tracking-[-0.04em] text-[#182026] sm:text-5xl md:text-7xl md:leading-none">
                 Simple pricing,<br />
                 <span className="text-[#8A99A4]">real results.</span>
               </h2>
@@ -465,7 +465,7 @@ export default function PricingAdjust() {
             </div>
           </motion.div>
 
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:gap-6 lg:grid-cols-3 items-stretch">
             {getPricingTiers(billingInterval).map((tier, index) => renderPricingTier(tier, index))}
           </div>
 
