@@ -2261,7 +2261,7 @@ function OperatorProofSection() {
   return (
     <section 
       data-navbar-theme="dark"
-      className="relative border-b border-[var(--margin-border)] bg-[#101827] py-32 text-white md:py-52"
+      className="relative border-b border-white/10 bg-[#101827] py-32 text-white md:py-52"
     >
       <div className={containerClass}>
         <div className="max-w-[920px]">
