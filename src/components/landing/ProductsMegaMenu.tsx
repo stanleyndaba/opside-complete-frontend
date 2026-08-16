@@ -135,24 +135,27 @@ export function ProductServiceItem({
         <div
             className={cn(
                 'landing-menu-item group flex cursor-default items-start gap-4 rounded-[4px] border border-transparent p-3 transition-all duration-200',
-                'hover:bg-[#F8FAFB] hover:border-[#D8E3E8]'
+                isLight
+                    ? 'hover:bg-[#F8FAFB] hover:border-[#D8E3E8]'
+                    : 'hover:bg-white/[0.03] hover:border-white/10'
             )}
         >
             <div className={cn(
                 'flex h-5 w-5 shrink-0 items-center justify-center mt-0.5 transition-colors',
-                'text-[#6B7280] group-hover:text-[#0B74DE]'
+                isLight ? 'text-[#6B7280] group-hover:text-[#0B74DE]' : 'text-white/40 group-hover:text-white'
             )}>
                 <Icon className="h-full w-full" strokeWidth={1.5} />
             </div>
             <div className="min-w-0">
                 <span className={cn(
                     'block text-[14px] font-semibold tracking-tight transition-colors',
-                    'text-[#182026] group-hover:text-[#0B74DE]'
+                    isLight ? 'text-[#182026] group-hover:text-[#0B74DE]' : 'text-white group-hover:text-blue-400'
                 )}>
                     {title}
                 </span>
                 <p className={cn(
-                    'mt-1 text-[12px] font-normal leading-relaxed tracking-tight text-[#66737F]'
+                    'mt-1 text-[12px] font-normal leading-relaxed tracking-tight',
+                    isLight ? 'text-[#66737F]' : 'text-white/50'
                 )}>
                     {description}
                 </p>

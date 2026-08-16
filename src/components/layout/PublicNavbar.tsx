@@ -185,17 +185,13 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             className="relative z-50 mt-2 md:hidden">
                             <div className={cn(
                                 "flex max-h-[calc(100vh-92px)] flex-col gap-1 overflow-y-auto p-3",
-                                isLight
-                                    ? "rounded-[8px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.14)]"
-                                    : "rounded-[8px] border border-white/10 bg-[#080808]/96 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
+                                "rounded-[8px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.22)]"
                             )}>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            mobileMenuItemClass,
-                                            isLight
-                                                ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
-                                                : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
+                                            "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight transition-colors",
+                                            "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
                                         )}>
                                             Workflows
                                         </AccordionTrigger>
@@ -203,14 +199,14 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                             <div className="space-y-6">
                                                 {apiMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-3">
-                                                        <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
+                                                        <h5 className="pl-2 text-[9px] font-bold uppercase tracking-[0.1em] text-[#94A3B8]">
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
                                                             {group.items.map((item) => (
                                                                 <ApiServiceItem
                                                                     key={item.title}
-                                                                    variant={effectiveVariant}
+                                                                    variant="light"
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -224,24 +220,22 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     </AccordionItem>
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            mobileMenuItemClass,
-                                            isLight
-                                                ? "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
-                                                : "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
+                                            "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight transition-colors",
+                                            "justify-between border-none text-[#66737F] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8] data-[state=open]:text-[#182026]"
                                         )}>
                                             For Teams
                                         </AccordionTrigger>
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
                                             {productMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-3">
-                                                        <h5 className={cn("pl-2 text-[9px] font-bold uppercase tracking-tight", isLight ? "text-[#8A99A4]" : "text-white/20")}>
+                                                        <h5 className="pl-2 text-[9px] font-bold uppercase tracking-[0.1em] text-[#94A3B8]">
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
                                                             {group.items.map((item) => (
                                                                 <ProductServiceItem
                                                                     key={item.title}
-                                                                    variant={effectiveVariant}
+                                                                    variant="light"
                                                                     icon={item.icon}
                                                                     title={item.title}
                                                                     description={item.description}
@@ -256,18 +250,13 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className={mobileMenuItemClass}>
+                                    className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]">
                                     Pricing
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className={cn(
-                                        mobileMenuItemClass,
-                                        isLight
-                                            ? "mt-2 justify-center border border-[#DCE8EE] bg-white text-[#25313A]"
-                                            : "mt-2 justify-center border border-white/10 bg-white/[0.025] text-white"
-                                    )}>
+                                    className="mt-2 flex items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8]">
                                     Enterprise Sales
                                 </Link>
                             </div>
