@@ -234,6 +234,19 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
             </div>
           </div>
         </div>
+
+        {/* Display Wordmark Signature */}
+        <div className="pointer-events-none relative -mb-8 mt-12 overflow-hidden select-none opacity-[0.03]">
+          <h2 
+            className="text-center font-merriweather font-black uppercase leading-none tracking-[-0.05em]"
+            style={{ 
+              fontSize: 'clamp(100px, 24vw, 480px)',
+              color: '#FFFFFF'
+            }}
+          >
+            Margin
+          </h2>
+        </div>
       </footer>
     </div>
   );
