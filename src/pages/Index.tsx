@@ -1932,6 +1932,38 @@ function RecoveryWorkspacePricingSection({
 
 function ExistingOperationFitSection() {
   const reduceMotion = useReducedMotion();
+  const [activeIcons, setActiveIcons] = useState(["amazon", "gmail", "gd", "quickbooks"]);
+  
+  const iconPool = [
+    { id: "amazon", src: "/amazon-logo-transparent-circle.png" },
+    { id: "gmail", src: "/gmailicon.png" },
+    { id: "gd", src: "/gd.png" },
+    { id: "quickbooks", src: "/quickbooks.png" },
+    { id: "slack", src: "/slack-icon-2019.png" },
+    { id: "xero", src: "/xero.png" },
+    { id: "dropbox", src: "/Dropbox_Icon.svg.png" },
+    { id: "outlook", src: "/outlookicon.webp" },
+    { id: "onedrive", src: "/onedriive.png" },
+    { id: "adobe", src: "/dobe.png" }
+  ];
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const interval = setInterval(() => {
+      const slotToChange = Math.floor(Math.random() * 4);
+      const currentIds = activeIcons;
+      let nextIcon;
+      do {
+        nextIcon = iconPool[Math.floor(Math.random() * iconPool.length)];
+      } while (currentIds.includes(nextIcon.id));
+      
+      const nextIcons = [...currentIds];
+      nextIcons[slotToChange] = nextIcon.id;
+      setActiveIcons(nextIcons);
+    }, 2400);
+    return () => clearInterval(interval);
+  }, [activeIcons, reduceMotion]);
+
   return (
     <section
       className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-20"
@@ -1950,12 +1982,23 @@ function ExistingOperationFitSection() {
         </motion.div>
 
         <div className="mt-10 grid gap-7 lg:grid-cols-3">
+          {/* Tile 1: Operations Scan */}
           <motion.article
             {...revealProps}
             className="border-t border-[var(--margin-border)] pt-5"
           >
             <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
-              <div className="absolute inset-0 opacity-[0.5] [background-image:linear-gradient(rgba(233,233,236,0.75)_1px,transparent_1px),linear-gradient(90deg,rgba(233,233,236,0.7)_1px,transparent_1px)] [background-size:38px_38px]" />
+              <div className="absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(201,214,222,0.3)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.3)_1px,transparent_1px)] [background-size:24px_24px]" />
+              
+              {/* Surgical Scan Line */}
+              {!reduceMotion && (
+                <motion.div 
+                  className="absolute left-0 right-0 z-10 h-[1px] bg-gradient-to-r from-transparent via-[var(--margin-blue)] to-transparent opacity-40"
+                  animate={{ top: ["0%", "100%"] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                />
+              )}
+
               <div className="relative space-y-4">
                 {[
                   "Amazon synced",
@@ -1964,17 +2007,15 @@ function ExistingOperationFitSection() {
                   "Recovery surfaced",
                 ].map((item, index) => (
                   <div key={item} className="flex items-center gap-3">
-                    <motion.span
-                      className="h-2 w-2 rounded-full bg-[var(--margin-blue)]"
-                      animate={reduceMotion ? undefined : { opacity: [0.3, 1, 0.3] }}
-                      transition={{
-                        duration: 1.8,
-                        delay: index * 0.35,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                    <div className="border-b border-[var(--margin-border)] pb-2 text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)]">
+                    <div className="relative flex h-2 w-2 items-center justify-center">
+                      <motion.span
+                        className="absolute h-full w-full rounded-full bg-[var(--margin-blue)]"
+                        animate={reduceMotion ? undefined : { scale: [1, 1.8, 1], opacity: [0.4, 0.2, 0.4] }}
+                        transition={{ duration: 2, delay: index * 0.4, repeat: Infinity }}
+                      />
+                      <span className="h-1.5 w-1.5 rounded-full bg-[var(--margin-blue)]" />
+                    </div>
+                    <div className="flex-1 border-b border-[var(--margin-border-subtle)] pb-2 text-[13px] font-medium tracking-tight text-[var(--margin-text-secondary)]">
                       {item}
                     </div>
                   </div>
@@ -1991,6 +2032,7 @@ function ExistingOperationFitSection() {
             </p>
           </motion.article>
 
+          {/* Tile 2: Kinetic Integration Hub */}
           <motion.article
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.06 }}
@@ -1999,30 +2041,51 @@ function ExistingOperationFitSection() {
             <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
               <div className="grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4">
                 <div className="grid grid-cols-2 gap-3">
-                  {[
-                    ["/amazon-logo-transparent-circle.png", "Amazon"],
-                    ["/gmailicon.png", "Gmail"],
-                    ["/gd.png", "Drive"],
-                    ["/quickbooks.png", "QuickBooks"],
-                  ].map(([src, label]) => (
-                    <div
-                      key={label}
-                      className="flex h-14 items-center justify-center rounded-[8px] border border-[var(--margin-border)] bg-white"
-                    >
-                      <img src={src} alt="" className="max-h-7 max-w-8 object-contain" />
-                    </div>
-                  ))}
+                  {activeIcons.map((iconId, index) => {
+                    const icon = iconPool.find(i => i.id === iconId);
+                    return (
+                      <div
+                        key={index}
+                        className="relative flex h-14 items-center justify-center overflow-hidden rounded-[8px] border border-[var(--margin-border)] bg-white"
+                      >
+                        <AnimatePresence mode="wait">
+                          <motion.img 
+                            key={iconId}
+                            src={icon?.src} 
+                            alt="" 
+                            initial={{ rotateY: 90, opacity: 0 }}
+                            animate={{ rotateY: 0, opacity: 1 }}
+                            exit={{ rotateY: -90, opacity: 0 }}
+                            transition={{ duration: 0.4, ease: "easeInOut" }}
+                            className="max-h-7 max-w-8 object-contain" 
+                          />
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="font-mono text-[18px] text-[var(--margin-text-muted)]">→</div>
-                <div className="rounded-[8px] border border-[var(--margin-border)] bg-[var(--margin-section-alt)] p-4">
-                  <div className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
-                    Connected recovery
+                <div className="font-mono text-[18px] text-[var(--margin-text-muted)] opacity-40">→</div>
+                <div className="rounded-[8px] border border-[var(--margin-border-subtle)] bg-[#F8FAFB] p-4">
+                  <div className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-[var(--margin-text-muted)]">
+                    Evidence Loop
                   </div>
-                  <div className="mt-3 space-y-2 text-[12px] font-medium text-[var(--margin-text-primary)]">
-                    <div>Shipment record</div>
-                    <div>Invoice</div>
-                    <div>Case timeline</div>
-                    <div>Payout ledger</div>
+                  <div className="mt-3 space-y-2 text-[12px] font-medium tracking-tight text-[var(--margin-text-primary)]">
+                    <div className="flex items-center gap-2">
+                      <div className="h-1 w-1 rounded-full bg-[var(--margin-blue)]" />
+                      Shipment
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1 w-1 rounded-full bg-[var(--margin-blue)]" />
+                      Invoice
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1 w-1 rounded-full bg-[var(--margin-blue)]" />
+                      Timeline
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1 w-1 rounded-full bg-[var(--margin-blue)]" />
+                      Ledger
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2037,6 +2100,7 @@ function ExistingOperationFitSection() {
             </p>
           </motion.article>
 
+          {/* Tile 3: The Evidence Ledger */}
           <motion.article
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.12 }}
@@ -2045,24 +2109,30 @@ function ExistingOperationFitSection() {
             <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
               <div className="space-y-3">
                 {[
-                  ["Case prepared", "Complete"],
-                  ["Evidence ready", "Ready"],
-                  ["Seller review required", "Approval"],
-                  ["Approve filing", "Decision"],
-                ].map(([item, label], index) => (
+                  ["Case prepared", "Complete", "success"],
+                  ["Evidence ready", "Ready", "success"],
+                  ["Seller review required", "Approval", "warning"],
+                  ["Approve filing", "Decision", "warning"],
+                ].map(([item, label, status], index) => (
                   <div
                     key={item}
-                    className="flex items-center justify-between border-b border-[var(--margin-border)] pb-3"
+                    className="flex items-center justify-between border-b border-[var(--margin-border-subtle)] pb-3 last:border-0"
                   >
                     <div className="flex items-center gap-3">
-                      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${index < 2 ? "bg-[var(--margin-success-soft)] text-[var(--margin-success)]" : "bg-[var(--margin-warning-soft)] text-[var(--margin-warning)]"}`}>
-                        <Check className="h-3.5 w-3.5" strokeWidth={2.6} />
-                      </span>
-                      <span className="text-[13px] font-medium tracking-[-0.02em] text-[var(--margin-text-secondary)]">
+                      <div className={cn(
+                        "flex h-6 w-6 items-center justify-center rounded-full transition-colors",
+                        status === "success" ? "bg-emerald-500/10 text-emerald-600" : "bg-orange-500/10 text-orange-600"
+                      )}>
+                        <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                      </div>
+                      <span className="text-[13px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
                         {item}
                       </span>
                     </div>
-                    <span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
+                    <span className={cn(
+                      "font-mono text-[9px] font-bold uppercase tracking-widest",
+                      status === "success" ? "text-emerald-600/70" : "text-orange-600/70"
+                    )}>
                       {label}
                     </span>
                   </div>
