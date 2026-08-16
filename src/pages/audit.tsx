@@ -1198,7 +1198,7 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex h-full flex-1 flex-col overflow-y-auto overflow-x-hidden scroll-smooth">
         {/* Persistent audit context */}
-        <div className="sticky top-0 z-10 flex min-h-[57px] shrink-0 items-center border-b border-[#D8E3EA] bg-white px-4 py-2 sm:px-8 md:h-[57px] md:py-0">
+        <div className="sticky top-0 z-10 flex min-h-[57px] shrink-0 items-center border-b border-[#D8E3EA] bg-[#FAFAF7] px-4 py-2 sm:px-8 md:h-[57px] md:py-0">
           <div className="flex w-full items-center justify-between gap-3 lg:flex-row lg:justify-between">
             <div className="flex items-center gap-3 overflow-hidden">
               {!sidebarOpen && (
