@@ -49,7 +49,10 @@ export const RecoveryTimelineSection: React.FC = () => {
   };
 
   return (
-    <section className="relative overflow-hidden border-b border-white/10 bg-[#101827] py-32 text-white md:py-56">
+    <section 
+      data-navbar-theme="dark"
+      className="relative overflow-hidden border-b border-white/10 bg-[#101827] py-32 text-white md:py-56"
+    >
       <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
         <div className="grid gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
           <motion.div {...revealProps} className="max-w-[560px]">

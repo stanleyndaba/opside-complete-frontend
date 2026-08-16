@@ -2259,7 +2259,10 @@ function KineticHeroSection({
 
 function OperatorProofSection() {
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[#101827] py-32 text-white md:py-52">
+    <section 
+      data-navbar-theme="dark"
+      className="relative border-b border-[var(--margin-border)] bg-[#101827] py-32 text-white md:py-52"
+    >
       <div className={containerClass}>
         <div className="max-w-[920px]">
           <div className="h-0.5 w-12 bg-[var(--margin-blue)]" />
