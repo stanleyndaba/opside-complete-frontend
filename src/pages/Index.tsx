@@ -2287,7 +2287,7 @@ function KineticHeroSection({
             <div className="flex flex-col items-center gap-2 sm:hidden">
               <span className="text-[11px] font-medium text-slate-500">Prefer a larger screen?</span>
               <PwaInstallButton
-                className="h-auto w-auto bg-transparent p-0 text-[13px] font-semibold text-blue-400/90 transition-colors hover:text-blue-400"
+                className="h-auto w-auto bg-transparent p-0 text-[13px] font-semibold text-white/70 transition-colors hover:text-white"
                 label="Install Margin Desktop ↓"
               />
             </div>
