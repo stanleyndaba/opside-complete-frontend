@@ -52,7 +52,7 @@ const socialLinks = [
 
 const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
   const className =
-    'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight text-gray-400 transition-colors duration-200 hover:text-blue-400 focus-visible:text-blue-400 focus-visible:outline-none';
+    'group inline-flex w-fit items-center text-sm font-normal leading-6 tracking-tight text-[#94A3B8] transition-colors duration-200 hover:text-white focus-visible:text-white focus-visible:outline-none';
 
   if (item.external) {
     return (
@@ -85,7 +85,7 @@ const FooterLinkItem: React.FC<{ item: FooterLink }> = ({ item }) => {
 
 const FooterColumn: React.FC<{ title: string; links: FooterLink[] }> = ({ title, links }) => (
   <div>
-    <h3 className="text-lg font-medium tracking-tight text-white">{title}</h3>
+    <h3 className="text-lg font-medium tracking-tight text-white !important">{title}</h3>
     <nav className="mt-5 flex flex-col gap-3" aria-label={title}>
       {links.map((item) => (
         <FooterLinkItem key={item.label} item={item} />
@@ -153,12 +153,12 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
             <div className="max-w-[360px]">
               <Link to="/" className="inline-flex items-center gap-3 transition-opacity hover:opacity-85">
                 <img src="/logoimagetwo.png" alt="Margin" width="32" height="32" className="h-8 w-auto object-contain invert brightness-0" />
-                <span className="brand-wordmark font-merriweather text-2xl tracking-tight text-white">Margin</span>
+                <span className="brand-wordmark font-merriweather text-2xl tracking-tight text-white !important">Margin</span>
               </Link>
-              <p className="mt-5 text-sm leading-6 tracking-tight text-gray-400">
+              <p className="mt-5 text-sm leading-6 tracking-tight text-[#94A3B8]">
                 Amazon FBA revenue recovery and reconciliation for established brands, agencies and operations teams.
               </p>
-              <p className="mt-4 text-sm leading-6 tracking-tight text-gray-500">
+              <p className="mt-4 text-sm leading-6 tracking-tight text-[#64748B]">
                 Verify what Amazon owes, connect the evidence, control the response and reconcile the payout.
               </p>
             </div>
@@ -174,9 +174,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-700 pt-8 md:flex-row">
-            <div className="flex flex-col gap-2 text-sm tracking-tight text-gray-500 md:flex-row md:items-center md:gap-5">
+            <div className="flex flex-col gap-2 text-sm tracking-tight text-[#64748B] md:flex-row md:items-center md:gap-5">
               <span>© {new Date().getFullYear()} Margin. All rights reserved.</span>
-              <a href="mailto:support@margin-finance.com" className="w-fit transition-colors duration-200 hover:text-blue-400 focus-visible:text-blue-400 focus-visible:outline-none">
+              <a href="mailto:support@margin-finance.com" className="w-fit transition-colors duration-200 hover:text-white focus-visible:text-white focus-visible:outline-none">
                 support@margin-finance.com
               </a>
               {selectedLanguageLabel && (
@@ -195,7 +195,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={social.label}
-                  className="inline-flex items-center justify-center text-gray-400 transition-colors duration-200 hover:text-blue-400 focus-visible:text-blue-400 focus-visible:outline-none"
+                  className="inline-flex items-center justify-center text-[#94A3B8] transition-colors duration-200 hover:text-white focus-visible:text-white focus-visible:outline-none"
                 >
                   {social.icon}
                 </a>
