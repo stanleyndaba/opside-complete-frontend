@@ -26,8 +26,8 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "theme_color": "#09121C",
-  "background_color": "#09121C",
+  "theme_color": "#FAFAF7",
+  "background_color": "#FAFAF7",
   "display_override": ["window-controls-overlay"],
   "orientation": "any"
 }

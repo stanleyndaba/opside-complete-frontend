@@ -1,4 +1,4 @@
-const CACHE_NAME = 'margin-v1';
+const CACHE_NAME = 'margin-v2';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
