@@ -24,7 +24,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
           <motion.div {...revealProps} className="mb-6 flex items-center gap-3">
             <div className="h-[1px] w-8 bg-[var(--margin-border-strong)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-secondary)]">
-              A recovery issue you can actually see
+              See what happened to your inventory and money
             </span>
           </motion.div>
 
@@ -34,7 +34,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             className="font-lora text-[44px] leading-[0.96] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[66px] lg:text-[86px]"
             style={{ fontWeight: 400 }}
           >
-            Find the gap. See the proof. Decide what happens next.
+            See what happened to your inventory and money.
           </motion.h2>
 
           <motion.p
@@ -42,7 +42,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             transition={{ ...revealProps.transition, delay: 0.2 }}
             className="mt-8 max-w-[740px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9"
           >
-            Amazon can receive the wrong quantity, lose inventory, reverse a reimbursement, or leave a case unresolved. Margin connects the records so you can see what happened—not just a number someone says might be recoverable.
+            Amazon’s records do not always agree. Margin compares the records and shows you what changed, what is missing, and what still needs a decision.
           </motion.p>
         </div>
 

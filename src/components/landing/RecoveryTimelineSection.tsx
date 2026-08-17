@@ -59,18 +59,21 @@ export const RecoveryTimelineSection: React.FC = () => {
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-white/20" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-300">
-                You approve. Margin moves it forward.
+                Keep control without keeping all the work
               </span>
             </div>
             <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-white md:text-[76px]" style={{ fontWeight: 400 }}>
-              You stay in control. The recovery work stops living in your head.
+              Keep control without keeping all the work.
             </h2>
             <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">
-              Margin prepares the recovery record, connects the supporting evidence, tracks what Amazon says, and checks what Amazon pays. You review the important decisions and approve the action.
+              Margin prepares the recovery record, connects the supporting evidence, tracks Amazon’s response, and checks what Amazon pays. You review the important decisions and approve the action.
             </p>
             <div className="mt-10 border-l border-blue-400/45 pl-5">
               <p className="text-[16px] leading-7 text-slate-400">
-                You do not have to chase every document, remember every deadline, or wonder whether an approved reimbursement actually reached your account.
+                You should not have to chase every document, remember every deadline, or wonder whether an approved reimbursement reached your account.
+              </p>
+              <p className="mt-4 font-semibold text-[15px] text-blue-200">
+                You approve the action. Margin keeps the work moving.
               </p>
             </div>
           </motion.div>

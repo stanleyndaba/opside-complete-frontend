@@ -173,7 +173,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               Not ready to continue? That is fine.
             </p>
             <p className="mt-2 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
-              Your Recovery Audit is free. Review what Margin found, then decide whether you want the recovery work managed.
+              The Recovery Audit is free. Review what was found, then decide whether you want the work managed.
             </p>
           </motion.div>
         </div>
@@ -191,10 +191,10 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 </span>
               </div>
               <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
-                The hard part is keeping the whole record together.
+                Finding the issue does not get the money back.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-                Amazon may ask for a supplier invoice, shipment details, proof of delivery, inventory records, or the history of what was already submitted. Miss one part, lose the thread, or miss the timing, and a recoverable issue can become another unresolved case.
+                Amazon may ask for an invoice, shipment details, proof of delivery, inventory records, or the history of what was already submitted. Miss one part, lose the thread, or miss the timing, and a recoverable issue can become another unresolved case.
               </p>
             </motion.div>
 
@@ -256,7 +256,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 </span>
               </div>
               <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
-                See exactly what was checked—and why it was flagged.
+                See what was checked, why the issue was flagged, what proof is ready, and how the amount was calculated.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
                 You should not have to take a recovery estimate on faith. Every finding is tied to the records Margin used to identify and assess it.
@@ -304,10 +304,10 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   Your visibility
                 </p>
                 <h3 className="mt-5 text-[22px] font-lora font-medium tracking-tight text-[var(--margin-text-primary)]">
-                  Get help with the work without handing over control.
+                  Get help without handing over your account.
                 </h3>
                 <p className="mt-4 text-[14px] leading-6 text-[var(--margin-text-secondary)]">
-                  Margin can examine your Amazon records, organize the recovery work, and keep the status visible. You decide whether a recovery should be submitted and what happens next.
+                  Margin can examine the records needed for the Audit, organize the recovery work, and keep the status visible. You decide whether anything is submitted and what happens next.
                 </p>
                 <div className="mt-8 space-y-5">
                   {controlItems.map((item) => (

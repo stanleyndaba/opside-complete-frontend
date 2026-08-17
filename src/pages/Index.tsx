@@ -147,17 +147,20 @@ function SectionTwo() {
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                From discrepancy to decision
+                Finding the problem is only the beginning
               </span>
             </div>
             <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
-              Turn a finding into work that can actually move.
+              Finding the problem is only the beginning.
             </h2>
             <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-              Finding a problem is only the first step. The real work is gathering the right records, keeping the case together, meeting the deadline, responding to Amazon, and checking what Amazon ultimately paid.
+              The work usually starts after the finding: gather the right records, keep the case together, meet the deadline, respond to Amazon, and check what Amazon actually paid.
             </p>
             <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-              Margin keeps that work attached to the finding so you do not have to rebuild the same case across spreadsheets, files, Seller Central, and someone’s memory.
+              Margin keeps the evidence and next steps attached to the same recovery so you do not rebuild the case across Seller Central, spreadsheets, files, and someone’s memory.
+            </p>
+            <p className="mt-6 font-semibold text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-primary)] md:text-[19px]">
+              You see the proof and the next decision. Margin handles the work behind it.
             </p>
             
             <div className="mt-12 flex flex-col items-start gap-4">
@@ -245,7 +248,7 @@ function ExistingOperationFitSection() {
             Operations sees the case. Finance sees the money.
           </h2>
           <p className="mx-auto mt-8 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
-            The person managing Amazon should not have to explain the case from memory. Finance should not have to guess whether Amazon paid what was expected. Margin keeps the finding, evidence, deadline, decision, Amazon response, expected value, and payout attached to the same recovery record.
+            Operations can see what is missing and what happens next. Finance can compare what was expected, what Amazon approved, and what Amazon actually paid. No more rebuilding the story from Seller Central, spreadsheets, files, and one person’s memory.
           </p>
         </motion.div>
 
@@ -356,10 +359,10 @@ function ExistingOperationFitSection() {
               </div>
             </div>
             <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
-              The financial outcome is compared with the expected result.
+              Approved does not always mean paid.
             </h3>
             <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              Compare what was expected, what Amazon approved, and what Amazon actually paid. Identify underpayments, reversals, and unreconciled amounts from the same record operations uses to manage the case.
+              Compare the amount you expected, the amount Amazon approved, and the amount that actually reached your account. See underpayments, reversals, and unresolved amounts before they disappear into a settlement report.
             </p>
           </motion.article>
 
@@ -403,10 +406,10 @@ function ExistingOperationFitSection() {
               </div>
             </div>
             <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
-              Know what is ready, what needs you, and what happens next.
+              Know what needs you—and what no longer does.
             </h3>
             <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              Margin prepares and monitors the recovery work in the background. Sensitive decisions stay attached to you. You should never have to ask what Margin found or if the money arrived.
+              Margin prepares and monitors the recovery work in the background. You see what was found, what needs your approval, and whether the money arrived.
             </p>
           </motion.article>
         </div>
@@ -496,7 +499,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Amazon lost something.
+              Find what Amazon missed.
             </motion.span>{" "}
             <motion.span
               className="block text-slate-400 font-lora"
@@ -508,7 +511,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Margin controls what happens next.
+              Get it handled.
             </motion.span>{" "}
           </div>{" "}
           <motion.p
@@ -522,8 +525,7 @@ function KineticHeroSection({
             className="mt-6 max-w-[720px] text-[16px] leading-[1.75] text-slate-300 sm:mt-8 sm:text-[18px] md:text-[20px]"
           >
             {" "}
-            Margin audits your Amazon recovery operation, proves what is unresolved,
-            and takes over the work when there is a justified case.{" "}
+            Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -538,18 +540,18 @@ function KineticHeroSection({
             {" "}
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Connect Amazon"
+              aria-label="Run a Free Recovery Audit"
               className="landing-pressable group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              Connect Amazon <ArrowRight className="ml-2 h-4 w-4" />
+              Run a Free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
 
             <Link
               to="/data-upload"
               className="landing-pressable flex h-[52px] w-full items-center justify-center rounded-[8px] border border-white/14 bg-transparent px-8 text-sm font-semibold text-white/78 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto"
             >
-              Upload Amazon Reports
+              Upload Amazon Reports Instead
             </Link>
           </motion.div>{" "}
           <motion.div
@@ -559,13 +561,11 @@ function KineticHeroSection({
             className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12px] font-medium text-slate-400 sm:mt-8"
           >
             {" "}
-            <span className="hidden sm:inline">Read-only audit</span>
-            <span className="hidden sm:inline text-slate-600">·</span>
-            <span>No payment required</span>
+            <span>Free to run</span>
             <span className="text-slate-600">·</span>
-            <span>Seller approval before filing</span>
+            <span>Read-only access</span>
             <span className="text-slate-600">·</span>
-            <span>0% recovery commission</span>
+            <span>You approve every submission</span>
           </motion.div>{" "}
           {isFull ? (
             <div className="mt-5 max-w-[430px] rounded-[8px] bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
