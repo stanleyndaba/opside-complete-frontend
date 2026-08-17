@@ -480,23 +480,23 @@
 
   /* All text elements use Inter - comprehensive coverage */
   /* Exception for .font-montserrat, .font-code, .font-merriweather, .font-playfair which are used for specific branding */
-  *:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  *:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
   *::before,
   *::after,
-  h1:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
-  h2:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
-  h3:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
-  h4:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
-  h5:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
-  h6:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
-  p:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  h1:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
+  h2:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
+  h3:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
+  h4:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
+  h5:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
+  h6:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
+  p:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
   label,
   input,
   textarea,
   select,
   button,
-  span:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
-  div:not(.font-montserrat):not(.font-merriweather):not(.font-playfair),
+  span:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
+  div:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
   a,
   li,
   td,
@@ -537,7 +537,7 @@
   abbr,
   acronym,
   address,
-  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather):not(.font-playfair):not(.font-lora) {
+  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather):not(.font-playfair):not(.font-lora):not(.font-lora) {
     font-family: 'Inter', system-ui, sans-serif;
   }
 

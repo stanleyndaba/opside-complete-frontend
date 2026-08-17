@@ -3793,7 +3793,7 @@ export default function Index() {
                 {" "}
                 <motion.div {...revealProps}>
                   {" "}
-                  <h2 className="font-serif-headline mt-2 max-w-[760px] text-[36px] font-semibold leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]">
+                                    <h2 className="font-lora mt-2 max-w-[760px] text-[36px] leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
                     <span className="text-[var(--margin-text-primary)]">See what Amazon may have missed.</span>
                   </h2>{" "}
                   <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px]">
