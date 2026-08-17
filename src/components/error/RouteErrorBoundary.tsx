@@ -54,21 +54,18 @@ class RouteErrorBoundaryInner extends Component<BoundaryProps, BoundaryState> {
 
     if (this.state.isRecoveringChunk) {
       return (
-        <div className="relative min-h-[calc(100vh-96px)] bg-[#FAFAF7] px-6 py-16 text-[#182026]">
-          <div className="mx-auto max-w-xl rounded-[28px] border border-[#CFE0EA] bg-white p-6 shadow-[0_24px_80px_rgba(37,49,58,0.08)]">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#BFD8EA] border-t-[#0B74DE]" />
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
-                  Updating Margin
-                </p>
-                <p className="mt-1 text-sm text-[#66737F]">
-                  Loading the latest platform version.
-                </p>
-              </div>
+        <main className="flex min-h-[calc(100vh-96px)] items-center justify-center bg-[#FAFAF7] px-6 text-[#182026]" aria-label="Updating Margin">
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex items-center gap-3 font-merriweather text-2xl font-bold tracking-tight">
+              <img src="/logoimagetwo.png" alt="Margin" className="h-7 w-auto object-contain" />
+              <span>Margin</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 animate-spin rounded-full border border-[#D8E3EA] border-t-[#0B74DE]" />
+              <span className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Updating platform</span>
             </div>
           </div>
-        </div>
+        </main>
       );
     }
 
