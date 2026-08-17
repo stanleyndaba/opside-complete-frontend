@@ -1243,19 +1243,19 @@ export default function Audit() {
         {/* Content area */}
         <section className="flex-1 px-4 py-6 sm:px-8 sm:py-8">
           <div className="mx-auto w-full max-w-5xl">
-            <header className="mb-6 pt-2">
-              <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
-                <div className="max-w-3xl">
-                  <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
-                  <h1 className="break-words font-playfair text-[30px] leading-[1.15] tracking-tight text-[#182026] sm:text-[40px] sm:leading-[1.15]" style={{ fontFamily: "'Playfair Display', serif !important", fontWeight: 500 }}>
+            <header className="mb-8 pt-4 text-center sm:mb-10 sm:pt-8">
+              <div className="flex flex-col items-center gap-6">
+                <div className="w-full max-w-4xl">
+                  <p className="mb-3 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
+                  <h1 className="mx-auto max-w-4xl break-words font-playfair text-[36px] leading-[1.08] tracking-tight text-[#182026] sm:text-[56px] sm:leading-[1.08]" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
                     Does what Amazon says match what happened?
                   </h1>
-                  <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#4D5B66]">
+                  <p className="mx-auto mt-5 max-w-3xl text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-7">
                     Margin examines your Amazon records for reimbursement gaps, unresolved exceptions, reversals, evidence issues and financial discrepancies.
                   </p>
                   {needsAdditionalAmazonData && (
-                    <div className="mt-4 max-w-2xl rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-4">
-                      <div className="flex items-start gap-3">
+                    <div className="mx-auto mt-4 max-w-2xl rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-4">
+                      <div className="flex items-start gap-3 text-left">
                         <FilePlus2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0B74DE]" />
                         <div className="min-w-0 flex-1">
                           <p className="text-[13px] font-medium text-[#182026]">Additional Amazon data required</p>
@@ -1275,7 +1275,7 @@ export default function Audit() {
                     </div>
                   )}
                 </div>
-                <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                <div className="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:justify-center sm:gap-3">
                   <button
                     type="button"
                     onClick={() => {
@@ -1312,10 +1312,10 @@ export default function Audit() {
             </header>
 
             {step !== 'completed' && (
-              <section className="mb-6 mt-6 sm:mb-12 sm:mt-12">
-                <div className="mb-4 sm:mb-8">
+              <section className="mb-6 mt-10 sm:mb-12 sm:mt-14">
+                <div className="mb-5 text-center sm:mb-8">
                   <h2 className="text-[12px] font-medium text-[#0B74DE] sm:text-[13px]">Operational surface</h2>
-                  <p className="mt-1 text-[15px] font-medium leading-6 tracking-[-0.02em] text-[#182026] sm:text-[18px]">
+                  <p className="mt-1 text-[17px] font-medium leading-6 tracking-[-0.02em] text-[#182026] sm:text-[20px]">
                     Record reconciliation behind your selling partner account
                   </p>
                 </div>
