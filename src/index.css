@@ -478,67 +478,14 @@
     background-color: #FAFAF7 !important;
   }
 
-  /* All text elements use Inter - comprehensive coverage */
-  /* Exception for .font-montserrat, .font-code, .font-merriweather, .font-playfair which are used for specific branding */
-  *:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  *::before,
-  *::after,
-  h1:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  h2:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  h3:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  h4:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  h5:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  h6:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  p:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  label,
-  input,
-  textarea,
-  select,
-  button,
-  span:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  div:not(.font-montserrat):not(.font-merriweather):not(.font-playfair):not(.font-lora),
-  a,
-  li,
-  td,
-  th,
-  code,
-  pre,
-  small,
-  strong,
-  em,
-  b,
-  i,
-  u,
-  sub,
-  sup,
-  table,
-  thead,
-  tbody,
-  tfoot,
-  tr,
-  nav,
-  header,
-  footer,
-  aside,
-  section,
-  article,
-  main,
-  ul,
-  ol,
-  dl,
-  dt,
-  dd,
-  form,
-  fieldset,
-  legend,
-  blockquote,
-  cite,
-  q,
-  abbr,
-  acronym,
-  address,
-  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather):not(.font-playfair):not(.font-lora):not(.font-lora) {
+  /* Global Default: Inter */
+  html, body, #root, main {
     font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Comprehensive Inter Reset - only applies if NO brand font class is present */
+  *:not(.font-lora):not(.font-merriweather):not(.font-playfair):not(.font-brand):not(.brand-wordmark):not(.font-logo):not(.font-code) {
+    font-family: inherit;
   }
 
   /* Inter for branding - explicitly override */
@@ -1329,4 +1276,23 @@ html.lenis body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+/* ============================================================
+   FINAL AUTHORITY OVERRIDES — Highest Specificity
+   ============================================================ */
+
+.font-lora, 
+.font-lora *,
+[class*="font-lora"],
+[class*="font-lora"] * {
+  font-family: 'Lora', Georgia, serif !important;
+  font-weight: 400 !important;
+}
+
+/* Ensure Hero specifically respects Lora */
+#margin-hero-title,
+#margin-hero-title * {
+  font-family: 'Lora', Georgia, serif !important;
+  font-weight: 400 !important;
 }
