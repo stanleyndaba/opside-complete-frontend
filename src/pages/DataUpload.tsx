@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import {
     Upload, FileSpreadsheet, X,
-    Calendar, ArrowRight, FileText, Ban
+    Calendar, ArrowRight, FileText, Ban, ArrowLeft
 } from 'lucide-react';
 
 interface UploadFile {
@@ -74,17 +74,28 @@ export default function DataUpload() {
     return (
         <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] overflow-x-hidden">
             {/* Sticky Header */}
-            <header className="sticky top-0 z-50 border-b border-[#D8E3EA] bg-white px-6 py-2.5">
-                <div className="mx-auto flex max-w-4xl items-center justify-between">
-                    <Link to="/audit" className="flex items-center gap-2 text-[#4D5B66] hover:text-[#182026] transition-colors">
-                        <X className="h-4 w-4" />
-                        <span className="text-[12px] font-medium">Back to Margin</span>
+            <header className="sticky top-0 z-50 border-b border-[#D8E3EA] bg-white px-6 py-2">
+                <div className="mx-auto flex max-w-5xl items-center justify-between">
+                    {/* Back Button */}
+                    <Link to="/audit" className="group flex items-center gap-2.5 text-[#182026] transition-colors">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F1F5F9] group-hover:bg-[#E2E8F0] transition-colors">
+                            <ArrowLeft className="h-3.5 w-3.5" />
+                        </div>
+                        <span className="text-[13px] font-medium">Back</span>
                     </Link>
+
+                    {/* Brand Logo */}
+                    <div className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
+                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
+                        <span className="font-merriweather text-[16px] font-bold tracking-tight text-[#182026]">Margin</span>
+                    </div>
+
+                    {/* Connect Amazon */}
                     <Link 
                         to="/audit" 
-                        className="text-[12px] font-medium text-[#0B74DE] hover:underline flex items-center gap-1"
+                        className="text-[12px] font-medium text-[#0B74DE] hover:underline"
                     >
-                        Connect Amazon instead <ArrowRight className="h-3 w-3" />
+                        Connect Amazon
                     </Link>
                 </div>
             </header>
