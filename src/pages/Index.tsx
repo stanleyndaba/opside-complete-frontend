@@ -2227,7 +2227,7 @@ function KineticHeroSection({
           >
             {" "}
             <motion.span
-              className="block text-white"
+              className="block text-white font-lora"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -2239,7 +2239,7 @@ function KineticHeroSection({
               Amazon lost something.
             </motion.span>{" "}
             <motion.span
-              className="block text-slate-400"
+              className="block text-slate-400 font-lora"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -2947,9 +2947,9 @@ export default function Index() {
                 className="font-lora text-[28px] leading-[1.22] tracking-[-0.02em] text-[#182026] sm:text-[38px] md:text-[48px] md:leading-[1.16]"
                 style={{ fontWeight: 400 }}
               >
-                Margin is the standard for FBA recovery infrastructure.{" "}
-                <span className="text-[#66737F]">
-                  Eliminate manual reconciliation on a secure platform built for high-volume operations.
+                Margin is vertical financial-operations software for Amazon marketplace businesses.{" "}
+                <span className="text-[#66737F] font-lora">
+                  It reconciles Amazon’s operational and financial data, identifies and proves discrepancies, and takes ownership of recovery and recurring control.
                 </span>
               </motion.p>
             </div>
@@ -3794,7 +3794,7 @@ export default function Index() {
                 <motion.div {...revealProps}>
                   {" "}
                                     <h2 className="font-lora mt-2 max-w-[760px] text-[36px] leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-                    <span className="text-[var(--margin-text-primary)]">See what Amazon may have missed.</span>
+                    <span className="text-[var(--margin-text-primary)] font-lora">See what Amazon may have missed.</span>
                   </h2>{" "}
                   <p className="mt-5 max-w-[740px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[17px]">
                     {" "}
