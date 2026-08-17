@@ -117,10 +117,12 @@ export default function DataUpload() {
                             onChange={(e) => e.target.files && handleFiles(e.target.files)}
                             className="absolute inset-0 z-10 cursor-pointer opacity-0"
                         />
-                        <div className="flex flex-col items-center justify-center py-10 text-center">
+                        <div className="flex flex-col items-center justify-center py-10 text-center px-6">
                             <Upload className="h-5 w-5 text-[#4D5B66] mb-3" />
                             <h3 className="mb-1 text-[15px] font-medium text-[#182026]">Drop Amazon reports here</h3>
-                            <p className="text-[12px] text-[#4D5B66]">or browse to select files (CSV / TXT only)</p>
+                            <p className="text-[12px] text-[#4D5B66] max-w-sm">
+                                or browse to select files (CSV/TXT · up to 10 files · 50MB each)
+                            </p>
                         </div>
                     </div>
 
@@ -214,14 +216,10 @@ export default function DataUpload() {
                     </div>
 
                     {/* Rules */}
-                    <div className="grid sm:grid-cols-2 gap-6 border-t border-[#F1F5F9] pt-5">
-                        <div className="text-[11px] text-[#4D5B66]">
-                            <span className="block mb-1 font-bold text-[#182026] uppercase text-[9px]">What qualifies</span>
-                            CSV and TXT operational reports. Up to 10 files (50 MB each).
-                        </div>
-                        <div className="text-[11px] text-[#4D5B66]">
+                    <div className="border-t border-[#F1F5F9] pt-5 text-center">
+                        <div className="text-[11px] text-[#4D5B66] max-w-md mx-auto">
                             <span className="block mb-1 font-bold text-[#182026] uppercase text-[9px]">Do not upload</span>
-                            PDFs, Excel, Screenshots, or Invoices. Those are evidence documents.
+                            PDFs, Excel, Screenshots, or Invoices. Those are evidence documents, not operational reports.
                         </div>
                     </div>
                 </div>
