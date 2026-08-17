@@ -92,7 +92,7 @@ export default function DataUpload() {
             <main className="mx-auto max-w-2xl px-6 py-8 sm:py-10">
                 {/* Compact Intro */}
                 <div className="mb-8 text-center">
-                    <h1 className="font-lora text-2xl sm:text-3xl font-medium tracking-tight mb-2">Upload Amazon Reports</h1>
+                    <h1 className="font-lora text-2xl sm:text-3xl font-medium tracking-tight mb-2" style={{ fontWeight: 400 }}>Upload Amazon Reports</h1>
                     <p className="text-[14px] text-[#4D5B66]">
                         Run your Recovery Audit using reports exported from Amazon Seller Central.
                     </p>
@@ -169,51 +169,58 @@ export default function DataUpload() {
                         <p className="mt-2.5 text-[11px] text-[#8C9BA6]">
                             Margin will begin analysis immediately after upload.
                         </p>
+                        
+                        <div className="mt-8 border-t border-[#F1F5F9] pt-6 text-center">
+                            <h3 className="mb-1.5 text-[10px] font-bold text-[#182026] uppercase tracking-tight">A Simple Rule</h3>
+                            <p className="max-w-md mx-auto text-[12px] leading-relaxed text-[#4D5B66]">
+                                Export the Amazon reports for the same seller and the same date range where possible.
+                            </p>
+                        </div>
                     </div>
                 </section>
 
                 {/* SUPPORTING: Decision Info */}
-                <div className="grid gap-8 border-t border-[#D8E3EA] pt-8 mt-10">
+                <div className="grid gap-6 border-t border-[#D8E3EA] pt-6 mt-8">
                     {/* Period & Scope */}
-                    <div className="grid sm:grid-cols-2 gap-8">
+                    <div className="grid sm:grid-cols-2 gap-6">
                         <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <Calendar className="h-3.5 w-3.5 text-[#0B74DE]" />
-                                <span className="text-[11px] font-bold uppercase text-[#182026]">Audit Period</span>
+                            <div className="flex items-center gap-2 mb-1.5">
+                                <Calendar className="h-3 w-3 text-[#0B74DE]" />
+                                <span className="text-[10px] font-bold uppercase text-[#182026]">Audit Period</span>
                             </div>
                             <select 
                                 value={dateRange}
                                 onChange={(e) => setDateRange(e.target.value)}
-                                className="h-8 w-full rounded-md border border-[#D8E3EA] bg-white px-2 text-[12px] font-medium focus:outline-none cursor-pointer"
+                                className="h-7 w-full rounded-md border border-[#D8E3EA] bg-white px-2 text-[11px] font-medium focus:outline-none cursor-pointer"
                             >
                                 <option>Last 90 days</option>
                                 <option>Last 180 days</option>
                                 <option>Year to date</option>
                                 <option>Custom range</option>
                             </select>
-                            <p className="mt-2 text-[11px] text-[#4D5B66]">Use reports covering the same period where possible.</p>
+                            <p className="mt-1.5 text-[10px] text-[#8C9BA6]">Use reports covering the same period where possible.</p>
                         </div>
 
                         <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
-                                <span className="text-[11px] font-bold uppercase text-[#182026]">What to Upload</span>
+                            <div className="flex items-center gap-2 mb-1.5">
+                                <FileText className="h-3 w-3 text-[#0B74DE]" />
+                                <span className="text-[10px] font-bold uppercase text-[#182026]">What to Upload</span>
                             </div>
-                            <p className="text-[12px] leading-relaxed text-[#4D5B66]">
+                            <p className="text-[11px] leading-relaxed text-[#4D5B66] font-medium">
                                 {ACCEPTED_TYPES.join(' · ')}
                             </p>
-                            <p className="mt-2 text-[11px] text-[#8C9BA6]">Margin recognizes these reports automatically.</p>
+                            <p className="mt-1.5 text-[10px] text-[#8C9BA6]">Margin recognizes these reports automatically.</p>
                         </div>
                     </div>
 
                     {/* Rules */}
-                    <div className="grid sm:grid-cols-2 gap-8 border-t border-[#F1F5F9] pt-6">
-                        <div className="text-[12px] text-[#4D5B66]">
-                            <span className="block mb-1 font-bold text-[#182026] uppercase text-[10px]">What qualifies</span>
+                    <div className="grid sm:grid-cols-2 gap-6 border-t border-[#F1F5F9] pt-5">
+                        <div className="text-[11px] text-[#4D5B66]">
+                            <span className="block mb-1 font-bold text-[#182026] uppercase text-[9px]">What qualifies</span>
                             CSV and TXT operational reports. Up to 10 files (50 MB each).
                         </div>
-                        <div className="text-[12px] text-[#4D5B66]">
-                            <span className="block mb-1 font-bold text-[#182026] uppercase text-[10px]">Do not upload</span>
+                        <div className="text-[11px] text-[#4D5B66]">
+                            <span className="block mb-1 font-bold text-[#182026] uppercase text-[9px]">Do not upload</span>
                             PDFs, Excel, Screenshots, or Invoices. Those are evidence documents.
                         </div>
                     </div>
