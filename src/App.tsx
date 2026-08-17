@@ -375,6 +375,7 @@ const App = () => (
                         <Route path="/stripe/callback" element={<StripeCallback />} />
                         <Route path="/amazon-sandbox" element={<AmazonSandbox />} />
                         <Route path="/analyzing" element={<AnalyzingScreen />} />
+                        <Route path="/data-upload" element={<DataUpload />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
                         <Route path="/app" element={appRoute(<TenantRedirect />)} />
                         <Route path="/app/redirect" element={<EmailActionRedirect />} />
@@ -424,7 +425,6 @@ const App = () => (
                         <Route path="/app/:tenantSlug/admin/queue" element={appRoute(<AdminOnly><QueueDashboard /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/team" element={appRoute(<AdminOnly><TeamManagement /></AdminOnly>)} />
                         {/* LEGACY REDIRECTS */}
-                        <Route path="/data-upload" element={<TenantRedirect targetPath="/data-upload" />} />
                         <Route path="/integrations-hub" element={<TenantRedirect />} />
                         <Route path="/cases/:caseId" element={<TenantRedirect preservePath />} />
                         <Route path="/recoveries/:caseId" element={<TenantRedirect preservePath />} />

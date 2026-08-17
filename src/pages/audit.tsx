@@ -1116,10 +1116,10 @@ export default function Audit() {
   return (
     <main className="platform-audit-workspace flex h-screen max-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[286px]' : 'w-[68px]'} sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F5F5F5] transition-[width] duration-200 md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[260px]' : 'w-[54px]'} sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F5F5F5] transition-[width] duration-300 ease-in-out md:flex`}>
         {sidebarOpen ? (
           <div className="flex h-full flex-col">
-            <div className="flex h-[57px] items-center justify-between border-b border-[#D8E3EA] bg-[#F5F5F5] px-4">
+            <div className="flex h-[57px] min-h-[57px] items-center justify-between border-b border-[#D8E3EA] bg-[#F5F5F5] px-4">
               <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
                 <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
                 <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
@@ -1167,12 +1167,12 @@ export default function Audit() {
           </div>
         ) : (
           <div className="flex h-full flex-col items-center">
-            <div className="flex h-[57px] w-full items-center justify-center border-b border-[#D8E3EA] bg-[#F5F5F5]">
+            <div className="flex h-[57px] min-h-[57px] w-full items-center justify-center border-b border-[#D8E3EA] bg-[#F5F5F5]">
               <Link to="/" aria-label="Margin home" className="transition-opacity hover:opacity-80">
                 <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
               </Link>
             </div>
-            <nav className="flex flex-col items-center gap-2 pt-4">
+            <nav className="flex flex-col items-center gap-1.5 pt-4">
               <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Expand sidebar" title="Expand sidebar" className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900">
                 <PanelLeft className="h-4 w-4" />
               </button>
@@ -1186,7 +1186,7 @@ export default function Audit() {
                 <Calendar className="h-4 w-4" />
               </button>
             </nav>
-            <div className="mt-auto border-t border-[#D8E3EA] px-3 py-4">
+            <div className="mt-auto border-t border-[#D8E3EA] py-4">
               <button type="button" onClick={openShareDialog} aria-label="Invite Seller" title="Invite Seller" className="rounded-md p-2 text-[#007AFF] transition-colors hover:bg-white hover:text-zinc-900">
                 <HeartHandshake className="h-4 w-4" />
               </button>
@@ -1198,7 +1198,7 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex h-full flex-1 flex-col overflow-y-auto overflow-x-hidden scroll-smooth">
         {/* Persistent audit context */}
-        <div className="sticky top-0 z-10 flex min-h-[57px] shrink-0 items-center border-b border-[#D8E3EA] bg-[#FAFAF7] px-4 py-2 sm:px-8 md:h-[57px] md:py-0">
+        <div className="sticky top-0 z-10 flex min-h-[57px] shrink-0 items-center border-b border-[#D8E3EA] bg-[#FAFAF7] px-4 py-2 sm:px-6 md:h-[57px] md:py-0">
           <div className="flex w-full items-center justify-between gap-3 lg:flex-row lg:justify-between">
             <div className="flex items-center gap-3 overflow-hidden">
               {!sidebarOpen && (
@@ -1220,7 +1220,7 @@ export default function Audit() {
                 <span className="truncate">Schedules</span>
               </button>
               <Link 
-                to={`/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+                to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                 className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
                 title="Upload reports"
               >
