@@ -60,7 +60,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className={cn(triggerClassName, "font-lora font-medium tracking-tight")}>
+                    <NavigationMenuTrigger className={cn(triggerClassName, "tracking-tight")}>
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>

@@ -60,7 +60,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className={cn(triggerClassName, "font-lora font-medium tracking-tight")}>
+                    <NavigationMenuTrigger className={cn(triggerClassName, "tracking-tight")}>
                         Workflows
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
