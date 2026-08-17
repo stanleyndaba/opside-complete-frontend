@@ -103,3 +103,23 @@ html, body, #root {
   font-family: var(--font-serif) !important;
   font-weight: 400;
 }
+
+/* Subtle Hero Swoosh */
+.agentic-scan-subtle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.01) 48%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.01) 52%,
+    transparent 58%,
+    transparent 100%
+  );
+  transform: translate3d(-115%, 0, 0);
+  animation: agentic-scan 12s linear infinite;
+}
