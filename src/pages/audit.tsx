@@ -1247,7 +1247,7 @@ export default function Audit() {
               <div className="flex flex-col items-center gap-4">
                 <div className="w-full max-w-4xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
-                  <h1 className="mx-auto max-w-4xl break-words font-playfair text-[34px] leading-[1.03] tracking-tight text-[#182026] sm:text-[52px] sm:leading-[1.03]" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
+                  <h1 className="mx-auto max-w-4xl break-words font-lora text-[34px] leading-[1.03] tracking-tight text-[#182026] sm:text-[52px] sm:leading-[1.03]" style={{ fontWeight: 400 }}>
                     Does what Amazon says match what happened?
                   </h1>
                   <p className="mx-auto mt-3 max-w-3xl text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-6">

@@ -276,7 +276,10 @@
   /* Premium Redesign Utilities */
   .font-serif-headline,
   .font-playfair {
-    font-family: 'Playfair Display', Georgia, serif !important;
+    font-family: 'Playfair Display', serif !important;
+  }
+  .font-lora {
+    font-family: 'Lora', serif !important;
   }
 
   .glass-card {
@@ -534,7 +537,7 @@
   abbr,
   acronym,
   address,
-  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather):not(.font-playfair) {
+  [class*="font-"]:not(.font-montserrat):not(.font-code):not(.font-merriweather):not(.font-playfair):not(.font-lora) {
     font-family: 'Inter', system-ui, sans-serif;
   }
 
