@@ -2248,7 +2248,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Margin finds out what happened.
+              Margin controls what happens next.
             </motion.span>{" "}
           </div>{" "}
           <motion.p
@@ -2262,8 +2262,8 @@ function KineticHeroSection({
             className="mt-6 max-w-[720px] text-[16px] leading-[1.75] text-slate-300 sm:mt-8 sm:text-[18px] md:text-[20px]"
           >
             {" "}
-            Margin checks your Amazon account for reimbursement issues, shows what
-            happened, what may be recoverable, and what you need to prove it.{" "}
+            Margin audits your Amazon recovery operation, proves what is unresolved,
+            and takes over the work when there is a justified case.{" "}
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
