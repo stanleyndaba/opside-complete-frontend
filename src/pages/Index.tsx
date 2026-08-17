@@ -35,7 +35,7 @@ import { PublicNavbar } from "@/components/layout/PublicNavbar";
 import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { SystemPerformanceTicker } from "@/components/landing/SystemPerformanceTicker";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { RecoveryTimelineSection } from "@/components/landing/RecoveryTimelineSection";
