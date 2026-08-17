@@ -583,7 +583,7 @@ function KineticHeroSection({
 }
 
 export default function Index() {
-  usePageMeta(PUBLIC_ROUTE_META.index);
+  usePageMeta(PUBLIC_ROUTE_META['/']);
   const navigate = useNavigate();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const { isFull, nextBatchHours } = useOnboardingCapacity();
