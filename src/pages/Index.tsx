@@ -2947,9 +2947,9 @@ export default function Index() {
                 className="font-lora text-[28px] leading-[1.22] tracking-[-0.02em] text-[#182026] sm:text-[38px] md:text-[48px] md:leading-[1.16]"
                 style={{ fontWeight: 400 }}
               >
-                Margin is vertical financial-operations software for Amazon marketplace businesses.{" "}
+                Margin is the standard for FBA recovery infrastructure.{" "}
                 <span className="text-[#66737F] font-lora">
-                  It reconciles Amazon’s operational and financial data, identifies and proves discrepancies, and takes ownership of recovery and recurring control.
+                  Eliminate manual reconciliation on a secure platform built for high-volume operations.
                 </span>
               </motion.p>
             </div>
