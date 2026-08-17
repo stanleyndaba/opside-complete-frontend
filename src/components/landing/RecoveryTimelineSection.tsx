@@ -4,38 +4,38 @@ import { motion } from "framer-motion";
 const recoverySteps = [
   {
     number: "01",
-    title: "Issue Found",
-    body: "A potential recovery issue is identified in your Amazon records.",
+    title: "Found",
+    body: "A possible recovery issue is identified in your Amazon records.",
     state: "FOUND",
   },
   {
     number: "02",
-    title: "Evidence Ready",
-    body: "Relevant shipment, inventory, settlement and supporting records are matched to the finding so the recovery can be substantiated.",
+    title: "Evidence",
+    body: "The relevant shipment, inventory, settlement, and supporting records are connected to the finding.",
     state: "EVIDENCE",
   },
   {
     number: "03",
-    title: "Seller Approval",
-    body: "You review the recovery and decide whether it should be submitted.",
+    title: "Approval",
+    body: "You review the issue and decide whether it should move forward.",
     state: "APPROVAL",
   },
   {
     number: "04",
     title: "Filed",
-    body: "The recovery case is prepared and submitted through the appropriate Amazon process.",
+    body: "The recovery is prepared and submitted through the appropriate Amazon process after approval.",
     state: "FILED",
   },
   {
     number: "05",
-    title: "Amazon Response",
-    body: "Margin tracks Amazon's response and identifies what needs to happen next.",
+    title: "Response",
+    body: "Amazon’s response is tracked, including what needs attention next.",
     state: "RESPONSE",
   },
   {
     number: "06",
-    title: "Payout Verified",
-    body: "The reimbursement is checked against the expected outcome, including any shortfall, reversal or unresolved amount.",
+    title: "Verified",
+    body: "The result is checked against the expected amount. Shortfalls, reversals, and unresolved balances remain visible.",
     state: "VERIFIED",
   },
 ];
@@ -59,24 +59,18 @@ export const RecoveryTimelineSection: React.FC = () => {
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-white/20" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-300">
-                From finding to recovery
+                You approve. Margin moves it forward.
               </span>
             </div>
-            <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-white md:text-[76px]">
-              Once Margin finds a recovery, the work keeps moving.
+            <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-white md:text-[76px]" style={{ fontWeight: 400 }}>
+              You stay in control. The recovery work stops living in your head.
             </h2>
-            <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">
-              Margin turns a potential recovery into an evidence-backed case,
-              moves it through the required steps, and verifies what Amazon
-              ultimately pays.
+            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">
+              Margin prepares the recovery record, connects the supporting evidence, tracks what Amazon says, and checks what Amazon pays. You review the important decisions and approve the action.
             </p>
             <div className="mt-10 border-l border-blue-400/45 pl-5">
-              <p className="text-[18px] font-semibold leading-7 tracking-[-0.025em] text-white">
-                Margin prepares the evidence. You decide the action.
-              </p>
-              <p className="mt-2 text-[14px] leading-6 text-slate-400">
-                You remain in control while Margin handles the recovery work
-                behind the decision.
+              <p className="text-[16px] leading-7 text-slate-400">
+                You do not have to chase every document, remember every deadline, or wonder whether an approved reimbursement actually reached your account.
               </p>
             </div>
           </motion.div>

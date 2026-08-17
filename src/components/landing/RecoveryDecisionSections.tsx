@@ -9,7 +9,7 @@ interface RecoveryDecisionSectionsProps {
 
 const pathOptions = [
   {
-    label: "RECOVER ONCE",
+    label: "Option 1 — Recover Once",
     title: "One problem. One engagement.",
     copy: "Have Margin manage the eligible recovery opportunities identified in your Audit.",
     price: "Personalized one-time quote after your Audit",
@@ -25,51 +25,52 @@ const pathOptions = [
     ],
   },
   {
-    label: "RECOVERY WORKSPACE",
-    title: "Keep Margin working.",
-    copy: "For sellers who want Margin continuously monitoring recovery exposure instead of turning each new issue into another manual project.",
-    price: "$99/month",
+    label: "Option 2 — Recovery Workspace",
+    title: "Keep the recovery work under control.",
+    copy: "For sellers who do not want every new issue to become another spreadsheet, case chase, or internal project. Workspace keeps checking, evidence, cases, responses, and payouts together over time.",
+    price: "US$99/month",
+    subPrice: "with 0% recovery commission",
     cta: "Activate Recovery Workspace",
     ctaLocation: "homepage_recovery_workspace",
     items: [
       "Continuous recovery monitoring",
-      "Recurring audits",
+      "Recurring Audits",
       "New recovery opportunities",
       "Evidence readiness",
       "Case continuity",
-      "Payout and recovery tracking",
+      "Payout tracking",
     ],
   },
 ];
 
 const evidenceRequests = [
   {
-    title: "Invoice",
-    copy: "Supplier documentation for the affected units.",
+    title: "INVOICE",
+    copy: "The supplier record for the affected units.",
   },
   {
-    title: "Shipment records",
-    copy: "What was shipped, when, and under which shipping plan.",
+    title: "SHIPMENT RECORD",
+    copy: "What was shipped, when it was shipped, and under which shipping plan.",
   },
   {
-    title: "Proof of delivery",
+    title: "PROOF OF DELIVERY",
     copy: "Confirmation that the shipment reached the fulfillment center.",
   },
   {
-    title: "Inventory records",
+    title: "INVENTORY RECORD",
     copy: "What Amazon received, adjusted, lost, damaged, or reimbursed.",
   },
   {
-    title: "Case history",
-    copy: "What was already submitted, what Amazon responded, and what still needs to be resolved.",
+    title: "CASE HISTORY",
+    copy: "What was submitted, what Amazon answered, and what still needs attention.",
   },
 ];
 
 const auditTrustItems = [
-  ["Records reviewed", "See what Margin actually examined."],
-  ["Why it was flagged", "Understand exactly why the recovery was identified."],
-  ["Evidence status", "See what is ready and what is still missing."],
-  ["Recovery value", "See how the estimated amount was calculated."],
+  ["Records reviewed", "See what Margin actually examined, including the data range and coverage."],
+  ["Why it was flagged", "Understand what happened and which records created the finding."],
+  ["Evidence status", "See what is ready, what is missing, and what would strengthen the case."],
+  ["Recovery value", "See how the estimate was calculated and what it does—or does not—include."],
   [
     "Case status",
     "Know what has been submitted, what Amazon answered, and what still needs attention.",
@@ -77,12 +78,12 @@ const auditTrustItems = [
 ];
 
 const controlItems = [
-  "Read-only Amazon access",
-  "Seller approval before recovery submission",
-  "Clear recovery status",
-  "Payout verification",
-  "0% recovery commission",
-  "No payment required to run the Audit",
+  { title: "Read-only Amazon access", detail: "Margin examines the records needed for the Audit." },
+  { title: "Your approval before submission", detail: "Nothing is filed without your approval." },
+  { title: "Clear recovery status", detail: "See what was found, what is ready, and what is waiting." },
+  { title: "Payout verification", detail: "See what Amazon approved and what actually reached your account." },
+  { title: "No payment to run the Audit", detail: "Review what Margin finds before deciding whether to continue." },
+  { title: "0% recovery commission on Workspace", detail: "Workspace is a fixed monthly control layer, not a percentage taken from each recovery." },
 ];
 
 export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> = ({
@@ -97,21 +98,21 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
 
   return (
     <>
+      {/* Section 4 — Choose how much work you want to keep */}
       <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-32 md:py-56">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <motion.div {...revealProps} className="max-w-[780px]">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                Your next step
+                Your next step depends on what the Audit finds
               </span>
             </div>
             <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
-              Found a recovery? Choose what happens next.
+              Handle one recovery—or stop handling them yourself.
             </h2>
             <p className="mt-6 max-w-[720px] text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-              Some sellers need one recovery handled. Others want Margin working
-              continuously so the next one doesn't become another manual project.
+              Some sellers have one recovery that needs to be handled. Others keep finding the same kind of issue and do not want another manual project every time it happens. Margin shows you what your account supports, then gives you one clear next step.
             </p>
           </motion.div>
 
@@ -147,6 +148,11 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   <p className="text-[30px] font-semibold tracking-[-0.065em] text-[var(--margin-text-primary)]">
                     {option.price}
                   </p>
+                  {option.subPrice && (
+                    <p className="mt-1 text-[14px] font-medium text-[var(--margin-text-muted)]">
+                      {option.subPrice}
+                    </p>
+                  )}
                   <Button
                     onClick={() => onAuditCta(option.ctaLocation)}
                     className="mt-5 h-12 rounded-[8px] bg-[var(--margin-primary)] px-5 text-[14px] font-semibold text-white hover:bg-[var(--margin-primary-hover)]"
@@ -164,16 +170,16 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
             className="mt-8 border-l border-[var(--margin-border)] pl-5"
           >
             <p className="text-[17px] font-semibold tracking-[-0.025em] text-[var(--margin-text-primary)]">
-              Not ready to continue?
+              Not ready to continue? That is fine.
             </p>
             <p className="mt-2 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
-              Your Recovery Audit is free. Review what Margin found and decide
-              whether you want recovery work managed.
+              Your Recovery Audit is free. Review what Margin found, then decide whether you want the recovery work managed.
             </p>
           </motion.div>
         </div>
       </section>
 
+      {/* Section 5 — Why recoveries stall */}
       <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
@@ -181,17 +187,14 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                  Where recoveries break down
+                  A finding is not a recovery
                 </span>
               </div>
               <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
-                Finding the problem is only the beginning.
+                The hard part is keeping the whole record together.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-                Amazon may require specific evidence, quantities, dates, or case
-                history before a recovery can move forward. The hard part is
-                assembling the right record, keeping it together, and acting
-                before the opportunity goes stale.
+                Amazon may ask for a supplier invoice, shipment details, proof of delivery, inventory records, or the history of what was already submitted. Miss one part, lose the thread, or miss the timing, and a recoverable issue can become another unresolved case.
               </p>
             </motion.div>
 
@@ -216,7 +219,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                     }}
                     className="grid gap-2 py-4 sm:grid-cols-[180px_1fr] sm:items-start"
                   >
-                    <h3 className="text-[16px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">
+                    <h3 className="text-[14px] font-bold uppercase tracking-tight text-[var(--margin-text-primary)]">
                       {item.title}
                     </h3>
                     <p className="text-[14px] leading-6 text-[var(--margin-text-secondary)]">
@@ -227,15 +230,13 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               </div>
               <div className="border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] px-5 py-5 md:px-7">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                  Margin organizes the recovery record
+                  Margin keeps the recovery record together
                 </p>
                 <p className="mt-3 text-[20px] font-semibold tracking-[-0.035em] text-[var(--margin-text-primary)]">
                   {"Issue -> Evidence -> Case -> Response -> Payout"}
                 </p>
                 <p className="mt-3 text-[14px] leading-6 text-[var(--margin-text-secondary)]">
-                  So the recovery record stays together instead of being rebuilt
-                  across spreadsheets, files, case history and someone&apos;s
-                  memory.
+                  So you can see what is ready, what is missing, and what happens next—without reconstructing the case from five different places.
                 </p>
               </div>
             </motion.div>
@@ -243,6 +244,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
         </div>
       </section>
 
+      {/* Section 6 — See why the finding exists */}
       <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-32 md:py-56">
         <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
@@ -250,24 +252,27 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                  Built around your records
+                  No black-box numbers
                 </span>
               </div>
               <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
-                See exactly what Margin found.
+                See exactly what was checked—and why it was flagged.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
-                Margin doesn&apos;t ask you to take a recovery on faith. Every
-                finding is tied back to the records used to identify and assess
-                it.
+                You should not have to take a recovery estimate on faith. Every finding is tied to the records Margin used to identify and assess it.
               </p>
-              <Button
-                onClick={() => onAuditCta("homepage_inspectability")}
-                className="mt-8 h-12 rounded-[8px] bg-[var(--margin-primary)] px-5 text-[14px] font-semibold text-white hover:bg-[var(--margin-primary-hover)]"
-              >
-                Run Free Recovery Audit
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <div className="mt-10 flex flex-col items-start gap-4">
+                <Button
+                  onClick={() => onAuditCta("homepage_inspectability")}
+                  className="h-14 rounded-[8px] bg-[var(--margin-primary)] px-8 text-[15px] font-semibold text-white hover:bg-[var(--margin-primary-hover)]"
+                >
+                  Run a Free Recovery Audit
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+                <p className="text-[13px] text-[var(--margin-text-muted)]">
+                  Free to run. No recovery commission. No claim submitted without your approval.
+                </p>
+              </div>
             </motion.div>
 
             <motion.div
@@ -275,9 +280,9 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               transition={{ ...revealProps.transition, delay: 0.08 }}
               className="grid gap-0 border-y border-[var(--margin-border)] lg:grid-cols-2"
             >
-              <div className="p-6 lg:border-r lg:border-[var(--margin-border)]">
+              <div className="p-6 lg:border-r lg:border-[var(--margin-border)] col-span-2 lg:col-span-1">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
-                  Your audit
+                  Audit result panel
                 </p>
                 <div className="mt-5 divide-y divide-[var(--margin-border-subtle)]">
                   {auditTrustItems.map(([label, detail]) => (
@@ -293,18 +298,28 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 </div>
               </div>
 
-              <div className="border-t border-[var(--margin-border)] p-6 lg:border-t-0">
+              {/* Section 7 — Keep your account and decisions yours */}
+              <div className="border-t border-[var(--margin-border)] p-6 lg:border-t-0 col-span-2 lg:col-span-1 bg-[var(--margin-canvas)]">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
-                  You stay in control
+                  Your visibility
                 </p>
-                <div className="mt-5 space-y-3">
+                <h3 className="mt-5 text-[22px] font-lora font-medium tracking-tight text-[var(--margin-text-primary)]">
+                  Get help with the work without handing over control.
+                </h3>
+                <p className="mt-4 text-[14px] leading-6 text-[var(--margin-text-secondary)]">
+                  Margin can examine your Amazon records, organize the recovery work, and keep the status visible. You decide whether a recovery should be submitted and what happens next.
+                </p>
+                <div className="mt-8 space-y-5">
                   {controlItems.map((item) => (
                     <div
-                      key={item}
-                      className="flex items-start gap-3 text-[14px] leading-6 text-[var(--margin-text-secondary)]"
+                      key={item.title}
+                      className="flex flex-col gap-1"
                     >
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--margin-primary)]" />
-                      <span>{item}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="h-1 w-1 shrink-0 rounded-full bg-[var(--margin-primary)]" />
+                        <span className="text-[14px] font-semibold text-[var(--margin-text-primary)]">{item.title}</span>
+                      </div>
+                      <p className="pl-3 text-[13px] text-[var(--margin-text-secondary)] leading-5">{item.detail}</p>
                     </div>
                   ))}
                 </div>
