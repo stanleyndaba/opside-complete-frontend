@@ -60,7 +60,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className={triggerClassName}>
+                    <NavigationMenuTrigger className={cn(triggerClassName, "font-lora font-medium tracking-tight")}>
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
@@ -75,7 +75,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                         )}
                                     >
                                         <div className="mb-2 flex items-center justify-between gap-3">
-                                            <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#94A3B8]">
+                                            <h4 className="text-[11px] font-lora font-medium text-[#94A3B8]">
                                                 {group.label}
                                             </h4>
                                             {group.badge && (
@@ -148,7 +148,7 @@ export function ProductServiceItem({
             </div>
             <div className="min-w-0">
                 <span className={cn(
-                    'block text-[13px] font-semibold tracking-tight transition-colors',
+                    'block text-[13px] font-lora font-medium tracking-tight transition-colors',
                     isLight ? 'text-[#182026] group-hover:text-[#0B74DE]' : 'text-white group-hover:text-blue-400'
                 )}>
                     {title}

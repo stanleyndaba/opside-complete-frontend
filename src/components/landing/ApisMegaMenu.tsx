@@ -60,7 +60,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className={triggerClassName}>
+                    <NavigationMenuTrigger className={cn(triggerClassName, "font-lora font-medium tracking-tight")}>
                         Workflows
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
@@ -74,7 +74,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                             index < apiMenuGroups.length - 1 && 'border-b border-[#D8E3E8]/60 lg:border-b-0 lg:border-r'
                                         )}
                                     >
-                                        <h5 className="mb-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#94A3B8]">
+                                        <h5 className="mb-2 text-[11px] font-lora font-medium text-[#94A3B8]">
                                             {group.label}
                                         </h5>
                                         <div className="grid grid-cols-1 gap-0">
@@ -139,7 +139,7 @@ export function ApiServiceItem({
             </div>
             <div className="min-w-0">
                 <span className={cn(
-                    'block text-[13px] font-semibold tracking-tight transition-colors',
+                    'block text-[13px] font-lora font-medium tracking-tight transition-colors',
                     isLight ? 'text-[#182026] group-hover:text-[#0B74DE]' : 'text-white group-hover:text-blue-400'
                 )}>
                     {title}
