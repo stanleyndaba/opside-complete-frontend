@@ -64,17 +64,17 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] overflow-hidden rounded-[6px] bg-white shadow-[0_32px_80px_rgba(0,0,0,0.18)] ring-1 ring-[#D8E3E8] lg:fixed lg:left-1/2 lg:top-[76px] lg:w-[96vw] lg:max-w-[1080px] lg:-translate-x-1/2">
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-140px)] overflow-y-auto rounded-[6px] bg-white shadow-[0_32px_80px_rgba(0,0,0,0.18)] ring-1 ring-[#D8E3E8] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[76px] lg:w-[96vw] lg:max-w-[1080px] lg:-translate-x-1/2">
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {productMenuGroups.map((group, index) => (
                                     <div
                                         key={group.label}
                                         className={cn(
-                                            'p-5 lg:p-6',
+                                            'p-4 lg:p-5',
                                             index < productMenuGroups.length - 1 && 'border-b border-[#D8E3E8]/60 lg:border-b-0 lg:border-r'
                                         )}
                                     >
-                                        <div className="mb-4 flex items-center justify-between gap-3">
+                                        <div className="mb-2 flex items-center justify-between gap-3">
                                             <h4 className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#94A3B8]">
                                                 {group.label}
                                             </h4>
@@ -84,7 +84,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="grid grid-cols-1 gap-1">
+                                        <div className="grid grid-cols-1 gap-0">
                                             {group.items.map((item) => (
                                                 <ProductServiceItem
                                                     key={item.title}
@@ -98,10 +98,10 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                     </div>
                                 ))}
                             </div>
-                            <div className="border-t border-[#D8E3E8] bg-[#F8FAFB] px-6 py-5 lg:flex lg:items-center lg:justify-between lg:px-8">
+                            <div className="border-t border-[#D8E3E8] bg-[#F8FAFB] px-6 py-3 lg:flex lg:items-center lg:justify-between lg:px-8">
                                 <div>
-                                    <p className="text-[15px] font-semibold tracking-tight text-[#182026]">Built for serious FBA operations</p>
-                                    <p className="mt-1 max-w-[680px] text-[12px] font-normal tracking-tight text-[#66737F]">
+                                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">Built for serious FBA operations</p>
+                                    <p className="mt-0.5 max-w-[680px] text-[11px] font-normal tracking-tight text-[#66737F]">
                                         Margin is designed for businesses where recovery crosses multiple shipments, systems and people, and where missed windows, weak evidence or incorrect payouts materially affect margin.
                                     </p>
                                 </div>
@@ -134,7 +134,7 @@ export function ProductServiceItem({
     return (
         <div
             className={cn(
-                'landing-menu-item group flex cursor-default items-start gap-4 rounded-[4px] border border-transparent p-3 transition-all duration-200',
+                'landing-menu-item group flex cursor-default items-start gap-4 rounded-[4px] border border-transparent p-2 transition-all duration-200',
                 isLight
                     ? 'hover:bg-[#F8FAFB] hover:border-[#D8E3E8]'
                     : 'hover:bg-white/[0.03] hover:border-white/10'
@@ -148,13 +148,13 @@ export function ProductServiceItem({
             </div>
             <div className="min-w-0">
                 <span className={cn(
-                    'block text-[14px] font-semibold tracking-tight transition-colors',
+                    'block text-[13px] font-semibold tracking-tight transition-colors',
                     isLight ? 'text-[#182026] group-hover:text-[#0B74DE]' : 'text-white group-hover:text-blue-400'
                 )}>
                     {title}
                 </span>
                 <p className={cn(
-                    'mt-1 text-[12px] font-normal leading-relaxed tracking-tight',
+                    'mt-0.5 text-[11px] font-normal leading-snug tracking-tight',
                     isLight ? 'text-[#66737F]' : 'text-white/50'
                 )}>
                     {description}
