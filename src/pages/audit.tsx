@@ -1051,9 +1051,9 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-      <Button onClick={startAccountStep} className="h-10 w-full rounded-[6px] bg-[#182026] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] sm:w-auto">
-        Start Free Audit
-      </Button>
+	      <Button onClick={startAccountStep} className="h-10 w-full rounded-[6px] bg-[#182026] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] sm:w-auto">
+	        Connect Amazon
+	      </Button>
     ) : step === 'connect' ? (
       <Button onClick={connectAmazon} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#182026] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] sm:w-auto">
         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
@@ -1275,20 +1275,27 @@ export default function Audit() {
                     </div>
                   )}
                 </div>
-                <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:justify-center sm:gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsPeriodSelectorOpen(true);
-                      trackEvent('audit_period_selector_opened', { source_page: '/audit' });
-                    }}
-                    className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-4 text-[13px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:h-9 sm:w-auto sm:px-3.5 sm:text-[12px]"
-                  >
-                    <Calendar className="h-4 w-4 text-zinc-400 sm:h-3.5 sm:w-3.5" />
-                    View scope
-                  </button>
-                  {primaryAction}
-                </div>
+	                <div className="flex flex-col items-center gap-4">
+	                  <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:justify-center sm:gap-3">
+	                    {primaryAction}
+	                    <Link 
+	                      to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+	                      className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-5 text-[13px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:h-10 sm:w-auto sm:text-[13px]"
+	                    >
+	                      Upload Amazon reports
+	                    </Link>
+	                  </div>
+	                  <button
+	                    type="button"
+	                    onClick={() => {
+	                      setIsPeriodSelectorOpen(true);
+	                      trackEvent('audit_period_selector_opened', { source_page: '/audit' });
+	                    }}
+	                    className="text-[13px] text-[#4D5B66] underline-offset-4 hover:text-[#0B74DE] hover:underline transition-colors"
+	                  >
+	                    View Audit scope
+	                  </button>
+	                </div>
               </div>
 
               {/* Integrated Data Bar hidden per user request */}
