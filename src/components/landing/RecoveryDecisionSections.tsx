@@ -106,7 +106,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                 Your next step
               </span>
             </div>
-            <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[76px]">
+            <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
               Found a recovery? Choose what happens next.
             </h2>
             <p className="mt-6 max-w-[720px] text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
@@ -184,7 +184,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   Where recoveries break down
                 </span>
               </div>
-              <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[76px]">
+              <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
                 Finding the problem is only the beginning.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
@@ -253,7 +253,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   Built around your records
                 </span>
               </div>
-              <h2 className="text-[44px] font-bold leading-[0.98] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[76px]">
+              <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
                 See exactly what Margin found.
               </h2>
               <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">

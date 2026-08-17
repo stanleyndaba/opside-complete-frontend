@@ -1595,7 +1595,7 @@ function OperatorQualificationSection() {
         <div className="grid gap-8 md:grid-cols-[0.86fr_1.14fr] md:items-start">
           <motion.div {...revealProps}>
             <div className={sectionLabelClass}>Built for complex FBA operations</div>
-            <h2 className="mt-3 max-w-[640px] text-[31px] font-semibold leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[50px]">
+            <h2 className="mt-3 max-w-[640px] font-lora text-[31px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[50px]" style={{ fontWeight: 400 }}>
               Recovery has become an operating process, not an occasional claim.
             </h2>
             <p className="mt-5 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
@@ -1670,7 +1670,7 @@ function DiscrepancyIsNotRevenueSection() {
         <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
           <motion.div {...revealProps}>
             <div className={sectionLabelClass}>Recovery Control Loop</div>
-            <h2 className="mt-3 max-w-[760px] text-[34px] font-medium leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[60px]">
+            <h2 className="mt-3 max-w-[760px] font-lora text-[34px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[60px]" style={{ fontWeight: 400 }}>
               Recovering revenue is a control loop, not an alert.
             </h2>
             <p className="mt-5 max-w-[720px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
@@ -1973,7 +1973,7 @@ function ExistingOperationFitSection() {
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[860px] text-center">
           <div className={sectionLabelClass}>One control layer across the team</div>
-          <h2 className="mt-3 text-[34px] font-semibold leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]">
+          <h2 className="mt-3 font-lora text-[34px] leading-[1.03] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
             Operations sees the case. Finance sees the money.
           </h2>
           <p className="mx-auto mt-5 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
@@ -2222,7 +2222,8 @@ function KineticHeroSection({
           </motion.div>{" "}
           <div
             id="margin-hero-title"
-            className="mt-6 max-w-[1040px] text-[42px] font-bold leading-[0.96] tracking-[-0.075em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] sm:tracking-[-0.085em] md:text-[82px] lg:text-[96px]"
+            className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]"
+            style={{ fontWeight: 400 }}
           >
             {" "}
             <motion.span
@@ -2341,7 +2342,7 @@ function OperatorProofSection() {
           <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-300/80">
             Anonymous operator | approx $120k/month Amazon revenue
           </p>
-          <blockquote className="mt-8 text-[31px] font-semibold leading-[1.08] tracking-[-0.055em] text-white md:text-[48px] lg:text-[58px]">
+          <blockquote className="mt-8 font-lora text-[31px] leading-[1.08] tracking-[-0.035em] text-white md:text-[48px] lg:text-[58px]" style={{ fontWeight: 400 }}>
             “The audit did not just show a discrepancy. It showed what happened,
             what proof was connected, and what needed a decision.”
           </blockquote>
@@ -2370,7 +2371,7 @@ function SystemLogMarquee() {
         <motion.div {...revealProps} className="relative z-20 max-w-[760px]">
           {" "}
           <div className={sectionLabelClass}>Recovery Intelligence</div>{" "}
-          <h2 className="mt-4 text-[34px] font-semibold leading-[1.02] tracking-[-0.045em] sm:text-[42px] md:text-[62px]">
+                    <h2 className="mt-4 font-lora text-[34px] leading-[1.02] tracking-[-0.035em] sm:text-[42px] md:text-[62px]" style={{ fontWeight: 400 }}>
             <span className="text-[var(--margin-text-primary)]">One rejected case.</span> <span className="text-[var(--margin-text-muted)]">Every missing answer.</span>
           </h2>{" "}
           <p className="mt-5 max-w-[680px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
@@ -2943,7 +2944,8 @@ export default function Index() {
             <div className="max-w-[920px]">
               <motion.p
                 {...revealProps}
-                className="text-[28px] font-semibold leading-[1.22] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[48px] md:leading-[1.16]"
+                className="font-lora text-[28px] leading-[1.22] tracking-[-0.02em] text-[#182026] sm:text-[38px] md:text-[48px] md:leading-[1.16]"
+                style={{ fontWeight: 400 }}
               >
                 Margin is the standard for FBA recovery infrastructure.{" "}
                 <span className="text-[#66737F]">

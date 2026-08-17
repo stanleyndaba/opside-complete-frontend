@@ -31,7 +31,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
           <motion.h2
             {...revealProps}
             transition={{ ...revealProps.transition, delay: 0.1 }}
-            className="text-[44px] font-bold leading-[0.96] tracking-[-0.075em] text-[var(--margin-text-primary)] md:text-[66px] lg:text-[86px]"
+            className="font-lora text-[44px] leading-[0.96] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[66px] lg:text-[86px]"
+            style={{ fontWeight: 400 }}
           >
             Margin turns an Amazon discrepancy into a recovery record you can act on.
           </motion.h2>
