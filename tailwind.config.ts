@@ -43,9 +43,10 @@ export default {
 				heading: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
 				sans: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
 				brand: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],
-				playfair: ['"Playfair Display"', 'Georgia', 'serif'],
-				inter: ['Inter', 'system-ui', 'sans-serif'],
-			},
+					playfair: ['"Playfair Display"', 'Georgia', 'serif'],
+					lora: ['Lora', 'Georgia', 'serif'],
+					inter: ['Inter', 'system-ui', 'sans-serif'],
+				},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
