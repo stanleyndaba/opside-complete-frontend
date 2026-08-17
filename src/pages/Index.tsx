@@ -597,7 +597,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
-      <PublicNavbar variant="dark" />
+      <PublicNavbar variant="light" />
       
       <main>
         <KineticHeroSection 

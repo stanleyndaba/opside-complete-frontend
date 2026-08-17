@@ -25,15 +25,14 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
     const isLight = effectiveVariant === 'light';
+    
+    // Using Margin Design Tokens
     const mobileMenuItemClass = isLight
-        ? "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
+        ? "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
     const desktopNavLinkClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-[background-color,color,border-color] duration-150 hover:bg-[#F3F6F8] hover:text-[#182026]"
+        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-[background-color,color,border-color] duration-150 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
         : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-[background-color,color,border-color] duration-150 hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
-    const desktopActionClass = isLight
-        ? "hidden md:inline-flex h-10 items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8]"
-        : "hidden md:inline-flex h-10 items-center justify-center rounded-[6px] border border-white/10 bg-white/[0.025] px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white transition-colors hover:bg-white/5";
 
     // Close mobile menu on resize
     useEffect(() => {
@@ -100,12 +99,12 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
             )}
         >
             <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
-                <div className={cn(
-                    "relative flex items-center justify-between gap-3 transition-colors md:gap-5 md:px-4 md:py-3 lg:px-6",
-                    isLight
-                        ? "rounded-[8px] bg-white px-3 py-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)]"
-                        : "rounded-[8px] bg-[#080808]/88 px-3 py-2.5 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]"
-                )}>
+                    <div className={cn(
+                        "relative flex items-center justify-between gap-3 transition-all duration-300 md:gap-5 md:px-4 md:py-3 lg:px-6",
+                        isLight
+                            ? "rounded-[8px] bg-white/96 px-3 py-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md"
+                            : "rounded-[8px] bg-[#080808]/88 px-3 py-2.5 shadow-[0_18px_48px_rgba(0,0,0,0.42)] backdrop-blur-xl saturate-[180%]"
+                    )}>
                     <div className="flex items-center gap-3">
                         <Link
                             to="/"
@@ -122,7 +121,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 fetchPriority="high"
                                 className={cn("h-4 w-auto object-contain md:h-5", isLight ? "" : "invert brightness-0")}
                             />
-                            <span className={cn("brand-wordmark font-merriweather text-base tracking-tight md:text-lg", isLight ? "text-[#182026]" : "text-white")}>
+                            <span className={cn("brand-wordmark font-merriweather text-base tracking-tight md:text-lg", isLight ? "text-[var(--margin-text-primary)]" : "text-white")}>
                                 Margin
                             </span>
                         </Link>
@@ -145,7 +144,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             to="/login"
                             className={cn(
                                 "text-[13px] font-medium transition-colors",
-                                isLight ? "text-[#66737F] hover:text-[#182026]" : "text-white/70 hover:text-white"
+                                isLight ? "text-[var(--margin-text-secondary)] hover:text-[var(--margin-text-primary)]" : "text-white/70 hover:text-white"
                             )}
                         >
                             Log in
@@ -155,7 +154,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             className={cn(
                                 "flex h-[32px] items-center justify-center rounded-full px-3.5 text-[13px] font-medium transition-colors",
                                 isLight
-                                    ? "bg-[#F3F6F8] text-[#182026] hover:bg-[#E1E7EC]"
+                                    ? "bg-[var(--margin-surface-alt)] text-[var(--margin-text-primary)] hover:bg-[var(--margin-border)]"
                                     : "bg-white text-black hover:bg-white/90"
                             )}
                         >
