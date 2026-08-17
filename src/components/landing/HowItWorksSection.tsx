@@ -120,7 +120,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
           <Button
             size="lg"
             onClick={onCtaClick}
-            className="h-14 rounded-[8px] bg-[var(--margin-primary)] px-8 text-[15px] font-semibold tracking-[-0.01em] text-white transition-transform hover:scale-[1.02] hover:bg-[var(--margin-primary-hover)] active:scale-[0.98] shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_4px_12px_rgba(0,0,0,0.2)]"
+            className="h-14 rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-semibold tracking-[-0.01em] text-white transition-transform hover:scale-[1.02] hover:bg-[var(--margin-blue-hover)] active:scale-[0.98] shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_4px_12px_rgba(0,0,0,0.2)]"
           >
             Run a Free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" />
           </Button>

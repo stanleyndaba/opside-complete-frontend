@@ -163,7 +163,7 @@ function SectionTwo() {
             <div className="mt-12 flex flex-col items-start gap-4">
               <Button
                 onClick={() => navigate("/audit")}
-                className="h-14 rounded-[8px] bg-[var(--margin-primary)] px-8 text-[15px] font-semibold text-white hover:bg-[var(--margin-primary-hover)]"
+                className="h-14 rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-semibold text-white hover:bg-[var(--margin-blue-hover)]"
               >
                 See What Your Account Shows
                 <ArrowRight className="ml-2 h-4 w-4" />

@@ -11,6 +11,8 @@
 :root {
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-serif: 'Lora', Georgia, "Times New Roman", serif;
+  
+  /* Margin Design Tokens */
   --margin-canvas: #FAFAF7;
   --margin-surface: #FFFFFF;
   --margin-surface-alt: #F4F6F8;
@@ -22,7 +24,31 @@
   --margin-text-muted: #94A3B8;
   --margin-blue: #0B74DE;
   --margin-blue-hover: #095fb8;
+  --margin-primary: #182026;
+  --margin-primary-hover: #2d3748;
   --margin-success: #10B981;
+
+  /* Tailwind/Shadcn HSL Variables (Required for UI Components) */
+  --background: 0 0% 98%; /* #FAFAF7 approx */
+  --foreground: 206 20% 12%; /* #182026 */
+  --card: 0 0% 100%;
+  --card-foreground: 206 20% 12%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 206 20% 12%;
+  --primary: 210 90% 46%; /* #0B74DE */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 20% 96%;
+  --secondary-foreground: 206 20% 12%;
+  --muted: 210 20% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 210 20% 96%;
+  --accent-foreground: 206 20% 12%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 204 24% 89%; /* #D8E3EA */
+  --input: 204 24% 89%;
+  --ring: 210 90% 46%;
+  --radius: 0.5rem;
 }
 
 html, body, #root {

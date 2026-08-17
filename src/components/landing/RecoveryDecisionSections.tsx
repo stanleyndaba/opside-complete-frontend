@@ -155,7 +155,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                   )}
                   <Button
                     onClick={() => onAuditCta(option.ctaLocation)}
-                    className="mt-5 h-12 rounded-[8px] bg-[var(--margin-primary)] px-5 text-[14px] font-semibold text-white hover:bg-[var(--margin-primary-hover)]"
+                    className="mt-5 h-12 rounded-[8px] bg-[var(--margin-blue)] px-5 text-[14px] font-semibold text-white hover:bg-[var(--margin-blue-hover)]"
                   >
                     {option.cta}
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -264,7 +264,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
               <div className="mt-10 flex flex-col items-start gap-4">
                 <Button
                   onClick={() => onAuditCta("homepage_inspectability")}
-                  className="h-14 rounded-[8px] bg-[var(--margin-primary)] px-8 text-[15px] font-semibold text-white hover:bg-[var(--margin-primary-hover)]"
+                  className="h-14 rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-semibold text-white hover:bg-[var(--margin-blue-hover)]"
                 >
                   Run a Free Recovery Audit
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -316,7 +316,7 @@ export const RecoveryDecisionSections: React.FC<RecoveryDecisionSectionsProps> =
                       className="flex flex-col gap-1"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="h-1 w-1 shrink-0 rounded-full bg-[var(--margin-primary)]" />
+                        <span className="h-1 w-1 shrink-0 rounded-full bg-[var(--margin-blue)]" />
                         <span className="text-[14px] font-semibold text-[var(--margin-text-primary)]">{item.title}</span>
                       </div>
                       <p className="pl-3 text-[13px] text-[var(--margin-text-secondary)] leading-5">{item.detail}</p>
