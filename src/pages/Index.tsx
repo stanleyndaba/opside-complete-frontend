@@ -2278,25 +2278,19 @@ function KineticHeroSection({
             {" "}
             <Button
               onClick={onEarlyAccessCta}
-              aria-label="Audit Seller Account"
+              aria-label="Connect Amazon"
               className="landing-pressable group relative h-[52px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-sm font-semibold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              Audit Seller Account <ArrowRight className="ml-2 h-4 w-4" />
+              Connect Amazon <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
 
-            <div className="flex flex-col items-center gap-2 sm:hidden">
-              <span className="text-[11px] font-medium text-slate-500">Prefer a larger screen?</span>
-              <PwaInstallButton
-                className="h-auto w-auto bg-transparent p-0 text-[13px] font-semibold text-white/70 transition-colors hover:text-white"
-                label="Install Margin Desktop ↓"
-              />
-            </div>
-
-            <PwaInstallButton
-              className="hidden h-[52px] w-full justify-center rounded-[8px] border border-white/14 bg-transparent px-6 text-sm font-semibold text-white/78 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto"
-              label="Install Margin Desktop"
-            />
+            <Link
+              to="/data-upload"
+              className="landing-pressable flex h-[52px] w-full items-center justify-center rounded-[8px] border border-white/14 bg-transparent px-8 text-sm font-semibold text-white/78 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto"
+            >
+              Upload Amazon Reports
+            </Link>
           </motion.div>{" "}
           <motion.div
             initial={{ opacity: 0 }}
