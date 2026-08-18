@@ -278,7 +278,7 @@ const Login = () => {
   const intent = searchParams.get('intent');
   const next = searchParams.get('next');
   const nextPath = useMemo(() => sanitizeNextPath(next, intent), [intent, next]);
-  const isAuditIntent = intent === 'audit' || nextPath === '/audit' || nextPath.startsWith('/audit?');
+  const isAuditIntent = intent === 'audit' || intent === 'upload-csv' || nextPath === '/audit' || nextPath.startsWith('/audit?') || nextPath === '/data-upload' || nextPath.startsWith('/data-upload?');
   const demoBypassAvailable = isDemoBypassAvailable();
 
   const [mode, setMode] = useState<AuthMode>('login');
@@ -904,7 +904,13 @@ const Login = () => {
 
       const bootstrapResult = await bootstrapWorkspaceWithClerkToken(clerkEmail, sessionToken);
       const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
-      const intentReturnPath = bootstrapResult.intent?.return_path;
+      
+      // Force correct return path based on intent source type if backend is generic
+      let intentReturnPath = bootstrapResult.intent?.return_path;
+      if (bootstrapResult.intent?.source_type === 'csv_upload' && (!intentReturnPath || intentReturnPath === '/audit')) {
+        intentReturnPath = '/data-upload';
+      }
+
       const targetPath = intentReturnPath
         ? tenantRoute(intentReturnPath, resolvedTenantSlug)
         : nextPath !== '/app'
@@ -916,7 +922,13 @@ const Login = () => {
 
     const bootstrapResult = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
     const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
-    const intentReturnPath = bootstrapResult.intent?.return_path;
+    
+    // Force correct return path based on intent source type if backend is generic
+    let intentReturnPath = bootstrapResult.intent?.return_path;
+    if (bootstrapResult.intent?.source_type === 'csv_upload' && (!intentReturnPath || intentReturnPath === '/audit')) {
+      intentReturnPath = '/data-upload';
+    }
+
     const targetPath = intentReturnPath
       ? tenantRoute(intentReturnPath, resolvedTenantSlug)
       : nextPath !== '/app'
@@ -1445,11 +1457,11 @@ const Login = () => {
               <div className="pt-2">
                 <Button
                   type="submit"
-                  disabled={loading}
-                  className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA]"
+                  disabled={loading || !clerkAuthLoaded}
+                  className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
                 >
-                  {loading ? (
-                    'Processing...'
+                  {loading || !clerkAuthLoaded ? (
+                    !clerkAuthLoaded ? 'Loading Security...' : 'Processing...'
                   ) : (
                     mode === 'signup'
                       ? 'Create Account'

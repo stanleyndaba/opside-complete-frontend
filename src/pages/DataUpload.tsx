@@ -249,14 +249,16 @@ export default function DataUpload() {
                         </div>
 
                         <div>
-                            <div className="flex items-center gap-2 mb-1.5">
-                                <FileText className="h-3 w-3 text-[#0B74DE]" />
-                                <span className="text-[10px] font-bold uppercase text-[#182026]">What to Upload</span>
+                            <div className="flex items-center gap-2 mb-2">
+                                <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#182026]">Required Data Scope</span>
                             </div>
-                            <p className="text-[11px] leading-relaxed text-[#4D5B66] font-medium">
+                            <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium">
                                 {ACCEPTED_TYPES.join(' · ')}
                             </p>
-                            <p className="mt-1.5 text-[10px] text-[#8C9BA6]">Margin recognizes these reports automatically.</p>
+                            <p className="mt-2 text-[11px] leading-relaxed text-[#8C9BA6]">
+                                Margin's engine is built to ingest these specific Seller Central exports. We reconcile them against each other to find your recovery gaps.
+                            </p>
                         </div>
                     </div>
 
