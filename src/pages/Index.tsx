@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Check,
+  FileText,
   FileCheck2,
   Landmark,
   MessagesSquare,
@@ -574,6 +575,7 @@ function KineticHeroSection({
                   onClick={onUploadReportsCta}
                   className="landing-pressable flex h-[48px] w-full cursor-pointer items-center justify-center rounded-[8px] border-0 bg-white/[0.06] px-6 text-[14px] font-semibold text-white/75 transition-[border-color,color,background-color] hover:bg-white/[0.10] hover:text-white sm:inline-flex sm:h-[56px] sm:w-auto sm:border sm:border-white/14 sm:bg-transparent sm:px-10 sm:text-[16px] sm:font-bold sm:hover:border-white/24 sm:hover:bg-white/[0.04]"
                 >
+                  <FileText className="mr-2 h-4 w-4" strokeWidth={1.5} />
                   Use Amazon Reports
                 </button>
               </div>
