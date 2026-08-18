@@ -137,44 +137,29 @@ export default function DataUpload() {
                         </div>
 
                         <div className="grid gap-8">
-                            {/* Supported Families */}
-                            <div className="rounded-lg border border-[#D8E3EA] bg-white p-6 shadow-sm">
-                                <h3 className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#182026]">Supported Report Families</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {ACCEPTED_TYPES.map(type => (
-                                        <span key={type} className="rounded-full bg-[#F1F5F9] px-3 py-1 text-[12px] font-medium text-[#4D5B66]">
-                                            {type}
-                                        </span>
-                                    ))}
-                                </div>
-                                <p className="mt-4 text-[13px] text-[#8C9BA6] leading-relaxed">
-                                    Export these as CSV or TXT from your Seller Central account. Margin reconciles them against our forensic baseline.
-                                </p>
-                            </div>
-
                             {/* The Rule */}
-                            <div className="text-center px-4">
+                            <div className="px-4 text-center">
                                 <h3 className="mb-2 text-[11px] font-bold uppercase tracking-tight text-[#182026]">A Simple Rule</h3>
                                 <p className="text-[14px] leading-relaxed text-[#4D5B66]">
                                     Use reports covering the same seller and the same date range where possible.
                                 </p>
                             </div>
 
-                            {/* The Gate */}
+                            {/* The Gate: the one primary action on the anonymous route */}
                             <div className="rounded-lg border border-[#0B74DE]/20 bg-[#0B74DE]/5 p-8 text-center">
                                 <h2 className="mb-2 text-[18px] font-semibold text-[#182026]">Ready to add your reports?</h2>
                                 <p className="mb-6 text-[14px] text-[#4D5B66]">
                                     Create your free Margin account to securely run this Audit and keep your results connected to you.
                                 </p>
-                                <Button 
+                                <Button
                                     onClick={startAuth}
                                     disabled={isBusy}
-                                    className="h-12 w-full max-w-[280px] rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all shadow-md"
+                                    className="h-12 w-full max-w-[280px] rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-md transition-all hover:bg-[#075EBA]"
                                 >
                                     {isBusy ? (
                                         <>
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Securing connection...
+                                            Securing your Audit
                                         </>
                                     ) : (
                                         'Continue with free account'
@@ -186,6 +171,27 @@ export default function DataUpload() {
                                     <span>No payment required</span>
                                     <span className="h-1 w-1 rounded-full bg-[#D8E3EA]" />
                                     <span>Read-only Audit</span>
+                                </div>
+                            </div>
+
+                            {/* Supporting information: intentionally unboxed */}
+                            <div className="px-1">
+                                <h3 className="mb-4 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Supported Report Families</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {ACCEPTED_TYPES.map(type => (
+                                        <span key={type} className="rounded-full bg-[#F1F5F9] px-3 py-1 text-[12px] font-medium text-[#4D5B66]">
+                                            {type}
+                                        </span>
+                                    ))}
+                                </div>
+                                <p className="mt-4 text-[13px] leading-relaxed text-[#8C9BA6]">
+                                    Export these as CSV or TXT from Seller Central. You don't need to identify the report type yourself. Margin recognizes supported reports automatically.
+                                </p>
+                                <div className="mt-6 border-t border-[#D8E3EA] pt-5">
+                                    <h3 className="mb-2 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Do Not Upload</h3>
+                                    <p className="text-[13px] leading-relaxed text-[#8C9BA6]">
+                                        PDFs, Excel files, screenshots or invoices. Those are evidence documents, not operational reports.
+                                    </p>
                                 </div>
                             </div>
                         </div>

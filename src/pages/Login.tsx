@@ -76,10 +76,17 @@ type DemoReviewerLoginResponse = {
   redirectPath: string;
 };
 
+type AuditIntentRoute = {
+  id?: string;
+  return_path?: string;
+  source_type?: string;
+};
+
 type AuthBootstrapResponse = {
   success: boolean;
   user?: { id: string; email: string };
   tenant?: { id: string; slug: string; foundingReservation?: boolean; foundingActivationReady?: boolean };
+  intent?: AuditIntentRoute;
   error?: string;
   message?: string;
 };
@@ -578,12 +585,7 @@ const Login = () => {
 
           const bootstrapResult = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
           const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
-          const intentReturnPath = bootstrapResult.intent?.return_path;
-          const targetPath = intentReturnPath
-            ? tenantRoute(intentReturnPath, resolvedTenantSlug)
-            : nextPath !== '/app'
-            ? bindPathToTenant(nextPath, resolvedTenantSlug)
-            : getDefaultWorkspaceLanding(resolvedTenantSlug);
+          const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
           await routeWithCapacityGate(targetPath);
 
           return {
@@ -736,12 +738,7 @@ const Login = () => {
 
         const bootstrapResult = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
         const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
-        const intentReturnPath = bootstrapResult.intent?.return_path;
-        const targetPath = intentReturnPath
-          ? tenantRoute(intentReturnPath, resolvedTenantSlug)
-          : nextPath !== '/app'
-          ? bindPathToTenant(nextPath, resolvedTenantSlug)
-          : getDefaultWorkspaceLanding(resolvedTenantSlug);
+        const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
         await routeWithCapacityGate(targetPath);
         completed = true;
       },
@@ -831,6 +828,23 @@ const Login = () => {
     throw new Error(import.meta.env.DEV
       ? `Clerk signup stopped at unsupported status: ${signUp.status || 'unknown'}.`
       : 'This signup needs an additional authentication step Margin does not support yet.');
+  };
+
+  const buildPostAuthTargetPath = (
+    intentRecord: AuditIntentRoute | null | undefined,
+    resolvedTenantSlug: string,
+  ) => {
+    // Manual audit is a distinct source rail. Once the server confirms csv_upload,
+    // keep the seller on the public upload route instead of entering Amazon onboarding.
+    if (intentRecord?.source_type === 'csv_upload') {
+      return '/data-upload';
+    }
+
+    return intentRecord?.return_path
+      ? tenantRoute(intentRecord.return_path, resolvedTenantSlug)
+      : nextPath !== '/app'
+      ? bindPathToTenant(nextPath, resolvedTenantSlug)
+      : getDefaultWorkspaceLanding(resolvedTenantSlug);
   };
 
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
@@ -934,17 +948,7 @@ const Login = () => {
       const bootstrapResult = await bootstrapWorkspaceWithClerkToken(clerkEmail, sessionToken);
       const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
       
-      // Force correct return path based on intent source type if backend is generic
-      let intentReturnPath = bootstrapResult.intent?.return_path;
-      if (bootstrapResult.intent?.source_type === 'csv_upload' && (!intentReturnPath || intentReturnPath === '/audit')) {
-        intentReturnPath = '/data-upload';
-      }
-
-      const targetPath = intentReturnPath
-        ? tenantRoute(intentReturnPath, resolvedTenantSlug)
-        : nextPath !== '/app'
-        ? bindPathToTenant(nextPath, resolvedTenantSlug)
-        : getDefaultWorkspaceLanding(resolvedTenantSlug);
+      const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
       await routeWithCapacityGate(targetPath);
       return;
     }
@@ -952,17 +956,7 @@ const Login = () => {
     const bootstrapResult = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
     const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
     
-    // Force correct return path based on intent source type if backend is generic
-    let intentReturnPath = bootstrapResult.intent?.return_path;
-    if (bootstrapResult.intent?.source_type === 'csv_upload' && (!intentReturnPath || intentReturnPath === '/audit')) {
-      intentReturnPath = '/data-upload';
-    }
-
-    const targetPath = intentReturnPath
-      ? tenantRoute(intentReturnPath, resolvedTenantSlug)
-      : nextPath !== '/app'
-      ? bindPathToTenant(nextPath, resolvedTenantSlug)
-      : getDefaultWorkspaceLanding(resolvedTenantSlug);
+    const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
     await routeWithCapacityGate(targetPath);
   };
 
@@ -999,10 +993,8 @@ const Login = () => {
       persistSession(session?.access_token || storedToken, session?.user?.id || localStorage.getItem('user_id'), sessionEmail);
       setActiveSessionEmail(sessionEmail || null);
 
-      const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
-      const targetPath = nextPath !== '/app'
-        ? bindPathToTenant(nextPath, resolvedTenantSlug)
-        : getDefaultWorkspaceLanding(resolvedTenantSlug);
+      const bootstrapResult = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
+      const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, bootstrapResult.resolvedTenantSlug);
       await routeWithCapacityGate(targetPath);
     } catch (retryError) {
       setWorkspaceRetryAvailable(true);
