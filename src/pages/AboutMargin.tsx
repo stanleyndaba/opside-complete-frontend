@@ -1,80 +1,13 @@
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ShieldCheck, Zap, Users, ShieldAlert, FileSearch, Scale, BarChart3, Globe, ClipboardCheck } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
-import { trackEarlyAccessCtaClicked } from '@/lib/analytics';
-
-const sectionLinks = [
-  { href: '#system', label: 'System' },
-  { href: '#capabilities', label: 'Capabilities' },
-  { href: '#why', label: 'Why' },
-  { href: '#promise', label: 'Promise' }
-];
-
-const pillars = [
-  {
-    label: 'A reasoning system',
-    detail:
-      'Margin does not just store data or show dashboards. It reads across shipments, returns, reimbursements, transfers, fees, and payout activity to expose where Amazon may owe the seller money.'
-  },
-  {
-    label: 'A coordinated recovery workflow',
-    detail:
-      'Detection, evidence collection, filing readiness, submission control, and payout tracking are handled as one connected workflow instead of a set of disconnected steps.'
-  },
-  {
-    label: 'An ongoing operating layer',
-    detail:
-      'Margin is not meant to feel like a one-time audit. It is built for continuous recovery coverage, where new discrepancies, support gaps, and payout states stay visible over time.'
-  }
-];
-
-const capabilities = [
-  {
-    label: 'Detection',
-    detail: 'Find missed reimbursement and discrepancy opportunities across Amazon operational activity.'
-  },
-  {
-    label: 'Evidence',
-    detail: 'Collect and match supporting records from connected sources such as email, storage, and uploaded documents.'
-  },
-  {
-    label: 'Readiness',
-    detail: 'Separate what is supportable from what is weak, duplicate, thread-only, or outside the right path to move.'
-  },
-  {
-    label: 'Filing control',
-    detail: 'Help sellers review, prepare, and move valid cases without turning the workflow into blind submission.'
-  },
-  {
-    label: 'Recovery tracking',
-    detail: 'Keep approvals, waits, holds, and payout truth visible until the outcome is actually resolved.'
-  }
-];
-
-const principles = [
-  {
-    label: 'Explainable',
-    detail: 'The seller should be able to understand what is happening, what is blocked, and why.'
-  },
-  {
-    label: 'Evidence-backed',
-    detail: 'The case should move with support, not with guesswork or pressure to file everything.'
-  },
-  {
-    label: 'Operationally calm',
-    detail: 'The workflow should reduce noise and make recovery more readable, not create another surface of clutter.'
-  },
-  {
-    label: 'Outcome-aware',
-    detail: 'Approval should not be mistaken for payout. Recovery truth only matters when the outcome is actually visible.'
-  }
-];
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const revealProps = {
   initial: { opacity: 0, y: 18 },
@@ -83,261 +16,395 @@ const revealProps = {
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
 
-const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
-const labelClass = 'text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]';
-const headingClass = 'mt-4 max-w-[920px] text-[31px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[36px] md:text-[60px]';
-const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-[#66737F] md:mt-6 md:text-[18px] md:leading-8';
+const containerClass = 'mx-auto w-full max-w-5xl px-6';
+const labelClass = 'text-[11px] font-bold uppercase tracking-[0.15em] text-[#0B74DE]';
+const sectionHeadingClass = 'font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#182026] leading-tight';
+const bodyTextClass = 'text-[16px] md:text-[18px] text-[#4D5B66] leading-relaxed tracking-tight';
 
 export default function AboutMargin() {
-  const navigate = useNavigate();
-  const { isFull } = useOnboardingCapacity();
-
   usePageMeta({
-    title: 'About Margin | Operating System for FBA Recovery',
-    description:
-      'Margin is building an operating system for Amazon FBA recovery: detection, evidence collection, filing readiness, and payout tracking in one continuous workflow.',
+    title: 'About Margin — The Recovery Engine for Marketplace Businesses',
+    description: 'Margin is building the Recovery Engine for marketplace businesses, starting with Amazon Seller Recovery and making unresolved marketplace money visible, evidence-backed, and accountable.',
     url: `${SITE_META.url}/about-margin`,
     image: SITE_META.image
   });
-
-  const handlePrimaryCta = () => {
-    if (isFull) {
-      navigate('/waitlist?reason=capacity');
-      return;
-    }
-
-    trackEarlyAccessCtaClicked({
-      cta_location: 'about_margin',
-      cta_text: 'Get Started',
-      destination: '/early-access',
-    });
-    navigate('/early-access');
-  };
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAFAF7] font-sans text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
       <PublicNavbar variant="light" />
 
       <main className="relative">
+        {/* Background effects */}
         <div className="pointer-events-none fixed inset-0 opacity-[0.45] [background-image:linear-gradient(rgba(11,116,222,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(11,116,222,0.045)_1px,transparent_1px)] [background-size:64px_64px]" />
-        <div
-          className="pointer-events-none fixed inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
-          }}
-        />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(11,116,222,0.13),transparent_32%),radial-gradient(circle_at_84%_12%,rgba(46,125,91,0.1),transparent_28%)]" />
 
-        <section className="relative pt-28 md:pt-40">
+        {/* Hero Section */}
+        <section className="relative pt-32 pb-24 md:pt-48 md:pb-32">
           <div className={containerClass}>
             <motion.div
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-[980px]"
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
             >
-              <div className={labelClass}>About Margin</div>
-              <h1 className="mt-5 max-w-[980px] text-[38px] font-semibold leading-[0.98] tracking-[-0.06em] text-[#182026] sm:text-[46px] md:text-[76px]">
-                Margin is being built as the operating system for Amazon FBA recovery.
-              </h1>
-              <p className="mt-5 max-w-[760px] text-[16px] leading-7 text-[#4D5B66] md:mt-7 md:text-[19px] md:leading-8">
-                At the surface, Margin should feel simple: find what Amazon may owe, prepare the support, control the filing path, and keep the recovery lifecycle visible. Underneath that simple experience is a deeper system built to reason across data, documents, actions, and outcomes over time.
-              </p>
-
-              <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
-                {isFull ? (
-                  <button
-                    type="button"
-                    onClick={handlePrimaryCta}
-                    className="hidden inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
-                  >
-                    Get Started
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handlePrimaryCta}
-                    className="inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
-                  >
-                    Get Started
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </button>
-                )}
+              <div className="space-y-4">
+                <span className={labelClass}>The Recovery Engine</span>
+                <h1 className="font-lora text-4xl md:text-[76px] font-medium leading-[1.02] tracking-tight text-[#182026]">
+                  Financial truth should not disappear inside a marketplace.
+                </h1>
               </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="relative mt-14 border-y border-[#D8E3E8] bg-white/50 md:mt-20">
-          <div className={containerClass}>
-            <div className="overflow-x-auto py-4">
-              <div className="flex min-w-max gap-2">
-                {sectionLinks.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-[5px] border border-[#DCE8EE] bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="system">
-          <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={labelClass}>System Model</div>
-              <h2 className={headingClass}>
-                Margin is designed around a simple idea: recovery work should feel coordinated, not investigative.
-              </h2>
-              <p className={bodyClass}>
-                Most sellers do not need another place to stare at raw operational activity. They need a system that can turn discrepancies, support, and state changes into something clear enough to act on and calm enough to trust.
-              </p>
-            </motion.div>
-
-            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
-              {pillars.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
-                >
-                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                    {item.detail}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28" id="capabilities">
-          <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={labelClass}>What Margin Coordinates</div>
-              <h2 className={headingClass}>
-                Recovery work becomes useful only when detection, evidence, filing control, and payout truth stay connected.
-              </h2>
-              <p className={bodyClass}>
-                Margin is being shaped as one continuous workflow rather than a collection of isolated features. That means each part of the system should make the rest of the workflow clearer, not heavier.
-              </p>
-            </motion.div>
-
-            <div className="mt-10 overflow-hidden rounded-[34px] border border-[#CFE0EA] bg-white shadow-[0_34px_100px_rgba(37,49,58,0.1)] md:mt-16">
-              {capabilities.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className={`grid gap-3 px-5 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-8 ${
-                    index > 0 ? 'border-t border-[#D8E3E8]' : ''
-                  }`}
-                >
-                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                    {item.detail}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="relative border-t border-[#E4EDF1] py-16 md:py-28" id="why">
-          <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={labelClass}>Why We Are Building</div>
-              <h2 className={headingClass}>
-                Too much seller loss still disappears into operational blind spots.
-              </h2>
-              <p className={bodyClass}>
-                Inventory goes missing. Customers get refunded without returns. Transfers fall short. Cases get approved, but payouts never land. Supporting documents sit across inboxes, storage tools, and team systems. Recovery should not depend on whether a seller has time to become a full-time investigator.
-              </p>
-            </motion.div>
-
-            <motion.div {...revealProps} className="mt-10 max-w-[820px] space-y-6 md:mt-14">
-              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                The deeper reason Margin exists is that most sellers are being asked to perform reconciliation, evidence collection, filing judgment, and payout verification across too many disconnected surfaces.
-              </p>
-              <p className="text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                We think recovery should be continuous, explainable, and calmer than that. It should feel like a working system on the seller&apos;s side, not another dashboard asking for more attention.
-              </p>
-            </motion.div>
-          </div>
-        </section>
-
-        <section className="relative border-t border-[#E4EDF1] bg-[#F3F6F8] py-16 md:py-28" id="promise">
-          <div className={containerClass}>
-            <motion.div {...revealProps}>
-              <div className={labelClass}>Seller Promise</div>
-              <h2 className={headingClass}>
-                The product should make recovery clearer, stricter, and more trustworthy.
-              </h2>
-            </motion.div>
-
-            <div className="mt-10 border-t border-[#D8E3E8] md:mt-14">
-              {principles.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  {...revealProps}
-                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
-                  className="grid gap-3 border-b border-[#D8E3E8] py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
-                >
-                  <div className="text-[12px] font-semibold uppercase tracking-tight text-[#0B74DE]">{item.label}</div>
-                  <p className="max-w-[760px] text-[15px] leading-7 text-[#66737F] md:text-[17px] md:leading-8">
-                    {item.detail}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="relative border-t border-[#E4EDF1] py-16 md:py-32">
-          <div className={containerClass}>
-            <motion.div
-              {...revealProps}
-              className="border-t border-[#D8E3E8] pt-10 md:pt-12"
-            >
-              <div className="max-w-[860px]">
-                <div className={labelClass}>Direction</div>
-                <h2 className="mt-4 max-w-[860px] text-[32px] font-semibold leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[66px]">
-                  Margin is being built to help turn hidden Amazon discrepancies into recoverable outcomes with less manual friction.
-                </h2>
-                <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[#66737F] md:text-[18px] md:leading-8">
-                  The goal is simple: when Amazon may owe a seller money, Margin should make the discrepancy clearer, the support stronger, the workflow more controlled, and the recovery state easier to trust.
+              
+              <div className="max-w-3xl space-y-6">
+                <p className="text-xl md:text-2xl text-[#4D5B66] leading-relaxed tracking-tight font-medium">
+                  Margin exists to make unresolved marketplace money visible, evidence-backed, and accountable.
+                </p>
+                <p className={bodyTextClass}>
+                  We start with Amazon sellers because recovery becomes difficult long before it becomes optional. Inventory moves across accounts, warehouses, SKUs, markets, cases, reimbursements, reversals, and payouts. The records exist—but they rarely form one clear answer.
+                </p>
+                <p className={bodyTextClass}>
+                  Margin brings those records together so a business can see what happened, what is supported, what remains uncertain, and what should happen next.
                 </p>
               </div>
 
-              <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
-                {isFull ? (
-                  <button
-                    type="button"
-                    onClick={handlePrimaryCta}
-                    className="hidden inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
-                  >
-                    Get Started
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handlePrimaryCta}
-                    className="inline-flex h-11 items-center justify-between rounded-[5px] bg-[#0B74DE] px-5 text-[13px] font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] transition-colors hover:bg-[#0869C9] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
-                  >
-                    Get Started
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </button>
-                )}
+              <div className="pt-4 flex flex-wrap items-center gap-6">
+                <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                  <Link to="/audit">Explore Recovery Audit</Link>
+                </Button>
+                <Link to="/contact" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
+                  Talk to Margin <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </motion.div>
+          </div>
+        </section>
+
+        {/* Section 1: Why Margin exists */}
+        <section className="py-24 border-t border-[#D8E3E8] bg-white/50">
+          <div className={containerClass}>
+            <div className="grid lg:grid-cols-12 gap-16">
+              <div className="lg:col-span-5">
+                <h2 className={sectionHeadingClass}>Important money should not depend on detective work.</h2>
+              </div>
+              <div className="lg:col-span-7 space-y-6">
+                <p className={bodyTextClass}>
+                  Marketplace businesses are expected to reconcile complex financial outcomes across systems they do not control.
+                </p>
+                <p className={bodyTextClass}>
+                  An inventory discrepancy appears in one report. A case is discussed in another. A reimbursement is approved somewhere else. A reversal arrives later. The payout statement tells a different part of the story. The business is left to reconstruct the truth from fragments.
+                </p>
+                <p className={bodyTextClass}>
+                  That work is expensive, repetitive, and easy to postpone—until the unresolved amount becomes material.
+                </p>
+                <div className="pt-6 p-8 rounded-xl border border-[#D8E3E8] bg-[#FAFAF7]">
+                  <p className="text-[16px] font-semibold text-[#182026] leading-relaxed">
+                    Margin exists to give marketplace businesses a reliable recovery record: what happened, what proves it, what is still missing, and who owns the next action.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 2: What we are building */}
+        <section className="py-24 border-t border-[#D8E3E8]">
+          <div className={containerClass}>
+            <div className="max-w-3xl space-y-8">
+              <div className="space-y-4">
+                <h2 className={sectionHeadingClass}>Margin is the Recovery Engine for marketplace businesses.</h2>
+                <p className="text-[14px] font-bold text-[#0B74DE] uppercase tracking-widest">Seller Recovery is the first business.</p>
+              </div>
+              <p className={bodyTextClass}>
+                Margin examines the operational and financial records behind marketplace recovery, turns discrepancies into evidence-backed cases, and keeps the outcome visible through approval, payout, reversal, and final reconciliation.
+              </p>
+              <p className={bodyTextClass}>
+                The immediate product is built for Amazon sellers. The larger company is built around a broader problem:
+              </p>
+              <blockquote className="border-l-4 border-[#0B74DE] pl-8 py-4">
+                <p className="font-lora text-2xl md:text-3xl text-[#182026] leading-relaxed">
+                  "When a marketplace transaction becomes financially unresolved, the business needs more than a report. It needs a trusted way to establish the truth and move the matter forward."
+                </p>
+              </blockquote>
+              <p className="text-[16px] font-bold text-[#182026]">That is the Recovery Engine.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 3: The company belief */}
+        <section className="py-24 bg-[#182026] text-white overflow-hidden relative">
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none [background-image:linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:40px_40px]" />
+          <div className={containerClass + " relative z-10"}>
+            <div className="max-w-3xl space-y-8">
+              <h2 className="font-lora text-3xl md:text-4xl font-medium tracking-tight leading-tight">We believe recovery should be treated as an operating function.</h2>
+              <p className="text-lg text-white/70 leading-relaxed">
+                Recovery is often handled as a scattered side task: an occasional spreadsheet, a provider report, a support thread, a finance check, or a best-effort review when someone has time.
+              </p>
+              <p className="text-lg text-white/70 leading-relaxed font-semibold">
+                That approach breaks as the business grows.
+              </p>
+              <p className="text-lg text-white/70 leading-relaxed">
+                At scale, recovery affects cash, margin, inventory accuracy, financial close, provider accountability, and operational confidence. It belongs inside the operating system of the business—not outside it as an unexplained estimate.
+              </p>
+              <div className="pt-8 border-t border-white/10">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#0B74DE] mb-4">The Margin Belief</p>
+                <p className="font-lora text-2xl md:text-3xl leading-relaxed text-white">
+                  Money is not recovered when a system says "approved." Money is recovered when the outcome is supported, received, reconciled, and visible.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4: How we work */}
+        <section className="py-24 border-y border-[#D8E3E8]">
+          <div className={containerClass}>
+            <div className="mb-16">
+              <h2 className={sectionHeadingClass}>How we work</h2>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+              {[
+                { title: "Evidence before assertion.", desc: "We do not begin with the amount a business hopes to recover. We begin with what the records can establish." },
+                { title: "Truth before urgency.", desc: "A possible discrepancy is not the same as a verified recovery. Margin separates potential, verified, incomplete, reversed, paid, and unresolved states." },
+                { title: "Control before automation.", desc: "Automation should make the operation easier to govern—not make it harder to understand. Important actions should have an owner, an evidence trail, and a clear state." },
+                { title: "No forced sale.", desc: "If the evidence does not support a paid engagement, Margin should say so. A clean or incomplete result is better than an invented claim." },
+                { title: "Approval is not payout.", desc: "A case is not finished because a platform marked it approved. The financial outcome must be followed through payment, reversal, offset, and final reconciliation." },
+                { title: "The seller stays in control.", desc: "Margin can help examine, prepare, route, and monitor recovery work. The seller should understand what is happening and approve the actions that require approval." }
+              ].map((item, i) => (
+                <div key={i} className="space-y-4">
+                  <h4 className="text-[16px] font-bold text-[#182026] tracking-tight">{item.title}</h4>
+                  <p className="text-[14px] text-[#66737F] leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Section 5: The first business */}
+        <section className="py-24 bg-white">
+          <div className={containerClass}>
+            <div className="grid lg:grid-cols-12 gap-16 items-start">
+              <div className="lg:col-span-5 space-y-6">
+                <h2 className={sectionHeadingClass}>The first business: <br />Seller Recovery</h2>
+                <p className={bodyTextClass}>
+                  We start where the financial and operational complexity is already visible.
+                </p>
+                <p className={bodyTextClass}>
+                  Amazon sellers manage inventory, shipments, returns, reimbursements, transfers, fees, cases, and payouts across a marketplace that changes constantly.
+                </p>
+              </div>
+              <div className="lg:col-span-7 rounded-2xl border border-[#D8E3E8] bg-[#FAFAF7] p-8 md:p-12 space-y-8">
+                <h3 className="text-[13px] font-bold uppercase tracking-widest text-[#182026]">Margin's first Recovery Audit is designed to answer:</h3>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  {[
+                    "What may be missing?",
+                    "What can the available records prove?",
+                    "What has already been paid?",
+                    "What was reversed or offset?",
+                    "What is still incomplete?",
+                    "What should the seller do next?"
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-[15px] font-medium text-[#182026]">
+                      <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-8 border-t border-[#D8E3E8]">
+                  <p className="text-[15px] text-[#4D5B66] leading-relaxed">
+                    From there, the seller can handle a defined recovery through <strong>Recover Once</strong>, or keep Margin examining the operation through <strong>Recovery Workspace</strong>.
+                  </p>
+                  <p className="mt-4 text-[15px] text-[#4D5B66] leading-relaxed italic">
+                    The product may become more powerful over time. The promise remains simple: make recovery clearer, more controlled, and easier to trust.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 6: The engine beneath the product */}
+        <section className="py-24 border-t border-[#D8E3E8]">
+          <div className={containerClass}>
+            <div className="max-w-3xl mb-16">
+              <h2 className={sectionHeadingClass}>The engine beneath the product</h2>
+              <p className="mt-4 text-lg text-[#4D5B66]">One truth model. Many recovery situations.</p>
+            </div>
+
+            <div className="rounded-lg border border-[#D8E3E8] bg-white shadow-sm overflow-hidden mb-12">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#FAFAF7] border-b border-[#D8E3E8]">
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[#182026] w-[240px]">Layer</th>
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[#182026]">What it does</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#D8E3E8]">
+                  {[
+                    { l: "Operational record", d: "Reconstructs the inventory, return, shipment, case, or payout event." },
+                    { l: "Evidence", d: "Shows which records support the finding and where coverage is incomplete." },
+                    { l: "Commercial decision", d: "Determines whether the matter should be recovered, investigated, remediated, monitored, or closed." },
+                    { l: "Outcome state", d: "Follows the matter through approval, payment, reversal, offset, and final resolution." }
+                  ].map((row, i) => (
+                    <tr key={i}>
+                      <td className="px-6 py-5 text-[14px] font-bold text-[#182026]">{row.l}</td>
+                      <td className="px-6 py-5 text-[14px] text-[#4D5B66]">{row.d}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className={bodyTextClass + " max-w-3xl"}>
+              This is what makes Margin more than an alerting tool or a reimbursement estimate. It is designed to preserve the relationship between what happened, what is proven, what is decided, and what finally occurred.
+            </p>
+          </div>
+        </section>
+
+        {/* Section 7: Consumer Recovery */}
+        <section className="py-24 bg-[#FAFAF7] border-t border-[#D8E3E8]">
+          <div className={containerClass}>
+            <div className="grid lg:grid-cols-12 gap-16">
+              <div className="lg:col-span-5 space-y-6">
+                <h2 className={sectionHeadingClass}>The second test: <br />Consumer Recovery</h2>
+                <p className={bodyTextClass}>
+                  The engine should generalize—but the proof must come first.
+                </p>
+                <p className={bodyTextClass}>
+                  Seller Recovery is the company's first business. Consumer Recovery is a later experiment built on the same underlying question:
+                </p>
+              </div>
+              <div className="lg:col-span-7 space-y-8">
+                <blockquote className="font-lora text-2xl md:text-3xl text-[#182026] leading-relaxed border-l-4 border-[#0B74DE] pl-8">
+                  "What happens when a marketplace's financial record does not match the evidence held by the person on the other side of the transaction?"
+                </blockquote>
+                <p className={bodyTextClass}>
+                  Consumer Recovery will remain narrow and evidence-heavy. It will focus on high-value unresolved transactions where the records support a meaningful contradiction—not generic customer support or promises of easy refunds.
+                </p>
+                <div className="pt-8 border-t border-[#D8E3E8]">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8C9BA6] mb-6">The Order Matters</p>
+                  <div className="flex flex-wrap items-center gap-4 text-[14px] font-bold text-[#182026] uppercase tracking-wider">
+                    <span>Prove Seller Recovery</span>
+                    <ArrowRight className="h-3 w-3 text-[#D8E3E8]" />
+                    <span>Strengthen the engine</span>
+                    <ArrowRight className="h-3 w-3 text-[#D8E3E8]" />
+                    <span>Test the generalization</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 8: What Margin will not do */}
+        <section className="py-24 border-t border-[#D8E3E8] bg-white">
+          <div className={containerClass}>
+            <div className="max-w-3xl space-y-12">
+              <h2 className={sectionHeadingClass}>What Margin will not do</h2>
+              <div className="space-y-6">
+                {[
+                  "Margin will not present every anomaly as recoverable money.",
+                  "Margin will not confuse a possible amount with a verified outcome.",
+                  "Margin will not force a seller to replace an existing provider without evidence.",
+                  "Margin will not hide uncertainty behind a dashboard, a confidence score, or technical language.",
+                  "Margin will not treat customer money, marketplace data, or operational access casually."
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <ShieldAlert className="h-5 w-5 text-[#0B74DE] mt-1 flex-shrink-0" />
+                    <p className="text-[17px] font-medium text-[#182026] leading-relaxed">{item}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[14px] text-[#8C9BA6] italic pt-4">
+                These are not marketing lines. They are product and operating constraints.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 9: Where we are now */}
+        <section className="py-24 border-t border-[#D8E3E8] bg-[#FAFAF7]">
+          <div className={containerClass}>
+            <div className="grid lg:grid-cols-12 gap-16">
+              <div className="lg:col-span-5">
+                <h2 className={sectionHeadingClass}>Where we are now</h2>
+                <p className="mt-6 text-lg text-[#4D5B66] leading-relaxed">
+                  We are building the first reliable recovery loop.
+                </p>
+              </div>
+              <div className="lg:col-span-7 space-y-8">
+                <p className={bodyTextClass}>
+                  Margin has built the core architecture for a server-owned, evidence-aware Recovery Audit with connected and manual entry paths. The system is designed to preserve intent, protect route boundaries, establish evidence states, support commercial decisions, and keep recovery outcomes visible.
+                </p>
+                <div className="space-y-4">
+                  <p className="text-[13px] font-bold uppercase tracking-widest text-[#182026]">The remaining proof is commercial:</p>
+                  <ul className="space-y-3">
+                    {[
+                      "real sellers must complete the Audit;",
+                      "paid Recovery engagements must be delivered profitably;",
+                      "the same customer loop must repeat;",
+                      "and the product must earn recurring use through measurable control value."
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 text-[15px] text-[#4D5B66]">
+                        <div className="h-1 w-1 rounded-full bg-[#0B74DE]" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="text-[16px] font-semibold text-[#182026] italic">
+                  "We would rather be precise about what has been proven than impressive about what has not."
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 10: The standard */}
+        <section className="py-24 border-t border-[#D8E3E8] bg-white">
+          <div className={containerClass}>
+            <div className="max-w-3xl space-y-8">
+              <h2 className={sectionHeadingClass}>The standard</h2>
+              <p className={bodyTextClass}>
+                Build the system we would trust with our own money.
+              </p>
+              <p className={bodyTextClass}>
+                Margin is not being built to add another dashboard to an already crowded operation. It is being built to become the place where unresolved marketplace recovery is examined, understood, decided, executed, and remembered.
+              </p>
+              <div className="pt-8 grid sm:grid-cols-2 gap-8">
+                {[
+                  { label: "Clear", desc: "enough for a seller to understand" },
+                  { label: "Rigorous", desc: "enough for finance to trust" },
+                  { label: "Controlled", desc: "enough for operations to use" },
+                  { label: "Transparent", desc: "enough for an enterprise buyer to evaluate" }
+                ].map((item, i) => (
+                  <div key={i} className="space-y-1">
+                    <span className="text-[14px] font-bold text-[#182026] uppercase tracking-tight">{item.label}</span>
+                    <p className="text-[14px] text-[#66737F]">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[15px] font-semibold text-[#182026] pt-4">
+                ...and honest enough to say no when the evidence is not there.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Final Statement & CTA */}
+        <section className="py-32 border-t border-[#D8E3E8] bg-[#FAFAF7]">
+          <div className={containerClass}>
+            <div className="max-w-4xl mx-auto text-center space-y-12">
+              <p className="font-lora text-3xl md:text-5xl font-medium tracking-tight text-[#182026] leading-tight">
+                Margin is building the Recovery Engine for marketplace businesses—starting with Amazon Seller Recovery and expanding only where the evidence proves the engine can carry more.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
+                  <Link to="/audit">Run a Recovery Audit</Link>
+                </Button>
+                <Link to="/contact" className="text-[14px] font-semibold text-[#182026] hover:underline flex items-center gap-2">
+                  Talk to the team building Margin <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
       </main>
