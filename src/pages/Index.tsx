@@ -568,7 +568,6 @@ function KineticHeroSection({
                   <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-                <span className="mt-2 text-[13px] font-semibold text-slate-400 sm:hidden">Free read-only Recovery Audit</span>
               </div>
 
               <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
