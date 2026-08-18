@@ -542,8 +542,10 @@ function KineticHeroSection({
             }}
             className="mt-5 max-w-[720px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]"
           >
-            {" "}
-            Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.{" "}
+            <span className="sm:hidden">See what was paid, missed, or reversed—and what to do next.</span>
+            <span className="hidden sm:block">
+              Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.
+            </span>
           </motion.p>{" "}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
