@@ -583,14 +583,14 @@ function KineticHeroSection({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="mt-5 grid grid-cols-3 gap-2 border-y border-white/10 py-3 text-center text-[10px] font-semibold uppercase tracking-tight text-slate-400 sm:mt-8 sm:flex sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-3 sm:border-0 sm:py-0 sm:text-left sm:text-[12px] sm:font-medium sm:normal-case"
+            className="mt-5 flex w-full min-w-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap border-y border-white/10 py-3 text-[8px] font-semibold uppercase tracking-[-0.02em] text-slate-400 sm:mt-8 sm:w-auto sm:justify-start sm:gap-x-5 sm:gap-y-3 sm:overflow-visible sm:border-0 sm:py-0 sm:text-left sm:text-[12px] sm:font-medium sm:normal-case sm:tracking-tight"
           >
             {" "}
-            <span>Free to run</span>
-            <span className="hidden text-slate-600 sm:inline">·</span>
-            <span>Read-only access</span>
-            <span className="hidden text-slate-600 sm:inline">·</span>
-            <span>You approve every submission</span>
+            <span className="shrink-0">Free to run</span>
+            <span className="shrink-0 text-slate-600">·</span>
+            <span className="shrink-0">Read-only access</span>
+            <span className="shrink-0 text-slate-600">·</span>
+            <span className="shrink-0">You approve every submission</span>
           </motion.div>{" "}
           {isFull ? (
             <div className="mt-5 max-w-[430px] rounded-[8px] bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl">
