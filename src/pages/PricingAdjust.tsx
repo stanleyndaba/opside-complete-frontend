@@ -276,7 +276,7 @@ export default function PricingAdjust() {
               <div className="text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                 {tier.salesLed ? 'Offer' : 'Coverage'}
               </div>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[#182026]">{tier.name}</h2>
+              <h2 className="mt-3 font-lora text-3xl font-normal leading-tight tracking-tight text-[#182026]">{tier.name}</h2>
             </div>
             {featured || tier.badgeLabel ? (
               <Badge 
@@ -418,7 +418,7 @@ export default function PricingAdjust() {
             className="mb-16 flex flex-col items-start justify-between gap-10 md:flex-row md:items-end"
           >
             <div className="max-w-xl">
-              <h2 className="text-4xl font-semibold leading-tight tracking-[-0.04em] text-[#182026] sm:text-5xl md:text-7xl md:leading-none">
+              <h2 className="font-lora text-4xl font-normal leading-tight tracking-tight text-[#182026] sm:text-5xl md:text-7xl md:leading-none">
                 Simple pricing,<br />
                 <span className="text-[#8A99A4]">real results.</span>
               </h2>
