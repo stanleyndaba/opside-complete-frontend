@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, FileSearch, Loader2, LockKeyhole, ShieldCheck } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { useTenant } from '@/contexts/TenantContext';
@@ -185,102 +185,148 @@ export default function ConnectAmazonAccount() {
 
   return (
     <PageLayout title="Connect Amazon | Margin" hideNavbar hideSidebar hideLogo plainBackground noPadding>
-      <div className="relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
-        <main className="relative z-10 flex min-h-screen items-center justify-center px-5 py-12">
-          <div className="w-full max-w-[390px]">
-            <div className="mb-12 flex justify-center">
-              <div className="flex items-center gap-3">
-                <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto object-contain" />
-                <span className="brand-wordmark font-merriweather text-[20px] font-semibold tracking-tight text-[#182026]">Margin</span>
+      <div className="min-h-screen bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
+        <main className="mx-auto flex min-h-screen w-full max-w-[1120px] flex-col px-5 py-7 sm:px-8 sm:py-9 lg:px-12">
+          <header className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-2 text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </button>
+            <div className="flex items-center gap-2.5">
+              <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
+              <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-[#182026]">Margin</span>
+            </div>
+            <div className="w-14" aria-hidden="true" />
+          </header>
+
+          <section className="grid flex-1 items-center gap-12 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(360px,430px)] lg:gap-20 lg:py-16">
+            <div className="max-w-[570px]">
+              <div className="mb-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
+                <ShieldCheck className="h-4 w-4" strokeWidth={1.7} />
+                Secure account connection
+              </div>
+              <h1 className="font-lora text-[38px] font-normal leading-[1.08] tracking-tight text-[#182026] sm:text-[50px] lg:text-[58px]">
+                Your Amazon records, connected.
+              </h1>
+              <p className="mt-6 max-w-[510px] text-[16px] leading-7 text-[#66737F] sm:text-[17px]">
+                Margin connects to your Selling Partner account to read the records needed for a read-only recovery audit. You stay in control of the connection and every action that follows.
+              </p>
+
+              <div className="mt-10 space-y-5 border-t border-[#D8E3E8] pt-7">
+                <div className="flex gap-4">
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[#D8E3E8] bg-white text-[#0B74DE]">
+                    <FileSearch className="h-4 w-4" strokeWidth={1.6} />
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">Read the records behind your operation</p>
+                    <p className="mt-1 text-[13px] leading-6 text-[#66737F]">Orders, inventory, shipments, reimbursements, and related account history.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[#D8E3E8] bg-white text-[#0B74DE]">
+                    <LockKeyhole className="h-4 w-4" strokeWidth={1.6} />
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">Authorize through Amazon</p>
+                    <p className="mt-1 text-[13px] leading-6 text-[#66737F]">You will leave Margin and approve the connection on Amazon. Margin never receives your Amazon password.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[#D8E3E8] bg-white text-[#0B74DE]">
+                    <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} />
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">Review before anything moves forward</p>
+                    <p className="mt-1 text-[13px] leading-6 text-[#66737F]">This connection starts examination. No recovery action is filed without your approval.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <section>
-              <h1 className="text-center text-[32px] font-bold leading-none tracking-[-0.065em] text-[#182026]">
-                Connect Amazon
-              </h1>
-              <p className="mt-3 text-center text-[14px] leading-6 text-[#66737F]">
-                Select your marketplace and authorize Margin to read your FBA history.
-              </p>
+            <div className="w-full">
+              <div className="border-y border-[#D8E3E8] bg-white/55 px-5 py-6 sm:px-7 sm:py-8">
+                <div className="mb-7 flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">Step 1 of 3</p>
+                    <h2 className="mt-2 font-lora text-[25px] font-normal leading-tight tracking-tight text-[#182026]">Choose your marketplace</h2>
+                  </div>
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EAF3FB] text-[#0B74DE]">
+                    <ShieldCheck className="h-4 w-4" strokeWidth={1.7} />
+                  </div>
+                </div>
 
-              <div className="mt-10 space-y-5">
                 {preparing ? (
-                  <div className="flex h-14 w-full items-center justify-center rounded-sm border border-[#182026]/20 bg-transparent text-[14px] text-[#66737F]">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin text-[#0B74DE]" />
-                    Preparing workspace...
+                  <div className="border-t border-[#D8E3E8] pt-6 text-[14px] text-[#66737F]">
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin text-[#0B74DE]" />
+                      Preparing your secure connection...
+                    </div>
+                    <p className="mt-2 pl-6 text-[12px] leading-5 text-[#8C9BA6]">This only takes a moment. Your account details remain unchanged.</p>
                   </div>
                 ) : isFull ? (
-                  <div className="space-y-5 border border-[#D8E3E8] bg-white/55 px-5 py-6 text-center text-[#182026]">
-                    <div className="space-y-2">
-                      <p className="text-[14px] font-semibold tracking-tight text-[#182026]">
-                        Margin is processing the current audit queue.
-                      </p>
-                      <p className="text-[13px] leading-6 text-[#66737F]">
-                        Join the waitlist and we will notify you when more Free Recovery Audit capacity opens.
-                      </p>
-                    </div>
+                  <div className="border-t border-[#D8E3E8] pt-6">
+                    <p className="text-[14px] font-semibold tracking-tight text-[#182026]">The current audit queue is full.</p>
+                    <p className="mt-2 text-[13px] leading-6 text-[#66737F]">Join the waitlist and we will notify you when more Free Recovery Audit capacity opens.</p>
                     <Button
                       type="button"
                       onClick={() => navigate('/waitlist?reason=capacity')}
-                      className="mt-5 h-11 w-full rounded-sm bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white hover:bg-[#0869C9] active:scale-[0.98]"
+                      className="mt-6 h-11 w-full rounded-md bg-[#0B74DE] px-5 text-[13px] font-semibold tracking-tight text-white hover:bg-[#0869C9]"
                     >
                       Join Waitlist
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 ) : (
-                  <div className="space-y-5">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-medium uppercase tracking-widest text-[#66737F]">
-                        Marketplace
-                      </label>
-                      <Select
-                        value={selectedMarketplace}
-                        onValueChange={setSelectedMarketplace}
-                        disabled={connecting}
-                      >
-                        <SelectTrigger className="h-12 w-full rounded-sm border-[#182026]/20 bg-transparent px-3 text-left text-[14px] tracking-tight text-[#182026] focus:border-[#182026] focus:ring-0">
-                          <SelectValue placeholder="Select a marketplace" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-sm border-[#182026]/20 bg-white text-[#182026] shadow-md">
-                          {AMAZON_MARKETPLACES.map((marketplace) => (
-                            <SelectItem
-                              key={marketplace.id}
-                              value={marketplace.id}
-                              className="text-sm text-[#182026] focus:bg-[#F3F6F8] focus:text-[#182026]"
-                            >
-                              {marketplace.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <div className="border-t border-[#D8E3E8] pt-6">
+                    <label className="mb-2 block text-[12px] font-medium tracking-tight text-[#66737F]">Amazon marketplace</label>
+                    <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
+                      <SelectTrigger className="h-12 w-full rounded-md border-[#C9D4DB] bg-white px-3 text-left text-[14px] tracking-tight text-[#182026] focus:border-[#0B74DE] focus:ring-0">
+                        <SelectValue placeholder="Select a marketplace" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-md border-[#D8E3E8] bg-white text-[#182026] shadow-lg">
+                        {AMAZON_MARKETPLACES.map((marketplace) => (
+                          <SelectItem key={marketplace.id} value={marketplace.id} className="text-sm text-[#182026] focus:bg-[#F3F6F8] focus:text-[#182026]">
+                            {marketplace.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="mt-3 text-[12px] leading-5 text-[#8C9BA6]">We use this to open the correct Amazon authorization page for your account.</p>
 
-                    <div className="pt-2">
-                      <Button
-                        type="button"
-                        onClick={handleConnectAmazon}
-                        disabled={connecting}
-                        className="flex h-11 w-full items-center justify-center rounded-sm bg-[#0B74DE] px-8 text-[13px] font-semibold tracking-tight text-white shadow-[0_18px_40px_rgba(11,116,222,0.2)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98]"
-                      >
-                        {connecting ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Connecting...
-                          </>
-                        ) : (
-                          <>
-                            Connect Account
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
+                    <Button
+                      type="button"
+                      onClick={handleConnectAmazon}
+                      disabled={connecting}
+                      className="mt-7 flex h-12 w-full items-center justify-center rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold tracking-tight text-white shadow-[0_16px_32px_rgba(11,116,222,0.18)] hover:bg-[#0869C9] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {connecting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Opening Amazon securely...
+                        </>
+                      ) : (
+                        <>
+                          Continue to Amazon
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+
+                    <div className="mt-6 border-t border-[#D8E3E8] pt-5">
+                      <p className="text-[12px] leading-5 text-[#66737F]">
+                        <span className="font-semibold text-[#182026]">What happens next:</span> Amazon asks you to approve access, then brings you back to Margin to begin the audit.
+                      </p>
                     </div>
                   </div>
                 )}
               </div>
-            </section>
-          </div>
+              <p className="mt-5 text-center text-[11px] leading-5 text-[#8C9BA6]">Read-only examination · No payment required · You approve the action</p>
+            </div>
+          </section>
         </main>
       </div>
     </PageLayout>
