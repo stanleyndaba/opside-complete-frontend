@@ -384,9 +384,7 @@ const Login = () => {
   }, []);
 
   const heading = mode === 'signup'
-    ? isAuditIntent
-      ? 'Create audit access'
-      : 'Create your Margin account'
+    ? 'Your Amazon recovery, finally under control.'
     : mode === 'recovery'
       ? 'Reset your password'
     : 'Sign in to Margin';
@@ -483,6 +481,7 @@ const Login = () => {
 
   const bootstrapWorkspaceWithClerkToken = async (emailAddress: string, sessionToken: string) => {
     clearStoredTenantContext();
+    const auditIntentId = searchParams.get('auditIntentId');
 
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
     const bootstrapResponse = await fetch(api.buildApiUrl('/api/auth/bootstrap'), {
@@ -497,10 +496,11 @@ const Login = () => {
         workspaceName,
         preferredTenantSlug: normalizeTenantSlug(localStorage.getItem('active_tenant_slug')),
         foundingReservation: !isAuditIntent && (intent === 'onboarding' || hasFoundingReservationContext()),
+        auditIntentId,
       }),
     });
 
-    const payload = await bootstrapResponse.json().catch(() => null) as AuthBootstrapResponse | null;
+    const payload = await bootstrapResponse.json().catch(() => null) as AuthBootstrapResponse & { intent?: { id: string; return_path: string; source_type: string } } | null;
     if (!bootstrapResponse.ok || !payload?.success) {
       throw new Error(payload?.error || payload?.message || 'Unable to resolve a workspace for this account.');
     }
@@ -515,7 +515,7 @@ const Login = () => {
       persistSession(sessionToken, payload.user?.id, payload.user?.email || emailAddress);
       localStorage.setItem('active_tenant_id', payload.tenant.id);
       localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
-      return resolvedTenantSlug;
+      return { resolvedTenantSlug, intent: payload.intent };
     }
 
     throw new Error('Unable to resolve a workspace for this account.');
@@ -550,8 +550,12 @@ const Login = () => {
             };
           }
 
-          const resolvedTenantSlug = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
-          const targetPath = nextPath !== '/app'
+          const bootstrapResult = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
+          const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
+          const intentReturnPath = bootstrapResult.intent?.return_path;
+          const targetPath = intentReturnPath
+            ? tenantRoute(intentReturnPath, resolvedTenantSlug)
+            : nextPath !== '/app'
             ? bindPathToTenant(nextPath, resolvedTenantSlug)
             : getDefaultWorkspaceLanding(resolvedTenantSlug);
           await routeWithCapacityGate(targetPath);
@@ -702,8 +706,12 @@ const Login = () => {
         persistSession(sessionToken, finalizedUserId, emailAddress);
         setActiveSessionEmail(emailAddress);
 
-        const resolvedTenantSlug = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
-        const targetPath = nextPath !== '/app'
+        const bootstrapResult = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
+        const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
+        const intentReturnPath = bootstrapResult.intent?.return_path;
+        const targetPath = intentReturnPath
+          ? tenantRoute(intentReturnPath, resolvedTenantSlug)
+          : nextPath !== '/app'
           ? bindPathToTenant(nextPath, resolvedTenantSlug)
           : getDefaultWorkspaceLanding(resolvedTenantSlug);
         await routeWithCapacityGate(targetPath);
@@ -848,18 +856,21 @@ const Login = () => {
     if (isInternalDemoAccessEmail(emailAddress)) {
       seedDemoSession({ userEmail: emailAddress });
       setActiveSessionEmail(emailAddress);
-      return DEMO_TENANT_SLUG;
+      return { resolvedTenantSlug: DEMO_TENANT_SLUG, intent: undefined };
     }
 
+    const auditIntentId = searchParams.get('auditIntentId');
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
     const bootstrapResponse = await api.post<{
       success: boolean;
       user?: { id: string; email: string };
       tenant?: { id: string; slug: string; foundingReservation?: boolean; foundingActivationReady?: boolean };
+      intent?: { id: string; return_path: string; source_type: string };
     }>('/api/auth/bootstrap', {
       workspaceName,
       preferredTenantSlug: normalizeTenantSlug(preferredTenantSlug || localStorage.getItem('active_tenant_slug')),
       foundingReservation: !isAuditIntent && (intent === 'onboarding' || hasFoundingReservationContext()),
+      auditIntentId,
     });
 
     applyFoundingActivationState({
@@ -876,7 +887,7 @@ const Login = () => {
       );
       localStorage.setItem('active_tenant_id', bootstrapResponse.data.tenant.id);
       localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
-      return resolvedTenantSlug;
+      return { resolvedTenantSlug, intent: bootstrapResponse.data?.intent };
     }
 
     throw new Error('Unable to resolve a workspace for this account.');
@@ -891,16 +902,24 @@ const Login = () => {
         throw new Error('No active Clerk session is available for workspace routing.');
       }
 
-      const resolvedTenantSlug = await bootstrapWorkspaceWithClerkToken(clerkEmail, sessionToken);
-      const targetPath = nextPath !== '/app'
+      const bootstrapResult = await bootstrapWorkspaceWithClerkToken(clerkEmail, sessionToken);
+      const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
+      const intentReturnPath = bootstrapResult.intent?.return_path;
+      const targetPath = intentReturnPath
+        ? tenantRoute(intentReturnPath, resolvedTenantSlug)
+        : nextPath !== '/app'
         ? bindPathToTenant(nextPath, resolvedTenantSlug)
         : getDefaultWorkspaceLanding(resolvedTenantSlug);
       await routeWithCapacityGate(targetPath);
       return;
     }
 
-    const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
-    const targetPath = nextPath !== '/app'
+    const bootstrapResult = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
+    const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
+    const intentReturnPath = bootstrapResult.intent?.return_path;
+    const targetPath = intentReturnPath
+      ? tenantRoute(intentReturnPath, resolvedTenantSlug)
+      : nextPath !== '/app'
       ? bindPathToTenant(nextPath, resolvedTenantSlug)
       : getDefaultWorkspaceLanding(resolvedTenantSlug);
     await routeWithCapacityGate(targetPath);
@@ -1153,7 +1172,7 @@ const Login = () => {
 
       toast({
         title: 'Logged in',
-        description: 'Redirecting you into your workspace now.',
+        description: isAuditIntent ? 'Returning to your Recovery Audit...' : 'Your Margin account is ready.',
       });
     } catch (loginError: unknown) {
       setWorkspaceRetryAvailable(failureStep === 'workspace');
@@ -1220,9 +1239,29 @@ const Login = () => {
               </Link>
             </div>
 
-            <h1 className="text-left text-[28px] font-bold leading-[1.1] tracking-[-0.035em] text-[#182026] sm:text-[32px]">
+            <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px]">
               {heading}
             </h1>
+
+            {mode === 'signup' && (
+              <div className="mt-3 text-left">
+                {isAuditIntent && (
+                  <p className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#0B74DE]">
+                    Connected Recovery Audit
+                  </p>
+                )}
+                <p className="text-[15px] leading-relaxed text-[#4D5B66]">
+                  Create your free Margin account to keep your Audits, results, and recovery activity connected to you — so you can return anytime without starting over.
+                </p>
+                <div className="mt-4 flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE]">
+                  <span>Free account</span>
+                  <span className="text-slate-300">·</span>
+                  <span>No payment required</span>
+                  <span className="text-slate-300">·</span>
+                  <span>Read-only Audit</span>
+                </div>
+              </div>
+            )}
 
             <div className="mt-6 sm:mt-8">
               {sessionChecked && activeSessionEmail && mode === 'login' ? (

@@ -372,10 +372,8 @@ export function buildApiUrl(path: string): string {
 
   // Detect if we're in Vite development mode with proxy configured
   // In dev mode, use relative URLs so Vite's proxy handles the routing
-  const isViteDev = typeof import.meta !== 'undefined' &&
-    import.meta.env?.DEV === true &&
-    typeof window !== 'undefined' &&
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const isViteDev = typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.endsWith('.manus.computer'));
 
   const isLocalhostOrigin = (value?: string): boolean => {
     if (!value) return false;
@@ -1010,6 +1008,20 @@ export const api = {
     };
   }>(`/api/auth/me${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
+
+  createAuditIntent: (sourceType: 'sp_api' | 'csv_upload') => requestJson<{
+    success: boolean;
+    intent: {
+      id: string;
+      source_type: string;
+      status: string;
+      return_path: string;
+      expires_at: string;
+    };
+  }>('/api/audit-intents', {
+    method: 'POST',
+    body: JSON.stringify({ source_type: sourceType }),
+  }),
 
   startAudit: (authToken?: string | null) => requestJson<{
     success: boolean;

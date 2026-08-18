@@ -9,11 +9,12 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: true,
     // Development proxy - route /api calls to local backend
     // This eliminates CORS issues and simplifies development
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'https://opside-node-api-woco.onrender.com',
         changeOrigin: true,
         secure: false,
         // Log proxy requests in development for debugging

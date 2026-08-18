@@ -723,7 +723,9 @@ export default function Audit() {
     void runAuditForAudit(audit);
   }, [audit, isAuthenticated, location.search, tenantSlug]);
 
-  const startAccountStep = () => {
+  const startAccountStep = async (sourceType: 'sp_api' | 'csv_upload' = 'sp_api') => {
+    if (isBusy) return;
+    setIsBusy(true);
     trackEvent(ANALYTICS_EVENTS.auditStarted, {
       cta_location: 'audit_public_hero',
       cta_text: 'Start Free Audit',
@@ -732,6 +734,15 @@ export default function Audit() {
       cta_location: 'audit_public_hero',
       destination: '/login',
     });
+    try {
+      const res = await api.createAuditIntent(sourceType);
+      if (res.ok && res.data?.success && res.data?.intent?.id) {
+        navigate(`/login?auditIntentId=${res.data.intent.id}&mode=signup`);
+        return;
+      }
+    } catch (e) {
+      console.error('Failed to create audit intent:', e);
+    }
     navigate('/login?mode=signup&intent=audit&next=%2Faudit');
   };
 
@@ -1051,22 +1062,22 @@ export default function Audit() {
 
   const primaryAction =
     step === 'public' ? (
-	      <Button onClick={startAccountStep} className="h-10 w-full rounded-[6px] bg-[#182026] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] sm:w-auto">
-	        Connect Amazon
-	      </Button>
-    ) : step === 'connect' ? (
-      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#182026] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] sm:w-auto">
-        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-        Connect Amazon
-      </Button>
-    ) : step === 'completed' ? (
-      null
-    ) : (
-      <Button onClick={runAudit} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#182026] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] sm:w-auto">
-        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-        {step === 'syncing' || step === 'detecting' ? 'Check Status' : audit?.sync_id ? 'Retry Audit' : 'Run Audit'}
-      </Button>
-    );
+		      <Button onClick={startAccountStep} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
+		        {isAuthenticated ? 'Continue to Amazon' : 'Connect Amazon'}
+		      </Button>
+	    ) : step === 'connect' ? (
+	      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
+		        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+		        {isAuthenticated ? 'Continue to Amazon' : 'Connect Amazon'}
+		      </Button>
+	    ) : step === 'completed' ? (
+	      null
+	    ) : (
+	      <Button onClick={runAudit} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
+		        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+		        {step === 'syncing' || step === 'detecting' ? 'Check Status' : audit?.sync_id ? 'Retry Audit' : 'Run Audit'}
+		      </Button>
+	    );
 
   const auditPhaseMarker = {
     public: '01 / INITIALIZE WORKSPACE',
@@ -1246,13 +1257,23 @@ export default function Audit() {
             <header className="mb-5 pt-2 text-center sm:mb-7 sm:pt-4">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-full max-w-4xl">
-                  <p className="mb-2 text-[13px] font-medium text-[#0B74DE]">Current audit workspace</p>
+                  <p className="mb-2 text-[13px] font-medium text-[#0B74DE] uppercase tracking-wider">
+                    {isAuthenticated ? 'Recovery Audit' : 'Current audit workspace'}
+                  </p>
                   <h1 className="mx-auto max-w-4xl break-words font-lora text-[34px] leading-[1.03] tracking-tight text-[#182026] sm:text-[52px] sm:leading-[1.03]" style={{ fontWeight: 400 }}>
-                    Does what Amazon says match what happened?
+                    {isAuthenticated && step === 'public' ? "Your Recovery Audit is ready" : "Recovery Audit"}
                   </h1>
                   <p className="mx-auto mt-3 max-w-3xl text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-6">
-                    Margin examines your Amazon records for reimbursement gaps, unresolved exceptions, reversals, evidence issues and financial discrepancies.
+                    {isAuthenticated && step === 'public' 
+                      ? "Your account is set up. Continue to Amazon to grant read-only access and begin the examination."
+                      : "Find out what Amazon reimbursed, reversed, or left unresolved."}
                   </p>
+                  {!isAuthenticated && (
+                    <p className="mx-auto mt-4 max-w-2xl text-[13px] font-medium text-[#4D5B66]">
+                      Read-only access. Margin examines the Amazon records needed for your Audit.
+                    </p>
+                  )}
+
                   {needsAdditionalAmazonData && (
                     <div className="mx-auto mt-4 max-w-2xl rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-4">
                       <div className="flex items-start gap-3 text-left">
@@ -1278,12 +1299,12 @@ export default function Audit() {
 	                <div className="flex flex-col items-center gap-4">
 	                  <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:justify-center sm:gap-3">
 	                    {primaryAction}
-	                    <Link 
-	                      to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
-	                      className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-5 text-[13px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:h-10 sm:w-auto sm:text-[13px]"
-	                    >
-	                      Upload Amazon reports
-	                    </Link>
+		                    <Link 
+		                      to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
+		                      className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-5 text-[13px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:h-10 sm:w-auto sm:text-[13px]"
+		                    >
+		                      Use Amazon Reports
+		                    </Link>
 	                  </div>
 	                  <button
 	                    type="button"
