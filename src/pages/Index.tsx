@@ -517,6 +517,20 @@ function KineticHeroSection({
               Get it handled.
             </motion.span>{" "}
           </div>{" "}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-tight text-slate-400 sm:hidden"
+          >
+            <motion.span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 rounded-full bg-[var(--margin-blue)]"
+              animate={reduceMotion ? undefined : { opacity: [0.45, 1, 0.45] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            Recovery audit · Connected or manual
+          </motion.div>{" "}
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -525,7 +539,7 @@ function KineticHeroSection({
               delay: 0.58,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-6 max-w-[720px] text-[16px] leading-[1.75] text-slate-300 sm:mt-8 sm:text-[18px] md:text-[20px]"
+            className="mt-5 max-w-[720px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]"
           >
             {" "}
             Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.{" "}
@@ -538,7 +552,7 @@ function KineticHeroSection({
               delay: 0.78,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:mt-10"
+            className="mt-6 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center"
           >
             {" "}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -546,7 +560,7 @@ function KineticHeroSection({
                 <Button
                   onClick={onEarlyAccessCta}
                   aria-label="Connect Amazon"
-                  className="landing-pressable group relative h-[56px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
+                  className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-6 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"
                 >
                   <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
@@ -558,7 +572,7 @@ function KineticHeroSection({
                 <button
                   type="button"
                   onClick={onUploadReportsCta}
-                  className="landing-pressable flex h-[56px] w-full items-center justify-center rounded-[8px] border border-white/14 bg-transparent px-10 text-[16px] font-bold text-white/80 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto cursor-pointer"
+                  className="landing-pressable flex h-[48px] w-full cursor-pointer items-center justify-center rounded-[8px] border-0 bg-white/[0.06] px-6 text-[14px] font-semibold text-white/75 transition-[border-color,color,background-color] hover:bg-white/[0.10] hover:text-white sm:inline-flex sm:h-[56px] sm:w-auto sm:border sm:border-white/14 sm:bg-transparent sm:px-10 sm:text-[16px] sm:font-bold sm:hover:border-white/24 sm:hover:bg-white/[0.04]"
                 >
                   Use Amazon Reports
                 </button>
@@ -569,13 +583,13 @@ function KineticHeroSection({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12px] font-medium text-slate-400 sm:mt-8"
+            className="mt-5 grid grid-cols-3 gap-2 border-y border-white/10 py-3 text-center text-[10px] font-semibold uppercase tracking-tight text-slate-400 sm:mt-8 sm:flex sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-3 sm:border-0 sm:py-0 sm:text-left sm:text-[12px] sm:font-medium sm:normal-case"
           >
             {" "}
             <span>Free to run</span>
-            <span className="text-slate-600">·</span>
+            <span className="hidden text-slate-600 sm:inline">·</span>
             <span>Read-only access</span>
-            <span className="text-slate-600">·</span>
+            <span className="hidden text-slate-600 sm:inline">·</span>
             <span>You approve every submission</span>
           </motion.div>{" "}
           {isFull ? (
