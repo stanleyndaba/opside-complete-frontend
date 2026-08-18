@@ -514,7 +514,7 @@ const Login = () => {
 
   const bootstrapWorkspaceWithClerkToken = async (emailAddress: string, sessionToken: string) => {
     clearStoredTenantContext();
-    const auditIntentId = searchParams.get('auditIntentId');
+    const auditIntentId = searchParams.get('auditIntentId') || localStorage.getItem('pending_audit_intent_id');
 
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
     const bootstrapResponse = await fetch(api.buildApiUrl('/api/auth/bootstrap'), {
@@ -548,6 +548,11 @@ const Login = () => {
       persistSession(sessionToken, payload.user?.id, payload.user?.email || emailAddress);
       localStorage.setItem('active_tenant_id', payload.tenant.id);
       localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
+      
+      if (payload.intent?.id) {
+        localStorage.removeItem('pending_audit_intent_id');
+      }
+      
       return { resolvedTenantSlug, intent: payload.intent };
     }
 
@@ -739,6 +744,14 @@ const Login = () => {
         const bootstrapResult = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
         const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
         const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
+        
+        toast({
+          title: 'Account created',
+          description: bootstrapResult.intent?.source_type === 'csv_upload' 
+            ? 'Your account is ready. Returning to your Recovery Audit.'
+            : 'Your account is ready. Redirecting you into the audit workspace now.',
+        });
+
         await routeWithCapacityGate(targetPath);
         completed = true;
       },
@@ -902,7 +915,7 @@ const Login = () => {
       return { resolvedTenantSlug: DEMO_TENANT_SLUG, intent: undefined };
     }
 
-    const auditIntentId = searchParams.get('auditIntentId');
+    const auditIntentId = searchParams.get('auditIntentId') || localStorage.getItem('pending_audit_intent_id');
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
     const bootstrapResponse = await api.post<{
       success: boolean;
@@ -930,6 +943,11 @@ const Login = () => {
       );
       localStorage.setItem('active_tenant_id', bootstrapResponse.data.tenant.id);
       localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
+      
+      if (bootstrapResponse.data?.intent?.id) {
+        localStorage.removeItem('pending_audit_intent_id');
+      }
+      
       return { resolvedTenantSlug, intent: bootstrapResponse.data?.intent };
     }
 
@@ -1129,10 +1147,7 @@ const Login = () => {
           access_outcome: 'session_started',
         }));
 
-        toast({
-          title: 'Account created',
-          description: 'Your account is ready. Redirecting you into the audit workspace now.',
-        });
+        // Toast and redirect are handled in the finalize callback
         setLoading(false);
         return;
       }
