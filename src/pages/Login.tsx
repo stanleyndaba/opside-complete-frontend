@@ -288,6 +288,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingStage, setLoadingStage] = useState<'processing' | 'securing' | 'opening'>('processing');
   const [internalError, setInternalError] = useState('');
   const setError = (message: string) => {
     if (message === '__SERVICE_PREPARING__') {
@@ -1077,11 +1078,18 @@ const Login = () => {
     let failureStep: LoginStep = 'account';
 
     setLoading(true);
+    setLoadingStage('processing');
     setError('');
 
     try {
       // B5 Fix: Wait for Clerk to initialize before proceeding with auth logic
       await waitForClerk();
+      
+      // Stage 2: Security handshake (where CAPTCHA usually triggers)
+      setLoadingStage('securing');
+      await new Promise(r => setTimeout(r, 1500)); 
+      
+      setLoadingStage('opening');
     } catch (clerkLoadError: any) {
       setLoading(false);
       setError(clerkLoadError.message);
@@ -1484,23 +1492,29 @@ const Login = () => {
                   ) : null}
 
                   <div className="pt-2">
-                    <Button
-                      type="submit"
-                      disabled={loading || !clerkAuthLoaded}
-                      className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
-                    >
-                      {loading || !clerkAuthLoaded ? (
-                        !clerkAuthLoaded ? 'Loading Security...' : 'Processing...'
-                      ) : (
-                        mode === 'signup'
-                          ? 'Create Account'
-                          : mode === 'recovery'
-                            ? 'Update Password'
-                            : clerkVerificationStep
-                              ? 'Verify Code'
-                              : 'Sign In'
-                      )}
-                    </Button>
+                <Button
+                  type="submit"
+                  disabled={loading || !clerkAuthLoaded}
+                  className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
+                >
+                  {loading || !clerkAuthLoaded ? (
+                    !clerkAuthLoaded 
+                      ? 'Loading Security...' 
+                      : loadingStage === 'processing' 
+                        ? 'Processing...' 
+                        : loadingStage === 'securing'
+                          ? 'Securing connection...'
+                          : 'Opening secure signup...'
+                  ) : (
+                    mode === 'signup'
+                      ? 'Create Account'
+                      : mode === 'recovery'
+                        ? 'Update Password'
+                        : clerkVerificationStep
+                          ? 'Verify Code'
+                          : 'Sign In'
+                  )}
+                </Button>
                   </div>
 
                   <div className="flex flex-col gap-4 pt-7 text-[13px] font-medium tracking-tight text-[#66737F] sm:flex-row sm:items-center sm:justify-between">

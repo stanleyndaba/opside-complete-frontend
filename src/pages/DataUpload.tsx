@@ -26,36 +26,25 @@ const ACCEPTED_TYPES = [
 export default function DataUpload() {
     const { toast } = useToast();
     const navigate = useNavigate();
-    const { isSignedIn } = useAuth();
+    const { isSignedIn, isLoaded } = useAuth();
     const [files, setFiles] = useState<UploadFile[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [dateRange, setDateRange] = useState('Last 90 days');
     const [isBusy, setIsBusy] = useState(false);
 
-    const startAudit = async () => {
+    const startAuth = async () => {
         if (isBusy) return;
-        
-        if (!isSignedIn) {
-            setIsBusy(true);
-            try {
-                const res = await api.createAuditIntent('csv_upload');
-                if (res.ok && res.data?.success && res.data?.intent?.id) {
-                    navigate(`/login?auditIntentId=${res.data.intent.id}&mode=signup`);
-                    return;
-                }
-            } catch (e) {
-                console.error('Failed to create audit intent:', e);
+        setIsBusy(true);
+        try {
+            const res = await api.createAuditIntent('csv_upload');
+            if (res.ok && res.data?.success && res.data?.intent?.id) {
+                navigate(`/login?auditIntentId=${res.data.intent.id}&mode=signup`);
+                return;
             }
-            navigate('/login?mode=signup&intent=upload-csv&next=%2Fdata-upload');
-            return;
+        } catch (e) {
+            console.error('Failed to create audit intent:', e);
         }
-
-        // If signed in, handle the actual upload process
-        toast({
-            title: "Audit Initialized",
-            description: "Margin is preparing your manual audit workspace."
-        });
-        // In a real scenario, we would trigger the upload to S3/Backend here
+        navigate('/login?mode=signup&intent=upload-csv&next=%2Fdata-upload');
     };
 
     const onDragOver = useCallback((e: React.DragEvent) => {
@@ -103,13 +92,7 @@ export default function DataUpload() {
 
     const hasValidFiles = files.some(f => f.status === 'pending');
 
-    const handleUploadClick = (e: React.MouseEvent | React.DragEvent) => {
-        if (!isSignedIn) {
-            e.preventDefault();
-            e.stopPropagation();
-            void startAudit();
-        }
-    };
+    if (!isLoaded) return null;
 
     return (
         <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] overflow-x-hidden">
@@ -140,38 +123,124 @@ export default function DataUpload() {
                 </div>
             </header>
 
-            <main className="mx-auto max-w-2xl px-6 py-8 sm:py-10">
-                {/* Compact Intro */}
-                <div className="mb-8 text-center">
-                    <h1 className="font-lora text-2xl sm:text-3xl font-medium tracking-tight mb-2" style={{ fontWeight: 400 }}>Use the Seller Central reports you already have</h1>
-                    <p className="text-[14px] text-[#4D5B66]">
-                        Margin recognizes supported reports automatically.
-                    </p>
-                </div>
+            <main className="mx-auto max-w-2xl px-6 py-8 sm:py-12">
+                {!isSignedIn ? (
+                    /* ANONYMOUS VIEW: Hierarchy B3 */
+                    <div className="space-y-12">
+                        <div className="text-center">
+                            <h1 className="font-lora text-3xl sm:text-4xl font-medium tracking-tight mb-4" style={{ fontWeight: 400 }}>
+                                Use the Seller Central reports you already have
+                            </h1>
+                            <p className="text-[16px] text-[#4D5B66] max-w-lg mx-auto leading-relaxed">
+                                Margin recognizes supported reports automatically. No manual mapping required.
+                            </p>
+                        </div>
 
-                {/* LEAD: The Uploader */}
-                <section className="mb-6">
-                    <div 
-                        onDragOver={(e) => {
-                            if (!isSignedIn) return;
-                            onDragOver(e);
-                        }}
-                        onDragLeave={onDragLeave}
-                        onDrop={(e) => {
-                            if (!isSignedIn) {
-                                handleUploadClick(e);
-                                return;
-                            }
-                            onDrop(e);
-                        }}
-                        onClick={handleUploadClick}
-                        className={`relative rounded-md border border-dashed transition-all duration-200 ${
-                            isDragging && isSignedIn
-                            ? 'border-[#0B74DE] bg-[#0B74DE]/5' 
-                            : 'border-[#D8E3EA] bg-white hover:border-[#4D5B66]'
-                        } ${!isSignedIn ? 'cursor-pointer' : ''}`}
-                    >
-                        {isSignedIn && (
+                        <div className="grid gap-8">
+                            {/* Supported Families */}
+                            <div className="rounded-lg border border-[#D8E3EA] bg-white p-6 shadow-sm">
+                                <h3 className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#182026]">Supported Report Families</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {ACCEPTED_TYPES.map(type => (
+                                        <span key={type} className="rounded-full bg-[#F1F5F9] px-3 py-1 text-[12px] font-medium text-[#4D5B66]">
+                                            {type}
+                                        </span>
+                                    ))}
+                                </div>
+                                <p className="mt-4 text-[13px] text-[#8C9BA6] leading-relaxed">
+                                    Export these as CSV or TXT from your Seller Central account. Margin reconciles them against our forensic baseline.
+                                </p>
+                            </div>
+
+                            {/* The Rule */}
+                            <div className="text-center px-4">
+                                <h3 className="mb-2 text-[11px] font-bold uppercase tracking-tight text-[#182026]">A Simple Rule</h3>
+                                <p className="text-[14px] leading-relaxed text-[#4D5B66]">
+                                    Use reports covering the same seller and the same date range where possible.
+                                </p>
+                            </div>
+
+                            {/* The Gate */}
+                            <div className="rounded-lg border border-[#0B74DE]/20 bg-[#0B74DE]/5 p-8 text-center">
+                                <h2 className="mb-2 text-[18px] font-semibold text-[#182026]">Ready to add your reports?</h2>
+                                <p className="mb-6 text-[14px] text-[#4D5B66]">
+                                    Create your free Margin account to securely run this Audit and keep your results connected to you.
+                                </p>
+                                <Button 
+                                    onClick={startAuth}
+                                    disabled={isBusy}
+                                    className="h-12 w-full max-w-[280px] rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all shadow-md"
+                                >
+                                    {isBusy ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Securing connection...
+                                        </>
+                                    ) : (
+                                        'Continue with free account'
+                                    )}
+                                </Button>
+                                <div className="mt-4 flex items-center justify-center gap-4 text-[12px] font-medium text-[#8C9BA6]">
+                                    <span>Free account</span>
+                                    <span className="h-1 w-1 rounded-full bg-[#D8E3EA]" />
+                                    <span>No payment required</span>
+                                    <span className="h-1 w-1 rounded-full bg-[#D8E3EA]" />
+                                    <span>Read-only Audit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    /* AUTHENTICATED VIEW: Operational Controls */
+                    <div className="space-y-8">
+                        <div className="mb-8">
+                            <h1 className="font-lora text-2xl font-medium tracking-tight mb-2" style={{ fontWeight: 400 }}>Upload Reports</h1>
+                            <p className="text-[14px] text-[#4D5B66]">
+                                Select your audit period and drop your Amazon reports below.
+                            </p>
+                        </div>
+
+                        {/* Operational Settings */}
+                        <div className="grid sm:grid-cols-2 gap-6 p-5 rounded-lg border border-[#D8E3EA] bg-white">
+                            <div>
+                                <label className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
+                                    <Calendar className="h-3 w-3 text-[#0B74DE]" />
+                                    Audit Period
+                                </label>
+                                <select 
+                                    value={dateRange}
+                                    onChange={(e) => setDateRange(e.target.value)}
+                                    className="h-9 w-full rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] font-medium focus:outline-none focus:ring-1 focus:ring-[#0B74DE] cursor-pointer"
+                                >
+                                    <option>Last 90 days</option>
+                                    <option>Last 180 days</option>
+                                    <option>Year to date</option>
+                                    <option>Custom range</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
+                                    <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
+                                    Report Families
+                                </label>
+                                <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium">
+                                    {ACCEPTED_TYPES.slice(0, 4).join(', ')}...
+                                </p>
+                                <p className="mt-1 text-[11px] text-[#8C9BA6]">Recognized automatically.</p>
+                            </div>
+                        </div>
+
+                        {/* Dropzone */}
+                        <div 
+                            onDragOver={onDragOver}
+                            onDragLeave={onDragLeave}
+                            onDrop={onDrop}
+                            className={`relative rounded-lg border-2 border-dashed transition-all duration-200 min-h-[200px] flex items-center justify-center ${
+                                isDragging 
+                                ? 'border-[#0B74DE] bg-[#0B74DE]/5' 
+                                : 'border-[#D8E3EA] bg-white hover:border-[#4D5B66]'
+                            }`}
+                        >
                             <input 
                                 type="file" 
                                 multiple 
@@ -179,125 +248,85 @@ export default function DataUpload() {
                                 onChange={(e) => e.target.files && handleFiles(e.target.files)}
                                 className="absolute inset-0 z-10 cursor-pointer opacity-0"
                             />
-                        )}
-                        <div className="flex flex-col items-center justify-center py-10 text-center px-6">
-                            <Upload className="h-5 w-5 text-[#4D5B66] mb-3" />
-                            <h3 className="mb-1 text-[15px] font-medium text-[#182026]">
-                                {isSignedIn ? 'Drop Amazon reports here' : 'Create your free Margin account to securely run this Audit'}
-                            </h3>
-                            <p className="text-[12px] text-[#4D5B66] max-w-sm">
-                                {isSignedIn 
-                                    ? 'or browse to select files (CSV/TXT · up to 10 files · 50MB each)' 
-                                    : 'Click here to authenticate and start your report-based Audit'}
-                            </p>
+                            <div className="flex flex-col items-center justify-center text-center px-6">
+                                <div className="h-12 w-12 rounded-full bg-[#F1F5F9] flex items-center justify-center mb-4">
+                                    <Upload className="h-6 w-6 text-[#4D5B66]" />
+                                </div>
+                                <h3 className="mb-1 text-[16px] font-medium text-[#182026]">
+                                    Drop Amazon reports here
+                                </h3>
+                                <p className="text-[13px] text-[#4D5B66]">
+                                    or browse to select files
+                                </p>
+                                <p className="mt-4 text-[11px] text-[#8C9BA6]">
+                                    CSV or TXT · Up to 10 files · 50MB each
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* File List */}
-                    <AnimatePresence>
-                        {files.length > 0 && (
-                            <motion.div 
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="mt-3 space-y-1"
-                            >
-                                {files.map(file => (
-                                    <div 
-                                        key={file.id} 
-                                        className={`flex items-center justify-between rounded-md border px-3 py-2 ${
-                                            file.status === 'error' ? 'border-red-100 bg-red-50/30' : 'border-[#D8E3EA] bg-white'
-                                        }`}
-                                    >
-                                        <div className="flex items-center gap-3 overflow-hidden">
-                                            <FileSpreadsheet className={`h-3.5 w-3.5 flex-shrink-0 ${
-                                                file.status === 'error' ? 'text-red-400' : 'text-[#0B74DE]'
-                                            }`} />
-                                            <span className="truncate text-[12px] font-medium text-[#182026]">{file.file.name}</span>
-                                        </div>
-                                        <button 
-                                            onClick={() => removeFile(file.id)}
-                                            className="text-[#4D5B66] hover:text-[#182026]"
+                        {/* File List */}
+                        <AnimatePresence>
+                            {files.length > 0 && (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    className="space-y-2"
+                                >
+                                    {files.map(file => (
+                                        <div 
+                                            key={file.id} 
+                                            className={`flex items-center justify-between rounded-md border px-4 py-3 ${
+                                                file.status === 'error' ? 'border-red-100 bg-red-50/30' : 'border-[#D8E3EA] bg-white shadow-sm'
+                                            }`}
                                         >
-                                            <X className="h-3.5 w-3.5" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                                            <div className="flex items-center gap-3 overflow-hidden">
+                                                <FileSpreadsheet className={`h-4 w-4 flex-shrink-0 ${
+                                                    file.status === 'error' ? 'text-red-400' : 'text-[#0B74DE]'
+                                                }`} />
+                                                <div className="flex flex-col overflow-hidden">
+                                                    <span className="truncate text-[13px] font-medium text-[#182026]">{file.file.name}</span>
+                                                    {file.error && <span className="text-[10px] text-red-500">{file.error}</span>}
+                                                </div>
+                                            </div>
+                                            <button 
+                                                onClick={() => removeFile(file.id)}
+                                                className="text-[#4D5B66] hover:text-red-500 transition-colors"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
-                    {/* ACTION: Start Audit */}
-                    <div className="mt-6 text-center">
-                        <Button 
-                            onClick={startAudit}
-                            disabled={!hasValidFiles || isBusy}
-                            className="h-10 w-full max-w-[240px] rounded-md bg-[#182026] text-[13px] font-medium text-white hover:bg-black disabled:opacity-20 transition-all shadow-sm"
-                        >
-                            {isBusy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Start Recovery Audit
-                        </Button>
-                        <p className="mt-2.5 text-[11px] text-[#8C9BA6]">
-                            Margin will begin analysis immediately after upload.
-                        </p>
-                        
-                        <div className="mt-8 border-t border-[#F1F5F9] pt-6 text-center">
-                            <h3 className="mb-1.5 text-[10px] font-bold text-[#182026] uppercase tracking-tight">A Simple Rule</h3>
-                            <p className="max-w-md mx-auto text-[12px] leading-relaxed text-[#4D5B66]">
-                                Export the Amazon reports for the same seller and the same date range where possible.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* SUPPORTING: Decision Info */}
-                <div className="grid gap-6 border-t border-[#D8E3EA] pt-6 mt-8">
-                    {/* Period & Scope */}
-                    <div className="grid sm:grid-cols-2 gap-6">
-                        <div>
-                            <div className="flex items-center gap-2 mb-1.5">
-                                <Calendar className="h-3 w-3 text-[#0B74DE]" />
-                                <span className="text-[10px] font-bold uppercase text-[#182026]">Audit Period</span>
-                            </div>
-                            <select 
-                                value={dateRange}
-                                onChange={(e) => setDateRange(e.target.value)}
-                                className="h-7 w-full rounded-md border border-[#D8E3EA] bg-white px-2 text-[11px] font-medium focus:outline-none cursor-pointer"
+                        {/* Action Bar */}
+                        <div className="pt-4 flex flex-col items-center gap-4">
+                            <Button 
+                                onClick={() => {
+                                    toast({
+                                        title: "Audit Initialized",
+                                        description: "Margin is preparing your manual audit workspace."
+                                    });
+                                }}
+                                disabled={!hasValidFiles || isBusy}
+                                className="h-12 w-full max-w-[320px] rounded-md bg-[#182026] text-[14px] font-semibold text-white hover:bg-black disabled:opacity-20 transition-all shadow-md"
                             >
-                                <option>Last 90 days</option>
-                                <option>Last 180 days</option>
-                                <option>Year to date</option>
-                                <option>Custom range</option>
-                            </select>
-                            <p className="mt-1.5 text-[10px] text-[#8C9BA6]">Use reports covering the same period where possible.</p>
-                        </div>
-
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
-                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#182026]">Supported Report Families</span>
+                                Start Recovery Audit
+                            </Button>
+                            
+                            <div className="flex items-center gap-2 text-[11px] text-[#8C9BA6]">
+                                <Ban className="h-3 w-3" />
+                                <span>Do not upload PDFs, Excel, or Screenshots.</span>
                             </div>
-                            <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium opacity-80">
-                                {ACCEPTED_TYPES.join(' · ')}
-                            </p>
-                            <p className="mt-2 text-[11px] leading-relaxed text-[#8C9BA6]">
-                                You don't need to identify the report type yourself. Margin recognizes supported reports automatically.
-                            </p>
                         </div>
                     </div>
-
-                    {/* Rules */}
-                    <div className="border-t border-[#F1F5F9] pt-5 text-center">
-                        <div className="text-[11px] text-[#4D5B66] max-w-md mx-auto">
-                            <span className="block mb-1 font-bold text-[#182026] uppercase text-[9px]">Do not upload</span>
-                            PDFs, Excel, Screenshots, or Invoices. Those are evidence documents, not operational reports.
-                        </div>
-                    </div>
-                </div>
+                )}
             </main>
 
-            <footer className="py-8 text-center border-t border-[#D8E3EA] mt-12 bg-white">
-                <p className="text-[11px] text-[#8C9BA6]">
+            <footer className="py-12 text-center border-t border-[#D8E3EA] mt-12 bg-white">
+                <p className="text-[12px] text-[#8C9BA6]">
                     Margin Agents can make mistakes. Check important info.
                 </p>
             </footer>
