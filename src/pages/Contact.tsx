@@ -119,43 +119,46 @@ export default function Contact() {
 
           {/* Intent Selector */}
           {!selectedRoute && (
-            <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-              <IntentCard 
-                icon={Search}
-                title="I want to check my Amazon recovery"
-                description="Run a Free Recovery Audit to see what Amazon paid, missed, reversed, or left unresolved."
-                cta="Run a Free Recovery Audit"
-                onClick={() => setSelectedRoute('audit')}
-              />
-              <IntentCard 
-                icon={Zap}
-                title="I manage a larger operation"
-                description="Discuss an Enterprise Assessment for multi-account, multi-marketplace, high-SKU, or high-GMV Amazon operations."
-                cta="Request an Enterprise Assessment"
-                onClick={() => setSelectedRoute('enterprise')}
-              />
-              <IntentCard 
-                icon={LifeBuoy}
-                title="I already use Margin"
-                description="Get help with onboarding, Amazon connection, evidence, billing, API access, an Audit, or an active recovery engagement."
-                cta="Get Support"
-                onClick={() => setSelectedRoute('support')}
-              />
-              <IntentCard 
-                icon={Users}
-                title="I want to work with Margin"
-                description="Discuss an agency, aggregator, technology, data, or strategic partnership."
-                cta="Discuss a Partnership"
-                onClick={() => setSelectedRoute('partnership')}
-              />
-              <IntentCard 
-                icon={Mail}
-                title="Something else"
-                description="For media, investor, hiring, research, or general company questions."
-                cta="Send a General Inquiry"
-                onClick={() => setSelectedRoute('general')}
-              />
-            </section>
+            <div className="space-y-12">
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#8C9BA6]">What brings you here?</h2>
+              <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+                <IntentCard 
+                  icon={ShieldCheck}
+                  title="I want to check my Amazon recovery"
+                  description="Run a Free Recovery Audit to see what Amazon paid, missed, reversed, or left unresolved."
+                  cta="Run a Free Recovery Audit"
+                  onClick={() => setSelectedRoute('audit')}
+                />
+                <IntentCard 
+                  icon={Zap}
+                  title="I manage a larger operation"
+                  description="Discuss an Enterprise Assessment for multi-account, multi-marketplace, high-SKU, or high-GMV Amazon operations."
+                  cta="Request an Enterprise Assessment"
+                  onClick={() => setSelectedRoute('enterprise')}
+                />
+                <IntentCard 
+                  icon={LifeBuoy}
+                  title="I already use Margin"
+                  description="Get help with onboarding, Amazon connection, evidence, billing, API access, an Audit, or an active recovery engagement."
+                  cta="Get Support"
+                  onClick={() => setSelectedRoute('support')}
+                />
+                <IntentCard 
+                  icon={Handshake}
+                  title="I want to work with Margin"
+                  description="Discuss an agency, aggregator, technology, data, or strategic partnership."
+                  cta="Discuss a Partnership"
+                  onClick={() => setSelectedRoute('partnership')}
+                />
+                <IntentCard 
+                  icon={Mail}
+                  title="Something else"
+                  description="For media, investor, hiring, research, or general company questions."
+                  cta="Send a General Inquiry"
+                  onClick={() => setSelectedRoute('general')}
+                />
+              </section>
+            </div>
           )}
 
           {/* Route Content */}
@@ -194,10 +197,15 @@ export default function Contact() {
                         <Button asChild className="h-12 px-8 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-lg shadow-[#0B74DE]/20 hover:bg-[#075EBA] transition-all">
                           <Link to="/audit">Run a Free Recovery Audit</Link>
                         </Button>
-                        <p className="text-[13px] font-medium text-[#182026] flex items-center gap-2">
-                          <ShieldCheck className="h-4 w-4 text-[#0B74DE]" />
-                          Free to start. Read-only by default. You approve the action.
-                        </p>
+                        <div className="space-y-4">
+                          <p className="text-[13px] font-medium text-[#182026] flex items-center gap-2">
+                            <ShieldCheck className="h-4 w-4 text-[#0B74DE]" />
+                            Free to start. Read-only by default. You approve the action.
+                          </p>
+                          <p className="text-[13px] text-[#66737F] leading-relaxed">
+                            No contact form required. Start with your Audit intent and create your free account when you are ready to save the work.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -247,6 +255,7 @@ export default function Contact() {
                             title="Your request is with the Margin team."
                             message="We received your message and will review it within one business day. Keep your request reference available if you need to follow up."
                             onReset={resetForm}
+                            showPrivacyNote
                           />
                         ) : (
                           <form onSubmit={handleSupportSubmit} className="space-y-6">
@@ -612,7 +621,7 @@ function IntentCard({ icon: Icon, title, description, cta, onClick }: { icon: an
   );
 }
 
-function SuccessState({ title, message, onReset }: { title: string, message: string, onReset: () => void }) {
+function SuccessState({ title, message, onReset, showPrivacyNote }: { title: string, message: string, onReset: () => void, showPrivacyNote?: boolean }) {
   return (
     <div className="h-full flex flex-col items-center justify-center text-center py-12 px-6">
       <div className="h-16 w-16 rounded-full bg-[#0B74DE]/10 flex items-center justify-center mb-6">
@@ -630,9 +639,11 @@ function SuccessState({ title, message, onReset }: { title: string, message: str
         >
           Back to contact paths
         </Button>
-        <p className="text-[12px] text-[#8C9BA6] italic">
-          Do not send passwords, access tokens, payment card details, or sensitive customer data by email.
-        </p>
+        {showPrivacyNote && (
+          <p className="text-[12px] text-[#8C9BA6] italic">
+            Do not send passwords, access tokens, payment card details, or sensitive customer data by email.
+          </p>
+        )}
       </div>
     </div>
   );
