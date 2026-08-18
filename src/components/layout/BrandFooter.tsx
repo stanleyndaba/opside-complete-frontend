@@ -29,7 +29,7 @@ const resourceLinks: FooterLink[] = [
 const companyLinks: FooterLink[] = [
   { label: 'About', href: '/about-margin' },
   { label: 'Contact', href: '/contact' },
-  { label: 'Sales', href: '/sales' }
+  { label: 'Enterprise', href: '/sales' }
 ];
 
 const legalLinks: FooterLink[] = [

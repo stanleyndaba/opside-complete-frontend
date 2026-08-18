@@ -138,7 +138,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                             Pricing
                         </Link>
                         <Link to="/sales" className={desktopNavLinkClass}>
-                            Enterprise
+                            ENTERPRISE
                         </Link>
                     </nav>
 
@@ -259,7 +259,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="mt-2 flex items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8]">
-                                    Enterprise
+                                    ENTERPRISE
                                 </Link>
                             </div>
                         </motion.div>
