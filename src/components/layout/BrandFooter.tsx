@@ -14,10 +14,8 @@ type FooterLink = {
 
 const productLinks: FooterLink[] = [
   { label: 'Free Recovery Audit', href: '/audit' },
-  { label: 'Recovery Workspace', href: '/app' },
   { label: 'Pricing', href: '/pricing' },
-  { label: 'Security', href: '/security' },
-  { label: 'Integrations', href: '/integrations' }
+  { label: 'Security', href: '/security' }
 ];
 
 const resourceLinks: FooterLink[] = [
