@@ -17,7 +17,7 @@ const revealProps = {
 };
 
 const containerClass = 'mx-auto w-full max-w-5xl px-6';
-const labelClass = 'text-[11px] font-bold uppercase tracking-[0.15em] text-[#0B74DE]';
+const labelClass = 'text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]';
 const sectionHeadingClass = 'font-lora text-3xl md:text-4xl font-medium tracking-tight text-[#182026] leading-tight';
 const bodyTextClass = 'text-[16px] md:text-[18px] text-[#4D5B66] leading-relaxed tracking-tight';
 
@@ -95,7 +95,7 @@ export default function AboutMargin() {
                 <p className={bodyTextClass}>
                   That work is expensive, repetitive, and easy to postpone—until the unresolved amount becomes material.
                 </p>
-                <div className="pt-6 p-8 rounded-xl border border-[#D8E3E8] bg-[#FAFAF7]">
+                <div className="pt-6 border-t border-[#D8E3E8]">
                   <p className="text-[16px] font-semibold text-[#182026] leading-relaxed">
                     Margin exists to give marketplace businesses a reliable recovery record: what happened, what proves it, what is still missing, and who owns the next action.
                   </p>
@@ -111,7 +111,7 @@ export default function AboutMargin() {
             <div className="max-w-3xl space-y-8">
               <div className="space-y-4">
                 <h2 className={sectionHeadingClass}>Margin is the Recovery Engine for marketplace businesses.</h2>
-                <p className="text-[14px] font-bold text-[#0B74DE] uppercase tracking-widest">Seller Recovery is the first business.</p>
+                <p className="text-[14px] font-bold text-[#0B74DE] uppercase tracking-tight">Seller Recovery is the first business.</p>
               </div>
               <p className={bodyTextClass}>
                 Margin examines the operational and financial records behind marketplace recovery, turns discrepancies into evidence-backed cases, and keeps the outcome visible through approval, payout, reversal, and final reconciliation.
@@ -145,7 +145,7 @@ export default function AboutMargin() {
                 At scale, recovery affects cash, margin, inventory accuracy, financial close, provider accountability, and operational confidence. It belongs inside the operating system of the business—not outside it as an unexplained estimate.
               </p>
               <div className="pt-8 border-t border-white/10">
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#0B74DE] mb-4">The Margin Belief</p>
+                <p className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE] mb-4">The Margin Belief</p>
                 <p className="font-lora text-2xl md:text-3xl leading-relaxed text-white">
                   Money is not recovered when a system says "approved." Money is recovered when the outcome is supported, received, reconciled, and visible.
                 </p>
@@ -191,8 +191,8 @@ export default function AboutMargin() {
                   Amazon sellers manage inventory, shipments, returns, reimbursements, transfers, fees, cases, and payouts across a marketplace that changes constantly.
                 </p>
               </div>
-              <div className="lg:col-span-7 rounded-2xl border border-[#D8E3E8] bg-[#FAFAF7] p-8 md:p-12 space-y-8">
-                <h3 className="text-[13px] font-bold uppercase tracking-widest text-[#182026]">Margin's first Recovery Audit is designed to answer:</h3>
+              <div className="lg:col-span-7 border-y border-[#D8E3E8] bg-[#FAFAF7] py-8 md:py-12 space-y-8">
+                <h3 className="text-[13px] font-bold uppercase tracking-tight text-[#182026]">Margin's first Recovery Audit is designed to answer:</h3>
                 <div className="grid sm:grid-cols-2 gap-6">
                   {[
                     "What may be missing?",
@@ -229,12 +229,12 @@ export default function AboutMargin() {
               <p className="mt-4 text-lg text-[#4D5B66]">One truth model. Many recovery situations.</p>
             </div>
 
-            <div className="rounded-lg border border-[#D8E3E8] bg-white shadow-sm overflow-hidden mb-12">
+            <div className="border-y border-[#D8E3E8] bg-white overflow-hidden mb-12">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#FAFAF7] border-b border-[#D8E3E8]">
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[#182026] w-[240px]">Layer</th>
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[#182026]">What it does</th>
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#182026] w-[240px]">Layer</th>
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#182026]">What it does</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#D8E3E8]">
@@ -280,8 +280,8 @@ export default function AboutMargin() {
                   Consumer Recovery will remain narrow and evidence-heavy. It will focus on high-value unresolved transactions where the records support a meaningful contradiction—not generic customer support or promises of easy refunds.
                 </p>
                 <div className="pt-8 border-t border-[#D8E3E8]">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8C9BA6] mb-6">The Order Matters</p>
-                  <div className="flex flex-wrap items-center gap-4 text-[14px] font-bold text-[#182026] uppercase tracking-wider">
+                  <p className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6] mb-6">The Order Matters</p>
+                  <div className="flex flex-wrap items-center gap-4 text-[14px] font-bold text-[#182026] uppercase tracking-tight">
                     <span>Prove Seller Recovery</span>
                     <ArrowRight className="h-3 w-3 text-[#D8E3E8]" />
                     <span>Strengthen the engine</span>
@@ -308,7 +308,7 @@ export default function AboutMargin() {
                   "Margin will not treat customer money, marketplace data, or operational access casually."
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <ShieldAlert className="h-5 w-5 text-[#0B74DE] mt-1 flex-shrink-0" />
+                    <ShieldAlert className="h-4 w-4 text-[#66737F] mt-1 flex-shrink-0" strokeWidth={1.5} />
                     <p className="text-[17px] font-medium text-[#182026] leading-relaxed">{item}</p>
                   </div>
                 ))}
@@ -335,7 +335,7 @@ export default function AboutMargin() {
                   Margin has built the core architecture for a server-owned, evidence-aware Recovery Audit with connected and manual entry paths. The system is designed to preserve intent, protect route boundaries, establish evidence states, support commercial decisions, and keep recovery outcomes visible.
                 </p>
                 <div className="space-y-4">
-                  <p className="text-[13px] font-bold uppercase tracking-widest text-[#182026]">The remaining proof is commercial:</p>
+                  <p className="text-[13px] font-bold uppercase tracking-tight text-[#182026]">The remaining proof is commercial:</p>
                   <ul className="space-y-3">
                     {[
                       "real sellers must complete the Audit;",

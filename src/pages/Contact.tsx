@@ -1,22 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  ShieldCheck, 
-  Building2, 
-  HelpCircle, 
-  Handshake, 
-  Mail, 
-  ArrowRight, 
-  CheckCircle2, 
-  Send, 
-  UserRound, 
-  Building, 
-  MessageSquareText,
-  ChevronRight,
-  Search,
-  Zap,
-  LifeBuoy,
-  Users
+import {
+  ShieldCheck,
+  Building2,
+  FileText,
+  BriefcaseBusiness,
+  BookOpen,
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -34,7 +26,7 @@ import { cn } from '@/lib/utils';
 
 type ContactRoute = 'audit' | 'enterprise' | 'support' | 'partnership' | 'general' | null;
 
-const fieldLabelClass = 'text-[11px] font-bold uppercase tracking-wider text-[#182026]';
+const fieldLabelClass = 'text-[11px] font-bold uppercase tracking-tight text-[#182026]';
 const inputClass = 'h-12 rounded-[5px] border-[#DCE8EE] bg-white text-[14px] tracking-tight text-[#182026] placeholder:text-[#9AA8B2] focus-visible:ring-[#0B74DE]/10 focus-visible:border-[#0B74DE]';
 
 export default function Contact() {
@@ -102,7 +94,7 @@ export default function Contact() {
           
           {/* Hero */}
           <section className="mb-20 space-y-6">
-            <div className="inline-flex items-center gap-2 text-[11px] font-bold text-[#0B74DE] tracking-[0.05em] uppercase">
+            <div className="inline-flex items-center gap-2 text-[11px] font-bold text-[#0B74DE] tracking-tight uppercase">
               Contact Margin
             </div>
             <h1 className="font-lora text-4xl md:text-[64px] font-medium leading-[1.05] tracking-tight text-[#182026]">
@@ -120,7 +112,7 @@ export default function Contact() {
           {/* Intent Selector */}
           {!selectedRoute && (
             <div className="space-y-12">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#8C9BA6]">What brings you here?</h2>
+              <h2 className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6]">What brings you here?</h2>
               <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
                 <IntentCard 
                   icon={ShieldCheck}
@@ -130,28 +122,28 @@ export default function Contact() {
                   onClick={() => setSelectedRoute('audit')}
                 />
                 <IntentCard 
-                  icon={Zap}
+                  icon={Building2}
                   title="I manage a larger operation"
                   description="Discuss an Enterprise Assessment for multi-account, multi-marketplace, high-SKU, or high-GMV Amazon operations."
                   cta="Request an Enterprise Assessment"
                   onClick={() => setSelectedRoute('enterprise')}
                 />
                 <IntentCard 
-                  icon={LifeBuoy}
+                  icon={FileText}
                   title="I already use Margin"
                   description="Get help with onboarding, Amazon connection, evidence, billing, API access, an Audit, or an active recovery engagement."
                   cta="Get Support"
                   onClick={() => setSelectedRoute('support')}
                 />
                 <IntentCard 
-                  icon={Handshake}
+                  icon={BriefcaseBusiness}
                   title="I want to work with Margin"
                   description="Discuss an agency, aggregator, technology, data, or strategic partnership."
                   cta="Discuss a Partnership"
                   onClick={() => setSelectedRoute('partnership')}
                 />
                 <IntentCard 
-                  icon={Mail}
+                  icon={BookOpen}
                   title="Something else"
                   description="For media, investor, hiring, research, or general company questions."
                   cta="Send a General Inquiry"
@@ -175,13 +167,13 @@ export default function Contact() {
                 <div className="mb-8">
                   <button 
                     onClick={() => setSelectedRoute(null)}
-                    className="flex items-center gap-2 text-[12px] font-bold text-[#0B74DE] uppercase tracking-wider hover:underline"
+                    className="flex items-center gap-2 text-[12px] font-bold text-[#0B74DE] uppercase tracking-tight hover:underline"
                   >
                     ← Back to choices
                   </button>
                 </div>
 
-                <div className="rounded-2xl border border-[#D8E3E8] bg-white shadow-2xl shadow-[#182026]/5 overflow-hidden">
+                <div className="border-y border-[#D8E3E8] bg-white overflow-hidden">
                   {selectedRoute === 'audit' && (
                     <div className="p-8 md:p-12 space-y-8">
                       <div className="max-w-2xl space-y-4">
@@ -241,7 +233,7 @@ export default function Contact() {
                             Reach Margin for onboarding, Amazon connection issues, evidence questions, billing, API access, Audit problems, or anything blocking recovery work.
                           </p>
                           <div className="pt-6 space-y-4">
-                            <div className="text-[11px] font-bold uppercase tracking-widest text-[#0B74DE]">Direct Email</div>
+                            <div className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">Direct Email</div>
                             <a href="mailto:support@margin-finance.com" className="text-[16px] font-medium hover:underline">support@margin-finance.com</a>
                           </div>
                         </div>
@@ -535,13 +527,13 @@ export default function Contact() {
 
           {/* Direct Contact Table */}
           <section className="mb-24">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#8C9BA6] mb-8">Direct contact</h3>
-            <div className="rounded-lg border border-[#D8E3E8] bg-white shadow-sm overflow-hidden">
+            <h3 className="text-[11px] font-bold uppercase tracking-tight text-[#8C9BA6] mb-8">Direct contact</h3>
+            <div className="border-y border-[#D8E3E8] bg-white overflow-hidden">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#FAFAF7] border-b border-[#D8E3E8]">
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[#182026]">Need</th>
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[#182026]">Contact</th>
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Need</th>
+                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Contact</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#D8E3E8]">
@@ -580,8 +572,8 @@ export default function Contact() {
                 We use the information you provide to understand the request, route it correctly, and determine the next useful step. If a connection, upload, authorization, or payment is needed later, we will explain why before asking for it.
               </p>
             </div>
-            <div className="p-8 rounded-xl border border-[#D8E3E8] bg-white shadow-sm space-y-4">
-              <div className="flex items-center gap-2 text-[11px] font-bold text-[#0B74DE] uppercase tracking-widest">
+            <div className="border-y border-[#D8E3E8] bg-[#FAFAF7] py-8 space-y-4">
+              <div className="flex items-center gap-2 text-[11px] font-bold text-[#0B74DE] uppercase tracking-tight">
                 <ShieldCheck className="h-4 w-4" />
                 Privacy first
               </div>
@@ -601,23 +593,24 @@ export default function Contact() {
 
 function IntentCard({ icon: Icon, title, description, cta, onClick }: { icon: any, title: string, description: string, cta: string, onClick: () => void }) {
   return (
-    <div 
+    <button
+      type="button"
       onClick={onClick}
-      className="group cursor-pointer p-6 rounded-[6px] border border-[#D8E3E8] bg-white shadow-sm transition-all hover:border-[#0B74DE]/30 hover:shadow-md flex flex-col justify-between"
+      className="group flex min-h-[220px] w-full cursor-pointer flex-col justify-between border-t border-[#D8E3E8] bg-transparent py-8 text-left transition-colors hover:bg-[#F8FAFB]/70"
     >
-      <div className="space-y-4">
-        <div className="h-10 w-10 rounded-[4px] bg-[#F8FAFB] border border-[#D8E3E8] flex items-center justify-center transition-colors group-hover:bg-[#0B74DE]/5 group-hover:border-[#0B74DE]/20">
-          <Icon className="h-5 w-5 text-[#66737F] transition-colors group-hover:text-[#0B74DE]" strokeWidth={1.5} />
+      <div className="space-y-5">
+        <div className="flex h-5 w-5 items-center justify-center text-[#6B7280] transition-colors group-hover:text-[#0B74DE]">
+          <Icon className="h-full w-full" strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
           <h3 className="text-[16px] font-bold text-[#182026] tracking-tight">{title}</h3>
           <p className="text-[13px] text-[#66737F] leading-relaxed">{description}</p>
         </div>
       </div>
-      <div className="mt-6 flex items-center gap-2 text-[12px] font-bold text-[#0B74DE] uppercase tracking-wider group-hover:gap-3 transition-all">
+      <div className="mt-7 inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] tracking-tight group-hover:gap-3 transition-all">
         {cta} <ChevronRight className="h-3 w-3" />
       </div>
-    </div>
+    </button>
   );
 }
 
