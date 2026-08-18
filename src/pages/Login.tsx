@@ -1269,299 +1269,336 @@ const Login = () => {
 
   return (
     <div className="relative min-h-screen overflow-y-auto bg-[#FAFAF7] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-      <main className="relative z-10 flex min-h-screen items-center justify-center px-6 py-10 sm:px-8 sm:py-16">
-        <div className="w-full max-w-[380px]">
-          <div className="mb-10 flex flex-col items-center sm:mb-12">
-            <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-              <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
-              <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
-            </Link>
-          </div>
-
-          <section>
-            <div className="mb-6 flex justify-start sm:mb-7">
-              <Link 
-                to={isAuditIntent ? "/audit" : "/"} 
-                className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
-              >
-                <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
-                Back to Margin
+      <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
+        {/* Left Side: Form */}
+        <div className="flex flex-1 items-center justify-center px-6 py-10 sm:px-8 lg:py-16">
+          <div className="w-full max-w-[380px]">
+            <div className="mb-10 flex flex-col items-start sm:mb-12">
+              <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+                <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
+                <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
               </Link>
             </div>
 
-            <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px]">
+            <section>
+              <div className="mb-6 flex justify-start sm:mb-7">
+                <Link 
+                  to={isAuditIntent ? "/audit" : "/"} 
+                  className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
+                >
+                  <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
+                  Back to Margin
+                </Link>
+              </div>
+
+              <div className="lg:hidden mb-8">
+                <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px] font-lora">
+                  {heading}
+                </h1>
+                {mode === 'signup' && (
+                  <div className="mt-4">
+                    <p className="text-[15px] leading-relaxed text-[#4D5B66]">
+                      Create your free Margin account to keep your Audits, results, and recovery activity connected to you — so you can return anytime without starting over.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 sm:mt-0">
+                {sessionChecked && activeSessionEmail && mode === 'login' ? (
+                  <div className="mb-8 border border-[#D8E3EA] bg-[#FAFAF7] p-5 sm:p-6">
+                    <p className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                      Active Session Detected
+                    </p>
+                    <p className="mt-3 text-[15px] leading-6 text-[#66737F]">
+                      You are signed in as <span className="font-semibold text-[#182026]">{activeSessionEmail}</span>.
+                    </p>
+                    <div className="mt-6 flex flex-col gap-2">
+                      <Button
+                        type="button"
+                        onClick={() => void handleContinueExistingSession()}
+                        disabled={loading}
+                        className="h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                      >
+                        Continue
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => void handleUseDifferentAccount()}
+                        disabled={loading}
+                        className="h-12 w-full rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
+                      >
+                        Switch Account
+                      </Button>
+                    </div>
+                  </div>
+                ) : null}
+
+                <form onSubmit={handleLogin} className="space-y-5">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="email"
+                        type="email"
+                        autoComplete="off"
+                        disabled={mode === 'recovery'}
+                        value={email}
+                        onChange={(event) => {
+                          setEmail(event.target.value);
+                          resetLocalAuthError();
+                        }}
+                        placeholder="name@company.com"
+                        className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="password" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                      {mode === 'recovery' ? 'New Password' : 'Password'}
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={(event) => {
+                          setPassword(event.target.value);
+                          resetLocalAuthError();
+                        }}
+                        placeholder={mode === 'recovery' ? 'Enter new password' : 'Enter password'}
+                        className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((value) => !value)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="clerkVerificationCode" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                        Verification Code
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="clerkVerificationCode"
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          value={clerkVerificationCode}
+                          onChange={(event) => {
+                            setClerkVerificationCode(event.target.value);
+                            setError('');
+                          }}
+                          placeholder="Enter verification code"
+                          className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                        />
+                      </div>
+                      {clerkVerificationMessage ? (
+                        <p className="text-[14px] leading-6 text-[#66737F]">{clerkVerificationMessage}</p>
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  {mode === 'recovery' ? (
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                        Confirm Password
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="confirmPassword"
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          autoComplete="new-password"
+                          value={confirmPassword}
+                          onChange={(event) => {
+                            setConfirmPassword(event.target.value);
+                            resetLocalAuthError();
+                          }}
+                          placeholder="Confirm your new password"
+                          className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword((value) => !value)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
+                          aria-label={showConfirmPassword ? 'Hide confirmed password' : 'Show confirmed password'}
+                        >
+                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {error === '__SERVICE_PREPARING__' ? (
+                    <div className="border border-[#D8E3EA] bg-[#FAFAF7] p-6 text-center sm:p-8">
+                      <h3 className="text-[22px] font-bold tracking-[-0.025em] text-[#182026]">
+                        Preparing Account
+                      </h3>
+                      <p className="mx-auto mt-3 max-w-[340px] text-[15px] leading-6 text-[#66737F]">
+                        Margin could not finish preparing your workspace automatically. Retry setup or start from the free audit path.
+                      </p>
+                      <Button
+                        asChild
+                        className="mt-6 h-12 rounded-md bg-[#0B74DE] px-6 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                      >
+                        <Link to="/audit">
+                          Start Free Audit
+                        </Link>
+                      </Button>
+                    </div>
+                  ) : null}
+
+                  {workspaceRetryAvailable && mode === 'login' ? (
+                    <Button
+                      type="button"
+                      onClick={() => void handleRetryWorkspaceRouting()}
+                      disabled={loading}
+                      className="mt-3 h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+                    >
+                      Retry Access Setup
+                    </Button>
+                  ) : null}
+
+                  {!workspaceRetryAvailable && loginStep === 'account' && mode === 'login' ? (
+                    <Button
+                      type="button"
+                      onClick={() => void handleClearBrowserSession()}
+                      disabled={loading}
+                      variant="outline"
+                      className="mt-3 h-11 rounded-md border-[#E8B6B6] bg-[#FAFAF7] px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
+                    >
+                      Clear browser session
+                    </Button>
+                  ) : null}
+
+                  <div className="pt-2">
+                    <Button
+                      type="submit"
+                      disabled={loading || !clerkAuthLoaded}
+                      className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
+                    >
+                      {loading || !clerkAuthLoaded ? (
+                        !clerkAuthLoaded ? 'Loading Security...' : 'Processing...'
+                      ) : (
+                        mode === 'signup'
+                          ? 'Create Account'
+                          : mode === 'recovery'
+                            ? 'Update Password'
+                            : clerkVerificationStep
+                              ? 'Verify Code'
+                              : 'Sign In'
+                      )}
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-col gap-4 pt-7 text-[13px] font-medium tracking-tight text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode((currentMode) => {
+                          const nextMode = currentMode === 'signup' ? 'login' : 'signup';
+                          setPassword('');
+                          setConfirmPassword('');
+                          setError('');
+                          setClerkVerificationStep(null);
+                          setClerkVerificationCode('');
+                          setClerkVerificationMessage('');
+                          return nextMode;
+                        });
+                      }}
+                      className="text-left transition-colors hover:text-[#182026]"
+                    >
+                      {mode === 'signup' ? 'Log In' : 'Create Account'}
+                    </button>
+                    {mode !== 'recovery' ? (
+                      <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        disabled={loading}
+                        className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
+                      >
+                        Forgot Password?
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode('login');
+                          setPassword('');
+                          setConfirmPassword('');
+                          setError('');
+                          setClerkVerificationStep(null);
+                          setClerkVerificationCode('');
+                          setClerkVerificationMessage('');
+                        }}
+                        className="text-left transition-colors hover:text-[#182026]"
+                      >
+                        Back
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        {/* Right Side: Information */}
+        <div className="hidden lg:flex flex-1 items-center justify-center bg-[#F3F6F8] px-12 py-16">
+          <div className="w-full max-w-[520px]">
+            {isAuditIntent && (
+              <p className="mb-6 text-[12px] font-bold uppercase tracking-widest text-[#0B74DE]">
+                Connected Recovery Audit
+              </p>
+            )}
+            
+            <h1 className="text-left text-[42px] font-bold leading-[1.1] tracking-tight text-[#182026] font-lora">
               {heading}
             </h1>
 
             {mode === 'signup' && (
-              <div className="mt-3 text-left">
-                {isAuditIntent && (
-                  <p className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#0B74DE]">
-                    Connected Recovery Audit
-                  </p>
-                )}
-                <p className="text-[15px] leading-relaxed text-[#4D5B66]">
+              <div className="mt-8 space-y-8">
+                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
                   Create your free Margin account to keep your Audits, results, and recovery activity connected to you — so you can return anytime without starting over.
                 </p>
-                <div className="mt-4 flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE]">
-                  <span>Free account</span>
-                  <span className="text-slate-300">·</span>
-                  <span>No payment required</span>
-                  <span className="text-slate-300">·</span>
-                  <span>Read-only Audit</span>
+                
+                <div className="flex flex-col gap-4 border-t border-[#D8E3EA] pt-8">
+                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <span>Free account</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <span>No payment required</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <span>Read-only Audit</span>
+                  </div>
                 </div>
               </div>
             )}
 
-            <div className="mt-6 sm:mt-8">
-              {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                <div className="mb-8 border border-[#D8E3EA] bg-[#FAFAF7] p-5 sm:p-6">
-                  <p className="text-[12px] font-semibold tracking-tight text-[#66737F]">
-                    Active Session Detected
-                  </p>
-                  <p className="mt-3 text-[15px] leading-6 text-[#66737F]">
-                    You are signed in as <span className="font-semibold text-[#182026]">{activeSessionEmail}</span>.
-                  </p>
-                  <div className="mt-6 flex flex-col gap-2">
-                    <Button
-                      type="button"
-                      onClick={() => void handleContinueExistingSession()}
-                      disabled={loading}
-                      className="h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
-                    >
-                      Continue
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => void handleUseDifferentAccount()}
-                      disabled={loading}
-                      className="h-12 w-full rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
-                    >
-                      Switch Account
-                    </Button>
-                  </div>
-                </div>
-              ) : null}
-
-              <form onSubmit={handleLogin} className="space-y-5">
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
-                  Email Address
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="email"
-                    type="email"
-                    autoComplete="off"
-                    disabled={mode === 'recovery'}
-                    value={email}
-                    onChange={(event) => {
-                      setEmail(event.target.value);
-                      resetLocalAuthError();
-                    }}
-                    placeholder="name@company.com"
-                    className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
-                  />
-                </div>
+            {mode === 'login' && (
+              <div className="mt-8">
+                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+                  Sign in to your Margin workspace to manage your recovery operations, approve claims, and monitor your account integrity.
+                </p>
               </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
-                  {mode === 'recovery' ? 'New Password' : 'Password'}
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(event) => {
-                      setPassword(event.target.value);
-                      resetLocalAuthError();
-                    }}
-                    placeholder={mode === 'recovery' ? 'Enter new password' : 'Enter password'}
-                    className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((value) => !value)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                  </button>
-                </div>
-              </div>
-
-              {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
-                <div className="space-y-2">
-                  <Label htmlFor="clerkVerificationCode" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
-                    Verification Code
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="clerkVerificationCode"
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                      value={clerkVerificationCode}
-                      onChange={(event) => {
-                        setClerkVerificationCode(event.target.value);
-                        setError('');
-                      }}
-                      placeholder="Enter verification code"
-                      className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
-                    />
-                  </div>
-                  {clerkVerificationMessage ? (
-                    <p className="text-[14px] leading-6 text-[#66737F]">{clerkVerificationMessage}</p>
-                  ) : null}
-                </div>
-              ) : null}
-
-              {mode === 'recovery' ? (
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
-                    Confirm Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      autoComplete="new-password"
-                      value={confirmPassword}
-                      onChange={(event) => {
-                        setConfirmPassword(event.target.value);
-                        resetLocalAuthError();
-                      }}
-                      placeholder="Confirm your new password"
-                      className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword((value) => !value)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A99A4] transition-colors hover:text-[#182026]"
-                      aria-label={showConfirmPassword ? 'Hide confirmed password' : 'Show confirmed password'}
-                    >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
-              ) : null}
-
-              {error === '__SERVICE_PREPARING__' ? (
-                <div className="border border-[#D8E3EA] bg-[#FAFAF7] p-6 text-center sm:p-8">
-                  <h3 className="text-[22px] font-bold tracking-[-0.025em] text-[#182026]">
-                    Preparing Account
-                  </h3>
-                  <p className="mx-auto mt-3 max-w-[340px] text-[15px] leading-6 text-[#66737F]">
-                    Margin could not finish preparing your workspace automatically. Retry setup or start from the free audit path.
-                  </p>
-                  <Button
-                    asChild
-                    className="mt-6 h-12 rounded-md bg-[#0B74DE] px-6 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
-                  >
-                    <Link to="/audit">
-                      Start Free Audit
-                    </Link>
-                  </Button>
-                </div>
-              ) : null}
-
-              {workspaceRetryAvailable && mode === 'login' ? (
-                <Button
-                  type="button"
-                  onClick={() => void handleRetryWorkspaceRouting()}
-                  disabled={loading}
-                  className="mt-3 h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
-                >
-                  Retry Access Setup
-                </Button>
-              ) : null}
-
-              {!workspaceRetryAvailable && loginStep === 'account' && mode === 'login' ? (
-                <Button
-                  type="button"
-                  onClick={() => void handleClearBrowserSession()}
-                  disabled={loading}
-                  variant="outline"
-                  className="mt-3 h-11 rounded-md border-[#E8B6B6] bg-[#FAFAF7] px-4 text-[13px] font-semibold text-[#A33A3A] hover:bg-[#FFF5F5]"
-                >
-                  Clear browser session
-                </Button>
-              ) : null}
-
-              <div className="pt-2">
-                <Button
-                  type="submit"
-                  disabled={loading || !clerkAuthLoaded}
-                  className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
-                >
-                  {loading || !clerkAuthLoaded ? (
-                    !clerkAuthLoaded ? 'Loading Security...' : 'Processing...'
-                  ) : (
-                    mode === 'signup'
-                      ? 'Create Account'
-                      : mode === 'recovery'
-                        ? 'Update Password'
-                        : clerkVerificationStep
-                          ? 'Verify Code'
-                          : 'Sign In'
-                  )}
-                </Button>
-              </div>
-
-              <div className="flex flex-col gap-4 pt-7 text-[13px] font-medium tracking-tight text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode((currentMode) => {
-                      const nextMode = currentMode === 'signup' ? 'login' : 'signup';
-                      setPassword('');
-                      setConfirmPassword('');
-                      setError('');
-                      setClerkVerificationStep(null);
-                      setClerkVerificationCode('');
-                      setClerkVerificationMessage('');
-                      return nextMode;
-                    });
-                  }}
-                  className="text-left transition-colors hover:text-[#182026]"
-                >
-                  {mode === 'signup' ? 'Log In' : 'Create Account'}
-                </button>
-                {mode !== 'recovery' ? (
-                  <button
-                    type="button"
-                    onClick={handleForgotPassword}
-                    disabled={loading}
-                    className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
-                  >
-                    Forgot Password?
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode('login');
-                      setPassword('');
-                      setConfirmPassword('');
-                      setError('');
-                      setClerkVerificationStep(null);
-                      setClerkVerificationCode('');
-                      setClerkVerificationMessage('');
-                    }}
-                    className="text-left transition-colors hover:text-[#182026]"
-                  >
-                    Back
-                  </button>
-                )}
-              </div>
-
-              </form>
-            </div>
-          </section>
+            )}
+          </div>
         </div>
       </main>
     </div>
