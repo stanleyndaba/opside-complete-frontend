@@ -252,13 +252,13 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]">
+                                    className="flex items-center rounded-[6px] px-3 py-3 text-[14px] font-lora font-medium tracking-tight text-[#66737F] transition-colors hover:bg-[#F3F6F8] hover:text-[#182026]">
                                     Pricing
                                 </Link>
-                                    <Link
+                                <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 flex items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[#25313A] transition-colors hover:bg-[#F3F6F8]">
+                                    className="mt-2 flex items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-3.5 py-3 text-[14px] font-lora font-medium tracking-tight text-[#182026] shadow-sm transition-colors hover:bg-[#F3F6F8]">
                                     ENTERPRISE
                                 </Link>
                             </div>

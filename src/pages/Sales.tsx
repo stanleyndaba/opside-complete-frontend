@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check, ShieldCheck, BarChart3, Users, Globe, Zap, FileSearch, ClipboardCheck, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, Check, ShieldCheck, BarChart3, Users, Globe, CreditCard, Timer, BriefcaseBusiness, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -301,16 +301,16 @@ export default function Sales() {
 
                     <div className="grid md:grid-cols-2 gap-8">
                         {[
-                            { icon: FileSearch, title: "A defensible evidence trail", desc: "Every material finding should point back to the records that support it. Your team can see the source, the logic, the confidence, the limitation, and the action state." },
+                            { icon: ShieldCheck, title: "A defensible evidence trail", desc: "Every material finding should point back to the records that support it. Your team can see the source, the logic, the confidence, the limitation, and the action state." },
                             { icon: BarChart3, title: "A prioritized recovery queue", desc: "Focus attention on the issues that matter financially and operationally instead of treating every anomaly as equally urgent." },
                             { icon: Globe, title: "A shared view across accounts and markets", desc: "Create a common operating standard for brand groups, agencies, and portfolio operators without forcing every team to maintain a separate interpretation of recovery data." },
-                            { icon: ClipboardCheck, title: "Payout and reversal verification", desc: "Track the difference between a case being approved, a reimbursement being issued, a payout being received, and the outcome remaining correct after later adjustments." },
-                            { icon: Zap, title: "Recurring control", desc: "Move from one-off recovery work toward a scheduled examination and a consistent Control Statement that shows what changed, what was recovered, what reversed, and what requires attention." },
-                            { icon: Users, title: "A clear handoff", desc: "Your team can own the work, ask Margin to handle an approved recovery route, or use Margin as an independent control layer alongside an existing provider." }
+                            { icon: CreditCard, title: "Payout and reversal verification", desc: "Track the difference between a case being approved, a reimbursement being issued, a payout being received, and the outcome remaining correct after later adjustments." },
+                            { icon: Timer, title: "Recurring control", desc: "Move from one-off recovery work toward a scheduled examination and a consistent Control Statement that shows what changed, what was recovered, what reversed, and what requires attention." },
+                            { icon: BriefcaseBusiness, title: "A clear handoff", desc: "Your team can own the work, ask Margin to handle an approved recovery route, or use Margin as an independent control layer alongside an existing provider." }
                         ].map((benefit, i) => (
-                            <div key={i} className="p-8 rounded-lg border border-[#D8E3E8] bg-white shadow-sm flex gap-6">
-                                <div className="h-10 w-10 rounded-full bg-[#0B74DE]/5 flex items-center justify-center flex-shrink-0">
-                                    <benefit.icon className="h-5 w-5 text-[#0B74DE]" />
+                            <div key={i} className="p-8 rounded-[6px] border border-[#D8E3E8] bg-white shadow-[0_2px_8px_rgba(37,49,58,0.04)] flex gap-5">
+                                <div className="h-9 w-9 rounded-[4px] bg-[#F8FAFB] border border-[#D8E3E8] flex items-center justify-center flex-shrink-0">
+                                    <benefit.icon className="h-4 w-4 text-[#66737F]" strokeWidth={1.5} />
                                 </div>
                                 <div className="space-y-2">
                                     <h4 className="text-[16px] font-bold text-[#182026]">{benefit.title}</h4>
