@@ -542,22 +542,27 @@ function KineticHeroSection({
           >
             {" "}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <Button
-                onClick={onEarlyAccessCta}
-                aria-label="Connect Amazon"
-                className="landing-pressable group relative h-[56px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
-              >
-                <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
+                <Button
+                  onClick={onEarlyAccessCta}
+                  aria-label="Connect Amazon"
+                  className="landing-pressable group relative h-[56px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
+                >
+                  <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+                <span className="mt-2 text-[13px] font-semibold text-slate-400 sm:hidden">Free read-only Recovery Audit</span>
+              </div>
 
-              <button
-                type="button"
-                onClick={onUploadReportsCta}
-                className="landing-pressable flex h-[56px] w-full items-center justify-center rounded-[8px] border border-white/14 bg-transparent px-10 text-[16px] font-bold text-white/80 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto cursor-pointer"
-              >
-                Use Amazon Reports
-              </button>
+              <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={onUploadReportsCta}
+                  className="landing-pressable flex h-[56px] w-full items-center justify-center rounded-[8px] border border-white/14 bg-transparent px-10 text-[16px] font-bold text-white/80 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto cursor-pointer"
+                >
+                  Use Amazon Reports
+                </button>
+              </div>
             </div>
           </motion.div>{" "}
           <motion.div
