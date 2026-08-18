@@ -1,8 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@clerk/react';
+import { api } from '@/lib/api';
+import { Loader2 } from 'lucide-react';
 import {
     Upload, FileSpreadsheet, X,
     Calendar, ArrowRight, FileText, Ban, ArrowLeft
@@ -22,9 +25,38 @@ const ACCEPTED_TYPES = [
 
 export default function DataUpload() {
     const { toast } = useToast();
+    const navigate = useNavigate();
+    const { isSignedIn } = useAuth();
     const [files, setFiles] = useState<UploadFile[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [dateRange, setDateRange] = useState('Last 90 days');
+    const [isBusy, setIsBusy] = useState(false);
+
+    const startAudit = async () => {
+        if (isBusy) return;
+        
+        if (!isSignedIn) {
+            setIsBusy(true);
+            try {
+                const res = await api.createAuditIntent('csv_upload');
+                if (res.ok && res.data?.success && res.data?.intent?.id) {
+                    navigate(`/login?auditIntentId=${res.data.intent.id}&mode=signup`);
+                    return;
+                }
+            } catch (e) {
+                console.error('Failed to create audit intent:', e);
+            }
+            navigate('/login?mode=signup&intent=upload-csv&next=%2Fdata-upload');
+            return;
+        }
+
+        // If signed in, handle the actual upload process
+        toast({
+            title: "Audit Initialized",
+            description: "Margin is preparing your manual audit workspace."
+        });
+        // In a real scenario, we would trigger the upload to S3/Backend here
+    };
 
     const onDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -174,9 +206,11 @@ export default function DataUpload() {
                     {/* ACTION: Start Audit */}
                     <div className="mt-6 text-center">
                         <Button 
-                            disabled={!hasValidFiles}
+                            onClick={startAudit}
+                            disabled={!hasValidFiles || isBusy}
                             className="h-10 w-full max-w-[240px] rounded-md bg-[#182026] text-[13px] font-medium text-white hover:bg-black disabled:opacity-20 transition-all shadow-sm"
                         >
+                            {isBusy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Start Recovery Audit
                         </Button>
                         <p className="mt-2.5 text-[11px] text-[#8C9BA6]">

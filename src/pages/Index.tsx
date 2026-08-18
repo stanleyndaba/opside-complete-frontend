@@ -541,29 +541,23 @@ function KineticHeroSection({
             className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:mt-10"
           >
             {" "}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-              <div className="flex flex-col items-center sm:items-start">
-                <Button
-                  onClick={onEarlyAccessCta}
-                  aria-label="Connect Amazon"
-                  className="landing-pressable group relative h-[56px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
-                >
-                  <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                <span className="mt-2 text-[13px] font-semibold text-slate-400">Free read-only Recovery Audit</span>
-              </div>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <Button
+                onClick={onEarlyAccessCta}
+                aria-label="Connect Amazon"
+                className="landing-pressable group relative h-[56px] w-full sm:w-auto justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)]"
+              >
+                <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
 
-              <div className="flex flex-col items-center sm:items-start">
-                <button
-                  type="button"
-                  onClick={onUploadReportsCta}
-                  className="landing-pressable flex h-[56px] w-full items-center justify-center rounded-[8px] border border-white/14 bg-transparent px-10 text-[16px] font-bold text-white/80 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto cursor-pointer"
-                >
-                  Use Amazon Reports
-                </button>
-                <span className="mt-2 text-[13px] font-semibold text-slate-400">Same Audit without connecting Amazon</span>
-              </div>
+              <button
+                type="button"
+                onClick={onUploadReportsCta}
+                className="landing-pressable flex h-[56px] w-full items-center justify-center rounded-[8px] border border-white/14 bg-transparent px-10 text-[16px] font-bold text-white/80 transition-[border-color,color,background-color] hover:border-white/24 hover:bg-white/[0.04] hover:text-white sm:inline-flex sm:w-auto cursor-pointer"
+              >
+                Use Amazon Reports
+              </button>
             </div>
           </motion.div>{" "}
           <motion.div
@@ -602,19 +596,8 @@ export default function Index() {
 
   const [isBusy, setIsBusy] = useState(false);
 
-  const handleClaimAccessClick = async (location: string, sourceType: 'sp_api' | 'csv_upload' = 'sp_api') => {
-    if (isBusy) return;
-    setIsBusy(true);
+  const handleClaimAccessClick = (location: string, sourceType: 'sp_api' | 'csv_upload' = 'sp_api') => {
     trackEarlyAccessCtaClicked(location);
-    try {
-      const res = await api.createAuditIntent(sourceType);
-      if (res.ok && res.data?.success && res.data?.intent?.id) {
-        navigate(`/login?auditIntentId=${res.data.intent.id}&mode=signup`);
-        return;
-      }
-    } catch (e) {
-      console.error('Failed to create audit intent:', e);
-    }
     navigate(sourceType === 'sp_api' ? '/audit' : '/data-upload');
   };
 
