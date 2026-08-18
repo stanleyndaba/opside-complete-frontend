@@ -311,6 +311,31 @@ const Login = () => {
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
   const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
   const clerkFinalizeBootstrapRef = useRef<Promise<ClerkLoginResult> | null>(null);
+
+  // B5 Fix: Track latest Clerk state in a ref to handle initialization races silently
+  const clerkStateRef = useRef({ loaded: clerkAuthLoaded, signIn, signUp });
+  useEffect(() => {
+    clerkStateRef.current = { loaded: clerkAuthLoaded, signIn, signUp };
+  }, [clerkAuthLoaded, signIn, signUp]);
+
+  const waitForClerk = async (timeoutMs = 15000): Promise<void> => {
+    if (clerkStateRef.current.loaded && (clerkStateRef.current.signIn || clerkStateRef.current.signUp)) return;
+    
+    return new Promise((resolve, reject) => {
+      const start = Date.now();
+      const check = () => {
+        if (clerkStateRef.current.loaded && (clerkStateRef.current.signIn || clerkStateRef.current.signUp)) {
+          resolve();
+        } else if (Date.now() - start > timeoutMs) {
+          reject(new Error('The security service is taking longer than expected. Please refresh the page and try again.'));
+        } else {
+          setTimeout(check, 200);
+        }
+      };
+      check();
+    });
+  };
+
   const enterDemoWorkspace = useCallback(() => {
     seedDemoSession();
     navigate(`/app/${DEMO_TENANT_SLUG}/dashboard`, { replace: true });
@@ -596,11 +621,12 @@ const Login = () => {
   };
 
   const handleClerkSignInStatus = async (emailAddress: string): Promise<ClerkLoginResult> => {
-    if (!signIn) {
-      throw new Error('Authentication is still loading. Please try again in a moment.');
+    const currentSignIn = clerkStateRef.current.signIn;
+    if (!currentSignIn) {
+      throw new Error('The security service is still initializing. Please try again in a moment.');
     }
 
-    const currentStatus = signIn.status;
+    const currentStatus = currentSignIn.status;
     logClerkLoginDiagnostic('status_after_sign_in_step', {
       status: currentStatus,
       fetchStatus: clerkSignInFetchStatus,
@@ -647,8 +673,9 @@ const Login = () => {
   };
 
   const authenticateNormalLoginWithClerk = async (): Promise<ClerkLoginResult> => {
-    if (!clerkAuthLoaded || !signIn) {
-      throw new Error('Authentication is still loading. Please try again in a moment.');
+    const currentSignIn = clerkStateRef.current.signIn;
+    if (!clerkStateRef.current.loaded || !currentSignIn) {
+      throw new Error('The security service is still initializing. Please try again in a moment.');
     }
 
     const normalizedEmail = email.trim().toLowerCase();
@@ -734,8 +761,9 @@ const Login = () => {
   };
 
   const authenticateSignupWithClerk = async (): Promise<ClerkLoginResult> => {
-    if (!clerkAuthLoaded || !signUp) {
-      throw new Error('Authentication is still loading. Please try again in a moment.');
+    const currentSignUp = clerkStateRef.current.signUp;
+    if (!clerkStateRef.current.loaded || !currentSignUp) {
+      throw new Error('The security service is still initializing. Please try again in a moment.');
     }
 
     const normalizedEmail = email.trim().toLowerCase();
@@ -1048,6 +1076,18 @@ const Login = () => {
     event.preventDefault();
     let failureStep: LoginStep = 'account';
 
+    setLoading(true);
+    setError('');
+
+    try {
+      // B5 Fix: Wait for Clerk to initialize before proceeding with auth logic
+      await waitForClerk();
+    } catch (clerkLoadError: any) {
+      setLoading(false);
+      setError(clerkLoadError.message);
+      return;
+    }
+
     if (mode === 'recovery') {
       if (!password.trim() || !confirmPassword.trim()) {
         setError('Enter and confirm your new password.');
@@ -1066,8 +1106,6 @@ const Login = () => {
       return;
     }
 
-    setLoading(true);
-    setError('');
     setLoginStep('account');
     setWorkspaceRetryAvailable(false);
     trackEvent(ANALYTICS_EVENTS.loginAttempt, buildLoginAnalyticsParams({

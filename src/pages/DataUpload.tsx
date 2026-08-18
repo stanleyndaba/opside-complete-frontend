@@ -103,6 +103,14 @@ export default function DataUpload() {
 
     const hasValidFiles = files.some(f => f.status === 'pending');
 
+    const handleUploadClick = (e: React.MouseEvent | React.DragEvent) => {
+        if (!isSignedIn) {
+            e.preventDefault();
+            e.stopPropagation();
+            void startAudit();
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] overflow-x-hidden">
             {/* Sticky Header */}
@@ -135,36 +143,52 @@ export default function DataUpload() {
             <main className="mx-auto max-w-2xl px-6 py-8 sm:py-10">
                 {/* Compact Intro */}
                 <div className="mb-8 text-center">
-                    <h1 className="font-lora text-2xl sm:text-3xl font-medium tracking-tight mb-2" style={{ fontWeight: 400 }}>Upload Amazon Reports</h1>
+                    <h1 className="font-lora text-2xl sm:text-3xl font-medium tracking-tight mb-2" style={{ fontWeight: 400 }}>Use the Seller Central reports you already have</h1>
                     <p className="text-[14px] text-[#4D5B66]">
-                        Run your Recovery Audit using reports exported from Amazon Seller Central.
+                        Margin recognizes supported reports automatically.
                     </p>
                 </div>
 
                 {/* LEAD: The Uploader */}
                 <section className="mb-6">
                     <div 
-                        onDragOver={onDragOver}
+                        onDragOver={(e) => {
+                            if (!isSignedIn) return;
+                            onDragOver(e);
+                        }}
                         onDragLeave={onDragLeave}
-                        onDrop={onDrop}
+                        onDrop={(e) => {
+                            if (!isSignedIn) {
+                                handleUploadClick(e);
+                                return;
+                            }
+                            onDrop(e);
+                        }}
+                        onClick={handleUploadClick}
                         className={`relative rounded-md border border-dashed transition-all duration-200 ${
-                            isDragging 
+                            isDragging && isSignedIn
                             ? 'border-[#0B74DE] bg-[#0B74DE]/5' 
                             : 'border-[#D8E3EA] bg-white hover:border-[#4D5B66]'
-                        }`}
+                        } ${!isSignedIn ? 'cursor-pointer' : ''}`}
                     >
-                        <input 
-                            type="file" 
-                            multiple 
-                            accept=".csv,.txt"
-                            onChange={(e) => e.target.files && handleFiles(e.target.files)}
-                            className="absolute inset-0 z-10 cursor-pointer opacity-0"
-                        />
+                        {isSignedIn && (
+                            <input 
+                                type="file" 
+                                multiple 
+                                accept=".csv,.txt"
+                                onChange={(e) => e.target.files && handleFiles(e.target.files)}
+                                className="absolute inset-0 z-10 cursor-pointer opacity-0"
+                            />
+                        )}
                         <div className="flex flex-col items-center justify-center py-10 text-center px-6">
                             <Upload className="h-5 w-5 text-[#4D5B66] mb-3" />
-                            <h3 className="mb-1 text-[15px] font-medium text-[#182026]">Drop Amazon reports here</h3>
+                            <h3 className="mb-1 text-[15px] font-medium text-[#182026]">
+                                {isSignedIn ? 'Drop Amazon reports here' : 'Create your free Margin account to securely run this Audit'}
+                            </h3>
                             <p className="text-[12px] text-[#4D5B66] max-w-sm">
-                                or browse to select files (CSV/TXT · up to 10 files · 50MB each)
+                                {isSignedIn 
+                                    ? 'or browse to select files (CSV/TXT · up to 10 files · 50MB each)' 
+                                    : 'Click here to authenticate and start your report-based Audit'}
                             </p>
                         </div>
                     </div>
@@ -251,13 +275,13 @@ export default function DataUpload() {
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
-                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#182026]">Required Data Scope</span>
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#182026]">Supported Report Families</span>
                             </div>
-                            <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium">
+                            <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium opacity-80">
                                 {ACCEPTED_TYPES.join(' · ')}
                             </p>
                             <p className="mt-2 text-[11px] leading-relaxed text-[#8C9BA6]">
-                                Margin's engine is built to ingest these specific Seller Central exports. We reconcile them against each other to find your recovery gaps.
+                                You don't need to identify the report type yourself. Margin recognizes supported reports automatically.
                             </p>
                         </div>
                     </div>
