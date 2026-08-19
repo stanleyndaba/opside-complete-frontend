@@ -340,6 +340,7 @@ export default function EvidenceLocker() {
   const [docLogSearch, setDocLogSearch] = useState('');
   const [selectedDoc, setSelectedDoc] = useState<LockerDocumentRow | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
   const page = Number(searchParams.get('page')) || 1;
   const pageSize = Number(searchParams.get('pageSize')) || 12;
@@ -760,38 +761,34 @@ export default function EvidenceLocker() {
                 Export CSV
               </Button>
               <div className="h-4 w-px bg-[#E5E7EB]" />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
-                  >
-                    <Upload className="mr-1.5 h-3 w-3" />
-                    Ingest Evidence
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 border-[#E5E7EB] bg-white p-2 shadow-xl">
-                  <div className="p-2">
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">Evidence Sources</p>
-                    <div className="space-y-1">
-                      <Button 
-                        variant="ghost" 
-                        className="w-full justify-start gap-3 h-10 text-xs font-medium text-[#111827] hover:bg-[#F3F5F4]"
-                        onClick={() => navigate(tenantRoute(activeSlug, '/integrations'))}
-                      >
-                        <Mail className="h-4 w-4 text-[#6B7280]" />
-                        Connect Gmail/Slack
-                      </Button>
-                      <label className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-xs font-medium text-[#111827] hover:bg-[#F3F5F4]">
-                        <Cloud className="h-4 w-4 text-[#6B7280]" />
-                        Upload Files
-                        <input type="file" multiple className="hidden" onChange={(e) => handleFileUpload(Array.from(e.target.files || []))} />
-                      </label>
-                    </div>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(tenantRoute(activeSlug, '/integrations'))}
+                className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-semibold tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+              >
+                <Cloud className="mr-1.5 h-3 w-3" />
+                Connect source
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => uploadInputRef.current?.click()}
+                className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-semibold tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+              >
+                <Upload className="mr-1.5 h-3 w-3" />
+                Upload documents
+              </Button>
+              <input
+                ref={uploadInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  void handleFileUpload(Array.from(e.target.files || []));
+                  e.currentTarget.value = '';
+                }}
+              />
             </div>
           </div>
         </div>
@@ -927,7 +924,7 @@ export default function EvidenceLocker() {
         {/* Registry Footer */}
         <div className="mx-auto max-w-6xl px-8 pb-20 pt-10">
           <div className="border-t border-[#E5E7EB] pt-8 text-center">
-            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">
+            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
               <Shield className="h-3 w-3" />
               Forensic Evidence Registry • US-EAST-1
             </div>
@@ -1012,8 +1009,8 @@ export default function EvidenceLocker() {
                       
                       <div className="mt-8 border-t border-[#E5E7EB] pt-6">
                         <div className="flex items-center gap-2 mb-3">
-                          <Zap className="h-3.5 w-3.5 text-[#0B74DE]" />
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#111827]">Operational Signal</span>
+                          <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
+                          <span className="text-[11px] font-bold uppercase tracking-tight text-[#111827]">Operational Signal</span>
                         </div>
                         <p className="text-[12px] leading-relaxed text-[#6B7280]">
                           {selectedDoc.parsing_explanation?.reason || "This document has been parsed and reconciled against Amazon's operational records. Key identifiers were extracted to build the evidence trail."}
@@ -1070,7 +1067,7 @@ export default function EvidenceLocker() {
 
               <div className="border-t border-[#E5E7EB] bg-[#F9FAFB] p-6">
                 <Button 
-                  className="w-full h-11 bg-[#0B74DE] hover:bg-[#0861C5] text-white font-bold uppercase tracking-widest text-[11px] rounded-lg shadow-lg shadow-[#0B74DE]/20"
+                  className="w-full h-11 bg-[#0B74DE] hover:bg-[#0861C5] text-white font-semibold tracking-tight text-[11px] rounded-lg shadow-lg shadow-[#0B74DE]/20"
                   onClick={() => setIsDetailOpen(false)}
                 >
                   Confirm Review
