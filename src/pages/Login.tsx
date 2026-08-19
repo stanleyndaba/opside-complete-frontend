@@ -80,15 +80,28 @@ type AuditIntentRoute = {
   id?: string;
   return_path?: string;
   source_type?: string;
+  status?: string;
 };
 
 type AuthBootstrapResponse = {
   success: boolean;
   user?: { id: string; email: string };
   tenant?: { id: string; slug: string; foundingReservation?: boolean; foundingActivationReady?: boolean };
-  intent?: AuditIntentRoute;
+  auditIntent?: AuditIntentRoute | null;
+  // Preserve compatibility with any older bootstrap producer while preferring the current backend contract.
+  intent?: AuditIntentRoute | null;
   error?: string;
   message?: string;
+};
+
+const getBootstrapAuditIntent = (payload?: AuthBootstrapResponse | null): AuditIntentRoute | undefined => {
+  const auditIntent = payload?.auditIntent ?? payload?.intent;
+  if (!auditIntent?.id) return undefined;
+
+  // Bootstrap attaches a valid intent. Terminal intents must not reroute a later login.
+  if (auditIntent.status && auditIntent.status !== 'attached') return undefined;
+
+  return auditIntent;
 };
 
 const PAYSTACK_REVIEW_EMAIL = String(
@@ -533,7 +546,7 @@ const Login = () => {
       }),
     });
 
-    const payload = await bootstrapResponse.json().catch(() => null) as AuthBootstrapResponse & { intent?: { id: string; return_path: string; source_type: string } } | null;
+    const payload = await bootstrapResponse.json().catch(() => null) as AuthBootstrapResponse | null;
     if (!bootstrapResponse.ok || !payload?.success) {
       throw new Error(payload?.error || payload?.message || 'Unable to resolve a workspace for this account.');
     }
@@ -544,16 +557,17 @@ const Login = () => {
     });
 
     const resolvedTenantSlug = normalizeTenantSlug(payload.tenant?.slug);
+    const auditIntent = getBootstrapAuditIntent(payload);
     if (resolvedTenantSlug && payload.tenant?.id) {
       persistSession(sessionToken, payload.user?.id, payload.user?.email || emailAddress);
       localStorage.setItem('active_tenant_id', payload.tenant.id);
       localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
-      
-      if (payload.intent?.id) {
+
+      if (auditIntentId) {
         localStorage.removeItem('pending_audit_intent_id');
       }
-      
-      return { resolvedTenantSlug, intent: payload.intent };
+
+      return { resolvedTenantSlug, intent: auditIntent };
     }
 
     throw new Error('Unable to resolve a workspace for this account.');
@@ -847,15 +861,11 @@ const Login = () => {
     intentRecord: AuditIntentRoute | null | undefined,
     resolvedTenantSlug: string,
   ) => {
-    // Manual audit is a distinct source rail. Once the server confirms csv_upload,
-    // keep the seller on the public upload route instead of entering Amazon onboarding.
-    if (intentRecord?.source_type === 'csv_upload') {
-      return '/data-upload';
+    if (intentRecord?.return_path) {
+      return sanitizeNextPath(intentRecord.return_path, null);
     }
 
-    return intentRecord?.return_path
-      ? tenantRoute(intentRecord.return_path, resolvedTenantSlug)
-      : nextPath !== '/app'
+    return nextPath !== '/app'
       ? bindPathToTenant(nextPath, resolvedTenantSlug)
       : getDefaultWorkspaceLanding(resolvedTenantSlug);
   };
@@ -917,12 +927,7 @@ const Login = () => {
 
     const auditIntentId = searchParams.get('auditIntentId') || localStorage.getItem('pending_audit_intent_id');
     const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
-    const bootstrapResponse = await api.post<{
-      success: boolean;
-      user?: { id: string; email: string };
-      tenant?: { id: string; slug: string; foundingReservation?: boolean; foundingActivationReady?: boolean };
-      intent?: { id: string; return_path: string; source_type: string };
-    }>('/api/auth/bootstrap', {
+    const bootstrapResponse = await api.post<AuthBootstrapResponse>('/api/auth/bootstrap', {
       workspaceName,
       preferredTenantSlug: normalizeTenantSlug(preferredTenantSlug || localStorage.getItem('active_tenant_slug')),
       foundingReservation: !isAuditIntent && (intent === 'onboarding' || hasFoundingReservationContext()),
@@ -935,6 +940,7 @@ const Login = () => {
     });
 
     const resolvedTenantSlug = normalizeTenantSlug(bootstrapResponse.data?.tenant?.slug);
+    const auditIntent = getBootstrapAuditIntent(bootstrapResponse.data);
     if (bootstrapResponse.ok && resolvedTenantSlug && bootstrapResponse.data?.tenant?.id) {
       persistSession(
         localStorage.getItem('session_token'),
@@ -943,12 +949,12 @@ const Login = () => {
       );
       localStorage.setItem('active_tenant_id', bootstrapResponse.data.tenant.id);
       localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
-      
-      if (bootstrapResponse.data?.intent?.id) {
+
+      if (auditIntentId) {
         localStorage.removeItem('pending_audit_intent_id');
       }
-      
-      return { resolvedTenantSlug, intent: bootstrapResponse.data?.intent };
+
+      return { resolvedTenantSlug, intent: auditIntent };
     }
 
     throw new Error('Unable to resolve a workspace for this account.');
