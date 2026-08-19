@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { 
   ChevronRight, Search, X, Settings, Bell, 
-  FileText, Zap, Shield, AlertCircle, RefreshCw,
+  FileText, Zap, Shield, AlertCircle, RefreshCw, DollarSign,
   CheckCircle2, Clock, Filter, Mail, Database,
   ArrowUpRight, Info
 } from 'lucide-react';
@@ -16,7 +16,7 @@ import { useTenant } from '@/contexts/TenantContext';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow, isAfter, subDays, isToday, isYesterday } from 'date-fns';
-import { normalizeTenantSlug } from '@/lib/routes';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
