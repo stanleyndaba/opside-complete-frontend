@@ -506,7 +506,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Amazon lost something.
+              Find what Amazon missed.
             </motion.span>{" "}
             <motion.span
               className="block text-slate-400 font-lora"
@@ -518,7 +518,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Margin controls what happens next.
+              Get it handled.
             </motion.span>{" "}
           </div>{" "}
           <motion.div
@@ -547,7 +547,7 @@ function KineticHeroSection({
           >
             <span className="sm:hidden">See what happened and what to do next.</span>
             <span className="hidden sm:block">
-              Margin audits your Amazon recovery operation, proves what is unresolved, and takes over the work when there is a justified case.
+              Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.
             </span>
           </motion.p>{" "}
           <motion.div
@@ -565,11 +565,11 @@ function KineticHeroSection({
               <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
                 <Button
                   onClick={onEarlyAccessCta}
-                  aria-label="Connect Amazon"
+                  aria-label="Run Free Recovery Audit"
                   className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-6 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"
                 >
                   <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
+                  Run Free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
 
@@ -579,7 +579,7 @@ function KineticHeroSection({
                   onClick={onUploadReportsCta}
                   className="landing-pressable flex h-[48px] w-full cursor-pointer items-center justify-center rounded-[8px] border-0 bg-white/[0.06] px-6 text-[14px] font-semibold text-white/75 transition-[border-color,color,background-color] hover:bg-white/[0.10] hover:text-white sm:inline-flex sm:h-[56px] sm:w-auto sm:border sm:border-white/14 sm:bg-transparent sm:px-10 sm:text-[16px] sm:font-bold sm:hover:border-white/24 sm:hover:bg-white/[0.04]"
                 >
-                  <img src="/AMZN.png" alt="" className="mr-2 h-4 w-auto object-contain brightness-0 invert opacity-70" />
+                  <FileText className="mr-2 h-5 w-5 opacity-70" />
                   Use Amazon Reports
                 </button>
               </div>
