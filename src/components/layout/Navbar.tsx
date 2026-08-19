@@ -626,18 +626,32 @@ export function Navbar({
                   <HoverCardContent
                     side="bottom"
                     align="center"
-                    sideOffset={12}
-                    className="w-64 overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
-                    <div className="p-5">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7]">
-                          <Upload className="h-4 w-4 text-[#4B5563]" />
+                    sideOffset={10}
+                    className="w-[320px] overflow-hidden rounded-[6px] border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_14px_34px_rgba(17,24,39,0.10)]">
+                    <div className="px-4 py-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-[5px] bg-[#F3F5F4] text-[#4B5563]">
+                            <Upload className="h-4 w-4" strokeWidth={1.6} />
+                          </div>
+                          <div>
+                            <p className="font-sans text-[12px] font-semibold tracking-tight text-[#111827]">Data upload</p>
+                            <p className="mt-0.5 font-sans text-[10px] font-medium tracking-tight text-[#0B74DE]">Manual report ingestion</p>
+                          </div>
                         </div>
-                        <span className="text-[11px] font-sans font-bold uppercase tracking-tight text-[#111827]">Data Upload</span>
+                        <span className="rounded-[4px] bg-[#F3F5F4] px-2 py-1 font-sans text-[9px] font-semibold tracking-tight text-[#6B7280]">CSV / TXT</span>
                       </div>
-                      <p className="font-sans text-[11px] font-bold leading-relaxed text-[#4B5563]">
-                        "Upload Amazon Seller Central CSV reports to feed the detection pipeline."
+
+                      <div className="my-4 h-px bg-[#F1F2F0]" />
+
+                      <p className="font-sans text-[12px] font-normal leading-relaxed tracking-tight text-[#4B5563]">
+                        Upload Amazon Seller Central CSV reports to feed the detection pipeline.
                       </p>
+
+                      <div className="mt-4 flex items-center justify-between gap-3">
+                        <span className="font-sans text-[10px] font-medium tracking-tight text-[#9CA3AF]">Orders · Shipments · Settlements</span>
+                        <span className="shrink-0 font-sans text-[10px] font-semibold tracking-tight text-[#0B74DE]">Open upload →</span>
+                      </div>
                     </div>
                   </HoverCardContent>
                 </HoverCard>
