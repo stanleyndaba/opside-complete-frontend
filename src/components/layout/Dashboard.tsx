@@ -3335,7 +3335,7 @@ export function Dashboard() {
                             }}
                             disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
                             aria-label="Dashboard Auto-File seller-controlled filing switch"
-                            className="data-[state=checked]:bg-[#111827] data-[state=unchecked]:bg-[#D1D5DB]"
+                            className="data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#D1D5DB]"
                           />
                           <span className="min-w-9 text-right text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                             {dashboardAutoFileSaving ? 'Saving' : dashboardAutoFileEnabled ? 'On' : 'Off'}
