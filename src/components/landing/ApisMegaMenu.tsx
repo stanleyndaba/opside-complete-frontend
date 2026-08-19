@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import {
     Activity,
+    ArrowRight,
     BookOpen,
     BriefcaseBusiness,
     CreditCard,
@@ -74,7 +75,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                             index < apiMenuGroups.length - 1 && 'border-b border-[#D8E3E8]/60 lg:border-b-0 lg:border-r'
                                         )}
                                     >
-                                        <h5 className="mb-2.5 text-[10px] font-sans font-bold uppercase tracking-wider text-[#6B7280]">
+                                        <h5 className="mb-2.5 text-[11px] font-lora font-medium tracking-tight text-[#94A3B8]">
                                             {group.label}
                                         </h5>
                                         <div className="grid grid-cols-1 gap-0">
@@ -96,9 +97,9 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                     <p className="text-[14px] font-semibold tracking-tight text-[#182026]">From first signal to reconciled payout.</p>
                                     <p className="mt-0.5 text-[11px] font-normal tracking-tight text-[#66737F]">See how Margin controls the complete recovery lifecycle.</p>
                                 </div>
-                                <span className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
+                                <span className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[12px] font-semibold tracking-tight text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
                                     Explore the workflow
-                                    <div className="h-px w-4 bg-[#0B74DE]" />
+                                    <ArrowRight className="h-3.5 w-3.5" />
                                 </span>
                             </div>
                         </div>

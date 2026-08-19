@@ -7,6 +7,7 @@ import {
     NavigationMenuTrigger
 } from '@/components/ui/navigation-menu';
 import {
+    ArrowRight,
     Building2,
     Briefcase,
     FileCheck2,
@@ -75,7 +76,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                         )}
                                     >
                                         <div className="mb-2 flex items-center justify-between gap-3">
-                                            <h4 className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#6B7280]">
+                                            <h4 className="text-[11px] font-lora font-medium tracking-tight text-[#94A3B8]">
                                                 {group.label}
                                             </h4>
                                             {group.badge && (
@@ -105,9 +106,9 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                         Margin is designed for businesses where recovery crosses multiple shipments, systems and people, and where missed windows, weak evidence or incorrect payouts materially affect margin.
                                     </p>
                                 </div>
-                                <span className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
+                                <span className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[12px] font-semibold tracking-tight text-[#0B74DE] transition-colors hover:text-[#0967C8] lg:mt-0">
                                     See who Margin is for
-                                    <div className="h-px w-4 bg-[#0B74DE]" />
+                                    <ArrowRight className="h-3.5 w-3.5" />
                                 </span>
                             </div>
                         </div>

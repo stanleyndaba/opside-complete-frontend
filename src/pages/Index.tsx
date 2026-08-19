@@ -142,33 +142,36 @@ function TypewriterPrompt({ text }: { text: string }) {
 function SectionTwo() {
   const navigate = useNavigate();
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
+    <section 
+      data-navbar-theme="dark"
+      className="relative border-none bg-[#101827] py-32 md:py-56 text-white"
+    >
       <div className={containerClass}>
         <div className="grid gap-16 lg:grid-cols-[1fr_0.8fr] lg:items-start">
           <motion.div {...revealProps}>
             <div className="mb-5 flex items-center gap-3">
-              <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
+              <div className="h-px w-8 bg-blue-500/50" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-400">
                 Finding the problem is only the beginning
               </span>
             </div>
-            <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>
+            <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-white md:text-[76px]" style={{ fontWeight: 400 }}>
               Finding the problem is only the beginning.
             </h2>
-            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
+            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">
               The work usually starts after the finding: gather the right records, keep the case together, meet the deadline, respond to Amazon, and check what Amazon actually paid.
             </p>
-            <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">
+            <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">
               Margin keeps the evidence and next steps attached to the same recovery so you do not rebuild the case across Seller Central, spreadsheets, files, and someone’s memory.
             </p>
-            <p className="mt-6 font-semibold text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-primary)] md:text-[19px]">
+            <p className="mt-6 font-semibold text-[17px] leading-8 tracking-[-0.015em] text-blue-100 md:text-[19px]">
               You see the proof and the next decision. Margin handles the work behind it.
             </p>
             
             <div className="mt-12 flex flex-col items-start gap-4">
               <Button
                 onClick={() => navigate("/audit")}
-                className="h-14 rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-semibold text-white hover:bg-[var(--margin-blue-hover)]"
+                className="h-14 rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-semibold text-white hover:bg-[var(--margin-blue-hover)] shadow-[0_12px_30px_rgba(11,116,222,0.24)]"
               >
                 See What Your Account Shows
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -181,19 +184,19 @@ function SectionTwo() {
             transition={{ ...revealProps.transition, delay: 0.12 }}
             className="relative"
           >
-            <div className="rounded-[12px] border border-[var(--margin-border)] bg-white p-8 shadow-[0_24px_80px_rgba(37,49,58,0.06)]">
+            <div className="agentic-scan relative overflow-hidden rounded-[12px] border border-white/10 bg-white/[0.035] p-8 shadow-[0_38px_120px_rgba(0,0,0,0.18)] backdrop-blur-xl">
               <div className="h-0.5 w-12 bg-[var(--margin-blue)]" />
-              <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
+              <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-tight text-slate-400">
                 Anonymous operator | approx US$120K/month in Amazon revenue
               </p>
-              <blockquote className="mt-8 font-lora text-[28px] leading-[1.15] tracking-tight text-[var(--margin-text-primary)] md:text-[34px]" style={{ fontWeight: 400 }}>
+              <blockquote className="mt-8 font-lora text-[28px] leading-[1.15] tracking-tight text-white md:text-[34px]" style={{ fontWeight: 400 }}>
                 “It showed what happened, what proof was connected, and what needed a decision.”
               </blockquote>
-              <div className="mt-10 border-t border-[var(--margin-border-subtle)] pt-8">
-                <p className="text-[18px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
+              <div className="mt-10 border-t border-white/10 pt-8">
+                <p className="text-[18px] font-semibold tracking-tight text-white">
                   You get the evidence and the next decision.
                 </p>
-                <p className="mt-2 text-[15px] leading-7 text-[var(--margin-text-secondary)]">
+                <p className="mt-2 text-[15px] leading-7 text-slate-400">
                   Margin handles the work behind it.
                 </p>
               </div>
@@ -503,7 +506,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Find what Amazon missed.
+              Amazon lost something.
             </motion.span>{" "}
             <motion.span
               className="block text-slate-400 font-lora"
@@ -515,7 +518,7 @@ function KineticHeroSection({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              Get it handled.
+              Margin controls what happens next.
             </motion.span>{" "}
           </div>{" "}
           <motion.div
@@ -542,9 +545,9 @@ function KineticHeroSection({
             }}
             className="mt-5 max-w-[720px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]"
           >
-            <span className="sm:hidden">See what was paid, missed, or reversed—and what to do next.</span>
+            <span className="sm:hidden">See what happened and what to do next.</span>
             <span className="hidden sm:block">
-              Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.
+              Margin audits your Amazon recovery operation, proves what is unresolved, and takes over the work when there is a justified case.
             </span>
           </motion.p>{" "}
           <motion.div
@@ -576,7 +579,7 @@ function KineticHeroSection({
                   onClick={onUploadReportsCta}
                   className="landing-pressable flex h-[48px] w-full cursor-pointer items-center justify-center rounded-[8px] border-0 bg-white/[0.06] px-6 text-[14px] font-semibold text-white/75 transition-[border-color,color,background-color] hover:bg-white/[0.10] hover:text-white sm:inline-flex sm:h-[56px] sm:w-auto sm:border sm:border-white/14 sm:bg-transparent sm:px-10 sm:text-[16px] sm:font-bold sm:hover:border-white/24 sm:hover:bg-white/[0.04]"
                 >
-                  <FileText className="mr-2 h-4 w-4" strokeWidth={1.5} />
+                  <img src="/AMZN.png" alt="" className="mr-2 h-4 w-auto object-contain brightness-0 invert opacity-70" />
                   Use Amazon Reports
                 </button>
               </div>
@@ -586,7 +589,7 @@ function KineticHeroSection({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="mt-5 flex w-full min-w-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap border-y border-white/10 py-3 text-[8px] font-semibold uppercase tracking-[-0.02em] text-slate-400 sm:mt-8 sm:w-auto sm:justify-start sm:gap-x-5 sm:gap-y-3 sm:overflow-visible sm:border-0 sm:py-0 sm:text-left sm:text-[12px] sm:font-medium sm:normal-case sm:tracking-tight"
+            className="mt-5 hidden w-full min-w-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap border-y border-white/10 py-3 text-[8px] font-semibold uppercase tracking-[-0.02em] text-slate-400 sm:mt-8 sm:flex sm:w-auto sm:justify-start sm:gap-x-5 sm:gap-y-3 sm:overflow-visible sm:border-0 sm:py-0 sm:text-left sm:text-[12px] sm:font-medium sm:normal-case sm:tracking-tight"
           >
             {" "}
             <span className="shrink-0">Free to run</span>

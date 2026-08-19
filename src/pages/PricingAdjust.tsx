@@ -285,7 +285,7 @@ export default function PricingAdjust() {
                   "text-[9px] uppercase whitespace-nowrap rounded-[6px] px-2 py-0.5",
                   tier.badgeLabel?.includes('Coming Soon')
                     ? "font-medium tracking-tight bg-slate-100 text-slate-500 border-[#D8E3EA]"
-                    : "font-bold tracking-tight border-[#D8E3EA] bg-white text-[#182026] shadow-sm"
+                    : "font-bold tracking-tight border-[#D8E3EA] bg-white text-[#0B74DE] shadow-sm"
                 )}
               >
                 {tier.badgeLabel || 'Most Popular'}
@@ -295,7 +295,7 @@ export default function PricingAdjust() {
 
           <div className="mb-6 rounded-[24px] border border-[#E4EDF1] bg-[#F8FAFC] p-5">
             <div className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Price</div>
-            <div className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-[#182026]">
+            <div className="mt-3 font-lora text-4xl font-normal tracking-[-0.02em] text-[#182026]">
               {tier.price}
             </div>
             <div className="mt-2 text-[11px] text-[#66737F]">
@@ -357,7 +357,7 @@ export default function PricingAdjust() {
                 tier.badgeLabel?.includes('Coming Soon')
                   ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed"
                   : featured
-                    ? "bg-white text-[#182026] border border-[#182026] hover:bg-[#FAFAF7] shadow-sm"
+                    ? "bg-white text-[#0B74DE] border border-[#0B74DE] hover:bg-[#FAFAF7] shadow-sm"
                     : "border border-[#D8E3EA] bg-white text-[#182026] hover:bg-[#FAFAF7]"
               )}
             >
@@ -422,6 +422,9 @@ export default function PricingAdjust() {
                 Simple pricing,<br />
                 <span className="text-[#8A99A4]">real results.</span>
               </h2>
+              <p className="mt-6 text-[15px] leading-relaxed text-[#66737F] sm:hidden">
+                See what happened and what to do next.
+              </p>
             </div>
             
             <div className="flex max-w-[320px] flex-col items-start md:items-end md:text-right">
