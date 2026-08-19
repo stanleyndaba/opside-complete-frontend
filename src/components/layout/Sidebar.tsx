@@ -217,10 +217,10 @@ export function Sidebar({
     }, [item.href, queryClient]);
     if (isCollapsed) {
       const collapsedBaseClasses = variant === 'core'
-        ? "h-10 w-10"
+        ? "h-11 w-11"
         : variant === 'utility'
-          ? "h-9 w-9"
-          : "h-10 w-10";
+          ? "h-10 w-10"
+          : "h-11 w-11";
 
       return (
         <TooltipProvider>
@@ -230,13 +230,11 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "group relative flex w-full items-center transition-all duration-200",
+                  "group relative flex w-full items-center justify-center transition-all duration-200",
                   collapsedBaseClasses,
                   isActive
-                    ? "bg-[#F2F7FF] text-[#0B74DE]"
-                    : variant === 'core'
-                      ? "text-[#4B5563] hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
-                      : "text-[#6B7280] hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+                    ? "bg-white/10 text-white"
+                    : "text-white/40 hover:bg-white/5 hover:text-white"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
@@ -248,19 +246,15 @@ export function Sidebar({
                 <item.icon
                   className={cn(
                     "transition-colors duration-200",
-                    variant === 'core' ? "h-[17px] w-[17px]" : "h-4 w-4",
-                    isActive
-                      ? "text-[#0B74DE]"
-                      : variant === 'core'
-                        ? "text-[#4B5563] group-hover:text-[#0B74DE]"
-                        : "text-[#6B7280] group-hover:text-[#0B74DE]"
+                    variant === 'core' ? "h-[18px] w-[18px]" : "h-[17px] w-[17px]",
+                    isActive ? "text-[#0B74DE]" : "text-inherit"
                   )}
-                  strokeWidth={isActive ? 2 : 1.5}
+                  strokeWidth={1.5}
                 />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-2 text-[#111827] shadow-none">
-              <div className="text-[10px] font-sans font-medium tracking-tight text-[#111827]">
+            <TooltipContent side="right" className="rounded-[4px] border border-white/10 bg-[#1A1A1A] px-3 py-2 text-white shadow-xl">
+              <div className="text-[11px] font-sans font-medium tracking-tight">
                 {item.title}
               </div>
             </TooltipContent>
@@ -273,72 +267,48 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "group relative flex items-center transition-all duration-200",
+          "group relative flex items-center transition-all duration-200 rounded-[6px] mx-2",
           variant === 'core'
-            ? "gap-2.5 px-3 py-2.5"
+            ? "gap-3 px-3 py-2.5"
             : variant === 'utility'
-              ? "gap-2 px-2.5 py-1.5"
-              : "gap-2.5 px-3 py-2",
+              ? "gap-2.5 px-2.5 py-2"
+              : "gap-3 px-3 py-2.5",
           isActive
-            ? "nav-active bg-[#F2F7FF] text-[#0B74DE]"
-            : "nav-hover text-[#4B5563] hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+            ? "bg-white/10 text-white shadow-sm"
+            : "text-white/40 hover:bg-white/5 hover:text-white"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
             className={cn(
-              "absolute left-0 w-[2px] bg-[#0B74DE]",
-              variant === 'utility' ? "top-1.5 bottom-1.5" : "top-2 bottom-2"
+              "absolute left-[-8px] w-[2px] bg-[#0B74DE]",
+              "top-2 bottom-2"
             )}
           />
         )}
         <item.icon
-          strokeWidth={isActive ? 2 : 1.5}
+          strokeWidth={1.5}
           className={cn(
-            "h-4 w-4 shrink-0 transition-all duration-200",
-            variant === 'core' ? "h-[17px] w-[17px]" : "",
-            isActive
-              ? "text-[#0B74DE]"
-              : variant === 'core'
-                ? "text-[#4B5563] group-hover:text-[#0B74DE]"
-                : variant === 'utility'
-                  ? "text-[#6B7280] group-hover:text-[#0B74DE]"
-                : "text-[#6B7280] group-hover:text-[#0B74DE]"
+            "h-[17px] w-[17px] shrink-0 transition-all duration-200",
+            isActive ? "text-[#0B74DE]" : "text-inherit"
           )}
         />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span className={cn(
               "font-sans tracking-tight transition-colors",
-              variant === 'core'
-                ? "text-[13.5px] font-[300] leading-5"
-                : variant === 'utility'
-                  ? "text-[13px] font-medium leading-5"
-                  : "text-[13.5px] font-[300] leading-5",
-              isActive ? "text-[#0B74DE]" : ""
+              "text-[13.5px] font-medium leading-5",
+              isActive ? "text-white" : "text-inherit"
             )}>
               {item.title}
             </span>
           </div>
         </div>
-        {variant !== 'utility' ? (
-          <ChevronRight
-            className={cn(
-              "h-3 w-3 shrink-0 transition-all duration-200",
-            isActive
-                ? "translate-x-0 text-[#0B74DE]/70"
-                : "translate-x-[-2px] text-[#9CA3AF] opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[#0B74DE]/70"
-            )}
-            strokeWidth={1.6}
-          />
-        ) : null}
         {item.count != null && !isCollapsed && (
           <span className={cn(
-            "ml-auto rounded-[2px] bg-[#F2F7FF] px-1.5 text-[10px] font-sans font-semibold tabular-nums tracking-tight",
-            isActive
-              ? "text-[#0B74DE]"
-              : "text-[#6B7280]"
+            "ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-sans font-bold tabular-nums tracking-tight",
+            isActive ? "text-[#0B74DE]" : "text-white/40"
           )}>
             {item.count}
           </span>
@@ -350,8 +320,8 @@ export function Sidebar({
     <aside
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col font-sans transition-all duration-500 ease-in-out gpu-accelerated",
-        isCollapsed ? "w-16" : "w-60",
-        "border-r border-[#D8E3E8] bg-white text-[#4B5563] shadow-none",
+        isCollapsed ? "w-16" : "w-64",
+        "border-r border-white/5 bg-[#0F0E0D] text-white/40 shadow-none",
         className
       )}
       style={{
@@ -361,45 +331,51 @@ export function Sidebar({
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-[#D8E3E8] pwa-drag-region",
-          isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
+          "pwa-drag-region",
+          isCollapsed ? "px-2 py-6" : "px-6 py-8"
         )}>
-        <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-2")}>
+        <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-6")}>
           <Link
             to={overviewHref}
             onMouseEnter={() => prefetchRoute(overviewHref)}
             className={cn(
               "w-full transition-colors",
-              isCollapsed ? "flex items-center justify-center px-1 py-1.5" : "block px-1 py-1"
+              isCollapsed ? "flex items-center justify-center" : "block"
             )}
           >
             <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <img
                   src="/logoimagetwo.png"
                   alt="Margin"
-                  className="h-3.5 w-auto object-contain"
+                  className="h-4 w-auto object-contain brightness-0 invert"
                 />
                 {!isCollapsed && (
-                  <span className="font-merriweather text-sm font-bold tracking-tight text-[#111827]">Margin</span>
+                  <span className="font-lora text-[17px] font-medium tracking-tight text-white">Margin</span>
                 )}
               </div>
-              {!isCollapsed && subscriptionTierLabel ? (
-                <span className="border-l border-[#D8E3E8] pl-2 text-[10px] font-medium uppercase tracking-tight text-[#6B7280]">
-                  {subscriptionTierLabel}
-                </span>
-              ) : null}
+              {!isCollapsed && subscriptionTierLabel && (
+                <div className="flex items-center gap-2 px-2 py-0.5 rounded-[4px] border border-white/10 bg-white/5">
+                  <div className="h-1 w-1 rounded-full bg-[#0B74DE]" />
+                  <span className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/60">
+                    {subscriptionTierLabel}
+                  </span>
+                </div>
+              )}
             </div>
           </Link>
-          {!isCollapsed ? (
+          {!isCollapsed && (
             <Link
               to={pricingAdjustHref}
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
-              className="inline-flex items-center border-l border-[#D8E3E8] px-2 py-0.5 text-[12px] font-sans font-medium tracking-tight text-[#365B7D] transition-colors hover:border-[#111827] hover:text-[#111827]"
+              className="group block transition-all"
             >
-              Upgrade Plan
+              <div className="flex items-center justify-between rounded-[6px] border border-white/5 bg-white/[0.03] px-3 py-2.5 transition-all hover:border-white/10 hover:bg-white/[0.06]">
+                <span className="text-[12px] font-sans font-medium text-white/60 group-hover:text-white">Upgrade Plan</span>
+                <ChevronRight className="h-3.5 w-3.5 text-white/20 group-hover:text-white" />
+              </div>
             </Link>
-          ) : null}
+          )}
         </div>
       </div>
 
@@ -419,8 +395,8 @@ export function Sidebar({
 
       {/* Footer Utilities */}
       <div className={cn(
-        "mt-auto border-t border-[#D8E3E8] py-3",
-        isCollapsed ? "px-2" : "px-3"
+        "mt-auto border-t border-white/5 py-4",
+        isCollapsed ? "px-2" : "px-4"
       )}>
         {(() => {
           const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
@@ -432,22 +408,22 @@ export function Sidebar({
           <DropdownMenuTrigger asChild>
             <button
               className={cn(
-                "group flex w-full items-center border-l border-transparent transition-all outline-none",
+                "group flex w-full items-center transition-all outline-none rounded-[6px]",
                 isCollapsed
-                  ? "justify-center p-2.5 hover:border-[#D8E3E8] hover:bg-[#F8FAFB]"
-                  : "gap-3 px-3 py-2.5 text-left text-[#6B7280] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                  ? "justify-center p-2.5 hover:bg-white/5"
+                  : "gap-3 px-3 py-2.5 text-left text-white/40 hover:bg-white/5 hover:text-white"
               )}>
-              <Menu className={cn("h-4 w-4 text-[#9CA3AF] transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-[#6B7280]">More</span>}
+              <Menu className={cn("h-4 w-4 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
+              {!isCollapsed && <span className="font-sans text-[13px] font-medium tracking-tight">More</span>}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="mb-2 ml-2 w-64 rounded-[2px] border border-[#D8E3E8] bg-white p-1.5 text-[#111827] shadow-none">
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="mb-2 ml-2 w-64 rounded-[8px] border border-white/10 bg-[#1A1A1A] p-1.5 text-white shadow-2xl">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className={cn(
-                "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
-                "text-[13px] text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]",
-                "data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none",
+                "group/more-item flex cursor-pointer items-center gap-3 rounded-[6px] px-3 py-2.5 font-sans transition-colors",
+                "text-[13px] text-white/60 hover:bg-white/5 hover:text-white",
+                "data-[highlighted]:bg-white/5 data-[highlighted]:text-white data-[highlighted]:outline-none",
                 settingsActive && "border-[#111827] bg-[#F8FAFB] text-[#111827]"
               )}>
               <Settings2
@@ -479,15 +455,15 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className={cn(
-                "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
-                "text-[13px] text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]",
-                "data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none",
-                helpActive && "border-[#111827] bg-[#F8FAFB] text-[#111827]"
+                "group/more-item flex cursor-pointer items-center gap-3 rounded-[6px] px-3 py-2.5 font-sans transition-colors",
+                "text-[13px] text-white/60 hover:bg-white/5 hover:text-white",
+                "data-[highlighted]:bg-white/5 data-[highlighted]:text-white data-[highlighted]:outline-none",
+                helpActive && "bg-white/5 text-white"
               )}>
               <LifeBuoy
                 className={cn(
                   "h-4 w-4 shrink-0 transition-colors",
-                  helpActive ? "text-[#111827]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#111827]"
+                  helpActive ? "text-white" : "text-white/40 group-data-[highlighted]/more-item:text-white"
                 )}
                 strokeWidth={1.5}
               />
@@ -496,15 +472,15 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
               className={cn(
-                "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight transition-colors",
-                "text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]",
-                "data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none",
-                notesActive && "border-[#111827] bg-[#F8FAFB] text-[#111827]"
+                "group/more-item flex cursor-pointer items-center gap-3 rounded-[6px] px-3 py-2 text-[13px] font-sans transition-colors",
+                "text-white/60 hover:bg-white/5 hover:text-white",
+                "data-[highlighted]:bg-white/5 data-[highlighted]:text-white data-[highlighted]:outline-none",
+                notesActive && "bg-white/5 text-white"
               )}>
               <NotebookPen
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  notesActive ? "text-[#111827]" : "text-[#9CA3AF] group-data-[highlighted]/more-item:text-[#111827]"
+                  notesActive ? "text-white" : "text-white/40 group-data-[highlighted]/more-item:text-white"
                 )}
                 strokeWidth={1.5}
               />
@@ -549,10 +525,10 @@ export function Sidebar({
                 </HoverCardContent>
               </HoverCard>
             </DropdownMenuItem> */}
-            <DropdownMenuSeparator className="my-1 bg-[#D8E3E8]" />
+            <DropdownMenuSeparator className="my-1 bg-white/5" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight text-[#4B5563] hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827] data-[highlighted]:border-[#D8E3E8] data-[highlighted]:bg-[#F8FAFB] data-[highlighted]:text-[#111827] data-[highlighted]:outline-none">
+              className="flex cursor-pointer items-center gap-3 rounded-[6px] px-3 py-2 text-[13px] font-sans text-white/60 hover:bg-white/5 hover:text-white data-[highlighted]:bg-white/5 data-[highlighted]:text-white data-[highlighted]:outline-none">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
