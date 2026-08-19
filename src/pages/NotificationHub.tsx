@@ -4,14 +4,20 @@ import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { ChevronRight, Search, X } from 'lucide-react';
+import { 
+  ChevronRight, Search, X, Settings, Bell, 
+  FileText, Zap, Shield, AlertCircle, RefreshCw,
+  CheckCircle2, Clock, Filter, Mail, Database,
+  ArrowUpRight, Info
+} from 'lucide-react';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { useToast } from '@/hooks/use-toast';
-import { formatDistanceToNow, isAfter, subDays, subHours } from 'date-fns';
+import { formatDistanceToNow, isAfter, subDays, isToday, isYesterday } from 'date-fns';
 import { normalizeTenantSlug } from '@/lib/routes';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface Notification {
   id: string;
@@ -200,7 +206,6 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   'Platform Learning': 'Digest and platform-learning updates from Margin.'
 };
 
-// Format timestamp to relative time
 const formatTimestamp = (createdAt: string): string => {
   try {
     const date = new Date(createdAt);
@@ -210,13 +215,12 @@ const formatTimestamp = (createdAt: string): string => {
   }
 };
 
-// Helper to render bold text from "**text**" markdown
 const renderNotificationMessage = (message: string) => {
   if (!message) return '';
   const parts = message.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={index} className="font-bold text-[#111827]">{part.slice(2, -2)}</strong>;
+      return <strong key={index} className="font-semibold text-[#111827]">{part.slice(2, -2)}</strong>;
     }
     return <span key={index}>{part}</span>;
   });
@@ -230,6 +234,7 @@ export default function NotificationHub() {
   const [preferencesError, setPreferencesError] = useState<string | null>(null);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const { tenant } = useTenant();
   const { notifications: providerNotifications, isLoading, markAsRead, markAllAsRead, refreshNotifications } = useNotifications();
@@ -243,27 +248,20 @@ export default function NotificationHub() {
     '';
   const loading = isLoading;
 
-  // Search and filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  // Mirror provider notifications so the page and navbar use the same source of truth
   useEffect(() => {
     const mappedNotifications: Notification[] = providerNotifications.map((notif: any) => {
       const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
       const channel = notif.channel || notif.payload?.channel || 'in_app';
       const channels: string[] = [];
-      if (channel === 'in_app' || channel === 'both') {
-        channels.push('In-App');
-      }
-      if (channel === 'email' || channel === 'both' || notif.email_sent || notif.sent_via_email || notif.payload?.email_sent) {
-        channels.push('Email');
-      }
-      if (channels.length === 0) {
-        channels.push('In-App');
-      }
+      if (channel === 'in_app' || channel === 'both') channels.push('In-App');
+      if (channel === 'email' || channel === 'both' || notif.email_sent || notif.sent_via_email || notif.payload?.email_sent) channels.push('Email');
+      if (channels.length === 0) channels.push('In-App');
+      
       return {
         id: notif.id,
         type: notif.type || 'general',
@@ -281,98 +279,68 @@ export default function NotificationHub() {
     setError(null);
   }, [providerNotifications]);
 
-  // Filter notifications based on search and filters
   const filteredNotifications = useMemo(() => {
     return notifications.filter(notification => {
-      // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const searchBlob = `${notification.title} ${notification.message}`.toLowerCase();
-        if (!searchBlob.includes(query)) {
-          return false;
-        }
+        if (!searchBlob.includes(query)) return false;
       }
-
-      // Type filter
       if (typeFilter !== 'all') {
         const typeLower = notification.type.toLowerCase();
-        if (typeFilter === 'financial' && !typeLower.includes('payout') && !typeLower.includes('payment') && !typeLower.includes('funds') && !typeLower.includes('claim') && !typeLower.includes('recovery')) {
-          return false;
-        }
-        if (typeFilter === 'document' && !typeLower.includes('document') && !typeLower.includes('invoice') && !typeLower.includes('file') && !typeLower.includes('evidence')) {
-          return false;
-        }
-        if (typeFilter === 'system' && !typeLower.includes('security') && !typeLower.includes('update') && !typeLower.includes('feature') && !typeLower.includes('team') && !typeLower.includes('user')) {
-          return false;
-        }
+        if (typeFilter === 'financial' && !typeLower.includes('payout') && !typeLower.includes('payment') && !typeLower.includes('funds') && !typeLower.includes('claim') && !typeLower.includes('recovery')) return false;
+        if (typeFilter === 'document' && !typeLower.includes('document') && !typeLower.includes('invoice') && !typeLower.includes('file') && !typeLower.includes('evidence')) return false;
+        if (typeFilter === 'system' && !typeLower.includes('security') && !typeLower.includes('update') && !typeLower.includes('feature') && !typeLower.includes('team') && !typeLower.includes('user')) return false;
       }
-
-      // Date filter
       if (dateFilter !== 'all') {
         const now = new Date();
-        if (dateFilter === 'today' && !isAfter(notification.created_at, subDays(now, 1))) {
-          return false;
-        }
-        if (dateFilter === 'week' && !isAfter(notification.created_at, subDays(now, 7))) {
-          return false;
-        }
-        if (dateFilter === 'month' && !isAfter(notification.created_at, subDays(now, 30))) {
-          return false;
-        }
+        if (dateFilter === 'today' && !isToday(notification.created_at)) return false;
+        if (dateFilter === 'week' && !isAfter(notification.created_at, subDays(now, 7))) return false;
+        if (dateFilter === 'month' && !isAfter(notification.created_at, subDays(now, 30))) return false;
       }
-
-      // Status filter
-      if (statusFilter === 'unread' && notification.read) {
-        return false;
-      }
-      if (statusFilter === 'read' && !notification.read) {
-        return false;
-      }
-
+      if (statusFilter === 'unread' && notification.read) return false;
+      if (statusFilter === 'read' && !notification.read) return false;
       return true;
     });
   }, [notifications, searchQuery, typeFilter, dateFilter, statusFilter]);
 
-  // Clear all filters
-  const clearFilters = () => {
-    setSearchQuery('');
-    setTypeFilter('all');
-    setDateFilter('all');
-    setStatusFilter('all');
-  };
+  const groupedNotifications = useMemo(() => {
+    const groups: Record<string, Notification[]> = {
+      'Today': [],
+      'Yesterday': [],
+      'Older': []
+    };
 
-  // Mark notification as read
+    filteredNotifications.forEach(notif => {
+      if (isToday(notif.created_at)) groups['Today'].push(notif);
+      else if (isYesterday(notif.created_at)) groups['Yesterday'].push(notif);
+      else groups['Older'].push(notif);
+    });
+
+    return groups;
+  }, [filteredNotifications]);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
   const handleMarkAsRead = async (notificationId: string) => {
     try {
       await markAsRead(notificationId);
-      setNotifications(prev => prev.map(n =>
-        n.id === notificationId ? { ...n, read: true } : n
-      ));
+      setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, read: true } : n));
     } catch (err: any) {
-      toast({
-        title: 'Error',
-        description: err.message || 'Failed to mark notification as read',
-        variant: 'destructive'
-      });
+      toast({ title: 'Error', description: 'Failed to mark as read', variant: 'destructive' });
     }
   };
 
-  // Mark all notifications as read
   const handleMarkAllRead = async () => {
     try {
       await markAllAsRead();
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       toast({ title: 'Success', description: 'All notifications marked as read' });
     } catch (err: any) {
-      toast({
-        title: 'Error',
-        description: err.message || 'Failed to mark notifications as read',
-        variant: 'destructive'
-      });
+      toast({ title: 'Error', description: 'Failed to mark all as read', variant: 'destructive' });
     }
   };
 
-  // Refresh notifications
   const handleRefresh = async () => {
     try {
       setError(null);
@@ -396,39 +364,30 @@ export default function NotificationHub() {
         setPreferencesLoaded(true);
         return true;
       }
-
       setPreferencesLoaded(false);
       setPreferences(DEFAULT_PREFERENCES);
-      setPreferencesError(response.error || 'Failed to load saved preferences');
       return false;
     } catch (err: any) {
-      console.warn('Failed to load notification preferences:', err);
       setPreferencesLoaded(false);
       setPreferences(DEFAULT_PREFERENCES);
-      setPreferencesError(err.message || 'Failed to load saved preferences');
       return false;
     }
   };
 
-  // Load preferences from backend on mount
   useEffect(() => {
     void loadPreferences();
   }, [activeSlug]);
 
   const updatePreference = async (id: string, channel: 'email' | 'inApp', value: boolean) => {
     if (!activeSlug) {
-      toast({ title: 'Workspace unavailable', description: 'Notification preferences require an active workspace.', variant: 'destructive' });
+      toast({ title: 'Workspace unavailable', description: 'Preferences require an active workspace.', variant: 'destructive' });
       return;
     }
 
     const previousPreferences = preferences;
-    const nextPreferences = preferences.map(pref =>
-      pref.id === id ? { ...pref, [channel]: value } : pref
-    );
+    const nextPreferences = preferences.map(pref => pref.id === id ? { ...pref, [channel]: value } : pref);
 
     setPreferences(nextPreferences);
-    setPreferencesError(null);
-
     const prefsToSave: Record<string, { email: boolean; inApp: boolean }> = {};
     nextPreferences.forEach(pref => {
       prefsToSave[pref.id] = { email: pref.email, inApp: pref.inApp };
@@ -437,388 +396,280 @@ export default function NotificationHub() {
     try {
       const response = await api.saveNotificationPreferences(prefsToSave, activeSlug);
       if (response.ok) {
-        const reloaded = await loadPreferences();
-        if (reloaded) {
-          toast({ title: 'Preferences saved' });
-        } else {
-          setPreferences(previousPreferences);
-          toast({ title: 'Failed to reload saved preferences', variant: 'destructive' });
-        }
+        await loadPreferences();
+        toast({ title: 'Preferences saved' });
       } else {
         setPreferences(previousPreferences);
-        setPreferencesError(response.error || 'Failed to save preferences');
-        toast({ title: 'Failed to save', description: response.error || 'Please try again', variant: 'destructive' });
+        toast({ title: 'Failed to save preferences', variant: 'destructive' });
       }
     } catch (err: any) {
       setPreferences(previousPreferences);
-      setPreferencesError(err.message || 'Failed to save preferences');
-      toast({ title: 'Failed to save', description: 'Preferences were not saved', variant: 'destructive' });
+      toast({ title: 'Error saving preferences', variant: 'destructive' });
     }
   };
 
-  const categories = [
-    'Cases & Recoveries',
-    'Evidence & Sync',
-    'Margin Updates',
-    'Platform Learning'
-  ];
-
-  const unreadCount = useMemo(() => notifications.filter((notification) => !notification.read).length, [notifications]);
-  const activePreferenceCount = useMemo(
-    () => preferences.filter((preference) => preference.email || preference.inApp).length,
-    [preferences]
-  );
+  const activePreferenceCount = preferences.filter(p => p.email || p.inApp).length;
 
   return (
     <PageLayout title="Notifications" noPadding>
-      <div className="platform-vitality-page relative min-h-screen bg-[#FAFAF7] text-[#111827]">
-        <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
-        <div className="relative mx-auto max-w-[1500px] px-8 py-8">
-          {/* Analysis Header */}
-          <div className="mb-5 border-b border-[#D8E3E8] pb-5">
-            <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#858792]">Operational notifications</div>
-            <h1 className="mt-2 text-[24px] font-sans font-semibold tracking-tight text-[#111827]">Notifications</h1>
-            <p className="mt-2 max-w-xl text-[12px] font-sans leading-5 text-[#6B7280]">
-              Review unread operational events first; open preferences only when you need to change delivery controls.
-            </p>
-          </div>
-
-          <div className="mb-5 border-b border-[#D8E3E8] pb-4">
-            <SheetTrigger asChild>
-              <button
-                type="button"
-                className="flex w-full items-center justify-between gap-6 border-y border-[#D8E3E8] px-4 py-3 text-left transition-colors hover:bg-[#F8FAFB]"
-              >
-                <div className="min-w-0">
-                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">Preferences</div>
-                  <div className="mt-1.5 text-[13px] font-sans font-medium tracking-tight text-[#111827]">
-                    Notification preferences
-                  </div>
-                  <p className="mt-1 text-[11px] font-sans leading-5 text-[#6B7280]">
-                    Configuration active across {activePreferenceCount} notification lanes. Opens in a side panel so the update log stays readable.
-                  </p>
-                </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
-                    {unreadCount} unread
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-[#6B7280]" />
-                </div>
-              </button>
-            </SheetTrigger>
-          </div>
-
-          {/* Notification Log */}
-          <div className="mb-10 flex min-h-[72vh] flex-col lg:min-h-[calc(100vh-220px)]">
-            {/* Fixed Header */}
-            <div className="flex shrink-0 items-center justify-between border-b border-[#D8E3E8] py-4">
-              <div>
-                <h2 className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#858792]">
-                  History
-                </h2>
-                <p className="mt-1 text-[11px] font-sans leading-5 text-[#6B7280]">
-                  {filteredNotifications.length} visible updates • {unreadCount} unread
-                </p>
+      <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
+        {/* Forensic Identity Header */}
+        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
+          <div className="mx-auto max-w-5xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <div className="h-px w-6 bg-[#0B74DE]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0B74DE]">Activity Hub</span>
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleMarkAllRead}
-                  disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
-                  className="rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563] transition-colors hover:border-[#C8D8FF] hover:bg-[#F2F7FF] hover:text-[#0B74DE] disabled:opacity-40">
-                  Mark read
-                </button>
-                <button
-                  onClick={handleRefresh}
-                  disabled={loading}
-                  className="rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1.5 text-[#4B5563] transition-colors hover:border-[#C8D8FF] hover:bg-[#F2F7FF] hover:text-[#0B74DE] disabled:opacity-40">
-                  <span className="text-[10px] font-sans font-medium uppercase tracking-tight">{loading ? 'Loading' : 'Refresh'}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Fixed Search and Filters Row */}
-            <div className="shrink-0 border-b border-[#D8E3E8] py-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Search Bar */}
-                <div className="relative flex-1 group/search">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF] group-focus-within/search:text-[#111827] transition-colors" />
-                  <Input
-                    placeholder="Search updates..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-10 rounded-none border-[#D8E3E8] bg-transparent pl-10 pr-10 text-[11px] font-sans font-medium text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#C8D8FF]"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#111827]">
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-
-                {/* Filter Dropdowns */}
-                <div className="flex flex-wrap gap-2">
-                  {/* Type Filter */}
-                  <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="h-10 w-[130px] rounded-none border-[#D8E3E8] bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-[#111827] focus:border-[#C8D8FF]">
-                      <SelectValue placeholder="Type" />
-                    </SelectTrigger>
-                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
-                      <SelectItem value="all" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">All Types</SelectItem>
-                      <SelectItem value="financial" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">Financial</SelectItem>
-                      <SelectItem value="document" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">Documents</SelectItem>
-                      <SelectItem value="system" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">System</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Date Filter */}
-                  <Select value={dateFilter} onValueChange={setDateFilter}>
-                    <SelectTrigger className="h-10 w-[120px] rounded-none border-[#D8E3E8] bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-[#111827] focus:border-[#C8D8FF]">
-                      <SelectValue placeholder="Date" />
-                    </SelectTrigger>
-                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
-                      <SelectItem value="all" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">All Time</SelectItem>
-                      <SelectItem value="today" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">Today</SelectItem>
-                      <SelectItem value="week" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">Week</SelectItem>
-                      <SelectItem value="month" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">Month</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Status Filter */}
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="h-10 w-[110px] rounded-none border-[#D8E3E8] bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-[#111827] focus:border-[#C8D8FF]">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
-                      <SelectItem value="all" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">All</SelectItem>
-                      <SelectItem value="unread" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">Unread</SelectItem>
-                      <SelectItem value="read" className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] uppercase tracking-tight">Read</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Clear Filters */}
-                  {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
-                    <button
-                      onClick={clearFilters}
-                      className="h-10 border border-[#D8E3E8] bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280] transition-colors hover:bg-white/[0.04] hover:text-[#111827]">
-                      Clear
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Filter Summary */}
-              {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
-                <p className="mt-4 text-[10px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">
-                  Showing {filteredNotifications.length} of {notifications.length} matches
-                </p>
-              )}
-            </div>
-
-            {/* Scrollable Content Area */}
-            <div className="custom-scrollbar flex-1 overflow-y-auto">
-              {loading && (
-                <div className="border-b border-[#D8E3E8] py-20 text-center">
-                  <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">Loading updates...</p>
-                </div>
-              )}
-
-              {error && !loading && (
-                <div className="border-b border-[#D8E3E8] py-20 text-center">
-                  <p className="mb-6 text-[11px] font-sans font-medium uppercase tracking-tight text-rose-300">{error}</p>
-                  <button
-                    onClick={handleRefresh}
-                    className="border border-[#D8E3E8] bg-transparent px-6 py-2.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280] transition-colors hover:bg-white/[0.04] hover:text-[#111827]">
-                    Retry
-                  </button>
-                </div>
-              )}
-
-              {!loading && !error && filteredNotifications.length === 0 && notifications.length > 0 && (
-                <div className="border-b border-[#D8E3E8] py-20 text-center">
-                  <p className="mb-4 text-[11px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">No matching results found.</p>
-                  <button onClick={clearFilters} className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] hover:text-[#111827]">
-                    Reset filters
-                  </button>
-                </div>
-              )}
-
-              {!loading && !error && notifications.length === 0 && (
-                <div className="border-b border-[#D8E3E8] py-20 text-center">
-                  <p className="mb-2 text-[11px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">Update log empty.</p>
-                  <p className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">Notifications will appear here as events occur.</p>
-                </div>
-              )}
-
-              <div className="border-b border-[#D8E3E8]">
-                {!loading && !error && filteredNotifications.length > 0 ? (
-                    <div className="hidden grid-cols-[minmax(0,1.7fr)_minmax(120px,0.4fr)_minmax(120px,0.42fr)_minmax(80px,0.3fr)] gap-4 border-b border-[#D8E3E8] px-4 py-3 text-[9px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF] lg:grid">
-                    <div>Notification</div>
-                    <div>Channels</div>
-                    <div>Recorded</div>
-                    <div className="text-right">State</div>
-                  </div>
-                ) : null}
-                {filteredNotifications.map((notification) => {
-                  return (
-                    <div
-                      key={notification.id}
-                      className={`grid cursor-pointer grid-cols-1 gap-3 border-b border-[#E5E7EB] px-4 py-3.5 transition-colors last:border-b-0 lg:grid-cols-[minmax(0,1.7fr)_minmax(120px,0.4fr)_minmax(120px,0.42fr)_minmax(80px,0.3fr)] lg:gap-4 ${!notification.read
-                        ? 'bg-white/[0.025]'
-                        : 'hover:bg-white/[0.02]'
-                        }`}
-                      onClick={() => !notification.read && handleMarkAsRead(notification.id)}>
-                      <div className="min-w-0">
-                        <div className="mb-1.5 flex items-center gap-2">
-                          <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">
-                            {notification.type.replace(/_/g, ' ')}
-                          </span>
-                          {!notification.read ? <span className="h-1.5 w-1.5 rounded-full bg-white/70" /> : null}
+              <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 gap-2 px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] hover:bg-[#F3F5F4] hover:text-[#111827]">
+                    <Settings className="h-3.5 w-3.5" />
+                    Preferences
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-full border-l border-[#E5E7EB] bg-white p-0 text-[#111827] sm:max-w-[450px]">
+                  <SheetHeader className="border-b border-[#E5E7EB] px-6 py-6 text-left">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">Configuration</div>
+                    <SheetTitle className="mt-2 font-lora text-2xl font-normal tracking-tight">Notification settings</SheetTitle>
+                    <p className="text-[13px] text-[#6B7280] leading-relaxed">Manage how and where you receive operational updates.</p>
+                  </SheetHeader>
+                  <div className="h-[calc(100vh-140px)] overflow-y-auto px-6 py-8">
+                    <div className="space-y-8">
+                      {Object.keys(CATEGORY_DESCRIPTIONS).map(category => (
+                        <div key={category}>
+                          <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wider text-[#111827]">{category}</h3>
+                          <p className="mb-4 text-[11px] text-[#6B7280]">{CATEGORY_DESCRIPTIONS[category]}</p>
+                          <div className="divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+                            {preferences.filter(p => p.category === category).map(pref => (
+                              <div key={pref.id} className="py-4">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-[13px] font-semibold tracking-tight">{pref.title}</span>
+                                </div>
+                                <p className="mb-4 text-[11px] text-[#6B7280] leading-relaxed">{pref.description}</p>
+                                <div className="flex items-center gap-6">
+                                  <div className="flex items-center gap-2">
+                                    <Switch checked={pref.inApp} onCheckedChange={(v) => updatePreference(pref.id, 'inApp', v)} className="scale-75" />
+                                    <span className="text-[11px] font-medium text-[#6B7280]">In-App</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <Switch checked={pref.email} onCheckedChange={(v) => updatePreference(pref.id, 'email', v)} className="scale-75" />
+                                    <span className="text-[11px] font-medium text-[#6B7280]">Email</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <p className="text-[13px] font-medium leading-5 tracking-tight text-[#111827]">
-                          {renderNotificationMessage(notification.title)}
-                        </p>
-                        {notification.message ? (
-                          <p className="mt-1.5 text-[11px] leading-5 tracking-tight text-[#6B7280]">
-                            {renderNotificationMessage(notification.message)}
-                          </p>
-                        ) : null}
-                      </div>
-
-                      <div className="flex flex-wrap gap-2 lg:pt-1">
-                        {notification.channels.map((channel) => (
-                          <span key={channel} className="border border-[#D8E3E8] px-2 py-0.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">{channel}</span>
-                        ))}
-                      </div>
-
-                      <div className="text-[10px] font-sans text-[#6B7280] lg:pt-1">
-                        {notification.timestamp}
-                      </div>
-
-                      <div className="text-left text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280] lg:pt-1 lg:text-right">
-                        {notification.read ? 'Read' : 'Unread'}
-                      </div>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
-          </div>
-
-          {/* Analysis Footer */}
-          <div className="mb-12 mt-10 border-t border-[#D8E3E8] pt-6 text-center">
-            <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">
-              Communication Registry • Status: Active
+            <h1 className="mb-4 font-lora text-[32px] font-normal leading-tight tracking-tight text-[#111827]">
+              System events and recovery activity
+            </h1>
+            <p className="max-w-2xl text-[15px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
+              Forensic activity log for the Margin workspace. Track automated sync progress, evidence readiness, and case-payout milestones.
             </p>
           </div>
         </div>
 
-        <SheetContent
-          side="right"
-          className="platform-vitality-page w-full border-l border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] sm:max-w-[46vw]"
-        >
-          <SheetHeader className="border-b border-[#D8E3E8] px-8 py-6 text-left">
-            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Settings</div>
-            <SheetTitle className="mt-2 text-[24px] font-medium tracking-tight text-[#111827]">
-              Notification preferences
-            </SheetTitle>
-            <p className="max-w-md text-[12px] font-sans leading-5 text-[#6B7280]">
-              Manage email and in-app delivery without shrinking the update log.
-            </p>
-          </SheetHeader>
-
-          <div className="h-full overflow-y-auto px-8 py-8">
-            <div className="mb-6 border-y border-[#D8E3E8] px-4 py-4">
-              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">Configuration active</div>
-              <div className="mt-2 text-sm font-sans font-medium tracking-tight text-[#111827]">
-                {activePreferenceCount} of {preferences.length} notification lanes enabled
+        {/* Readiness Strip */}
+        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8 py-3">
+          <div className="mx-auto flex max-w-5xl items-center justify-between">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <div className={cn("h-1.5 w-1.5 rounded-full", unreadCount > 0 ? "bg-[#0B74DE]" : "bg-[#9CA3AF]")} />
+                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Unread:</span>
+                <span className="text-[11px] font-bold text-[#111827]">{unreadCount} Updates</span>
               </div>
-              <p className="mt-1 text-[11px] font-sans leading-5 text-[#6B7280]">
-                Preference changes save back to backend truth as you toggle them.
-              </p>
+              <div className="flex items-center gap-2">
+                <Clock className="h-3.5 w-3.5 text-[#9CA3AF]" />
+                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Last Refresh:</span>
+                <span className="text-[11px] font-bold text-[#111827]">{loading ? "Updating..." : "Live"}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button onClick={handleMarkAllRead} disabled={unreadCount === 0} className="text-[11px] font-bold text-[#0B74DE] hover:underline disabled:opacity-40 disabled:no-underline">Mark all read</button>
+                <div className="h-3 w-px bg-[#E5E7EB]" />
+                <button onClick={handleRefresh} disabled={loading} className="text-[11px] font-bold text-[#6B7280] hover:text-[#111827]">Refresh</button>
+              </div>
             </div>
-
-            {preferencesError && (
-              <div className="mb-6 border-y border-rose-500/20 bg-rose-500/5 px-4 py-4">
-                <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-rose-300">
-                  Saved preferences are unavailable right now. Toggles are locked until the page reloads from backend truth.
-                </p>
+            <div className="flex items-center gap-4">
+              <div className="relative w-48">
+                <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#9CA3AF]" />
+                <input 
+                  type="text" 
+                  placeholder="Filter activity..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-8 w-full rounded-md border border-[#E5E7EB] bg-white pl-8 pr-3 text-[11px] font-medium tracking-tight outline-none focus:border-[#0B74DE] focus:ring-0"
+                />
               </div>
-            )}
-
-            <div className="space-y-10 pb-10">
-              {categories.map((category) => {
-                const categoryPrefs = preferences.filter(pref => pref.category === category);
-
-                return (
-                  <div key={category} className="space-y-4">
-                    <div className="flex flex-col gap-1">
-                      <h3 className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">
-                        {category}
-                      </h3>
-                      <p className="text-[11px] font-sans leading-5 text-[#6B7280]">
-                        {CATEGORY_DESCRIPTIONS[category] || 'Notification routing and delivery preferences.'}
-                      </p>
-                    </div>
-
-                    <div className="border-y border-[#D8E3E8]">
-                      {categoryPrefs.map((pref) => {
-                        return (
-                          <div key={pref.id} className="border-b border-[#E5E7EB] px-4 py-4 transition-colors last:border-b-0 hover:bg-white/[0.025]">
-                            <div className="flex items-start justify-between gap-5">
-                              <div className="min-w-0 flex-1">
-                                <h4 className="text-[13px] font-sans font-medium tracking-tight text-[#111827]">
-                                  {pref.title}
-                                </h4>
-                                <p className="mt-1 text-[11px] font-sans leading-5 text-[#6B7280]">
-                                  {pref.description}
-                                </p>
-                                {!pref.supported && (
-                                  <p className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-amber-300/80">
-                                    {pref.supportNote}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-
-                            <div className="mt-4 flex items-center gap-8">
-                              <div className="flex items-center gap-3">
-                                <Switch
-                                  checked={pref.email}
-                                  disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
-                                  onCheckedChange={(checked) =>
-                                    updatePreference(pref.id, 'email', checked)
-                                  }
-                                  className="scale-90 data-[state=checked]:bg-[#0052FF]"
-                                />
-                                <span className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">Email</span>
-                              </div>
-
-                              <div className="flex items-center gap-3">
-                                <Switch
-                                  checked={pref.inApp}
-                                  disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
-                                  onCheckedChange={(checked) =>
-                                    updatePreference(pref.id, 'inApp', checked)
-                                  }
-                                  className="scale-90 data-[state=checked]:bg-[#0052FF]"
-                                />
-                                <span className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">In-App</span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
+              <div className="flex flex-wrap gap-1">
+                <FilterSelect value={typeFilter} onChange={setTypeFilter} options={[
+                  { value: 'all', label: 'All types' },
+                  { value: 'financial', label: 'Financial' },
+                  { value: 'document', label: 'Evidence' },
+                  { value: 'system', label: 'System' }
+                ]} />
+                <FilterSelect value={dateFilter} onChange={setDateFilter} options={[
+                  { value: 'all', label: 'All time' },
+                  { value: 'today', label: 'Today' },
+                  { value: 'week', label: 'This week' },
+                  { value: 'month', label: 'This month' }
+                ]} />
+                <FilterSelect value={statusFilter} onChange={setStatusFilter} options={[
+                  { value: 'all', label: 'All status' },
+                  { value: 'unread', label: 'Unread' },
+                  { value: 'read', label: 'Read' }
+                ]} />
+                {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
+                  <button
+                    onClick={() => { setSearchQuery(''); setTypeFilter('all'); setDateFilter('all'); setStatusFilter('all'); }}
+                    className="h-8 rounded-md border border-[#E5E7EB] px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] hover:bg-[#F3F5F4] hover:text-[#111827]"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </SheetContent>
-        </Sheet>
+        </div>
+
+        <div className="mx-auto max-w-5xl px-8 py-12">
+          {filteredNotifications.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F3F5F4]">
+                <Bell className="h-6 w-6 text-[#9CA3AF]" />
+              </div>
+              <h3 className="text-[14px] font-semibold text-[#111827]">No activity detected</h3>
+              <p className="mt-1 text-[12px] text-[#6B7280]">Try adjusting your filters or check back later.</p>
+              {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
+                <Button variant="outline" size="sm" onClick={() => { setSearchQuery(''); setTypeFilter('all'); setDateFilter('all'); setStatusFilter('all'); }} className="mt-6 h-8 text-[11px] font-bold uppercase tracking-tight">Clear all filters</Button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-12">
+              {Object.entries(groupedNotifications).map(([group, items]) => (
+                items.length > 0 && (
+                  <div key={group}>
+                    <h3 className="mb-4 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">{group}</h3>
+                    <div className="divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+                      {items.map((notif) => (
+                        <ActivityRow 
+                          key={notif.id} 
+                          notification={notif} 
+                          onRead={() => !notif.read && handleMarkAsRead(notif.id)}
+                          onNavigate={() => {
+                            if (!notif.read) handleMarkAsRead(notif.id);
+                            // Contextual navigation logic based on type
+                            if (notif.type.includes('case')) navigate(tenantRoute(activeSlug, '/cases'));
+                            else if (notif.type.includes('sync')) navigate(tenantRoute(activeSlug, '/sync'));
+                            else if (notif.type.includes('evidence')) navigate(tenantRoute(activeSlug, '/evidence'));
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Registry Footer */}
+        <div className="mx-auto max-w-5xl px-8 pb-20 pt-10">
+          <div className="border-t border-[#E5E7EB] pt-8 text-center">
+            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">
+              <Shield className="h-3 w-3" />
+              Communication Registry • US-EAST-1
+            </div>
+          </div>
+        </div>
       </div>
     </PageLayout>
+  );
+}
+
+function ActivityRow({ notification, onRead, onNavigate }: { 
+  notification: Notification, 
+  onRead: () => void,
+  onNavigate: () => void
+}) {
+  const Icon = useMemo(() => {
+    const type = notification.type.toLowerCase();
+    if (type.includes('payout') || type.includes('payment') || type.includes('funds') || type.includes('paid')) return DollarSign;
+    if (type.includes('claim') || type.includes('recovery') || type.includes('case')) return FileText;
+    if (type.includes('evidence') || type.includes('document') || type.includes('invoice')) return Shield;
+    if (type.includes('sync')) return RefreshCw;
+    if (type.includes('security') || type.includes('update')) return Zap;
+    return Bell;
+  }, [notification.type]);
+
+  return (
+    <div 
+      className={cn(
+        "group flex items-center justify-between py-5 transition-colors",
+        notification.read ? "opacity-75 hover:bg-[#F3F5F4]/30" : "bg-white hover:bg-[#F8FAFB]"
+      )}
+      onClick={onRead}
+    >
+      <div className="flex items-start gap-5">
+        <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white shadow-sm">
+          <Icon className="h-4.5 w-4.5 text-[#4B5563]" strokeWidth={1.5} />
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-3">
+            <span className="text-[14px] font-semibold tracking-tight text-[#111827]">
+              {renderNotificationMessage(notification.title)}
+            </span>
+            {!notification.read && <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />}
+          </div>
+          <div className="mt-1 flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">
+              {notification.type.replace(/_/g, ' ')}
+            </span>
+            <div className="h-1 w-1 rounded-full bg-[#E5E7EB]" />
+            <span className="text-[11px] font-medium text-[#6B7280]">{notification.timestamp}</span>
+          </div>
+          {notification.message && (
+            <p className="mt-2 max-w-2xl text-[12px] leading-relaxed tracking-tight text-[#6B7280]">
+              {renderNotificationMessage(notification.message)}
+            </p>
+          )}
+        </div>
+      </div>
+      
+      <div className="flex shrink-0 items-center gap-4 px-4 opacity-0 transition-opacity group-hover:opacity-100">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={(e) => { e.stopPropagation(); onNavigate(); }}
+          className="h-8 gap-1.5 border-[#E5E7EB] px-3 text-[11px] font-bold uppercase tracking-tight text-[#111827] hover:bg-[#F3F5F4]"
+        >
+          View
+          <ArrowUpRight className="h-3 w-3" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function FilterSelect({ value, onChange, options }: { value: string, onChange: (v: string) => void, options: { value: string, label: string }[] }) {
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger className="h-8 w-auto min-w-[100px] border-[#E5E7EB] bg-white px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] focus:ring-0">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent className="border-[#E5E7EB] bg-white shadow-xl">
+        {options.map(opt => (
+          <SelectItem key={opt.value} value={opt.value} className="text-[11px] font-medium text-[#111827] focus:bg-[#F3F5F4]">
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
