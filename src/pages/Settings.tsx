@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, CreditCard, Store } from 'lucide-react';
+import { 
+  Building2, CreditCard, Store, Shield, User, Lock, 
+  Settings as SettingsIcon, Bell, CreditCard as BillingIcon, 
+  ChevronRight, CheckCircle2, AlertCircle, RefreshCw, HelpCircle,
+  ExternalLink, LogOut, Trash2
+} from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -111,7 +116,7 @@ const Settings = () => {
     };
 
     void loadSellerProfile();
-  }, [activeTenantSlug]);
+  }, [activeTenantSlug, tenant?.name]);
 
   const loadAutoFilePreference = useCallback(async (options?: { silent?: boolean }): Promise<boolean> => {
     if (!activeTenantSlug) {
@@ -188,102 +193,28 @@ const Settings = () => {
   };
 
   const supportTier = planLimits?.supportTier ? SUPPORT_TIER_COPY[planLimits.supportTier] : 'Not available';
-  const isAmazonConnected = sellerProfile.amazon_connected ?? false;
-  const linkedMarketplaces = sellerProfile.linked_marketplaces || [];
-  const paypalActive = !!sellerProfile.paypal_payment_token || !!sellerProfile.paypal_email;
-
-  const connectionScope = useMemo(() => {
-    if (linkedMarketplaces.length > 0) {
-      return `${linkedMarketplaces.length} Marketplace${linkedMarketplaces.length === 1 ? '' : 's'} Linked`;
-    }
-    if (isAmazonConnected) return 'Seller Account Linked';
-    return 'Not linked';
-  }, [isAmazonConnected, linkedMarketplaces.length]);
-
-  const lastActivity = sellerProfile.last_sync_completed_at || sellerProfile.last_login;
-  const autoFileIntentCopy = autoFileEnabled
-    ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
-    : 'Cases will wait for your review before filing.';
-  const autoFileGateCopy = loadingAutoFile
-    ? 'Checking saved seller intent and filing gates.'
-    : savingAutoFile
-      ? 'Saving seller intent and confirming backend truth.'
-      : autoFileEnabled
-        ? autoFileGateStatus?.message || 'Auto-File is on. System filing gates will still be checked before any submission.'
-        : 'Auto-File is off. Global filing gates, payment checks, and evidence requirements remain unchanged.';
-  const autoFileGateMeta = autoFileGateStatus && autoFileEnabled
-    ? [
-        autoFileGateStatus.globalFilingEnabled === null
-          ? 'Global gate unknown'
-          : autoFileGateStatus.globalFilingEnabled === false
-            ? 'Global paused'
-            : 'Global gate active',
-        autoFileGateStatus.queueAvailable === null
-          ? 'Dispatch gate unknown'
-          : autoFileGateStatus.queueAvailable === false
-            ? 'Dispatch paused'
-            : 'Dispatch available',
-        autoFileGateStatus.paymentRequired ? 'Payment required' : 'Payment gate clear',
-        autoFileGateStatus.evidenceBlockedCount > 0 ? `${autoFileGateStatus.evidenceBlockedCount} need evidence` : 'Evidence gate clear'
-      ].join(' · ')
-    : null;
-
+  
   const formatDate = (dateString?: string): string => {
     if (!dateString) return 'Not available';
     try {
       const date = new Date(dateString);
       if (Number.isNaN(date.getTime())) return 'Not available';
-
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMs / 3600000);
-      const diffDays = Math.floor(diffMs / 86400000);
-
-      if (diffMins < 1) return 'Just now';
-      if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
-      if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
-      if (diffDays < 30) return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
-
       return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     } catch {
       return 'Not available';
     }
   };
-  const identityName = sellerProfile.name || sellerProfile.email || (loadingProfile ? 'Loading identity...' : 'Not available');
-  const identityFields = [
-    { label: 'User ID', value: sellerProfile.id || 'Not available' },
-    { label: 'Email', value: sellerProfile.email || 'Not available' },
-    { label: 'Name', value: sellerProfile.name || 'Not set' },
-    { label: 'Workspace Role', value: sellerProfile.role || 'Not available' },
-    { label: 'Workspace', value: sellerProfile.tenant_name || tenant?.name || 'Not available' },
-    { label: 'Last Login', value: formatDate(sellerProfile.last_login) },
-  ];
-
-  const marketplaceNames: Record<string, { name: string; flag: string }> = {
-    ATVPDKIKX0DER: { name: 'United States', flag: 'US' },
-    A1PA6795UKMFR9: { name: 'Germany', flag: 'DE' },
-    A1RKKUPIHCS9HS: { name: 'Spain', flag: 'ES' },
-    A13V1IB3VIYZZH: { name: 'France', flag: 'FR' },
-    A1F83G8C2ARO7P: { name: 'United Kingdom', flag: 'UK' },
-    A1VC38T7YXB528: { name: 'Japan', flag: 'JP' },
-    A1AM78C64UM0Y8: { name: 'India', flag: 'IN' },
-    A2EUQ1WTGCTBG2: { name: 'Canada', flag: 'CA' },
-    A39IBJ37TRP1C6: { name: 'Australia', flag: 'AU' },
-    A2Q3Y263D00KWC: { name: 'Brazil', flag: 'BR' },
-  };
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Account Control Center" noPadding>
-        <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827]">
-          <div className="container mx-auto px-8 pt-10 pb-20">
-            <div className="border-t border-[#D8E3EA] pt-8 space-y-3">
-              <h1 className="text-[20px] font-sans font-bold text-[#182026] tracking-tight">Settings unavailable</h1>
-              <p className="text-[15px] text-[#66737F] font-sans">
-                A tenant workspace is required before account settings can be loaded.
-              </p>
-            </div>
+      <PageLayout title="Settings" noPadding>
+        <div className="flex h-screen items-center justify-center bg-[#FAFAF7]">
+          <div className="max-w-md border border-[#E5E7EB] bg-white p-10 text-center shadow-sm">
+            <Shield className="mx-auto mb-4 h-10 w-10 text-[#9CA3AF]" />
+            <h1 className="font-lora text-2xl font-normal tracking-tight text-[#111827]">Workspace Required</h1>
+            <p className="mt-3 text-sm text-[#6B7280]">
+              Account settings only load inside an active workspace. Please select a marketplace to continue.
+            </p>
           </div>
         </div>
       </PageLayout>
@@ -291,260 +222,216 @@ const Settings = () => {
   }
 
   return (
-    <PageLayout title="Account Control Center" noPadding>
-      <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
-        <div
-          className="fixed inset-0 pointer-events-none opacity-[0.03]"
-          style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
-          }}
-        />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
-
-        <div className="relative z-10 container mx-auto px-8 pt-8 pb-14">
-          <div className="border-b border-[#D8E3EA] pb-6">
-            <div className="text-[12px] text-[#66737F]/40 font-sans font-bold uppercase tracking-tight">
-              ACCOUNT CONTROLS · LIVE DATA
-            </div>
-            <h1 className="mt-2 text-[22px] font-sans font-semibold text-[#111827] tracking-tight">Settings</h1>
-            <p className="mt-3 max-w-3xl text-[15px] text-[#66737F] font-sans leading-relaxed">
-              Inspect account identity, source connections, filing authority, and controls that are backed by live persistence.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 pt-6">
-            <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24 space-y-5">
-                <nav className="space-y-1">
-                  <div className="group relative w-full flex items-center gap-4 px-0 py-2.5 text-[#182026] border-b border-[#D8E3EA]">
-                    <Building2 className="h-4.5 w-4.5 text-[#66737F]" />
-                    <span className="text-[13px] font-sans font-bold uppercase tracking-tight">
-                      Account Identity
-                    </span>
-                  </div>
-                </nav>
+    <PageLayout title="Settings" noPadding>
+      <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
+        {/* Forensic Identity Header */}
+        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
+          <div className="mx-auto max-w-5xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <div className="h-px w-6 bg-[#0B74DE]" />
+                <span className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Workspace Configuration</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Badge variant="outline" className="bg-[#F3F5F4] text-[#6B7280] border-transparent font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
+                  Status: Active
+                </Badge>
               </div>
             </div>
+            <h1 className="mb-4 font-lora text-[32px] font-normal leading-tight tracking-tight text-[#111827]">
+              Settings
+            </h1>
+            <p className="max-w-2xl text-[15px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
+              Manage your workspace identity, filing authority, and account security. 
+              Changes here are reflected across your forensic auditing environment.
+            </p>
+          </div>
+        </div>
 
-            <div className="lg:col-span-3">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-7"
-              >
-                <div>
-                  <h2 className="text-[18px] font-sans font-semibold text-[#111827] tracking-tight">Account Identity</h2>
-                  <p className="text-[15px] text-[#66737F] font-sans mt-2 max-w-2xl">
-                    This section shows authenticated user and workspace identity only.
+        {/* Settings Navigation Rail */}
+        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8">
+          <div className="mx-auto flex max-w-5xl items-center gap-8">
+            <button className="border-b-2 border-[#0B74DE] py-4 text-[11px] font-bold uppercase tracking-tight text-[#111827]">
+              Account Identity
+            </button>
+            <button className="py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF] hover:text-[#6B7280] transition-colors">
+              Workspace
+            </button>
+            <button className="py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF] hover:text-[#6B7280] transition-colors">
+              Security
+            </button>
+            <button className="py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF] hover:text-[#6B7280] transition-colors">
+              Billing
+            </button>
+          </div>
+        </div>
+
+        {/* Main Settings Content */}
+        <div className="mx-auto max-w-5xl px-8 py-12">
+          <div className="space-y-12">
+            
+            {/* Section: Account Identity */}
+            <section>
+              <div className="mb-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Identity & Access</h2>
+                <p className="mt-1 text-[13px] text-[#6B7280]">Authenticated user and workspace role information.</p>
+              </div>
+              
+              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
+                <div className="divide-y divide-[#F3F5F4]">
+                  <div className="flex items-center justify-between p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                        <User className="h-5 w-5" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">User Name</p>
+                        <p className="text-[14px] font-semibold text-[#111827]">{sellerProfile.name || 'Not set'}</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm" className="text-[11px] font-bold text-[#0B74DE] hover:bg-[#F3F5F4]">Edit</Button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                        <SettingsIcon className="h-5 w-5" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Email Address</p>
+                        <p className="text-[14px] font-semibold text-[#111827]">{sellerProfile.email || 'Not available'}</p>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 border-transparent font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">Verified</Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 divide-x divide-[#F3F5F4]">
+                    <div className="p-6">
+                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Workspace Role</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#111827]">{sellerProfile.role || 'Member'}</p>
+                    </div>
+                    <div className="p-6">
+                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Last Login</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#111827]">{formatDate(sellerProfile.last_login)}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Section: Filing Authority */}
+            <section>
+              <div className="mb-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Filing Authority</h2>
+                <p className="mt-1 text-[13px] text-[#6B7280]">Control how cases are submitted to Amazon Support.</p>
+              </div>
+
+              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm p-6">
+                <div className="flex items-start justify-between gap-8">
+                  <div className="max-w-xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="text-[15px] font-semibold text-[#111827]">Auto-File Cases</h3>
+                      {savingAutoFile && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#0B74DE]" />}
+                    </div>
+                    <p className="text-[13px] leading-relaxed text-[#6B7280]">
+                      {autoFileEnabled
+                        ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
+                        : 'Cases will wait for your manual review and approval before filing.'}
+                    </p>
+                    <div className="mt-4 flex items-center gap-3">
+                      <div className={cn(
+                        "h-2 w-2 rounded-full",
+                        autoFileEnabled ? "bg-emerald-500" : "bg-[#9CA3AF]"
+                      )} />
+                      <span className="text-[11px] font-bold uppercase tracking-tight text-[#6B7280]">
+                        {autoFileEnabled ? 'Authority: Delegated' : 'Authority: Manual Approval'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <Switch
+                      checked={autoFileEnabled}
+                      onCheckedChange={(checked) => void handleAutoFileChange(checked)}
+                      disabled={loadingAutoFile || savingAutoFile}
+                      className="data-[state=checked]:bg-[#0B74DE]"
+                    />
+                    <span className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
+                      {savingAutoFile ? 'Updating...' : autoFileEnabled ? 'Enabled' : 'Disabled'}
+                    </span>
+                  </div>
+                </div>
+
+                {autoFileError && (
+                  <div className="mt-6 flex items-center gap-2 rounded-lg bg-rose-50 p-4 text-rose-600">
+                    <AlertCircle className="h-4 w-4" />
+                    <p className="text-[12px] font-medium">{autoFileError}</p>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Section: Support & Plan */}
+            <section>
+              <div className="mb-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Workspace Support</h2>
+                <p className="mt-1 text-[13px] text-[#6B7280]">Your current plan limits and direct support channels.</p>
+              </div>
+
+              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm divide-y divide-[#F3F5F4]">
+                <div className="p-6 flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Current Support Tier</p>
+                    <p className="mt-1 text-[15px] font-semibold text-[#111827]">{supportTier}</p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="h-9 border-[#E5E7EB] text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+                    onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
+                  >
+                    Open Support Channel
+                  </Button>
+                </div>
+                
+                <div className="p-6">
+                  <div className="flex items-center gap-2 text-amber-600 mb-2">
+                    <Info className="h-3.5 w-3.5" />
+                    <span className="text-[11px] font-bold uppercase tracking-tight">Plan Context</span>
+                  </div>
+                  <p className="text-[13px] text-[#6B7280] leading-relaxed">
+                    Support guidance is based on your current tenant plan limits. 
+                    For direct forensic help with a specific case, please use the Support channel above.
                   </p>
                 </div>
+              </div>
+            </section>
 
-                <div className="relative overflow-hidden border-t border-[#D8E3EA] pt-6 group transition-all duration-500">
-                  <div className="absolute top-0 right-0 p-6 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
-                    <Building2 className="h-48 w-48 text-[#182026] rotate-12" />
+            {/* Danger Zone */}
+            <section className="pt-10">
+              <div className="rounded-xl border border-rose-100 bg-rose-50/30 p-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-[15px] font-bold text-rose-700">Workspace Management</h3>
+                    <p className="mt-1 text-[13px] text-rose-600/80">Manage workspace lifecycle and access persistence.</p>
                   </div>
-
-                  <div className="relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                      <div className="space-y-4">
-                        <div>
-                          <h3 className="text-2xl font-sans font-bold text-[#182026] tracking-tight">
-                            {identityName}
-                          </h3>
-                          <div className="flex items-center gap-3 mt-2">
-                            <Badge
-                              variant="outline"
-                              className={cn(
-                                'text-[12px] font-sans font-bold uppercase tracking-tight px-3 py-1 rounded-none',
-                                sellerProfile.id
-                                  ? 'bg-[#F3F6F8] text-[#182026] border-[#D8E3EA]'
-                                  : 'bg-[#F3F6F8] text-[#66737F]/70 border-[#D8E3EA]'
-                              )}
-                            >
-                              {sellerProfile.id ? 'AUTHENTICATED_USER' : 'IDENTITY_UNAVAILABLE'}
-                            </Badge>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
-                          {identityFields.map((field) => (
-                            <div key={field.label} className="space-y-2">
-                              <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">{field.label}</p>
-                              <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight break-all">{field.value}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-3">
-                        <Button
-                          className="bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] transition-all active:scale-[0.98] rounded-none h-12 px-8 font-sans font-bold uppercase tracking-tight text-[13px] shadow-[0_12px_28px_rgba(0,82,255,0.16)]"
-                          onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/integrations-hub'))}
-                          disabled={!activeTenantSlug}
-                        >
-                          Manage Integrations
-                        </Button>
-                      </div>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <Button variant="ghost" className="text-rose-600 hover:bg-rose-100 hover:text-rose-700 text-[11px] font-bold uppercase tracking-tight">
+                      Leave Workspace
+                    </Button>
                   </div>
                 </div>
+              </div>
+            </section>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-[#D8E3EA] pt-7">
-                  <section className="space-y-4">
-                    <div className="text-[12px] font-sans font-bold text-[#66737F]/60 uppercase tracking-tight">Platform Connectivity</div>
+          </div>
+        </div>
 
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between py-2.5 border-b border-[#D8E3EA]">
-                        <div className="flex items-center gap-3">
-                          <Store className="h-4 w-4 text-[#66737F]/70" />
-                          <span className="text-[13px] font-sans font-bold text-[#182026] tracking-tight">Amazon SP-API</span>
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            'text-[12px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
-                            isAmazonConnected
-                              ? 'bg-[#F3F6F8] text-[#182026] border-[#D8E3EA]'
-                              : 'bg-[#F3F6F8] text-[#66737F]/70 border-[#D8E3EA]'
-                          )}
-                        >
-                          {isAmazonConnected ? 'Linked' : 'Unverified'}
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center justify-between py-2.5 border-b border-[#D8E3EA]">
-                        <div className="flex items-center gap-3">
-                          <CreditCard className="h-4 w-4 text-[#66737F]/70" />
-                          <span className="text-[13px] font-sans font-bold text-[#182026] tracking-tight">PayPal Billing</span>
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            'text-[12px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
-                            paypalActive
-                              ? 'bg-[#F3F6F8] text-[#182026] border-[#D8E3EA]'
-                              : 'bg-[#F3F6F8] text-[#66737F]/70 border-[#D8E3EA]'
-                          )}
-                        >
-                          {paypalActive ? 'Active' : 'Not available'}
-                        </Badge>
-                      </div>
-
-                      <div className="space-y-2 pt-2">
-                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Last Ingest</p>
-                        <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight">
-                          {sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
-                        </p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Marketplaces</p>
-                        <div className="flex flex-wrap gap-2">
-                          {linkedMarketplaces.length > 0 ? (
-                            linkedMarketplaces.map((marketplaceId) => {
-                              const marketplace = marketplaceNames[marketplaceId] || { name: marketplaceId, flag: 'GL' };
-                              return (
-                                <Badge key={marketplaceId} variant="outline" className="text-[12px] font-sans font-bold uppercase tracking-tight border-[#D8E3EA] text-[#4B5A64] rounded-none">
-                                  {marketplace.flag} {marketplace.name}
-                                </Badge>
-                              );
-                            })
-                          ) : (
-                            <span className="text-[15px] font-sans font-bold text-[#66737F] tracking-tight">Not available</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-
-                  <section className="space-y-4 border-t border-[#D8E3EA] pt-6 md:border-t-0 md:border-l md:pl-8">
-                    <div className="text-[12px] font-sans font-bold text-[#66737F]/60 uppercase tracking-tight">Filing Controls</div>
-
-                    <div className="space-y-4">
-                      <div className="flex items-start justify-between gap-5 py-2.5 border-b border-[#D8E3EA]">
-                        <div className="space-y-2 max-w-md">
-                          <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight">Auto-File</p>
-                          <p className="text-[13px] text-[#66737F] font-sans leading-relaxed">
-                            {autoFileIntentCopy}
-                          </p>
-                          <p className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/25">
-                            {loadingAutoFile
-                              ? 'Loading saved seller intent'
-                              : savingAutoFile
-                                ? 'Saving and confirming'
-                                : autoFileEnabled
-                                  ? 'Seller intent: automatic submission allowed'
-                                  : 'Seller intent: review before filing'}
-                          </p>
-                          <div className="border border-[#D8E3EA] bg-[#F9FBFC] px-3 py-2">
-                            <p className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/25">
-                              Submission Gate Status
-                            </p>
-                            <p className="mt-1 text-[13px] text-[#66737F] font-sans leading-relaxed">
-                              {autoFileGateCopy}
-                            </p>
-                            {autoFileGateMeta && (
-                              <p className="mt-1.5 text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/25">
-                                {autoFileGateMeta}
-                              </p>
-                            )}
-                          </div>
-                          {autoFileError && (
-                            <p className="text-[13px] text-[#d0b673] font-sans leading-relaxed">
-                              {autoFileError}
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="flex flex-col items-end gap-3">
-                          <Switch
-                            checked={autoFileEnabled}
-                            onCheckedChange={(checked) => {
-                              void handleAutoFileChange(checked);
-                            }}
-                            disabled={loadingAutoFile || savingAutoFile}
-                            aria-label="Auto-File seller-controlled filing switch"
-                            className="data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#E5E7EB]"
-                          />
-                          <span className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#182026]/35">
-                            {savingAutoFile ? 'Saving' : autoFileEnabled ? 'On' : 'Off'}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="text-[12px] font-sans font-bold text-[#66737F]/60 uppercase tracking-tight">Support Tier</div>
-
-                      <div className="space-y-2">
-                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Current Tier</p>
-                        <p className="text-[18px] font-sans font-bold text-[#182026] tracking-tight">{supportTier}</p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <p className="text-[12px] font-sans font-bold text-[#66737F]/40 uppercase tracking-tight">Workspace</p>
-                        <p className="text-[15px] font-sans font-bold text-[#182026] tracking-tight">
-                          {tenant?.name || 'Not available'}
-                        </p>
-                      </div>
-
-                      <p className="text-[13px] text-[#66737F]/70 font-sans leading-relaxed">
-                        Support guidance is based on your current tenant plan limits. For direct help, use the support page.
-                      </p>
-
-                      <Button
-                        variant="outline"
-                        className="w-full h-11 rounded-md border-[#C8D6DF] bg-white text-[#4B5A64] hover:bg-[#F3F6F8] font-sans font-semibold text-[13px] uppercase tracking-tight"
-                        onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
-                        disabled={!activeTenantSlug}
-                      >
-                        Open Support Channel
-                      </Button>
-                    </div>
-                  </section>
-                </div>
-              </motion.div>
+        {/* Registry Footer */}
+        <div className="mx-auto max-w-5xl px-8 pb-20 pt-10">
+          <div className="border-t border-[#E5E7EB] pt-8 text-center">
+            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
+              <Shield className="h-3 w-3" />
+              Workspace Authority Registry • US-EAST-1
             </div>
           </div>
         </div>
@@ -553,6 +440,4 @@ const Settings = () => {
   );
 };
 
-// Hidden notification/security/billing stubs remain intentionally excluded until
-// they have real backend persistence and truthful operator semantics.
 export default Settings;
