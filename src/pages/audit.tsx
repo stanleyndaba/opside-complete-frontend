@@ -300,7 +300,11 @@ export default function Audit() {
   const hasFindings = step === 'completed' && teaser.findingsCount > 0;
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
   const hasRecoveryOpportunity = hasFindings || hasScopeValue;
-  const canShowRecoverOnce = hasFindings && hasScopeValue && !isZeroRecordLimitedAudit;
+  const canShowRecoverOnce = teaser.commercialEligibility === 'eligible' && teaser.commercialRoute === 'RECOVER_ONCE' &&
+    hasFindings && hasScopeValue && !isZeroRecordLimitedAudit;
+  const canShowWorkspace = teaser.commercialEligibility === 'eligible' && (
+    teaser.commercialRoute === 'WORKSPACE' || teaser.commercialRoute === 'RECOVERY_CONTROL'
+  );
   const needsAdditionalAmazonData = step === 'completed' && (isZeroRecordLimitedAudit || Boolean(teaser.sourcesUnavailable?.length));
   const selectedAuditPeriodLabel = auditHistory.find((item) => item.id === audit?.id)?.label || 'Current audit';
   const expiringSoonValue = hasScopeValue ? formatMoney(Math.round(teaser.scopeValue * 0.28)) : '$0';
@@ -943,17 +947,30 @@ export default function Audit() {
       currency: 'ZAR',
     });
 
-    const response = await api.initializeRecoveryWorkspaceSubscription(audit.id, tenantSlug || undefined);
+    const workspaceSlug = tenant?.slug || tenantSlug;
+    const response = await api.initializeRecoveryWorkspaceSubscription(audit.id, workspaceSlug || undefined);
     setIsBusy(false);
 
     if (!response.ok || !response.data?.success) {
-      setError(response.error || 'Margin could not open subscription checkout yet.');
+      if (response.data?.code === 'workspace_not_eligible') {
+        setIsActivationSheetOpen(false);
+        setError(response.data.message || 'This audit does not qualify for Recovery Workspace checkout.');
+        return;
+      }
+
+      setError(response.error || response.data?.message || 'Margin could not open subscription checkout yet.');
       return;
     }
 
-    if (response.data.entitlement?.active && tenantSlug) {
+    if (response.data.already_entitled && response.data.entitlement?.entitled && workspaceSlug) {
       clearPendingAudit();
-      navigate(`/app/${tenantSlug}/dashboard`);
+      navigate(`/app/${workspaceSlug}/dashboard`);
+      return;
+    }
+
+    if (response.data.entitlement?.entitled && workspaceSlug) {
+      clearPendingAudit();
+      navigate(`/app/${workspaceSlug}/dashboard`);
       return;
     }
 
@@ -1440,7 +1457,7 @@ export default function Audit() {
               </section>
             ) : null}
 
-            {step === 'completed' ? (
+            {step === 'completed' && (canShowRecoverOnce || canShowWorkspace) ? (
               <section className="mb-12 rounded-none border border-zinc-100 bg-white p-8">
                 <div className="flex flex-col gap-10">
                   <div className="max-w-2xl">
@@ -1470,7 +1487,7 @@ export default function Audit() {
                   </div>
 
                   {canShowRecoverOnce ? (
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className={`grid gap-6 ${canShowWorkspace ? 'md:grid-cols-2' : ''}`}>
                       <div className="rounded-none border border-zinc-100 bg-zinc-50/30 p-8 flex flex-col">
                         <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Engagement 01 / One-Time</div>
                         <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">
@@ -1502,24 +1519,26 @@ export default function Audit() {
                         )}
                       </div>
 
-                      <div className="rounded-none border border-zinc-100 bg-white p-8 text-zinc-900 flex flex-col shadow-2xl shadow-zinc-100">
-                        <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Engagement 02 / Continuous</div>
-                        <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">R1,799 / Month</h3>
-                        <p className="mt-3 text-[13px] leading-relaxed text-zinc-400 flex-1">
-                          Full operational surface. Margin monitors every shipment, detects discrepancies daily, and handles all Amazon responses.
-                        </p>
-                        <div className="mt-6 pt-6 border-t border-zinc-100">
-                          <p className="text-[13px] font-semibold text-[#182026] uppercase tracking-tight">
-                            Unlimited Recoveries
+                      {canShowWorkspace ? (
+                        <div className="rounded-none border border-zinc-100 bg-white p-8 text-zinc-900 flex flex-col shadow-2xl shadow-zinc-100">
+                          <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Engagement 02 / Continuous</div>
+                          <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">R1,799 / Month</h3>
+                          <p className="mt-3 text-[13px] leading-relaxed text-zinc-400 flex-1">
+                            Full operational surface. Margin monitors every shipment, detects discrepancies daily, and handles all Amazon responses.
                           </p>
+                          <div className="mt-6 pt-6 border-t border-zinc-100">
+                            <p className="text-[13px] font-semibold text-[#182026] uppercase tracking-tight">
+                              Unlimited Recoveries
+                            </p>
+                          </div>
+                          <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
+                            {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
+                            Activate Workspace
+                          </Button>
                         </div>
-                        <Button onClick={openActivationSheet} disabled={isBusy} className="mt-6 w-full h-12 rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white hover:bg-[#075EBA] transition-all">
-                          {isBusy ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : null}
-                          Activate Workspace
-                        </Button>
-                      </div>
+                      ) : null}
                     </div>
-                  ) : (
+                  ) : canShowWorkspace ? (
                     <div className="rounded-none border border-zinc-100 bg-white p-8 text-zinc-900 flex flex-col shadow-2xl shadow-zinc-100">
                       <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Recovery Surface / Continuous</div>
                       <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">R1,799 / Month</h3>
@@ -1536,7 +1555,7 @@ export default function Audit() {
                         Activate Workspace
                       </Button>
                     </div>
-                  )}
+                  ) : null}
                 </div>
               </section>
             ) : null}

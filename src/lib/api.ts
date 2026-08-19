@@ -176,6 +176,10 @@ export interface AuditTeaserSummary {
   sourcesReviewed?: string[];
   sourcesUnavailable?: string[];
   retryable?: boolean;
+  commercialState?: string | null;
+  commercialRoute?: string | null;
+  commercialReason?: string | null;
+  commercialEligibility?: string | null;
 }
 
 export interface RecoveryWorkspaceSubscriptionStatus {
@@ -215,6 +219,16 @@ export interface RecoveryWorkspaceSubscriptionStatus {
 export interface PaystackSubscriptionInitializeResponse {
   success: boolean;
   already_exists?: boolean;
+  already_entitled?: boolean;
+  code?: 'workspace_not_eligible';
+  message?: string;
+  commercial?: {
+    route: string | null;
+    eligibility: string | null;
+  };
+  workspace?: {
+    tenant_id: string;
+  };
   subscription_intent_id?: string;
   payment_id?: string;
   reference?: string;
