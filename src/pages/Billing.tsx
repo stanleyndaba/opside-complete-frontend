@@ -13,9 +13,24 @@ import { trackEvent } from '@/lib/analytics';
 
 const NOT_AVAILABLE = 'Not Available';
 
-function formatMoneyUSD(value?: number | null) {
-  if (!Number.isFinite(Number(value))) return '$99/mo';
-  return `$${(Number(value) / 100).toFixed(0)}/mo`;
+function formatSubscriptionPrice(amountSubunits?: number | null, currency?: string | null) {
+  const normalizedCurrency = String(currency || 'ZAR').toUpperCase();
+  const amount = Number(amountSubunits);
+  if (!Number.isFinite(amount)) return 'R1,799/month';
+
+  const majorAmount = amount / 100;
+  if (normalizedCurrency === 'ZAR') {
+    return `R${majorAmount.toLocaleString('en-US', { maximumFractionDigits: 0 })}/month`;
+  }
+
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: normalizedCurrency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(majorAmount);
+
+  return `${formatted}/month`;
 }
 
 function formatDate(value?: string | null) {
@@ -140,7 +155,7 @@ export default function Billing() {
                   Billing
                 </h1>
                 <p className="mt-3 max-w-2xl text-[15px] leading-6 text-[#66737F]">
-                  Recovery OS is billed at $99/month with 0% recovery commission.
+                  Recovery Workspace is billed at R1,799/month with 0% recovery commission.
                 </p>
               </div>
               <Badge variant="outline" className={`w-fit rounded-md px-3 py-1 text-[13px] font-semibold ${toneForState(state)}`}>
@@ -166,8 +181,8 @@ export default function Billing() {
             <>
               <section className="grid gap-4 md:grid-cols-4">
                 {[
-                  { label: 'Product', value: product?.name || 'Recovery OS' },
-                  { label: 'Price', value: formatMoneyUSD(product?.amount_subunits ?? 9900) },
+                  { label: 'Product', value: product?.name || 'Recovery Workspace' },
+                  { label: 'Price', value: formatSubscriptionPrice(product?.amount_subunits, product?.currency) },
                   { label: 'Interval', value: product?.interval || 'monthly' },
                   { label: 'Commission', value: '0%' },
                 ].map((item) => (

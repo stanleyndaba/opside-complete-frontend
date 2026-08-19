@@ -28,7 +28,7 @@ const pathOptions = [
     label: "Option 2 — Recovery Workspace",
     title: "Keep the recovery work under control.",
     copy: "For sellers who do not want every new issue to become another spreadsheet, case chase, or internal project. Workspace keeps checking, evidence, cases, responses, and payouts together over time.",
-    price: "US$99/month",
+    price: "R1,799/month",
     subPrice: "with 0% recovery commission",
     cta: "Activate Recovery Workspace",
     ctaLocation: "homepage_recovery_workspace",

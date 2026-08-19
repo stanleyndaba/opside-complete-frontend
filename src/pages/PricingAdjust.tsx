@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, X } from 'lucide-react';
 
@@ -8,22 +8,15 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/components/ui/use-toast';
-import { useSession } from '@/contexts/SessionContext';
 import { useTenant } from '@/contexts/TenantContext';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
-import { api } from '@/lib/api';
-import {
-  trackCheckoutStarted,
-  trackClaimAccessClicked,
-  trackOutboundPaymentClicked,
-} from '@/lib/analytics';
+import { trackClaimAccessClicked } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
 type PricingTier = {
   name: string;
-  planKey?: SelectablePlan;
+  auditRequired?: boolean;
   price: string;
   priceContext: string;
   purpose: string;
@@ -35,13 +28,10 @@ type PricingTier = {
   badgeLabel?: string;
 };
 
-type BillingView = 'monthly' | 'annual';
-type SelectablePlan = 'starter' | 'pro' | 'enterprise';
-
-const getPricingTiers = (interval: BillingView): PricingTier[] => [
+const getPricingTiers = (): PricingTier[] => [
   {
     name: 'Free Recovery Audit',
-    price: '$0',
+    price: 'R0',
     priceContext: 'A one-time snapshot',
     purpose: 'Find out exactly what is missing and what can be recovered.',
     features: [
@@ -59,9 +49,9 @@ const getPricingTiers = (interval: BillingView): PricingTier[] => [
   },
   {
     name: 'Recovery Workspace',
-    planKey: 'starter',
-    price: interval === 'annual' ? '$79/mo' : '$99/mo',
-    priceContext: interval === 'annual' ? 'Billed $948 annually' : '0% recovery commission',
+    auditRequired: true,
+    price: 'R1,799/month',
+    priceContext: '0% recovery commission',
     purpose: 'For one Seller Central business. Cancel anytime. Nothing is filed without your approval.',
     features: [
       'Continuous discrepancy monitoring',
@@ -101,13 +91,7 @@ const getPricingTiers = (interval: BillingView): PricingTier[] => [
 export default function PricingAdjust() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams();
-  const [searchParams] = useSearchParams();
-  const { toast } = useToast();
-  const { isAuthReady, authToken } = useSession();
   const { tenant, isReady: isTenantReady } = useTenant();
-  const [billingInterval, setBillingInterval] = useState<BillingView>('monthly');
-  const [processingSelectionKey, setProcessingSelectionKey] = useState<string | null>(null);
-  const [restoredSelectionKey, setRestoredSelectionKey] = useState<string | null>(null);
   const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
   const isInAppOverlay = Boolean(tenantSlug);
 
@@ -118,125 +102,9 @@ export default function PricingAdjust() {
     url: `${SITE_META.url}/pricing`,
   });
 
-  const buildPricingReturnPath = (plan: SelectablePlan, interval: BillingView) =>
-    `/app/default/pricing-adjust?plan=${plan}&interval=${interval}`;
-
   const openSalesPage = () => {
     navigate('/sales');
   };
-
-  const openPaymentCheckout = useCallback((checkoutUrl: string, analyticsParams: Record<string, unknown> = {}) => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    trackOutboundPaymentClicked({
-      destination: checkoutUrl,
-      ...analyticsParams,
-    });
-    trackCheckoutStarted({
-      destination: checkoutUrl,
-      ...analyticsParams,
-    });
-    window.setTimeout(() => {
-      window.location.assign(checkoutUrl);
-    }, 180);
-  }, []);
-
-  const startSubscribeIntent = useCallback(async (plan: SelectablePlan, interval: BillingView) => {
-    const selectionKey = `${plan}:${interval}`;
-
-    if (!isAuthReady) {
-      toast({
-        title: 'Checking account access',
-        description: 'Pricing selection is waiting for authenticated workspace context.',
-      });
-      return;
-    }
-
-    if (!authToken) {
-      navigate(`/login?next=${encodeURIComponent(buildPricingReturnPath(plan, interval))}`);
-      return;
-    }
-
-    if (!isTenantReady) {
-      toast({
-        title: 'Loading workspace',
-        description: 'Pricing selection needs a tenant-bound workspace before billing can begin.',
-      });
-      return;
-    }
-
-    if (!activeSlug) {
-      toast({
-        title: 'Workspace Not Available',
-        description: 'Pricing cannot create a billing intent until a workspace is available.',
-        variant: 'destructive',
-      });
-      navigate('/app');
-      return;
-    }
-
-    setProcessingSelectionKey(selectionKey);
-
-    try {
-      const response = await api.createBillingSubscribeIntent({
-        plan_tier: plan,
-        billing_interval: interval,
-      }, activeSlug);
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          navigate(`/login?next=${encodeURIComponent(buildPricingReturnPath(plan, interval))}`);
-          return;
-        }
-
-        throw new Error(response.error || 'Unable to create a subscription invoice.');
-      }
-
-      const invoice = response.data?.invoice;
-      const invoiceId = response.data?.invoice_id || invoice?.invoice_id || 'subscription invoice';
-      const checkoutUrl = invoice?.payment_link_url || null;
-      toast({
-        title: checkoutUrl ? 'Opening secure checkout' : 'Billing invoice ready',
-        description: checkoutUrl
-          ? `Plan selection is bound to ${invoiceId}. Sending you to secure checkout now.`
-          : `Plan selection is bound to ${invoiceId}, but the checkout link is not available yet. Review it from Billing.`,
-      });
-
-      if (checkoutUrl) {
-        openPaymentCheckout(checkoutUrl);
-        return;
-      }
-
-      navigate(`/app/${activeSlug}/billing`);
-    } catch (error) {
-      toast({
-        title: 'Unable to start billing',
-        description: error instanceof Error ? error.message : 'Billing entrypoint is Not Available.',
-        variant: 'destructive',
-      });
-    } finally {
-      setProcessingSelectionKey(null);
-    }
-  }, [activeSlug, authToken, isAuthReady, isTenantReady, navigate, openPaymentCheckout, toast]);
-
-  useEffect(() => {
-    const planParam = searchParams.get('plan');
-    const intervalParam = searchParams.get('interval');
-    const plan = planParam === 'starter' || planParam === 'pro' || planParam === 'enterprise' ? planParam : null;
-    const interval = intervalParam === 'monthly' || intervalParam === 'annual' ? intervalParam : null;
-
-    if (!plan || !interval) return;
-    if (!isAuthReady) return;
-    if (authToken && !isTenantReady) return;
-
-    const selectionKey = `${plan}:${interval}`;
-    if (processingSelectionKey === selectionKey || restoredSelectionKey === selectionKey) return;
-
-    setRestoredSelectionKey(selectionKey);
-    void startSubscribeIntent(plan, interval);
-  }, [authToken, isAuthReady, isTenantReady, processingSelectionKey, restoredSelectionKey, searchParams, startSubscribeIntent]);
 
   const closeOverlay = () => {
     if (!isInAppOverlay) {
@@ -330,28 +198,18 @@ export default function PricingAdjust() {
                   cta_text: ctaText,
                 });
                 if (tier.checkoutUrl) {
-                  if (tier.checkoutUrl.startsWith('/')) {
-                    navigate(tier.checkoutUrl);
-                    return;
-                  }
-
-                  openPaymentCheckout(tier.checkoutUrl, {
-                    cta_location: ctaLocation,
-                    cta_text: ctaText,
-                  });
+                  navigate(tier.checkoutUrl);
                   return;
                 }
-                if (tier.salesLed || !tier.planKey) {
-                  openSalesPage();
-                  return;
-                }
-                if (!isInAppOverlay) {
+                if (tier.auditRequired) {
                   navigate('/audit');
                   return;
                 }
-                startSubscribeIntent(tier.planKey, billingInterval);
+                if (tier.salesLed) {
+                  openSalesPage();
+                }
               }}
-              disabled={processingSelectionKey !== null || tier.badgeLabel?.includes('Coming Soon')}
+              disabled={tier.badgeLabel?.includes('Coming Soon')}
               className={cn(
                 "h-12 rounded-[6px] font-bold text-[13px] uppercase tracking-tight transition-all duration-200",
                 tier.badgeLabel?.includes('Coming Soon')
@@ -361,9 +219,7 @@ export default function PricingAdjust() {
                     : "border border-[#D8E3EA] bg-white text-[#182026] hover:bg-[#FAFAF7]"
               )}
             >
-              {tier.planKey && processingSelectionKey === `${tier.planKey}:${billingInterval}`
-                ? 'Preparing Checkout'
-                : tier.ctaLabel || `Start ${tier.name} Coverage`}
+              {tier.ctaLabel || `Start ${tier.name} Coverage`}
               {!tier.badgeLabel?.includes('Coming Soon') && <ArrowRight className="ml-2 h-4 w-4" />}
             </Button>
           </div>
@@ -428,7 +284,7 @@ export default function PricingAdjust() {
             </div>
             
             <div className="flex max-w-[320px] flex-col items-start md:items-end md:text-right">
-              <div className="mb-6 grid gap-2 text-left md:text-right">
+              <div className="grid gap-2 text-left md:text-right">
                 {[
                   'Start on any tier',
                   'Move up or down whenever your data follows',
@@ -440,36 +296,11 @@ export default function PricingAdjust() {
                   </div>
                 ))}
               </div>
-              
-              <div className="flex w-full items-center justify-between rounded-full border border-[#E4EDF1] bg-[#F8FAFC] p-1 md:w-auto md:justify-end">
-                <button 
-                  onClick={() => setBillingInterval('monthly')}
-                  className={cn(
-                    "flex-1 rounded-full px-5 py-2 text-[11px] font-semibold uppercase tracking-wide transition-all md:flex-none",
-                    billingInterval === 'monthly' ? "bg-white text-[#182026] shadow-sm" : "text-[#66737F] hover:text-[#182026]"
-                  )}
-                >
-                  Monthly
-                </button>
-                <button 
-                  onClick={() => setBillingInterval('annual')}
-                  className={cn(
-                    "flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-2 text-[11px] font-semibold uppercase tracking-wide transition-all md:flex-none",
-                    billingInterval === 'annual' ? "bg-white text-[#182026] shadow-sm" : "text-[#66737F] hover:text-[#182026]"
-                  )}
-                >
-                  Yearly
-                  <span className="rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] tracking-tight text-[#0284C7]">Save 20%</span>
-                </button>
-              </div>
-              <p className="mt-3 w-full text-center text-[10px] font-medium tracking-wide text-[#8A99A4] md:text-right">
-                Billed yearly · 2 months free
-              </p>
             </div>
           </motion.div>
 
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:gap-6 lg:grid-cols-3 items-stretch">
-            {getPricingTiers(billingInterval).map((tier, index) => renderPricingTier(tier, index))}
+            {getPricingTiers().map((tier, index) => renderPricingTier(tier, index))}
           </div>
 
           <p className="mx-auto mt-10 max-w-4xl text-center text-[11px] font-medium leading-5 text-[#7A8994]">

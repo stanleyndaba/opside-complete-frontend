@@ -920,27 +920,27 @@ export default function Audit() {
       scope_value: teaser.scopeValue,
       findings_count: teaser.findingsCount,
       destination: 'wise_subscription_checkout',
-      value: 99,
-      currency: 'USD',
+      value: 1799,
+      currency: 'ZAR',
     });
     trackEvent(ANALYTICS_EVENTS.checkoutStarted, {
       offer: 'recovery_workspace',
-      value: 99,
-      currency: 'USD',
+      value: 1799,
+      currency: 'ZAR',
       payment_provider: 'wise_subscription',
     });
     trackEvent(ANALYTICS_EVENTS.subscriptionCheckoutStarted, {
       offer: 'recovery_workspace',
-      value: 99,
-      currency: 'USD',
+      value: 1799,
+      currency: 'ZAR',
     });
     trackEvent('recovery_workspace_checkout_started', {
       source_page: '/audit',
       audit_id: audit?.id || null,
       audit_outcome: teaser.finalStatus || 'unknown',
       findings_count: teaser.findingsCount,
-      value: 99,
-      currency: 'USD',
+      value: 1799,
+      currency: 'ZAR',
     });
 
     const response = await api.initializeRecoveryWorkspaceSubscription(audit.id, tenantSlug || undefined);
@@ -1504,7 +1504,7 @@ export default function Audit() {
 
                       <div className="rounded-none border border-zinc-100 bg-white p-8 text-zinc-900 flex flex-col shadow-2xl shadow-zinc-100">
                         <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Engagement 02 / Continuous</div>
-                        <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">$99 / Month</h3>
+                        <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">R1,799 / Month</h3>
                         <p className="mt-3 text-[13px] leading-relaxed text-zinc-400 flex-1">
                           Full operational surface. Margin monitors every shipment, detects discrepancies daily, and handles all Amazon responses.
                         </p>
@@ -1522,7 +1522,7 @@ export default function Audit() {
                   ) : (
                     <div className="rounded-none border border-zinc-100 bg-white p-8 text-zinc-900 flex flex-col shadow-2xl shadow-zinc-100">
                       <div className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-4">Recovery Surface / Continuous</div>
-                      <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">$99 / Month</h3>
+                      <h3 className="text-[20px] font-bold tracking-tight text-zinc-900">R1,799 / Month</h3>
                       <p className="mt-3 text-[13px] leading-relaxed text-zinc-500 flex-1">
                         Our agents monitor your account daily for new lost inventory, damaged items, and settlement gaps.
                       </p>
@@ -1593,7 +1593,7 @@ export default function Audit() {
           </div>
 
           <div className="mt-auto border-t border-[#D8E3EA] bg-[#F5F5F5] px-6 py-5">
-            <div className="text-[28px] font-semibold tracking-[-0.04em] text-[#182026]">$99 / Month</div>
+            <div className="text-[28px] font-semibold tracking-[-0.04em] text-[#182026]">R1,799 / Month</div>
             <p className="mt-1 text-[13px] leading-relaxed text-[#4D5B66]">Flat-fee Recovery OS | 0% recovery commission | Cancel anytime | Nothing filed without approval</p>
             <Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-11 w-full rounded-[6px] bg-[#182026] px-5 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35]">
               {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
