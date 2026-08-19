@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import { formatDistanceToNow } from 'date-fns';
 import { Link, useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
+import { PageLayout } from '@/components/layout/PageLayout';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
@@ -14,7 +15,7 @@ import {
   FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail,
   Shield, FileText, Zap, ArrowUpRight, Info, Filter, History,
   Lock, CheckCircle, ExternalLink, Paperclip, ChevronRight,
-  BarChart3, FileSearch, Layers, Activity
+  BarChart3, FileSearch, Layers, Activity, DollarSign
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
