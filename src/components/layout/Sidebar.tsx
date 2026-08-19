@@ -1,5 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, MoreHorizontal, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Search, Bell, Send, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCw } from 'lucide-react';
+import { 
+  Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, 
+  MoreHorizontal as MoreIcon, LogOut, FileText, LifeBuoy, User, Plug, 
+  Box, Menu, Search, Bell, Send, Headset, Gift, Copy, Check, X, 
+  CreditCard, Mail, Upload, Inbox, RefreshCw 
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -15,6 +20,10 @@ import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
 
 const prefetchRoute = (path: string) => {
   try {
@@ -61,7 +70,6 @@ const prefetchRoute = (path: string) => {
     }
   } catch { }
 };
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
@@ -448,7 +456,7 @@ export function Sidebar({
                 isMoreActive && "bg-white/10 text-white"
               )}
             >
-              <MoreHorizontal className={cn("h-[17px] w-[17px] shrink-0", isMoreActive && "text-[#0B74DE]")} strokeWidth={1.5} />
+              <MoreIcon className={cn("h-[17px] w-[17px] shrink-0", isMoreActive && "text-[#0B74DE]")} strokeWidth={1.5} />
               {!isCollapsed && <span className="text-[13px] font-sans font-medium tracking-tight">More</span>}
             </button>
           </DropdownMenuTrigger>
