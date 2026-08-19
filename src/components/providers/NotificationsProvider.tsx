@@ -15,6 +15,15 @@ export interface Notification {
   priority: 'low' | 'normal' | 'high' | 'urgent';
   created_at: string;
   payload?: any;
+  system_signal_id?: string | null;
+  signal_event_type?: string | null;
+  signal_severity?: 'critical' | 'action_required' | 'informational' | null;
+  signal_sensitivity?: 'operational_private' | 'financial_sensitive' | 'security_sensitive' | null;
+  signal_action_type?: string | null;
+  signal_action_route?: Record<string, unknown> | null;
+  signal_state?: 'open' | 'resolved' | 'expired' | 'superseded' | 'cancelled' | null;
+  seller_state?: 'unseen' | 'seen' | 'read' | 'acknowledged' | null;
+  action_state?: 'none' | 'pending' | 'completed' | 'no_longer_needed' | 'expired' | null;
 }
 
 interface NotificationsContextType {
@@ -23,6 +32,7 @@ interface NotificationsContextType {
   isLoading: boolean;
   markAsRead: (id: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
+  acknowledgeSignal: (id: string) => Promise<void>;
   refreshNotifications: () => Promise<void>;
 }
 
@@ -117,6 +127,19 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
     }
   };
 
+  const acknowledgeSignal = async (id: string) => {
+    if (!activeSlug || !userId) return;
+    try {
+      setNotifications(prev => prev.map(n =>
+        n.id === id ? { ...n, seller_state: 'acknowledged' as const } : n
+      ));
+      await (api as any).acknowledgeSystemSignal(id, activeSlug);
+    } catch (error) {
+      console.error('Failed to acknowledge System Signal:', error);
+      fetchNotifications();
+    }
+  };
+
   const markAllAsRead = async () => {
     if (!activeSlug || !userId) return;
     try {
@@ -146,6 +169,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
       isLoading,
       markAsRead,
       markAllAsRead,
+      acknowledgeSignal,
       refreshNotifications: fetchNotifications
     }}>
       {children}

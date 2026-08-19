@@ -12,6 +12,7 @@ import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { useTenant } from '@/contexts/TenantContext';
 import { tenantRoute } from '@/lib/routes';
 import { format, formatDistanceToNow } from 'date-fns';
+import { getSystemSignalActionLabel, getSystemSignalMeta, resolveSystemSignalHref } from '@/lib/systemSignalRoutes';
 
 interface NotificationBellProps {
   label?: string;
@@ -65,6 +66,19 @@ const getNotificationPreview = (notification: any) => {
   const type = String(notification.type || '').toLowerCase();
   const rawTitle = stripEmojis(notification.title || '');
   const rawMessage = stripEmojis(notification.message || '');
+  const systemSignal = getSystemSignalMeta(notification);
+  if (systemSignal) {
+    return {
+      eyebrow: systemSignal.severity === 'critical'
+        ? 'Critical signal'
+        : systemSignal.severity === 'action_required'
+          ? 'Action required'
+          : 'System signal',
+      header: rawTitle || 'Margin update',
+      message: rawMessage || 'A new operational update is available in Margin.',
+      tone: systemSignal.severity === 'informational' ? 'neutral' as NotificationTone : 'warning' as NotificationTone,
+    };
+  }
   const messageBlob = `${rawTitle} ${rawMessage}`.toLowerCase();
   const caseIdentifier = firstValue(payload.case_number, payload.amazon_case_id, payload.case_id, payload.dispute_case_id, payload.disputeId);
   const documentLabel = firstValue(payload.document_label, payload.document_type, payload.file_name, payload.fileName);
@@ -272,20 +286,6 @@ export function NotificationBell({
   const { tenant } = useTenant();
   const activeSlug = tenant?.slug || 'beta';
   const [isOpen, setIsOpen] = useState(false);
-  const isAcmeDemoTenant = activeSlug === 'demo-workspace' || activeSlug === 'acme-corp';
-  const demoFilingApprovalNotification = isAcmeDemoTenant
-    ? {
-        id: 'demo-rfd-16874-inb-filing-approval',
-        eyebrow: 'High priority',
-        header: 'Ref RFD-16874-INB · Inbound Shipment Shortage',
-        message: '$184.72 is waiting for filing approval.',
-        timestamp: 'Just now',
-        href: tenantRoute(activeSlug, '/filing-pipeline'),
-        read: false,
-        type: 'case_filed',
-        tone: 'warning' as NotificationTone,
-      }
-    : null;
 
   const isTransparentNavbar = (
     location.pathname === '/' ||
@@ -311,8 +311,9 @@ export function NotificationBell({
     return tenantRoute(activeSlug, '/notifications');
   };
 
-  const liveDisplayNotifications = notifications.slice(0, demoFilingApprovalNotification ? 9 : 10).map(n => {
+  const displayNotifications = notifications.slice(0, 10).map(n => {
     const preview = getNotificationPreview(n);
+    const systemSignal = getSystemSignalMeta(n);
 
     return {
       id: n.id,
@@ -320,25 +321,21 @@ export function NotificationBell({
       header: preview.header,
       message: preview.message,
       timestamp: formatNotificationTimestamp(n.created_at),
-      href: getHrefForType(n.type),
-      read: n.status === 'read',
+      href: systemSignal ? resolveSystemSignalHref(n, activeSlug) : getHrefForType(n.type),
+      actionLabel: systemSignal ? getSystemSignalActionLabel(n) : null,
+      read: n.status === 'read' || n.seller_state === 'read' || n.seller_state === 'acknowledged',
       type: n.type,
       tone: preview.tone,
     };
   });
-  const displayNotifications = demoFilingApprovalNotification
-    ? [demoFilingApprovalNotification, ...liveDisplayNotifications]
-    : liveDisplayNotifications;
-  const displayUnreadCount = unreadCount + (demoFilingApprovalNotification && !demoFilingApprovalNotification.read ? 1 : 0);
+  const displayUnreadCount = unreadCount;
 
   const IconComponent = iconOverride ?? Mail;
   const isSidebarStyle = forceCountStyle === 'sidebar';
   const shouldShowLabel = isSidebarStyle && showLabel;
 
   const handleNotificationClick = (id: string) => {
-    if (id !== demoFilingApprovalNotification?.id) {
-      markAsRead(id);
-    }
+    markAsRead(id);
     setIsOpen(false);
   };
 
@@ -487,6 +484,11 @@ export function NotificationBell({
                       >
                         {notification.message}
                       </p>
+                      {notification.actionLabel && (
+                        <p className="mt-3 text-[10px] font-sans font-semibold tracking-tight text-[#007AFF]">
+                          {notification.actionLabel} →
+                        </p>
+                      )}
                     </div>
 
                     <span className="shrink-0 whitespace-nowrap pt-0.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">

@@ -19,6 +19,7 @@ import { formatDistanceToNow, isAfter, subDays, isToday, isYesterday } from 'dat
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { getSystemSignalActionLabel, getSystemSignalMeta, resolveSystemSignalHref } from '@/lib/systemSignalRoutes';
 
 interface Notification {
   id: string;
@@ -30,6 +31,9 @@ interface Notification {
   channels: string[];
   read: boolean;
   payload?: any;
+  href?: string;
+  actionLabel?: string | null;
+  systemSignal?: ReturnType<typeof getSystemSignalMeta>;
 }
 
 interface NotificationPreference {
@@ -271,14 +275,17 @@ export default function NotificationHub() {
         timestamp,
         created_at: new Date(notif.created_at || new Date().toISOString()),
         channels,
-        read: notif.status === 'read' || notif.read || notif.is_read || false,
-        payload: notif.payload || {}
+        read: notif.status === 'read' || notif.read || notif.is_read || notif.seller_state === 'read' || notif.seller_state === 'acknowledged' || false,
+        payload: notif.payload || {},
+        href: getSystemSignalMeta(notif) ? resolveSystemSignalHref(notif, activeSlug) : undefined,
+        actionLabel: getSystemSignalActionLabel(notif),
+        systemSignal: getSystemSignalMeta(notif)
       };
     });
 
     setNotifications(mappedNotifications);
     setError(null);
-  }, [providerNotifications]);
+  }, [activeSlug, providerNotifications]);
 
   const filteredNotifications = useMemo(() => {
     return notifications.filter(notification => {
@@ -565,10 +572,14 @@ export default function NotificationHub() {
                           onRead={() => !notif.read && handleMarkAsRead(notif.id)}
                           onNavigate={() => {
                             if (!notif.read) handleMarkAsRead(notif.id);
-                            // Contextual navigation logic based on type
-                            if (notif.type.includes('case')) navigate(tenantRoute(activeSlug, '/cases'));
-                            else if (notif.type.includes('sync')) navigate(tenantRoute(activeSlug, '/sync'));
-                            else if (notif.type.includes('evidence')) navigate(tenantRoute(activeSlug, '/evidence'));
+                            if (notif.href) {
+                              navigate(notif.href);
+                              return;
+                            }
+                            // Legacy rows retain their pre-existing broad routing.
+                            if (notif.type.includes('case')) navigate(tenantRoute(activeSlug, '/dispute-cases'));
+                            else if (notif.type.includes('evidence')) navigate(tenantRoute(activeSlug, '/evidence-locker'));
+                            else navigate(tenantRoute(activeSlug, '/notifications'));
                           }}
                         />
                       ))}
@@ -629,8 +640,8 @@ function ActivityRow({ notification, onRead, onNavigate }: {
             {!notification.read && <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />}
           </div>
           <div className="mt-1 flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">
-              {notification.type.replace(/_/g, ' ')}
+            <span className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
+              {notification.systemSignal?.eventType.replace(/\./g, ' ') || notification.type.replace(/_/g, ' ')}
             </span>
             <div className="h-1 w-1 rounded-full bg-[#E5E7EB]" />
             <span className="text-[11px] font-medium text-[#6B7280]">{notification.timestamp}</span>
@@ -638,6 +649,11 @@ function ActivityRow({ notification, onRead, onNavigate }: {
           {notification.message && (
             <p className="mt-2 max-w-2xl text-[12px] leading-relaxed tracking-tight text-[#6B7280]">
               {renderNotificationMessage(notification.message)}
+            </p>
+          )}
+          {notification.actionLabel && (
+            <p className="mt-3 text-[11px] font-semibold tracking-tight text-[#0B74DE]">
+              {notification.actionLabel} →
             </p>
           )}
         </div>
@@ -650,7 +666,7 @@ function ActivityRow({ notification, onRead, onNavigate }: {
           onClick={(e) => { e.stopPropagation(); onNavigate(); }}
           className="h-8 gap-1.5 border-[#E5E7EB] px-3 text-[11px] font-bold uppercase tracking-tight text-[#111827] hover:bg-[#F3F5F4]"
         >
-          View
+          {notification.actionLabel || 'View'}
           <ArrowUpRight className="h-3 w-3" />
         </Button>
       </div>

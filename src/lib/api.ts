@@ -3230,6 +3230,13 @@ export const api = {
       meta: { count: number };
     }>(`/api/notifications/mark-all-read?tenantSlug=${tenantSlug}`, { method: 'POST' });
   },
+  acknowledgeSystemSignal: (notificationId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for acknowledgeSystemSignal");
+    return requestJson<{ success: boolean; data: unknown }>(
+      `/api/notifications/${encodeURIComponent(notificationId)}/acknowledge?tenantSlug=${encodeURIComponent(tenantSlug)}`,
+      { method: 'POST' }
+    );
+  },
   getUnreadCount: (userId?: string, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getUnreadCount");
     const queryParams = new URLSearchParams();
