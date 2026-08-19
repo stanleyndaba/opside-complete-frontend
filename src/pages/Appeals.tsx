@@ -4,7 +4,7 @@ import {
   AlertCircle, ArrowUpRight, RefreshCw, Search, 
   ChevronRight, Filter, Info, FileText, 
   History, BarChart3, TrendingUp, AlertTriangle,
-  CheckCircle2, XCircle, ExternalLink
+  CheckCircle2, XCircle, ExternalLink, Target
 } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 
