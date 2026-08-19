@@ -627,7 +627,7 @@ export function Navbar({
                     side="bottom"
                     align="center"
                     sideOffset={12}
-                    className="w-64 overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-0 shadow-none">
+                    className="w-64 overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
                     <div className="p-5">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="flex h-8 w-8 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7]">
@@ -664,7 +664,7 @@ export function Navbar({
                     side="bottom"
                     align="center"
                     sideOffset={12}
-                    className="w-[560px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-0 shadow-none">
+                    className="w-[560px] overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
                     <div className="border-b border-[#D8E3E8] px-5 py-4">
                       <h4 className="text-[13px] font-sans font-bold uppercase tracking-tight text-[#111827]">Approved Reimbursements</h4>
                     </div>
@@ -752,7 +752,7 @@ export function Navbar({
                 side="bottom"
                 align="center"
                 sideOffset={12}
-                className="w-72 overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-0 shadow-none">
+                className="w-72 overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
                 <div className="p-5">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7]">
@@ -785,7 +785,7 @@ export function Navbar({
                   <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/marketplace:text-[#0B74DE]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[220px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-2 shadow-none">
+              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[220px] overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-2 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
                 <DropdownMenuLabel className="px-3 py-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
                   Select Marketplace
                 </DropdownMenuLabel>
@@ -821,7 +821,7 @@ export function Navbar({
                   <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/account:text-[#0B74DE]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[360px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-0 shadow-none">
+              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[360px] overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
                 <div className="border-b border-[#D8E3E8] bg-[#FAFAF7] px-6 py-5">
                   <div className="min-w-0">
                     <h3 className="truncate text-[13px] font-sans font-semibold tracking-tight text-[#111827]">

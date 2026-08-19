@@ -64,7 +64,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                         Workflows
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-140px)] overflow-y-auto rounded-[6px] bg-white shadow-[0_32px_80px_rgba(0,0,0,0.18)] ring-1 ring-[#D8E3E8] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[76px] lg:w-[96vw] lg:max-w-[1080px] lg:-translate-x-1/2">
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[4px] bg-white shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-[#E5E7EB] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[72px] lg:w-[96vw] lg:max-w-[1020px] lg:-translate-x-1/2">
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {apiMenuGroups.map((group, index) => (
                                     <div
@@ -74,7 +74,7 @@ export function ApisMegaMenu({ variant = 'dark' }: ApisMegaMenuProps) {
                                             index < apiMenuGroups.length - 1 && 'border-b border-[#D8E3E8]/60 lg:border-b-0 lg:border-r'
                                         )}
                                     >
-                                        <h5 className="mb-2 text-[11px] font-lora font-medium text-[#94A3B8]">
+                                        <h5 className="mb-2.5 text-[10px] font-sans font-bold uppercase tracking-wider text-[#6B7280]">
                                             {group.label}
                                         </h5>
                                         <div className="grid grid-cols-1 gap-0">

@@ -64,7 +64,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                         For Teams
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-140px)] overflow-y-auto rounded-[6px] bg-white shadow-[0_32px_80px_rgba(0,0,0,0.18)] ring-1 ring-[#D8E3E8] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[76px] lg:w-[96vw] lg:max-w-[1080px] lg:-translate-x-1/2">
+                        <div className="relative z-[100] w-[calc(100vw-2rem)] max-h-[calc(100vh-160px)] overflow-y-auto rounded-[4px] bg-white shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-[#E5E7EB] scrollbar-hide lg:fixed lg:left-1/2 lg:top-[72px] lg:w-[96vw] lg:max-w-[1020px] lg:-translate-x-1/2">
                             <div className="grid grid-cols-1 lg:grid-cols-3">
                                 {productMenuGroups.map((group, index) => (
                                     <div
@@ -75,7 +75,7 @@ export function ProductsMegaMenu({ variant = 'dark' }: ProductsMegaMenuProps) {
                                         )}
                                     >
                                         <div className="mb-2 flex items-center justify-between gap-3">
-                                            <h4 className="text-[11px] font-lora font-medium text-[#94A3B8]">
+                                            <h4 className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#6B7280]">
                                                 {group.label}
                                             </h4>
                                             {group.badge && (
