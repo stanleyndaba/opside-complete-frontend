@@ -1308,6 +1308,184 @@ function ClaimRecordStatusBadge({ children }: { children: React.ReactNode }) {
   );
 }
 
+function AccountingReconciliationWidget({ caseId, tenantSlug }: { caseId: string; tenantSlug?: string }) {
+  const [loading, setLoading] = useState(true);
+  const [running, setRunning] = useState(false);
+  const [reconciliation, setReconciliation] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [provider, setProvider] = useState<string>('quickbooks');
+  const { toast } = useToast();
+
+  const fetchReconciliation = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await api.getRecoveryReconciliation(caseId, tenantSlug);
+      if (res.success) {
+        setReconciliation(res.data);
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Failed to fetch reconciliation status');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (caseId) {
+      fetchReconciliation();
+    }
+  }, [caseId, tenantSlug]);
+
+  const handleRunReconciliation = async () => {
+    try {
+      setRunning(true);
+      setError(null);
+      const res = await api.runRecoveryReconciliation(caseId, provider, tenantSlug);
+      if (res.success) {
+        setReconciliation(res.data);
+        toast({
+          title: 'Reconciliation Completed',
+          description: `Successfully reconciled against ${provider.toUpperCase()}`
+        });
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Reconciliation failed due to provider or API error');
+      toast({
+        title: 'Reconciliation Error',
+        description: err?.message || 'Failed to run reconciliation',
+        variant: 'destructive'
+      });
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <ClaimRecordSection title="Accounting Reconciliation" eyebrow="QuickBooks & Xero Audit Trail">
+        <div className="flex items-center gap-3 py-4 text-[#6B7C88]">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span className="text-xs">Checking accounting records...</span>
+        </div>
+      </ClaimRecordSection>
+    );
+  }
+
+  return (
+    <ClaimRecordSection title="Accounting Reconciliation" eyebrow="QuickBooks & Xero Audit Trail">
+      <div className="space-y-4">
+        {error && (
+          <div className="rounded-[2px] border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+            {error}
+          </div>
+        )}
+
+        {!reconciliation ? (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-dashed border-[#D8E3E8] bg-[#FAFAF7] p-4">
+            <div>
+              <p className="text-xs font-semibold text-[#07111A]">No accounting reconciliation performed yet</p>
+              <p className="mt-1 text-[11px] text-[#6B7C88]">
+                Match this recovery against authoritative purchasing invoices, bills, or bank transactions in QuickBooks or Xero.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Select value={provider} onValueChange={setProvider}>
+                <SelectTrigger className="h-8 w-[140px] border-[#D8E3E8] bg-white text-xs">
+                  <SelectValue placeholder="Provider" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  <SelectItem value="quickbooks">QuickBooks</SelectItem>
+                  <SelectItem value="xero">Xero</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                size="sm"
+                onClick={handleRunReconciliation}
+                disabled={running}
+                className="h-8 bg-[#07111A] text-xs font-semibold text-white hover:bg-[#26333D]"
+              >
+                {running ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
+                Run Reconciliation
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E4EDF1] pb-3">
+              <div className="flex items-center gap-3">
+                <Badge className={cn(
+                  "rounded-[2px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-tight",
+                  reconciliation.status === 'RECONCILED' && "bg-emerald-100 text-emerald-800 border-emerald-300",
+                  reconciliation.status === 'PARTIAL_MATCH' && "bg-amber-100 text-amber-800 border-amber-300",
+                  reconciliation.status === 'NEEDS_REVIEW' && "bg-blue-100 text-blue-800 border-blue-300",
+                  reconciliation.status === 'UNMATCHED' && "bg-slate-100 text-slate-800 border-slate-300"
+                )}>
+                  {reconciliation.status === 'RECONCILED' && 'Reconciled'}
+                  {reconciliation.status === 'PARTIAL_MATCH' && 'Partial Match (Review Required)'}
+                  {reconciliation.status === 'NEEDS_REVIEW' && 'Multiple Candidates (Needs Review)'}
+                  {reconciliation.status === 'UNMATCHED' && 'Unreconciled / No Record Found'}
+                </Badge>
+                <span className="text-[11px] font-medium text-[#6B7C88] uppercase tracking-tight">
+                  Provider: {reconciliation.provider || provider}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRunReconciliation}
+                  disabled={running}
+                  className="h-7 border-[#D8E3E8] bg-white text-[11px] font-medium text-[#4D5B66]"
+                >
+                  {running ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <RefreshCw className="h-3 w-3 mr-1" />}
+                  Rerun
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              <ClaimRecordMetric
+                label="Expected Amount"
+                value={formatCurrencyOrDash(reconciliation.expectedAmount, reconciliation.currency || 'USD')}
+              />
+              <ClaimRecordMetric
+                label="Matched Amount"
+                value={reconciliation.matchedAmount != null ? formatCurrencyOrDash(reconciliation.matchedAmount, reconciliation.currency || 'USD') : 'Not available'}
+              />
+              <ClaimRecordMetric
+                label="Difference"
+                value={reconciliation.difference != null ? formatCurrencyOrDash(reconciliation.difference, reconciliation.currency || 'USD') : 'Not available'}
+              />
+            </div>
+
+            <div className="border-t border-[#E4EDF1] pt-3">
+              <p className="text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">Reconciliation Analysis & Reasons</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {Array.isArray(reconciliation.matchReasons) && reconciliation.matchReasons.map((reason: string) => (
+                  <span key={reason} className="inline-flex items-center bg-[#F8FAFB] border border-[#D8E3E8] px-2.5 py-1 text-[11px] font-medium text-[#4D5B66]">
+                    {reason.replace(/[_-]+/g, ' ')}
+                  </span>
+                ))}
+              </div>
+              {reconciliation.status === 'NEEDS_REVIEW' && (
+                <p className="mt-2 text-[11px] text-blue-700 font-medium">
+                  Margin found multiple plausible accounting candidates and has NOT automatically reconciled this recovery. Please review manually.
+                </p>
+              )}
+              {reconciliation.status === 'UNMATCHED' && (
+                <p className="mt-2 text-[11px] text-slate-700 font-medium">
+                  Margin successfully retrieved the relevant accounting dataset and found no credible candidate matching this recovery.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </ClaimRecordSection>
+  );
+}
+
 export default function CaseDetail() {
   const { caseId, tenantSlug } = useParams<{ caseId: string; tenantSlug: string }>();
   const { tenant, isReady } = useTenant();
@@ -2670,6 +2848,8 @@ export default function CaseDetail() {
                     </div>
                   </div>
                 </ClaimRecordSection>
+
+                <AccountingReconciliationWidget caseId={effectiveCase.id} tenantSlug={activeSlug} />
 
                 <ClaimRecordSection title="Evidence Packet" eyebrow="Proof and claim basis">
                   <div className="grid gap-5 lg:grid-cols-2">
