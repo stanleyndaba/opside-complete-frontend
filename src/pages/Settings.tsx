@@ -5,7 +5,8 @@ import {
   Store, Shield, User, 
   Settings as SettingsIcon, 
   ChevronRight, AlertCircle, RefreshCw,
-  Trash2, Activity, Info as InfoIcon
+  Trash2, Activity, Info as InfoIcon,
+  CreditCard
 } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
