@@ -379,7 +379,7 @@ export default function Appeals() {
     const fetchQueue = async () => {
       setLoading(true);
       try {
-        const response = await api.getDisputeCaseQueue(activeTenantSlug);
+        const response = await api.getDisputeCaseQueue({}, activeTenantSlug);
         if (!cancelled) {
           if (response.ok && response.data) {
             setRows(response.data.rows);
