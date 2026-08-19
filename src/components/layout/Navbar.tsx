@@ -751,22 +751,34 @@ export function Navbar({
               <HoverCardContent
                 side="bottom"
                 align="center"
-                sideOffset={12}
-                className="w-72 overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7]">
-                      <Box className="h-4 w-4 text-[#4B5563]" />
+                sideOffset={10}
+                className="w-[304px] overflow-hidden rounded-[8px] border border-[#E5E7EB] bg-white p-0 shadow-[0_16px_40px_rgba(17,24,39,0.10)]">
+                <div className="px-4 pb-3 pt-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-[#F3F5F4] text-[#4B5563]">
+                      <Box className="h-4 w-4" strokeWidth={1.6} />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-[11px] font-sans font-bold uppercase tracking-tight text-[#111827]">Integrations Hub</span>
-                      <span className="text-[9px] font-sans font-bold text-orange-600 uppercase tracking-tight mt-0.5">{connectedPlatformsCount} Platform{connectedPlatformsCount === 1 ? '' : 's'} connected</span>
+                    <div className="min-w-0">
+                      <div className="text-[12px] font-sans font-semibold tracking-tight text-[#111827]">Integrations Hub</div>
+                      <div className="mt-1 flex items-center gap-1.5 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                        {connectedPlatformsCount} platform{connectedPlatformsCount === 1 ? '' : 's'} connected
+                      </div>
                     </div>
                   </div>
-                  <p className="font-sans text-[11px] font-bold leading-relaxed text-[#4B5563]">
-                    "Configure your document and data providers — connect Amazon, Gmail, and other marketplace sources."
+                </div>
+                <div className="border-t border-[#E5E7EB] px-4 py-3">
+                  <p className="text-[11px] font-sans leading-[1.5] tracking-tight text-[#4B5563]">
+                    Connect the sources Margin uses to reconcile your records and evidence.
                   </p>
                 </div>
+                <button
+                  onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
+                  className="flex w-full items-center justify-between border-t border-[#E5E7EB] bg-[#FAFAF7] px-4 py-3 text-left text-[10px] font-sans font-semibold tracking-tight text-[#111827] transition-colors hover:bg-[#F3F5F4] hover:text-[#0B74DE]"
+                >
+                  <span>Open integrations</span>
+                  <span aria-hidden="true" className="text-[13px] leading-none">→</span>
+                </button>
               </HoverCardContent>
             </HoverCard>
 
@@ -785,8 +797,8 @@ export function Navbar({
                   <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/marketplace:text-[#0B74DE]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[220px] overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-2 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
-                <DropdownMenuLabel className="px-3 py-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
+              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[240px] overflow-hidden rounded-[8px] border border-[#E5E7EB] bg-white p-1.5 shadow-[0_16px_40px_rgba(17,24,39,0.10)]">
+                <DropdownMenuLabel className="px-3.5 py-2.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                   Select Marketplace
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-[#E5E7EB]" />
@@ -795,13 +807,13 @@ export function Navbar({
                     key={mp.code}
                     onSelect={() => setSelectedMarketplace(mp.code)}
                     className={cn(
-                      "flex cursor-pointer items-center gap-3 rounded-[2px] px-3 py-2.5 text-[11px] font-sans font-medium tracking-tight outline-none transition-colors",
+                      "flex cursor-pointer items-center gap-3 rounded-[6px] px-3 py-2.5 text-[11px] font-sans font-medium tracking-tight outline-none transition-colors",
                       selectedMarketplace === mp.code
-                        ? "bg-[#F8FAFB] text-[#111827] font-semibold"
-                        : "text-[#4B5563] hover:bg-[#F8FAFB] hover:text-[#111827]"
+                        ? "bg-[#F3F5F4] text-[#111827] font-semibold"
+                        : "text-[#4B5563] hover:bg-[#F3F5F4] hover:text-[#111827]"
                     )}
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-[2px] bg-[#F2F7FF] text-[10px] font-bold uppercase leading-none text-[#0B74DE]">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#F3F5F4] text-[10px] font-bold uppercase leading-none text-[#0B74DE]">
                       {mp.code.toLowerCase()}
                     </span>
                     <span>{mp.label}</span>
@@ -821,8 +833,8 @@ export function Navbar({
                   <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/account:text-[#0B74DE]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[360px] overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
-                <div className="border-b border-[#D8E3E8] bg-[#FAFAF7] px-6 py-5">
+              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[352px] overflow-hidden rounded-[8px] border border-[#E5E7EB] bg-white p-0 shadow-[0_16px_40px_rgba(17,24,39,0.10)]">
+                <div className="border-b border-[#E5E7EB] bg-white px-4 py-4">
                   <div className="min-w-0">
                     <h3 className="truncate text-[13px] font-sans font-semibold tracking-tight text-[#111827]">
                       {accountDisplayName}
@@ -856,10 +868,10 @@ export function Navbar({
                   </div>
                 </div>
 
-                <div className="px-6 pt-4">
+                <div className="px-4 pt-3">
                   <DropdownMenuItem
                     onSelect={handleContactSupport}
-                    className="flex cursor-pointer items-center gap-3 rounded-[2px] border border-[#D8E3E8] bg-white px-4 py-3 text-[#4B5563] outline-none transition-colors hover:bg-[#F8FAFB] hover:text-[#111827] focus:bg-[#F8FAFB] focus:text-[#111827]"
+                    className="flex cursor-pointer items-center gap-3 rounded-[6px] bg-[#F3F5F4] px-3.5 py-3 text-[#4B5563] outline-none transition-colors hover:bg-[#EDEFEF] hover:text-[#111827] focus:bg-[#EDEFEF] focus:text-[#111827]"
                   >
                     <Mail className="h-4 w-4 text-[#9CA3AF]" />
                     <div className="min-w-0">
@@ -873,13 +885,13 @@ export function Navbar({
                   </DropdownMenuItem>
                 </div>
 
-                <div className="px-6 py-5">
-                  <div className="rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-4 py-3.5">
+                <div className="px-4 py-4">
+                  <div className="rounded-[6px] bg-[#F3F5F4] px-3.5 py-3">
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
                         Amazon
                       </div>
-                      <div className="shrink-0 rounded-[2px] border border-[#D8E3E8] bg-white px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#365B7D]">
+                      <div className="shrink-0 rounded-full bg-white px-2 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#365B7D]">
                         {amazonStatusLabel}
                       </div>
                     </div>
