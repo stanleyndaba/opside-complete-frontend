@@ -3274,65 +3274,45 @@ export function Dashboard() {
               {/* Command Center Header */}
               <div className="mb-10 flex items-start justify-between gap-6">
                 <div className="flex flex-col gap-1">
-                  <div className="border-b border-[#E5E7EB]">
-                    <div className="flex items-center gap-6">
-                      <button
-                        onClick={() => handleTabChange('overview')}
-                        className={cn(
-                          "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
-                          activeTab === 'overview'
-                            ? "font-semibold text-[#111827]"
-                            : "text-[#6B7280] hover:text-[#111827]"
-                        )}
-                      >
-                        Overview
-                        <span
-                          className={cn(
-                            "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'overview' ? "bg-[#111827] opacity-100" : "bg-transparent opacity-0"
-                          )}
-                        />
-                      </button>
-                      <button
-                        onClick={() => handleTabChange('discrepancies')}
-                        className={cn(
-                          "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
-                          activeTab === 'discrepancies'
-                            ? "font-semibold text-[#111827]"
-                            : "text-[#6B7280] hover:text-[#111827]"
-                        )}
-                      >
-                        Issues Found
-                        <span
-                          className={cn(
-                            "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'discrepancies' ? "bg-[#111827] opacity-100" : "bg-transparent opacity-0"
-                          )}
-                        />
-                      </button>
-                      <button
-                        onClick={() => handleTabChange('evidence')}
-                        className={cn(
-                          "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
-                          activeTab === 'evidence'
-                            ? "font-semibold text-[#111827]"
-                            : "text-[#6B7280] hover:text-[#111827]"
-                        )}
-                      >
-                        Evidence
-                        <span
-                          className={cn(
-                            "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
-                            activeTab === 'evidence' ? "bg-[#111827] opacity-100" : "bg-transparent opacity-0"
-                          )}
-                        />
-                      </button>
-                    </div>
+                  <div className="flex items-center gap-1 rounded-[8px] bg-[#F3F4F2] p-1">
+                    <button
+                      onClick={() => handleTabChange('overview')}
+                      className={cn(
+                        "rounded-[6px] px-3 py-1.5 text-[11px] font-sans tracking-tight transition-all duration-200",
+                        activeTab === 'overview'
+                          ? "bg-white font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.08)]"
+                          : "text-[#6B7280] hover:bg-white/70 hover:text-[#111827]"
+                      )}
+                    >
+                      Overview
+                    </button>
+                    <button
+                      onClick={() => handleTabChange('discrepancies')}
+                      className={cn(
+                        "rounded-[6px] px-3 py-1.5 text-[11px] font-sans tracking-tight transition-all duration-200",
+                        activeTab === 'discrepancies'
+                          ? "bg-white font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.08)]"
+                          : "text-[#6B7280] hover:bg-white/70 hover:text-[#111827]"
+                      )}
+                    >
+                      Issues Found
+                    </button>
+                    <button
+                      onClick={() => handleTabChange('evidence')}
+                      className={cn(
+                        "rounded-[6px] px-3 py-1.5 text-[11px] font-sans tracking-tight transition-all duration-200",
+                        activeTab === 'evidence'
+                          ? "bg-white font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.08)]"
+                          : "text-[#6B7280] hover:bg-white/70 hover:text-[#111827]"
+                      )}
+                    >
+                      Evidence
+                    </button>
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2">
                   <div className="flex flex-col items-end gap-2">
-                    <div className="w-[360px] max-w-[calc(100vw-4rem)] rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-2 shadow-none">
+                    <div className="w-[360px] max-w-[calc(100vw-4rem)] rounded-[8px] bg-white/70 px-3 py-2 shadow-[0_1px_2px_rgba(17,24,39,0.04)]">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                           <span className={cn(

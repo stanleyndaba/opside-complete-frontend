@@ -480,10 +480,10 @@ export function Navbar({
       <header className={cn(
         "sticky top-0 z-30 transition-all duration-500 ease-in-out font-sans",
         sidebarCollapsed ? "ml-16" : "ml-60",
-        "border-b border-[#D8E3E8] bg-white text-[#111827] shadow-none",
+        "bg-[#FAFAF7] text-[#111827] shadow-none",
         className
       )}>
-        <div className="flex items-center justify-between h-14 px-6">
+        <div className="flex min-h-16 items-center justify-between px-8">
           {/* Left/Center Group - Search, Icons, Currency, Connect */}
           <div className="flex items-center gap-x-8">
             <div className="relative flex items-center gap-4" ref={searchContainerRef}>
@@ -497,7 +497,7 @@ export function Navbar({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="h-9 rounded-none border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-12 text-[12px] font-medium tracking-tight text-[#111827] placeholder:font-normal placeholder:text-[#9CA3AF] transition-all focus:border-[#007AFF] focus:bg-white focus:ring-0"
+                  className="h-9 rounded-[7px] border-0 bg-[#F1F2F0] pl-10 pr-12 text-[12px] font-medium tracking-tight text-[#111827] placeholder:font-normal placeholder:text-[#9CA3AF] transition-all focus:bg-white focus:ring-0"
                 />
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
                   <div className="search-shortcut-hint">
@@ -618,7 +618,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/data-upload'))}
-                      className="relative flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+                      className="relative flex h-10 w-10 items-center justify-center rounded-[7px] text-[#6B7280] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
                       aria-label="Upload CSV">
                       <Upload className="h-5 w-5" />
                     </button>
@@ -655,7 +655,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                      className="relative flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+                      className="relative flex h-10 w-10 items-center justify-center rounded-[7px] text-[#6B7280] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
                       aria-label="Approved reimbursements">
                       <CircleCheck className="h-5 w-5" />
                     </button>
@@ -740,7 +740,7 @@ export function Navbar({
               <HoverCardTrigger asChild>
                 <button
                   onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                  className="relative flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-[7px] text-[#6B7280] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
                   aria-label="Integrations Hub">
                   <Box className="h-5 w-5" />
                   <span className="pointer-events-none absolute right-0 top-0 z-10 flex h-4 min-w-4 translate-x-1/4 -translate-y-1/4 select-none items-center justify-center rounded-full bg-[#0B74DE] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-none">
@@ -774,7 +774,7 @@ export function Navbar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="group/marketplace flex items-center gap-2 rounded-none px-2.5 py-1.5 text-[11px] font-sans font-semibold tracking-tight text-[#4B5563] transition-all hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+                  className="group/marketplace flex items-center gap-2 rounded-[7px] px-3 py-2 text-[11px] font-sans font-semibold tracking-tight text-[#4B5563] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
                   aria-label="Select marketplace"
                 >
                   <span className="hidden sm:inline">Marketplace</span>
@@ -815,7 +815,7 @@ export function Navbar({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="group/account flex items-center gap-3 rounded-none px-3 py-1.5 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:bg-[#F8FAFB] hover:text-[#0B74DE]">
+                <button className="group/account flex items-center gap-3 rounded-[7px] px-3 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]">
                   <User className="h-5 w-5 text-[#9CA3AF] transition-colors group-hover/account:text-[#0B74DE]" />
                   <span className="hidden sm:inline">Account</span>
                   <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/account:text-[#0B74DE]" />
