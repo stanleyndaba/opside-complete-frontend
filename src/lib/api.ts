@@ -134,8 +134,33 @@ export interface AuditRunRecord {
   source_type?: string;
   started_at?: string;
   completed_at?: string | null;
+  next_eligible_at?: string | null;
   summary?: AuditTeaserSummary;
   activation_status?: 'not_activated' | 'pending_manual_review' | 'activated';
+}
+
+export interface CsvIngestionFileResult {
+  success: boolean;
+  csvType: string;
+  fileName: string;
+  rowsProcessed: number;
+  rowsInserted: number;
+  rowsSkipped: number;
+  rowsFailed: number;
+  errors: string[];
+  detectionTriggered: boolean;
+  detectionJobId?: string;
+}
+
+export interface CsvIngestionResponse {
+  success: boolean;
+  userId: string;
+  totalFiles: number;
+  results: CsvIngestionFileResult[];
+  detectionTriggered: boolean;
+  detectionJobId?: string;
+  syncId: string;
+  manualAudit: AuditRunRecord | null;
 }
 
 export interface AuditTeaserSummary {
@@ -434,7 +459,8 @@ async function requestJsonWithRetry<T>(
 
   // Avoid forcing JSON content-type on GET/HEAD requests. It creates unnecessary preflights
   // and pollutes runtime traces for pages that only need reads.
-  if (method !== 'GET' && method !== 'HEAD' && !callerHeaders['Content-Type']) {
+  const isFormDataBody = typeof FormData !== 'undefined' && options?.body instanceof FormData;
+  if (method !== 'GET' && method !== 'HEAD' && !isFormDataBody && !callerHeaders['Content-Type']) {
     baseHeaders['Content-Type'] = 'application/json';
   }
 
@@ -566,7 +592,7 @@ async function requestJsonWithRetry<T>(
     // Network errors that might benefit from retry (backend might be waking up)
     // But NOT CORS errors - those need backend configuration, not retries
     const isRetryableNetworkError =
-      !isCorsError && (
+      !isFormDataBody && !isCorsError && (
         error instanceof TypeError || // Fetch failed (network error)
         (errorMsg.includes('fetch') && !errorMsg.includes('CORS')) ||
         (errorMsg.includes('network') && !errorMsg.includes('CORS')) ||
@@ -994,7 +1020,18 @@ export const api = {
           isSandbox: boolean;
         } | null;
       } | null;
+      manualAudit: AuditRunRecord | null;
     }>(`/api/csv-upload/latest-run?tenantSlug=${encodeURIComponent(tenantSlug)}`);
+  },
+  ingestCsvReports: (files: File[], auditIntentId?: string | null) => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append('files', file, file.name));
+    if (auditIntentId) formData.append('auditIntentId', auditIntentId);
+
+    return requestJson<CsvIngestionResponse>('/api/csv-upload/ingest', {
+      method: 'POST',
+      body: formData,
+    });
   },
   getUserProfile: (tenantSlug?: string) => requestJson<{
     success: boolean;

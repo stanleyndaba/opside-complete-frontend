@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@clerk/react';
-import { api } from '@/lib/api';
+import { api, type AuditRunRecord, type CsvIngestionResponse } from '@/lib/api';
 import { Loader2 } from 'lucide-react';
 import {
     Upload, FileSpreadsheet, X,
@@ -32,6 +32,64 @@ export default function DataUpload() {
     const [dateRange, setDateRange] = useState('Last 90 days');
     const [isBusy, setIsBusy] = useState(false);
     const [showGate, setShowGate] = useState(false);
+    const [submissionError, setSubmissionError] = useState<string | null>(null);
+    const submissionInFlightRef = useRef(false);
+
+    const getActiveTenantSlug = () => localStorage.getItem('active_tenant_slug') || '';
+
+    const continueManualAudit = useCallback((manualAudit: AuditRunRecord, tenantSlug: string) => {
+        if (!manualAudit.id || !tenantSlug) return false;
+
+        localStorage.setItem('margin_pending_audit', JSON.stringify({
+            auditId: manualAudit.id,
+            tenantSlug,
+            phase: manualAudit.status === 'completed' ? 'completed' : 'syncing',
+            updatedAt: new Date().toISOString(),
+        }));
+        navigate('/audit', { replace: true });
+        return true;
+    }, [navigate]);
+
+    const getBackendError = (response?: CsvIngestionResponse | null) => {
+        const fileErrors = response?.results
+            ?.flatMap((result) => result.errors || [])
+            .map((message) => String(message).trim())
+            .filter(Boolean) || [];
+        return fileErrors[0] || null;
+    };
+
+    const getReentryMessage = async () => {
+        const activeTenantId = localStorage.getItem('active_tenant_id');
+        const latestAudit = await api.getLatestAudit();
+        const audit = latestAudit.data?.audit;
+        if (!audit || (activeTenantId && audit.tenant_id !== activeTenantId)) return null;
+
+        const nextEligibleAt = audit.next_eligible_at;
+        if (!nextEligibleAt || new Date(nextEligibleAt).getTime() <= Date.now()) return null;
+        return `Your next complimentary manual report audit is available on ${new Date(nextEligibleAt).toLocaleDateString()}.`;
+    };
+
+    const restoreLatestManualAudit = useCallback(async () => {
+        const tenantSlug = getActiveTenantSlug();
+        if (!tenantSlug) return false;
+
+        const response = await api.getLatestCsvUploadRun(tenantSlug);
+        const manualAudit = response.ok ? response.data?.manualAudit : null;
+        return manualAudit ? continueManualAudit(manualAudit, tenantSlug) : false;
+    }, [continueManualAudit]);
+
+    useEffect(() => {
+        if (!isSignedIn) return;
+        let cancelled = false;
+
+        void restoreLatestManualAudit().catch(() => undefined).then((continued) => {
+            if (!cancelled && continued) return;
+        });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [isSignedIn, restoreLatestManualAudit]);
 
     const startAuth = async () => {
         if (isBusy) return;
@@ -84,7 +142,7 @@ export default function DataUpload() {
                 description: `${unsupportedCount} file(s) were rejected. Evidence documents (PDF/Images) are not accepted here.`
             });
         }
-    }, [toast]);
+    }, [isSignedIn, toast]);
 
     const onDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -97,6 +155,76 @@ export default function DataUpload() {
     };
 
     const hasValidFiles = files.some(f => f.status === 'pending');
+
+    const startManualAudit = async () => {
+        if (isBusy || submissionInFlightRef.current) return;
+
+        const selectedFiles = files.filter((item) => item.status === 'pending');
+        if (selectedFiles.length === 0) return;
+
+        const tenantSlug = getActiveTenantSlug();
+        if (!tenantSlug) {
+            setSubmissionError('Margin needs your workspace context before reports can be submitted. Refresh and try again.');
+            return;
+        }
+
+        submissionInFlightRef.current = true;
+        setIsBusy(true);
+        setSubmissionError(null);
+        setFiles((current) => current.map((item) => selectedFiles.some((selected) => selected.id === item.id)
+            ? { ...item, status: 'uploading', error: undefined }
+            : item));
+
+        try {
+            const response = await api.ingestCsvReports(selectedFiles.map((item) => item.file));
+            const ingestion = response.data;
+            const byFileName = new Map((ingestion?.results || []).map((result) => [result.fileName, result]));
+
+            setFiles((current) => current.map((item) => {
+                const result = byFileName.get(item.file.name);
+                if (!result) return item;
+                const error = result.errors?.[0];
+                return {
+                    ...item,
+                    status: result.success ? 'success' : 'error',
+                    error: error || undefined,
+                };
+            }));
+
+            if (response.ok && ingestion?.manualAudit && continueManualAudit(ingestion.manualAudit, tenantSlug)) {
+                return;
+            }
+
+            if (response.ok && ingestion?.syncId) {
+                const resumed = await restoreLatestManualAudit();
+                if (resumed) return;
+            }
+
+            const reentryMessage = await getReentryMessage().catch(() => null);
+            const backendError = getBackendError(ingestion);
+            const error = reentryMessage
+                || backendError
+                || response.error
+                || 'Margin could not confirm a Manual Report Audit from these reports. Review the file requirements and try again.';
+            setSubmissionError(error);
+            toast({
+                variant: 'destructive',
+                title: 'Reports were not accepted for an audit',
+                description: error,
+            });
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Margin could not submit these reports. Please try again.';
+            setSubmissionError(message);
+            toast({
+                variant: 'destructive',
+                title: 'Reports were not submitted',
+                description: message,
+            });
+        } finally {
+            submissionInFlightRef.current = false;
+            setIsBusy(false);
+        }
+    };
 
     if (!isLoaded) return null;
 
@@ -299,19 +427,21 @@ export default function DataUpload() {
                             {/* Action Bar (Authenticated Only) */}
                             {isSignedIn && (
                                 <div className="pt-4 flex flex-col items-center gap-4">
-                                    <Button 
-                                        onClick={() => {
-                                            toast({
-                                                title: "Audit Initialized",
-                                                description: "Margin is preparing your manual audit workspace."
-                                            });
-                                        }}
+                                    <Button
+                                        onClick={startManualAudit}
                                         disabled={!hasValidFiles || isBusy}
                                         className="h-12 w-full max-w-[320px] rounded-md bg-[#182026] text-[14px] font-semibold text-white hover:bg-black disabled:opacity-20 transition-all shadow-md"
                                     >
-                                        Start Recovery Audit
+                                        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                        {isBusy ? 'Submitting Reports' : 'Start Recovery Audit'}
                                     </Button>
-                                    
+
+                                    {submissionError ? (
+                                        <p role="alert" className="max-w-[420px] text-center text-[12px] leading-relaxed text-red-600">
+                                            {submissionError}
+                                        </p>
+                                    ) : null}
+
                                     <div className="flex items-center gap-2 text-[11px] text-[#8C9BA6]">
                                         <Ban className="h-3 w-3" />
                                         <span>Do not upload PDFs, Excel, or Screenshots.</span>
