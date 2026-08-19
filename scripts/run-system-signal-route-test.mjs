@@ -21,6 +21,20 @@ const approvalSignal = {
 assert.equal(resolveSystemSignalHref(approvalSignal, 'trusted-workspace'), '/app/trusted-workspace/cases/case-42');
 assert.equal(getSystemSignalActionLabel(approvalSignal), 'Review approval');
 
+const deadlineSignal = {
+  system_signal_id: '00000000-0000-0000-0000-000000000003',
+  signal_event_type: 'deadline.critical',
+  signal_severity: 'critical',
+  signal_state: 'open',
+  action_state: 'pending',
+  signal_action_type: 'review_deadline',
+  signal_action_route: {
+    target: 'recovery', objectType: 'detection_result', objectId: 'finding-42', action: 'review_deadline', fallbackTarget: 'notifications'
+  }
+};
+assert.equal(resolveSystemSignalHref(deadlineSignal, 'trusted-workspace'), '/app/trusted-workspace/resolve/finding-42');
+assert.equal(getSystemSignalActionLabel(deadlineSignal), 'Review deadline');
+
 const resolvedSignal = { ...approvalSignal, signal_state: 'resolved', action_state: 'completed' };
 assert.equal(resolveSystemSignalHref(resolvedSignal, 'trusted-workspace'), '/app/trusted-workspace/notifications');
 assert.equal(getSystemSignalActionLabel(resolvedSignal), null);

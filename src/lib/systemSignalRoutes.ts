@@ -142,6 +142,9 @@ export function resolveSystemSignalHref(notification: any, tenantSlug: string): 
   if (route.target === 'case' && route.objectType === 'dispute_case') {
     return `/app/${safeSlug}/cases/${objectId}`;
   }
+  if (route.target === 'recovery' && route.objectType === 'detection_result') {
+    return `/app/${safeSlug}/resolve/${objectId}`;
+  }
   if ((route.target === 'recovery' || route.target === 'reconciliation' || route.target === 'deadline') && route.objectType === 'recovery') {
     return `/app/${safeSlug}/recoveries/${objectId}`;
   }
