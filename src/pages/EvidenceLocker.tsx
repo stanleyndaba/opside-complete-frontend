@@ -13,15 +13,14 @@ import {
   Hexagon, AlertCircle, ArrowRight, Terminal, Database, Link2, 
   FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail,
   Shield, FileText, Zap, ArrowUpRight, Info, Filter, History,
-  Lock, CheckCircle, ExternalLink, Paperclip, ChevronRight
+  Lock, CheckCircle, ExternalLink, Paperclip, ChevronRight,
+  BarChart3, FileSearch, Layers, Activity
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { getFrontendAuthContext } from '@/lib/authSession';
 import { useStatusStream } from '@/hooks/use-status-stream';
 import { Checkbox } from '@/components/ui/checkbox';
-import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
-import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -724,8 +723,7 @@ export default function EvidenceLocker() {
               Evidence Locker
             </h1>
             <p className="max-w-2xl text-[15px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
-              Centralized repository for operational records and forensic artifacts. 
-              Review parsed data points, Amazon case linkages, and verification trails required for recovery filing.
+              Forensic artifacts and reconciliation trails. Review parsed data points, Amazon case linkages, and verification trails required for recovery filing.
             </p>
           </div>
         </div>
