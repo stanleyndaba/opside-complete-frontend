@@ -212,6 +212,11 @@ export interface RecoveryWorkspaceSubscriptionStatus {
     access_until: string | null;
     subscription_id: string | null;
   };
+  actions: {
+    cancel: boolean;
+    resume: boolean;
+    manage: boolean;
+  };
   latest_payment: any | null;
   payments: any[];
 }
