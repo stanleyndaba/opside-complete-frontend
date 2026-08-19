@@ -35,18 +35,19 @@ const updateCanonical = (href?: string) => {
   tag.href = href;
 };
 
-export const usePageMeta = ({
-  title,
-  description,
-  url,
-  image,
-  canonical,
-  robots,
-  ogTitle,
-  ogDescription,
-  ogUrl,
-  preloadImages
-}: MetaConfig) => {
+export const usePageMeta = (config: MetaConfig) => {
+  const {
+    title,
+    description,
+    url,
+    image,
+    canonical,
+    robots,
+    ogTitle,
+    ogDescription,
+    ogUrl,
+    preloadImages
+  } = config || {};
   useEffect(() => {
     if (typeof document === 'undefined') return;
     const resolvedOgTitle = ogTitle || title;

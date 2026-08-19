@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  Building2, CreditCard, Store, Shield, User, Lock, 
-  Settings as SettingsIcon, Bell, CreditCard as BillingIcon, 
-  ChevronRight, CheckCircle2, AlertCircle, RefreshCw, HelpCircle,
-  ExternalLink, LogOut, Trash2, Database, Zap, Activity, Info
+  Store, Shield, User, 
+  Settings as SettingsIcon, 
+  ChevronRight, AlertCircle, RefreshCw,
+  Trash2, Activity, Info as InfoIcon
 } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -543,7 +543,7 @@ const Settings = () => {
                 
                 <div className="p-6">
                   <div className="flex items-center gap-2 text-amber-600 mb-2">
-                    <Info className="h-3.5 w-3.5" />
+                    <InfoIcon className="h-3.5 w-3.5" />
                     <span className="text-[11px] font-bold uppercase tracking-tight">Plan Context</span>
                   </div>
                   <p className="text-[13px] text-[#6B7280] leading-relaxed">
