@@ -5,7 +5,7 @@ import {
   Building2, CreditCard, Store, Shield, User, Lock, 
   Settings as SettingsIcon, Bell, CreditCard as BillingIcon, 
   ChevronRight, CheckCircle2, AlertCircle, RefreshCw, HelpCircle,
-  ExternalLink, LogOut, Trash2
+  ExternalLink, LogOut, Trash2, Database, Zap, Activity, Info
 } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -42,6 +42,19 @@ const SUPPORT_TIER_COPY: Record<'community' | 'email' | 'priority' | 'dedicated'
   email: 'Email',
   priority: 'Priority',
   dedicated: 'Dedicated'
+};
+
+const marketplaceNames: Record<string, { name: string; flag: string }> = {
+  ATVPDKIKX0DER: { name: 'United States', flag: 'US' },
+  A1PA6795UKMFR9: { name: 'Germany', flag: 'DE' },
+  A1RKKUPIHCS9HS: { name: 'Spain', flag: 'ES' },
+  A13V1IB3VIYZZH: { name: 'France', flag: 'FR' },
+  A1F83G8C2ARO7P: { name: 'United Kingdom', flag: 'UK' },
+  A1VC38T7YXB528: { name: 'Japan', flag: 'JP' },
+  A1AM78C64UM0Y8: { name: 'India', flag: 'IN' },
+  A2EUQ1WTGCTBG2: { name: 'Canada', flag: 'CA' },
+  A39IBJ37TRP1C6: { name: 'Australia', flag: 'AU' },
+  A2Q3Y263D00KWC: { name: 'Brazil', flag: 'BR' },
 };
 
 const Settings = () => {
@@ -193,7 +206,35 @@ const Settings = () => {
   };
 
   const supportTier = planLimits?.supportTier ? SUPPORT_TIER_COPY[planLimits.supportTier] : 'Not available';
-  
+  const isAmazonConnected = sellerProfile.amazon_connected ?? false;
+  const linkedMarketplaces = sellerProfile.linked_marketplaces || [];
+  const paypalActive = !!sellerProfile.paypal_payment_token || !!sellerProfile.paypal_email;
+
+  const autoFileGateCopy = loadingAutoFile
+    ? 'Checking saved seller intent and filing gates.'
+    : savingAutoFile
+      ? 'Saving seller intent and confirming backend truth.'
+      : autoFileEnabled
+        ? autoFileGateStatus?.message || 'Auto-File is on. System filing gates will still be checked before any submission.'
+        : 'Auto-File is off. Global filing gates, payment checks, and evidence requirements remain unchanged.';
+
+  const autoFileGateMeta = autoFileGateStatus && autoFileEnabled
+    ? [
+        autoFileGateStatus.globalFilingEnabled === null
+          ? 'Global gate unknown'
+          : autoFileGateStatus.globalFilingEnabled === false
+            ? 'Global paused'
+            : 'Global gate active',
+        autoFileGateStatus.queueAvailable === null
+          ? 'Dispatch gate unknown'
+          : autoFileGateStatus.queueAvailable === false
+            ? 'Dispatch paused'
+            : 'Dispatch available',
+        autoFileGateStatus.paymentRequired ? 'Payment required' : 'Payment gate clear',
+        autoFileGateStatus.evidenceBlockedCount > 0 ? `${autoFileGateStatus.evidenceBlockedCount} need evidence` : 'Evidence gate clear'
+      ].join(' · ')
+    : null;
+
   const formatDate = (dateString?: string): string => {
     if (!dateString) return 'Not available';
     try {
@@ -272,9 +313,11 @@ const Settings = () => {
             
             {/* Section: Account Identity */}
             <section>
-              <div className="mb-6">
-                <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Identity & Access</h2>
-                <p className="mt-1 text-[13px] text-[#6B7280]">Authenticated user and workspace role information.</p>
+              <div className="mb-6 flex items-end justify-between">
+                <div>
+                  <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Identity & Access</h2>
+                  <p className="mt-1 text-[13px] text-[#6B7280]">Authenticated user and workspace role information.</p>
+                </div>
               </div>
               
               <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
@@ -305,7 +348,11 @@ const Settings = () => {
                     <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 border-transparent font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">Verified</Badge>
                   </div>
 
-                  <div className="grid grid-cols-2 divide-x divide-[#F3F5F4]">
+                  <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#F3F5F4]">
+                    <div className="p-6">
+                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">User ID</p>
+                      <p className="mt-1 text-[13px] font-semibold text-[#111827] break-all">{sellerProfile.id || 'Not available'}</p>
+                    </div>
                     <div className="p-6">
                       <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Workspace Role</p>
                       <p className="mt-1 text-[14px] font-semibold text-[#111827]">{sellerProfile.role || 'Member'}</p>
@@ -319,6 +366,87 @@ const Settings = () => {
               </div>
             </section>
 
+            {/* Section: Platform Connectivity */}
+            <section>
+              <div className="mb-6 flex items-end justify-between">
+                <div>
+                  <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Platform Connectivity</h2>
+                  <p className="mt-1 text-[13px] text-[#6B7280]">Status of external data sources and billing connections.</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="h-8 border-[#E5E7EB] text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+                  onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/integrations-hub'))}
+                >
+                  Manage Integrations
+                </Button>
+              </div>
+
+              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
+                <div className="divide-y divide-[#F3F5F4]">
+                  <div className="flex items-center justify-between p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                        <Store className="h-5 w-5" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Amazon SP-API</p>
+                        <p className="text-[14px] font-semibold text-[#111827]">{isAmazonConnected ? 'Linked' : 'Not connected'}</p>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className={cn(
+                      "font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight border-transparent",
+                      isAmazonConnected ? "bg-emerald-500/10 text-emerald-700" : "bg-[#F3F5F4] text-[#6B7280]"
+                    )}>
+                      {isAmazonConnected ? 'Active' : 'Required'}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center justify-between p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                        <CreditCard className="h-5 w-5" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">PayPal Billing</p>
+                        <p className="text-[14px] font-semibold text-[#111827]">{paypalActive ? 'Connected' : 'Not available'}</p>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className={cn(
+                      "font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight border-transparent",
+                      paypalActive ? "bg-emerald-500/10 text-emerald-700" : "bg-[#F3F5F4] text-[#6B7280]"
+                    )}>
+                      {paypalActive ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[#F3F5F4]">
+                    <div className="p-6">
+                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Last Ingest</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#111827]">
+                        {sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
+                      </p>
+                    </div>
+                    <div className="p-6">
+                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Linked Marketplaces</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {linkedMarketplaces.length > 0 ? (
+                          linkedMarketplaces.map((mId) => (
+                            <Badge key={mId} variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-[#E5E7EB] font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
+                              {marketplaceNames[mId]?.flag || 'GL'} · {marketplaceNames[mId]?.name || mId}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-[13px] font-medium text-[#9CA3AF]">No marketplaces linked</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Section: Filing Authority */}
             <section>
               <div className="mb-6">
@@ -326,47 +454,67 @@ const Settings = () => {
                 <p className="mt-1 text-[13px] text-[#6B7280]">Control how cases are submitted to Amazon Support.</p>
               </div>
 
-              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm p-6">
-                <div className="flex items-start justify-between gap-8">
-                  <div className="max-w-xl">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-[15px] font-semibold text-[#111827]">Auto-File Cases</h3>
-                      {savingAutoFile && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#0B74DE]" />}
+              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
+                <div className="p-6">
+                  <div className="flex items-start justify-between gap-8">
+                    <div className="max-w-xl">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-[15px] font-semibold text-[#111827]">Auto-File Cases</h3>
+                        {savingAutoFile && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#0B74DE]" />}
+                      </div>
+                      <p className="text-[13px] leading-relaxed text-[#6B7280]">
+                        {autoFileEnabled
+                          ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
+                          : 'Cases will wait for your manual review and approval before filing.'}
+                      </p>
+                      <div className="mt-4 flex items-center gap-3">
+                        <div className={cn(
+                          "h-2 w-2 rounded-full",
+                          autoFileEnabled ? "bg-emerald-500" : "bg-[#9CA3AF]"
+                        )} />
+                        <span className="text-[11px] font-bold uppercase tracking-tight text-[#6B7280]">
+                          {autoFileEnabled ? 'Authority: Delegated' : 'Authority: Manual Approval'}
+                        </span>
+                      </div>
                     </div>
-                    <p className="text-[13px] leading-relaxed text-[#6B7280]">
-                      {autoFileEnabled
-                        ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
-                        : 'Cases will wait for your manual review and approval before filing.'}
-                    </p>
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className={cn(
-                        "h-2 w-2 rounded-full",
-                        autoFileEnabled ? "bg-emerald-500" : "bg-[#9CA3AF]"
-                      )} />
-                      <span className="text-[11px] font-bold uppercase tracking-tight text-[#6B7280]">
-                        {autoFileEnabled ? 'Authority: Delegated' : 'Authority: Manual Approval'}
+                    <div className="flex flex-col items-end gap-2">
+                      <Switch
+                        checked={autoFileEnabled}
+                        onCheckedChange={(checked) => void handleAutoFileChange(checked)}
+                        disabled={loadingAutoFile || savingAutoFile}
+                        className="data-[state=checked]:bg-[#0B74DE]"
+                      />
+                      <span className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
+                        {savingAutoFile ? 'Updating...' : autoFileEnabled ? 'Enabled' : 'Disabled'}
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <Switch
-                      checked={autoFileEnabled}
-                      onCheckedChange={(checked) => void handleAutoFileChange(checked)}
-                      disabled={loadingAutoFile || savingAutoFile}
-                      className="data-[state=checked]:bg-[#0B74DE]"
-                    />
-                    <span className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
-                      {savingAutoFile ? 'Updating...' : autoFileEnabled ? 'Enabled' : 'Disabled'}
-                    </span>
-                  </div>
                 </div>
 
-                {autoFileError && (
-                  <div className="mt-6 flex items-center gap-2 rounded-lg bg-rose-50 p-4 text-rose-600">
-                    <AlertCircle className="h-4 w-4" />
-                    <p className="text-[12px] font-medium">{autoFileError}</p>
+                {/* Submission Gate Status - Restored detailed feedback */}
+                <div className="border-t border-[#F3F5F4] bg-[#F9FAFB] p-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Shield className="h-3.5 w-3.5 text-[#9CA3AF]" />
+                    <span className="text-[11px] font-bold uppercase tracking-tight text-[#6B7280]">Submission Gate Status</span>
                   </div>
-                )}
+                  <p className="text-[13px] text-[#4B5563] leading-relaxed">
+                    {autoFileGateCopy}
+                  </p>
+                  {autoFileGateMeta && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <Activity className="h-3 w-3 text-[#0B74DE]" />
+                      <p className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">
+                        {autoFileGateMeta}
+                      </p>
+                    </div>
+                  )}
+                  {autoFileError && (
+                    <div className="mt-4 flex items-center gap-2 rounded-lg bg-rose-50 p-3 text-rose-600">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      <p className="text-[12px] font-medium">{autoFileError}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
