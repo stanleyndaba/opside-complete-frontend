@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -8,16 +8,44 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Search, Clock, Eye, Download, Trash2, MoreHorizontal, RefreshCw, Hexagon, AlertCircle, ArrowRight, Terminal, Database, Link2, FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { 
+  Search, Clock, Eye, Download, Trash2, MoreHorizontal, RefreshCw, 
+  Hexagon, AlertCircle, ArrowRight, Terminal, Database, Link2, 
+  FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail,
+  Shield, FileText, Zap, ArrowUpRight, Info, Filter, History,
+  Lock, CheckCircle, ExternalLink, Paperclip, ChevronRight
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { getFrontendAuthContext } from '@/lib/authSession';
 import { useStatusStream } from '@/hooks/use-status-stream';
 import { Checkbox } from '@/components/ui/checkbox';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger 
+} from '@/components/ui/sheet';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { formatAutonomyLabel, getIngestionTruth, getParsingTruth, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
+import { tenantRoute } from '@/lib/routes';
+
 interface LockerDocumentRow {
   id: string;
   name: string;
@@ -174,21 +202,6 @@ type LiveLockerEvent = {
   entityId?: string;
 };
 
-const getAuditEventColor = (eventType: string) => {
-  switch (eventType) {
-    case 'parsed':
-    case 'verified':
-      return 'text-[#111827]';
-    case 'linked':
-    case 'filed':
-      return 'text-emerald-700';
-    case 'error':
-      return 'text-rose-500';
-    default:
-      return 'text-[#4B5563]';
-  }
-};
-
 const formatBytes = (value?: number | null) => {
   if (typeof value !== 'number' || Number.isNaN(value) || value <= 0) {
     return 'Not available';
@@ -200,70 +213,7 @@ const formatBytes = (value?: number | null) => {
   return `${(value / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 };
 
-const getEvidenceStateIcon = (state: string) => {
-  switch (state) {
-    case 'Usable':
-      return <CheckCircle2 className="h-3 w-3" />;
-    case 'Parsing Failed':
-      return <FileWarning className="h-3 w-3" />;
-    case 'Linked Strongly':
-    case 'Linked Weakly':
-      return <Link2 className="h-3 w-3" />;
-    default:
-      return <CircleDashed className="h-3 w-3" />;
-  }
-};
-
-const getEvidenceStateLabel = (doc: LockerDocumentRow) => {
-  switch (doc.evidence_state) {
-    case 'Usable':
-      return 'Support confirmed';
-    case 'Linked Strongly':
-      return 'Linked, review';
-    case 'Linked Weakly':
-      return 'Linked weakly';
-    case 'Unmatched':
-      return 'Parsed, unlinked';
-    case 'Not Parsed':
-      return 'Stored';
-    case 'Parsing Partial':
-      return 'Parsed partial';
-    default:
-      return doc.evidence_state;
-  }
-};
-
-const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
-  if (doc.usable_as_evidence) {
-    return 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20';
-  }
-
-  switch (doc.evidence_state) {
-    case 'Parsing Failed':
-      return 'bg-rose-500/10 text-rose-500 border-rose-500/20';
-    case 'Parsing Partial':
-    case 'Linked Weakly':
-    case 'Linked Strongly':
-      return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-    case 'Unmatched':
-    case 'Not Parsed':
-    default:
-      return 'bg-[#FAFAF7] text-[#4B5563] border-[#D8E3E8]';
-  }
-};
-
 const getLockerParsingStatus = (doc: LockerDocumentRow) => getParsingTruth(doc).status;
-
-const getLockerParsingReason = (doc: LockerDocumentRow) =>
-  getParsingTruth(doc).explanation?.reason ||
-  summarizeOperationalExplanation(getParsingTruth(doc).operationalExplanation) ||
-  doc.parser_error ||
-  null;
-
-const getLockerIngestionLabel = (doc: LockerDocumentRow) => {
-  const truth = getIngestionTruth(doc);
-  return truth.strategy ? formatAutonomyLabel(truth.strategy) : null;
-};
 
 function appendAuditEvent(
   current: LockerAuditEvent[],
@@ -354,11 +304,12 @@ function applyLockerEvent(doc: LockerDocumentRow, event: LiveLockerEvent): Locke
 
   return doc;
 }
+
 export default function EvidenceLocker() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isReady } = useTenant();
+  const { isReady, tenant } = useTenant();
   const activeSlug = tenantSlug;
   const urlQuery = (searchParams.get('q') || '').trim();
   const toggleSidebar = useCallback(() => setIsSidebarCollapsed(prev => !prev), []);
@@ -375,129 +326,67 @@ export default function EvidenceLocker() {
     failed: 0,
     needsReview: 0
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [gmailConnected, setGmailConnected] = useState(false);
-  const [q, setQ] = useState('');
-  const [docLogSearch, setDocLogSearch] = useState('');
-  const [sortBy] = useState('created_at');
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
   const [pagination, setPagination] = useState({
     page: 1,
-    pageSize: 10,
-    totalPages: 1,
-    totalResults: 0
+    pageSize: 12,
+    total: 0,
+    totalPages: 0
   });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [gmailConnected, setGmailConnected] = useState(false);
+  const [docLogSearch, setDocLogSearch] = useState('');
+  const [selectedDoc, setSelectedDoc] = useState<LockerDocumentRow | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
+  const page = Number(searchParams.get('page')) || 1;
+  const pageSize = Number(searchParams.get('pageSize')) || 12;
+  const q = searchParams.get('q') || '';
+  const sortBy = searchParams.get('sortBy') || 'created_at';
+  const sortDir = searchParams.get('sortDir') || 'desc';
+
   const { toast } = useToast();
-
   const docLogContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (q !== urlQuery) {
-      setQ(urlQuery);
-      setPage(1);
-    }
-  }, [q, urlQuery]);
-
-  useEffect(() => {
-    const normalizedSearch = q.trim();
-    const currentQuery = (searchParams.get('q') || '').trim();
-    if (normalizedSearch === currentQuery) return;
-
-    const nextParams = new URLSearchParams(searchParams);
-    if (normalizedSearch) {
-      nextParams.set('q', normalizedSearch);
-    } else {
-      nextParams.delete('q');
-    }
-    setSearchParams(nextParams, { replace: true });
-  }, [q, searchParams, setSearchParams]);
+  const navigate = useNavigate();
 
   const refreshInventory = useCallback(async () => {
-    if (!activeSlug) {
-      setError('Tenant context is required to load Claim Documents.');
-      return;
-    }
+    if (!activeSlug) return;
+    setLoading(true);
+    try {
+      const res = await api.getDocumentInventory({
+        q: q.trim() || undefined,
+        sortBy,
+        sortDir,
+        page,
+        pageSize
+      }, activeSlug);
 
-    const inventoryRes = await api.getDocumentInventory({
-      q: q.trim() || undefined,
-      sortBy,
-      sortDir,
-      page,
-      pageSize
-    }, activeSlug);
-
-    if (inventoryRes.ok && inventoryRes.data) {
-      setDocuments(inventoryRes.data.documents);
-      setMetrics(inventoryRes.data.metrics);
-      setPagination(inventoryRes.data.pagination);
-      setRecentEvents(inventoryRes.data.recentEvents);
-      setError(null);
-    } else {
-      setError(inventoryRes.error || 'Failed to load document inventory');
+      if (res.ok && res.data) {
+        setDocuments(res.data.documents);
+        setMetrics(res.data.metrics);
+        setPagination(res.data.pagination);
+        setRecentEvents(res.data.recentEvents);
+        setError(null);
+      } else {
+        setError(res.error || 'Failed to load inventory');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
     }
   }, [activeSlug, page, pageSize, q, sortBy, sortDir]);
 
-  // Unified upload protocol for Ingestion Nodes
   const handleFileUpload = async (files: File[]) => {
-    if (!activeSlug) {
-      toast({
-        title: 'Tenant Required',
-        description: 'Open Claim Documents from a tenant workspace before uploading.',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    if (!files || files.length === 0) {
-      toast({
-        title: 'Empty upload',
-        description: 'Please select at least one document to upload.',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    toast({
-      title: 'Uploading documents',
-      description: `Processing ${files.length} document(s)...`
-    });
-
+    if (!activeSlug || files.length === 0) return;
+    setLoading(true);
     try {
-      setLoading(true);
-      const form = new FormData();
-      for (const file of files) {
-        form.append('file', file);
-      }
-      const { token, userId, tenantId } = await getFrontendAuthContext();
+      const { ok, data: payload, error: apiError, rawText } = await api.uploadDocuments(files, activeSlug);
 
-      const response = await fetch(api.buildApiUrl(`/api/documents/upload?tenantSlug=${activeSlug}`), {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          ...(userId ? { 'x-user-id': userId } : {}),
-          ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
-        },
-        body: form
-      });
-
-      const rawText = await response.text();
-      let payload: any = null;
-      try {
-        payload = rawText ? JSON.parse(rawText) : {};
-      } catch {
-        payload = { message: rawText };
-      }
-
-      if (!response.ok) {
-        const firstFailureReason =
-          Array.isArray(payload?.failed_files) && payload.failed_files[0]?.reason
-            ? String(payload.failed_files[0].reason)
-            : '';
+      if (!ok) {
+        const firstFailureReason = Array.isArray(payload?.failed_files) && payload.failed_files[0]?.reason;
         const failureMessage = firstFailureReason || payload?.error || payload?.message || rawText || 'Document upload failed.';
         throw new Error(failureMessage);
       }
@@ -534,16 +423,6 @@ export default function EvidenceLocker() {
     if (!docLogContainerRef.current) return;
     docLogContainerRef.current.scrollTop = 0;
   }, [recentEvents]);
-
-  const filteredDocLogs = useMemo(() => {
-    if (!docLogSearch.trim()) return recentEvents;
-    const term = docLogSearch.trim().toLowerCase();
-    return recentEvents.filter(event =>
-      event.narrative.toLowerCase().includes(term) ||
-      event.eventType.toLowerCase().includes(term) ||
-      event.filename.toLowerCase().includes(term)
-    );
-  }, [docLogSearch, recentEvents]);
 
   const latestInventoryTimestamp = useMemo(() => {
     return recentEvents[0]?.timestamp || documents[0]?.updated_at || documents[0]?.created_at || null;
@@ -681,6 +560,7 @@ export default function EvidenceLocker() {
       cancelled = true;
     };
   }, [activeSlug, isReady, page, pageSize, q, refreshInventory, sortBy, sortDir]);
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -690,6 +570,7 @@ export default function EvidenceLocker() {
       setDragActive(false);
     }
   };
+
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -697,6 +578,7 @@ export default function EvidenceLocker() {
     const files = Array.from(e.dataTransfer.files || []);
     handleFileUpload(files);
   };
+
   const exportCsv = async () => {
     if (!activeSlug) return;
 
@@ -752,7 +634,6 @@ export default function EvidenceLocker() {
     try {
       const response = await api.getDocumentDownload(id, activeSlug);
       if (response.ok && response.data?.url) {
-        // Open the signed URL directly to download the file
         window.open(response.data.url, '_blank');
       } else {
         toast({
@@ -770,7 +651,6 @@ export default function EvidenceLocker() {
     }
   };
 
-  // Delete a single document
   const handleDeleteDocument = async (docId: string, docName: string) => {
     if (!activeSlug) return;
     if (!confirm(`Are you sure you want to delete "${docName}"?`)) {
@@ -790,533 +670,417 @@ export default function EvidenceLocker() {
     }
   };
 
-  // Delete all documents
-  const handleDeleteAllDocuments = async () => {
-    if (!activeSlug) return;
-    if (!confirm(`Are you sure you want to delete ALL ${metrics.totalDocuments} document(s) in this workspace? This cannot be undone.`)) {
-      return;
-    }
-
-    try {
-      const res = await api.deleteAllDocuments(activeSlug);
-      if (res.ok) {
-        await refreshInventory();
-        toast({ title: 'All Documents Deleted', description: `${res.data?.deletedCount || 0} document(s) have been deleted.` });
-      } else {
-        throw new Error(res.error || 'Failed to delete documents');
-      }
-    } catch (error: any) {
-      toast({ title: 'Delete Failed', description: error.message, variant: 'destructive' });
-    }
+  const handleRowClick = (doc: LockerDocumentRow) => {
+    setSelectedDoc(doc);
+    setIsDetailOpen(true);
   };
 
   if (!activeSlug) {
     return (
-      <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#FAFAF7] text-[#111827]">
-        <div className="pointer-events-none absolute inset-0 bg-[#FAFAF7]" />
-        <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
-        <div className="flex-1 flex h-full overflow-hidden">
-          <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-          <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
-            <div className="relative pt-8">
-              <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-[#111827]">
-                <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none p-10">
-                  <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
-                  <p className="text-[#6B7280] text-sm font-sans font-semibold uppercase tracking-tight">Tenant context required</p>
-                  <p className="text-[#4B5563] mt-3 font-sans text-sm max-w-xl">
-                    Claim Documents only renders inside a real tenant workspace. Open this page from a tenant-scoped route to load document inventory truthfully.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </main>
+      <PageLayout title="Evidence Locker" noPadding>
+        <div className="flex h-screen items-center justify-center bg-[#FAFAF7]">
+          <div className="max-w-md border border-[#E5E7EB] bg-white p-10 text-center shadow-sm">
+            <Shield className="mx-auto mb-4 h-10 w-10 text-[#9CA3AF]" />
+            <h1 className="font-lora text-2xl font-normal tracking-tight text-[#111827]">Workspace Required</h1>
+            <p className="mt-3 text-sm text-[#6B7280]">
+              The Evidence Locker only renders inside an active workspace. Please select a marketplace to continue.
+            </p>
+          </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="platform-vitality-page relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#FAFAF7] text-[#111827]">
-      <div className="pointer-events-none absolute inset-0 bg-[#FAFAF7]" />
-
-      <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
-      <div className="flex-1 flex h-full overflow-hidden">
-        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-        <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
-          <div className="relative pt-8">
-            <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-[#111827]">
-              <div className="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-                <div className="space-y-2">
-                  <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Claim Documents</h1>
-                  <p className="text-sm text-[#4B5563] font-sans max-w-3xl">
-                    Review stored files, parsing progress, and case links that can support recoveries, filings, and payout follow-up.
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">
-                    {latestInventoryTimestamp
-                      ? `Updated ${formatDistanceToNow(new Date(latestInventoryTimestamp), { addSuffix: true })}`
-                      : 'Update time unavailable'}
-                  </div>
-                  <Button
-                    onClick={() => void refreshInventory()}
-                    disabled={loading}
-                    className="h-10 px-4 font-sans font-bold text-[10px] bg-white text-[#4B5563] border border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827] rounded-[2px] shadow-none uppercase tracking-tight disabled:opacity-50"
-                  >
-                    <RefreshCw className={cn("w-3 h-3 mr-2", loading && "animate-spin")} />
-                    Refresh
-                  </Button>
-                </div>
+    <PageLayout title="Evidence Locker" noPadding>
+      <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
+        {/* Forensic Identity Header */}
+        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
+          <div className="mx-auto max-w-6xl">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <div className="h-px w-6 bg-[#0B74DE]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0B74DE]">Forensic Vault</span>
               </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none p-6">
-                  <GmailConnectionStatus onStatusChange={setGmailConnected} />
+              <div className="flex items-center gap-3">
+                <div className="text-[10px] font-bold uppercase tracking-tight text-[#6B7280]">
+                  {latestInventoryTimestamp
+                    ? `Last Sync ${formatDistanceToNow(new Date(latestInventoryTimestamp), { addSuffix: true })}`
+                    : 'Sync time unavailable'}
                 </div>
-                <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none p-6">
-                    <EvidenceIngestion
-                      gmailConnected={gmailConnected}
-                      onIngestionComplete={() => {
-                      void refreshInventory();
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Forensic Ingestion Terminal */}
-              <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden mb-8 relative">
-                {/* Terminal Header */}
-                <div className="px-6 py-4 border-b border-[#D8E3E8] bg-white flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Terminal className="h-3 w-3 text-[#4B5563]" />
-                    <h2 className="text-[10px] font-sans font-bold text-[#111827] uppercase tracking-tight">Evidence history</h2>
-                  </div>
-                  <span className="text-[9px] font-sans font-bold text-[#111827] uppercase tracking-tight">{filteredDocLogs.length} entries</span>
-                </div>
-
-                <div className="p-8">
-                  {/* Terminal Search */}
-                  <div className="relative mb-6">
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                      <span className="text-[#6B7280] text-[10px] font-sans font-bold">$</span>
-                    </div>
-                    <Input
-                      type="text"
-                      placeholder="Search document history..."
-                      value={docLogSearch}
-                      onChange={(e) => setDocLogSearch(e.target.value)}
-                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white border-[#D8E3E8] text-[#111827] placeholder:text-[#9CA3AF] focus:border-[#8FA0AD] rounded-[2px] tracking-tight shadow-none"
-                    />
-                  </div>
-
-                  {/* Terminal Logs */}
-                  <div
-                    ref={docLogContainerRef}
-                    className="bg-white border border-[#D8E3E8] rounded-[2px] p-6 font-sans font-bold text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative tracking-tight shadow-none">
-                    {filteredDocLogs.length === 0 ? (
-                      <div className="text-[#9CA3AF] flex items-center justify-center h-full gap-3">
-                        <Clock className="h-3 w-3 opacity-20" />
-                        <span className="uppercase tracking-tight">No audit events for the current inventory view.</span>
-                      </div>
-                    ) : (
-                      <div className="relative space-y-1.5">
-                        {filteredDocLogs.map((log) => (
-                          <div key={log.id} className="flex flex-col group/log">
-                            <div className="flex items-start gap-4 hover:bg-[#F8FAFB] -mx-2 px-2 py-1 rounded-[2px] transition-colors">
-                              <span className="text-[#4B5563] shrink-0 select-none tabular-nums transition-colors">
-                                [{new Date(log.timestamp).toLocaleTimeString()}]
-                              </span>
-                              <div className="flex items-center gap-2 shrink-0">
-                                <span className="text-[#111827] font-bold uppercase tracking-tight">{log.eventType}</span>
-                              </div>
-                              <span className={cn("flex-1 break-words leading-relaxed", getAuditEventColor(log.eventType))}>
-                                <span className="mr-2 opacity-50">{">>"}</span>
-                                {log.narrative}
-                                <span className="ml-2 text-[#4B5563] border-l border-[#E5E7EB] pl-2">
-                                  {log.filename}
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Ingestion Node - Dropzone */}
-              <div className="bg-white border border-[#D8E3E8] rounded-[2px] overflow-hidden shadow-none mb-12 relative p-10">
-                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-[#D8E3E8]" />
-                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-[#D8E3E8]" />
-
-                <div
-                  className={cn(
-                    "border border-dashed transition-all duration-300 rounded-[2px] p-12 text-center group relative overflow-hidden",
-                    dragActive ? "border-[#8FA0AD] bg-[#F8FAFB]" : "border-[#D8E3E8] hover:border-[#8FA0AD] bg-[#FAFAF7]"
-                  )}
-                  onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
+                <Button
+                  onClick={() => void refreshInventory()}
+                  disabled={loading}
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 gap-2 px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] hover:bg-[#F3F5F4] hover:text-[#111827]"
                 >
-                  <div className="absolute inset-0 bg-[#F8FAFB] opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                  <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-[#111827]" : "text-[#B8C4CE] group-hover:text-[#8FA0AD]")} />
-                  <h3 className="text-sm font-sans font-bold text-[#111827] mb-2 uppercase tracking-tight">Document Ingestion</h3>
-                  <p className="text-[10px] text-[#6B7280] font-sans font-bold mb-3 uppercase tracking-tight">
-                    Supported types: PDF, JPG, PNG
-                  </p>
-                  <p className="mx-auto mb-8 max-w-xl text-[11px] font-sans font-medium leading-relaxed text-[#4B5563]">
-                    Margin checks connected repositories first. Use upload only when a supporting document is not available from your ingested sources; uploaded files still enter the same parsing, matching, and evidence workflow.
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button
-                      className="group relative px-6 py-2.5 bg-[#111827] hover:bg-[#1F2937] transition-all rounded-[2px] overflow-hidden shadow-none"
-                      onClick={() => document.getElementById('doc-file-input')?.click()}
-                    >
-                      <div className="relative flex items-center gap-2">
-                        <Upload className="w-3.5 h-3.5 text-[#FFFFFF]" />
-                        <span className="text-[11px] font-sans font-bold text-[#FFFFFF] uppercase tracking-tight">Upload Files</span>
-                      </div>
-                    </button>
-                    <input id="doc-file-input" type="file" multiple className="hidden" onChange={(e) => {
-                      const files = Array.from((e.target as HTMLInputElement).files || []);
-                      handleFileUpload(files);
-                      e.target.value = '';
-                    }} />
-
-                    <div className="flex items-center gap-6 pl-4 border-l border-[#D8E3E8]">
-                      <div className="flex items-center gap-2 text-[#6B7280]">
-                        <Mail className="w-3.5 h-3.5" />
-                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight">store@invoices.margin.app</span>
-                      </div>
-                      <Link to={`/app/${activeSlug}/integrations-hub`} className="text-[10px] font-sans font-bold text-[#111827] hover:text-[#4B5563] uppercase tracking-tight transition-colors">
-                        Connect sources {">>"}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Audit Registry Ledger - Evidence library */}
-              <div className="relative border-y border-[#D8E3E8] bg-white">
-                {/* Ledger Header */}
-                <div className="px-5 py-4 border-b border-[#D8E3E8] flex flex-col gap-4 bg-white lg:flex-row lg:items-end lg:justify-between">
-                  <div>
-                    <h2 className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Evidence library</h2>
-                    <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-[15px] font-sans font-medium text-[#111827] tracking-tight">{displayMetrics.filteredResults} results</span>
-                      <div className="h-1.5 w-[1px] bg-[#D8E3E8]" />
-                      <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Total archive: {displayMetrics.totalDocuments}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <div className="relative group/search">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-[#9CA3AF] group-focus-within/search:text-[#111827] transition-colors" />
-                      <Input
-                        placeholder="Search documents..."
-                        value={q}
-                        onChange={(e) => {
-                          setQ(e.target.value);
-                          setPage(1);
-                        }}
-                        className="h-8 w-full rounded-[2px] border-[#D8E3E8] bg-[#FAFAF7] pl-9 font-sans text-[11px] font-medium tracking-tight text-[#111827] transition-all placeholder:text-[#9CA3AF] focus:border-[#8FA0AD] sm:w-64"
-                      />
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-[#4B5563] transition-colors hover:bg-[#F8FAFB] hover:text-[#111827]"
-                      onClick={exportCsv}
-                    >
-                      <Download className="mr-2 h-3.5 w-3.5" />
-                      EXPORT
-                    </Button>
-
-                    {metrics.totalDocuments > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 rounded-[2px] border border-rose-200 bg-white px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-rose-500 transition-colors hover:bg-rose-50"
-                        onClick={handleDeleteAllDocuments}>
-                        <Trash2 className="w-3.5 h-3.5 mr-2" />
-                        Delete All
-                      </Button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Ledger Body */}
-                <div className="flex flex-col min-h-[420px]">
-                  {loading ? (
-                    <div className="flex flex-col items-center justify-center py-32">
-                      <div className="relative flex h-4 w-4 mb-6">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#111827]/20 opacity-20"></span>
-                        <span className="relative inline-flex rounded-full h-4 w-4 bg-[#111827]/35"></span>
-                      </div>
-                      <span className="text-[11px] font-sans font-bold text-[#6B7280] uppercase tracking-tight">Loading documents...</span>
-                    </div>
-                  ) : error ? (
-                    <div className="flex flex-col items-center justify-center py-32 bg-rose-500/[0.02]">
-                      <AlertCircle className="h-8 w-8 text-rose-500/20 mb-6" />
-                      <span className="text-[11px] font-sans font-bold text-rose-500 uppercase tracking-tight">Connection error</span>
-                      <p className="text-[10px] text-rose-500/40 mt-2 font-sans font-bold tracking-tight">{error}</p>
-                      <Button
-                        variant="ghost"
-                        className="mt-8 text-[11px] font-sans font-bold text-[#6B7280] hover:text-[#111827] tracking-tight"
-                        onClick={() => window.location.reload()}
-                      >
-                        Retry
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      {displayDocuments.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-24">
-                          <CircleDashed className="h-6 w-6 text-[#B8C4CE] mb-4" />
-                          <span className="text-[11px] font-sans font-bold text-[#6B7280] uppercase tracking-tight">
-                            {displayMetrics.totalDocuments === 0 ? 'No documents in this workspace' : 'No documents match the current search'}
-                          </span>
-                        </div>
-                      ) : (
-                      <div className="overflow-hidden">
-                        <div className="hidden border-b border-[#D8E3E8] px-5 py-2.5 lg:grid lg:grid-cols-[2.25rem_minmax(0,1.35fr)_minmax(0,1.25fr)_minmax(0,0.85fr)_5.5rem] lg:gap-5">
-                          {['', 'Document', 'Evidence details', 'Value / date', 'Action'].map((label) => (
-                            <div key={label || 'selection'} className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                              {label}
-                            </div>
-                          ))}
-                        </div>
-                      <div className="divide-y divide-[#D8E3E8]">
-                        {displayDocuments.map((doc) => (
-                          <div
-                            key={doc.id}
-                            className="group relative px-5 py-3.5 transition-colors hover:bg-[#F8FAFB]"
-                          >
-                            <div className="absolute left-0 top-2 bottom-2 w-[1px] bg-[#111827] opacity-0 transition-opacity group-hover:opacity-100" />
-
-                            <div className="grid gap-4 lg:grid-cols-[2.25rem_minmax(0,1.35fr)_minmax(0,1.25fr)_minmax(0,0.85fr)_5.5rem] lg:items-start lg:gap-5">
-                              <div className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-2">
-                                <Checkbox
-                                  checked={selectedIds.has(doc.id)}
-                                  onCheckedChange={(c) => {
-                                    setSelectedIds(prev => {
-                                      const next = new Set(prev);
-                                      if (c) next.add(doc.id); else next.delete(doc.id);
-                                      return next;
-                                    });
-                                  }}
-                                  className="h-3.5 w-3.5 border-[#D8E3E8] rounded-[2px] data-[state=checked]:bg-[#111827] data-[state=checked]:border-none transition-colors"
-                                />
-                                <Hexagon className="h-3.5 w-3.5 text-[#B8C4CE] group-hover:text-[#8FA0AD] transition-colors" />
-                              </div>
-
-                              <div className="min-w-0">
-                                <div className="flex flex-wrap items-center gap-2.5">
-                                  <span className="min-w-0 truncate text-[13px] font-sans font-medium tracking-tight text-[#111827] normal-case transition-colors">
-                                    {doc.name}
-                                  </span>
-                                  <Badge className={cn("text-[9px] font-sans font-bold uppercase tracking-tight flex items-center gap-1.5", getEvidenceStateBadgeClass(doc))}>
-                                    {getEvidenceStateIcon(doc.evidence_state)}
-                                    {getEvidenceStateLabel(doc)}
-                                  </Badge>
-                                  {doc.linked_case_count > 0 && (
-                                    <div className="px-2 py-0.5 bg-[#FAFAF7] border border-[#D8E3E8] text-[9px] font-sans font-medium text-[#4B5563] uppercase tracking-tight flex items-center gap-1.5">
-                                      <Link2 className="h-2.5 w-2.5" />
-                                      {doc.linked_case_count} linked cases
-                                    </div>
-                                  )}
-                                </div>
-
-                                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
-                                  <span className="text-[#4B5563]">{doc.source_display || "Unknown source"}</span>
-                                  <span className="text-[#B8C4CE]">|</span>
-                                  <span className="text-[#4B5563]">{doc.content_type || "Type unavailable"}</span>
-                                  <span className="text-[#B8C4CE]">|</span>
-                                  <span className="text-[#4B5563]">{formatBytes(doc.size_bytes)}</span>
-                                </div>
-
-                                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium tracking-tight text-zinc-500">
-                                  <span className="text-[#4B5563]">Supplier: {doc.supplier || "Not available"}</span>
-                                  <span className="text-[#B8C4CE]">|</span>
-                                  <span className="text-[#4B5563]">Invoice: {doc.invoice || "Not available"}</span>
-                                </div>
-                              </div>
-
-                              <div className="min-w-0">
-                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
-                                  Evidence details
-                                </div>
-                                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:mt-0">
-                                  <div className="flex items-center gap-2">
-                                    {(() => {
-                                      const parsingStatus = getLockerParsingStatus(doc);
-                                      return (
-                                        <>
-                                    <div className={cn(
-                                      "h-1.5 w-1.5 rounded-full",
-                                      parsingStatus === 'completed' ? 'bg-emerald-600' :
-                                        parsingStatus === 'partial' ? 'bg-amber-500' :
-                                          parsingStatus === 'processing' ? 'bg-amber-500 animate-pulse' :
-                                            parsingStatus === 'failed' ? 'bg-rose-500' : 'bg-[#B8C4CE]'
-                                    )} />
-                                    <span className={cn(
-                                      parsingStatus === 'completed' ? 'text-[#4B5563]' :
-                                        parsingStatus === 'partial' ? 'text-amber-400/80' :
-                                          parsingStatus === 'failed' ? 'text-rose-500/80' : 'text-[#6B7280]'
-                                    )}>
-                                      {formatAutonomyLabel(doc.parsing_strategy || parsingStatus)}
-                                    </span>
-                                        </>
-                                      );
-                                    })()}
-                                  </div>
-                                  <span className="text-[#B8C4CE]">|</span>
-                                  <span className="text-[#4B5563]">
-                                    {doc.parser_confidence != null ? `${(doc.parser_confidence * 100).toFixed(0)}% confidence` : "Confidence unknown"}
-                                  </span>
-                                  <span className="text-[#B8C4CE]">|</span>
-                                  <span className="text-[#4B5563]">{doc.usability_reason}</span>
-                                  {getLockerIngestionLabel(doc) ? (
-                                    <>
-                                      <span className="text-[#B8C4CE]">|</span>
-                                      <span className="text-[#4B5563]">Intake: {getLockerIngestionLabel(doc)}</span>
-                                    </>
-                                  ) : null}
-                                  {getLockerParsingReason(doc) ? (
-                                    <>
-                                      <span className="text-[#B8C4CE]">|</span>
-                                      <span className="text-[#4B5563]">Decision: {getLockerParsingReason(doc)}</span>
-                                    </>
-                                  ) : null}
-                                </div>
-                              </div>
-
-                              <div>
-                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
-                                  Value / date
-                                </div>
-                                <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-[#111827] lg:mt-0">
-                                  {typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : "—"}
-                                </div>
-                                <div className="mt-1 text-[10px] font-sans text-zinc-500 tabular-nums">
-                                  {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-2 lg:justify-end">
-                              {doc.linked_case_count > 0 && (
-                                <Link
-                                  to={`/app/${activeSlug}/recoveries/${encodeURIComponent(doc.linked_case_ids[0])}`}
-                                  className="text-[9px] font-sans font-medium text-[#4B5563] hover:text-[#111827] transition-colors uppercase tracking-tight flex items-center gap-2"
-                                >
-                                  {doc.linked_case_refs[0] || `ID_${doc.linked_case_ids[0].slice(0, 8)}`}
-                                  <ArrowRight className="h-3 w-3" />
-                                </Link>
-                              )}
-
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="sm" className="h-7 w-7 rounded-[2px] border border-transparent p-0 text-[#9CA3AF] transition-colors hover:border-[#D8E3E8] hover:bg-[#F8FAFB] hover:text-[#111827]">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="platform-vitality-page w-56 bg-white border border-[#D8E3E8] rounded-[2px] shadow-none p-2 animate-in fade-in slide-in-from-top-1">
-                                  <DropdownMenuItem asChild className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] rounded-[2px] cursor-pointer px-4 py-2.5 uppercase tracking-tight">
-                                    <Link to={`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
-                                      <Eye className="w-3.5 h-3.5" />
-                                      View Details
-                                    </Link>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    onClick={() => downloadDoc(doc.id)}
-                                    className="text-[11px] font-sans font-bold text-[#4B5563] focus:bg-[#F8FAFB] focus:text-[#111827] rounded-[2px] cursor-pointer px-4 py-2.5 uppercase tracking-tight"
-                                  >
-                                    <Download className="w-3.5 h-3.5 mr-3" />
-                                    Download
-                                  </DropdownMenuItem>
-                                  <div className="h-[1px] bg-[#D8E3E8] my-2" />
-                                  <DropdownMenuItem
-                                    onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                                    className="text-[11px] font-sans font-bold text-rose-500/80 focus:bg-rose-50 focus:text-rose-600 rounded-[2px] cursor-pointer px-4 py-2.5 uppercase tracking-tight"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5 mr-3" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      </div>
-                      )}
-
-                      {/* Ledger Pagination */}
-                      <div className="px-5 py-3.5 flex flex-col gap-4 border-t border-[#D8E3E8] bg-[#FAFAF7] lg:flex-row lg:items-center lg:justify-between">
-                        <div className="flex flex-wrap items-center gap-5">
-                          <div className="flex items-center gap-3">
-                              <Checkbox
-                              checked={selectedIds.size > 0 && selectedIds.size === displayDocuments.length}
-                              onCheckedChange={(c) => {
-                                if (c) setSelectedIds(new Set(displayDocuments.map(d => d.id)));
-                                else setSelectedIds(new Set());
-                              }}
-                              className="h-3 w-3 border-[#D8E3E8] rounded-[2px]"
-                            />
-                            <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Selection</span>
-                          </div>
-                          <span className="h-3 w-[1px] bg-[#D8E3E8]" />
-                          <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">
-                            PAGE {pagination.page} OF {pagination.totalPages}
-                          </span>
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-5">
-                          <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Page size</span>
-                            <select
-                              className="bg-transparent border-none text-[10px] font-sans font-medium text-[#4B5563] focus:ring-0 cursor-pointer p-0 uppercase"
-                              value={pageSize}
-                              onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
-                            >
-                              <option value={10}>10 records</option>
-                              <option value={20}>20 records</option>
-                              <option value={50}>50 records</option>
-                            </select>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="ghost"
-                              className="h-8 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-medium tracking-tight text-[#4B5563] transition-colors hover:bg-[#F8FAFB] hover:text-[#111827] disabled:opacity-30"
-                              disabled={pagination.page <= 1}
-                              onClick={() => setPage(p => Math.max(1, (pagination.page || p) - 1))}
-                            >
-                              PREVIOUS
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              className="h-8 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-medium tracking-tight text-[#4B5563] transition-colors hover:bg-[#F8FAFB] hover:text-[#111827] disabled:opacity-30"
-                              disabled={pagination.page >= pagination.totalPages}
-                              onClick={() => setPage(p => Math.min(pagination.totalPages, (pagination.page || p) + 1))}
-                            >
-                              NEXT_CYCLE
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
+                  <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
+                  Refresh
+                </Button>
               </div>
             </div>
+            <h1 className="mb-4 font-lora text-[32px] font-normal leading-tight tracking-tight text-[#111827]">
+              Evidence Locker
+            </h1>
+            <p className="max-w-2xl text-[15px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
+              Centralized repository for operational records and forensic artifacts. 
+              Review parsed data points, Amazon case linkages, and verification trails required for recovery filing.
+            </p>
           </div>
-        </main>
+        </div>
+
+        {/* Readiness Strip */}
+        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8 py-3">
+          <div className="mx-auto flex max-w-6xl items-center justify-between">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <Database className="h-3.5 w-3.5 text-[#9CA3AF]" />
+                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Artifacts:</span>
+                <span className="text-[11px] font-bold text-[#111827]">{displayMetrics.totalDocuments} Total</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#0B74DE]" />
+                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Filing Ready:</span>
+                <span className="text-[11px] font-bold text-[#111827]">{displayMetrics.matched} Linked</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FileWarning className="h-3.5 w-3.5 text-amber-500" />
+                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Needs Review:</span>
+                <span className="text-[11px] font-bold text-[#111827]">{displayMetrics.needsReview} Items</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={exportCsv}
+                className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+              >
+                <Download className="mr-1.5 h-3 w-3" />
+                Export CSV
+              </Button>
+              <div className="h-4 w-px bg-[#E5E7EB]" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+                  >
+                    <Upload className="mr-1.5 h-3 w-3" />
+                    Ingest Evidence
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64 border-[#E5E7EB] bg-white p-2 shadow-xl">
+                  <div className="p-2">
+                    <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">Evidence Sources</p>
+                    <div className="space-y-1">
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start gap-3 h-10 text-xs font-medium text-[#111827] hover:bg-[#F3F5F4]"
+                        onClick={() => navigate(tenantRoute(activeSlug, '/integrations'))}
+                      >
+                        <Mail className="h-4 w-4 text-[#6B7280]" />
+                        Connect Gmail/Slack
+                      </Button>
+                      <label className="flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-xs font-medium text-[#111827] hover:bg-[#F3F5F4]">
+                        <Cloud className="h-4 w-4 text-[#6B7280]" />
+                        Upload Files
+                        <input type="file" multiple className="hidden" onChange={(e) => handleFileUpload(Array.from(e.target.files || []))} />
+                      </label>
+                    </div>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+
+        {/* Synthesis Bar */}
+        <div className="mx-auto max-w-6xl px-8 pt-8">
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-4 flex items-center">
+              <Search className="h-5 w-5 text-[#9CA3AF] group-focus-within:text-[#0B74DE] transition-colors" />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Query the Evidence Locker... (e.g., 'Find shipment invoices for Case 16894')" 
+              value={q}
+              onChange={(e) => setSearchParams({ q: e.target.value, page: '1' })}
+              className="h-14 w-full rounded-xl border border-[#E5E7EB] bg-white pl-12 pr-4 text-[15px] font-normal tracking-tight shadow-sm outline-none focus:border-[#0B74DE] focus:ring-0 transition-all"
+            />
+            <div className="absolute inset-y-0 right-4 flex items-center gap-2">
+              <Badge variant="outline" className="bg-[#F3F5F4] text-[#6B7280] border-transparent font-medium text-[10px] px-2 py-0.5">
+                ⌘ K
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Workspace Area */}
+        <div className="mx-auto max-w-6xl px-8 py-8">
+          <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
+            <Table>
+              <TableHeader className="bg-[#F9FAFB]">
+                <TableRow className="border-b border-[#E5E7EB] hover:bg-transparent">
+                  <TableHead className="w-[40%] text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10 px-6">Artifact</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10">Type</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10">Amazon Link</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10">Confidence</TableHead>
+                  <TableHead className="text-right text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10 px-6">State</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loading && displayDocuments.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-64 text-center">
+                      <RefreshCw className="mx-auto mb-2 h-6 w-6 animate-spin text-[#9CA3AF]" />
+                      <p className="text-[11px] font-medium uppercase tracking-tight text-[#9CA3AF]">Synchronizing Vault...</p>
+                    </TableCell>
+                  </TableRow>
+                ) : displayDocuments.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-64 text-center">
+                      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F3F5F4]">
+                        <Paperclip className="h-6 w-6 text-[#9CA3AF]" />
+                      </div>
+                      <h3 className="text-[14px] font-semibold text-[#111827]">No artifacts detected</h3>
+                      <p className="mt-1 text-[12px] text-[#6B7280]">Connect a source or upload records to populate the vault.</p>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  displayDocuments.map((doc) => (
+                    <TableRow 
+                      key={doc.id} 
+                      className="group cursor-pointer border-b border-[#F3F5F4] hover:bg-[#F8FAFB] transition-colors"
+                      onClick={() => handleRowClick(doc)}
+                    >
+                      <TableCell className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white shadow-sm group-hover:border-[#0B74DE]/30 transition-colors">
+                            <FileText className="h-4.5 w-4.5 text-[#4B5563]" strokeWidth={1.5} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-[13px] font-semibold tracking-tight text-[#111827]">{doc.name}</p>
+                            <div className="mt-1 flex items-center gap-2">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">{doc.source_display}</span>
+                              <div className="h-1 w-1 rounded-full bg-[#E5E7EB]" />
+                              <span className="text-[11px] font-medium text-[#6B7280]">{formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-transparent font-medium text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
+                          {doc.content_type?.split('/').pop()?.toUpperCase() || 'RAW'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {doc.linked_case_refs.length > 0 ? (
+                          <div className="flex items-center gap-1.5 text-[#0B74DE]">
+                            <Link2 className="h-3 w-3" />
+                            <span className="text-[12px] font-bold tracking-tight">{doc.linked_case_refs[0]}</span>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] font-medium text-[#9CA3AF]">Unlinked</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[#E5E7EB]">
+                            <div 
+                              className={cn(
+                                "h-full rounded-full",
+                                (doc.parser_confidence || 0) > 0.8 ? "bg-emerald-500" : "bg-amber-500"
+                              )} 
+                              style={{ width: `${(doc.parser_confidence || 0) * 100}%` }} 
+                            />
+                          </div>
+                          <span className="text-[11px] font-bold text-[#111827]">
+                            {doc.parser_confidence != null ? `${(doc.parser_confidence * 100).toFixed(0)}%` : '--'}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-6 text-right">
+                        <div className="flex items-center justify-end gap-3">
+                          <Badge 
+                            className={cn(
+                              "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border-transparent",
+                              doc.usable_as_evidence 
+                                ? "bg-emerald-500/10 text-emerald-700" 
+                                : "bg-amber-500/10 text-amber-600"
+                            )}
+                          >
+                            {doc.usable_as_evidence ? 'Filing Ready' : 'Review Required'}
+                          </Badge>
+                          <ChevronRight className="h-4 w-4 text-[#9CA3AF] opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Registry Footer */}
+        <div className="mx-auto max-w-6xl px-8 pb-20 pt-10">
+          <div className="border-t border-[#E5E7EB] pt-8 text-center">
+            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">
+              <Shield className="h-3 w-3" />
+              Forensic Evidence Registry • US-EAST-1
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Forensic Sidebar */}
+      <Sheet open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+        <SheetContent side="right" className="w-full border-l border-[#E5E7EB] bg-white p-0 text-[#111827] sm:max-w-[550px]">
+          {selectedDoc && (
+            <div className="flex h-full flex-col">
+              <SheetHeader className="border-b border-[#E5E7EB] px-8 py-8 text-left">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="h-px w-6 bg-[#0B74DE]" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#0B74DE]">Artifact Detail</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-[#6B7280]" onClick={() => downloadDoc(selectedDoc.id)}>
+                      <Download className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-[#6B7280]" onClick={() => handleDeleteDocument(selectedDoc.id, selectedDoc.name)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <SheetTitle className="font-lora text-2xl font-normal leading-tight tracking-tight text-[#111827]">
+                  {selectedDoc.name}
+                </SheetTitle>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Badge variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-transparent font-medium text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
+                    {selectedDoc.source_display}
+                  </Badge>
+                  <Badge variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-transparent font-medium text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
+                    {formatBytes(selectedDoc.size_bytes)}
+                  </Badge>
+                  {selectedDoc.linked_case_refs.length > 0 && (
+                    <Badge className="bg-[#0B74DE]/10 text-[#0B74DE] border-transparent font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
+                      Linked: {selectedDoc.linked_case_refs[0]}
+                    </Badge>
+                  )}
+                </div>
+              </SheetHeader>
+
+              <div className="flex-1 overflow-y-auto px-8 py-8">
+                <div className="space-y-10">
+                  {/* Forensic Extraction Section */}
+                  <div>
+                    <h3 className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#111827]">Forensic Extraction</h3>
+                    <div className="rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] p-6">
+                      <div className="grid grid-cols-2 gap-y-6">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Invoice ID</p>
+                          <p className="text-[13px] font-semibold text-[#111827]">{selectedDoc.invoice || '--'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Total Amount</p>
+                          <p className="text-[13px] font-semibold text-[#111827]">
+                            {selectedDoc.amount ? `$${selectedDoc.amount.toFixed(2)}` : '--'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Supplier</p>
+                          <p className="text-[13px] font-semibold text-[#111827]">{selectedDoc.supplier || '--'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Parser Confidence</p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[13px] font-semibold text-[#111827]">
+                              {selectedDoc.parser_confidence != null ? `${(selectedDoc.parser_confidence * 100).toFixed(0)}%` : '--'}
+                            </span>
+                            <div className="h-1.5 w-12 overflow-hidden rounded-full bg-[#E5E7EB]">
+                              <div 
+                                className="h-full bg-[#0B74DE] rounded-full" 
+                                style={{ width: `${(selectedDoc.parser_confidence || 0) * 100}%` }} 
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-8 border-t border-[#E5E7EB] pt-6">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Zap className="h-3.5 w-3.5 text-[#0B74DE]" />
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#111827]">Operational Signal</span>
+                        </div>
+                        <p className="text-[12px] leading-relaxed text-[#6B7280]">
+                          {selectedDoc.parsing_explanation?.reason || "This document has been parsed and reconciled against Amazon's operational records. Key identifiers were extracted to build the evidence trail."}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Audit Trail Section */}
+                  <div>
+                    <h3 className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#111827]">Audit Trail</h3>
+                    <div className="relative space-y-6 pl-4">
+                      <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[#E5E7EB]" />
+                      
+                      <div className="relative">
+                        <div className="absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white bg-emerald-500 shadow-sm" />
+                        <p className="text-[12px] font-semibold text-[#111827]">Ingestion Confirmed</p>
+                        <p className="text-[11px] text-[#6B7280] mt-0.5">Source: {selectedDoc.source_display} • {formatDistanceToNow(new Date(selectedDoc.created_at), { addSuffix: true })}</p>
+                      </div>
+
+                      <div className="relative">
+                        <div className="absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white bg-emerald-500 shadow-sm" />
+                        <p className="text-[12px] font-semibold text-[#111827]">Forensic Parsing Complete</p>
+                        <p className="text-[11px] text-[#6B7280] mt-0.5">Strategy: {selectedDoc.parsing_strategy || 'FULL'} • Confidence: {(selectedDoc.parser_confidence || 0 * 100).toFixed(0)}%</p>
+                      </div>
+
+                      <div className="relative">
+                        <div className={cn(
+                          "absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white shadow-sm",
+                          selectedDoc.linked_case_refs.length > 0 ? "bg-emerald-500" : "bg-[#9CA3AF]"
+                        )} />
+                        <p className="text-[12px] font-semibold text-[#111827]">Case Linkage</p>
+                        <p className="text-[11px] text-[#6B7280] mt-0.5">
+                          {selectedDoc.linked_case_refs.length > 0 
+                            ? `Linked to Amazon Case ${selectedDoc.linked_case_refs[0]}` 
+                            : 'Awaiting discrepancy match'}
+                        </p>
+                      </div>
+
+                      <div className="relative">
+                        <div className={cn(
+                          "absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white shadow-sm",
+                          selectedDoc.usable_as_evidence ? "bg-emerald-500" : "bg-[#9CA3AF]"
+                        )} />
+                        <p className="text-[12px] font-semibold text-[#111827]">Filing Readiness</p>
+                        <p className="text-[11px] text-[#6B7280] mt-0.5">
+                          {selectedDoc.usable_as_evidence ? 'Verified for Amazon Support' : 'Awaiting final forensic verification'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-[#E5E7EB] bg-[#F9FAFB] p-6">
+                <Button 
+                  className="w-full h-11 bg-[#0B74DE] hover:bg-[#0861C5] text-white font-bold uppercase tracking-widest text-[11px] rounded-lg shadow-lg shadow-[#0B74DE]/20"
+                  onClick={() => setIsDetailOpen(false)}
+                >
+                  Confirm Review
+                </Button>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+    </PageLayout>
   );
 }
-
