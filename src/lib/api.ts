@@ -3829,4 +3829,19 @@ export const detectionApi = {
       method: 'POST',
       body: JSON.stringify({ setupTokenId, sellerId })
     }),
+
+  getRecoveryReconciliation: (recoveryId: string, tenantSlug?: string) => {
+    return requestJson<{ success: boolean; data: any }>(
+      `/api/recoveries/${recoveryId}/reconciliation${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`
+    );
+  },
+
+  runRecoveryReconciliation: (recoveryId: string, provider = 'quickbooks', tenantSlug?: string) => {
+    return requestJson<{ success: boolean; data: any }>(
+      `/api/recoveries/${recoveryId}/reconcile?provider=${provider}${tenantSlug ? `&tenantSlug=${tenantSlug}` : ''}`,
+      {
+        method: 'POST'
+      }
+    );
+  },
 };
