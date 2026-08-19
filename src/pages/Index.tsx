@@ -565,11 +565,11 @@ function KineticHeroSection({
               <div className="flex flex-col items-center sm:items-start w-full sm:w-auto">
                 <Button
                   onClick={onEarlyAccessCta}
-                  aria-label="Run Free Recovery Audit"
+                  aria-label="Connect Amazon"
                   className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-6 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"
                 >
                   <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  Run Free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" />
+                  Connect Amazon <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
 
@@ -626,7 +626,7 @@ export default function Index() {
     navigate(sourceType === 'sp_api' ? '/audit' : '/data-upload');
   };
 
-  const primaryCtaLabel = "Run Free Recovery Audit";
+  const primaryCtaLabel = "Connect Amazon";
 
   return (
     <div className="min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
@@ -724,7 +724,7 @@ export default function Index() {
                       className="landing-pressable group relative h-16 w-full rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_40px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow,transform] duration-150 max-md:shadow-none sm:w-auto"
                     >
                       <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      Run Free Recovery Audit
+                      Connect Amazon
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </div>
