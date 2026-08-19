@@ -433,7 +433,7 @@ export function Sidebar({
       )}>
         {!isCollapsed && (
           <div className="px-3 pb-2 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/25">
-            Account
+            More
           </div>
         )}
         <div className="space-y-0.5">
