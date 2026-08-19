@@ -1391,7 +1391,7 @@ export const api = {
     return requestBlob(`/api/disputes/${encodeURIComponent(id)}/brief?tenantSlug=${encodeURIComponent(tenantSlug)}`);
   },
 
-  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive', tenantSlug?: string) => {
+  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive' | 'quickbooks' | 'xero', tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for connectDocs");
     const frontendUrl = getFrontendUrl();
     const slug = tenantSlug;
@@ -1996,7 +1996,7 @@ export const api = {
       status: 'disconnected';
     };
   }>(`/api/evidence/sources/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-  disconnectDocsProvider: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') =>
+  disconnectDocsProvider: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'quickbooks' | 'xero') =>
     requestJson<any>(`/api/v1/integrations/${encodeURIComponent(provider)}/disconnect`, { method: 'POST' }),
 
   getMatchingMetrics: (days?: number) =>
@@ -3188,17 +3188,19 @@ export const api = {
   },
 
   // Agent 10: Notifications endpoints
-  getNotifications: (params?: { userId?: string; unreadOnly?: boolean; limit?: number }, tenantSlug?: string) => {
+  getNotifications: (params?: { userId?: string; unreadOnly?: boolean; unread_only?: boolean; limit?: number; offset?: number }, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getNotifications");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
-    if (params?.unreadOnly) queryParams.append('unreadOnly', 'true');
+    if (params?.unreadOnly || params?.unread_only) queryParams.append('unreadOnly', 'true');
     if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.offset) queryParams.append('offset', params.offset.toString());
     queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
-      notifications: Array<{
+      data?: any[];
+      notifications?: Array<{
         id: string;
         type: string;
         title: string;
@@ -3206,7 +3208,8 @@ export const api = {
         read: boolean;
         created_at: string;
       }>;
-      total: number;
+      total?: number;
+      meta?: any;
     }>(`/api/notifications?${query}`);
   },
   markNotificationRead: (notificationId: string, tenantSlug?: string) => {
@@ -3736,16 +3739,7 @@ export const detectionApi = {
     }>(`/api/detections/deadlines${query ? `?${query}` : ''}`);
   },
 
-  // Notifications
-  getNotifications: (params?: { unread_only?: boolean; limit?: number; offset?: number }, tenantSlug?: string) => {
-    if (!tenantSlug) throw new Error("tenantSlug required for getNotifications");
-    const query = new URLSearchParams();
-    if (params?.unread_only) query.append('unread_only', 'true');
-    if (params?.limit) query.append('limit', params.limit.toString());
-    if (params?.offset) query.append('offset', params.offset.toString());
-    query.append('tenantSlug', tenantSlug);
-    return requestJson<{ success: boolean; data: any[]; meta: any }>(`/api/notifications?${query.toString()}`);
-  },
+
   markNotificationsRead: (notificationIds: string[]) =>
     requestJson<{ success: boolean; data: any[] }>('/api/notifications/mark-read', {
       method: 'POST',

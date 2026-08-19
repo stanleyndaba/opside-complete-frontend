@@ -375,6 +375,8 @@ export default function IntegrationsHub() {
         : provider === 'slack' ? 'Slack'
         : provider === 'adobe_sign' ? 'Adobe Sign'
         : provider === 'onedrive' ? 'OneDrive'
+        : provider === 'quickbooks' ? 'QuickBooks'
+        : provider === 'xero' ? 'Xero'
           : 'Outlook';
     try {
       setProviderLoading(provider);
@@ -412,6 +414,8 @@ export default function IntegrationsHub() {
         : provider === 'slack' ? 'Slack'
         : provider === 'adobe_sign' ? 'Adobe Sign'
         : provider === 'onedrive' ? 'OneDrive'
+        : provider === 'quickbooks' ? 'QuickBooks'
+        : provider === 'xero' ? 'Xero'
           : 'Outlook';
           
     try {
@@ -427,7 +431,7 @@ export default function IntegrationsHub() {
         return;
       }
 
-      const supportsDirectProviderDisconnect = provider === 'gmail' || provider === 'outlook' || provider === 'gdrive' || provider === 'dropbox';
+      const supportsDirectProviderDisconnect = provider === 'gmail' || provider === 'outlook' || provider === 'gdrive' || provider === 'dropbox' || provider === 'quickbooks' || provider === 'xero';
       const res = sourceId
         ? await api.disconnectEvidenceSource(sourceId)
         : supportsDirectProviderDisconnect
@@ -638,6 +642,8 @@ export default function IntegrationsHub() {
     const outlookConnected = searchParams.get('outlook_connected');
     const gdriveConnected = searchParams.get('gdrive_connected');
     const dropboxConnected = searchParams.get('dropbox_connected');
+    const quickbooksConnected = searchParams.get('quickbooks_connected');
+    const xeroConnected = searchParams.get('xero_connected');
     const email = searchParams.get('email');
     const error = searchParams.get('error');
     const message = searchParams.get('message');
@@ -680,11 +686,13 @@ export default function IntegrationsHub() {
     }
 
     // Show success notification if provider was just connected
-    if (gmailConnected === 'true' || outlookConnected === 'true' || gdriveConnected === 'true' || dropboxConnected === 'true') {
+    if (gmailConnected === 'true' || outlookConnected === 'true' || gdriveConnected === 'true' || dropboxConnected === 'true' || quickbooksConnected === 'true' || xeroConnected === 'true') {
       const providerName = gmailConnected === 'true' ? 'Gmail'
         : outlookConnected === 'true' ? 'Outlook'
           : gdriveConnected === 'true' ? 'Google Drive'
             : dropboxConnected === 'true' ? 'Dropbox'
+            : quickbooksConnected === 'true' ? 'QuickBooks'
+            : xeroConnected === 'true' ? 'Xero'
               : 'provider';
 
       toast({
@@ -715,7 +723,7 @@ export default function IntegrationsHub() {
     }
 
     // Show generic success message if success parameter is present
-    if (success && !amazonConnected && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected) {
+    if (success && !amazonConnected && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected && !quickbooksConnected && !xeroConnected) {
       toast({
         title: 'Connection Successful',
         description: 'Your account has been connected successfully.',
