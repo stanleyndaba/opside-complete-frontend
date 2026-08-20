@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Clock, ExternalLink, Send } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { motion } from 'framer-motion';
 import { api, type ProductUpdateRecord } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
@@ -97,180 +96,48 @@ export default function WhatsNew() {
 
   return (
     <PageLayout title="What's New">
-      <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] relative overflow-hidden">
-        <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
-
-        <div className="relative z-10 container max-w-4xl mx-auto px-6 py-12">
-          {/* Professional Header */}
-          <motion.header
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-20 border-b border-white/5 pb-12"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-px w-8 bg-white/20" />
-              <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Updates & Releases</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-sans font-bold text-white mb-4 tracking-tight">
-              Product <span className="text-white/40">Updates</span>
-            </h1>
-            <p className="text-gray-400 max-w-xl text-lg leading-relaxed font-sans font-bold tracking-tight">
-              Stay informed about the latest enhancements, feature releases, and platform improvements designed to maximize your FBA recoveries.
-            </p>
-          </motion.header>
-
-          {/* Timeline Feed */}
-          <div className="relative">
-            {/* The vertical connector line */}
-            <div className="absolute left-[11px] top-4 bottom-4 w-px bg-gradient-to-b from-[#C7DAFF] via-[#E5E7EB] to-transparent hidden md:block" />
-
-            {loading && (
-              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8 text-sm font-sans font-bold tracking-tight text-white/50">
-                Loading published product updates...
-              </div>
-            )}
-
-            {!loading && error && (
-              <div className="rounded-2xl border border-red-400/20 bg-red-500/[0.06] p-8 text-sm font-sans font-bold tracking-tight text-red-100/80">
-                {error}
-              </div>
-            )}
-
-            {!loading && !error && orderedMonths.length === 0 && (
-              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                  No published updates yet
-                </div>
-                <p className="mt-3 max-w-xl text-sm font-sans font-bold leading-6 tracking-tight text-gray-400">
-                  Product rollouts will appear here after they are published as real Margin update records.
-                </p>
-              </div>
-            )}
-
-            {!loading && !error && orderedMonths.map((month) => (
-              <section key={month} className="mb-16">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  className="flex items-center gap-6 mb-8 md:ml-[32px]"
-                >
-                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full">{month}</span>
-                  <div className="h-px flex-1 bg-white/5" />
-                </motion.div>
-
-                <div className="space-y-12">
-                  {groups[month].map((update, idx) => {
-                    const ctaHref = resolveCtaHref(update.cta_href, activeSlug);
-                    return (
-                    <motion.div
-                      key={update.id}
-                      id={update.slug}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      className="relative md:pl-[64px]"
-                    >
-                      {/* Timeline Marker */}
-                      <div className="absolute left-[6px] top-6 w-2.5 h-2.5 rounded-full bg-white border border-[#D8E7FF] hidden md:flex items-center justify-center">
-                        <div className="w-1 h-1 rounded-full bg-[#0052FF]" />
-                      </div>
-
-                      <div className="group relative bg-[#0c0c0c] border border-white/5 rounded-2xl p-8 hover:border-white/20 transition-all duration-500">
-                        {/* Status Line */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                          <div className="flex items-center gap-4">
-                            {update.tag && (
-                              <span className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight rounded">
-                                {update.tag}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-gray-500 tracking-tight">
-                            <Clock className="h-3 w-3" />
-                            {formatUpdateDate(update.published_at || update.created_at)}
-                          </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="max-w-2xl">
-                          <h3 className="text-2xl font-medium text-white mb-4 tracking-tight group-hover:text-white/80 transition-colors">
-                            {update.title}
-                          </h3>
-                          <p className="text-gray-400 text-sm leading-relaxed mb-6 font-sans font-bold tracking-tight">
-                            {update.summary}
-                          </p>
-
-                          {update.highlights.length > 0 && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                              {update.highlights.map((item, index) => (
-                                <div key={index} className="flex items-start gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl group/item hover:bg-white/[0.04] transition-colors">
-                                  <div className="mt-1 h-1.5 w-1.5 rounded-full bg-white/30 group-hover/item:bg-white/60 transition-colors" />
-                                  <span className="text-xs text-gray-400 leading-snug">{item}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {update.body && (
-                            <p className="mb-8 max-w-2xl text-xs leading-6 text-gray-500 font-sans font-bold tracking-tight">
-                              {update.body}
-                            </p>
-                          )}
-
-                          {update.cta_text && ctaHref && (
-                            <a
-                              href={ctaHref}
-                              className="inline-flex items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all duration-300 hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
-                            >
-                              {update.cta_text}
-                              {/^https?:\/\//i.test(ctaHref) ? <ExternalLink className="h-3 w-3" /> : <ArrowRight className="h-3 w-3" />}
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                  })}
-                </div>
-              </section>
-            ))}
+      <div className="min-h-screen bg-[#FAFAF7] text-[#111827]">
+        <div className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
+          <div className="mx-auto max-w-[980px]">
+            <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Product record</p>
+            <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">What’s new</h1>
+            <p className="mt-2.5 max-w-2xl text-[14px] leading-6 text-[#66737F]">Published changes to the Margin workspace, including new controls, recovery improvements, and operational refinements.</p>
           </div>
-
-          {/* Support & Feedback Section */}
-          <motion.footer
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="mt-20 pt-12 border-t border-white/5 text-center"
-          >
-            {/* Support Button */}
-            <div className="flex flex-col items-center gap-3 mb-10">
-              <a
-                href="mailto:support@margin-finance.com"
-                className="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-[#0052FF] border border-[#0052FF] hover:bg-[#0047DD] hover:border-[#0047DD] transition-all duration-300 text-sm font-sans font-bold text-[#FFFFFF] uppercase tracking-tight shadow-[0_12px_28px_rgba(0,82,255,0.14)]"
-              >
-                Support
-              </a>
-              <span className="text-[9px] font-sans font-bold text-white/20 tracking-tight uppercase">12 minute response time</span>
-            </div>
-
-            <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 bg-white/[0.02] border border-white/5 rounded-full">
-              <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Feedback Channel Open</span>
-            </div>
-            <div className="max-w-xl mx-auto">
-              <div className="relative group">
-                <input
-                  type="text"
-                  placeholder="Changelogs and user feature request"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-300 pr-12 font-sans font-bold tracking-tight"
-                />
-                <button className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-[#0052FF] text-[#FFFFFF] hover:bg-[#0047DD] transition-all duration-300">
-                  <Send className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </motion.footer>
         </div>
+
+        <main className="mx-auto max-w-[980px] px-4 py-7 sm:px-6 lg:px-8">
+          {loading ? <div className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 text-[13px] text-[#66737F]">Loading published product updates.</div> : null}
+          {!loading && error ? <div className="rounded-[10px] border border-rose-200 bg-rose-50 px-5 py-4 text-[13px] text-rose-700">{error}</div> : null}
+          {!loading && !error && orderedMonths.length === 0 ? (
+            <div className="rounded-[10px] border border-[#DCE8EE] bg-white p-5"><h2 className="text-[16px] font-semibold tracking-tight text-[#182026]">No published updates yet</h2><p className="mt-1.5 text-[13px] leading-5 text-[#66737F]">New Margin release records will appear here as they are published.</p></div>
+          ) : null}
+
+          {!loading && !error ? <div className="space-y-8">{orderedMonths.map((month) => (
+            <section key={month}>
+              <div className="mb-3 flex items-center gap-3"><p className="text-[13px] font-medium tracking-tight text-[#66737F]">{month}</p><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
+              <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+                {groups[month].map((update, index) => {
+                  const ctaHref = resolveCtaHref(update.cta_href, activeSlug);
+                  return <article key={update.id} id={update.slug} className={index > 0 ? 'border-t border-[#E7EEF2] px-5 py-5 sm:px-6' : 'px-5 py-5 sm:px-6'}>
+                    <div className="flex flex-wrap items-center justify-between gap-3"><div>{update.tag ? <span className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">{update.tag}</span> : null}</div><p className="flex items-center gap-1.5 text-[12px] text-[#66737F]"><Clock className="h-3.5 w-3.5" />{formatUpdateDate(update.published_at || update.created_at)}</p></div>
+                    <h2 className="mt-4 text-[20px] font-semibold tracking-tight text-[#182026]">{update.title}</h2>
+                    <p className="mt-2 text-[14px] leading-6 text-[#66737F]">{update.summary}</p>
+                    {update.highlights.length > 0 ? <ul className="mt-4 divide-y divide-[#E7EEF2] border-t border-[#E7EEF2]">{update.highlights.map((item, itemIndex) => <li key={itemIndex} className="py-2.5 text-[13px] leading-5 text-[#4D5B66]">{item}</li>)}</ul> : null}
+                    {update.body ? <p className="mt-4 text-[13px] leading-6 text-[#66737F]">{update.body}</p> : null}
+                    {update.cta_text && ctaHref ? <a href={ctaHref} className="mt-4 inline-flex h-9 items-center gap-2 rounded-md border border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:bg-[#F7FAFC]">{update.cta_text}{/^https?:\/\//i.test(ctaHref) ? <ExternalLink className="h-3.5 w-3.5" /> : <ArrowRight className="h-3.5 w-3.5" />}</a> : null}
+                  </article>;
+                })}
+              </div>
+            </section>
+          ))}</div> : null}
+        </main>
+
+        <footer className="mx-auto max-w-[980px] px-4 pb-10 sm:px-6 lg:px-8">
+          <div className="border-t border-[#DCE8EE] pt-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[13px] font-medium tracking-tight text-[#182026]">Need help with a change?</p><p className="mt-1 text-[13px] text-[#66737F]">Contact support with the update and the workspace task you need help with.</p></div><a href="mailto:support@margin-finance.com" className="inline-flex h-9 items-center justify-center rounded-md border border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]">Contact support</a></div>
+            <div className="mt-5 flex items-center rounded-md border border-[#DCE8EE] bg-white"><input type="text" placeholder="Share feedback on a product update" className="h-10 min-w-0 flex-1 bg-transparent px-3 text-[13px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A97A2]" /><button type="button" aria-label="Send feedback" className="mr-1.5 flex h-7 w-7 items-center justify-center rounded-md text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#0B74DE]"><Send className="h-4 w-4" /></button></div>
+          </div>
+        </footer>
       </div>
     </PageLayout>
   );
