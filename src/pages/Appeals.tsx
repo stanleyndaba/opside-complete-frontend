@@ -810,8 +810,8 @@ export default function Appeals() {
                   </div>
                 </SheetHeader>
 
-                <div className="flex-1 overflow-y-auto p-5 sm:p-6">
-                  <div className="space-y-10">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6">
+                  <div className="space-y-8 pb-4">
                     {/* Amazon Response Analysis */}
                     <div>
                       <h3 className="text-[11px] font-bold tracking-tight text-[#9CA3AF] mb-4">Amazon Response Analysis</h3>
@@ -847,8 +847,55 @@ export default function Appeals() {
                       </div>
                     </div>
 
+                    {/* Complete review basis and recorded case truth */}
+                    <section className="border-t border-[#E7EEF2] pt-6">
+                      <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Review basis and case record</h3>
+                      <p className="mt-1 text-[12px] leading-5 text-[#66737F]">The recorded response, evidence state, and identifiers Margin uses to decide whether an appeal can move forward.</p>
+
+                      <div className="mt-4 divide-y divide-[#E7EEF2] rounded-md border border-[#DCE8EE] bg-white">
+                        <div className="p-4">
+                          <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Review basis</p>
+                          <p className="mt-1.5 text-[13px] leading-5 text-[#182026]">{selectedCase.policyAngle}</p>
+                        </div>
+                        <div className="grid grid-cols-1 divide-y divide-[#E7EEF2] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+                          <div className="p-4">
+                            <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Amazon case ID</p>
+                            <p className="mt-1 text-[13px] font-medium text-[#182026]">{selectedCase.amazon_case_id || 'Not available'}</p>
+                          </div>
+                          <div className="p-4">
+                            <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Recorded response</p>
+                            <p className="mt-1 text-[13px] font-medium text-[#182026]">{selectedCase.updated_at ? `Updated ${formatDistanceToNow(new Date(selectedCase.updated_at), { addSuffix: true })}` : 'Update pending'}</p>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 divide-y divide-[#E7EEF2] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                          <div className="p-4">
+                            <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Order</p>
+                            <p className="mt-1 break-words text-[13px] font-medium text-[#182026]">{selectedCase.order_id || 'Not available'}</p>
+                          </div>
+                          <div className="p-4">
+                            <p className="text-[12px] font-medium tracking-tight text-[#66737F]">SKU</p>
+                            <p className="mt-1 break-words text-[13px] font-medium text-[#182026]">{selectedCase.sku || 'Not available'}</p>
+                          </div>
+                          <div className="p-4">
+                            <p className="text-[12px] font-medium tracking-tight text-[#66737F]">ASIN</p>
+                            <p className="mt-1 break-words text-[13px] font-medium text-[#182026]">{selectedCase.asin || 'Not available'}</p>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 divide-y divide-[#E7EEF2] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+                          <div className="p-4">
+                            <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Filing and response truth</p>
+                            <p className="mt-1 text-[13px] leading-5 text-[#182026]">{hasFiledTruth(selectedCase) ? 'Filing recorded' : 'Filing not recorded'} · {hasApprovalTruth(selectedCase) ? 'Approval recorded' : 'No approval recorded'} · {hasRejectionTruth(selectedCase) ? 'Rejection recorded' : 'No rejection recorded'}</p>
+                          </div>
+                          <div className="p-4">
+                            <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Evidence state</p>
+                            <p className="mt-1 text-[13px] leading-5 text-[#182026]">{Math.max(Number(selectedCase.matched_document_count || 0), 0)} linked document{Math.max(Number(selectedCase.matched_document_count || 0), 0) === 1 ? '' : 's'} · {label(selectedCase.proof_status || 'not available')}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
                     {/* Resubmission Readiness */}
-                    <div>
+                    <section className="border-t border-[#E7EEF2] pt-6">
                       <h3 className="text-[11px] font-bold tracking-tight text-[#9CA3AF] mb-4">Resubmission Readiness</h3>
                       <div className="space-y-6">
                         <div className="flex items-start gap-4">
@@ -882,11 +929,23 @@ export default function Appeals() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </section>
+
+                    <section className="border-t border-[#E7EEF2] pt-6">
+                      <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Decision record</h3>
+                      <div className="mt-4 rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-4">
+                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Next step</p>
+                        <p className="mt-1.5 text-[14px] font-medium leading-5 text-[#182026]">{selectedCase.nextStep}</p>
+                        <div className="mt-4 border-t border-[#E7EEF2] pt-4">
+                          <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Evidence rebuild guidance</p>
+                          <p className="mt-1.5 text-[13px] leading-5 text-[#4D5B66]">{evidenceRebuildSummary(selectedCase)}</p>
+                        </div>
+                      </div>
+                    </section>
                   </div>
                 </div>
 
-                <div className="border-t border-[#DCE8EE] bg-[#FAFAF7] p-5 sm:p-6">
+                <div className="shrink-0 border-t border-[#DCE8EE] bg-[#FAFAF7] p-5 sm:p-6">
                   <div className="flex flex-col gap-3">
                     <Button className="h-10 w-full rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">
                       Initiate appeal review
