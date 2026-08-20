@@ -497,7 +497,7 @@ export function Sidebar({
                 <LogOut className="h-4 w-4 text-[#182026]" strokeWidth={1.75} />
               </div>
               <div>
-                <DialogTitle className="text-[20px] font-semibold tracking-tight text-[#182026]">Sign out</DialogTitle>
+                <DialogTitle className="font-lora text-[21px] font-normal tracking-tight text-[#182026]">Sign out</DialogTitle>
                 <DialogDescription className="mt-0.5 text-[12px] font-medium tracking-tight text-[#66737F]">Session control</DialogDescription>
               </div>
             </div>
@@ -507,7 +507,7 @@ export function Sidebar({
           </div>
           <DialogFooter className="flex gap-3 border-t border-[#DCE8EE] bg-[#FAFAF7] px-5 py-4 sm:justify-end sm:px-6">
             <Button variant="outline" onClick={() => setSignOutOpen(false)} className="h-9 rounded-md border-[#DCE8EE] bg-white px-4 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">Cancel</Button>
-            <Button onClick={handleSignOut} className="h-9 rounded-md bg-[#182026] px-4 text-[13px] font-medium tracking-tight text-white hover:bg-[#111827]">Sign out</Button>
+            <Button onClick={handleSignOut} className="h-9 rounded-md border border-[#D1D9DE] bg-[#E9EEF1] px-4 text-[13px] font-medium tracking-tight text-[#182026] hover:bg-[#DDE5E9] hover:text-[#111827]">Sign out</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
