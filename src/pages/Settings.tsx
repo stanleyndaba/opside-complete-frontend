@@ -251,10 +251,10 @@ const Settings = () => {
     return (
       <PageLayout title="Settings" noPadding>
         <div className="flex h-screen items-center justify-center bg-[#FAFAF7]">
-          <div className="max-w-md border border-[#E5E7EB] bg-white p-10 text-center shadow-sm">
+          <div className="max-w-md border border-[#DCE8EE] bg-white p-10 text-center shadow-sm">
             <Shield className="mx-auto mb-4 h-10 w-10 text-[#9CA3AF]" />
-            <h1 className="font-lora text-2xl font-normal tracking-tight text-[#111827]">Workspace Required</h1>
-            <p className="mt-3 text-sm text-[#6B7280]">
+            <h1 className="font-lora text-2xl font-normal tracking-tight text-[#182026]">Workspace Required</h1>
+            <p className="mt-3 text-sm text-[#66737F]">
               Account settings only load inside an active workspace. Please select a marketplace to continue.
             </p>
           </div>
@@ -265,102 +265,70 @@ const Settings = () => {
 
   return (
     <PageLayout title="Settings" noPadding>
-      <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
-        {/* Forensic Identity Header */}
-        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
-          <div className="mx-auto max-w-5xl">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <div className="h-px w-6 bg-[#0B74DE]" />
-                <span className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Workspace Configuration</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="outline" className="bg-[#F3F5F4] text-[#6B7280] border-transparent font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
-                  Status: Active
-                </Badge>
-              </div>
+      <div className="min-h-screen bg-[#FAFAF7] text-[#182026]">
+        <div className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
+          <div className="mx-auto flex max-w-[1180px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Account control</p>
+              <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Settings</h1>
+              <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Manage workspace identity, connected services, filing authority, support, and account access from one controlled record.</p>
             </div>
-            <h1 className="mb-4 font-lora text-[32px] font-normal leading-tight tracking-tight text-[#111827]">
-              Settings
-            </h1>
-            <p className="max-w-2xl text-[15px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
-              Manage your workspace identity, filing authority, and account security. 
-              Changes here are reflected across your forensic auditing environment.
-            </p>
+            <Badge variant="outline" className="w-fit rounded-md border-[#DCE8EE] bg-white px-2.5 py-1 text-[12px] font-medium tracking-tight text-[#4D5B66]">Workspace active</Badge>
           </div>
         </div>
 
-        {/* Settings Navigation Rail */}
-        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8">
-          <div className="mx-auto flex max-w-5xl items-center gap-8">
-            <button className="border-b-2 border-[#0B74DE] py-4 text-[11px] font-bold uppercase tracking-tight text-[#111827]">
-              Account Identity
-            </button>
-            <button className="py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF] hover:text-[#6B7280] transition-colors">
-              Workspace
-            </button>
-            <button className="py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF] hover:text-[#6B7280] transition-colors">
-              Security
-            </button>
-            <button className="py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF] hover:text-[#6B7280] transition-colors">
-              Billing
-            </button>
-          </div>
-        </div>
-
-        {/* Main Settings Content */}
-        <div className="mx-auto max-w-5xl px-8 py-12">
-          <div className="space-y-12">
+        <main className="mx-auto max-w-[1180px] px-4 py-7 sm:px-6 lg:px-8">
+          <div className="space-y-8">
             
             {/* Section: Account Identity */}
             <section>
-              <div className="mb-6 flex items-end justify-between">
+              <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Identity & Access</h2>
-                  <p className="mt-1 text-[13px] text-[#6B7280]">Authenticated user and workspace role information.</p>
+                  <h2 className="text-[13px] font-medium tracking-tight text-[#66737F]">Identity & Access</h2>
+                  <p className="mt-1 text-[13px] text-[#66737F]">Your account identity and access role in this workspace.</p>
                 </div>
               </div>
               
-              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
-                <div className="divide-y divide-[#F3F5F4]">
-                  <div className="flex items-center justify-between p-6">
+              <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+                <div className="divide-y divide-[#E7EEF2]">
+                  <div className="flex items-center justify-between p-4 sm:p-5">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#F7FAFC] text-[#4D5B66]">
                         <User className="h-5 w-5" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">User Name</p>
-                        <p className="text-[14px] font-semibold text-[#111827]">{sellerProfile.name || 'Not set'}</p>
+                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">User Name</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{sellerProfile.name || 'Not set'}</p>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="text-[11px] font-bold text-[#0B74DE] hover:bg-[#F3F5F4]">Edit</Button>
+                    <Button variant="ghost" size="sm" className="h-9 text-[13px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]">Edit</Button>
                   </div>
 
-                  <div className="flex items-center justify-between p-6">
+                  <div className="flex items-center justify-between p-4 sm:p-5">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#F7FAFC] text-[#4D5B66]">
                         <SettingsIcon className="h-5 w-5" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Email Address</p>
-                        <p className="text-[14px] font-semibold text-[#111827]">{sellerProfile.email || 'Not available'}</p>
+                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Email Address</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{sellerProfile.email || 'Not available'}</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 border-transparent font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">Verified</Badge>
+                    <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F6FAFE] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#0B74DE]">Verified</Badge>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#F3F5F4]">
-                    <div className="p-6">
-                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">User ID</p>
-                      <p className="mt-1 text-[13px] font-semibold text-[#111827] break-all">{sellerProfile.id || 'Not available'}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 divide-y divide-[#E7EEF2] md:divide-x md:divide-y-0">
+                    <div className="p-4 sm:p-5">
+                      <p className="text-[12px] font-medium tracking-tight text-[#66737F]">User ID</p>
+                      <p className="mt-1 text-[13px] font-semibold text-[#182026] break-all">{sellerProfile.id || 'Not available'}</p>
                     </div>
-                    <div className="p-6">
-                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Workspace Role</p>
-                      <p className="mt-1 text-[14px] font-semibold text-[#111827]">{sellerProfile.role || 'Member'}</p>
+                    <div className="p-4 sm:p-5">
+                      <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Workspace Role</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#182026]">{sellerProfile.role || 'Member'}</p>
                     </div>
-                    <div className="p-6">
-                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Last Login</p>
-                      <p className="mt-1 text-[14px] font-semibold text-[#111827]">{formatDate(sellerProfile.last_login)}</p>
+                    <div className="p-4 sm:p-5">
+                      <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Last Login</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#182026]">{formatDate(sellerProfile.last_login)}</p>
                     </div>
                   </div>
                 </div>
@@ -369,72 +337,72 @@ const Settings = () => {
 
             {/* Section: Platform Connectivity */}
             <section>
-              <div className="mb-6 flex items-end justify-between">
+              <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Platform Connectivity</h2>
-                  <p className="mt-1 text-[13px] text-[#6B7280]">Status of external data sources and billing connections.</p>
+                  <h2 className="text-[13px] font-medium tracking-tight text-[#66737F]">Platform Connectivity</h2>
+                  <p className="mt-1 text-[13px] text-[#66737F]">The account connections that keep this workspace operating.</p>
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="h-8 border-[#E5E7EB] text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+                  className="h-8 border-[#DCE8EE] text-[11px] font-bold tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]"
                   onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/integrations-hub'))}
                 >
                   Manage Integrations
                 </Button>
               </div>
 
-              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
-                <div className="divide-y divide-[#F3F5F4]">
-                  <div className="flex items-center justify-between p-6">
+              <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+                <div className="divide-y divide-[#E7EEF2]">
+                  <div className="flex items-center justify-between p-4 sm:p-5">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#F7FAFC] text-[#4D5B66]">
                         <Store className="h-5 w-5" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Amazon SP-API</p>
-                        <p className="text-[14px] font-semibold text-[#111827]">{isAmazonConnected ? 'Linked' : 'Not connected'}</p>
+                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Amazon Seller Central</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{isAmazonConnected ? 'Linked' : 'Not connected'}</p>
                       </div>
                     </div>
                     <Badge variant="outline" className={cn(
-                      "font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight border-transparent",
-                      isAmazonConnected ? "bg-emerald-500/10 text-emerald-700" : "bg-[#F3F5F4] text-[#6B7280]"
+                      "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
+                      isAmazonConnected ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]" : "border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]"
                     )}>
                       {isAmazonConnected ? 'Active' : 'Required'}
                     </Badge>
                   </div>
 
-                  <div className="flex items-center justify-between p-6">
+                  <div className="flex items-center justify-between p-4 sm:p-5">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F3F5F4] text-[#4B5563]">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#F7FAFC] text-[#4D5B66]">
                         <CreditCard className="h-5 w-5" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">PayPal Billing</p>
-                        <p className="text-[14px] font-semibold text-[#111827]">{paypalActive ? 'Connected' : 'Not available'}</p>
+                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">PayPal Billing</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{paypalActive ? 'Connected' : 'Not available'}</p>
                       </div>
                     </div>
                     <Badge variant="outline" className={cn(
-                      "font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight border-transparent",
-                      paypalActive ? "bg-emerald-500/10 text-emerald-700" : "bg-[#F3F5F4] text-[#6B7280]"
+                      "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
+                      paypalActive ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]" : "border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]"
                     )}>
                       {paypalActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[#F3F5F4]">
-                    <div className="p-6">
-                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Last Ingest</p>
-                      <p className="mt-1 text-[14px] font-semibold text-[#111827]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 divide-y divide-[#E7EEF2] md:divide-x md:divide-y-0">
+                    <div className="p-4 sm:p-5">
+                      <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Last Ingest</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#182026]">
                         {sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
                       </p>
                     </div>
-                    <div className="p-6">
-                      <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Linked Marketplaces</p>
+                    <div className="p-4 sm:p-5">
+                      <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Linked Marketplaces</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {linkedMarketplaces.length > 0 ? (
                           linkedMarketplaces.map((mId) => (
-                            <Badge key={mId} variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-[#E5E7EB] font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
+                            <Badge key={mId} variant="outline" className="bg-[#F7FAFC] text-[#4D5B66] border-[#DCE8EE] font-bold text-[10px] px-2 py-0.5 rounded-md tracking-tight">
                               {marketplaceNames[mId]?.flag || 'GL'} · {marketplaceNames[mId]?.name || mId}
                             </Badge>
                           ))
@@ -451,19 +419,19 @@ const Settings = () => {
             {/* Section: Filing Authority */}
             <section>
               <div className="mb-6">
-                <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Filing Authority</h2>
-                <p className="mt-1 text-[13px] text-[#6B7280]">Control how cases are submitted to Amazon Support.</p>
+                <h2 className="text-[13px] font-medium tracking-tight text-[#66737F]">Filing Authority</h2>
+                <p className="mt-1 text-[13px] text-[#66737F]">Choose whether eligible cases wait for your approval or can be submitted once every filing gate is satisfied.</p>
               </div>
 
-              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
-                <div className="p-6">
+              <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+                <div className="p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-8">
                     <div className="max-w-xl">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-[15px] font-semibold text-[#111827]">Auto-File Cases</h3>
+                        <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Auto-file eligible cases</h3>
                         {savingAutoFile && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#0B74DE]" />}
                       </div>
-                      <p className="text-[13px] leading-relaxed text-[#6B7280]">
+                      <p className="text-[13px] leading-relaxed text-[#66737F]">
                         {autoFileEnabled
                           ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
                           : 'Cases will wait for your manual review and approval before filing.'}
@@ -471,10 +439,10 @@ const Settings = () => {
                       <div className="mt-4 flex items-center gap-3">
                         <div className={cn(
                           "h-2 w-2 rounded-full",
-                          autoFileEnabled ? "bg-emerald-500" : "bg-[#9CA3AF]"
+                          autoFileEnabled ? "bg-[#0B74DE]" : "bg-[#9CA3AF]"
                         )} />
-                        <span className="text-[11px] font-bold uppercase tracking-tight text-[#6B7280]">
-                          {autoFileEnabled ? 'Authority: Delegated' : 'Authority: Manual Approval'}
+                        <span className="text-[12px] font-medium tracking-tight text-[#4D5B66]">
+                          {autoFileEnabled ? 'Seller authority: delegated when gates are clear' : 'Seller authority: manual approval required'}
                         </span>
                       </div>
                     </div>
@@ -485,26 +453,26 @@ const Settings = () => {
                         disabled={loadingAutoFile || savingAutoFile}
                         className="data-[state=checked]:bg-[#0B74DE]"
                       />
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
-                        {savingAutoFile ? 'Updating...' : autoFileEnabled ? 'Enabled' : 'Disabled'}
+                      <span className="text-[12px] font-medium tracking-tight text-[#4D5B66]">
+                        {savingAutoFile ? 'Updating' : autoFileEnabled ? 'On' : 'Off'}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Submission Gate Status - Restored detailed feedback */}
-                <div className="border-t border-[#F3F5F4] bg-[#F9FAFB] p-6">
+                <div className="border-t border-[#E7EEF2] bg-[#F7FAFC] p-4 sm:p-5">
                   <div className="flex items-center gap-2 mb-3">
-                    <Shield className="h-3.5 w-3.5 text-[#9CA3AF]" />
-                    <span className="text-[11px] font-bold uppercase tracking-tight text-[#6B7280]">Submission Gate Status</span>
+                    <Shield className="h-3.5 w-3.5 text-[#66737F]" />
+                    <span className="text-[13px] font-medium tracking-tight text-[#4D5B66]">Submission gate status</span>
                   </div>
-                  <p className="text-[13px] text-[#4B5563] leading-relaxed">
+                  <p className="text-[13px] text-[#4D5B66] leading-relaxed">
                     {autoFileGateCopy}
                   </p>
                   {autoFileGateMeta && (
                     <div className="mt-3 flex items-center gap-2">
                       <Activity className="h-3 w-3 text-[#0B74DE]" />
-                      <p className="text-[11px] font-bold uppercase tracking-tight text-[#0B74DE]">
+                      <p className="text-[12px] font-medium tracking-tight text-[#0B74DE]">
                         {autoFileGateMeta}
                       </p>
                     </div>
@@ -522,34 +490,33 @@ const Settings = () => {
             {/* Section: Support & Plan */}
             <section>
               <div className="mb-6">
-                <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Workspace Support</h2>
-                <p className="mt-1 text-[13px] text-[#6B7280]">Your current plan limits and direct support channels.</p>
+                <h2 className="text-[13px] font-medium tracking-tight text-[#66737F]">Workspace Support</h2>
+                <p className="mt-1 text-[13px] text-[#66737F]">Your current support level and the direct route for help.</p>
               </div>
 
-              <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm divide-y divide-[#F3F5F4]">
-                <div className="p-6 flex items-center justify-between">
+              <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] divide-y divide-[#E7EEF2]">
+                <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Current Support Tier</p>
-                    <p className="mt-1 text-[15px] font-semibold text-[#111827]">{supportTier}</p>
+                    <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Current Support Tier</p>
+                    <p className="mt-1 text-[15px] font-semibold text-[#182026]">{supportTier}</p>
                   </div>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="h-9 border-[#E5E7EB] text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
+                    className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]"
                     onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
                   >
                     Open Support Channel
                   </Button>
                 </div>
                 
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-amber-600 mb-2">
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-[#0B74DE] mb-2">
                     <InfoIcon className="h-3.5 w-3.5" />
-                    <span className="text-[11px] font-bold uppercase tracking-tight">Plan Context</span>
+                    <span className="text-[11px] font-bold tracking-tight">Plan Context</span>
                   </div>
-                  <p className="text-[13px] text-[#6B7280] leading-relaxed">
-                    Support guidance is based on your current tenant plan limits. 
-                    For direct forensic help with a specific case, please use the Support channel above.
+                  <p className="text-[13px] text-[#66737F] leading-relaxed">
+                    Support guidance reflects the plan available to this workspace. Use the support route above when you need help with a specific case or account task.
                   </p>
                 </div>
               </div>
@@ -557,14 +524,14 @@ const Settings = () => {
 
             {/* Danger Zone */}
             <section className="pt-10">
-              <div className="rounded-xl border border-rose-100 bg-rose-50/30 p-8">
-                <div className="flex items-center justify-between">
+              <div className="rounded-[10px] border border-rose-200 bg-white p-4 sm:p-5">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h3 className="text-[15px] font-bold text-rose-700">Workspace Management</h3>
-                    <p className="mt-1 text-[13px] text-rose-600/80">Manage workspace lifecycle and access persistence.</p>
+                    <h3 className="text-[16px] font-semibold tracking-tight text-rose-800">Workspace management</h3>
+                    <p className="mt-1 text-[13px] text-rose-600/80">Manage workspace membership and access persistence.</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Button variant="ghost" className="text-rose-600 hover:bg-rose-100 hover:text-rose-700 text-[11px] font-bold uppercase tracking-tight">
+                    <Button variant="ghost" className="h-9 rounded-md border border-rose-200 text-[13px] font-medium tracking-tight text-rose-700 hover:bg-rose-50 hover:text-rose-800">
                       Leave Workspace
                     </Button>
                   </div>
@@ -573,16 +540,10 @@ const Settings = () => {
             </section>
 
           </div>
-        </div>
+        </main>
 
-        {/* Registry Footer */}
-        <div className="mx-auto max-w-5xl px-8 pb-20 pt-10">
-          <div className="border-t border-[#E5E7EB] pt-8 text-center">
-            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
-              <Shield className="h-3 w-3" />
-              Workspace Authority Registry • US-EAST-1
-            </div>
-          </div>
+        <div className="mx-auto max-w-[1180px] px-4 pb-10 sm:px-6 lg:px-8">
+          <p className="border-t border-[#DCE8EE] pt-5 text-[12px] leading-5 text-[#66737F]">Changes to filing authority are stored as seller intent. Margin still checks payment, evidence, and global filing gates before a case can be submitted.</p>
         </div>
       </div>
     </PageLayout>
