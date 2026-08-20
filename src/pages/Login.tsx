@@ -1530,6 +1530,19 @@ const Login = () => {
                 </Button>
                   </div>
 
+                  {mode === 'login' ? (
+                    <p className="pt-4 text-center text-[12px] leading-5 text-[#7B8790]">
+                      By signing in, you agree to our{' '}
+                      <Link to="/terms" className="text-[#4D5B66] underline decoration-[#B8C5CD] underline-offset-2 transition-colors hover:text-[#182026]">
+                        Terms
+                      </Link>{' '}
+                      and{' '}
+                      <Link to="/privacy" className="text-[#4D5B66] underline decoration-[#B8C5CD] underline-offset-2 transition-colors hover:text-[#182026]">
+                        Privacy Policy
+                      </Link>.
+                    </p>
+                  ) : null}
+
                   <div className="flex flex-col gap-4 pt-7 text-[13px] font-medium tracking-tight text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
                     <button
                       type="button"

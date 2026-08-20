@@ -3293,6 +3293,13 @@ export const api = {
       { method: 'POST' }
     );
   },
+  recordSystemSignalReceipt: (notificationId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for recordSystemSignalReceipt");
+    return requestJson<{ success: boolean; data: { receipt: 'recorded'; idempotent: boolean } }>(
+      `/api/notifications/${encodeURIComponent(notificationId)}/receipt?tenantSlug=${encodeURIComponent(tenantSlug)}`,
+      { method: 'POST' }
+    );
+  },
   getUnreadCount: (userId?: string, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getUnreadCount");
     const queryParams = new URLSearchParams();

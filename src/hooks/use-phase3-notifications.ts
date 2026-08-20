@@ -164,6 +164,27 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
             setLastEvent(notificationEvent);
             onEvent?.(notificationEvent);
 
+            // Transport receipt is only recorded after this authenticated client has parsed
+            // a canonical notification event. It is deliberately not read, acknowledgement,
+            // or action completion, and server-side writes are idempotent for replay.
+            if (notificationEvent.type === 'notification') {
+              const notificationId = String(data?.id || data?.notification_id || '').trim();
+              const systemSignalId = String(
+                data?.payload?.system_signal?.signal_id ||
+                data?.data?.system_signal?.signal_id ||
+                data?.system_signal_id ||
+                ''
+              ).trim();
+              if (notificationId && systemSignalId && tenantSlug) {
+                void api.recordSystemSignalReceipt(notificationId, tenantSlug).catch((error) => {
+                  console.warn('[Phase3 Notifications] Failed to record transport receipt', {
+                    notificationId,
+                    error: error instanceof Error ? error.message : String(error)
+                  });
+                });
+              }
+            }
+
             // Show toast notifications
             switch (notificationEvent.type) {
               case 'claim_expiring':
