@@ -39,7 +39,7 @@ const prefetchRoute = (path: string) => {
         import('@/pages/PricingAdjust');
         break;
       case '/recoveries':
-        import('@/pages/RecoveryPipelineAgent8');
+        import('@/pages/Recoveries');
         break;
       case '/filing-pipeline':
         import('@/pages/FilingPipeline');
