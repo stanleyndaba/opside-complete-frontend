@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@clerk/react';
 import { ArrowRight, CheckCircle2, Loader2, XCircle } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -7,11 +8,20 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { Button } from '@/components/ui/button';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useTenant } from '@/contexts/TenantContext';
 import { api, RecoveryWorkspaceSubscriptionStatus } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 
 type VerifyState = 'verifying' | 'subscription_pending' | 'active' | 'recover_once_active' | 'failed' | 'error';
+
+type TenantBootstrapResponse = {
+  success?: boolean;
+  tenant?: {
+    id?: string;
+    slug?: string;
+  };
+};
 
 function readLocalStorage(key: string): string | null {
   if (typeof window === 'undefined') return null;
@@ -25,9 +35,12 @@ function getReference(searchParams: URLSearchParams): string | null {
 export default function PaymentSuccess() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const tenantSlug = searchParams.get('tenant') || readLocalStorage('active_tenant_slug');
+  const returnTenantSlug = searchParams.get('tenant') || readLocalStorage('active_tenant_slug');
   const reference = useMemo(() => getReference(searchParams), [searchParams]);
   const trackedPurchaseRef = useRef(false);
+  const verificationStartedRef = useRef(false);
+  const { isLoaded: isClerkLoaded, isSignedIn, getToken, userId } = useAuth();
+  const { tenant } = useTenant();
 
   const [state, setState] = useState<VerifyState>('verifying');
   const [message, setMessage] = useState('Margin is verifying your Recovery Workspace subscription.');
@@ -44,8 +57,53 @@ export default function PaymentSuccess() {
         return;
       }
 
+      if (!isClerkLoaded) {
+        setMessage('Restoring your secure session before verifying payment.');
+        return;
+      }
+
+      if (!isSignedIn || !userId) {
+        setState('error');
+        setMessage('Sign in to the original Margin workspace to verify this payment securely.');
+        return;
+      }
+
+      setMessage('Restoring your secure workspace before verifying payment.');
+      const token = await getToken({ skipCache: true }).catch(() => null);
+      if (cancelled) return;
+
+      if (!token) {
+        setState('error');
+        setMessage('Your secure session could not be restored. Sign in and open this payment return link again.');
+        return;
+      }
+
+      localStorage.setItem('session_token', token);
+      localStorage.setItem('user_id', userId);
+      window.dispatchEvent(new Event('margin:session-updated'));
+
+      const requestedTenantSlug = searchParams.get('tenant') || readLocalStorage('active_tenant_slug') || tenant?.slug || undefined;
+      const tenantQuery = requestedTenantSlug ? `?tenantSlug=${encodeURIComponent(requestedTenantSlug)}` : '';
+      const tenantResponse = await api.get<TenantBootstrapResponse>(`/api/tenant/current${tenantQuery}`);
+      if (cancelled) return;
+
+      const resolvedTenant = tenantResponse.ok && tenantResponse.data?.success ? tenantResponse.data.tenant : null;
+      const resolvedTenantId = String(resolvedTenant?.id || '').trim();
+      const resolvedTenantSlug = String(resolvedTenant?.slug || '').trim();
+      if (!resolvedTenantId || !resolvedTenantSlug) {
+        setState('failed');
+        setMessage(tenantResponse.error || 'Margin could not restore the authorized workspace for this payment.');
+        return;
+      }
+
+      localStorage.setItem('active_tenant_id', resolvedTenantId);
+      localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
+
+      if (verificationStartedRef.current) return;
+      verificationStartedRef.current = true;
+
       if (isRecoverOnceReference) {
-        const recoverOnceResponse = await api.verifyRecoverOncePayment(reference, tenantSlug || undefined);
+        const recoverOnceResponse = await api.verifyRecoverOncePayment(reference, resolvedTenantSlug);
         if (cancelled) return;
 
         if (!recoverOnceResponse.ok || !recoverOnceResponse.data?.success) {
@@ -71,7 +129,7 @@ export default function PaymentSuccess() {
         return;
       }
 
-      const verifyResponse = await api.verifyPaystackPayment(reference, tenantSlug || undefined);
+      const verifyResponse = await api.verifyPaystackPayment(reference, resolvedTenantSlug);
       if (cancelled) return;
 
       if (!verifyResponse.ok || !verifyResponse.data?.success) {
@@ -86,8 +144,7 @@ export default function PaymentSuccess() {
       }
 
       for (let attempt = 0; attempt < 6; attempt += 1) {
-        if (!tenantSlug) break;
-        const statusResponse = await api.getRecoveryWorkspaceSubscription(tenantSlug);
+        const statusResponse = await api.getRecoveryWorkspaceSubscription(resolvedTenantSlug);
         if (cancelled) return;
 
         if (statusResponse.ok && statusResponse.data) {
@@ -129,7 +186,7 @@ export default function PaymentSuccess() {
     return () => {
       cancelled = true;
     };
-  }, [isRecoverOnceReference, reference, tenantSlug]);
+  }, [getToken, isClerkLoaded, isRecoverOnceReference, isSignedIn, reference, searchParams, tenant?.slug, userId]);
 
   usePageMeta({
     title: 'Payment Verification | Margin',
@@ -177,9 +234,10 @@ export default function PaymentSuccess() {
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
               <Button
                 onClick={() => {
-                  if (state === 'active' && tenantSlug) navigate(`/app/${tenantSlug}/dashboard`);
+                  const workspaceSlug = returnTenantSlug || tenant?.slug || readLocalStorage('active_tenant_slug');
+                  if (state === 'active' && workspaceSlug) navigate(`/app/${workspaceSlug}/dashboard`);
                   else if (state === 'recover_once_active') navigate('/audit');
-                  else if (tenantSlug) navigate(`/app/${tenantSlug}/billing`);
+                  else if (workspaceSlug) navigate(`/app/${workspaceSlug}/billing`);
                   else navigate('/audit');
                 }}
                 className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
