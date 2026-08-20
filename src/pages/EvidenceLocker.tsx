@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { 
   Search, Clock, Eye, Download, Trash2, MoreHorizontal, RefreshCw, 
-  Hexagon, AlertCircle, ArrowRight, Terminal, Database, Link2, 
+  Hexagon, AlertCircle, ArrowRight, Database, Link2,
   FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail,
   Shield, FileText, Zap, ArrowUpRight, Info, Filter, History,
   Lock, CheckCircle, ExternalLink, Paperclip, ChevronRight,
@@ -214,6 +214,11 @@ const formatBytes = (value?: number | null) => {
 };
 
 const getLockerParsingStatus = (doc: LockerDocumentRow) => getParsingTruth(doc).status;
+
+const isPdfArtifact = (doc: Pick<LockerDocumentRow, 'content_type' | 'name' | 'filename' | 'original_filename'>) => {
+  const filename = doc.original_filename || doc.filename || doc.name || '';
+  return doc.content_type === 'application/pdf' || /\.pdf$/i.test(filename);
+};
 
 function appendAuditEvent(
   current: LockerAuditEvent[],
@@ -694,189 +699,128 @@ export default function EvidenceLocker() {
 
   return (
     <PageLayout title="Evidence Locker" noPadding>
-      <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
-        {/* Forensic Identity Header */}
-        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
-          <div className="mx-auto max-w-6xl">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <div className="h-px w-6 bg-[#0B74DE]" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0B74DE]">Forensic Vault</span>
+      <div className="min-h-screen bg-[#FAFAF7] text-[#111827]">
+        <div className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
+          <div className="mx-auto max-w-[1180px]">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence control</p>
+                <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Evidence Locker</h1>
+                <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Review documents, parsed records, linked cases, and the evidence state that supports a recovery workflow.</p>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="text-[10px] font-bold uppercase tracking-tight text-[#6B7280]">
-                  {latestInventoryTimestamp
-                    ? `Last Sync ${formatDistanceToNow(new Date(latestInventoryTimestamp), { addSuffix: true })}`
-                    : 'Sync time unavailable'}
-                </div>
+              <div className="flex items-center gap-3 text-[12px] text-[#66737F]">
+                <span>{latestInventoryTimestamp ? `Updated ${formatDistanceToNow(new Date(latestInventoryTimestamp), { addSuffix: true })}` : 'Update time unavailable'}</span>
                 <Button
                   onClick={() => void refreshInventory()}
                   disabled={loading}
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
-                  className="h-8 gap-2 px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] hover:bg-[#F3F5F4] hover:text-[#111827]"
+                  className="h-9 gap-2 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                 >
-                  <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
+                  <RefreshCw className={cn('h-3.5 w-3.5', loading && 'animate-spin')} />
                   Refresh
                 </Button>
               </div>
             </div>
-            <h1 className="mb-4 font-lora text-[32px] font-normal leading-tight tracking-tight text-[#111827]">
-              Evidence Locker
-            </h1>
-            <p className="max-w-2xl text-[15px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
-              Forensic artifacts and reconciliation trails. Review parsed data points, Amazon case linkages, and verification trails required for recovery filing.
-            </p>
           </div>
         </div>
 
-        {/* Readiness Strip */}
-        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8 py-3">
-          <div className="mx-auto flex max-w-6xl items-center justify-between">
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-2">
-                <Database className="h-3.5 w-3.5 text-[#9CA3AF]" />
-                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Artifacts:</span>
-                <span className="text-[11px] font-bold text-[#111827]">{displayMetrics.totalDocuments} Total</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#0B74DE]" />
-                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Filing Ready:</span>
-                <span className="text-[11px] font-bold text-[#111827]">{displayMetrics.matched} Linked</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <FileWarning className="h-3.5 w-3.5 text-amber-500" />
-                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Needs Review:</span>
-                <span className="text-[11px] font-bold text-[#111827]">{displayMetrics.needsReview} Items</span>
-              </div>
+        <div className="border-b border-[#DCE8EE] bg-white px-4 py-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1180px] flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px]">
+              <div className="flex items-center gap-2"><span className="text-[#66737F]">Documents</span><span className="font-semibold tracking-tight text-[#182026]">{displayMetrics.totalDocuments}</span></div>
+              <div className="flex items-center gap-2"><span className="text-[#66737F]">Linked to cases</span><span className="font-semibold tracking-tight text-[#182026]">{displayMetrics.matched}</span></div>
+              <div className="flex items-center gap-2"><span className="text-[#66737F]">Needs review</span><span className="font-semibold tracking-tight text-[#182026]">{displayMetrics.needsReview}</span></div>
             </div>
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={exportCsv}
-                className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
-              >
-                <Download className="mr-1.5 h-3 w-3" />
-                Export CSV
-              </Button>
-              <div className="h-4 w-px bg-[#E5E7EB]" />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate(tenantRoute(activeSlug, '/integrations'))}
-                className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-semibold tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
-              >
-                <Cloud className="mr-1.5 h-3 w-3" />
-                Connect source
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => uploadInputRef.current?.click()}
-                className="h-8 border-[#E5E7EB] bg-white px-3 text-[11px] font-semibold tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
-              >
-                <Upload className="mr-1.5 h-3 w-3" />
-                Upload documents
-              </Button>
-              <input
-                ref={uploadInputRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={(e) => {
-                  void handleFileUpload(Array.from(e.target.files || []));
-                  e.currentTarget.value = '';
-                }}
-              />
+            <div className="flex flex-wrap items-center gap-2">
+              <Button variant="outline" size="sm" onClick={exportCsv} className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]"><Download className="mr-1.5 h-3.5 w-3.5" />Export CSV</Button>
+              <Button variant="outline" size="sm" onClick={() => navigate(tenantRoute(activeSlug, '/integrations'))} className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]"><Cloud className="mr-1.5 h-3.5 w-3.5" />Connect source</Button>
+              <Button variant="outline" size="sm" onClick={() => uploadInputRef.current?.click()} className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]"><Upload className="mr-1.5 h-3.5 w-3.5" />Upload documents</Button>
+              <input ref={uploadInputRef} type="file" multiple className="hidden" onChange={(e) => { void handleFileUpload(Array.from(e.target.files || [])); e.currentTarget.value = ''; }} />
             </div>
           </div>
         </div>
 
-        {/* Synthesis Bar */}
-        <div className="mx-auto max-w-6xl px-8 pt-8">
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-4 flex items-center">
-              <Search className="h-5 w-5 text-[#9CA3AF] group-focus-within:text-[#0B74DE] transition-colors" />
-            </div>
-            <input 
-              type="text" 
-              placeholder="Query the Evidence Locker... (e.g., 'Find shipment invoices for Case 16894')" 
+        <div className="mx-auto max-w-[1180px] px-4 pt-6 sm:px-6 lg:px-8">
+          <div className="relative flex items-center rounded-md border border-[#DCE8EE] bg-white transition-colors focus-within:border-[#0B74DE] focus-within:ring-2 focus-within:ring-[#0B74DE]/15">
+            <Search className="ml-3 h-4 w-4 shrink-0 text-[#66737F]" aria-hidden="true" />
+            <input
+              type="text"
+              placeholder="Search documents, sources, suppliers, and case references"
               value={q}
               onChange={(e) => setSearchParams({ q: e.target.value, page: '1' })}
-              className="h-14 w-full rounded-xl border border-[#E5E7EB] bg-white pl-12 pr-4 text-[15px] font-normal tracking-tight shadow-sm outline-none focus:border-[#0B74DE] focus:ring-0 transition-all"
+              className="h-10 w-full bg-transparent px-3 text-[13px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A97A2]"
             />
-            <div className="absolute inset-y-0 right-4 flex items-center gap-2">
-              <Badge variant="outline" className="bg-[#F3F5F4] text-[#6B7280] border-transparent font-medium text-[10px] px-2 py-0.5">
-                ⌘ K
-              </Badge>
-            </div>
           </div>
         </div>
 
         {/* Main Workspace Area */}
-        <div className="mx-auto max-w-6xl px-8 py-8">
-          <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
+        <main className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
+          <div className="overflow-x-auto rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
             <Table>
-              <TableHeader className="bg-[#F9FAFB]">
-                <TableRow className="border-b border-[#E5E7EB] hover:bg-transparent">
-                  <TableHead className="w-[40%] text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10 px-6">Artifact</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10">Type</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10">Amazon Link</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10">Confidence</TableHead>
-                  <TableHead className="text-right text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] h-10 px-6">State</TableHead>
+              <TableHeader className="bg-[#FAFAF7]">
+                <TableRow className="border-b border-[#DCE8EE] hover:bg-transparent">
+                  <TableHead className="h-10 w-[40%] px-5 text-[12px] font-medium tracking-tight text-[#66737F]">Document</TableHead>
+                  <TableHead className="h-10 text-[12px] font-medium tracking-tight text-[#66737F]">Type</TableHead>
+                  <TableHead className="h-10 text-[12px] font-medium tracking-tight text-[#66737F]">Case link</TableHead>
+                  <TableHead className="h-10 text-[12px] font-medium tracking-tight text-[#66737F]">Confidence</TableHead>
+                  <TableHead className="h-10 px-5 text-right text-[12px] font-medium tracking-tight text-[#66737F]">Evidence state</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading && displayDocuments.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="h-64 text-center">
-                      <RefreshCw className="mx-auto mb-2 h-6 w-6 animate-spin text-[#9CA3AF]" />
-                      <p className="text-[11px] font-medium uppercase tracking-tight text-[#9CA3AF]">Synchronizing Vault...</p>
+                      <RefreshCw className="mx-auto mb-2 h-5 w-5 animate-spin text-[#66737F]" />
+                      <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Refreshing evidence inventory</p>
                     </TableCell>
                   </TableRow>
                 ) : displayDocuments.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="h-64 text-center">
-                      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F3F5F4]">
-                        <Paperclip className="h-6 w-6 text-[#9CA3AF]" />
+                      <div className="mx-auto mb-3 flex h-9 w-9 items-center justify-center rounded-md border border-[#DCE8EE] bg-[#F7FAFC]">
+                        <Paperclip className="h-4 w-4 text-[#66737F]" />
                       </div>
-                      <h3 className="text-[14px] font-semibold text-[#111827]">No artifacts detected</h3>
-                      <p className="mt-1 text-[12px] text-[#6B7280]">Connect a source or upload records to populate the vault.</p>
+                      <h2 className="text-[16px] font-semibold tracking-tight text-[#182026]">No documents found</h2>
+                      <p className="mt-1.5 text-[13px] text-[#66737F]">Connect a source or upload records to add evidence here.</p>
                     </TableCell>
                   </TableRow>
                 ) : (
                   displayDocuments.map((doc) => (
                     <TableRow 
                       key={doc.id} 
-                      className="group cursor-pointer border-b border-[#F3F5F4] hover:bg-[#F8FAFB] transition-colors"
+                      className="group cursor-pointer border-b border-[#E7EEF2] transition-colors hover:bg-[#F7FAFC]"
                       onClick={() => handleRowClick(doc)}
                     >
-                      <TableCell className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white shadow-sm group-hover:border-[#0B74DE]/30 transition-colors">
-                            <FileText className="h-4.5 w-4.5 text-[#4B5563]" strokeWidth={1.5} />
+                      <TableCell className="px-5 py-3.5">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#E7EEF2] bg-white">
+                            {isPdfArtifact(doc) ? (
+                              <img src="/evidence-pdf-mark.png" alt="PDF" className="h-7 w-7 object-contain" />
+                            ) : (
+                              <FileText className="h-4 w-4 text-[#66737F]" strokeWidth={1.75} />
+                            )}
                           </div>
                           <div className="min-w-0">
-                            <p className="truncate text-[13px] font-semibold tracking-tight text-[#111827]">{doc.name}</p>
-                            <div className="mt-1 flex items-center gap-2">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">{doc.source_display}</span>
-                              <div className="h-1 w-1 rounded-full bg-[#E5E7EB]" />
-                              <span className="text-[11px] font-medium text-[#6B7280]">{formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}</span>
+                            <p className="truncate text-[13px] font-semibold tracking-tight text-[#182026]">{doc.name}</p>
+                            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] leading-5 text-[#66737F]">
+                              <span>{doc.source_display || 'Source unavailable'}</span>
+                              <span className="h-1 w-1 rounded-full bg-[#DCE8EE]" />
+                              <span>{formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}</span>
                             </div>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-transparent font-medium text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
-                          {doc.content_type?.split('/').pop()?.toUpperCase() || 'RAW'}
+                        <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">
+                          {isPdfArtifact(doc) ? 'PDF' : doc.content_type?.split('/').pop()?.toUpperCase() || 'RAW'}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         {doc.linked_case_refs.length > 0 ? (
                           <div className="flex items-center gap-1.5 text-[#0B74DE]">
-                            <Link2 className="h-3 w-3" />
-                            <span className="text-[12px] font-bold tracking-tight">{doc.linked_case_refs[0]}</span>
+                            <Link2 className="h-3.5 w-3.5" />
+                            <span className="text-[12px] font-medium tracking-tight">{doc.linked_case_refs[0]}</span>
                           </div>
                         ) : (
                           <span className="text-[11px] font-medium text-[#9CA3AF]">Unlinked</span>
@@ -888,12 +832,12 @@ export default function EvidenceLocker() {
                             <div 
                               className={cn(
                                 "h-full rounded-full",
-                                (doc.parser_confidence || 0) > 0.8 ? "bg-emerald-500" : "bg-amber-500"
+                                (doc.parser_confidence || 0) > 0.8 ? "bg-[#0B74DE]" : "bg-rose-500"
                               )} 
                               style={{ width: `${(doc.parser_confidence || 0) * 100}%` }} 
                             />
                           </div>
-                          <span className="text-[11px] font-bold text-[#111827]">
+                          <span className="text-[12px] font-medium text-[#182026]">
                             {doc.parser_confidence != null ? `${(doc.parser_confidence * 100).toFixed(0)}%` : '--'}
                           </span>
                         </div>
@@ -902,10 +846,10 @@ export default function EvidenceLocker() {
                         <div className="flex items-center justify-end gap-3">
                           <Badge 
                             className={cn(
-                              "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border-transparent",
-                              doc.usable_as_evidence 
-                                ? "bg-emerald-500/10 text-emerald-700" 
-                                : "bg-amber-500/10 text-amber-600"
+                              "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
+                              doc.usable_as_evidence
+                                ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]"
+                                : "border-rose-200 bg-rose-50 text-rose-700"
                             )}
                           >
                             {doc.usable_as_evidence ? 'Filing Ready' : 'Review Required'}
@@ -919,162 +863,76 @@ export default function EvidenceLocker() {
               </TableBody>
             </Table>
           </div>
-        </div>
+        </main>
 
-        {/* Registry Footer */}
-        <div className="mx-auto max-w-6xl px-8 pb-20 pt-10">
-          <div className="border-t border-[#E5E7EB] pt-8 text-center">
-            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
-              <Shield className="h-3 w-3" />
-              Forensic Evidence Registry • US-EAST-1
-            </div>
-          </div>
+        {/* Evidence record note */}
+        <div className="mx-auto max-w-[1180px] px-4 pb-10 sm:px-6 lg:px-8">
+          <p className="border-t border-[#DCE8EE] pt-5 text-[12px] leading-5 text-[#66737F]">Evidence state, case linkage, and filing usability are recorded separately. Review the underlying document before relying on it in a recovery workflow.</p>
         </div>
       </div>
 
-      {/* Forensic Sidebar */}
       <Sheet open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <SheetContent side="right" className="w-full border-l border-[#E5E7EB] bg-white p-0 text-[#111827] sm:max-w-[550px]">
-          {selectedDoc && (
+        <SheetContent side="right" className="w-full border-l border-[#DCE8EE] bg-white p-0 text-[#111827] sm:max-w-[570px]">
+          {selectedDoc ? (
             <div className="flex h-full flex-col">
-              <SheetHeader className="border-b border-[#E5E7EB] px-8 py-8 text-left">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="h-px w-6 bg-[#0B74DE]" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#0B74DE]">Artifact Detail</span>
+              <SheetHeader className="border-b border-[#DCE8EE] px-5 py-5 text-left sm:px-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[#E7EEF2] bg-white">
+                      {isPdfArtifact(selectedDoc) ? <img src="/evidence-pdf-mark.png" alt="PDF" className="h-8 w-8 object-contain" /> : <FileText className="h-4 w-4 text-[#66737F]" strokeWidth={1.75} />}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Document detail</p>
+                      <SheetTitle className="mt-1 font-lora text-[24px] font-normal leading-tight tracking-tight text-[#182026]">{selectedDoc.name}</SheetTitle>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-[#6B7280]" onClick={() => downloadDoc(selectedDoc.id)}>
-                      <Download className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-[#6B7280]" onClick={() => handleDeleteDocument(selectedDoc.id, selectedDoc.name)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Button variant="ghost" size="icon" aria-label="Download document" className="h-8 w-8 rounded-md text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]" onClick={() => downloadDoc(selectedDoc.id)}><Download className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" aria-label="Delete document" className="h-8 w-8 rounded-md text-rose-700 hover:bg-rose-50 hover:text-rose-800" onClick={() => handleDeleteDocument(selectedDoc.id, selectedDoc.name)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </div>
-                <SheetTitle className="font-lora text-2xl font-normal leading-tight tracking-tight text-[#111827]">
-                  {selectedDoc.name}
-                </SheetTitle>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Badge variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-transparent font-medium text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
-                    {selectedDoc.source_display}
-                  </Badge>
-                  <Badge variant="outline" className="bg-[#F3F5F4] text-[#4B5563] border-transparent font-medium text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
-                    {formatBytes(selectedDoc.size_bytes)}
-                  </Badge>
-                  {selectedDoc.linked_case_refs.length > 0 && (
-                    <Badge className="bg-[#0B74DE]/10 text-[#0B74DE] border-transparent font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-tight">
-                      Linked: {selectedDoc.linked_case_refs[0]}
-                    </Badge>
-                  )}
+                  <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">{selectedDoc.source_display || 'Source unavailable'}</Badge>
+                  <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">{formatBytes(selectedDoc.size_bytes)}</Badge>
+                  {selectedDoc.linked_case_refs.length > 0 ? <Badge className="rounded-md border border-[#DCE8EE] bg-[#F6FAFE] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#0B74DE]">Linked: {selectedDoc.linked_case_refs[0]}</Badge> : null}
                 </div>
               </SheetHeader>
 
-              <div className="flex-1 overflow-y-auto px-8 py-8">
-                <div className="space-y-10">
-                  {/* Forensic Extraction Section */}
-                  <div>
-                    <h3 className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#111827]">Forensic Extraction</h3>
-                    <div className="rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] p-6">
-                      <div className="grid grid-cols-2 gap-y-6">
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Invoice ID</p>
-                          <p className="text-[13px] font-semibold text-[#111827]">{selectedDoc.invoice || '--'}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Total Amount</p>
-                          <p className="text-[13px] font-semibold text-[#111827]">
-                            {selectedDoc.amount ? `$${selectedDoc.amount.toFixed(2)}` : '--'}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Supplier</p>
-                          <p className="text-[13px] font-semibold text-[#111827]">{selectedDoc.supplier || '--'}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-1">Parser Confidence</p>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[13px] font-semibold text-[#111827]">
-                              {selectedDoc.parser_confidence != null ? `${(selectedDoc.parser_confidence * 100).toFixed(0)}%` : '--'}
-                            </span>
-                            <div className="h-1.5 w-12 overflow-hidden rounded-full bg-[#E5E7EB]">
-                              <div 
-                                className="h-full bg-[#0B74DE] rounded-full" 
-                                style={{ width: `${(selectedDoc.parser_confidence || 0) * 100}%` }} 
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-8 border-t border-[#E5E7EB] pt-6">
-                        <div className="flex items-center gap-2 mb-3">
-                          <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
-                          <span className="text-[11px] font-bold uppercase tracking-tight text-[#111827]">Operational Signal</span>
-                        </div>
-                        <p className="text-[12px] leading-relaxed text-[#6B7280]">
-                          {selectedDoc.parsing_explanation?.reason || "This document has been parsed and reconciled against Amazon's operational records. Key identifiers were extracted to build the evidence trail."}
-                        </p>
-                      </div>
+              <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+                <div className="space-y-7">
+                  <section>
+                    <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Document facts</p>
+                    <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white">
+                      <div className="border-b border-r border-[#E7EEF2] p-3"><p className="text-[12px] text-[#66737F]">Invoice ID</p><p className="mt-1 text-[13px] font-semibold tracking-tight text-[#182026]">{selectedDoc.invoice || '--'}</p></div>
+                      <div className="border-b border-[#E7EEF2] p-3"><p className="text-[12px] text-[#66737F]">Total amount</p><p className="mt-1 text-[13px] font-semibold tracking-tight text-[#182026]">{selectedDoc.amount ? `$${selectedDoc.amount.toFixed(2)}` : '--'}</p></div>
+                      <div className="border-r border-[#E7EEF2] p-3"><p className="text-[12px] text-[#66737F]">Supplier</p><p className="mt-1 text-[13px] font-semibold tracking-tight text-[#182026]">{selectedDoc.supplier || '--'}</p></div>
+                      <div className="p-3"><p className="text-[12px] text-[#66737F]">Parser confidence</p><div className="mt-1 flex items-center gap-2"><span className="text-[13px] font-semibold tracking-tight text-[#182026]">{selectedDoc.parser_confidence != null ? `${(selectedDoc.parser_confidence * 100).toFixed(0)}%` : '--'}</span><div className="h-1.5 w-12 overflow-hidden rounded-full bg-[#E7EEF2]"><div className="h-full rounded-full bg-[#0B74DE]" style={{ width: `${(selectedDoc.parser_confidence || 0) * 100}%` }} /></div></div></div>
                     </div>
-                  </div>
+                  </section>
 
-                  {/* Audit Trail Section */}
-                  <div>
-                    <h3 className="mb-4 text-[11px] font-bold uppercase tracking-wider text-[#111827]">Audit Trail</h3>
-                    <div className="relative space-y-6 pl-4">
-                      <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[#E5E7EB]" />
-                      
-                      <div className="relative">
-                        <div className="absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white bg-emerald-500 shadow-sm" />
-                        <p className="text-[12px] font-semibold text-[#111827]">Ingestion Confirmed</p>
-                        <p className="text-[11px] text-[#6B7280] mt-0.5">Source: {selectedDoc.source_display} • {formatDistanceToNow(new Date(selectedDoc.created_at), { addSuffix: true })}</p>
-                      </div>
+                  <section className="border-l-2 border-[#0B74DE] bg-[#F6FAFE] px-3 py-3">
+                    <p className="text-[13px] font-medium tracking-tight text-[#182026]">Document interpretation</p>
+                    <p className="mt-1 text-[12px] leading-5 text-[#4D5B66]">{selectedDoc.parsing_explanation?.reason || 'This document has been parsed against the available operational records. Key identifiers were retained for evidence review.'}</p>
+                  </section>
 
-                      <div className="relative">
-                        <div className="absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white bg-emerald-500 shadow-sm" />
-                        <p className="text-[12px] font-semibold text-[#111827]">Forensic Parsing Complete</p>
-                        <p className="text-[11px] text-[#6B7280] mt-0.5">Strategy: {selectedDoc.parsing_strategy || 'FULL'} • Confidence: {(selectedDoc.parser_confidence || 0 * 100).toFixed(0)}%</p>
-                      </div>
-
-                      <div className="relative">
-                        <div className={cn(
-                          "absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white shadow-sm",
-                          selectedDoc.linked_case_refs.length > 0 ? "bg-emerald-500" : "bg-[#9CA3AF]"
-                        )} />
-                        <p className="text-[12px] font-semibold text-[#111827]">Case Linkage</p>
-                        <p className="text-[11px] text-[#6B7280] mt-0.5">
-                          {selectedDoc.linked_case_refs.length > 0 
-                            ? `Linked to Amazon Case ${selectedDoc.linked_case_refs[0]}` 
-                            : 'Awaiting discrepancy match'}
-                        </p>
-                      </div>
-
-                      <div className="relative">
-                        <div className={cn(
-                          "absolute -left-[13px] top-1 h-2 w-2 rounded-full border border-white shadow-sm",
-                          selectedDoc.usable_as_evidence ? "bg-emerald-500" : "bg-[#9CA3AF]"
-                        )} />
-                        <p className="text-[12px] font-semibold text-[#111827]">Filing Readiness</p>
-                        <p className="text-[11px] text-[#6B7280] mt-0.5">
-                          {selectedDoc.usable_as_evidence ? 'Verified for Amazon Support' : 'Awaiting final forensic verification'}
-                        </p>
-                      </div>
+                  <section>
+                    <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Audit trail</p>
+                    <div className="relative mt-4 space-y-5 pl-4">
+                      <div className="absolute bottom-2 left-[3px] top-2 w-px bg-[#DCE8EE]" />
+                      <div className="relative"><span className="absolute -left-[17px] top-1.5 h-2 w-2 rounded-full border-2 border-white bg-[#0B74DE]" /><p className="text-[13px] font-semibold tracking-tight text-[#182026]">Ingestion confirmed</p><p className="mt-0.5 text-[12px] leading-5 text-[#66737F]">Source: {selectedDoc.source_display || 'Source unavailable'} · {formatDistanceToNow(new Date(selectedDoc.created_at), { addSuffix: true })}</p></div>
+                      <div className="relative"><span className="absolute -left-[17px] top-1.5 h-2 w-2 rounded-full border-2 border-white bg-[#0B74DE]" /><p className="text-[13px] font-semibold tracking-tight text-[#182026]">Parsing complete</p><p className="mt-0.5 text-[12px] leading-5 text-[#66737F]">Strategy: {selectedDoc.parsing_strategy || 'FULL'} · Confidence: {((selectedDoc.parser_confidence || 0) * 100).toFixed(0)}%</p></div>
+                      <div className="relative"><span className={cn('absolute -left-[17px] top-1.5 h-2 w-2 rounded-full border-2 border-white', selectedDoc.linked_case_refs.length > 0 ? 'bg-[#0B74DE]' : 'bg-[#AAB6BE]')} /><p className="text-[13px] font-semibold tracking-tight text-[#182026]">Case linkage</p><p className="mt-0.5 text-[12px] leading-5 text-[#66737F]">{selectedDoc.linked_case_refs.length > 0 ? `Linked to Amazon case ${selectedDoc.linked_case_refs[0]}` : 'Awaiting discrepancy match'}</p></div>
+                      <div className="relative"><span className={cn('absolute -left-[17px] top-1.5 h-2 w-2 rounded-full border-2 border-white', selectedDoc.usable_as_evidence ? 'bg-[#0B74DE]' : 'bg-[#AAB6BE]')} /><p className="text-[13px] font-semibold tracking-tight text-[#182026]">Filing readiness</p><p className="mt-0.5 text-[12px] leading-5 text-[#66737F]">{selectedDoc.usable_as_evidence ? 'Verified for Amazon Support' : 'Awaiting final evidence verification'}</p></div>
                     </div>
-                  </div>
+                  </section>
                 </div>
               </div>
 
-              <div className="border-t border-[#E5E7EB] bg-[#F9FAFB] p-6">
-                <Button 
-                  className="w-full h-11 bg-[#0B74DE] hover:bg-[#0861C5] text-white font-semibold tracking-tight text-[11px] rounded-lg shadow-lg shadow-[#0B74DE]/20"
-                  onClick={() => setIsDetailOpen(false)}
-                >
-                  Confirm Review
-                </Button>
+              <div className="border-t border-[#DCE8EE] bg-white px-5 py-4 sm:px-6">
+                <Button className="h-10 w-full rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white hover:bg-[#005FBA]" onClick={() => setIsDetailOpen(false)}>Confirm review</Button>
               </div>
             </div>
-          )}
+          ) : null}
         </SheetContent>
       </Sheet>
     </PageLayout>
