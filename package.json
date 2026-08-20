@@ -8,6 +8,7 @@
     "build": "vite build && node scripts/prerender-public-routes.mjs",
     "test:system-signal-routes": "node scripts/test-system-signal-routes.mjs",
     "build:dev": "vite build --mode development",
+    "test:audit-duration": "node scripts/run-audit-duration-test.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "analyze": "vite build && rollup-plugin-visualizer --template treemap --sourcemap false --gzipSize true --brotliSize true dist/*.js --filename dist/bundle-report.html"

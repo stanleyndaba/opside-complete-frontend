@@ -68,6 +68,25 @@ function formatMoney(value: number) {
   return CURRENCY_FORMATTER.format(value);
 }
 
+function formatDuration(completedAt?: string | null, startedAt?: string | null) {
+  const completedMs = Date.parse(completedAt || '');
+  const startedMs = Date.parse(startedAt || '');
+  if (!Number.isFinite(completedMs) || !Number.isFinite(startedMs)) return '—';
+
+  const durationMs = completedMs - startedMs;
+  if (durationMs <= 0) return '—';
+
+  const totalSeconds = Math.max(1, Math.floor(durationMs / 1000));
+  if (totalSeconds < 60) return `${totalSeconds}s`;
+
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  if (totalMinutes < 60) return `${totalMinutes}m`;
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return minutes ? `${hours}h ${minutes}m` : `${hours}h`;
+}
+
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
@@ -1492,10 +1511,8 @@ export default function Audit() {
                       <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Audit Duration</span>
                       <span className="text-[18px] font-bold tracking-tight text-zinc-900 tabular-nums">
                         {step === 'completed'
-                          ? audit?.completed_at && audit?.started_at
-                            ? formatDuration(audit.completed_at, audit.started_at)
-                            : '2.4m'
-                          : '2.4m'}
+                          ? formatDuration(audit?.completed_at, audit?.started_at)
+                          : '—'}
                       </span>
                     </div>
                     <div className="flex flex-col pl-8">
