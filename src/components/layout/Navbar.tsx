@@ -480,29 +480,28 @@ export function Navbar({
           {/* Left/Center Group - Search, Icons, Currency, Connect */}
           <div className="flex items-center gap-x-8">
             <div className="relative flex items-center gap-4" ref={searchContainerRef}>
-              <div className="relative w-80 lg:w-[420px] group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#9CA3AF] transition-colors group-focus-within:text-[#111827]" />
+              <div className="group relative w-80 lg:w-[420px]">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A5] transition-colors group-focus-within:text-[#4D5B66]" />
                 <Input
                   ref={searchInputRef}
-                  aria-label="Search"
-                  placeholder="Search..."
+                  aria-label="Search workspace"
+                  placeholder="Search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="h-9 rounded-[7px] border-0 bg-[#F1F2F0] pl-10 pr-12 text-[12px] font-medium tracking-tight text-[#111827] placeholder:font-normal placeholder:text-[#9CA3AF] transition-all focus:bg-white focus:ring-0"
+                  className="h-10 rounded-md border border-[#DCE8EE] bg-white pl-10 pr-16 text-[12px] font-medium tracking-tight text-[#182026] placeholder:font-normal placeholder:text-[#8A99A5] transition-colors hover:border-[#C7D7DF] focus:border-[#0B74DE] focus:bg-white focus:ring-2 focus:ring-[#0B74DE]/10"
                 />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-                  <div className="search-shortcut-hint">
-                    <span className="text-[9px]">{navigator.platform.indexOf('Mac') > -1 ? '⌘' : 'Ctrl'}</span>
-                    <span>K</span>
-                  </div>
-                </div>
+                {!searchQuery && (
+                  <kbd className="pointer-events-none absolute right-3 top-1/2 inline-flex h-5 -translate-y-1/2 items-center rounded border border-[#DCE8EE] bg-[#FAFAF7] px-1.5 text-[9px] font-medium tracking-tight text-[#66737F]">
+                    {navigator.platform.indexOf('Mac') > -1 ? '⌘ K' : 'Ctrl K'}
+                  </kbd>
+                )}
                 {/* Clear button */}
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] transition-colors hover:text-[#111827]">
+                    className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded text-[#8A99A5] transition-colors hover:bg-[#F7FAFC] hover:text-[#182026]">
                     <X className="h-3 w-3" />
                   </button>
                 )}
