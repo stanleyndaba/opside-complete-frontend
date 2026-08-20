@@ -479,7 +479,7 @@ export function Navbar({
     <>
       <header className={cn(
         "sticky top-0 z-30 transition-all duration-500 ease-in-out font-sans",
-        sidebarCollapsed ? "ml-16" : "ml-60",
+        sidebarCollapsed ? "ml-16" : "ml-[282px]",
         "bg-[#FAFAF7] text-[#111827] shadow-none",
         className
       )}>

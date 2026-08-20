@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { 
   Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, 
-  MoreHorizontal as MoreIcon, LogOut, FileText, LifeBuoy, User, Plug, 
+  LogOut, FileText, LifeBuoy, User, Plug,
   Box, Menu, Search, Bell, Send, Headset, Gift, Copy, Check, X, 
   CreditCard, Mail, Upload, Inbox, RefreshCw 
 } from 'lucide-react';
@@ -20,10 +20,6 @@ import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
 
 const prefetchRoute = (path: string) => {
   try {
@@ -203,7 +199,6 @@ export function Sidebar({
     { title: 'Help', icon: LifeBuoy, href: tenantRoute(currentTenantSlug, '/help') },
     { title: 'Latest Changes', icon: NotebookPen, href: tenantRoute(currentTenantSlug, '/whats-new') }
   ];
-  const isMoreActive = utilityItems.some((item) => location.pathname === item.href);
   const NavItemComponent = React.memo(({
     item,
     variant = 'default'
@@ -296,12 +291,12 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "group relative flex items-center transition-all duration-200 rounded-[6px] mx-2",
+              "group relative flex items-center transition-all duration-200 rounded-[6px] mx-2",
           variant === 'core'
-            ? "gap-3 px-3 py-2.5"
+            ? "gap-3 px-3 py-2"
             : variant === 'utility'
-              ? "gap-2.5 px-2.5 py-2"
-              : "gap-3 px-3 py-2.5",
+              ? "gap-2.5 px-2.5 py-1.5"
+              : "gap-3 px-3 py-2",
           isActive
             ? "bg-white/10 text-white shadow-sm"
             : "text-white/40 hover:bg-white/5 hover:text-white"
@@ -346,7 +341,7 @@ export function Sidebar({
     <aside
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col font-sans transition-all duration-500 ease-in-out gpu-accelerated",
-        isCollapsed ? "w-16" : "w-64",
+        isCollapsed ? "w-16" : "w-[282px]",
         "border-r border-white/5 bg-[#0F0E0D] text-white/40 shadow-none",
         className
       )}
@@ -355,7 +350,7 @@ export function Sidebar({
         fontFamily: "Inter, 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
       }}>
       {/* Branding Header */}
-      <div className={cn("pwa-drag-region", isCollapsed ? "px-2 py-5" : "px-5 py-6")}>
+      <div className={cn("pwa-drag-region", isCollapsed ? "px-2 py-4" : "px-5 py-4")}>
         <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
           <Link
             to={overviewHref}
@@ -396,7 +391,7 @@ export function Sidebar({
           )}
         </div>
         {!isCollapsed && (
-          <div className="mt-5 flex items-center justify-between gap-3">
+          <div className="mt-4 flex items-center justify-between gap-3">
             <Link
               to={pricingAdjustHref}
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
@@ -415,12 +410,12 @@ export function Sidebar({
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto">
-        <div className={cn("flex min-h-full flex-col", isCollapsed ? "px-2 py-4" : "px-3 py-5")}>
-          <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-4")}>
+        <div className={cn("flex min-h-full flex-col", isCollapsed ? "px-2 py-3" : "px-3 py-3")}>
+          <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-2.5")}>
             {navGroups.map((group) => (
               <div key={group.label} className="space-y-1">
                 {!isCollapsed && (
-                  <div className="px-3 pb-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/25">
+                  <div className="px-3 pb-0.5 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/25">
                     {group.label}
                   </div>
                 )}
@@ -435,68 +430,22 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* More Utilities */}
-      <div className={cn(
-        "mt-auto border-t border-white/5 py-4",
-        isCollapsed ? "px-2" : "px-3"
-      )}>
-        {!isCollapsed && (
-          <div className="px-3 pb-2 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/25">
-            More
-          </div>
-        )}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label="More options"
-              className={cn(
-                "group flex w-full items-center rounded-[6px] text-white/40 transition-colors hover:bg-white/5 hover:text-white",
-                isCollapsed ? "h-10 justify-center" : "gap-3 px-3 py-2",
-                isMoreActive && "bg-white/10 text-white"
-              )}
-            >
-              <MoreIcon className={cn("h-[17px] w-[17px] shrink-0", isMoreActive && "text-[#0B74DE]")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[13px] font-sans font-medium tracking-tight">More</span>}
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side={isCollapsed ? 'right' : 'top'}
-            align={isCollapsed ? 'start' : 'start'}
-            sideOffset={8}
-            className="w-56 rounded-[6px] border border-white/10 bg-[#1A1918] p-1.5 text-white shadow-2xl"
+      {/* Utility destinations */}
+      <div className={cn("mt-auto border-t border-white/5 py-2.5", isCollapsed ? "px-2" : "px-3")}>
+        <nav className={cn("flex flex-col", isCollapsed ? "items-center gap-0.5" : "gap-0.5")} aria-label="Account utilities">
+          {utilityItems.map((item) => <NavItemComponent key={item.title} item={item} variant="utility" />)}
+          <button
+            type="button"
+            onClick={() => setSignOutOpen(true)}
+            className={cn(
+              "group flex w-full items-center rounded-[6px] text-white/40 transition-colors hover:bg-white/5 hover:text-white",
+              isCollapsed ? "h-9 w-10 justify-center" : "gap-2.5 px-2.5 py-2"
+            )}
           >
-            <DropdownMenuLabel className="px-3 pb-2 pt-2 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/35">
-              Account
-            </DropdownMenuLabel>
-            {utilityItems.map((item) => {
-              const itemIsActive = location.pathname === item.href;
-              return (
-                <DropdownMenuItem key={item.title} asChild className="p-0 focus:bg-transparent">
-                  <Link
-                    to={item.href}
-                    onMouseEnter={() => prefetchRoute(item.href)}
-                    className={cn(
-                      "flex items-center gap-3 rounded-[5px] px-3 py-2.5 text-[13px] font-sans font-medium tracking-tight text-white/65 outline-none transition-colors hover:bg-white/10 hover:text-white",
-                      itemIsActive && "bg-white/10 text-white"
-                    )}
-                  >
-                    <item.icon className={cn("h-[16px] w-[16px]", itemIsActive && "text-[#0B74DE]")} strokeWidth={1.5} />
-                    <span>{item.title}</span>
-                  </Link>
-                </DropdownMenuItem>
-              );
-            })}
-            <DropdownMenuSeparator className="my-1 bg-white/10" />
-            <DropdownMenuItem
-              onSelect={() => setSignOutOpen(true)}
-              className="flex cursor-pointer items-center gap-3 rounded-[5px] px-3 py-2.5 text-[13px] font-sans font-medium tracking-tight text-white/65 outline-none focus:bg-white/10 focus:text-white"
-            >
-              <LogOut className="h-[16px] w-[16px]" strokeWidth={1.5} />
-              <span>Sign Out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <LogOut className="h-[16px] w-[16px] shrink-0" strokeWidth={1.5} />
+            {!isCollapsed && <span className="text-[13px] font-medium tracking-tight">Sign out</span>}
+          </button>
+        </nav>
       </div>
 
       {/* Sign Out confirmation */}

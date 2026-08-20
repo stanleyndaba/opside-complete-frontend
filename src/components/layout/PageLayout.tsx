@@ -43,7 +43,7 @@ export function PageLayout({
           <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         )}
 
-        <main className={`flex-1 transition-all duration-300 ${hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-60')} overflow-hidden bg-[#FAFAF7]`}>
+        <main className={`flex-1 transition-all duration-300 ${hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-[282px]')} overflow-hidden bg-[#FAFAF7]`}>
           <div className={`w-full max-w-full mx-auto ${noPadding ? '' : 'px-4 lg:px-6 pb-4 lg:pb-6'} animate-fade-in overflow-x-hidden min-h-screen bg-[#FAFAF7]`}>
             {hideNavbar && hideSidebar && !hideLogo && (
               <div className="fixed top-4 left-5 z-50 pointer-events-none">

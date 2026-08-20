@@ -56,7 +56,7 @@ export default function DocumentDetail() {
   const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
   const mainClass = useMemo(() => {
-    return isSidebarCollapsed ? 'ml-16' : 'ml-64';
+    return isSidebarCollapsed ? 'ml-16' : 'ml-[282px]';
   }, [isSidebarCollapsed]);
 
   const [loading, setLoading] = useState(true);

@@ -2312,7 +2312,7 @@ export function Dashboard() {
     };
   }, [activeSlug, isReady, refreshDashboardLive]);
 
-  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
+  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-[282px]';
 
   const syncScopedDetectionCount = useMemo(() => {
     if (isDemoWorkspace) return Math.max(DEMO_FINDINGS_TARGET_COUNT, detectionResults.length);

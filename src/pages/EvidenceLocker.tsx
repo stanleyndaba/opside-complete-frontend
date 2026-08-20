@@ -318,7 +318,7 @@ export default function EvidenceLocker() {
   const activeSlug = tenantSlug;
   const urlQuery = (searchParams.get('q') || '').trim();
   const toggleSidebar = useCallback(() => setIsSidebarCollapsed(prev => !prev), []);
-  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
+  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-[282px]';
 
   const [dragActive, setDragActive] = useState(false);
   const [documents, setDocuments] = useState<LockerDocumentRow[]>([]);
