@@ -142,6 +142,9 @@ export function resolveSystemSignalHref(notification: any, tenantSlug: string): 
   if (route.target === 'case' && route.objectType === 'dispute_case') {
     return `/app/${safeSlug}/cases/${objectId}`;
   }
+  if (route.target === 'audit' && route.objectType === 'audit_run') {
+    return `/audit?auditId=${objectId}`;
+  }
   if (route.target === 'recovery' && route.objectType === 'detection_result') {
     return `/app/${safeSlug}/resolve/${objectId}`;
   }
@@ -166,6 +169,7 @@ export function getSystemSignalActionLabel(notification: any): string | null {
     case 'approve_filing': return 'Review approval';
     case 'reconnect_amazon': return 'Reconnect Amazon';
     case 'certify_evidence': return 'Review evidence';
+    case 'review_evidence': return 'Review case';
     case 'review_reconciliation': return 'Review reconciliation';
     case 'review_deadline': return 'Review deadline';
     case 'review_case': return 'Review case';

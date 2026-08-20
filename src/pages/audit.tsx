@@ -676,6 +676,24 @@ export default function Audit() {
           throw new Error('Margin could not prepare your secure session yet. Please refresh and try again.');
         }
 
+        const requestedAuditId = new URLSearchParams(location.search).get('auditId');
+        if (requestedAuditId) {
+          const response = await api.getAudit(requestedAuditId, freshToken);
+          if (response.ok && response.data?.audit) {
+            setAudit(response.data.audit);
+            const storedTenantSlug = localStorage.getItem('active_tenant_slug');
+            if (storedTenantSlug) setTenantSlug(storedTenantSlug);
+            if (response.data.audit.status === 'completed') {
+              const results = await api.getAuditResults(response.data.audit.id, freshToken);
+              if (results.ok && results.data?.teaser) {
+                setTeaser(results.data.teaser);
+              }
+            }
+            setIsBusy(false);
+            return;
+          }
+        }
+
         if (pending?.auditId) {
           const response = await api.getAudit(pending.auditId, freshToken);
           if (response.ok && response.data?.audit) {
@@ -714,7 +732,7 @@ export default function Audit() {
     };
 
     void restoreAudit();
-  }, [isAuthenticated, isClerkLoaded, isClerkSignedIn, clerkUserId]);
+  }, [isAuthenticated, isClerkLoaded, isClerkSignedIn, clerkUserId, location.search]);
 
   useEffect(() => {
     if (!isAuthenticated || autoRunAfterOAuthRef.current) return;
