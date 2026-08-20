@@ -152,7 +152,7 @@ export default function IntegrationsHub() {
   const [deletingStore, setDeletingStore] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
 
-  // NEW: Shock and Awe state
+  // Connection-result modal state
   const [showRecoveryReveal, setShowRecoveryReveal] = useState(false);
   const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
   const [showEvidenceModal, setShowEvidenceModal] = useState(false);
@@ -1014,11 +1014,11 @@ export default function IntegrationsHub() {
   if (isReady && !activeSlug) {
     return (
       <PageLayout title="Integrations" noPadding>
-        <div className="platform-vitality-page min-h-screen bg-[#F9FAFB] text-[#111827] flex items-center justify-center px-6">
-          <div className="max-w-xl w-full bg-white border border-[#D8E3EA] rounded-md p-8 text-center">
-            <h1 className="text-2xl font-sans font-bold text-[#182026] tracking-tight mb-3">Workspace context required</h1>
-            <p className="text-sm text-gray-400 font-sans leading-relaxed">
-              Integration status is tenant-scoped. Select a real workspace before viewing or changing connection state.
+        <div className="min-h-screen bg-[#FAFAF7] px-4 py-10 text-[#111827] sm:px-6">
+          <div className="mx-auto max-w-xl rounded-[10px] border border-[#DCE8EE] bg-white p-6 text-center shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+            <h1 className="font-lora text-[28px] font-normal tracking-tight text-[#182026]">Workspace context required</h1>
+            <p className="mt-2 text-[14px] leading-6 text-[#66737F]">
+              Select a workspace before viewing or changing connection state.
             </p>
           </div>
         </div>
@@ -1028,93 +1028,89 @@ export default function IntegrationsHub() {
 
   return (
     <PageLayout title="Integrations" noPadding>
-      <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
+      <div className="min-h-screen bg-[#FAFAF7] text-[#111827]">
         {/* Aesthetic Background Elements */}
         
         
 
-        {/* SHOCK AND AWE: Recovery Reveal Modal */}
+        {/* Recovery result modal */}
         <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
-          <DialogContent className="platform-vitality-page max-w-2xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-[#182026] font-sans font-bold tracking-tight">
-                <Zap className="h-8 w-8 animate-pulse" />
+          <DialogContent className="max-w-2xl rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(24,32,38,0.12)]">
+            <DialogHeader className="border-b border-[#DCE8EE] px-6 py-5 text-left">
+              <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Recovery review</p>
+              <DialogTitle className="mt-1.5 font-lora text-[26px] font-normal tracking-tight text-[#182026]">
                 Estimated recovery opportunities detected
               </DialogTitle>
             </DialogHeader>
-            <div className="text-center space-y-6 py-4">
+            <div className="space-y-5 px-6 py-5 text-left">
               {recoveryData && (
                 <>
                   <div className="space-y-2">
                     <div className="text-6xl font-sans font-bold text-[#182026] tracking-tighter">
                       {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
                     </div>
-                    <div className="text-sm font-sans font-bold text-[#182026]/35 uppercase tracking-tight">
+                    <div className="text-sm font-sans font-bold text-[#182026]/35 tracking-tight">
                       estimated value from detected opportunities
                     </div>
                     <div className="mt-4">
-                      <Badge variant="outline" className="bg-[#F3F5F4] border-[#E5E7EB] text-[#182026]/70 font-sans font-bold text-[12px] uppercase tracking-tight px-3 py-1">
+                      <Badge variant="outline" className="bg-[#F3F5F4] border-[#E5E7EB] text-[#182026]/70 font-sans font-bold text-[12px] tracking-tight px-3 py-1">
                         {recoveryData.claimCount} Detected opportunities
                       </Badge>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 mt-8">
-                    <div className="text-center p-4 bg-white/[0.03] rounded-md border border-[#D8E3EA] backdrop-blur-sm">
-                      <FileText className="h-6 w-6 mx-auto mb-2 text-blue-400" />
-                      <div className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-1">Lost Inventory</div>
+                  <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div className="rounded-md border border-[#E7EEF2] bg-[#FAFAF7] p-3.5">
+                      <div className="text-[12px] font-medium tracking-tight text-[#66737F]">Lost inventory</div>
                       <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
                     </div>
-                    <div className="text-center p-4 bg-white/[0.03] rounded-md border border-[#D8E3EA] backdrop-blur-sm">
-                      <Calculator className="h-6 w-6 mx-auto mb-2 text-orange-400" />
-                      <div className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-1">Fee Errors</div>
+                    <div className="rounded-md border border-[#E7EEF2] bg-[#FAFAF7] p-3.5">
+                      <div className="text-[12px] font-medium tracking-tight text-[#66737F]">Fee errors</div>
                       <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
                     </div>
-                    <div className="text-center p-4 bg-white/[0.03] rounded-md border border-[#D8E3EA] backdrop-blur-sm">
-                      <Package className="h-6 w-6 mx-auto mb-2 text-purple-400" />
-                      <div className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-1">Shipments</div>
+                    <div className="rounded-md border border-[#E7EEF2] bg-[#FAFAF7] p-3.5">
+                      <div className="text-[12px] font-medium tracking-tight text-[#66737F]">Shipments</div>
                       <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-400 font-sans font-light tracking-tight italic">
-                    "Margin compared connected FBA records to identify opportunities that still need evidence review."
+                  <p className="text-[13px] leading-5 text-[#66737F]">
+                    Margin compared the connected marketplace records to identify opportunities that still need evidence review.
                   </p>
                 </>
               )}
             </div>
-            <DialogFooter>
-              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-[#0B74DE] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-xs hover:bg-[#005FBA] transition-colors">
+            <DialogFooter className="border-t border-[#DCE8EE] px-6 py-4">
+              <Button onClick={() => setShowRecoveryReveal(false)} className="h-9 w-full rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white hover:bg-[#005FBA]">
                 Continue to Dashboard
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
-        {/* SECOND WOW: Evidence Connect Modal */}
+        {/* Evidence source modal */}
         <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
-          <DialogContent className="platform-vitality-page max-w-2xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-[#182026] font-sans font-bold tracking-tight">
-                <Shield className="h-8 w-8 text-[#182026]/70" />
-                Protect Your Revenue
+          <DialogContent className="max-w-2xl rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(24,32,38,0.12)]">
+            <DialogHeader className="border-b border-[#DCE8EE] px-6 py-5 text-left">
+              <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence sources</p>
+              <DialogTitle className="mt-1.5 font-lora text-[26px] font-normal tracking-tight text-[#182026]">
+                Connect a source
               </DialogTitle>
-              <DialogDescription className="text-center text-gray-400 font-sans font-light tracking-tight">
-                Connect your data sources to automate document matching.
+              <DialogDescription className="mt-2 text-[13px] leading-5 text-[#66737F]">
+                Connect an eligible source to collect documents for evidence review.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-6 py-4">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-md p-6 text-center hover:border-[#C8D8FF] transition-all group">
-                  <Mail className="h-12 w-12 mx-auto mb-4 text-[#182026]/35 group-hover:text-[#0B74DE] transition-colors" />
-                  <h3 className="font-sans font-bold text-[18px] mb-2 tracking-tight">Connect Email</h3>
-                  <p className="text-xs text-[#66737F] mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
-                    AUTOMATICALLY SCAN REPOSITORIES FOR INVOICES, POs, AND SHIPMENT CONFIRMATIONS.
+            <div className="space-y-5 px-6 py-5">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="rounded-md border border-[#E7EEF2] p-4">
+                  <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Connect Gmail</h3>
+                  <p className="mt-1.5 text-[12px] leading-5 text-[#66737F]">
+                    Review Gmail for invoices, purchase orders, and shipment confirmations.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[12px] uppercase tracking-tight"
+                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[12px] tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                       handleConnectDocSource('gmail');
@@ -1124,15 +1120,14 @@ export default function IntegrationsHub() {
                   </Button>
                 </div>
 
-                <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-md p-6 text-center hover:border-[#C8D8FF] transition-all group">
-                  <Cloud className="h-12 w-12 mx-auto mb-4 text-[#182026]/35 group-hover:text-[#0B74DE] transition-colors" />
-                  <h3 className="font-sans font-bold text-[18px] mb-2 tracking-tight">Cloud Storage</h3>
-                  <p className="text-xs text-[#66737F] mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
-                    INTEGRATE GOOGLE DRIVE AND DROPBOX TO POOL YOUR BUSINESS DOCUMENTS.
+                <div className="rounded-md border border-[#E7EEF2] p-4">
+                  <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Connect Google Drive</h3>
+                  <p className="mt-1.5 text-[12px] leading-5 text-[#66737F]">
+                    Review Google Drive for the business documents that may support a case.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[12px] uppercase tracking-tight"
+                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[12px] tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                       handleConnectDocSource('gdrive');
@@ -1144,14 +1139,14 @@ export default function IntegrationsHub() {
               </div>
 
               <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-2 text-[12px] font-sans font-bold text-[#182026]/35 uppercase tracking-tight">
+                <div className="flex items-center justify-center gap-2 text-[12px] font-sans font-bold text-[#182026]/35 tracking-tight">
                   <Info className="h-3 w-3" />
-                  <span>Evidence increases claim approval rates by 300%</span>
+                  <span>Evidence is reviewed in the case workflow before it can support filing.</span>
                 </div>
                 <Button
                   variant="ghost"
                   onClick={() => setShowEvidenceModal(false)}
-                  className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F] hover:text-[#182026]"
+                  className="text-[12px] font-sans font-bold tracking-tight text-[#66737F] hover:text-[#182026]"
                 >
                   I'll upload manual artifacts later
                 </Button>
@@ -1160,42 +1155,39 @@ export default function IntegrationsHub() {
           </DialogContent>
         </Dialog>
 
-        <div className="relative z-10 container mx-auto max-w-6xl px-8 py-10">
+        <div className="mx-auto max-w-[1180px] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
           {/* Header section */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col mb-12"
+            className="mb-6 flex flex-col"
           >
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px w-8 bg-[#D8E3E8]" />
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#0B74DE]">Source control</span>
-                </div>
-                <h1 className="font-lora text-[30px] font-normal text-[#111827] mb-3 leading-tight tracking-tight">
+            <div className="flex flex-col gap-4 border-b border-[#DCE8EE] pb-6 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Integration control</p>
+                <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">
                   Connected sources
                 </h1>
-                <p className="max-w-2xl text-[15px] font-sans font-normal leading-relaxed tracking-tight text-[#6B7280]">
-                  Margin reconciles marketplace records with evidence from your business systems. Connect the sources required to prove reimbursement gaps and unresolved discrepancies.
+                <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">
+                  Connect marketplace records and evidence repositories. Margin keeps connection state, ingestion state, and downstream evidence state separate.
                 </p>
               </div>
 
-              <div className="mt-6 flex items-center gap-2 text-[11px] font-sans font-semibold tracking-tight text-[#6B7280]">
-                <span className={`h-1.5 w-1.5 rounded-full ${pageOperationalState === 'Attention required' || pageOperationalState === 'Amazon connection required' ? 'bg-orange-400' : 'bg-[#0B74DE]'}`} />
+              <div className="flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#4D5B66]">
+                <span className={`h-1.5 w-1.5 rounded-full ${pageOperationalState === 'Attention required' || pageOperationalState === 'Amazon connection required' ? 'bg-rose-500' : 'bg-[#0B74DE]'}`} />
                 <span>{pageOperationalState}</span>
               </div>
             </div>
 
             {/* Restored Unified Search */}
-            <div className="mt-6 flex flex-col gap-3 border-y border-[#E5E7EB] bg-[#F9FAFB] px-4 py-3 md:flex-row md:items-center md:justify-between">
-              <div className="relative flex w-full max-w-xl items-center rounded-md border border-[#E5E7EB] bg-white transition-colors focus-within:border-[#0B74DE] md:w-auto">
-                <SearchIcon className="h-4 w-4 text-[#66737F] ml-4 group-hover:text-[#0B74DE] transition-colors" />
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="relative flex w-full max-w-xl items-center rounded-md border border-[#DCE8EE] bg-white transition-colors focus-within:border-[#0B74DE] focus-within:ring-2 focus-within:ring-[#0B74DE]/15">
+                <SearchIcon className="ml-3 h-4 w-4 shrink-0 text-[#66737F]" aria-hidden="true" />
                 <Input
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search connected sources, stores, and evidence repositories"
-                  className="h-9 bg-transparent border-none text-[#111827] font-sans text-[11px] placeholder:text-[#9CA3AF] focus-visible:ring-0 tracking-tight"
+                  placeholder="Search sources, stores, and repositories"
+                  className="h-10 border-none bg-transparent text-[13px] tracking-tight text-[#182026] placeholder:text-[#8A97A2] focus-visible:ring-0"
                 />
               </div>
             </div>
@@ -1206,18 +1198,15 @@ export default function IntegrationsHub() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="space-y-8 mb-12"
+            className="space-y-5"
           >
             {/* Amazon Command Node */}
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12">
-              <div className="h-full border-y border-[#E5E7EB] bg-white px-5 py-5 flex flex-col relative group transition-colors duration-300 hover:bg-[#FDFEFE]">
-                <div className="absolute top-0 right-0 p-6 opacity-15 group-hover:opacity-50 transition-opacity">
-                  <Database className="w-12 h-12 text-[#182026]/10 group-hover:text-[#182026]/20 transition-colors" />
-                </div>
+              <div className="flex h-full flex-col rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
 
-                <div className="flex flex-col gap-5 border-b border-[#D8E3EA] pb-5 md:flex-row md:items-center md:justify-between">
-                  <div className="flex items-center gap-6">
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden">
+                <div className="flex flex-col gap-4 border-b border-[#DCE8EE] pb-4 md:flex-row md:items-center md:justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden">
                       <img
                         src="/amazon-logo-transparent-circle.png"
                         alt="Amazon"
@@ -1225,8 +1214,9 @@ export default function IntegrationsHub() {
                       />
                     </div>
                     <div>
-                      <h3 className="text-[20px] font-lora font-normal text-[#111827] tracking-tight">Amazon Seller Central</h3>
-                      <p className="mt-1 text-[11px] font-sans font-medium text-[#6B7280] tracking-tight">Marketplace records and account connection</p>
+                      <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Marketplace records</p>
+                      <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[#182026]">Amazon Seller Central</h3>
+                      <p className="mt-1 text-[13px] leading-5 text-[#66737F]">Account connection and reconciliation source.</p>
                     </div>
                   </div>
 
@@ -1235,42 +1225,43 @@ export default function IntegrationsHub() {
                       <DialogTrigger asChild>
                         <Button
                           variant="ghost"
-                          className="h-9 rounded-md border border-[#E5E7EB] bg-white px-4 text-[11px] font-sans font-semibold tracking-tight text-[#4B5563] transition-colors hover:border-[#C8D8FF] hover:bg-[#F3F5F4] hover:text-[#111827] gap-2"
+                          className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026] gap-2"
                         >
                           <Plus className="w-4 h-4" /> Add Store Record
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="platform-vitality-page border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
-                        <DialogHeader>
-                          <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Add Store Record</DialogTitle>
-                          <DialogDescription className="text-gray-400 font-sans font-light tracking-tight">
-                            Create a tenant store record. This does not authenticate Amazon by itself.
+                      <DialogContent className="rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(24,32,38,0.12)]">
+                        <DialogHeader className="border-b border-[#DCE8EE] px-6 py-5 text-left">
+                          <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Store mapping</p>
+                          <DialogTitle className="mt-1.5 font-lora text-[26px] font-normal tracking-tight text-[#182026]">Add a store record</DialogTitle>
+                          <DialogDescription className="mt-2 text-[13px] leading-5 text-[#66737F]">
+                            This record helps map your workspace. It does not authenticate Amazon by itself.
                           </DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-6 py-6">
+                        <div className="space-y-5 px-6 py-5">
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <label className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">Store Designator</label>
+                              <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Store name</label>
                               <Input
                                 placeholder="Alpha-Store-01"
                                 value={newStoreData.name}
                                 onChange={e => setNewStoreData({ ...newStoreData, name: e.target.value })}
-                                className="bg-[#F3F6F8] border-[#D8E3EA] focus:border-[#C8D8FF] text-[#182026] h-12 font-sans font-bold tracking-tight"
+                                className="h-10 border-[#DCE8EE] bg-[#FAFAF7] text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/15"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">Seller ID (Business Identity)</label>
+                              <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Seller ID</label>
                               <Input
                                 placeholder="A3XXXXXXXXXXXX"
                                 value={newStoreData.seller_id}
                                 onChange={e => setNewStoreData({ ...newStoreData, seller_id: e.target.value })}
-                                className="bg-[#F3F6F8] border-[#D8E3EA] focus:border-[#C8D8FF] text-[#182026] h-12 font-sans font-bold tracking-tight"
+                                className="h-10 border-[#DCE8EE] bg-[#FAFAF7] text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/15"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">Marketplace Region</label>
+                              <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Marketplace region</label>
                               <select
-                                className="w-full h-12 px-3 bg-[#F3F6F8] border-[#D8E3EA] rounded-md text-sm border focus:border-[#C8D8FF] focus:ring-0 outline-none text-[#182026] font-sans font-bold tracking-tight"
+                                className="h-10 w-full rounded-md border border-[#DCE8EE] bg-[#FAFAF7] px-3 text-[13px] tracking-tight text-[#182026] outline-none focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15"
                                 value={newStoreData.marketplace}
                                 onChange={e => setNewStoreData({ ...newStoreData, marketplace: e.target.value })}
                               >
@@ -1281,18 +1272,18 @@ export default function IntegrationsHub() {
                             </div>
                           </div>
                         </div>
-                        <DialogFooter className="gap-2">
+                        <DialogFooter className="border-t border-[#DCE8EE] px-6 py-4">
                           <Button
                             variant="ghost"
                             onClick={() => setShowAddStore(false)}
-                            className="bg-transparent text-gray-400 hover:text-[#182026] font-sans font-bold uppercase text-[12px] py-1 tracking-tight"
+                            className="h-9 text-[13px] font-medium tracking-tight text-[#66737F] hover:text-[#182026]"
                           >
                             Cancel
                           </Button>
                           <Button
                             onClick={handleAddStore}
                             disabled={addingStore}
-                            className="bg-[#0B74DE] hover:bg-[#005FBA] text-[#FFFFFF] font-sans font-bold uppercase text-[12px] h-12 px-8 tracking-tight"
+                            className="h-9 rounded-md bg-[#0B74DE] px-4 text-[13px] font-medium tracking-tight text-white hover:bg-[#005FBA]"
                           >
                             {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Store Record"}
                           </Button>
@@ -1302,15 +1293,15 @@ export default function IntegrationsHub() {
 
                     {isFull ? (
                       <div className="flex flex-col items-start gap-3">
-                        <div className="text-[11px] font-sans font-bold uppercase tracking-tight text-[#66737F]">
+                        <p className="text-[13px] font-medium tracking-tight text-[#4D5B66]">
                           We’re onboarding a small batch of sellers right now.
-                        </div>
-                        <div className="text-[11px] text-gray-400">
+                        </p>
+                        <p className="text-[13px] text-[#66737F]">
                           Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
-                          </div>
+                        </p>
                         <Button
                           onClick={() => navigate('/waitlist?reason=capacity')}
-                          className="h-9 rounded-md bg-[#0B74DE] px-5 text-[#FFFFFF] font-sans font-semibold tracking-tight text-[11px] transition-colors hover:bg-[#005FBA]"
+                          className="h-9 rounded-md bg-[#0B74DE] px-4 text-[13px] font-medium tracking-tight text-white transition-colors hover:bg-[#005FBA]"
                         >
                           Join Waitlist
                         </Button>
@@ -1318,7 +1309,7 @@ export default function IntegrationsHub() {
                     ) : (
                       <Button
                         onClick={async () => {
-                          toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon Seller Central Authorization...' });
+                          toast({ title: 'Connect Amazon', description: 'Redirecting to Amazon Seller Central authorization...' });
                           try {
                             if (!activeSlug) {
                               toast({ title: 'Workspace Required', description: 'Select a workspace before connecting Amazon.', variant: 'destructive' });
@@ -1344,22 +1335,22 @@ export default function IntegrationsHub() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 border-b border-[#D8E3EA] md:grid-cols-2 xl:grid-cols-4">
+                <div className="grid grid-cols-1 border-b border-[#E7EEF2] md:grid-cols-2 xl:grid-cols-4">
                   <div className="border-b border-[#D8E3EA] px-0 py-4 md:border-r xl:border-b-0 xl:pr-5">
-                    <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase block mb-2 tracking-tight">Auth Status</span>
-                    <span className="text-[13px] text-[#182026] font-sans font-medium tracking-tight">{describeProviderState(amazonProviderState)}</span>
+                    <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Auth status</span>
+                    <span className="text-[13px] font-medium tracking-tight text-[#182026]">{describeProviderState(amazonProviderState)}</span>
                   </div>
                   <div className="border-b border-[#D8E3EA] px-0 py-4 md:border-b-0 xl:border-r xl:px-5">
-                    <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase block mb-2 tracking-tight">Seller ID</span>
-                    <span className="text-[13px] text-[#182026] font-sans font-medium tracking-tight break-all">{connectedSellerId || 'Not resolved'}</span>
+                    <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Seller ID</span>
+                    <span className="break-all text-[13px] font-medium tracking-tight text-[#182026]">{connectedSellerId || 'Not resolved'}</span>
                   </div>
                   <div className="border-b border-[#D8E3EA] px-0 py-4 md:border-r md:pr-5 xl:border-b-0 xl:px-5">
-                    <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase block mb-2 tracking-tight">Amazon Account</span>
-                    <span className="text-[13px] text-[#182026] font-sans font-medium tracking-tight">{connectedAmazonName || 'Not available'}</span>
+                    <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Amazon account</span>
+                    <span className="text-[13px] font-medium tracking-tight text-[#182026]">{connectedAmazonName || 'Not available'}</span>
                   </div>
                   <div className="px-0 py-4 md:pl-5">
-                    <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase block mb-2 tracking-tight">Marketplaces</span>
-                    <span className="text-[13px] text-[#182026] font-sans font-medium tracking-tight">
+                    <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Marketplaces</span>
+                    <span className="text-[13px] font-medium tracking-tight text-[#182026]">
                       {connectedAmazonMarketplaces.length > 0 ? connectedAmazonMarketplaces.join(', ') : 'Not available'}
                     </span>
                   </div>
@@ -1372,24 +1363,24 @@ export default function IntegrationsHub() {
                     </div>
                   ) : stores.length > 0 ? (
                     stores.map(store => (
-                      <div key={store.id} className="border-y border-[#D8E3EA] px-0 py-4 relative group/card transition-colors duration-300 hover:border-[#C8D8FF] hover:bg-white/[0.025]">
+                        <div key={store.id} className="group/card relative rounded-md border border-[#E7EEF2] bg-[#FCFDFC] p-4 transition-colors hover:bg-[#F7FAFC]">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex flex-col">
                             <span className="text-[#182026] font-sans font-medium text-[13px] mb-1 truncate max-w-[150px] tracking-tight">{store.name}</span>
-                            <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase tracking-tight">{store.marketplace}</span>
+                            <span className="text-[12px] font-medium tracking-tight text-[#66737F]">{store.marketplace}</span>
                           </div>
-                          <div className="h-2 w-2 rounded-full bg-white/70" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                         </div>
 
                         <div className="space-y-3 pt-4 border-t border-[#D8E3EA]">
                           <div className="flex flex-col">
-                            <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase tracking-tight">Seller ID</span>
-                            <span className="text-[12px] text-[#111827] font-medium tracking-tight break-all">{store.seller_id || 'Not bound'}</span>
+                            <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Seller ID</span>
+                            <span className="break-all text-[12px] font-medium tracking-tight text-[#182026]">{store.seller_id || 'Not bound'}</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="flex flex-col">
-                            <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase tracking-tight">Status</span>
-                            <span className="text-[12px] text-[#111827] font-medium tracking-tight">{getStoreOperationalState(store)}</span>
+                            <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Status</span>
+                            <span className="text-[12px] font-medium tracking-tight text-[#182026]">{getStoreOperationalState(store)}</span>
                             </div>
                             <button
                               onClick={() => handleDeleteStore(store.id)}
@@ -1409,86 +1400,79 @@ export default function IntegrationsHub() {
                   )}
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-[#D8E3EA] flex flex-col gap-3 text-[12px] font-sans font-medium uppercase tracking-tight text-[#66737F] md:flex-row md:items-center md:justify-between">
-                  <div className="flex items-center gap-6">
-                    <span className="flex items-center gap-2"><Globe className="w-3 h-3" /> US-EAST-1</span>
-                    <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-[#182026]/35" /> Encrypted</span>
-                  </div>
-                  <span className="text-[#66737F]">Last Amazon ingest: {formatDateTime(status?.lastIngest)}</span>
+                <div className="mt-5 flex flex-col gap-2 border-t border-[#E7EEF2] pt-4 text-[12px] leading-5 text-[#66737F] md:flex-row md:items-center md:justify-between">
+                  <span>Marketplace access is handled through your approved Amazon connection.</span>
+                  <span>Last Amazon ingest: {formatDateTime(status?.lastIngest)}</span>
                 </div>
               </div>
             </motion.div>
 
             {/* INTEGRATION REQUEST: Can't find what you need? */}
-            <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12 mt-6">
-              <div className="bg-white/[0.01] border border-dashed border-[#D8E3EA] rounded-md p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-[#C8D8FF] transition-all duration-500">
-                <div className="flex items-center gap-6 text-center md:text-left">
-                  <div className="h-14 w-14 rounded-full bg-[#F3F6F8] flex items-center justify-center border border-[#D8E3EA] group-hover:scale-110 transition-transform duration-500">
-                    <Plus className="h-6 w-6 text-gray-400 group-hover:text-[#182026] transition-colors" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-sans font-bold text-[#182026] tracking-tight mb-1">Can't find a specific integration?</h3>
-                    <p className="text-sm text-[#66737F] font-sans font-bold uppercase tracking-tight">Our Engineering Team can build custom harvesting protocols.</p>
-                  </div>
+            <motion.div variants={itemVariants} className="mt-1">
+              <div className="flex flex-col gap-4 rounded-[10px] border border-dashed border-[#DCE8EE] bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Need another integration?</h3>
+                  <p className="mt-1 text-[13px] leading-5 text-[#66737F]">Tell us which provider would make your evidence review more complete.</p>
                 </div>
                 <Button
                   onClick={() => setShowRequestForm(true)}
-                  variant="ghost"
-                  className="h-12 border border-[#D8E3EA] hover:border-[#C8D8FF] hover:bg-[#F3F6F8] text-[#4B5563] hover:text-[#182026] font-sans font-bold uppercase tracking-tight text-[12px] px-10 transition-all duration-300"
+                  variant="outline"
+                  className="h-9 shrink-0 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                 >
-                  Request Integration Node
+                  Request integration
                 </Button>
               </div>
             </motion.div>
 
             {/* Waitlist / Request Dialog */}
             <Dialog open={showRequestForm} onOpenChange={setShowRequestForm}>
-              <DialogContent className="platform-vitality-page border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)] backdrop-blur-xl">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Request Integration Protocol</DialogTitle>
-                  <DialogDescription className="text-gray-400 font-sans font-light tracking-tight">
-                    Specify the platform or repository you wish to integrate into the matrix.
+              <DialogContent className="rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(24,32,38,0.12)]">
+                <DialogHeader className="border-b border-[#DCE8EE] px-6 py-5 text-left">
+                  <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Integration request</p>
+                  <DialogTitle className="mt-1.5 font-lora text-[26px] font-normal tracking-tight text-[#182026]">Request an integration</DialogTitle>
+                  <DialogDescription className="mt-2 text-[13px] leading-5 text-[#66737F]">
+                    Tell us which platform or repository you need to connect.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-6 py-6">
+                <div className="space-y-5 px-6 py-5">
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">Platform Name</label>
+                      <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Platform name</label>
                       <Input
                         placeholder="e.g., Shopify, Walmart, NetSuite..."
                         value={requestFormData.platform}
                         onChange={e => setRequestFormData({ ...requestFormData, platform: e.target.value })}
-                        className="bg-[#F3F6F8] border-[#D8E3EA] focus:border-[#C8D8FF] text-[#182026] h-12 font-sans font-bold tracking-tight"
+                        className="h-10 border-[#DCE8EE] bg-[#FAFAF7] text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/15"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">Harvesting Context</label>
+                      <label className="text-[12px] font-medium tracking-tight text-[#66737F]">What you need to connect</label>
                       <textarea
-                        placeholder="What data nodes should we extract?"
+                        placeholder="What records would you want Margin to review?"
                         value={requestFormData.description}
                         onChange={e => setRequestFormData({ ...requestFormData, description: e.target.value })}
-                        className="w-full h-32 px-3 py-2 bg-[#F3F6F8] border-[#D8E3EA] rounded-md text-sm border focus:border-[#C8D8FF] focus:ring-0 outline-none text-[#182026] font-sans font-bold tracking-tight resize-none"
+                        className="h-28 w-full resize-none rounded-md border border-[#DCE8EE] bg-[#FAFAF7] px-3 py-2.5 text-[13px] tracking-tight text-[#182026] outline-none focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15"
                       />
                     </div>
                   </div>
-                  <div className="bg-white/[0.03] border border-[#D8E3EA] rounded-md p-4 flex items-start gap-3">
-                    <Info className="h-5 w-5 text-[#182026]/60 shrink-0 mt-0.5" />
-                    <p className="text-[12px] text-[#182026]/55 font-sans font-bold leading-relaxed uppercase tracking-tight">
-                      Custom integration request capture is not wired in this build. Contact support if you need a new provider added.
+                  <div className="flex items-start gap-3 rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-3.5">
+                    <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#66737F]" />
+                    <p className="text-[12px] leading-5 text-[#66737F]">
+                      Integration request submission is not available in this build. Contact support if you need a provider added.
                     </p>
                   </div>
                 </div>
-                <DialogFooter className="gap-2">
+                <DialogFooter className="border-t border-[#DCE8EE] px-6 py-4">
                   <Button
                     variant="ghost"
                     onClick={() => setShowRequestForm(false)}
-                    className="bg-transparent text-gray-400 hover:text-[#182026] font-sans font-bold uppercase text-[12px] py-1 tracking-tight"
+                    className="h-9 text-[13px] font-medium tracking-tight text-[#66737F] hover:text-[#182026]"
                   >
                     Cancel
                   </Button>
                   <Button
                     disabled
-                    className="bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#6B7280] font-sans font-bold uppercase text-[12px] h-12 px-8 tracking-tight"
+                    className="h-9 rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-4 text-[13px] font-medium tracking-tight text-[#66737F]"
                   >
                     Unavailable
                   </Button>
@@ -1497,14 +1481,14 @@ export default function IntegrationsHub() {
             </Dialog>
 
             {/* Harvesting Nodes Title */}
-            <motion.div variants={itemVariants} className="lg:col-span-12 mt-8 mb-4">
-              <div className="flex items-center gap-3">
-                <div className="h-px w-6 bg-[#0B74DE]" />
-                <h3 className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#9CA3AF]">Available evidence sources</h3>
+            <motion.div variants={itemVariants} className="mt-3">
+              <div>
+                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence repositories</p>
+                <h2 className="mt-1 text-[20px] font-semibold tracking-tight text-[#182026]">Connect the records that can support review</h2>
               </div>
             </motion.div>
 
-            <div className="lg:col-span-12 grid grid-cols-1 gap-0 border-y border-[#E5E7EB] md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white md:grid-cols-2 xl:grid-cols-3">
 
               {SECONDARY_PROVIDERS.map((p) => {
                 const providerMeta = {
@@ -1528,30 +1512,30 @@ export default function IntegrationsHub() {
 
                 return (
                   <motion.div key={p} variants={itemVariants} className="w-full">
-                    <div className={`h-full border-b border-r border-[#E5E7EB] bg-white px-4 py-5 flex flex-col relative group transition-colors duration-200 ${isParked ? 'grayscale opacity-55' : 'hover:bg-[#F8FAFB]'}`}>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className={`flex h-9 w-9 items-center justify-center ${isParked ? '' : 'group-hover:scale-105'} transition-transform duration-200`}>
+                    <div className={`flex h-full flex-col border-b border-r border-[#E7EEF2] p-5 transition-colors ${isParked ? 'bg-[#FAFAF7] opacity-70' : 'bg-white hover:bg-[#F7FAFC]'}`}>
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className="flex h-8 w-8 items-center justify-center">
                           <img src={meta.icon} alt={meta.name} className="h-7 w-7 object-contain" />
                         </div>
                       </div>
 
-                      <h4 className="text-[14px] font-sans font-semibold text-[#111827] tracking-tight mb-1">{meta.name}</h4>
-                      <p className="text-[10px] font-sans font-medium text-[#6B7280] tracking-tight mb-4">Evidence repository</p>
+                      <h3 className="text-[15px] font-semibold tracking-tight text-[#182026]">{meta.name}</h3>
+                      <p className="mt-1 text-[12px] text-[#66737F]">Evidence repository</p>
 
                       <div className="flex-1">
                         {isParked ? (
                           <div className="space-y-4">
-                            <div className="bg-transparent rounded-none p-0 border-t border-[#E5E7EB] pt-3">
-                              <span className="text-[12px] font-sans font-bold text-[#66737F] uppercase block mb-1 tracking-tight">Availability</span>
-                              <span className="text-[13px] text-[#4B5A64] block font-sans font-bold tracking-tight">
+                            <div className="border-t border-[#E7EEF2] pt-3">
+                              <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Availability</span>
+                              <span className="block text-[13px] font-medium tracking-tight text-[#4D5B66]">
                                 Available {PARKED_PROVIDER_AVAILABLE_DATE}
                               </span>
-                              <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
+                              <span className="mt-2 block text-[12px] leading-5 text-[#66737F]">
                                 This repository is parked for launch and will be enabled once provider access is production-ready.
                               </span>
                             </div>
                             <Button
-                              className="w-full h-10 bg-[#F3F6F8] border border-[#D8E3EA] text-[#182026]/45 text-[12px] font-sans font-bold uppercase tracking-tight gap-2 cursor-not-allowed"
+                              className="h-9 w-full rounded-md border-[#DCE8EE] bg-[#F7FAFC] text-[13px] font-medium tracking-tight text-[#66737F] cursor-not-allowed"
                               disabled
                             >
                               Available {PARKED_PROVIDER_AVAILABLE_DATE}
@@ -1559,9 +1543,9 @@ export default function IntegrationsHub() {
                           </div>
                         ) : connected ? (
                           <div className="space-y-4">
-                            <div className="bg-transparent rounded-none p-0 border-t border-[#E5E7EB] pt-3">
-                              <span className="text-[12px] font-sans font-bold text-[#66737F] uppercase block mb-1 tracking-tight">Operational State</span>
-                              <span className="text-[13px] text-[#4B5A64] truncate block font-sans font-bold tracking-tight">
+                            <div className="border-t border-[#E7EEF2] pt-3">
+                              <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Operational state</span>
+                              <span className="block truncate text-[13px] font-medium tracking-tight text-[#4D5B66]">
                                 {describeProviderState(providerState)}
                               </span>
                               <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
@@ -1592,7 +1576,7 @@ export default function IntegrationsHub() {
                               variant="ghost"
                               size="sm"
                               disabled={disconnectingProvider === p}
-                              className="integrations-disconnect-button w-full h-8 rounded-md border border-[#E5E7EB] text-[11px] font-sans font-semibold tracking-tight"
+                              className="integrations-disconnect-button h-8 w-full rounded-md border border-rose-200 bg-white text-[12px] font-medium tracking-tight text-rose-700 hover:bg-rose-50"
                               onClick={() => handleDisconnectDocSource(p)}
                             >
                               {disconnectingProvider === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin mx-auto" /> : "Disconnect"}
@@ -1600,11 +1584,11 @@ export default function IntegrationsHub() {
                           </div>
                         ) : (
                           <div className="space-y-4">
-                            <p className="text-xs text-[#66737F] leading-relaxed mb-4">
+                            <p className="mb-4 text-[12px] leading-5 text-[#66737F]">
                               {providerState.needs_reconnect ? 'Reconnect this repository to restore evidence ingestion.' : 'Establish persistent monitoring of this repository for financial artifacts.'}
                             </p>
                             <Button
-                              className="w-full h-9 rounded-md bg-white hover:bg-[#F3F5F4] border border-[#E5E7EB] text-[#0B74DE] text-[11px] font-sans font-semibold tracking-tight gap-2"
+                              className="h-9 w-full rounded-md border-[#DCE8EE] bg-white text-[13px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC] gap-2"
                               onClick={() => handleConnectDocSource(p)}
                               disabled={providerLoading === p}
                             >
@@ -1620,20 +1604,21 @@ export default function IntegrationsHub() {
             </div>
 
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-8">
-              <div className="border-y border-[#E5E7EB] bg-white px-5 py-5">
-                <div className="flex flex-col gap-4 border-b border-[#D8E3EA] pb-5 md:flex-row md:items-end md:justify-between">
-                  <div>
-                    <h3 className="text-[20px] font-lora font-normal text-[#111827] tracking-tight">Evidence intake</h3>
-                    <p className="text-[12px] font-sans font-normal text-[#6B7280] tracking-tight mt-1">
-                      Connection state stays separate from stored, parsed, ready-to-match, and case-linked evidence.
+              <div className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+                  <div className="flex flex-col gap-3 border-b border-[#DCE8EE] pb-4 md:flex-row md:items-end md:justify-between">
+                    <div>
+                      <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence intake</p>
+                      <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[#182026]">Ingestion and evidence state</h3>
+                      <p className="mt-1.5 text-[13px] leading-5 text-[#66737F]">
+                        Connection state stays separate from stored, parsed, ready-to-match, and case-linked evidence.
+                      </p>
+                    </div>
+                    <p className="text-[12px] leading-5 text-[#66737F]">
+                      Last intake refresh: {formatDateTime(evidenceStatus?.lastIngestion || status?.lastIngest)}
                     </p>
                   </div>
-                  <div className="text-[12px] font-sans font-medium uppercase tracking-tight text-[#66737F]">
-                    Last intake refresh: {formatDateTime(evidenceStatus?.lastIngestion || status?.lastIngest)}
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 border-b border-[#D8E3EA] md:grid-cols-3 xl:grid-cols-6">
+                <div className="mt-4 grid grid-cols-2 border-y border-[#E7EEF2] md:grid-cols-3 xl:grid-cols-6">
                   {[
                     { label: 'Ingestable Sources', value: evidenceSourcesState.ingestableCount, note: `${evidenceSourcesState.connectedCount} connected` },
                     { label: 'Sources Resolved', value: ingestionResult?.sourcesResolved ?? evidenceStatus?.sourcesResolved ?? 0, note: 'Resolved for ingest' },
@@ -1645,7 +1630,7 @@ export default function IntegrationsHub() {
                     <div
                       key={item.label}
                       className={cn(
-                        "px-0 py-4 md:px-4 xl:px-4",
+                        "px-3 py-3.5 md:px-4",
                         index % 2 === 0 ? "border-r border-[#D8E3EA] pr-4" : "pl-4",
                         index < 4 ? "border-b border-[#D8E3EA] md:border-b-0" : "",
                         index < 3 ? "md:border-r md:border-[#D8E3EA]" : "",
@@ -1653,25 +1638,25 @@ export default function IntegrationsHub() {
                         index < 5 ? "xl:border-r xl:border-[#D8E3EA]" : ""
                       )}
                     >
-                      <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase block mb-2 tracking-tight">{item.label}</span>
-                      <span className="text-[24px] font-sans font-medium text-[#182026] tracking-tight">{item.value}</span>
-                      <span className="block mt-2 text-[12px] text-[#66737F] font-sans font-medium uppercase tracking-tight">{item.note}</span>
+                      <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">{item.label}</span>
+                      <span className="text-[22px] font-semibold tracking-tight text-[#182026]">{item.value}</span>
+                      <span className="mt-1 block text-[12px] leading-5 text-[#66737F]">{item.note}</span>
                     </div>
                   ))}
                 </div>
 
-                <p className="mt-4 text-[12px] font-sans font-medium uppercase tracking-tight text-[#66737F]">
+                <p className="mt-4 border-l-2 border-[#0B74DE] bg-[#F6FAFE] px-3 py-2.5 text-[12px] leading-5 text-[#4D5B66]">
                   Filing-usable evidence is not inferred here. It is confirmed later when dispute evidence links exist in case workflows.
                 </p>
 
                 <div className="mt-5 grid grid-cols-1 gap-6 xl:grid-cols-2">
-                  <div className="border-y border-[#D8E3EA] py-4">
-                    <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase block mb-3 tracking-tight">Skipped Providers</span>
+                  <div className="border-t border-[#E7EEF2] pt-4">
+                    <span className="mb-3 block text-[12px] font-medium tracking-tight text-[#66737F]">Skipped providers</span>
                     {activeSkippedProviders.length > 0 ? (
                       <div className="divide-y divide-[#D8E3EA]">
                         {activeSkippedProviders.map((item, index) => (
-                          <div key={`${item.provider}-${item.reason}-${index}`} className="flex items-start justify-between gap-4 py-2 text-xs font-sans tracking-tight">
-                            <span className="text-[#182026] font-medium uppercase">{item.provider}</span>
+                          <div key={`${item.provider}-${item.reason}-${index}`} className="flex items-start justify-between gap-4 py-2 text-[12px] tracking-tight">
+                            <span className="font-medium text-[#182026]">{item.provider}</span>
                             <span className="text-[#66737F] text-right">{humanizeSkippedReason(item.reason)}</span>
                           </div>
                         ))}
@@ -1683,8 +1668,8 @@ export default function IntegrationsHub() {
                     )}
                   </div>
 
-                  <div className="border-y border-[#D8E3EA] py-4">
-                    <span className="text-[12px] font-sans font-medium text-[#66737F] uppercase block mb-3 tracking-tight">Last Ingest Outcome</span>
+                  <div className="border-t border-[#E7EEF2] pt-4">
+                    <span className="mb-3 block text-[12px] font-medium tracking-tight text-[#66737F]">Last ingest outcome</span>
                     {ingestionResult ? (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-4">
@@ -1707,11 +1692,11 @@ export default function IntegrationsHub() {
                           </span>
                           <div className="flex items-center gap-2">
                             {ingestionResult.providerLabel && (
-                              <Badge variant="outline" className="border-[#D8E3EA] bg-[#F3F6F8] text-[#182026]/70 text-[12px] font-sans font-bold uppercase tracking-tight">
+                              <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">
                                 {ingestionResult.providerLabel}
                               </Badge>
                             )}
-                            <Badge variant="outline" className="border-[#D8E3EA] bg-[#F3F6F8] text-[#182026]/70 text-[12px] font-sans font-bold uppercase tracking-tight">
+                            <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">
                               {ingestionResult.totalDocumentsIngested ?? ingestionResult.documentsIngested ?? 0} stored
                             </Badge>
                           </div>
@@ -1720,7 +1705,7 @@ export default function IntegrationsHub() {
                           {ingestionResult.message || 'The latest ingestion result is now visible instead of being discarded.'}
                         </p>
                         {!!ingestionResult.providersAttempted?.length && (
-                          <p className="text-[12px] font-sans font-medium uppercase tracking-tight text-[#66737F]">
+                          <p className="text-[12px] font-sans font-medium tracking-tight text-[#66737F]">
                             Attempted: {ingestionResult.providersAttempted.join(', ')}
                           </p>
                         )}
@@ -1743,55 +1728,55 @@ export default function IntegrationsHub() {
             </motion.div>
 
             {/* Logic Overrides Section */}
-            <motion.div variants={itemVariants} className="lg:col-span-12 mt-12 mb-4">
-              <div className="flex items-center gap-3">
-                <div className="h-px w-6 bg-[#0B74DE]" />
-                <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-[#66737F]">Auto-Ingest from Sources</h3>
+            <motion.div variants={itemVariants} className="mt-3">
+              <div>
+                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Automated intake</p>
+                <h2 className="mt-1 text-[20px] font-semibold tracking-tight text-[#182026]">Control what Margin collects</h2>
               </div>
             </motion.div>
 
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-8">
-              <div className="bg-white backdrop-blur-md rounded-md border border-[#D8E3EA] p-8">
+              <div className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
                 <div className="flex items-center gap-4 mb-8">
                   <div>
-                    <h4 className="text-[18px] font-sans font-bold text-[#182026] tracking-tight">Harvesting Parameters</h4>
-                    <p className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mt-0.5">Global Filter Configuration</p>
+                    <h3 className="text-[18px] font-semibold tracking-tight text-[#182026]">Collection filters</h3>
+                    <p className="mt-1 text-[13px] leading-5 text-[#66737F]">Saved rules used when a supported provider can collect evidence.</p>
                   </div>
                 </div>
 
-                <div className="mb-8 rounded-md border border-[#D8E3EA] bg-black/30 p-4">
-                  <p className="text-xs text-gray-400 font-sans tracking-tight leading-relaxed">
+                <div className="mb-6 rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-3.5">
+                  <p className="text-[12px] leading-5 text-[#66737F]">
                     This panel actively controls sender, subject, exclusion, date, and file-type filtering. Duplicate suppression stays enforced automatically in the ingestion services, and provider folder scope is only honored when a provider route explicitly supports it.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <label className="text-[12px] font-sans text-[#182026]/35 uppercase tracking-tight">Target Sender Patterns</label>
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Target sender patterns</label>
                     <Input
                       value={filters.senderPatterns.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, senderPatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                      className="bg-[#F9FBFC] border-[#D8E3EA] text-[#182026] font-sans text-xs h-12 tracking-tight"
+                      className="h-10 border-[#DCE8EE] bg-[#FAFAF7] text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/15"
                     />
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-[12px] font-sans text-[#182026]/35 uppercase tracking-tight">Subject Scopes</label>
+                  <div className="space-y-2">
+                    <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Subject scopes</label>
                     <Input
                       value={filters.subjectKeywords.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, subjectKeywords: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                      className="bg-[#F9FBFC] border-[#D8E3EA] text-[#182026] font-sans text-xs h-12 tracking-tight"
+                      className="h-10 border-[#DCE8EE] bg-[#FAFAF7] text-[13px] tracking-tight text-[#182026] focus-visible:ring-[#0B74DE]/15"
                     />
                   </div>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-[#D8E3EA]">
-                  <label className="text-[12px] font-sans font-bold text-[#182026]/35 uppercase tracking-tight mb-6 block">Artifact Class Selection</label>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="mt-6 border-t border-[#E7EEF2] pt-5">
+                  <label className="mb-3 block text-[12px] font-medium tracking-tight text-[#66737F]">Artifact classes</label>
+                  <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
                     {Object.entries(filters.fileTypes).map(([type, enabled]) => (
                       <button
                         key={type}
                         onClick={() => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, [type]: !enabled } }))}
-                        className={`p-4 rounded-md border font-sans font-bold text-[12px] uppercase tracking-tight transition-all duration-300 ${enabled ? 'bg-[#F3F5F4] border-[#E5E7EB] text-[#182026]' : 'bg-[#F3F6F8] border-[#D8E3EA] text-[#66737F] hover:border-[#D8E3EA]'}`}
+                        className={`rounded-md border px-3 py-2.5 text-[12px] font-medium tracking-tight transition-colors ${enabled ? 'border-[#0B74DE] bg-[#F6FAFE] text-[#0B74DE]' : 'border-[#DCE8EE] bg-white text-[#66737F] hover:bg-[#F7FAFC]'}`}
                       >
                         {type}
                       </button>
@@ -1799,11 +1784,11 @@ export default function IntegrationsHub() {
                   </div>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-[#D8E3EA]">
-                  <label className="text-[12px] font-sans text-[#182026]/35 uppercase tracking-tight mb-3 block">Exclusion Rules</label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="mt-6 border-t border-[#E7EEF2] pt-5">
+                  <label className="mb-3 block text-[12px] font-medium tracking-tight text-[#66737F]">Exclusion rules</label>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-1">
-                      <label className="text-[12px] font-sans text-[#66737F] uppercase tracking-tight">Exclude Senders</label>
+                      <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Exclude senders</label>
                       <Input
                         placeholder="newsletter, marketing"
                         value={filters.excludeSenders.join(', ')}
@@ -1812,7 +1797,7 @@ export default function IntegrationsHub() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[12px] font-sans text-[#66737F] uppercase tracking-tight">Exclude Subjects</label>
+                      <label className="text-[12px] font-medium tracking-tight text-[#66737F]">Exclude subjects</label>
                       <Input
                         placeholder="unsubscribe, promotional"
                         value={filters.excludeSubjects.join(', ')}
@@ -1823,7 +1808,7 @@ export default function IntegrationsHub() {
                   </div>
                 </div>
 
-                <div className="mt-12 flex justify-end">
+                <div className="mt-6 flex justify-end">
                   <Button
                     onClick={async () => {
                       setSavingFilters(true);
@@ -1837,7 +1822,7 @@ export default function IntegrationsHub() {
                       setSavingFilters(false);
                     }}
                     disabled={savingFilters}
-                    className="h-12 bg-[#0B74DE] hover:bg-[#005FBA] text-[#FFFFFF] font-sans font-bold uppercase tracking-tight text-[12px] px-10"
+                      className="h-9 rounded-md bg-[#0B74DE] px-4 text-[13px] font-medium tracking-tight text-white hover:bg-[#005FBA]"
                   >
                     {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Changes"}
                   </Button>
@@ -1846,11 +1831,11 @@ export default function IntegrationsHub() {
             </motion.div>
 
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-4">
-              <div className="bg-white backdrop-blur-md rounded-md border border-[#D8E3EA] p-8 h-full flex flex-col">
+              <div className="flex h-full flex-col rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
                 <div className="flex items-center gap-4 mb-8">
                   <div>
-                    <h4 className="text-[18px] font-sans font-bold text-[#182026] tracking-tight">Schedules</h4>
-                    <p className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mt-0.5">Scheduling Engine</p>
+                    <h3 className="text-[18px] font-semibold tracking-tight text-[#182026]">Schedule</h3>
+                    <p className="mt-1 text-[13px] leading-5 text-[#66737F]">Choose when eligible sources are checked.</p>
                   </div>
                 </div>
 
@@ -1863,6 +1848,7 @@ export default function IntegrationsHub() {
                   ].map((opt) => (
                     <button
                       key={opt.value}
+                      disabled={updatingSchedule}
                       onClick={async () => {
                         setUpdatingSchedule(true);
                         const r = activeSlug ? await api.setEvidenceSchedule(opt.value, activeSlug) : { ok: false, error: 'Tenant context is required' } as any;
@@ -1875,21 +1861,21 @@ export default function IntegrationsHub() {
                         }
                         setUpdatingSchedule(false);
                       }}
-                      className={`w-full p-4 rounded-md border text-left transition-all duration-300 ${schedule === opt.value ? 'bg-[#F3F5F4] border-[#E5E7EB]' : 'bg-[#F3F6F8] border-[#D8E3EA] hover:border-[#D8E3EA]'}`}
+                      className={`w-full rounded-md border p-3 text-left transition-colors ${schedule === opt.value ? 'border-[#0B74DE] bg-[#F6FAFE]' : 'border-[#DCE8EE] bg-white hover:bg-[#F7FAFC]'}`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm font-bold tracking-tight ${schedule === opt.value ? 'text-[#182026]' : 'text-gray-400'}`}>{opt.label}</span>
-                        {schedule === opt.value && <CheckCircle2 className="w-4 h-4 text-[#182026]/70" />}
+                        <span className={`text-[13px] font-medium tracking-tight ${schedule === opt.value ? 'text-[#182026]' : 'text-[#66737F]'}`}>{opt.label}</span>
+                        {schedule === opt.value && <CheckCircle2 className="h-4 w-4 text-[#0B74DE]" />}
                       </div>
                     </button>
                   ))}
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-[#D8E3EA]">
-                  <div className="flex items-center justify-between mb-6">
+                <div className="mt-6 border-t border-[#E7EEF2] pt-5">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight block">Auto-Harvesting</span>
-                      <span className="text-sm font-sans font-bold text-[#182026] tracking-tight">{autoCollect ? 'Active' : 'Standby'}</span>
+                      <span className="block text-[12px] font-medium tracking-tight text-[#66737F]">Automatic collection</span>
+                      <span className="mt-1 block text-[13px] font-medium tracking-tight text-[#182026]">{autoCollect ? 'Active' : 'Standby'}</span>
                     </div>
                     <button
                       onClick={async () => {
@@ -1904,9 +1890,11 @@ export default function IntegrationsHub() {
                         }
                         setUpdatingAutoCollect(false);
                       }}
-                      className={`h-10 w-20 rounded-full border transition-all duration-500 relative ${autoCollect ? 'bg-[#F3F5F4] border-[#E5E7EB]' : 'bg-[#F3F6F8] border-[#D8E3EA]'}`}
+                      aria-label="Toggle automatic collection"
+                      disabled={updatingAutoCollect}
+                      className={`relative h-8 w-14 rounded-full border transition-colors ${autoCollect ? 'border-[#0B74DE] bg-[#0B74DE]' : 'border-[#DCE8EE] bg-[#F7FAFC]'}`}
                     >
-                      <div className={`absolute top-1 bottom-1 w-8 rounded-full transition-all duration-500 ${autoCollect ? 'right-1 bg-white' : 'left-1 bg-gray-600'}`} />
+                      <div className={`absolute bottom-1 top-1 w-6 rounded-full bg-white transition-transform ${autoCollect ? 'translate-x-7' : 'translate-x-1'}`} />
                     </button>
                   </div>
                 </div>
@@ -1914,10 +1902,9 @@ export default function IntegrationsHub() {
             </motion.div>
 
             {/* Ingestion Trigger */}
-            <motion.div variants={itemVariants} className="lg:col-span-12 mt-12">
-              <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_320px] gap-4">
-                <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-white/15 to-white/5 rounded-md blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
+            <motion.div variants={itemVariants} className="mt-1">
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+                <div>
                   <button
                     onClick={async () => {
                       setIngestingAll(true);
@@ -1947,32 +1934,32 @@ export default function IntegrationsHub() {
                       setIngestingAll(false);
                     }}
                     disabled={ingestingAll}
-                    className="relative w-full h-32 bg-black rounded-md border border-[#D8E3EA] flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-[#C8D8FF]"
+                    className="flex h-28 w-full items-center justify-between gap-5 rounded-[10px] border border-[#0B74DE] bg-[#0B74DE] px-5 text-left transition-colors hover:bg-[#005FBA]"
                   >
                     {ingestingAll ? (
-                      <RefreshCw className="w-10 h-10 text-[#182026]/70 animate-spin" />
+                      <RefreshCw className="h-5 w-5 animate-spin text-white" />
                     ) : (
                       <>
                         <div className="text-left">
-                          <span className="block text-3xl font-sans font-bold text-[#182026] tracking-tight">Retrieve from all Sources</span>
-                          <span className="block text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mt-1">Sync data from all connected accounts</span>
+                          <span className="block text-[18px] font-semibold tracking-tight text-white">Check all connected sources</span>
+                          <span className="mt-1 block text-[13px] leading-5 text-white/85">Run evidence collection for every eligible account.</span>
                         </div>
                       </>
                     )}
                   </button>
                 </div>
 
-                <div className="bg-white rounded-md border border-[#D8E3EA] p-5 flex flex-col justify-between gap-4">
+                <div className="flex flex-col justify-between gap-4 rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
                   <div>
-                    <span className="block text-[12px] font-sans font-bold text-[#66737F] uppercase tracking-tight mb-2">Provider-Specific Control</span>
-                    <h4 className="text-base font-sans font-bold text-[#182026] tracking-tight">Ingest Gmail Only</h4>
-                    <p className="text-xs text-gray-400 font-sans tracking-tight mt-2">
+                    <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Provider-specific action</span>
+                    <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Check Gmail only</h3>
+                    <p className="mt-2 text-[12px] leading-5 text-[#66737F]">
                       Run the real Gmail ingestion route by itself so zero-result runs and provider-specific errors are isolated clearly.
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">
+                    <p className="text-[12px] font-sans font-bold tracking-tight text-[#66737F]">
                       {gmailProviderState.connected
                         ? gmailEvidenceSource?.ingestable === false
                           ? `Connected, not ingestable: ${humanizeSkippedReason(gmailEvidenceSource.ingestable_reason)}`
@@ -1982,7 +1969,7 @@ export default function IntegrationsHub() {
                     <Button
                       onClick={handleIngestGmailOnly}
                       disabled={ingestingGmail || !gmailProviderState.connected}
-                      className="w-full h-11 bg-[#F3F6F8] hover:bg-[#F3F5F4] border border-[#D8E3EA] text-[#182026] text-[12px] font-sans font-bold uppercase tracking-tight"
+                      className="h-9 w-full rounded-md border-[#DCE8EE] bg-white text-[13px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]"
                     >
                       {ingestingGmail ? <RefreshCw className="h-4 w-4 animate-spin" /> : 'Ingest Gmail Only'}
                     </Button>
@@ -1997,27 +1984,27 @@ export default function IntegrationsHub() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="mt-12 pt-12 border-t border-[#D8E3EA] flex flex-col md:flex-row items-center justify-between gap-6"
+            className="mt-8 flex flex-col gap-5 border-t border-[#DCE8EE] pt-5 md:flex-row md:items-center md:justify-between"
           >
-            <div className="flex items-center gap-12">
+            <div className="grid w-full grid-cols-2 gap-x-6 gap-y-4 md:flex md:w-auto md:items-center md:gap-8">
               <div className="flex flex-col">
-                <span className="text-[12px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Amazon</span>
+                <span className="text-[12px] font-sans font-bold text-gray-600 tracking-tight mb-1">Amazon</span>
                 <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{describeProviderState(getProviderState('amazon'))}</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[12px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Repositories</span>
+                <span className="text-[12px] font-sans font-bold text-gray-600 tracking-tight mb-1">Repositories</span>
                 <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">
                   {evidenceSourcesState.ingestableCount} ingestable / {connectedSecondaryProviders.length} connected
                 </span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[12px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Documents</span>
+                <span className="text-[12px] font-sans font-bold text-gray-600 tracking-tight mb-1">Documents</span>
                 <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">
                   {evidenceStatus?.documentsCount ?? 0} stored / {evidenceStatus?.processingCount ?? 0} processing
                 </span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[12px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Last Ingest</span>
+                <span className="text-[12px] font-sans font-bold text-gray-600 tracking-tight mb-1">Last Ingest</span>
                 <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">
                   {formatDateTime(evidenceStatus?.lastIngestion || status?.lastIngest)}
                 </span>
@@ -2025,12 +2012,11 @@ export default function IntegrationsHub() {
             </div>
 
             <div className="flex items-center gap-6">
-              <button onClick={() => navigate(tenantRoute(activeSlug || 'default', '/evidence-locker'))} className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F] hover:text-[#182026] transition-colors">
+              <button onClick={() => navigate(tenantRoute(activeSlug || 'default', '/evidence-locker'))} className="text-[13px] font-medium tracking-tight text-[#0B74DE] hover:text-[#005FBA] transition-colors">
                 Evidence Locker
               </button>
-              <div className="h-4 w-px bg-[#F3F6F8]" />
-              <span className="text-[12px] font-sans font-bold uppercase tracking-tight text-[#66737F]">
-                Protocols unavailable
+              <span className="text-[12px] leading-5 text-[#66737F]">
+                Evidence state is confirmed in the workflows where it is used.
               </span>
             </div>
           </motion.div>
