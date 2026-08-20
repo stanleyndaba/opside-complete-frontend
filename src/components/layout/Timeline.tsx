@@ -110,11 +110,11 @@ export function Timeline({
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <div className="text-[10px] font-bold uppercase tracking-tight text-[#111827]">
+        <div className="text-[12px] font-medium tracking-tight text-[#182026]">
           Reconstructed history from notifications and agent events
         </div>
         {liveUpdatesUnavailable ? (
-          <div className="text-[10px] font-semibold text-amber-700">
+          <div className="text-[11px] font-medium text-[#0B74DE]">
             Live updates unavailable. Refreshing reconstructed history every 15 seconds.
           </div>
         ) : (
@@ -132,18 +132,18 @@ export function Timeline({
       {events.map((evt) => {
         const money = formatAmount(evt.amount, evt.currency);
         return (
-          <div key={evt.id} className="flex flex-col gap-1 text-[11px] border-l-2 border-[#BFD7FF] pl-4 py-1.5 transition-colors hover:border-[#0052FF]">
+          <div key={evt.id} className="flex flex-col gap-1 border-l-2 border-[#DCE8EE] py-1.5 pl-4 text-[12px] transition-colors hover:border-[#66737F]">
             <div className="flex items-center gap-2">
-              <div className="font-bold text-[#111827] uppercase tracking-tight">
-                {formatTimelineToken(evt.type)} • {formatTimelineToken(evt.status)}
+              <div className="font-medium tracking-tight text-[#182026]">
+                {formatTimelineToken(evt.type)} · {formatTimelineToken(evt.status)}
               </div>
             </div>
-            <div className="font-mono text-[#4B5563]">{formatTimelineTimestamp(evt.at)}</div>
-            <div className="font-medium leading-relaxed text-[#1F2937]">{evt.message || NOT_AVAILABLE}</div>
-            {money && <div className="text-emerald-500 font-bold font-mono">Amount: {money}</div>}
+            <div className="text-[11px] font-medium tabular-nums text-[#66737F]">{formatTimelineTimestamp(evt.at)}</div>
+            <div className="leading-5 text-[#4D5B66]">{evt.message || NOT_AVAILABLE}</div>
+            {money && <div className="font-medium tabular-nums text-[#0B74DE]">Amount: {money}</div>}
             {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (
               <div className="mt-1 flex items-center gap-2 text-[#4B5563]">
-                <span className="text-[10px] font-bold uppercase tracking-tight text-[#6B7280]">Docs:</span>
+                <span className="text-[11px] font-medium tracking-tight text-[#66737F]">Docs</span>
                 <div className="flex gap-2">
                   {evt.docIds.slice(0, 3).map((id) => (
                     <Link key={id} to={`/app/${activeSlug}/documents/${encodeURIComponent(id)}`} className="text-[#0052FF] underline transition-colors hover:text-[#003DB8]">

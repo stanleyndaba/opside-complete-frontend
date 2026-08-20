@@ -623,15 +623,15 @@ export function Sidebar({
           </div>
         </DialogContent>
       </Dialog>
-      {/* Edge toggle handle */}
+      {/* Sidebar width control */}
       <button
+        type="button"
         aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
-        className={cn(
-          'absolute top-14 -right-2.5 z-50 flex h-8 w-5 items-center justify-center border border-[#D8E3E8] bg-white text-[#4B5563] shadow-none transition-all duration-300 hover:bg-[#F8FAFB] hover:text-[#111827]',
-        )}>
-        {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+        className="absolute top-1/2 -right-4 z-50 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#DCE8EE] bg-[#FAFAF7] text-[#66737F] shadow-[0_2px_8px_rgba(24,32,38,0.10)] transition-[transform,background-color,color] duration-200 hover:scale-105 hover:bg-white hover:text-[#182026] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/35"
+      >
+        {isCollapsed ? <ChevronRight className="h-4 w-4" strokeWidth={1.75} /> : <ChevronLeft className="h-4 w-4" strokeWidth={1.75} />}
       </button>
     </aside>
   );

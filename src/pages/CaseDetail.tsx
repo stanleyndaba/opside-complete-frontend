@@ -195,7 +195,7 @@ const getStatusColor = (status: string) => {
     case 'Submitted':
       return 'bg-blue-100 text-blue-800 border-blue-200';
     case 'Under Review':
-      return 'bg-amber-100 text-amber-800 border-amber-200';
+      return 'bg-blue-100 text-blue-800 border-blue-200';
     case 'Paid Out':
       return 'bg-green-100 text-green-800 border-green-200';
     case 'Awaiting Approval':
@@ -227,7 +227,7 @@ const getEventIcon = (type: CaseEvent['type']) => {
 const getEventColor = (type: CaseEvent['type']) => {
   switch (type) {
     case 'detection':
-      return 'text-amber-600';
+      return 'text-blue-600';
     case 'analysis':
       return 'text-blue-600';
     case 'generation':
@@ -441,6 +441,13 @@ const getDocumentEvidenceSubtitle = (doc: any) => {
   return parts.join(' | ');
 };
 
+const isPdfArtifact = (doc: any) => {
+  const metadata = asPlainObject(doc?.metadata);
+  const filename = String(doc?.name || doc?.filename || doc?.original_filename || metadata?.original_filename || '').toLowerCase();
+  const mimeType = String(doc?.mime_type || doc?.content_type || metadata?.mime_type || metadata?.content_type || '').toLowerCase();
+  return mimeType.includes('pdf') || filename.endsWith('.pdf');
+};
+
 const formatThreadStateLabel = (value?: string | null) => {
   const normalized = String(value || '').trim().toLowerCase();
   if (!normalized) return NOT_AVAILABLE;
@@ -451,7 +458,7 @@ const getThreadStateTone = (value?: string | null) => {
   const normalized = String(value || '').trim().toLowerCase();
   if (normalized === 'paid') return 'text-emerald-800 border-emerald-200 bg-emerald-50';
   if (normalized === 'approved') return 'text-[#07111A] border-[#D8E3E8] bg-[#F8FAFB]';
-  if (normalized === 'needs_evidence') return 'text-amber-800 border-amber-200 bg-amber-50';
+  if (normalized === 'needs_evidence') return 'text-blue-800 border-blue-200 bg-blue-50';
   if (normalized === 'rejected') return 'text-red-800 border-red-200 bg-red-50';
   if (normalized === 'unlinked') return 'text-[#6B7C88] border-[#D8E3E8] bg-[#F8FAFB]';
   return 'text-[#4D5B66] border-[#D8E3E8] bg-[#F8FAFB]';
@@ -1245,10 +1252,10 @@ function ClaimRecordSection({
   className?: string;
 }) {
   return (
-    <section className={cn('border border-[#D8E3E8] bg-white p-4 sm:p-5', className)}>
-      <div className="mb-4 border-b border-[#D8E3E8] pb-3">
-        {eyebrow ? <p className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7C88]">{eyebrow}</p> : null}
-        <h3 className="mt-1 text-[15px] font-sans font-semibold tracking-tight text-[#07111A]">{title}</h3>
+    <section className={cn('rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5', className)}>
+      <div className="mb-4 border-b border-[#E7EEF2] pb-3">
+        {eyebrow ? <p className="text-[12px] font-medium tracking-tight text-[#66737F]">{eyebrow}</p> : null}
+        <h3 className="mt-1 font-lora text-[18px] font-normal tracking-tight text-[#182026]">{title}</h3>
       </div>
       {children}
     </section>
@@ -1265,9 +1272,9 @@ function ClaimRecordField({
   className?: string;
 }) {
   return (
-    <div className={cn('border-b border-[#E4EDF1] pb-2.5', className)}>
-      <dt className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7C88]">{label}</dt>
-      <dd className="mt-1.5 text-[12px] font-sans font-medium leading-5 tracking-tight text-[#111827]">{children}</dd>
+    <div className={cn('border-b border-[#E7EEF2] pb-2.5', className)}>
+      <dt className="text-[12px] font-medium tracking-tight text-[#66737F]">{label}</dt>
+      <dd className="mt-1.5 text-[13px] font-medium leading-5 tracking-tight text-[#182026]">{children}</dd>
     </div>
   );
 }
@@ -1292,17 +1299,17 @@ function ClaimRecordMetric({
   const toneClass = 'text-[#111827]';
 
   return (
-    <div className={cn('border border-[#D8E3E8] bg-[#F8FAFB] p-3', className)}>
-      <p className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7C88]">{label}</p>
-      <div className={cn('mt-2 text-[14px] font-sans font-medium tracking-tight tabular-nums', toneClass, valueClassName)}>{value}</div>
-      {detail ? <div className={cn('mt-1 text-[9px] font-sans font-medium leading-4 tracking-tight text-[#9CA3AF]', detailClassName)}>{detail}</div> : null}
+    <div className={cn('rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-3', className)}>
+      <p className="text-[12px] font-medium tracking-tight text-[#66737F]">{label}</p>
+      <div className={cn('mt-2 text-[14px] font-medium tracking-tight tabular-nums', toneClass, valueClassName)}>{value}</div>
+      {detail ? <div className={cn('mt-1 text-[11px] font-medium leading-4 tracking-tight text-[#66737F]', detailClassName)}>{detail}</div> : null}
     </div>
   );
 }
 
 function ClaimRecordStatusBadge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex w-fit items-center border border-[#D8E3E8] bg-[#F8FAFB] px-2 py-1 text-[11px] font-sans font-semibold leading-none tracking-tight text-[#111827]">
+    <span className="inline-flex w-fit items-center rounded-md border border-[#DCE8EE] bg-white px-2 py-1 text-[11px] font-medium leading-none tracking-tight text-[#182026]">
       {children}
     </span>
   );
@@ -1403,7 +1410,7 @@ function AccountingReconciliationWidget({ caseId, tenantSlug }: { caseId: string
                 size="sm"
                 onClick={handleRunReconciliation}
                 disabled={running}
-                className="h-8 bg-[#07111A] text-xs font-semibold text-white hover:bg-[#26333D]"
+                className="h-8 rounded-md bg-[#0B74DE] text-xs font-medium text-white hover:bg-[#075EAF]"
               >
                 {running ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
                 Run Reconciliation
@@ -1417,7 +1424,7 @@ function AccountingReconciliationWidget({ caseId, tenantSlug }: { caseId: string
                 <Badge className={cn(
                   "rounded-[2px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-tight",
                   reconciliation.status === 'RECONCILED' && "bg-emerald-100 text-emerald-800 border-emerald-300",
-                  reconciliation.status === 'PARTIAL_MATCH' && "bg-amber-100 text-amber-800 border-amber-300",
+                  reconciliation.status === 'PARTIAL_MATCH' && "bg-blue-100 text-blue-800 border-blue-300",
                   reconciliation.status === 'NEEDS_REVIEW' && "bg-blue-100 text-blue-800 border-blue-300",
                   reconciliation.status === 'UNMATCHED' && "bg-slate-100 text-slate-800 border-slate-300"
                 )}>
@@ -2543,18 +2550,18 @@ export default function CaseDetail() {
                 </Link>
                 <div className="max-w-[680px]">
                   <div className="flex items-center gap-3">
-                    <h1 className="font-sans text-[20px] font-semibold tracking-tight text-[#07111A]">{effectiveCase.case_number || effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
-                    <Badge variant="outline" className="border-[#D8E3E8] bg-[#F8FAFB] text-[9px] uppercase tracking-tight text-[#4D5B66]">
+                    <h1 className="font-lora text-[24px] font-normal tracking-tight text-[#182026]">{effectiveCase.case_number || effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
+                    <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] text-[12px] font-medium tracking-tight text-[#4D5B66]">
                       {entityTypeLabel}
                     </Badge>
                     {statusFeedUnavailable && (
-                      <Badge variant="outline" className="border-amber-500/20 bg-amber-500/10 text-[9px] uppercase tracking-tight text-amber-700">
+                      <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F6FAFE] text-[12px] font-medium tracking-tight text-[#0B74DE]">
                         Live Updates Unavailable
                       </Badge>
                     )}
                   </div>
                   <div className="mt-3 max-w-[620px]">
-                    <p className="font-sans text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">
+                    <p className="text-[12px] font-medium tracking-tight text-[#66737F]">
                       What this case needs next
                     </p>
                     <p className="mt-1 font-sans text-[12px] leading-5 tracking-tight text-[#26333D]">
@@ -2671,30 +2678,30 @@ export default function CaseDetail() {
             )}
 
             {/* Navigation Tabs */}
-            <div className="mb-4 flex border-b border-[#D8E3E8]">
+            <div className="mb-5 flex gap-1 border-b border-[#DCE8EE]" role="tablist" aria-label="Case detail views">
               <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'RECORD'}
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
-                  "relative px-8 py-3.5 text-[12px] font-semibold uppercase tracking-tight transition-all duration-300",
-                  activeTab === 'RECORD' ? "text-[#07111A]" : "text-[#8A98A3] hover:text-[#4D5B66]"
+                  "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
+                  activeTab === 'RECORD' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
                 )}>
-                CLAIM RECORD
-                <div className={cn(
-                  "absolute bottom-0 left-0 right-0 h-[2px] origin-left transform bg-[#07111A] transition-all duration-300",
-                  activeTab === 'RECORD' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
-                )} />
+                Claim record
+                <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'RECORD' ? "scale-x-100" : "scale-x-0")} />
               </button>
               <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'PROTOCOL'}
                 onClick={() => setActiveTab('PROTOCOL')}
                 className={cn(
-                  "relative px-8 py-3.5 text-[12px] font-semibold uppercase tracking-tight transition-all duration-300",
-                  activeTab === 'PROTOCOL' ? "text-[#07111A]" : "text-[#8A98A3] hover:text-[#4D5B66]"
+                  "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
+                  activeTab === 'PROTOCOL' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
                 )}>
-                RESOLUTION STEPS
-                <div className={cn(
-                  "absolute bottom-0 left-0 right-0 h-[2px] origin-left transform bg-[#07111A] transition-all duration-300",
-                  activeTab === 'PROTOCOL' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
-                )} />
+                Resolution steps
+                <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'PROTOCOL' ? "scale-x-100" : "scale-x-0")} />
               </button>
             </div>
 
@@ -2711,7 +2718,7 @@ export default function CaseDetail() {
                           <Badge variant="outline" className={cn(
                             "rounded-[2px] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight",
                             isReviewOnlyFinding
-                              ? "border-amber-200 bg-amber-50 text-amber-800"
+                              ? "border-blue-200 bg-blue-50 text-blue-800"
                               : "border-emerald-200 bg-emerald-50 text-emerald-800"
                           )}>
                             {findingReadinessLabel}
@@ -2777,9 +2784,9 @@ export default function CaseDetail() {
                         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-tight text-[#111827]">
                           {typeof resolvedUnitsAffected === 'number' ? resolvedUnitsAffected : <span className="text-[#9CA3AF]">-</span>}
                           {typeof resolvedUnitsAffected === 'number' && effectiveCase.units_is_verified ? (
-                            <Badge className="bg-[#111827]/5 text-[#111827] border-[#E5E7EB] text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Verified</Badge>
+                            <Badge className="h-4 rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-1.5 text-[10px] font-medium tracking-tight text-[#4D5B66]">Verified</Badge>
                           ) : typeof resolvedUnitsAffected === 'number' ? (
-                            <Badge className="bg-[#111827]/5 text-[#111827] border-[#E5E7EB] text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Estimated</Badge>
+                            <Badge className="h-4 rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-1.5 text-[10px] font-medium tracking-tight text-[#4D5B66]">Estimated</Badge>
                           ) : null}
                         </span>
                       </ClaimRecordField>
@@ -2907,7 +2914,7 @@ export default function CaseDetail() {
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-sans text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">Policy basis</p>
                         {policyBasis?.verification_status === 'policy_basis_pending_verification' && (
-                          <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-amber-100/80">Pending verification</span>
+                          <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-blue-100/80">Pending verification</span>
                         )}
                       </div>
                       <p className="mt-2 font-sans text-[13px] font-semibold leading-tight tracking-tight text-[#111827]">
@@ -2939,7 +2946,7 @@ export default function CaseDetail() {
                     </div>
                   </div>
                   {whyNotClaimReady && (
-                    <p className="mt-5 border-t border-[#D8E3E8] pt-4 font-sans text-[12px] leading-5 tracking-tight text-amber-800">
+                    <p className="mt-5 border-t border-[#D8E3E8] pt-4 font-sans text-[12px] leading-5 tracking-tight text-blue-800">
                       {whyNotClaimReady}
                     </p>
                   )}
@@ -3035,13 +3042,13 @@ export default function CaseDetail() {
 
                   <div className="mt-6">
                     <h4 className="flex items-center gap-2 text-[10px] font-bold text-[#6B7C88] border-b border-[#D8E3E8] pb-2.5 tracking-tight uppercase">
-                      <History className="h-3 w-3 text-amber-400" /> Platform Insights
+                      <History className="h-3 w-3 text-blue-400" /> Platform Insights
                     </h4>
                     {effectiveCase.warehouse_history ? (
-                      <div className="mt-3 border border-amber-500/10 bg-amber-500/5 p-3">
+                      <div className="mt-3 border border-blue-500/10 bg-blue-500/5 p-3">
                         <div className="mb-2 flex items-center gap-2">
-                          <AlertCircle className="h-3 w-3 text-amber-400" />
-                          <span className="text-[11px] font-bold text-amber-400">Recurring Pattern Detected</span>
+                          <AlertCircle className="h-3 w-3 text-blue-400" />
+                          <span className="text-[11px] font-bold text-blue-400">Recurring Pattern Detected</span>
                         </div>
                         <p className="text-[11px] text-[#6B7C88] leading-relaxed font-bold">
                           Warehouse <span className="text-[#07111A] font-semibold">{resolvedFacility ? String(resolvedFacility).split(' ')[0] : '-'}</span> has recorded <span className="text-[#07111A] font-semibold">{effectiveCase.warehouse_history.occurrence_count} similar discrepancies</span> for you, totaling <span className="text-[#07111A] font-semibold">${effectiveCase.warehouse_history.total_value_lost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span> in at-risk value.
@@ -3108,7 +3115,7 @@ export default function CaseDetail() {
                         </div>
                         <div className="pt-2 border-t border-[#E4EDF1] flex justify-between text-xs font-bold">
                           <span className="text-[#6B7C88] uppercase tracking-tight">Total Verified Out</span>
-                          <span className="text-amber-300 font-sans font-bold">{effectiveCase.evidence.total_output || 0}</span>
+                          <span className="text-blue-300 font-sans font-bold">{effectiveCase.evidence.total_output || 0}</span>
                         </div>
                       </div>
                     </div>
@@ -3137,11 +3144,11 @@ export default function CaseDetail() {
             )}
 
             {activeTab === 'PROTOCOL' && (
-              <div className="flex flex-col gap-0 overflow-hidden border border-[#D8E3E8] bg-white divide-y divide-[#D8E3E8]">
+              <div className="flex flex-col gap-0 overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] divide-y divide-[#E7EEF2]">
                 {/* Row 1: Case Progress */}
-                <div className="bg-white px-6 py-5">
-                  <div className="mb-6">
-                    <h3 className="text-sm font-bold text-[#111827]">Case Progress</h3>
+                <div className="bg-white px-4 py-5 sm:px-5">
+                  <div className="mb-5">
+                    <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Case progress</h3>
                   </div>
 
                   <div className="space-y-6">
@@ -3153,16 +3160,14 @@ export default function CaseDetail() {
                           return (
                             <div key={step.label} className="flex flex-col items-center gap-2">
                               <div className={cn(
-                                "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[9px] font-semibold transition-all",
-                                step.active ? "border-[#07111A] bg-[#07111A]" : "border-[#D8E3E8] bg-white"
+                                "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-medium tabular-nums transition-colors",
+                                step.active ? "border-[#66737F] bg-[#F1F3F4] text-[#182026]" : "border-[#DCE8EE] bg-white text-[#8A97A2]"
                               )}>
-                                <span className={step.active ? "text-[#FFFFFF]" : "text-[#6B7280]"}>
-                                  {idx + 1}
-                                </span>
+                                {idx + 1}
                               </div>
                               <span className={cn(
-                                "text-[11px] font-semibold uppercase tracking-tight",
-                                step.active ? "text-[#07111A]" : "text-[#6B7C88]"
+                                "text-center text-[11px] font-medium tracking-tight",
+                                step.active ? "text-[#182026]" : "text-[#66737F]"
                               )}>{step.label}</span>
                             </div>
                           );
@@ -3170,27 +3175,27 @@ export default function CaseDetail() {
                       </div>
                     </div>
 
-                    <div className="border border-[#D8E3E8] bg-[#F8FAFB] p-4">
-                      <div className="mb-2 text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">Next system step</div>
-                      <div className="text-sm font-semibold tracking-tight text-[#07111A]">{nextStep?.title || 'Unknown next step'}</div>
+                    <div className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-4">
+                      <div className="mb-2 text-[12px] font-medium tracking-tight text-[#66737F]">Next system step</div>
+                      <div className="text-[15px] font-semibold tracking-tight text-[#182026]">{nextStep?.title || 'Unknown next step'}</div>
                       <div className="mt-1 text-[11px] leading-relaxed text-[#6B7C88]">
                         {sellerSafeOperationalText(nextStep?.description, 'The backend did not return next-step context for this case.')}
                       </div>
                     </div>
 
                     {/* Timeline View */}
-                    <div className="border border-[#D8E3E8] bg-white p-5">
+                    <div className="rounded-md border border-[#DCE8EE] bg-white p-4 sm:p-5">
                       <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} liveUpdatesUnavailable={statusFeedUnavailable} />
                     </div>
 
                     <div className="space-y-4">
                       {isAmazonThreadBackfillCase ? (
-                        <div className="border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
-                          <div className="text-[10px] font-semibold uppercase tracking-tight text-amber-700">Amazon Thread Backfill</div>
-                          <div className="mt-1 font-semibold text-amber-950">
+                        <div className="border border-blue-200 bg-blue-50 px-4 py-4 text-sm text-blue-900">
+                          <div className="text-[10px] font-semibold uppercase tracking-tight text-blue-700">Amazon Thread Backfill</div>
+                          <div className="mt-1 font-semibold text-blue-950">
                             Margin linked an existing Amazon support thread to this case. Margin did not create the original filing.
                           </div>
-                          <div className="mt-2 text-[11px] leading-relaxed text-amber-800">
+                          <div className="mt-2 text-[11px] leading-relaxed text-blue-800">
                             Unknown filing details remain Not Available until real seller-side proof exists.
                             {threadBackfilledAt ? ` Backfilled ${formatEventTimestamp(threadBackfilledAt)}.` : ''}
                           </div>
@@ -3366,9 +3371,9 @@ export default function CaseDetail() {
                 </div>
 
                 {/* Row 2: Evidence & Verification */}
-                <div className="bg-white p-6">
-                  <div className="mb-8">
-                    <h3 className="text-sm font-semibold tracking-tight text-[#07111A]">Evidence & Verification</h3>
+                <div className="bg-white p-4 sm:p-5">
+                  <div className="mb-6">
+                    <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Evidence and verification</h3>
                   </div>
 
                   <div className="space-y-8">
@@ -3390,11 +3395,14 @@ export default function CaseDetail() {
                             const evidenceSubtitle = String(getDocumentEvidenceSubtitle(doc) || doc.evidence || '').replace(/\$963\.10/g, '$569.50');
                             const filename = String(doc.name || doc.filename || doc.original_filename || '').replace(/\$963\.10/g, '$569.50') || null;
                             const displayAmount = String(doc.displayAmount || '').replace(/\$963\.10/g, '$569.50');
+                            const documentIsPdf = isPdfArtifact(doc);
                             return (
-                              <div key={doc.id || idx} className="group border border-[#D8E3E8] bg-[#F8FAFB] p-4 transition-all hover:border-emerald-200 hover:bg-white">
+                              <div key={doc.id || idx} className="group rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-3.5 transition-colors hover:bg-white">
                                 <div className="flex items-center justify-between gap-4">
                                   <div className="flex min-w-0 items-center gap-3">
-                                    <FileText className="h-3.5 w-3.5 shrink-0 text-[#6B7C88] group-hover:text-emerald-700" />
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#E7EEF2] bg-white">
+                                      {documentIsPdf ? <img src="/evidence-pdf-mark.png" alt="PDF" className="h-7 w-7 object-contain" /> : <FileText className="h-4 w-4 text-[#66737F]" strokeWidth={1.75} />}
+                                    </div>
                                     <div className="min-w-0">
                                       <p className="truncate font-sans text-xs font-semibold text-[#07111A]" title={evidenceTitle}>
                                         {evidenceTitle}
@@ -3410,13 +3418,13 @@ export default function CaseDetail() {
                                     </div>
                                   </div>
                                   <div className="flex shrink-0 items-center gap-3">
-                                    <Badge variant="outline" className="h-4.5 border-emerald-200 bg-emerald-50 px-2 text-[10px] text-emerald-800">
+                                    <Badge variant="outline" className="h-5 rounded-md border-[#DCE8EE] bg-white px-2 text-[11px] font-medium text-[#4D5B66]">
                                       {confidencePct !== null ? `${confidencePct}%` : '-'}
                                     </Badge>
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      className="h-6 p-0 text-[10px] font-semibold text-emerald-800 hover:text-emerald-900"
+                                      className="h-7 px-1 text-[12px] font-medium tracking-tight text-[#0B74DE] hover:bg-transparent hover:text-[#075EAF]"
                                       onClick={() => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
                                       View <ArrowRight className="h-2.5 w-2.5 ml-1" />
                                     </Button>
@@ -3609,10 +3617,10 @@ export default function CaseDetail() {
                 </div>
 
                 {/* Row 3: Autonomous Strategy & Recovery Path */}
-                <div className="p-8 bg-white">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+                <div className="bg-white p-4 sm:p-5">
+                  <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
-                      <h3 className="text-sm font-bold text-[#07111A] mb-1">Autonomous Strategy & Recovery Path</h3>
+                      <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Autonomous strategy and recovery path</h3>
                       <p className="text-[10px] text-[#6B7C88] font-sans font-bold uppercase tracking-tight">Patient Zero → Settlement Ledger v4.2</p>
                     </div>
 
@@ -3625,7 +3633,7 @@ export default function CaseDetail() {
                         <div key={agent.id} className="flex items-center gap-1.5 px-2 py-1 rounded-[2px] bg-[#F8FAFB] border border-[#E4EDF1] group hover:border-emerald-500/30 transition-all cursor-crosshair">
                           <div className={cn(
                             "w-1 h-1 rounded-[2px] animate-pulse",
-                            agent.status === 'SETTLED' ? "bg-emerald-500" : "bg-amber-500"
+                            agent.status === 'SETTLED' ? "bg-emerald-500" : "bg-blue-500"
                           )} />
                           <span className="text-[10px] font-bold text-[#4D5B66] font-sans font-bold">{agent.agent}</span>
                         </div>
@@ -3797,7 +3805,7 @@ export default function CaseDetail() {
                 variant="outline"
                 disabled={!pdfPreviewUrl}
                 onClick={downloadPdfPreview}
-                className="h-11 rounded-[2px] border-[#D8E3E8] bg-black/25 px-3 text-[#07111A] backdrop-blur-md hover:bg-[#F8FAFB]"
+                className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[#4D5B66] shadow-[0_1px_2px_rgba(24,32,38,0.03)] hover:bg-[#F7FAFC]"
               >
                 <Download className="h-4 w-4" />
               </Button>
@@ -3805,7 +3813,7 @@ export default function CaseDetail() {
                 type="button"
                 variant="outline"
                 onClick={closePdfPreview}
-                className="h-11 rounded-[2px] border-[#D8E3E8] bg-black/25 px-3 text-[#07111A] backdrop-blur-md hover:bg-[#F8FAFB]"
+                className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[#4D5B66] shadow-[0_1px_2px_rgba(24,32,38,0.03)] hover:bg-[#F7FAFC]"
               >
                 <X className="h-4 w-4" />
               </Button>
