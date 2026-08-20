@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload, CircleCheck } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -51,10 +51,6 @@ const toTitleCase = (value?: string | null) => {
 };
 
 const NOT_AVAILABLE = 'Not Available';
-
-const marketplaces = [
-  { code: 'US', label: 'United States' },
-];
 
 const formatMoney = (value: number | null | undefined, currency = 'USD') =>
   typeof value === 'number' && !Number.isNaN(value)
@@ -130,8 +126,6 @@ export function Navbar({
     location.pathname.startsWith('/approved-reimbursements');
 
   const { selectedCurrency, setSelectedCurrency } = useCurrency();
-  const [selectedMarketplace, setSelectedMarketplace] = useState('US');
-  const activeMarketplace = marketplaces.find((marketplace) => marketplace.code === selectedMarketplace) || marketplaces[0];
 
   // User profile state
   const [userProfile, setUserProfile] = useState<{
@@ -669,9 +663,9 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                      className="relative flex h-10 w-10 items-center justify-center rounded-[7px] text-[#6B7280] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
+                      className="flex h-9 items-center rounded-[7px] px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
                       aria-label="Approved reimbursements">
-                      <CircleCheck className="h-5 w-5" />
+                      Reimbursements
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent
@@ -738,12 +732,7 @@ export function Navbar({
                   </HoverCardContent>
                 </HoverCard>
               </div>
-              <div className="hidden min-w-0 max-w-[220px] flex-col justify-center xl:flex">
-                <span className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">Active workspace</span>
-                <span className="truncate text-[11px] font-sans font-semibold tracking-tight text-[#111827]">
-                  {tenant?.name || tenant?.slug || activeTenantSlug || 'Workspace'}
-                </span>
-              </div>
+
             </div>
           </div>
 
@@ -796,49 +785,6 @@ export function Navbar({
               </HoverCardContent>
             </HoverCard>
 
-            {/* Marketplace Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="group/marketplace flex items-center gap-2 rounded-[7px] px-3 py-2 text-[11px] font-sans font-semibold tracking-tight text-[#4B5563] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
-                  aria-label="Select marketplace"
-                >
-                  <span className="hidden sm:inline">Marketplace</span>
-                  <span className="flex h-5 w-5 items-center justify-center rounded-[2px] bg-[#F2F7FF] text-[9px] font-bold leading-none text-[#0B74DE]">
-                    {activeMarketplace.code.toLowerCase()}
-                  </span>
-                  <span className="font-semibold uppercase">{activeMarketplace.code}</span>
-                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/marketplace:text-[#0B74DE]" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[240px] overflow-hidden rounded-[8px] border border-[#E5E7EB] bg-white p-1.5 shadow-[0_16px_40px_rgba(17,24,39,0.10)]">
-                <DropdownMenuLabel className="px-3.5 py-2.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
-                  Select Marketplace
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-[#E5E7EB]" />
-                {marketplaces.map((mp) => (
-                  <DropdownMenuItem
-                    key={mp.code}
-                    onSelect={() => setSelectedMarketplace(mp.code)}
-                    className={cn(
-                      "flex cursor-pointer items-center gap-3 rounded-[6px] px-3 py-2.5 text-[11px] font-sans font-medium tracking-tight outline-none transition-colors",
-                      selectedMarketplace === mp.code
-                        ? "bg-[#F3F5F4] text-[#111827] font-semibold"
-                        : "text-[#4B5563] hover:bg-[#F3F5F4] hover:text-[#111827]"
-                    )}
-                  >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#F3F5F4] text-[10px] font-bold uppercase leading-none text-[#0B74DE]">
-                      {mp.code.toLowerCase()}
-                    </span>
-                    <span>{mp.label}</span>
-                    {selectedMarketplace === mp.code && (
-                      <Check className="ml-auto h-3.5 w-3.5 text-[#0B74DE]" />
-                    )}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="group/account flex items-center gap-3 rounded-[7px] px-3 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]">
@@ -856,6 +802,10 @@ export function Navbar({
                     <p className="mt-1 truncate font-sans text-[11px] text-[#6B7280]">
                       {accountEmail}
                     </p>
+                    <div className="mt-4 border-t border-[#E5E7EB] pt-3">
+                      <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Active workspace</p>
+                      <p className="mt-1 truncate text-[12px] font-medium tracking-tight text-[#182026]">{tenant?.name || tenant?.slug || activeTenantSlug || 'Workspace'}</p>
+                    </div>
                     <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
                       <div className="min-w-0">
                         <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
