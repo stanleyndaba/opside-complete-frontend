@@ -4,7 +4,7 @@ import {
   AlertCircle, ArrowUpRight, RefreshCw, Search, 
   ChevronRight, Filter, Info, FileText, 
   History, BarChart3, TrendingUp, AlertTriangle,
-  CheckCircle2, XCircle, ExternalLink, Target
+  CheckCircle2, XCircle, ExternalLink, Target, X
 } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 
@@ -470,52 +470,35 @@ export default function Appeals() {
   return (
     <PageLayout title="Appeals" noPadding>
       <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
-        {/* Forensic Identity Header */}
-        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
-          <div className="mx-auto max-w-[1440px]">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="h-px w-6 bg-[#0B74DE]" />
-              <span className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Appeal Registry</span>
-            </div>
-            
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+        {/* Appeals context */}
+        <div className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
+          <div className="mx-auto max-w-[1280px]">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
-                <h1 className="mb-4 font-lora text-[42px] font-normal leading-tight tracking-tight text-[#111827]">
-                  Amazon Response Review
-                </h1>
-                <p className="text-[16px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
-                  Margin monitors recorded Amazon responses to identify denials and approved-value gaps. This workspace allows you to review the forensic basis for each rejection and verify evidence before resubmission.
-                </p>
+                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Response review</p>
+                <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Appeals</h1>
+                <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Review recorded Amazon responses, verify the evidence behind each decision, and decide whether resubmission is supportable.</p>
               </div>
-              
-              <div className="flex items-center gap-3">
-                {summary.lastUpdatedAt ? (
-                  <div className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
-                    Last Updated: {formatDistanceToNow(new Date(summary.lastUpdatedAt), { addSuffix: true })}
-                  </div>
-                ) : null}
-                <Button
-                  onClick={() => setRefreshKey((c) => c + 1)}
-                  variant="outline"
-                  className="h-10 border-[#E5E7EB] bg-white text-[12px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]"
-                >
-                  <RefreshCw className={cn("mr-2 h-4 w-4", loading && "animate-spin")} />
-                  Refresh Queue
+              <div className="flex flex-wrap items-center gap-3">
+                {summary.lastUpdatedAt ? <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Updated {formatDistanceToNow(new Date(summary.lastUpdatedAt), { addSuffix: true })}</p> : null}
+                <Button onClick={() => setRefreshKey((c) => c + 1)} variant="outline" className="h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]">
+                  <RefreshCw className={cn("mr-2 h-3.5 w-3.5", loading && "animate-spin")} />
+                  Refresh
                 </Button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Operational Metrics Strip */}
-        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8 py-4">
-          <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-12 gap-y-4">
+        {/* Review summary */}
+        <div className="border-b border-[#DCE8EE] bg-white px-4 py-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1280px] flex-wrap items-center gap-x-10 gap-y-4">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EFF6FF] text-[#0B74DE]">
                 <History className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Approval Gap</p>
+                <p className="text-[10px] font-bold tracking-tight text-[#9CA3AF]">Approval Gap</p>
                 <p className="text-[15px] font-bold text-[#111827]">{money(summary.totalGap)}</p>
               </div>
             </div>
@@ -527,7 +510,7 @@ export default function Appeals() {
                 <AlertTriangle className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Needs Proof</p>
+                <p className="text-[10px] font-bold tracking-tight text-[#9CA3AF]">Needs Proof</p>
                 <p className="text-[15px] font-bold text-[#111827]">{summary.needsProof} Cases Blocked</p>
               </div>
             </div>
@@ -539,15 +522,15 @@ export default function Appeals() {
                 <Target className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Visible Cases</p>
+                <p className="text-[10px] font-bold tracking-tight text-[#9CA3AF]">Visible Cases</p>
                 <p className="text-[15px] font-bold text-[#111827]">{filtered.length} Responses</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Main Content Area */}
-        <div className="mx-auto max-w-[1440px] px-8 py-12">
+        {/* Appeal review table */}
+        <div className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8">
           {/* Synthesis / Search Bar */}
           <div className="mb-8 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-2xl">
@@ -557,7 +540,7 @@ export default function Appeals() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search case, SKU, order, or rejection reason..."
-                className="h-12 w-full rounded-xl border border-[#E5E7EB] bg-white pl-11 pr-20 text-[14px] font-normal tracking-tight text-[#111827] outline-none transition focus:border-[#0B74DE] focus:ring-4 focus:ring-[#0B74DE]/5 shadow-sm"
+                className="h-12 w-full rounded-[10px] border border-[#E5E7EB] bg-white pl-11 pr-20 text-[14px] font-normal tracking-tight text-[#111827] outline-none transition focus:border-[#0B74DE] focus:ring-4 focus:ring-[#0B74DE]/5 shadow-sm"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md bg-[#F3F5F4] px-2 py-1 text-[10px] font-bold text-[#9CA3AF]">
                 ⌘ K
@@ -565,7 +548,7 @@ export default function Appeals() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white p-1 shadow-sm">
+              <div className="flex items-center gap-2 rounded-[10px] border border-[#E5E7EB] bg-white p-1 shadow-sm">
                 <div className="flex items-center gap-2 px-3 py-1.5 text-[12px] font-semibold text-[#4B5563]">
                   <Filter className="h-3.5 w-3.5" />
                   <span>State</span>
@@ -584,7 +567,7 @@ export default function Appeals() {
                 </select>
               </div>
 
-              <div className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white p-1 shadow-sm">
+              <div className="flex items-center gap-2 rounded-[10px] border border-[#E5E7EB] bg-white p-1 shadow-sm">
                 <div className="flex items-center gap-2 px-3 py-1.5 text-[12px] font-semibold text-[#4B5563]">
                   <Info className="h-3.5 w-3.5" />
                   <span>Reason</span>
@@ -605,7 +588,7 @@ export default function Appeals() {
           </div>
 
           {/* Appeal Ledger Table */}
-          <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
+          <div className="rounded-[10px] border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-32">
                 <RefreshCw className="h-8 w-8 animate-spin text-[#0B74DE] mb-4" />
@@ -616,12 +599,12 @@ export default function Appeals() {
                 <table className="w-full border-collapse text-left min-w-[1400px]">
                   <thead>
                     <tr className="border-b border-[#F3F5F4] bg-[#F9FAFB]">
-                      <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Case</th>
-                      <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Verified Response</th>
-                      <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Review State</th>
-                      <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Required Proof</th>
-                      <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Review Basis</th>
-                      <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Next Step</th>
+                      <th className="px-6 py-4 text-[11px] font-bold tracking-tight text-[#9CA3AF]">Case</th>
+                      <th className="px-6 py-4 text-[11px] font-bold tracking-tight text-[#9CA3AF]">Verified Response</th>
+                      <th className="px-6 py-4 text-[11px] font-bold tracking-tight text-[#9CA3AF]">Review State</th>
+                      <th className="px-6 py-4 text-[11px] font-bold tracking-tight text-[#9CA3AF]">Required Proof</th>
+                      <th className="px-6 py-4 text-[11px] font-bold tracking-tight text-[#9CA3AF]">Review Basis</th>
+                      <th className="px-6 py-4 text-[11px] font-bold tracking-tight text-[#9CA3AF]">Next Step</th>
                       <th className="w-12 px-6 py-4" />
                     </tr>
                   </thead>
@@ -645,13 +628,13 @@ export default function Appeals() {
                                   {[row.order_id, row.sku, row.asin].filter(Boolean).join(' / ') || 'Identifiers unavailable'}
                                 </p>
                                 <div className="pt-1 flex items-center gap-1.5">
-                                  <span className="text-[9px] font-bold uppercase tracking-tight text-[#D1D5DB]">Case progress:</span>
+                                  <span className="text-[9px] font-bold tracking-tight text-[#D1D5DB]">Case progress:</span>
                                   <span className={cn("text-[10px] font-bold tracking-tight", progress.toneClass)}>{progress.label}</span>
                                 </div>
                               </div>
                               
                               <div className="pt-4 border-t border-[#F3F5F4] space-y-2">
-                                <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Amount at stake</p>
+                                <p className="text-[10px] font-bold tracking-tight text-[#9CA3AF]">Amount at stake</p>
                                 <div className="space-y-1">
                                   <div className="flex justify-between text-[12px]">
                                     <span className="text-[#9CA3AF]">Requested</span>
@@ -679,7 +662,7 @@ export default function Appeals() {
 
                           <td className="px-6 py-6">
                             <div className="w-[300px] space-y-4">
-                              <Badge variant="outline" className={cn("rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-tight border-transparent", pushbackToneClass(row.appealState))}>
+                              <Badge variant="outline" className={cn("rounded-full px-2.5 py-0.5 text-[9px] font-bold tracking-tight border-transparent", pushbackToneClass(row.appealState))}>
                                 {row.appealState === 'underpaid' ? 'Approved-value gap' : 'Denied response'}
                               </Badge>
                               <p className="text-[13px] font-semibold leading-relaxed tracking-tight text-[#111827]" style={twoLineClampStyle}>
@@ -687,12 +670,12 @@ export default function Appeals() {
                               </p>
                               <div className="flex flex-wrap items-center gap-3">
                                 {row.rejection_category && (
-                                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
+                                  <div className="flex items-center gap-1.5 text-[10px] font-bold tracking-tight text-[#9CA3AF]">
                                     <Info className="h-3 w-3" />
                                     <span>Reason: {label(row.rejection_category)}</span>
                                   </div>
                                 )}
-                                <button className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE] hover:underline">
+                                <button className="text-[10px] font-bold tracking-tight text-[#0B74DE] hover:underline">
                                   View source detail
                                 </button>
                               </div>
@@ -701,7 +684,7 @@ export default function Appeals() {
 
                           <td className="px-6 py-6">
                             <div className="w-[220px] space-y-4">
-                              <Badge variant="outline" className={cn("rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-tight border-transparent", toneClass(row.strengthTone))}>
+                              <Badge variant="outline" className={cn("rounded-full px-2.5 py-0.5 text-[9px] font-bold tracking-tight border-transparent", toneClass(row.strengthTone))}>
                                 {row.strengthLabel}
                               </Badge>
                               <p className="text-[12px] font-bold tracking-tight text-[#111827]">{reopenStateSummary(row)}</p>
@@ -727,7 +710,7 @@ export default function Appeals() {
                               <p className="text-[13px] font-semibold leading-relaxed tracking-tight text-[#111827]" style={twoLineClampStyle}>
                                 {row.policyAngle}
                               </p>
-                              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
+                              <div className="flex items-center gap-1.5 text-[10px] font-bold tracking-tight text-[#9CA3AF]">
                                 <History className="h-3 w-3" />
                                 <span>{row.updated_at ? `Updated ${formatDistanceToNow(new Date(row.updated_at), { addSuffix: true })}` : 'Update pending'}</span>
                               </div>
@@ -737,7 +720,7 @@ export default function Appeals() {
                           <td className="px-6 py-6">
                             <div className="w-[200px] space-y-3">
                               <p className="text-[12px] font-bold leading-relaxed text-[#111827]">{row.nextStep}</p>
-                              <Button className="h-8 w-full bg-[#111827] text-white hover:bg-[#1F2937] text-[10px] font-bold uppercase tracking-tight rounded-lg shadow-none">
+                              <Button className="h-8 w-full rounded-md bg-[#0B74DE] text-[12px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">
                                 Review response
                               </Button>
                             </div>
@@ -795,44 +778,44 @@ export default function Appeals() {
 
         {/* Case Detail Side-Sheet */}
         <Sheet open={!!selectedCaseId} onOpenChange={(open) => !open && setSelectedCaseId(null)}>
-          <SheetContent className="w-full sm:max-w-[600px] border-l border-[#E5E7EB] bg-white p-0 shadow-2xl">
+          <SheetContent className="w-full border-l border-[#DCE8EE] bg-white p-0 shadow-[0_18px_45px_rgba(24,32,38,0.16)] sm:max-w-[600px]">
             {selectedCase && (
               <div className="flex h-full flex-col">
-                <SheetHeader className="border-b border-[#F3F5F4] p-8">
+                <SheetHeader className="border-b border-[#DCE8EE] p-5 sm:p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-2">
                       <div className="h-px w-4 bg-[#0B74DE]" />
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Forensic Review</span>
+                      <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Response record</span>
                     </div>
                     <Button 
                       variant="ghost" 
                       size="icon" 
                       onClick={() => setSelectedCaseId(null)}
-                      className="h-8 w-8 rounded-full hover:bg-[#F3F5F4]"
+                      className="h-8 w-8 rounded-md hover:bg-[#F7FAFC]"
                     >
                       <X className="h-4 w-4 text-[#9CA3AF]" />
                     </Button>
                   </div>
                   
-                  <SheetTitle className="font-lora text-[28px] font-normal leading-tight tracking-tight text-[#111827] mb-2">
+                  <SheetTitle className="mb-2 font-lora text-[28px] font-normal leading-tight tracking-tight text-[#182026]">
                     {selectedCase.case_number || selectedCase.amazon_case_id}
                   </SheetTitle>
                   <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant="outline" className="bg-[#F3F5F4] border-transparent text-[#6B7280] font-bold text-[10px] uppercase tracking-tight px-2 py-0.5">
+                    <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">
                       {selectedCase.store_name}
                     </Badge>
-                    <Badge variant="outline" className={cn("rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-tight border-transparent", pushbackToneClass(selectedCase.appealState))}>
+                    <Badge variant="outline" className={cn("rounded-md border px-2.5 py-0.5 text-[12px] font-medium tracking-tight", pushbackToneClass(selectedCase.appealState))}>
                       {selectedCase.appealState === 'underpaid' ? 'Value Gap' : 'Denied'}
                     </Badge>
                   </div>
                 </SheetHeader>
 
-                <div className="flex-1 overflow-y-auto p-8">
+                <div className="flex-1 overflow-y-auto p-5 sm:p-6">
                   <div className="space-y-10">
                     {/* Amazon Response Analysis */}
                     <div>
-                      <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Amazon Response Analysis</h3>
-                      <div className="rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] p-6">
+                      <h3 className="text-[11px] font-bold tracking-tight text-[#9CA3AF] mb-4">Amazon Response Analysis</h3>
+                      <div className="rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] p-6">
                         <p className="text-[14px] font-medium leading-relaxed text-[#111827]">
                           {selectedCase.rejection_reason || selectedCase.appealReasonText}
                         </p>
@@ -847,18 +830,18 @@ export default function Appeals() {
 
                     {/* Financial Variance */}
                     <div>
-                      <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Financial Variance</h3>
+                      <h3 className="text-[11px] font-bold tracking-tight text-[#9CA3AF] mb-4">Financial Variance</h3>
                       <div className="grid grid-cols-3 gap-4">
-                        <div className="rounded-xl border border-[#E5E7EB] p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Requested</p>
+                        <div className="rounded-[10px] border border-[#E5E7EB] p-4">
+                          <p className="text-[10px] font-bold tracking-tight text-[#9CA3AF]">Requested</p>
                           <p className="mt-1 text-[16px] font-bold text-[#111827]">{money(selectedCase.requested_amount, selectedCase.currency)}</p>
                         </div>
-                        <div className="rounded-xl border border-[#E5E7EB] p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Approved</p>
+                        <div className="rounded-[10px] border border-[#E5E7EB] p-4">
+                          <p className="text-[10px] font-bold tracking-tight text-[#9CA3AF]">Approved</p>
                           <p className="mt-1 text-[16px] font-bold text-[#111827]">{money(hasApprovalTruth(selectedCase) ? selectedCase.approved_amount : 0, selectedCase.currency)}</p>
                         </div>
-                        <div className="rounded-xl border border-[#E5E7EB] bg-blue-50/50 p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Variance Gap</p>
+                        <div className="rounded-[10px] border border-[#E5E7EB] bg-blue-50/50 p-4">
+                          <p className="text-[10px] font-bold tracking-tight text-[#0B74DE]">Variance Gap</p>
                           <p className="mt-1 text-[16px] font-bold text-[#0B74DE]">{money(selectedCase.appealGap, selectedCase.currency)}</p>
                         </div>
                       </div>
@@ -866,7 +849,7 @@ export default function Appeals() {
 
                     {/* Resubmission Readiness */}
                     <div>
-                      <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Resubmission Readiness</h3>
+                      <h3 className="text-[11px] font-bold tracking-tight text-[#9CA3AF] mb-4">Resubmission Readiness</h3>
                       <div className="space-y-6">
                         <div className="flex items-start gap-4">
                           <div className={cn("mt-1 flex h-5 w-5 items-center justify-center rounded-full text-white", selectedCase.strengthTone === 'ready' ? "bg-emerald-500" : "bg-slate-200")}>
@@ -878,10 +861,10 @@ export default function Appeals() {
                           </div>
                         </div>
 
-                        <div className="rounded-xl border border-[#E5E7EB] p-6 space-y-4">
+                        <div className="rounded-[10px] border border-[#E5E7EB] p-6 space-y-4">
                           <div className="flex items-center justify-between">
                             <span className="text-[12px] font-bold text-[#111827]">Required Evidence</span>
-                            <span className="text-[10px] font-bold text-[#9CA3AF] uppercase tracking-tight">{proofNeeds(selectedCase).length} Blockers</span>
+                            <span className="text-[10px] font-bold text-[#9CA3AF] tracking-tight">{proofNeeds(selectedCase).length} Blockers</span>
                           </div>
                           <div className="space-y-3">
                             {proofNeeds(selectedCase).map((need, i) => (
@@ -903,13 +886,13 @@ export default function Appeals() {
                   </div>
                 </div>
 
-                <div className="border-t border-[#F3F5F4] bg-[#F9FAFB] p-8">
+                <div className="border-t border-[#DCE8EE] bg-[#FAFAF7] p-5 sm:p-6">
                   <div className="flex flex-col gap-3">
-                    <Button className="w-full bg-[#111827] text-white hover:bg-[#1F2937] text-[12px] font-bold uppercase tracking-tight h-12 rounded-lg shadow-none">
-                      Initiate Forensic Appeal
+                    <Button className="h-10 w-full rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">
+                      Initiate appeal review
                     </Button>
-                    <Button variant="outline" className="w-full border-[#E5E7EB] bg-white text-[#4B5563] hover:bg-[#F3F5F4] text-[12px] font-bold uppercase tracking-tight h-12 rounded-lg">
-                      View Original Case Detail
+                    <Button variant="outline" className="h-10 w-full rounded-md border-[#DCE8EE] bg-white text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]">
+                      View original case detail
                     </Button>
                   </div>
                 </div>
