@@ -108,10 +108,10 @@ function subscriptionLabel(viewState: BillingViewState) {
 }
 
 function toneForState(viewState: BillingViewState) {
-  if (viewState === 'active') return 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700';
-  if (viewState === 'non_renewing' || viewState === 'pending') return 'border-amber-500/20 bg-amber-500/10 text-amber-700';
-  if (viewState === 'past_due' || viewState === 'past_due_grace' || viewState === 'suspended') return 'border-rose-500/20 bg-rose-500/10 text-rose-700';
-  return 'border-[#DCE8EE] bg-white text-[#66737F]';
+  if (viewState === 'active') return 'border-emerald-200 bg-emerald-50 text-emerald-700';
+  if (viewState === 'non_renewing' || viewState === 'pending') return 'border-sky-200 bg-sky-50 text-sky-700';
+  if (viewState === 'past_due' || viewState === 'past_due_grace' || viewState === 'suspended') return 'border-rose-200 bg-rose-50 text-rose-700';
+  return 'border-[#DCE8EE] bg-[#F7FAFC] text-[#586672]';
 }
 
 function accessLabel(status: RecoveryWorkspaceSubscriptionStatus | null, viewState: BillingViewState) {
@@ -327,126 +327,192 @@ export default function Billing() {
   return (
     <PageLayout title="Billing">
       <div className="min-h-screen bg-[#FAFAF7] text-[#111827]">
-        <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
-          <header className="border-b border-[#DCE8EE] pb-8">
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <div className="text-[12px] font-bold uppercase tracking-tight text-[#0B74DE]">Recovery Workspace</div>
-                <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-[#182026] md:text-5xl">
-                  Billing
-                </h1>
-                <p className="mt-3 max-w-2xl text-[15px] leading-6 text-[#66737F]">
-                  Your current Recovery Workspace subscription and access status, confirmed from Margin’s billing service.
-                </p>
-              </div>
-              <Badge variant="outline" className={`w-fit rounded-md px-3 py-1 text-[13px] font-semibold ${toneForState(viewState)}`}>
-                {subscriptionLabel(viewState)}
-              </Badge>
+        <div className="mx-auto max-w-[1180px] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
+          <header className="flex flex-col gap-5 border-b border-[#DCE8EE] pb-6 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Recovery Workspace</p>
+              <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">
+                Billing
+              </h1>
+              <p className="mt-2.5 max-w-xl text-[14px] leading-6 text-[#66737F]">
+                Review your current subscription, workspace access, and payment controls from Margin’s billing record.
+              </p>
             </div>
+            <Badge
+              variant="outline"
+              className={`w-fit rounded-full px-3 py-1 text-[12px] font-medium tracking-tight ${toneForState(viewState)}`}
+            >
+              {subscriptionLabel(viewState)}
+            </Badge>
           </header>
 
-          {effectiveLoading && !displayedStatus ? (
-            <div className="flex items-center gap-3 border border-[#DCE8EE] bg-white p-6 text-[15px] text-[#66737F]">
-              <RefreshCw className="h-4 w-4 animate-spin" />
-              Loading billing status...
-            </div>
-          ) : error ? (
-            <div className="space-y-4 border border-rose-200 bg-rose-50 p-6 text-[15px] text-rose-700">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="mt-0.5 h-4 w-4" />
-                <div>
-                  <div className="font-semibold">Billing status unavailable</div>
-                  <p className="mt-1">{error}</p>
-                  {displayedStatus ? <p className="mt-2 text-[13px]">The previous billing record remains visible below, but it may no longer be current.</p> : null}
-                </div>
+          <div className="mt-6 space-y-5">
+            {effectiveLoading && !displayedStatus ? (
+              <div className="flex items-center gap-3 rounded-[10px] border border-[#DCE8EE] bg-white px-4 py-3.5 text-[14px] text-[#66737F] shadow-[0_1px_2px_rgba(24,32,38,0.03)]" role="status">
+                <RefreshCw className="h-4 w-4 animate-spin text-[#66737F]" aria-hidden="true" />
+                Loading billing status...
               </div>
-              <Button variant="outline" onClick={() => void refreshStatus()} disabled={loading || busyAction !== null}>
-                <RefreshCw className={`mr-2 h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-                Refresh billing status
-              </Button>
-            </div>
-          ) : null}
-
-          {displayedStatus ? (
-            <>
-              <section className="grid gap-4 md:grid-cols-4">
-                {[
-                  { label: 'Product', value: product?.name || 'Product truth unavailable' },
-                  { label: 'Price', value: productPrice || 'Unavailable from billing service' },
-                  { label: 'Interval', value: product?.interval || NOT_AVAILABLE },
-                  { label: 'Commission', value: productKnown ? '0%' : NOT_AVAILABLE },
-                ].map((item) => (
-                  <div key={item.label} className="border border-[#DCE8EE] bg-white p-5">
-                    <div className="font-mono text-[12px] uppercase tracking-tight text-[#66737F]">{item.label}</div>
-                    <div className="mt-2 text-[20px] font-semibold tracking-tight text-[#182026]">{item.value}</div>
+            ) : error ? (
+              <div className="rounded-[10px] border border-rose-200 bg-rose-50 px-4 py-4 text-[14px] text-rose-800 shadow-[0_1px_2px_rgba(24,32,38,0.02)]" role="alert">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <div className="font-semibold tracking-tight">Billing status unavailable</div>
+                    <p className="mt-1 leading-5">{error}</p>
+                    {displayedStatus ? (
+                      <p className="mt-2 text-[13px] leading-5 text-rose-700">
+                        The previous billing record remains visible below, but it may no longer be current.
+                      </p>
+                    ) : null}
                   </div>
-                ))}
-              </section>
+                </div>
+                <Button
+                  variant="outline"
+                  className="mt-3 h-9 rounded-md border-rose-200 bg-white px-3 text-[13px] font-medium tracking-tight text-rose-700 hover:bg-rose-100 hover:text-rose-800"
+                  onClick={() => void refreshStatus()}
+                  disabled={loading || busyAction !== null}
+                >
+                  <RefreshCw className={`mr-2 h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
+                  Refresh billing status
+                </Button>
+              </div>
+            ) : null}
 
-              <section className="border border-[#DCE8EE] bg-white p-6 space-y-6">
-                <div className="flex flex-col gap-4 border-b border-[#DCE8EE] pb-4 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <h2 className="text-[18px] font-semibold tracking-tight text-[#182026]">Subscription Details</h2>
-                    <p className="mt-1 text-[13px] text-[#66737F]">Subscription state and Workspace access are shown separately because they can differ.</p>
+            {displayedStatus ? (
+              <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.85fr)]">
+                <div className="space-y-5">
+                  <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]" aria-labelledby="plan-overview-heading">
+                    <div className="flex flex-col gap-3 border-b border-[#DCE8EE] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Current plan</p>
+                        <h2 id="plan-overview-heading" className="mt-1 text-[18px] font-semibold tracking-tight text-[#182026]">
+                          {product?.name || 'Recovery Workspace'}
+                        </h2>
+                      </div>
+                      <div className="text-left sm:text-right">
+                        <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Current price</p>
+                        <p className="mt-1 text-[18px] font-semibold tracking-tight text-[#182026]">
+                          {productPrice || 'Unavailable'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <dl className="grid sm:grid-cols-2">
+                      {[
+                        { label: 'Product', value: product?.name || 'Product truth unavailable' },
+                        { label: 'Price', value: productPrice || 'Unavailable from billing service' },
+                        { label: 'Billing interval', value: product?.interval || NOT_AVAILABLE },
+                        { label: 'Recovery commission', value: productKnown ? '0%' : NOT_AVAILABLE },
+                      ].map((item, index) => (
+                        <div
+                          key={item.label}
+                          className={`min-w-0 px-5 py-4 ${index > 0 ? 'border-t border-[#E7EEF2]' : ''} ${index % 2 === 1 ? 'sm:border-l sm:border-t-0' : ''} ${index >= 2 ? 'sm:border-t' : ''}`}
+                        >
+                          <dt className="text-[12px] font-medium tracking-tight text-[#66737F]">{item.label}</dt>
+                          <dd className="mt-1.5 break-words text-[15px] font-medium tracking-tight text-[#182026]">{item.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </section>
+
+                  <section className="rounded-[10px] border border-[#DCE8EE] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]" aria-labelledby="access-heading">
+                    <div className="flex flex-col gap-2 border-b border-[#DCE8EE] pb-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Account state</p>
+                        <h2 id="access-heading" className="mt-1 text-[18px] font-semibold tracking-tight text-[#182026]">Subscription and access</h2>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className={`w-fit rounded-full px-2.5 py-0.5 text-[12px] font-medium tracking-tight ${toneForState(viewState)}`}
+                      >
+                        {subscriptionLabel(viewState)}
+                      </Badge>
+                    </div>
+
+                    {context ? (
+                      <div className="mt-4 border-l-2 border-[#0B74DE] bg-[#F6FAFE] px-3.5 py-3 text-[13px] leading-5 text-[#4D5B66]">
+                        {context}
+                      </div>
+                    ) : null}
+
+                    <dl className="mt-4 grid gap-x-8 sm:grid-cols-2">
+                      {details.map((item, index) => (
+                        <div
+                          key={item.label}
+                          className={`py-3.5 ${index > 0 ? 'border-t border-[#E7EEF2]' : ''} ${index < 2 ? 'sm:border-t-0 sm:pt-0' : ''}`}
+                        >
+                          <dt className="text-[12px] font-medium tracking-tight text-[#66737F]">{item.label}</dt>
+                          <dd className="mt-1 text-[14px] font-medium tracking-tight text-[#182026]">{item.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </section>
+                </div>
+
+                <aside className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_1px_2px_rgba(24,32,38,0.03)]" aria-labelledby="billing-controls-heading">
+                  <div className="border-b border-[#DCE8EE] pb-4">
+                    <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Billing controls</p>
+                    <h2 id="billing-controls-heading" className="mt-1 text-[18px] font-semibold tracking-tight text-[#182026]">Manage your subscription</h2>
+                    <p className="mt-2 text-[13px] leading-5 text-[#66737F]">
+                      Review the current record before making a subscription or payment change.
+                    </p>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3">
+
+                  <div className="mt-4 space-y-2.5">
                     <Button
                       variant="outline"
-                      className="rounded-md border-[#DCE8EE] text-[13px] font-semibold uppercase tracking-tight"
+                      className="h-9 w-full justify-start rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#34414B] hover:bg-[#F7FAFC] hover:text-[#182026]"
                       onClick={() => void refreshStatus()}
                       disabled={loading || busyAction !== null}
                     >
-                      <RefreshCw className={`mr-2 h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+                      <RefreshCw className={`mr-2 h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
                       Refresh billing status
                     </Button>
+
                     {actions?.manage ? (
                       <Button
                         variant="outline"
-                        className="rounded-md border-[#DCE8EE] text-[13px] font-semibold uppercase tracking-tight"
+                        className="h-9 w-full justify-start rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#34414B] hover:bg-[#F7FAFC] hover:text-[#182026]"
                         onClick={() => void runAction('manage')}
                         disabled={actionDisabled}
                       >
-                        <CreditCard className="mr-2 h-3.5 w-3.5" />
-                        Manage Payment Method
+                        <CreditCard className="mr-2 h-3.5 w-3.5" aria-hidden="true" />
+                        Manage payment method
                       </Button>
                     ) : null}
-                    {actions?.cancel ? (
-                      <Button
-                        variant="outline"
-                        className="rounded-md border-rose-200 text-[13px] font-semibold uppercase tracking-tight text-rose-700 hover:bg-rose-50"
-                        onClick={() => void runAction('cancel')}
-                        disabled={actionDisabled}
-                      >
-                        {busyAction === 'cancel' ? <RefreshCw className="mr-2 h-3.5 w-3.5 animate-spin" /> : null}
-                        Cancel Plan
-                      </Button>
-                    ) : null}
+
                     {actions?.resume ? (
                       <Button
-                        className="rounded-md bg-[#0B74DE] text-[13px] font-semibold uppercase tracking-tight text-white hover:bg-[#005FBA]"
+                        className="h-9 w-full justify-start rounded-md bg-[#0B74DE] px-3 text-[13px] font-medium tracking-tight text-white hover:bg-[#005FBA]"
                         onClick={() => void runAction('resume')}
                         disabled={actionDisabled}
                       >
-                        {busyAction === 'resume' ? <RefreshCw className="mr-2 h-3.5 w-3.5 animate-spin" /> : null}
-                        Resume Plan
+                        {busyAction === 'resume' ? <RefreshCw className="mr-2 h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : null}
+                        Resume plan
                       </Button>
                     ) : null}
                   </div>
-                </div>
 
-                {context ? <p className="border-l-2 border-[#DCE8EE] pl-4 text-[14px] leading-6 text-[#4D5B66]">{context}</p> : null}
-
-                <div className="grid gap-6 text-[15px] md:grid-cols-3">
-                  {details.map((item) => (
-                    <div key={item.label}>
-                      <div className="font-mono text-[12px] uppercase tracking-tight text-[#66737F]">{item.label}</div>
-                      <div className="mt-1 font-semibold text-[#182026]">{item.value}</div>
+                  {actions?.cancel ? (
+                    <div className="mt-5 border-t border-[#E7EEF2] pt-4">
+                      <p className="mb-2.5 text-[12px] leading-5 text-[#66737F]">
+                        Cancellation preserves access until the paid-through date shown in your subscription record.
+                      </p>
+                      <Button
+                        variant="outline"
+                        className="h-9 w-full justify-start rounded-md border-rose-200 bg-white px-3 text-[13px] font-medium tracking-tight text-rose-700 hover:bg-rose-50 hover:text-rose-800"
+                        onClick={() => void runAction('cancel')}
+                        disabled={actionDisabled}
+                      >
+                        {busyAction === 'cancel' ? <RefreshCw className="mr-2 h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : null}
+                        Cancel plan
+                      </Button>
                     </div>
-                  ))}
-                </div>
-              </section>
-            </>
-          ) : null}
+                  ) : null}
+                </aside>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </PageLayout>
