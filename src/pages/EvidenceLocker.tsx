@@ -220,6 +220,42 @@ const isPdfArtifact = (doc: Pick<LockerDocumentRow, 'content_type' | 'name' | 'f
   return doc.content_type === 'application/pdf' || /\.pdf$/i.test(filename);
 };
 
+const isCsvArtifact = (doc: Pick<LockerDocumentRow, 'content_type' | 'name' | 'filename' | 'original_filename'>) => {
+  const filename = doc.original_filename || doc.filename || doc.name || '';
+  return doc.content_type === 'text/csv' || /\.csv$/i.test(filename);
+};
+
+const isSpreadsheetArtifact = (doc: Pick<LockerDocumentRow, 'content_type' | 'name' | 'filename' | 'original_filename'>) => {
+  const filename = doc.original_filename || doc.filename || doc.name || '';
+  return /\.(xlsx|xls|ods)$/i.test(filename) || /spreadsheet|excel|sheet/i.test(doc.content_type || '');
+};
+
+const evidenceFileKind = (doc: Pick<LockerDocumentRow, 'content_type' | 'name' | 'filename' | 'original_filename'>) => {
+  if (isPdfArtifact(doc)) return 'PDF document';
+  if (isCsvArtifact(doc)) return 'CSV export';
+  if (isSpreadsheetArtifact(doc)) return 'Spreadsheet';
+  return 'Source document';
+};
+
+const filingUtility = (doc: LockerDocumentRow) => {
+  const parsingStatus = getLockerParsingStatus(doc);
+  const linkedCount = doc.linked_case_count || doc.linked_case_refs.length;
+
+  if (parsingStatus === 'failed') {
+    return { label: 'Parsing needs attention', detail: doc.parser_error || 'Margin could not extract a usable evidence record yet.', tone: 'review' as const };
+  }
+  if (doc.needs_review) {
+    return { label: 'Review evidence posture', detail: doc.usability_reason || 'Review the source record before relying on it in a recovery action.', tone: 'review' as const };
+  }
+  if (doc.usable_as_evidence && linkedCount > 0) {
+    return { label: `Supports ${linkedCount} ${linkedCount === 1 ? 'recovery case' : 'recovery cases'}`, detail: doc.usability_reason || 'The source record is linked and usable in the recovery workflow.', tone: 'linked' as const };
+  }
+  if (doc.usable_as_evidence) {
+    return { label: 'Ready for recovery matching', detail: doc.usability_reason || 'The source record is usable and waiting for a case relationship.', tone: 'ready' as const };
+  }
+  return { label: 'Not yet usable for filing', detail: doc.usability_reason || 'Margin is retaining this record while evidence processing completes.', tone: 'review' as const };
+};
+
 function appendAuditEvent(
   current: LockerAuditEvent[],
   next: LockerAuditEvent
@@ -760,11 +796,11 @@ export default function EvidenceLocker() {
             <Table>
               <TableHeader className="bg-[#FAFAF7]">
                 <TableRow className="border-b border-[#DCE8EE] hover:bg-transparent">
-                  <TableHead className="h-10 w-[40%] px-5 text-[12px] font-medium tracking-tight text-[#66737F]">Document</TableHead>
-                  <TableHead className="h-10 text-[12px] font-medium tracking-tight text-[#66737F]">Type</TableHead>
-                  <TableHead className="h-10 text-[12px] font-medium tracking-tight text-[#66737F]">Case link</TableHead>
-                  <TableHead className="h-10 text-[12px] font-medium tracking-tight text-[#66737F]">Confidence</TableHead>
-                  <TableHead className="h-10 px-5 text-right text-[12px] font-medium tracking-tight text-[#66737F]">Evidence state</TableHead>
+                  <TableHead className="h-10 w-[34%] px-5 text-[12px] font-medium tracking-tight text-[#66737F]">Document</TableHead>
+                  <TableHead className="h-10 w-[17%] text-[12px] font-medium tracking-tight text-[#66737F]">Source and type</TableHead>
+                  <TableHead className="h-10 w-[17%] text-[12px] font-medium tracking-tight text-[#66737F]">Recovery relationship</TableHead>
+                  <TableHead className="h-10 w-[24%] text-[12px] font-medium tracking-tight text-[#66737F]">Filing utility</TableHead>
+                  <TableHead className="h-10 w-[8%] px-5 text-right text-[12px] font-medium tracking-tight text-[#66737F]">Last movement</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -786,79 +822,86 @@ export default function EvidenceLocker() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  displayDocuments.map((doc) => (
-                    <TableRow 
-                      key={doc.id} 
-                      className="group cursor-pointer border-b border-[#E7EEF2] transition-colors hover:bg-[#F7FAFC]"
-                      onClick={() => handleRowClick(doc)}
-                    >
-                      <TableCell className="px-5 py-3.5">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#E7EEF2] bg-white">
-                            {isPdfArtifact(doc) ? (
-                              <img src="/evidence-pdf-mark.png" alt="PDF" className="h-7 w-7 object-contain" />
-                            ) : (
-                              <FileText className="h-4 w-4 text-[#66737F]" strokeWidth={1.75} />
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="truncate text-[13px] font-semibold tracking-tight text-[#182026]">{doc.name}</p>
-                            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] leading-5 text-[#66737F]">
-                              <span>{doc.source_display || 'Source unavailable'}</span>
-                              <span className="h-1 w-1 rounded-full bg-[#DCE8EE]" />
-                              <span>{formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}</span>
+                  displayDocuments.map((doc) => {
+                    const utility = filingUtility(doc);
+                    const linkedCount = doc.linked_case_count || doc.linked_case_refs.length;
+                    const documentSource = doc.source_display || doc.provider || doc.source || 'Source unavailable';
+
+                    return (
+                      <TableRow
+                        key={doc.id}
+                        className="group cursor-pointer border-b border-[#E7EEF2] transition-colors hover:bg-[#F7FAFC]"
+                        onClick={() => handleRowClick(doc)}
+                      >
+                        <TableCell className="px-5 py-4">
+                          <div className="flex min-w-[280px] items-center gap-3">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#E7EEF2] bg-white">
+                              {isPdfArtifact(doc) ? (
+                                <img src="/evidence-pdf-mark.png" alt="PDF document" className="h-7 w-7 object-contain" />
+                              ) : isCsvArtifact(doc) ? (
+                                <img src="/evidence-csv-mark.png" alt="CSV export" className="h-5 w-5 object-contain" />
+                              ) : isSpreadsheetArtifact(doc) ? (
+                                <img src="/evidence-spreadsheet-mark.png" alt="Spreadsheet" className="h-5 w-5 object-contain" />
+                              ) : (
+                                <FileText className="h-4 w-4 text-[#66737F]" strokeWidth={1.75} />
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="truncate text-[13px] font-semibold tracking-tight text-[#182026]">{doc.name}</p>
+                              <p className="mt-1 truncate text-[11px] leading-5 text-[#66737F]">{documentSource}</p>
                             </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">
-                          {isPdfArtifact(doc) ? 'PDF' : doc.content_type?.split('/').pop()?.toUpperCase() || 'RAW'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {doc.linked_case_refs.length > 0 ? (
-                          <div className="flex items-center gap-1.5 text-[#0B74DE]">
-                            <Link2 className="h-3.5 w-3.5" />
-                            <span className="text-[12px] font-medium tracking-tight">{doc.linked_case_refs[0]}</span>
+                        </TableCell>
+
+                        <TableCell className="py-4 align-top">
+                          <div className="min-w-[135px] space-y-1.5">
+                            <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{evidenceFileKind(doc)}</span>
+                            <p className="text-[10px] leading-4 text-[#8A99A5]">{formatBytes(doc.size_bytes)}</p>
+                            {(doc.supplier || doc.invoice) ? <p className="truncate text-[10px] leading-4 text-[#66737F]">{doc.supplier || doc.invoice}</p> : null}
                           </div>
-                        ) : (
-                          <span className="text-[11px] font-medium text-[#9CA3AF]">Unlinked</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[#E5E7EB]">
-                            <div 
-                              className={cn(
-                                "h-full rounded-full",
-                                (doc.parser_confidence || 0) > 0.8 ? "bg-[#0B74DE]" : "bg-rose-500"
-                              )} 
-                              style={{ width: `${(doc.parser_confidence || 0) * 100}%` }} 
-                            />
+                        </TableCell>
+
+                        <TableCell className="py-4 align-top">
+                          {doc.linked_case_refs.length > 0 ? (
+                            <div className="min-w-[145px] space-y-1.5">
+                              <div className="flex items-center gap-1.5 text-[#0B74DE]">
+                                <Link2 className="h-3.5 w-3.5" />
+                                <span className="text-[12px] font-medium tracking-tight">{doc.linked_case_refs[0]}</span>
+                              </div>
+                              <p className="text-[10px] leading-4 text-[#66737F]">{linkedCount > 1 ? `${linkedCount} linked recovery cases` : doc.linkage_strength === 'strong' ? 'Directly supports this recovery' : 'Linked for review'}</p>
+                            </div>
+                          ) : (
+                            <div className="min-w-[145px] space-y-1.5">
+                              <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">Awaiting case match</span>
+                              <p className="text-[10px] leading-4 text-[#8A99A5]">Margin is retaining this source record for recovery matching.</p>
+                            </div>
+                          )}
+                        </TableCell>
+
+                        <TableCell className="py-4 align-top">
+                          <div className="min-w-[210px] space-y-1.5">
+                            <span className={cn(
+                              "inline-flex rounded-md border px-2 py-0.5 text-[10px] font-medium tracking-tight",
+                              utility.tone === 'linked' ? "border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]" :
+                                utility.tone === 'ready' ? "border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]" :
+                                  "border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]"
+                            )}>{utility.label}</span>
+                            <p className="text-[11px] leading-5 text-[#66737F]">{utility.detail}</p>
                           </div>
-                          <span className="text-[12px] font-medium text-[#182026]">
-                            {doc.parser_confidence != null ? `${(doc.parser_confidence * 100).toFixed(0)}%` : '--'}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-6 text-right">
-                        <div className="flex items-center justify-end gap-3">
-                          <Badge 
-                            className={cn(
-                              "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
-                              doc.usable_as_evidence
-                                ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]"
-                                : "border-rose-200 bg-rose-50 text-rose-700"
-                            )}
-                          >
-                            {doc.usable_as_evidence ? 'Filing Ready' : 'Review Required'}
-                          </Badge>
-                          <ChevronRight className="h-4 w-4 text-[#9CA3AF] opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                        </TableCell>
+
+                        <TableCell className="px-5 py-4 text-right align-top">
+                          <div className="flex min-w-[100px] items-start justify-end gap-2">
+                            <div className="text-right">
+                              <p className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{formatDistanceToNow(new Date(doc.updated_at || doc.created_at), { addSuffix: true })}</p>
+                              <p className="mt-1 text-[10px] text-[#8A99A5]">{getLockerParsingStatus(doc) === 'completed' ? 'Parsed' : getLockerParsingStatus(doc) === 'partial' ? 'Partially parsed' : getLockerParsingStatus(doc) === 'failed' ? 'Parsing held' : 'Processing'}</p>
+                            </div>
+                            <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF] opacity-0 transition-opacity group-hover:opacity-100" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
