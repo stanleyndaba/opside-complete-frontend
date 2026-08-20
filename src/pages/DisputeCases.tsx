@@ -69,22 +69,22 @@ type QueueSummaryState = {
 };
 
 const STATUS_BADGE_STYLES: Record<string, string> = {
-  pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
-  filed: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
-  submitted: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
-  rejected: 'bg-red-500/10 text-red-300 border-red-500/20',
-  denied: 'bg-red-500/10 text-red-300 border-red-500/20',
-  approved: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
-  reconciled: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
-  pending_approval: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
-  pending_safety_verification: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
-  failed: 'bg-red-500/10 text-red-300 border-red-500/20',
-  retrying: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
-  billed: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
-  charged: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
-  credited: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
-  completed: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
-  default: 'bg-white/5 text-white/50 border-white/10'
+  pending: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
+  filed: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
+  submitted: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
+  rejected: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
+  denied: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
+  approved: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+  reconciled: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+  pending_approval: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
+  pending_safety_verification: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
+  failed: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
+  retrying: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
+  billed: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+  charged: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+  credited: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+  completed: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+  default: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]'
 };
 
 function formatLabel(value: string | null | undefined) {
@@ -413,17 +413,17 @@ type QueueProgressSnapshot = {
 function queueProgressTone(label: QueueProgressSnapshot['label']) {
   switch (label) {
     case 'Legacy billed':
-      return 'text-fuchsia-200';
+      return 'text-[#66737F]';
     case 'Recovered':
-      return 'text-emerald-200';
+      return 'text-[#2F6C54]';
     case 'Approved':
-      return 'text-blue-300';
+      return 'text-[#0B74DE]';
     case 'Filed':
-      return 'text-blue-100';
+      return 'text-[#0B74DE]';
     case 'Evidence':
-      return 'text-amber-200';
+      return 'text-[#4D5B66]';
     default:
-      return 'text-white/68';
+      return 'text-[#66737F]';
   }
 }
 
@@ -998,11 +998,11 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
 
 function postureBadgeClass(tone: FilingPosture['tone']) {
   const map: Record<FilingPosture['tone'], string> = {
-    ready: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
-    attention: 'border-amber-500/20 bg-amber-500/10 text-amber-300',
-    blocked: 'border-red-500/20 bg-red-500/10 text-red-300',
-    in_flight: 'border-blue-500/20 bg-blue-500/10 text-blue-300',
-    resolved: 'border-white/15 bg-white/10 text-white/75',
+    ready: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+    attention: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
+    blocked: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
+    in_flight: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
+    resolved: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
   };
 
   return map[tone];
@@ -1016,13 +1016,13 @@ function DetailSection({
   rows: Array<{ label: string; value: string }>;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{title}</div>
-      <div className="mt-4 space-y-3">
+    <div className="border border-[#DCE8EE] bg-white">
+      <div className="border-b border-[#E7EEF2] bg-[#F7FAFC] px-4 py-3 text-[12px] font-medium tracking-tight text-[#4D5B66]">{title}</div>
+      <div className="divide-y divide-[#E7EEF2] px-4">
         {rows.map((row) => (
-          <div key={`${title}-${row.label}`} className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-3 last:border-0 last:pb-0">
-            <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{row.label}</span>
-            <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-white/86">{row.value}</span>
+          <div key={`${title}-${row.label}`} className="flex items-start justify-between gap-4 py-3 last:pb-3">
+            <span className="text-[11px] text-[#66737F]">{row.label}</span>
+            <span className="max-w-[62%] text-right text-[11px] font-medium leading-5 tracking-tight text-[#182026]">{row.value}</span>
           </div>
         ))}
       </div>
@@ -1810,38 +1810,31 @@ export default function DisputeCases() {
 
   return (
     <PageLayout title="Dispute Queue" noPadding>
-      <div className="platform-vitality-page min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
-        <div
-          className="fixed inset-0 pointer-events-none opacity-[0.03]"
-          style={{
-            backgroundImage:
-              `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-          }}
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
-        <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
+      <div className="min-h-screen bg-[#FAFAF7] text-[#182026]">
+        <div className="container mx-auto max-w-[1600px] space-y-6 px-6 pb-16 pt-7 lg:px-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-            <div className="space-y-2">
-              <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Dispute Queue</h1>
-              <p className="text-sm text-white/50 font-sans max-w-3xl">
-                Review cases by queue state, evidence gate, Amazon response, approval, and payout posture. Detection does not mean filing.
+            <div>
+              <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Filed case control</div>
+              <h1 className="mt-2 font-lora text-[30px] font-normal tracking-tight text-[#182026]">Dispute queue</h1>
+              <p className="mt-2 max-w-3xl text-[12px] leading-5 text-[#66737F]">
+                Review what Amazon has received, what proof remains, what was approved, and whether the payout is verified.
               </p>
             </div>
             <div className="flex flex-col items-start gap-2 lg:items-end">
               {latestQueueSignal ? (
-                <div className="inline-flex items-center rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
+                <div className="inline-flex items-center rounded-md border border-[#DCE8EE] bg-white px-3 py-1 text-[11px] font-medium tracking-tight text-[#4D5B66]">
                   {latestQueueSignal.label}
-                  <span className="ml-2 text-white/40">
+                  <span className="ml-2 text-[#8A99A5]">
                     {formatDistanceToNow(new Date(latestQueueSignal.timestamp), { addSuffix: true })}
                   </span>
                 </div>
               ) : null}
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
+              <div className="text-[11px] text-[#66737F]">
                 {summary.last_updated_at ? `Queue refreshed ${formatDistanceToNow(new Date(summary.last_updated_at), { addSuffix: true })}` : 'Queue update time unavailable'}
               </div>
               <Button
                 onClick={refresh}
-                className="h-9 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans font-semibold text-[10px] text-[#4B5563] hover:border-[#C8D8FF] hover:bg-[#F2F7FF] hover:text-[#0B74DE] uppercase tracking-tight"
+                className="h-9 rounded-md border border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:border-[#BFD8F6] hover:bg-[#F3F7FF] hover:text-[#0B74DE]"
               >
                 <RefreshCw className="w-3 h-3 mr-2" />
                 Refresh
@@ -1849,22 +1842,22 @@ export default function DisputeCases() {
             </div>
           </div>
 
-          <Card className="rounded-[2px] border border-[#D8E3E8] bg-white text-[#111827] shadow-none overflow-hidden">
-            <CardHeader className="border-b border-[#D8E3E8] bg-[#FAFAFB] px-6 py-5">
+          <Card className="overflow-hidden rounded-none border border-[#DCE8EE] bg-white text-[#182026] shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+            <CardHeader className="border-b border-[#E7EEF2] bg-white px-5 py-4">
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col xl:flex-row xl:items-center gap-3">
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A5]" />
                     <Input
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
                       placeholder="Search queue ID, claim number, Amazon case, store, order, SKU, ASIN, or rejection reason"
-                      className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/25"
+                      className="h-10 border-[#DCE8EE] bg-white pl-10 text-[12px] text-[#182026] placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-[#0B74DE]/10"
                     />
                   </div>
 
                   <Select value={status} onValueChange={(value) => { setStatus(value); setPage(1); }}>
-                    <SelectTrigger className="w-[160px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[160px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1876,7 +1869,7 @@ export default function DisputeCases() {
                   </Select>
 
                   <Select value={gateState} onValueChange={(value) => { setGateState(value); setPage(1); }}>
-                    <SelectTrigger className="w-[200px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[200px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Gate" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1892,7 +1885,7 @@ export default function DisputeCases() {
                   </Select>
 
                   <Select value={filingStatus} onValueChange={(value) => { setFilingStatus(value); setPage(1); }}>
-                    <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[170px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Filing" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1908,7 +1901,7 @@ export default function DisputeCases() {
                   </Select>
 
                   <Select value={evidenceState} onValueChange={(value) => { setEvidenceState(value); setPage(1); }}>
-                    <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[170px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Evidence" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1922,7 +1915,7 @@ export default function DisputeCases() {
                   </Select>
 
                   <Select value={recoveryStatus} onValueChange={(value) => { setRecoveryStatus(value); setPage(1); }}>
-                    <SelectTrigger className="w-[180px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[180px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Recovery" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1933,7 +1926,7 @@ export default function DisputeCases() {
                   </Select>
 
                   <Select value={billingStatus} onValueChange={(value) => { setBillingStatus(value); setPage(1); }}>
-                    <SelectTrigger className="w-[180px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[180px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Billing" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1947,7 +1940,7 @@ export default function DisputeCases() {
                   </Select>
 
                   <Select value={rejectionCategory} onValueChange={(value) => { setRejectionCategory(value); setPage(1); }}>
-                    <SelectTrigger className="w-[200px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[200px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Rejection" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1963,7 +1956,7 @@ export default function DisputeCases() {
 
                 <div className="flex flex-col xl:flex-row xl:items-center gap-3">
                   <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
-                    <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[170px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1977,7 +1970,7 @@ export default function DisputeCases() {
                   </Select>
 
                   <Select value={sortOrder} onValueChange={(value: 'asc' | 'desc') => setSortOrder(value)}>
-                    <SelectTrigger className="w-[120px] bg-white/5 border-white/10 text-white">
+                    <SelectTrigger className="h-10 w-[120px] border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">
                       <SelectValue placeholder="Order" />
                     </SelectTrigger>
                     <SelectContent className="platform-vitality-page border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
@@ -1988,11 +1981,11 @@ export default function DisputeCases() {
                 </div>
 
                 <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+                  <div className="text-[11px] text-[#66737F]">
                     {queueScopeLine}
                   </div>
                   {loading && rows.length > 0 ? (
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+                    <div className="inline-flex items-center gap-2 rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-3 py-1 text-[11px] font-medium tracking-tight text-[#66737F]">
                       <Loader2 className="h-3 w-3 animate-spin" />
                       Refreshing queue readiness
                     </div>
@@ -2003,39 +1996,39 @@ export default function DisputeCases() {
 
             <CardContent className="p-0">
               {loading && rows.length === 0 ? (
-                <div className="py-20 flex flex-col items-center justify-center gap-3 text-center text-white/40">
+                <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center text-[#66737F]">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <div className="space-y-1">
-                    <span className="block text-sm font-sans font-bold text-white/70">{queueLoadingState.title}</span>
-                    <span className="block text-xs font-sans text-white/40">{queueLoadingState.detail}</span>
+                    <span className="block font-lora text-[20px] font-normal tracking-tight text-[#182026]">{queueLoadingState.title}</span>
+                    <span className="block text-[12px] leading-5 text-[#66737F]">{queueLoadingState.detail}</span>
                   </div>
                 </div>
               ) : error ? (
-                <div className="py-20 flex flex-col items-center justify-center gap-4 text-center">
-                  <AlertCircle className="w-5 h-5 text-white/40" />
+                <div className="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
+                  <AlertCircle className="h-5 w-5 text-[#B42318]" />
                   <div className="space-y-1">
-                    <p className="text-sm font-sans font-bold text-white/70">Failed to load dispute queue</p>
-                    <p className="text-xs font-sans text-white/40">{error}</p>
+                    <p className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Dispute records could not be loaded.</p>
+                    <p className="text-[12px] leading-5 text-[#66737F]">{error}</p>
                   </div>
                 </div>
               ) : rows.length === 0 ? (
-                <div className="py-20 flex flex-col items-center justify-center gap-3 text-center">
-                  <FileText className="w-5 h-5 text-white/20" />
-                  <p className="text-sm font-sans font-bold text-white/60">No dispute queue records match the current filters.</p>
+                <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
+                  <FileText className="h-5 w-5 text-[#8A99A5]" />
+                  <p className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">No filed cases match these filters.</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[1440px]">
-                    <thead className="bg-white/[0.02] border-b border-white/5">
+                    <thead className="border-b border-[#E7EEF2] bg-[#F7FAFC]">
                       <tr className="text-left">
                         {['Queue record', 'Record status', 'Amount at stake', 'Evidence', 'Next action', 'Updated', 'Actions'].map((header) => (
-                          <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
+                          <th key={header} className="px-5 py-3 text-[10px] font-medium tracking-tight text-[#66737F]">
                             {header}
                           </th>
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-[#E7EEF2]">
                       {rows.map((row) => {
                         const isProcessing = row.linked_dispute_case_id ? filingInProgress.has(row.linked_dispute_case_id) : false;
                         const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
@@ -2068,37 +2061,37 @@ export default function DisputeCases() {
                         const nextActionLabel = sellerNextActionLabel(row, posture);
 
                       return (
-                        <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
-                            <td className="px-6 py-5">
-                              <div className="space-y-2 min-w-[220px]">
-                                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
+                        <tr key={row.dispute_case_id} className="align-top transition-colors hover:bg-[#F7FAFC]">
+                            <td className="px-5 py-4">
+                              <div className="min-w-[220px] space-y-2">
+                                <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">
                                   {recordIdentifierLabel}
                                 </div>
                                 {canOpenCaseDetail ? (
-                                  <Link to={`/recoveries/${row.dispute_case_id}`} state={{ claim: row }} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
+                                  <Link to={`/recoveries/${row.dispute_case_id}`} state={{ claim: row }} className="inline-flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#0B74DE] hover:text-[#0968C8]">
                                     {recordIdentifier}
                                   </Link>
                                 ) : (
-                                  <span className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white/60">
+                                  <span className="inline-flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#4D5B66]">
                                     {recordIdentifier}
                                   </span>
                                 )}
                                 <div className="flex flex-wrap gap-2">
-                                  <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                  <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
                                     {hasRealDisputeCase ? 'Real dispute case' : 'Detection-only'}
                                   </Badge>
                                   {syntheticOpportunityReference ? (
-                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
                                       Synthetic ref
                                     </Badge>
                                   ) : null}
                                   {threadBackfilled ? (
-                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
                                       Thread-linked
                                     </Badge>
                                   ) : null}
                                 </div>
-                                <div className="space-y-1 text-[11px] text-white/50 font-sans">
+                                <div className="space-y-1 text-[11px] text-[#66737F]">
                                   <div>Entity: {entityLabel}</div>
                                   <div>Row Type: {rowTypeLabel}</div>
                                   <div>Linked Dispute Case: {row.linked_dispute_case_id || 'Not Available'}</div>
@@ -2106,15 +2099,15 @@ export default function DisputeCases() {
                                   <div>Store: {row.store_name || 'Not Available'}</div>
                                   <div>Type: {recordType}</div>
                                 </div>
-                                <div className="border-t border-white/[0.06] pt-2 text-[10px] font-sans tracking-tight text-white/42">
-                                  <span className="uppercase text-white/26">Case progress:</span>{' '}
+                                <div className="border-t border-[#E7EEF2] pt-2 text-[10px] tracking-tight text-[#66737F]">
+                                  <span className="text-[#8A99A5]">Case progress:</span>{' '}
                                   <span className={cn('font-semibold', progressSnapshot.toneClass)}>{progressSnapshot.label}</span>
                                 </div>
                               </div>
                             </td>
 
-                            <td className="px-6 py-5">
-                              <div className="grid grid-cols-1 gap-2 min-w-[220px]">
+                            <td className="px-5 py-4">
+                              <div className="grid min-w-[220px] grid-cols-1 gap-2">
                                 <Badge variant="outline" className={cn('w-fit justify-start border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
                                 {gateState ? (
                                   <Badge variant="outline" className={cn('w-fit justify-start border', postureBadgeClass(gateState.tone))}>
@@ -2122,47 +2115,47 @@ export default function DisputeCases() {
                                   </Badge>
                                 ) : null}
                                 {row.filing_status ? (
-                                  <div className="text-[11px] text-white/45 font-sans">
+                                  <div className="text-[11px] text-[#66737F]">
                                     Filing state: {formatSellerFilingStatus(row)}
                                   </div>
                                 ) : null}
                               </div>
                             </td>
 
-                            <td className="px-6 py-5">
-                              <div className="space-y-1 min-w-[220px] text-[12px] font-sans text-white/70">
-                                <div className="flex justify-between gap-4"><span className="text-white/35">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-white/35">Amazon approval</span><span>{formatMoney(approvedAmount, row.currency)}</span></div>
-                                  <div className="flex justify-between gap-4"><span className="text-white/35">Paid back (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
+                            <td className="px-5 py-4">
+                              <div className="min-w-[220px] space-y-1 text-[12px] text-[#4D5B66]">
+                                <div className="flex justify-between gap-4"><span className="text-[#8A99A5]">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
+                                <div className="flex justify-between gap-4"><span className="text-[#8A99A5]">Amazon approval</span><span>{formatMoney(approvedAmount, row.currency)}</span></div>
+                                  <div className="flex justify-between gap-4"><span className="text-[#8A99A5]">Paid back (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
                                   <div className="pt-1">
-                                    <Badge variant="outline" className={cn('border', financialStatusTone(financialSummary?.payout_status))}>
+                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]">
                                     Payout status: {financialStatusLabel(financialSummary?.payout_status)}
                                     </Badge>
                                   </div>
-                                <div className="text-[10px] text-white/40">{financialStatusDetail(financialSummary)}</div>
+                                <div className="text-[10px] leading-4 text-[#66737F]">{financialStatusDetail(financialSummary)}</div>
                               </div>
                             </td>
 
-                            <td className="px-6 py-5">
+                            <td className="px-5 py-4">
                               <div className="min-w-[190px] max-w-[220px] space-y-2.5">
                                 <Badge variant="outline" className={cn('w-fit max-w-full border', badgeClass(row.evidence_state))}>
                                   {evidenceStatus}
                                 </Badge>
-                                <div className="space-y-1.5 text-[11px] font-sans text-white/50">
+                                <div className="space-y-1.5 text-[11px] text-[#66737F]">
                                   <div className="flex items-start justify-between gap-3">
-                                    <span className="text-white/32">Source docs linked</span>
-                                    <span className="text-right text-white/65">{row.matched_document_count ?? 0}</span>
+                                    <span className="text-[#8A99A5]">Source documents</span>
+                                    <span className="text-right text-[#4D5B66]">{row.matched_document_count ? `${row.matched_document_count} linked` : 'No linked documents'}</span>
                                   </div>
                                   <div className="space-y-1">
-                                    <div className="text-white/32">Needed now</div>
-                                    <div className="break-words leading-snug text-white/62">
+                                    <div className="text-[#8A99A5]">Needed now</div>
+                                    <div className="break-words leading-5 text-[#4D5B66]">
                                       {evidenceDetail(row)}
                                     </div>
                                   </div>
                                   {evidenceNeeds.length ? (
                                     <div className="space-y-1">
-                                      <div className="text-white/32">Specific gaps</div>
-                                      <div className="break-words leading-snug text-white/62">
+                                      <div className="text-[#8A99A5]">Specific gaps</div>
+                                      <div className="break-words leading-5 text-[#4D5B66]">
                                         {evidenceNeeds.slice(0, 2).map((item) => item.detail).join(' ')}
                                       </div>
                                     </div>
@@ -2171,35 +2164,35 @@ export default function DisputeCases() {
                               </div>
                             </td>
 
-                            <td className="px-6 py-5">
+                            <td className="px-5 py-4">
                               <div className="min-w-[280px] space-y-3">
                                 <div className="flex flex-wrap items-center gap-2">
-                                  <p className="text-[13px] font-sans font-bold tracking-tight text-white">{nextActionLabel}</p>
+                                  <p className="text-[13px] font-medium tracking-tight text-[#182026]">{nextActionLabel}</p>
                                   <Badge variant="outline" className={cn('border', postureBadgeClass(posture.tone))}>
                                     {posture.headline}
                                   </Badge>
                                   {row.filing_strategy ? (
-                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
                                       Filing: {formatAutonomyLabel(row.filing_strategy)}
                                     </Badge>
                                   ) : null}
                                 </div>
-                                <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
-                                <p className="text-[11px] font-sans leading-5 text-white/42">
+                                <p className="text-[11px] leading-5 text-[#4D5B66]">{posture.detail}</p>
+                                <p className="text-[11px] leading-5 text-[#66737F]">
                                   Filing state: {filingTruthLine(row)}
                                 </p>
                                 {safeDecisionExplanation ? (
-                                  <p className="text-[11px] font-sans leading-5 text-white/45">
+                                  <p className="text-[11px] leading-5 text-[#66737F]">
                                     Why this record is in this state: {safeDecisionExplanation}
                                   </p>
                                 ) : null}
                                 {safeManualReviewReason ? (
-                                  <p className="text-[11px] font-sans leading-5 text-white/38">
+                                  <p className="text-[11px] leading-5 text-[#66737F]">
                                     Needs review because: {safeManualReviewReason}
                                   </p>
                                 ) : null}
                                 {safeQuarantineReason ? (
-                                  <p className="text-[11px] font-sans leading-5 text-white/38">
+                                  <p className="text-[11px] leading-5 text-[#66737F]">
                                     Held because: {safeQuarantineReason}
                                   </p>
                                 ) : null}
@@ -2208,7 +2201,7 @@ export default function DisputeCases() {
                                     {posture.strengths.map((item) => (
                                       <span
                                         key={`${row.dispute_case_id}-strength-${item}`}
-                                        className="rounded-full border border-emerald-500/15 bg-emerald-500/[0.08] px-2.5 py-1 text-[10px] font-sans font-semibold tracking-tight text-emerald-200/85"
+                                        className="rounded-md border border-[#BFE0CF] bg-[#F4FAF7] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#2F6C54]"
                                       >
                                         {item}
                                       </span>
@@ -2220,7 +2213,7 @@ export default function DisputeCases() {
                                     {posture.risks.map((item) => (
                                       <span
                                         key={`${row.dispute_case_id}-risk-${item}`}
-                                        className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-semibold tracking-tight text-white/62"
+                                        className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#4D5B66]"
                                       >
                                         {item}
                                       </span>
@@ -2230,64 +2223,64 @@ export default function DisputeCases() {
                               </div>
                             </td>
 
-                            <td className="px-6 py-5">
-                              <div className="min-w-[160px] space-y-1 text-[11px] text-white/50 font-sans">
-                                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Last movement</div>
-                                <div className="text-sm font-sans font-bold tracking-tight text-white">
+                            <td className="px-5 py-4">
+                              <div className="min-w-[160px] space-y-1 text-[11px] text-[#66737F]">
+                                <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Last movement</div>
+                                <div className="text-[12px] font-medium tracking-tight text-[#182026]">
                                   {row.updated_at ? formatDistanceToNow(new Date(row.updated_at), { addSuffix: true }) : 'Not Available'}
                                 </div>
                                 <div>{row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available'}</div>
                                 {isRecentTimestamp(row.updated_at) ? (
-                                  <Badge variant="outline" className="w-fit border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                                  <Badge variant="outline" className="w-fit border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
                                     Recently updated
                                   </Badge>
                                 ) : null}
                               </div>
                             </td>
 
-                            <td className="px-6 py-5">
+                            <td className="px-5 py-4">
                               <div className="flex justify-end min-w-[88px]">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="h-9 w-9 rounded-lg text-white/35 hover:bg-white/5 hover:text-white"
+                                      className="h-8 w-8 rounded-md border border-[#DCE8EE] bg-white text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
                                     >
                                       <MoreHorizontal className="w-4 h-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="platform-vitality-page w-56 rounded-xl border border-[#E5E7EB] bg-white p-1 shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
-                                    <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record Actions</div>
+                                  <DropdownMenuContent align="end" className="w-56 rounded-md border border-[#DCE8EE] bg-white p-1 shadow-[0_12px_32px_rgba(24,32,38,0.10)]">
+                                    <div className="mb-1 border-b border-[#E7EEF2] px-3 py-2 text-[11px] font-medium tracking-tight text-[#66737F]">Record actions</div>
                                     {canOpenCaseDetail ? (
-                                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+                                      <DropdownMenuItem asChild className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
                                         <Link to={`/recoveries/${row.dispute_case_id}`} state={{ claim: row }}>{openRecordLabel}</Link>
                                       </DropdownMenuItem>
                                     ) : (
                                       <DropdownMenuItem
                                         disabled
-                                        className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
+                                        className="rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#8A99A5]"
                                       >
                                         {getActionAvailabilityText(row, 'open_record', false, openRecordLabel)}
                                       </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem
                                       disabled={!canOpenBrief}
-                                      className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+                                      className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                                       onClick={() => handleBriefPreview(row)}
                                     >
                                       {getActionAvailabilityText(row, 'brief', canOpenBrief, 'Brief PDF')}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       disabled={!canOpenCaseDetail}
-                                      className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+                                      className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                                       onClick={() => openCaseDetails(row)}
                                     >
                                       {getActionAvailabilityText(row, 'details', canOpenCaseDetail, recordDetailsLabel)}
                                     </DropdownMenuItem>
                                     {actionButton ? (
                                       <DropdownMenuItem
-                                        className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+                                        className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                                         disabled={isProcessing}
                                         onClick={() => handleFilingAction(row, actionButton.mode)}
                                       >
@@ -2297,7 +2290,7 @@ export default function DisputeCases() {
                                     ) : (
                                       <DropdownMenuItem
                                         disabled
-                                        className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
+                                        className="rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#8A99A5]"
                                       >
                                         {getActionAvailabilityText(row, 'primary', false, 'Action blocked')}
                                       </DropdownMenuItem>
@@ -2317,7 +2310,7 @@ export default function DisputeCases() {
           </Card>
 
           <div className="flex items-center justify-between">
-            <div className="text-xs text-white/40 font-sans">
+            <div className="text-[11px] text-[#66737F]">
               Page {page} of {totalPages}
             </div>
             <div className="flex items-center gap-3">
@@ -2325,7 +2318,7 @@ export default function DisputeCases() {
                 variant="outline"
                 disabled={page <= 1 || loading}
                 onClick={() => setPage((current) => Math.max(1, current - 1))}
-                className="border-white/10 text-white/60 bg-white/5"
+                className="border-[#DCE8EE] bg-white text-[#4D5B66] hover:bg-[#F7FAFC]"
               >
                 Previous
               </Button>
@@ -2333,7 +2326,7 @@ export default function DisputeCases() {
                 variant="outline"
                 disabled={page >= totalPages || loading}
                 onClick={() => setPage((current) => current + 1)}
-                className="border-white/10 text-white/60 bg-white/5"
+                className="border-[#DCE8EE] bg-white text-[#4D5B66] hover:bg-[#F7FAFC]"
               >
                 Next
               </Button>
@@ -2343,14 +2336,14 @@ export default function DisputeCases() {
       </div>
 
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <DialogContent className="platform-vitality-page max-w-4xl border border-[#E5E7EB] bg-white text-[#111827] shadow-[0_18px_45px_rgba(17,24,39,0.10)]">
-          <DialogHeader className="border-b border-white/5 pb-5">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Record Details</div>
-            <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
+        <DialogContent className="max-w-4xl border border-[#DCE8EE] bg-[#FAFAF7] p-0 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.14)]">
+          <DialogHeader className="border-b border-[#E7EEF2] bg-white px-6 pb-5 pt-6">
+            <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Case record</div>
+            <DialogTitle className="mt-2 font-lora text-[26px] font-normal tracking-tight text-[#182026]">
               {detailsRow ? getQueueRecordIdentifier(detailsRow) : 'Not Available'}
             </DialogTitle>
             {detailsRow ? (
-              <div className="pt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/38">
+              <div className="pt-2 text-[11px] leading-5 text-[#66737F]">
                 {getQueueReferenceLabel(detailsRow)} · Entity: {getQueueEntityLabel(detailsRow)} · Origin: {formatCaseOrigin(detailsRow.case_origin)} · Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatSellerFilingStatus(detailsRow)} · Recovery: {formatLabel(detailsRow.recovery_status)}
               </div>
             ) : null}
@@ -2364,7 +2357,7 @@ export default function DisputeCases() {
             const detailsProofNeeds = proofNeedsFor(detailsRow);
             const detailsPosture = deriveFilingPosture(detailsRow, financialSummary);
             return (
-            <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
+            <div className="max-h-[70vh] space-y-4 overflow-y-auto bg-[#FAFAF7] px-6 py-5">
               <DetailSection
                 title="Record"
                 rows={[
@@ -2447,46 +2440,46 @@ export default function DisputeCases() {
                   { label: 'Rejection Reason', value: detailsRow.rejection_reason || 'Not Available' },
                 ]}
               />
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Detection Evidence Detail</div>
+              <div className="border border-[#DCE8EE] bg-white p-4">
+                <div className="text-[12px] font-medium tracking-tight text-[#4D5B66]">Evidence detail</div>
                 <div className="mt-4 space-y-4">
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="outline" className={cn('border', badgeClass(detailsRow.evidence_state))}>
                       {detailsRow.evidence_state || 'Not Available'}
                     </Badge>
                     {detailsProofStatus ? (
-                      <Badge variant="outline" className={cn('border', proofStatusTone(detailsProofStatus))}>
+                      <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]">
                         Proof: {formatProofStatus(detailsProofStatus)}
                       </Badge>
                     ) : null}
                     {detailsPayoutProofStatus && detailsPayoutProofStatus !== 'not_applicable' ? (
-                      <Badge variant="outline" className={cn('border', payoutProofTone(detailsPayoutProofStatus))}>
+                      <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]">
                         Payout Proof: {formatPayoutProofStatus(detailsPayoutProofStatus)}
                       </Badge>
                     ) : null}
                   </div>
                   <div className="space-y-2 text-[11px] font-sans">
-                    <div className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-2">
-                      <span className="text-white/35">Source docs linked</span>
-                      <span className="text-right font-semibold tracking-tight text-white/82">
+                    <div className="flex items-start justify-between gap-4 border-b border-[#E7EEF2] pb-2">
+                      <span className="text-[#8A99A5]">Source docs linked</span>
+                      <span className="text-right font-medium tracking-tight text-[#182026]">
                         {String(detailsRow.matched_document_count ?? 0)}
                       </span>
                     </div>
                     <div className="space-y-2">
-                      <div className="text-white/35">Still needed</div>
+                      <div className="text-[#8A99A5]">Still needed</div>
                       {detailsProofNeeds.length ? (
                         <div className="flex flex-wrap gap-2">
                           {detailsProofNeeds.map((requirement) => (
                             <span
                               key={`detail-missing-${detailsRow.dispute_case_id}-${requirement.title}`}
-                              className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold tracking-tight text-white/72"
+                              className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#4D5B66]"
                             >
                               {requirement.title}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <div className="text-[11px] leading-5 text-white/68">No missing requirements recorded.</div>
+                        <div className="text-[11px] leading-5 text-[#66737F]">No missing requirements recorded.</div>
                       )}
                     </div>
                   </div>
@@ -2502,26 +2495,26 @@ export default function DisputeCases() {
                   { label: 'SKU / ASIN', value: [detailsRow.sku, detailsRow.asin].filter(Boolean).join(' / ') || 'Not Available' },
                 ]}
               />
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+              <div className="border border-[#DCE8EE] bg-white p-4">
                 <div className="flex items-center justify-between gap-4">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Financial Events Timeline</div>
-                  {detailsFinancialLoading ? <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Loading proof…</div> : null}
+                  <div className="text-[12px] font-medium tracking-tight text-[#4D5B66]">Financial events</div>
+                  {detailsFinancialLoading ? <div className="text-[11px] text-[#8A99A5]">Loading proof…</div> : null}
                 </div>
                 <div className="mt-4 space-y-3">
                   {!detailsFinancialLoading && detailsFinancialEvents.length === 0 ? (
-                    <div className="text-[11px] font-sans font-semibold tracking-tight text-white/62">No payout recorded yet.</div>
+                    <div className="text-[11px] font-medium tracking-tight text-[#66737F]">No payout recorded yet.</div>
                   ) : detailsFinancialEvents.map((event) => (
-                    <div key={event.event_id} className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
+                    <div key={event.event_id} className="border border-[#E7EEF2] bg-[#FAFAF7] p-4">
                       <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
                         <div>
-                          <div className="text-[11px] font-sans font-semibold tracking-tight text-white">{labelFinancialEventType(event.event_type, event.event_subtype)}</div>
-                          <div className="mt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/32">
+                          <div className="text-[11px] font-medium tracking-tight text-[#182026]">{labelFinancialEventType(event.event_type, event.event_subtype)}</div>
+                          <div className="mt-1 text-[10px] font-medium tracking-tight text-[#8A99A5]">
                             {financialSourceLabel(event.source)} · {event.event_date ? format(new Date(event.event_date), 'yyyy/MM/dd HH:mm') : 'No event date'}
                           </div>
                         </div>
-                        <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{formatMoney(event.amount, event.currency)}</div>
+                        <div className="text-[12px] font-medium tracking-tight text-[#182026]">{formatMoney(event.amount, event.currency)}</div>
                       </div>
-                      <div className="mt-3 grid gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/42 xl:grid-cols-2">
+                      <div className="mt-3 grid gap-2 text-[10px] leading-4 text-[#66737F] xl:grid-cols-2">
                         <div>Reference: {event.reference_id || 'Not Available'}</div>
                         <div>Settlement: {event.settlement_id || 'Not Available'}</div>
                         <div>Batch: {event.payout_batch_id || 'Not Available'}</div>
@@ -2538,15 +2531,15 @@ export default function DisputeCases() {
       </Dialog>
 
       <Dialog open={briefPreviewOpen} onOpenChange={(open) => (open ? setBriefPreviewOpen(true) : closeBriefPreview())}>
-        <DialogContent className="grid h-[94vh] w-[98vw] max-w-none gap-0 overflow-hidden border-0 bg-transparent p-0 text-white shadow-none sm:rounded-none [&>button:last-child]:hidden">
+        <DialogContent className="grid h-[94vh] w-[98vw] max-w-none gap-0 overflow-hidden border border-[#DCE8EE] bg-[#FAFAF7] p-0 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.14)] sm:rounded-none [&>button:last-child]:hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>{briefPreviewRow?.case_number || 'Dispute Brief'}</DialogTitle>
           </DialogHeader>
 
           <div className="relative h-full w-full">
             <div className="pointer-events-none absolute left-6 top-5 z-10 max-w-[60vw] space-y-1">
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Brief PDF Preview</div>
-              <div className="truncate text-2xl font-sans font-light tracking-tight text-white">
+              <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Brief PDF preview</div>
+              <div className="truncate font-lora text-[24px] font-normal tracking-tight text-[#182026]">
                 {briefPreviewRow?.case_number || 'Dispute Brief'}
               </div>
             </div>
@@ -2557,7 +2550,7 @@ export default function DisputeCases() {
                 variant="outline"
                 disabled={!briefPreviewUrl}
                 onClick={downloadBriefPreview}
-                className="h-11 rounded-full border-white/15 bg-black/25 px-3 text-white backdrop-blur-md hover:bg-white/10"
+                className="h-9 rounded-md border border-[#DCE8EE] bg-white px-3 text-[#4D5B66] hover:bg-[#F3F7FF] hover:text-[#0B74DE]"
               >
                 <Download className="h-4 w-4" />
               </Button>
@@ -2565,7 +2558,7 @@ export default function DisputeCases() {
                 type="button"
                 variant="outline"
                 onClick={closeBriefPreview}
-                className="h-11 rounded-full border-white/15 bg-black/25 px-3 text-white backdrop-blur-md hover:bg-white/10"
+                className="h-9 rounded-md border border-[#DCE8EE] bg-white px-3 text-[#4D5B66] hover:bg-[#F3F7FF] hover:text-[#0B74DE]"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -2573,7 +2566,7 @@ export default function DisputeCases() {
 
             <div className="flex h-full items-center justify-center px-3 pb-4 pt-20 md:px-6 md:pb-6 md:pt-24">
               {briefPreviewLoading ? (
-                <div className="flex h-full w-full items-center justify-center gap-3 text-sm font-sans text-white/60">
+                <div className="flex h-full w-full items-center justify-center gap-3 text-[12px] text-[#66737F]">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Loading brief preview...
                 </div>
@@ -2586,7 +2579,7 @@ export default function DisputeCases() {
                   />
                 </div>
               ) : (
-                <div className="flex h-full w-full items-center justify-center px-8 text-center text-sm font-sans text-white/50">
+                <div className="flex h-full w-full items-center justify-center px-8 text-center text-[12px] text-[#66737F]">
                   Preview unavailable.
                 </div>
               )}
