@@ -380,30 +380,25 @@ export function NotificationBell({
         </Button>
       </HoverCardTrigger>
 
-      {/* Pentagon/JP Morgan Style - Minimal, Grayscale, Serious */}
       <HoverCardContent
         align="end"
-        sideOffset={12}
-        className="platform-vitality-page z-50 flex max-h-[520px] w-[428px] flex-col overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-0 shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
-        <div className="bg-[#F9FAFB] px-6 py-4 border-b border-[#E5E7EB] flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="min-w-0 flex-1 pr-4">
-              <h3 className="text-[11px] font-sans font-bold uppercase tracking-tight text-[#111827]">
-                Updates
-              </h3>
-              <p className="mt-1 text-[10px] font-sans leading-4 text-[#6B7280]">
-                Recent activity across your Amazon account and recoveries.
-              </p>
+        sideOffset={10}
+        className="z-50 flex max-h-[540px] w-[420px] flex-col overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-white p-0 shadow-[0_16px_40px_rgba(24,32,38,0.10)]">
+        <div className="shrink-0 border-b border-[#DCE8EE] bg-white px-4 py-3.5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h3 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Updates</h3>
+              <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Recent activity across your Amazon account and recoveries.</p>
             </div>
-            <div className="flex shrink-0 items-center gap-3">
+            <div className="flex shrink-0 items-center gap-2">
               {displayUnreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] transition-colors hover:text-[#007AFF]">
+                  className="rounded-md px-2 py-1 text-[11px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F3F7FA] hover:text-[#0B74DE]">
                   Mark all read
                 </button>
               )}
-              <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#007AFF]">
+              <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-3 py-1.5 text-[10px] font-medium tracking-tight text-[#0B74DE]">
                 {displayUnreadCount > 0 ? `${displayUnreadCount} unread` : 'All caught up'}
               </div>
             </div>
@@ -412,27 +407,23 @@ export function NotificationBell({
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {displayNotifications.length === 0 ? (
-            <div className="px-6 py-10 text-center">
-              <p className="text-[11px] font-sans font-medium uppercase tracking-tight text-[#6B7280]">
-                No recent updates
-              </p>
-              <p className="mt-2 text-[11px] font-sans leading-5 text-[#9CA3AF]">
-                New account activity will appear here as Margin finds, files, and tracks recoveries.
-              </p>
+            <div className="px-4 py-8 text-center">
+              <p className="text-[12px] font-medium tracking-tight text-[#4D5B66]">No recent updates</p>
+              <p className="mt-2 text-[11px] leading-5 text-[#66737F]">New account activity will appear here as Margin finds, files, and tracks recoveries.</p>
             </div>
           ) : (
             displayNotifications.map((notification, index) => {
               const content = (
                 <div
                   className={cn(
-                    'group relative cursor-pointer px-6 py-4 transition-colors duration-200 hover:bg-white/[0.025]',
-                    !notification.read ? 'bg-[#F3F7FF]' : 'bg-transparent'
+                    'group relative cursor-pointer px-4 py-3.5 transition-colors duration-200 hover:bg-[#F7FAFC]',
+                    !notification.read ? 'bg-[#F3F7FF]/70' : 'bg-transparent'
                   )}
                   onClick={() => handleNotificationClick(notification.id)}>
                   <div
                     className={cn(
-                      'absolute left-0 top-3 bottom-3 w-[2px] rounded-full transition-opacity',
-                      !notification.read ? 'bg-[#007AFF] opacity-100' : 'bg-[#007AFF]/20 opacity-0 group-hover:opacity-100'
+                      'absolute left-0 top-3 bottom-3 w-[2px] transition-opacity',
+                      !notification.read ? 'bg-[#0B74DE] opacity-100' : 'bg-[#B7C6D0] opacity-0 group-hover:opacity-100'
                     )}
                   />
 
@@ -441,14 +432,14 @@ export function NotificationBell({
                       <div className="flex items-center gap-2">
                         <span
                           className={cn(
-                            'rounded-full border px-2 py-0.5 text-[9px] font-sans font-semibold uppercase tracking-tight',
+                            'rounded-full border px-2 py-0.5 text-[9px] font-medium tracking-tight',
                             notification.tone === 'success'
-                              ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700'
+                              ? 'border-[#CFE4DB] bg-[#F4FAF7] text-[#2F6C54]'
                               : notification.tone === 'warning'
-                                ? 'border-amber-500/20 bg-amber-500/10 text-amber-700'
+                                ? 'border-[#F0D7DE] bg-[#FFF7F8] text-[#9B4354]'
                                 : notification.tone === 'progress'
-                                  ? 'border-[#D8E7FF] bg-[#F3F7FF] text-[#007AFF]'
-                                  : 'border-[#E5E7EB] bg-white text-[#4B5563]'
+                                  ? 'border-[#D8E7FF] bg-[#F3F7FF] text-[#0B74DE]'
+                                  : 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]'
                           )}
                         >
                           {notification.eyebrow}
@@ -457,8 +448,8 @@ export function NotificationBell({
 
                       <p
                         className={cn(
-                          'mt-3 text-[13px] font-sans font-semibold leading-5 tracking-tight',
-                          !notification.read ? 'text-[#111827]' : 'text-[#4B5563] group-hover:text-[#111827]'
+                          'mt-2.5 text-[13px] font-medium leading-5 tracking-tight',
+                          !notification.read ? 'text-[#182026]' : 'text-[#4D5B66] group-hover:text-[#182026]'
                         )}
                         style={{
                           display: '-webkit-box',
@@ -472,8 +463,8 @@ export function NotificationBell({
 
                       <p
                         className={cn(
-                          'mt-2 pr-3 text-[11px] font-sans leading-5 tracking-tight',
-                          !notification.read ? 'text-[#4B5563]' : 'text-[#6B7280] group-hover:text-[#4B5563]'
+                          'mt-1.5 pr-3 text-[11px] leading-5 tracking-tight',
+                          !notification.read ? 'text-[#4D5B66]' : 'text-[#66737F] group-hover:text-[#4D5B66]'
                         )}
                         style={{
                           display: '-webkit-box',
@@ -485,13 +476,13 @@ export function NotificationBell({
                         {notification.message}
                       </p>
                       {notification.actionLabel && (
-                        <p className="mt-3 text-[10px] font-sans font-semibold tracking-tight text-[#007AFF]">
+                        <p className="mt-2.5 text-[10px] font-medium tracking-tight text-[#0B74DE]">
                           {notification.actionLabel} →
                         </p>
                       )}
                     </div>
 
-                    <span className="shrink-0 whitespace-nowrap pt-0.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#9CA3AF]">
+                    <span className="shrink-0 whitespace-nowrap pt-0.5 text-[10px] font-medium tracking-tight text-[#8A99A5]">
                       {notification.timestamp}
                     </span>
                   </div>
@@ -508,7 +499,7 @@ export function NotificationBell({
                     <div>{content}</div>
                   )}
                   {index < displayNotifications.length - 1 && (
-                    <div className="border-b border-white/6" />
+                    <div className="border-b border-[#E7EEF2]" />
                   )}
                 </React.Fragment>
               );
@@ -516,9 +507,9 @@ export function NotificationBell({
           )}
         </div>
 
-        <div className="bg-[#F9FAFB] px-6 py-4 border-t border-[#E5E7EB] flex-shrink-0">
+        <div className="shrink-0 border-t border-[#DCE8EE] bg-[#FAFAF7] px-4 py-3">
           <Link to={tenantRoute(activeSlug, '/notifications')} onClick={() => setIsOpen(false)}>
-            <button className="w-full rounded-full border border-[#D8E7FF] bg-[#F3F7FF] px-4 py-2 text-center text-[10px] font-sans font-medium uppercase tracking-tight text-[#007AFF] transition-colors hover:border-[#007AFF]/30 hover:bg-white">
+            <button className="w-full rounded-md border border-[#D8E7FF] bg-[#F3F7FF] px-4 py-2 text-center text-[11px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:border-[#0B74DE]/30 hover:bg-white">
               View all updates
             </button>
           </Link>

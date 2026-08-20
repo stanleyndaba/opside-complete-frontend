@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload, Layers } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -665,7 +665,7 @@ export function Navbar({
                       className="flex h-9 w-9 items-center justify-center rounded-[7px] transition-colors hover:bg-[#F1F2F0]"
                       aria-label="Approved reimbursements"
                     >
-                      <img src="/assets/reimbursement-layers.png" alt="" className="h-5 w-5 object-contain" />
+                      <Layers className="h-5 w-5 text-[#0B74DE]" strokeWidth={1.85} />
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent
