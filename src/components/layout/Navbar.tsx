@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { NotificationBell } from './NotificationBell';
 import { useCurrency, currencies } from '@/components/providers/CurrencyProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -658,77 +657,69 @@ export function Navbar({
                   iconClassName="h-5 w-5"
                 />
 
-                {/* Approved Reimbursements */}
+                {/* Approved reimbursements */}
                 <HoverCard openDelay={100} closeDelay={200}>
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                      className="flex h-9 items-center rounded-[7px] px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
-                      aria-label="Approved reimbursements">
-                      Reimbursements
+                      className="flex h-9 w-9 items-center justify-center rounded-[7px] transition-colors hover:bg-[#F1F2F0]"
+                      aria-label="Approved reimbursements"
+                    >
+                      <img src="/assets/reimbursement-layers.png" alt="" className="h-5 w-5 object-contain" />
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent
                     side="bottom"
                     align="center"
-                    sideOffset={12}
-                    className="w-[560px] overflow-hidden rounded-[4px] border border-[#E5E7EB] bg-white p-0 shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
-                    <div className="border-b border-[#D8E3E8] px-5 py-4">
-                      <h4 className="text-[13px] font-sans font-bold uppercase tracking-tight text-[#111827]">Approved Reimbursements</h4>
+                    sideOffset={10}
+                    className="w-[420px] overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_16px_40px_rgba(24,32,38,0.10)]"
+                  >
+                    <div className="border-b border-[#DCE8EE] px-4 py-3.5">
+                      <div className="flex items-baseline justify-between gap-4">
+                        <div>
+                          <p className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Approved reimbursements</p>
+                          <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Recent verified outcome records.</p>
+                        </div>
+                        <span className="shrink-0 text-[11px] font-medium tabular-nums text-[#66737F]">{approvedReimbursements.length} recent</span>
+                      </div>
                     </div>
-                    <div className="max-h-[360px] overflow-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="border-[#E5E7EB] hover:bg-transparent">
-                            <TableHead className="h-10 px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Case</TableHead>
-                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Amount</TableHead>
-                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Verification</TableHead>
-                            <TableHead className="h-10 pr-5 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">Updated</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {approvedReimbursementsLoading ? (
-                            <TableRow className="border-[#E5E7EB]">
-                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-[#6B7280]">
-                                Loading approved reimbursements...
-                              </TableCell>
-                            </TableRow>
-                          ) : approvedReimbursementsError ? (
-                            <TableRow className="border-[#E5E7EB]">
-                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-[#6B7280]">
-                                Unable to load approved reimbursements.
-                              </TableCell>
-                            </TableRow>
-                          ) : approvedReimbursements.length === 0 ? (
-                            <TableRow className="border-[#E5E7EB]">
-                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-[#6B7280]">
-                                No production-verified approved reimbursement records yet.
-                              </TableCell>
-                            </TableRow>
-                          ) : approvedReimbursements.map((row) => (
-                            <TableRow
+                    <div className="max-h-[352px] overflow-y-auto">
+                      {approvedReimbursementsLoading ? (
+                        <p className="px-4 py-7 text-center text-[12px] text-[#66737F]">Loading approved reimbursements…</p>
+                      ) : approvedReimbursementsError ? (
+                        <p className="px-4 py-7 text-center text-[12px] text-[#66737F]">Unable to load approved reimbursements.</p>
+                      ) : approvedReimbursements.length === 0 ? (
+                        <p className="px-4 py-7 text-center text-[12px] leading-5 text-[#66737F]">No production-verified approved reimbursement records yet.</p>
+                      ) : (
+                        <div className="divide-y divide-[#E7EEF2]">
+                          {approvedReimbursements.map((row) => (
+                            <button
                               key={`${row.routeId}-${row.caseReference}`}
-                              className="cursor-pointer border-[#E5E7EB] text-[#4B5563] transition-colors hover:bg-[#F9FAFB] hover:text-[#111827]"
+                              type="button"
                               onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
+                              className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-4 px-4 py-3 text-left transition-colors hover:bg-[#F7FAFC]"
                             >
-                              <TableCell className="px-5 py-3 text-[11px] font-sans font-bold tracking-tight text-[#111827]">
-                                {row.caseReference}
-                              </TableCell>
-                              <TableCell className="py-3">
-                                <div className="text-[11px] font-sans font-bold text-[#111827]">{formatMoney(row.amount, row.currency)}</div>
-                                <div className="mt-1 text-[9px] font-sans font-bold uppercase tracking-tight text-[#9CA3AF]">{row.amountNote}</div>
-                              </TableCell>
-                              <TableCell className="py-3 text-[11px] font-sans font-bold text-[#4B5563]">
-                                {row.payoutTruth}
-                              </TableCell>
-                              <TableCell className="py-3 pr-5 text-right text-[11px] font-sans font-bold text-[#6B7280]">
-                                {formatStamp(row.lastUpdatedAt)}
-                              </TableCell>
-                            </TableRow>
+                              <div className="min-w-0">
+                                <p className="truncate text-[12px] font-medium tracking-tight text-[#182026]">{row.caseReference}</p>
+                                <p className="mt-1 text-[11px] leading-4 text-[#66737F]">{row.payoutTruth}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(row.amount, row.currency)}</p>
+                                <p className="mt-1 text-[10px] text-[#66737F]">{formatStamp(row.lastUpdatedAt)}</p>
+                              </div>
+                            </button>
                           ))}
-                        </TableBody>
-                      </Table>
+                        </div>
+                      )}
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
+                      className="flex w-full items-center justify-between border-t border-[#DCE8EE] bg-[#FAFAF7] px-4 py-3 text-left text-[12px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F3F7FA] hover:text-[#0B74DE]"
+                    >
+                      <span>Open reimbursement ledger</span>
+                      <span aria-hidden="true">→</span>
+                    </button>
                   </HoverCardContent>
                 </HoverCard>
               </div>
