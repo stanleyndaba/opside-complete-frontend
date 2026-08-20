@@ -673,26 +673,26 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
   <style>
     @page { size: A4; margin: 20mm; }
     * { box-sizing: border-box; }
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-      color: #1e293b; 
-      line-height: 1.4; 
-      max-width: 800px; 
-      margin: 0 auto; 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      line-height: 1.4;
+      max-width: 800px;
+      margin: 0 auto;
       padding: 40px 30px;
       background: #fff;
     }
-    .header { 
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      border-bottom: 1px solid #e2e8f0; 
-      padding-bottom: 20px; 
-      margin-bottom: 30px; 
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
     }
-    .logo { 
-      font-size: 18px; 
-      font-weight: 600; 
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
       color: #0f172a;
       letter-spacing: -0.5px;
     }
@@ -706,54 +706,54 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
     .header-right {
       text-align: right;
     }
-    .period { 
-      font-size: 11px; 
+    .period {
+      font-size: 11px;
       color: #475569;
     }
-    .generated { 
-      font-size: 9px; 
-      color: #94a3b8; 
+    .generated {
+      font-size: 9px;
+      color: #94a3b8;
       margin-top: 2px;
     }
-    .summary-grid { 
-      display: grid; 
-      grid-template-columns: repeat(4, 1fr); 
-      gap: 1px; 
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
       background: #e2e8f0;
       border: 1px solid #e2e8f0;
-      margin-bottom: 30px; 
+      margin-bottom: 30px;
     }
-    .summary-card { 
-      background: #f8fafc; 
-      padding: 16px 12px; 
-      text-align: center; 
+    .summary-card {
+      background: #f8fafc;
+      padding: 16px 12px;
+      text-align: center;
     }
-    .summary-value { 
-      font-size: 18px; 
-      font-weight: 600; 
+    .summary-value {
+      font-size: 18px;
+      font-weight: 600;
       color: #0f172a;
       font-variant-numeric: tabular-nums;
     }
-    .summary-label { 
-      font-size: 9px; 
-      color: #64748b; 
-      text-transform: uppercase; 
+    .summary-label {
+      font-size: 9px;
+      color: #64748b;
+      text-transform: uppercase;
       letter-spacing: 1px;
       margin-top: 4px;
     }
-    .section { 
-      margin-bottom: 25px; 
-      page-break-inside: avoid; 
+    .section {
+      margin-bottom: 25px;
+      page-break-inside: avoid;
     }
-    .section-title { 
-      font-size: 9px; 
-      font-weight: 600; 
-      color: #64748b; 
+    .section-title {
+      font-size: 9px;
+      font-weight: 600;
+      color: #64748b;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      border-bottom: 1px solid #e2e8f0; 
-      padding-bottom: 8px; 
-      margin-bottom: 12px; 
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
     }
     .data-table {
       width: 100%;
@@ -809,17 +809,17 @@ const generateCasebookPDF = (claims: RecoveryClaim[], dateRange: { from: Date; t
     .summary-row:last-child { border-bottom: none; }
     .summary-row .label { color: #64748b; }
     .summary-row .value { font-weight: 500; color: #0f172a; }
-    .footer { 
-      text-align: center; 
-      padding-top: 30px; 
+    .footer {
+      text-align: center;
+      padding-top: 30px;
       margin-top: 30px;
-      border-top: 1px solid #e2e8f0; 
-      font-size: 9px; 
+      border-top: 1px solid #e2e8f0;
+      font-size: 9px;
       color: #94a3b8;
     }
-    @media print { 
+    @media print {
       body { padding: 0; }
-      .no-print { display: none; } 
+      .no-print { display: none; }
     }
   </style>
 </head>
@@ -1432,7 +1432,7 @@ export default function Recoveries() {
 
   // --- Opportunity Radar helpers ---
   const getConfidenceTier = (c: number) => c >= 0.85 ? 'high' : c >= 0.6 ? 'medium' : 'low';
-  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-600' : c >= 0.6 ? 'text-amber-500' : 'text-blue-500';
+  const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-600' : c >= 0.6 ? 'text-[#9B4354]' : 'text-blue-500';
   const getConfidenceBadge = (c: number) => c >= 0.85 ? 'High' : c >= 0.6 ? 'Medium' : 'Low';
   const getEvidenceStatus = (claim: any): 'Ready' | 'Needs Docs' | 'Collecting' => {
     const matchedCount =
@@ -2355,29 +2355,28 @@ export default function Recoveries() {
     <PageLayout title="Reimbursements">
       <div className="relative w-full flex-1 overflow-x-hidden bg-[#FAFAF7]">
         <div className="relative w-full min-h-full bg-[#FAFAF7]">
-          <div className="relative w-full max-w-full px-8 pt-8 pb-24">
-            {/* Header Section - Matrix Terminal Design */}
-            <div className="border-b border-white/10 pb-8 mb-8 relative">
-              <div className="absolute -bottom-px left-0 w-24 h-px bg-white/20" />
+          <div className="relative mx-auto w-full max-w-[1440px] px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+            {/* Recovery control context */}
+            <div className="relative mb-6 border-b border-[#DCE8EE] pb-6">
+              <div className="absolute -bottom-px left-0 h-px w-16 bg-[#0B74DE]" />
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-[10px] font-sans font-semibold text-[#858792] tracking-tight uppercase">Recovery ledger</span>
-                    <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
+                    <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Recovery control</span>
                   </div>
-                  <h1 className="text-[24px] font-semibold font-sans text-[#111827] mb-2 tracking-tight">Open Recoveries</h1>
-                  <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-md leading-relaxed">
-                    Review detected opportunities, cases already with Amazon, payout posture, and confirmed recoveries.
+                  <h1 className="mb-2 font-lora text-[32px] font-normal tracking-tight text-[#182026]">Recoveries</h1>
+                  <p className="max-w-2xl text-[13px] leading-5 text-[#66737F]">
+                    Review what Margin found, what the current evidence supports, and what remains unresolved through payout and reconciliation.
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-3">
                   <Button
                     variant="ghost"
                     className={cn(
-                      "h-11 px-6 font-sans font-bold text-[10px] uppercase tracking-tight transition-all border border-white/5",
+                      "h-10 px-4 text-[12px] font-medium tracking-tight transition-colors border rounded-md",
                       selectedIds.size === 0 || submittingBulk
-                        ? "text-white/20 bg-transparent"
-                        : "text-white bg-white/5 border-white/15 hover:bg-white/10 hover:border-white/20"
+                        ? "border-[#DCE8EE] bg-white text-[#AAB7C0]"
+                        : "border-[#0B74DE] bg-[#0B74DE] text-white hover:bg-[#0968C8] hover:border-[#0968C8]"
                     )}
                     disabled={selectedIds.size === 0 || submittingBulk}
                     onClick={async () => {
@@ -2412,7 +2411,6 @@ export default function Recoveries() {
                       <Loader2 className="h-4 w-4 animate-spin text-white" />
                     ) : (
                       <>
-                        <Upload className="h-3.5 w-3.5 mr-2" />
                         File selected cases ({selectedIds.size} selected)
                       </>
                     )}
@@ -2421,23 +2419,23 @@ export default function Recoveries() {
               </div>
             </div>
 
-            {/* Recovered Value Section - Matrix Instrumentation */}
-            <div className="mb-12">
-              <div className="flex items-end justify-between">
+            {/* Recovery truth summary */}
+            <div className="mb-8 border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+              <div className="flex flex-col gap-6 p-5 lg:flex-row lg:items-end lg:justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">{recoveriesHeroLabel}</span>
+                    <span className="text-[12px] font-medium tracking-tight text-[#66737F]">{recoveriesHeroLabel}</span>
                     {((recoveredTotal != null && recoveredTotal > 0) || owedSummary.totalOwed > 0) && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="w-3.5 h-3.5 rounded-full border border-white/10 flex items-center justify-center hover:border-white/20 transition-colors group">
-                            <span className="text-white/40 text-[8px] font-sans font-bold group-hover:text-white">i</span>
+                            className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[#DCE8EE] text-[#66737F] transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE]">
+                            <span className="text-[9px] font-medium">i</span>
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-lg shadow-2xl backdrop-blur-3xl uppercase tracking-tight">
+                        <TooltipContent side="top" className="max-w-xs border border-[#DCE8EE] bg-white text-[11px] leading-4 text-[#4D5B66] shadow-[0_8px_24px_rgba(24,32,38,0.10)]">
                           {owedSummary.totalOwed > 0
                             ? `Value currently in play across open cases. ${recoverySource ? `Source: ${recoverySource}` : ''}`.trim()
                             : `Recovered from approved/completed claims. ${recoverySource ? `Source: ${recoverySource}` : ''}`.trim()}
@@ -2446,31 +2444,31 @@ export default function Recoveries() {
                     )}
                   </div>
                   <div className="flex items-baseline gap-4">
-                    <div className="text-6xl font-sans font-bold text-white tracking-tight shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
+                    <div className="font-lora text-[42px] font-normal tabular-nums tracking-tight text-[#182026]">
                       {formatCurrencyWithSelection(primaryRecoveryValue, recoveredCurrency)}
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-sans font-bold text-white/55 tracking-tight uppercase">
-                        {owedSummary.totalOwed > 0 ? 'In play now' : recoveredTotal != null && recoveredTotal > 0 ? 'Already paid back' : 'Current watchlist'}
+                      <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">
+                        {owedSummary.totalOwed > 0 ? 'Open value under review' : recoveredTotal != null && recoveredTotal > 0 ? 'Payouts confirmed so far' : 'Current watchlist'}
                       </span>
-                      <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
+                      <span className="text-[11px] leading-4 text-[#66737F]">
                         {recoveriesHeroSupportingLabel}
                       </span>
                     </div>
                   </div>
-                  <p className="mt-4 max-w-2xl text-[12px] font-sans leading-5 text-white/42">
+                  <p className="mt-3 max-w-2xl text-[12px] leading-5 text-[#66737F]">
                     {recoveriesPlanNote}
                   </p>
 
                   {/* Sync status message - Matrix Alert style */}
                   {(syncMessage || needsSync || syncTriggered) && (
                     <div className={cn(
-                      "mt-6 px-4 py-3 border rounded-lg max-w-2xl backdrop-blur-md transition-all duration-500",
+                      "mt-4 max-w-2xl border-l-2 px-3 py-2.5 text-[12px] leading-5 transition-colors",
                       syncTriggered
-                        ? 'bg-blue-500/5 border-blue-500/20 text-blue-400'
+                        ? 'border-[#0B74DE] bg-[#F3F7FF] text-[#0B74DE]'
                         : needsSync
-                          ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400'
-                          : 'bg-white/5 border-white/10 text-white/60'
+                          ? 'border-[#4F8A70] bg-[#F4FAF7] text-[#2F6C54]'
+                          : 'border-[#B7C6D0] bg-[#F7FAFC] text-[#4D5B66]'
                     )}>
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
@@ -2479,14 +2477,14 @@ export default function Recoveries() {
                         ) : (
                           <div className="h-1.5 w-1.5 rounded-full bg-current animate-pulse shadow-[0_0_8px_rgba(current,0.5)]" />
                         )}
-                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight">
+                        <span className="text-[12px] font-medium tracking-tight">
                             {syncMessage || (needsSync ? 'We are refreshing your latest Amazon records.' : '')}
                         </span>
                       </div>
                       {activeSyncId && (
                           <Link
                             to={`/sync?id=${activeSyncId}`}
-                            className="text-[10px] font-sans font-bold uppercase tracking-tight hover:underline px-2 py-1 border border-current/20 rounded">
+                            className="rounded border border-current/20 px-2 py-1 text-[11px] font-medium tracking-tight hover:underline">
                             Open sync detail
                           </Link>
                         )}
@@ -2497,19 +2495,18 @@ export default function Recoveries() {
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-sans font-bold text-[9px] uppercase tracking-tight rounded-lg px-4 gap-3 group transition-all">
+                    <Button variant="outline" className="h-9 gap-2 rounded-md border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
                       <div className="flex items-center gap-2">
-                        <div className="h-1 w-1 rounded-full bg-white/35 group-hover:bg-white" />
                         Issue breakdown
                       </div>
-                      <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/30 tracking-tighter group-hover:border-emerald-500/30 group-hover:text-emerald-500">
+                      <span className="rounded border border-[#DCE8EE] bg-[#F7FAFC] px-1.5 py-0.5 text-[10px] tabular-nums text-[#66737F]">
                         ({Object.values(categoryCounts).reduce((a, b) => a + b, 0)})
                       </span>
-                      <ChevronDown className="h-3 w-3 text-white/20 group-hover:text-emerald-500" />
+                      <ChevronDown className="h-3.5 w-3.5 text-[#66737F]" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-2 outline-none">
-                    <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-2 uppercase tracking-tight">
+                  <DropdownMenuContent align="end" className="w-80 rounded-md border border-[#DCE8EE] bg-white p-2 shadow-[0_12px_32px_rgba(24,32,38,0.10)] outline-none">
+                    <div className="mb-2 border-b border-[#E7EEF2] px-3 py-2 text-[11px] font-medium tracking-tight text-[#66737F]">
                       Detected issue types
                     </div>
                     <div className="max-h-80 overflow-y-auto custom-scrollbar">
@@ -2518,9 +2515,9 @@ export default function Recoveries() {
                         .map(([label, count]) => (
                           <DropdownMenuItem
                             key={label}
-                            className="flex justify-between items-center px-3 py-2 text-[10px] font-sans font-bold text-[10px] rounded-lg hover:bg-white/5 focus:bg-white/5 cursor-default group transition-all">
-                            <span className="text-white/60 group-hover:text-white truncate uppercase tracking-tight">{label}</span>
-                            <span className="text-white/20 group-hover:text-emerald-500 tabular-nums">[{String(count).padStart(3, '0')}]</span>
+                            className="group flex cursor-default items-center justify-between rounded px-3 py-2 text-[11px] hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">
+                            <span className="truncate text-[#4D5B66] group-hover:text-[#182026]">{label}</span>
+                            <span className="tabular-nums text-[#8A99A5] group-hover:text-[#0B74DE]">{count}</span>
                           </DropdownMenuItem>
                         ))}
                     </div>
@@ -2530,86 +2527,81 @@ export default function Recoveries() {
             </div>
 
 
-            {/* Tabs for Claims, Evidence Matching, and Cases - Matrix Design */}
-            <div className="mb-10">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-px flex-1 bg-white/5" />
-                <h2 className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Work queues</h2>
-                <div className="h-px flex-1 bg-white/5" />
+            {/* Recovery work queues */}
+            <div className="mb-8">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">Recovery work</h2>
+                  <p className="mt-1 text-[12px] leading-5 text-[#66737F]">Inspect the current record before Margin advances an evidence-backed action.</p>
+                </div>
               </div>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
-                <TabsList className="mb-8 flex h-14 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl">
+                <TabsList className="mb-5 flex h-10 w-full items-stretch justify-start gap-1 rounded-md border border-[#DCE8EE] bg-white p-1 sm:w-fit">
                   <TabsTrigger
                     value="claims"
-                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+                    className="group relative flex-1 rounded px-3 text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026] data-[state=active]:bg-[#F3F7FF] data-[state=active]:text-[#0B74DE] sm:flex-none">
                     <div className="flex items-center justify-center gap-2">
                       Open opportunities
                       {tabCounts.claimsCount > 0 && (
-                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+                        <span className="rounded border border-[#DCE8EE] bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-[#8A99A5] group-data-[state=active]:border-[#BFD8F6] group-data-[state=active]:text-[#0B74DE]">
                           {tabCounts.claimsCount}
                         </span>
                       )}
                     </div>
-                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
-                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+                    className="group relative flex-1 rounded px-3 text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026] data-[state=active]:bg-[#F3F7FF] data-[state=active]:text-[#0B74DE] sm:flex-none">
                     <div className="flex items-center justify-center gap-2">
                       Evidence-ready
                       {tabCounts.evidenceMatchingCount > 0 && (
-                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+                        <span className="rounded border border-[#DCE8EE] bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-[#8A99A5] group-data-[state=active]:border-[#BFD8F6] group-data-[state=active]:text-[#0B74DE]">
                           {tabCounts.evidenceMatchingCount}
                         </span>
                       )}
                     </div>
-                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
-                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+                    className="group relative flex-1 rounded px-3 text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026] data-[state=active]:bg-[#F3F7FF] data-[state=active]:text-[#0B74DE] sm:flex-none">
                     <div className="flex items-center justify-center gap-2">
                       Filed with Amazon
                       {tabCounts.disputeCasesCount > 0 && (
-                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+                        <span className="rounded border border-[#DCE8EE] bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-[#8A99A5] group-data-[state=active]:border-[#BFD8F6] group-data-[state=active]:text-[#0B74DE]">
                           {tabCounts.disputeCasesCount}
                         </span>
                       )}
                     </div>
-                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+
                   </TabsTrigger>
                 </TabsList>
 
                 {/* Claims Tab (Existing Content) */}
                 {/* Claims Tab - Matrix Ledger Controls */}
                 <TabsContent value="claims" className="mt-0 outline-none">
-                  <div className="mb-10 group/controls">
-                    <div className="relative overflow-hidden bg-white/5 border border-white/5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-                      {/* Top Accent Line */}
-                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent opacity-0 group-hover/controls:opacity-100 transition-opacity duration-700" />
-
-                      <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between">
+                  <div className="mb-5">
+                    <div className="overflow-hidden border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+                      <div className="flex items-center justify-between border-b border-[#E7EEF2] px-5 py-4">
                         <div>
-                          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Open recovery queue</h3>
-                          <p className="text-[10px] font-sans leading-5 text-white/35 mt-1 max-w-xl">Each row shows money still worth reviewing, evidence strength, and the next best move.</p>
+                          <h3 className="text-[14px] font-medium tracking-tight text-[#182026]">Open recovery queue</h3>
+                          <p className="mt-1 max-w-xl text-[12px] leading-5 text-[#66737F]">Each record keeps the amount, evidence posture, lifecycle state, and next controlled action together.</p>
                         </div>
-                        <div className="flex items-center gap-1.5 font-sans font-bold text-[9px] text-white/20 uppercase tracking-tight">
-                          <Eye className="w-3 h-3" />
-                          Live updates on
-                        </div>
+                        <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Live updates on</div>
                       </div>
 
-                      <div className="p-8">
+                      <div className="p-5">
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                           {/* Main Search Column */}
                           <div className="lg:col-span-12 space-y-4">
                             <div className="relative group/search max-w-2xl">
-                              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within/search:text-emerald-500 transition-colors" />
+                              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A99A5] transition-colors group-focus-within/search:text-[#0B74DE]" />
                               <Input
                                 placeholder="Search claim, order, SKU, ASIN, or store"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 h-14 bg-white/5 border-white/5 text-white font-sans font-bold text-[11px] placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-2xl transition-all shadow-inner"
+                                className="h-11 rounded-md border-[#DCE8EE] bg-white pl-10 text-[12px] text-[#182026] placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-[#0B74DE]/10"
                               />
                             </div>
 
@@ -2626,10 +2618,10 @@ export default function Recoveries() {
                                   variant="ghost"
                                   size="sm"
                                   className={cn(
-                                    "h-8 px-4 text-[9px] font-sans font-bold border border-white/5 rounded-full transition-all uppercase tracking-tight",
+                                    "h-8 rounded-md border px-3 text-[11px] font-medium tracking-tight transition-colors",
                                     quickDateRange === opt.val
-                                      ? "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
-                                      : "text-white/30 hover:text-white/60 hover:bg-white/5"
+                                      ? "border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]"
+                                      : "border-[#DCE8EE] bg-white text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
                                   )}
                                   onClick={() => setQuickDateRange(opt.val as any)}>
                                   {opt.label}
@@ -2639,17 +2631,17 @@ export default function Recoveries() {
                           </div>
 
                           {/* Filter Matrix Row */}
-                          <div className="lg:col-span-12 flex flex-wrap gap-4 pt-4 border-t border-white/5">
+                          <div className="flex flex-wrap gap-3 border-t border-[#E7EEF2] pt-4 lg:col-span-12">
                             {/* Temporal Window Popover */}
                             <Popover>
                               <PopoverTrigger asChild>
                                 <Button
                                   variant="outline"
                                   className={cn(
-                                    "h-12 bg-white/5 border-white/5 text-[10px] font-sans font-bold uppercase tracking-tight px-5 gap-4 rounded-xl hover:bg-white/10 transition-all",
-                                    !dateRange ? "text-white/20" : "text-white/60"
+                                    "h-10 gap-2 rounded-md border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight hover:bg-[#F7FAFC] transition-colors",
+                                    !dateRange ? "text-[#8A99A5]" : "text-[#4D5B66]"
                                   )}>
-                                  <CalendarIcon className="h-4 w-4 text-emerald-500/40" />
+                                  <CalendarIcon className="h-4 w-4 text-[#66737F]" />
                                   {dateRange?.from ? (
                                     dateRange.to ? (
                                       `${format(dateRange.from, "MMM dd")} - ${format(dateRange.to, "MMM dd")}`
@@ -2657,11 +2649,11 @@ export default function Recoveries() {
                                       format(dateRange.from, "MMM dd, y")
                                     )
                                   ) : (
-                                    "CUSTOM_WINDOW"
+                                    "Custom period"
                                   )}
                                 </Button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl overflow-hidden" align="start">
+                              <PopoverContent className="w-auto overflow-hidden rounded-md border border-[#DCE8EE] bg-white p-0 shadow-[0_12px_32px_rgba(24,32,38,0.10)]" align="start">
                                 <Calendar
                                   initialFocus
                                   mode="range"
@@ -2669,33 +2661,30 @@ export default function Recoveries() {
                                   selected={dateRange}
                                   onSelect={setDateRange}
                                   numberOfMonths={2}
-                                  className="bg-transparent text-white font-sans font-bold text-[10px]"
+                                  className="bg-white text-[#182026] text-[11px]"
                                 />
                               </PopoverContent>
                             </Popover>
 
                             <Button
                               variant="ghost"
-                              className="h-12 bg-transparent border-0 text-[10px] font-sans font-bold uppercase tracking-tight px-4 gap-2 text-white/40 hover:text-white/60 transition-all"
+                              className="h-10 gap-2 px-3 text-[11px] font-medium tracking-tight text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
                               onClick={() => loadData()}>
                               <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
-                              REFRESH
+                              Refresh
                             </Button>
 
                             {/* Spectrum Select Filter (Claim Type) */}
                             <Select
                               value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
                               onValueChange={(value) => setSelectedClaimTypes(value === 'all' ? [] : [value])}>
-                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl px-5 hover:bg-white/10 transition-all">
-                                <div className="flex items-center gap-3">
-                                  <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
-                                  <SelectValue placeholder="CLAIM_SPECTRUM" />
-                                </div>
+                              <SelectTrigger className="h-10 min-w-[180px] rounded-md border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]">
+                                <SelectValue placeholder="Claim type" />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
-                                <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">SPECTRUM_ALL</SelectItem>
+                              <SelectContent className="rounded-md border border-[#DCE8EE] bg-white p-1 text-[11px] text-[#182026] shadow-[0_12px_32px_rgba(24,32,38,0.10)]">
+                                <SelectItem value="all" className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">All claim types</SelectItem>
                                 {claimTypes.map(type => (
-                                  <SelectItem key={type} value={type} className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">{type.replace(/_/g, ' ')}</SelectItem>
+                                  <SelectItem key={type} value={type} className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">{type.replace(/_/g, ' ')}</SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
@@ -2704,16 +2693,13 @@ export default function Recoveries() {
                             <Select
                               value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
                               onValueChange={(value) => setSelectedStatuses(value === 'all' ? [] : [value])}>
-                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl px-5 hover:bg-white/10 transition-all">
-                                <div className="flex items-center gap-3">
-                                  <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
-                                  <SelectValue placeholder="NODE_STATUS" />
-                                </div>
+                              <SelectTrigger className="h-10 min-w-[180px] rounded-md border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]">
+                                <SelectValue placeholder="Recovery state" />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
-                                <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATUS_ALL</SelectItem>
+                              <SelectContent className="rounded-md border border-[#DCE8EE] bg-white p-1 text-[11px] text-[#182026] shadow-[0_12px_32px_rgba(24,32,38,0.10)]">
+                                <SelectItem value="all" className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">All recovery states</SelectItem>
                                 {['Pending', 'Approved', 'Submitted', 'Reimbursed', 'Denied', 'Under Review'].map(s => (
-                                  <SelectItem key={s} value={s} className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">{s.replace(/ /g, '_')}</SelectItem>
+                                  <SelectItem key={s} value={s} className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">{s.replace(/ /g, '_')}</SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
@@ -2727,8 +2713,8 @@ export default function Recoveries() {
                                 setSelectedClaimTypes([]);
                                 setSelectedStatuses([]);
                               }}
-                              className="h-12 text-[10px] font-sans font-bold text-white/20 hover:text-white/60 uppercase tracking-tight px-6 ml-auto">
-                              TERMINATE_FILTERS
+                              className="ml-auto h-10 px-3 text-[11px] font-medium tracking-tight text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]">
+                              Clear filters
                             </Button>
                           </div>
                         </div>
@@ -2737,30 +2723,25 @@ export default function Recoveries() {
                   </div>
 
 
-                  {/* Data Table */}
-                  <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
+                  {/* Recovery records */}
+                  <div className="overflow-hidden border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
                     <div className="p-0">
                       {loading && (
-                        <div className="py-24 flex flex-col items-center justify-center space-y-6">
-                          <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
-                          <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Checking recovery records…</span>
+                        <div className="flex flex-col items-center justify-center space-y-3 py-20">
+                          <Loader2 className="h-6 w-6 animate-spin text-[#0B74DE]" />
+                          <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Checking recovery records…</span>
                         </div>
                       )}
                       {error && (
-                        <div className="py-24 flex flex-col items-center justify-center space-y-4 text-center px-6">
-                          <AlertTriangle className="w-8 h-8 text-red-500/50" />
-                          <div className="space-y-1"><span className="text-xs font-sans font-semibold text-[#B42318]">Margin could not load this recovery ledger.</span><span className="block text-[11px] font-sans text-[#6B7280]">Refresh the workspace or reconnect Amazon before trying again.</span></div>
+                        <div className="flex flex-col items-center justify-center space-y-2 px-6 py-20 text-center">
+                          <div className="space-y-1"><span className="text-[12px] font-medium tracking-tight text-[#B42318]">Margin could not load this recovery ledger.</span><span className="block text-[11px] leading-5 text-[#66737F]">Refresh the workspace or reconnect Amazon before trying again.</span></div>
                         </div>
                       )}
                       {!loading && !error && rankedClaims.length === 0 && (
-                        <div className="py-32 flex flex-col items-center justify-center space-y-6">
-                          <div className="relative">
-                            <Search className="w-12 h-12 text-white/5" />
-                            <div className="absolute inset-0 bg-emerald-500/10 blur-xl rounded-full" />
-                          </div>
-                          <div className="flex flex-col items-center text-center max-w-sm px-6">
-                            <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">No recovery cases in this view</span>
-                            <span className="text-[10px] font-sans font-bold text-white/20 mt-3 leading-relaxed uppercase tracking-tighter">
+                        <div className="flex flex-col items-center justify-center space-y-3 py-24">
+                          <div className="flex max-w-sm flex-col items-center px-6 text-center">
+                            <span className="text-[13px] font-medium tracking-tight text-[#4D5B66]">No recovery cases in this view</span>
+                            <span className="mt-2 text-[11px] leading-5 text-[#66737F]">
                               {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
                                 ? 'Connect Amazon or run an audit to start a recovery review.'
                                 : 'Adjust the current filters to review a broader recovery scope.'}
@@ -2769,38 +2750,33 @@ export default function Recoveries() {
                         </div>
                       )}
                       {!loading && rankedClaims.length > 0 && (
-                        <div className="mt-0 divide-y divide-white/5">
-                          <div className="flex items-center px-8 py-4 bg-white/[0.02] border-b border-white/5">
+                        <div className="mt-0 divide-y divide-[#E7EEF2]">
+                          <div className="flex items-center border-b border-[#E7EEF2] bg-[#F7FAFC] px-5 py-3">
                             <Checkbox
                               checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length}
                               onCheckedChange={(checked) => {
                                 if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                 else setSelectedIds(new Set());
                               }}
-                              className="mr-6 border-white/10 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                              className="mr-4 border-[#B7C6D0] data-[state=checked]:border-[#0B74DE] data-[state=checked]:bg-[#0B74DE]"
                             />
-                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">BATCH OPERATIONS TARGETING</span>
+                            <span className="text-[11px] font-medium tracking-tight text-[#66737F]">Select records for controlled filing review</span>
                           </div>
 
                           {claimsByMonth.map((monthGroup, groupIndex) => (
                             <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
                               {/* Matrix Institutional Month Header */}
-                              <div className="sticky top-[0px] z-10 bg-[#0c0c0c]/90 backdrop-blur-xl px-8 py-4 border-y border-white/5 flex items-center justify-between group/header">
-                                <div className="flex items-center gap-4">
-                                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                                  <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">
-                                    {monthGroup.month} {monthGroup.year}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                  <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight border border-white/5 px-3 py-1 rounded-full bg-white/5">
-                                    {monthGroup.claims.length} NODES_FINALIZED
-                                  </span>
-                                </div>
+                              <div className="sticky top-0 z-10 flex items-center justify-between border-y border-[#E7EEF2] bg-[#FAFAF7]/95 px-5 py-3 backdrop-blur">
+                                <span className="text-[12px] font-medium tracking-tight text-[#4D5B66]">
+                                  {monthGroup.month} {monthGroup.year}
+                                </span>
+                                <span className="text-[11px] tabular-nums text-[#8A99A5]">
+                                  {monthGroup.claims.length} {monthGroup.claims.length === 1 ? 'record' : 'records'}
+                                </span>
                               </div>
 
                               {/* Claims in this month - Matrix Grid */}
-                              <div className="divide-y divide-white/5">
+                              <div className="divide-y divide-[#E7EEF2]">
                                 {monthGroup.claims.map((claim: any) => {
                                   const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
                                   const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
@@ -2810,17 +2786,17 @@ export default function Recoveries() {
                                     <div
                                       key={claim.id}
                                       className={cn(
-                                        "group relative bg-transparent hover:bg-white/[0.02] transition-all duration-300",
-                                        isCritical && "bg-red-500/[0.02]",
-                                        isUrgent && !isCritical && "bg-amber-500/[0.02]"
+                                        "group relative bg-white transition-colors hover:bg-[#F7FAFC]",
+                                        isCritical && "bg-[#FFF8F8]",
+                                        isUrgent && !isCritical && "bg-[#F7FAFC]"
                                       )}>
                                       {/* Status Accent Line */}
                                       <div className={cn(
-                                        "absolute left-0 top-0 bottom-0 w-px transition-all duration-500 origin-top scale-y-0 group-hover:scale-y-100",
-                                        isCritical ? "bg-red-500" : isUrgent ? "bg-amber-500" : "bg-emerald-500"
+                                        "absolute bottom-0 left-0 top-0 w-[2px] transition-opacity",
+                                        isCritical ? "bg-[#B42318] opacity-100" : isUrgent ? "bg-[#0B74DE] opacity-70" : "bg-[#B7C6D0] opacity-0 group-hover:opacity-100"
                                       )} />
 
-                                      <div className="flex items-center px-8 py-6">
+                                      <div className="flex items-center px-5 py-4">
                                         <div className="flex-shrink-0 mr-8">
                                           <Checkbox
                                             checked={selectedIds.has(claim.id)}
@@ -2831,94 +2807,82 @@ export default function Recoveries() {
                                                 return next;
                                               });
                                             }}
-                                            className="border-white/10 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                                            className="border-[#B7C6D0] data-[state=checked]:border-[#0B74DE] data-[state=checked]:bg-[#0B74DE]"
                                           />
                                         </div>
 
                                         <div className="flex items-center gap-8 min-w-0 flex-1">
-                                          <div className="flex-shrink-0">
-                                            <div className="relative group/hex">
-                                              <Hexagon className={cn(
-                                                "w-6 h-6 transition-all duration-500 text-white/5 group-hover/hex:text-white/20",
-                                                isCritical ? "text-red-500/20" : isUrgent ? "text-amber-500/20" : ""
-                                              )} strokeWidth={1} />
-                                              <div className={cn(
-                                                "absolute inset-0 flex items-center justify-center text-[8px] font-sans font-bold text-white/20 transition-colors",
-                                                isCritical ? "text-red-400" : isUrgent ? "text-amber-400" : "group-hover/hex:text-emerald-500"
-                                              )}>
-                                                {claim.id.slice(0, 1)}
-                                              </div>
-                                            </div>
+                                          <div className="flex h-7 w-7 shrink-0 items-center justify-center border border-[#DCE8EE] bg-[#F7FAFC] text-[10px] font-medium tabular-nums text-[#66737F]">
+                                            {claim.id.slice(0, 1)}
                                           </div>
 
                                           <div className="flex flex-col min-w-0 flex-1">
                                             <div className="flex items-center gap-4 mb-1.5">
                                               <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                                <span className="text-[11px] font-sans font-bold text-white hover:text-emerald-500 transition-colors tracking-tight">
+                                                <span className="text-[12px] font-medium tracking-tight text-[#182026] transition-colors hover:text-[#0B74DE]">
                                                   {claim.claim_number || claim.id.slice(0, 16)}
                                                 </span>
                                               </Link>
-                                              <div className="h-1 w-1 rounded-full bg-white/5" />
-                                              <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                                                {format(claimDate, 'dd_MMM_yyyy HH:mm')}
+                                              <span className="text-[10px] text-[#8A99A5]">
+                                                {format(claimDate, 'dd MMM yyyy, HH:mm')}
                                               </span>
                                             </div>
 
-                                            <div className="flex items-center gap-3 text-[10px] font-sans font-bold text-white/40 mb-3">
-                                              <span className="truncate max-w-md uppercase tracking-tight">{claim.details}</span>
-                                              <span className="text-white/10">|</span>
-                                              <span className="text-white/10 uppercase tracking-tight">SKU FIX: {claim.sku || 'N/A'}</span>
+                                            <div className="mb-2 flex items-center gap-2 text-[11px] leading-4 text-[#66737F]">
+                                              <span className="max-w-md truncate">{claim.details}</span>
+                                              <span className="text-[#C4D1D8]">·</span>
+                                              <span className="text-[#8A99A5]">SKU {claim.sku || 'Not available'}</span>
                                             </div>
 
                                             <div className="flex items-center gap-3 flex-wrap">
                                               <div className={cn(
-                                                "px-2 py-0.5 rounded border text-[9px] font-sans font-bold uppercase tracking-tight",
-                                                claim.status === 'Submitted' ? "bg-blue-500/10 border-blue-500/20 text-blue-400" :
-                                                  claim.status === 'Reimbursed' ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
-                                                    claim.status === 'Denied' ? "bg-red-500/10 border-red-500/20 text-red-400" :
-                                                      "bg-white/5 border-white/10 text-white/40"
+                                                "rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-tight",
+                                                claim.status === 'Submitted' ? "border-[#D8E7FF] bg-[#F3F7FF] text-[#0B74DE]" :
+                                                  claim.status === 'Reimbursed' ? "border-[#CFE4DB] bg-[#F4FAF7] text-[#2F6C54]" :
+                                                    claim.status === 'Denied' ? "border-[#F0D7DE] bg-[#FFF7F8] text-[#9B4354]" :
+                                                      "border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]"
                                               )}>
                                                 {claim.status}
                                               </div>
-                                              <div className="h-4 w-px bg-white/5" />
+                                              <div className="h-4 w-px bg-[#E7EEF2]" />
                                               {(() => {
                                                 const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
                                                 return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : null;
                                               })()}
                                               <div className={cn(
-                                                "text-[9px] font-sans font-bold uppercase tracking-tight",
-                                                isCritical ? "text-red-500" : isUrgent ? "text-amber-500" : "text-white/20"
+                                                "text-[10px] font-medium tracking-tight",
+                                                isCritical ? "text-[#B42318]" : isUrgent ? "text-[#0B74DE]" : "text-[#8A99A5]"
                                               )}>
-                                                {claim.days_remaining !== null ? `EXPIRY_IN_${claim.days_remaining}D` : 'EXPIRY_N/A'}
+                                                {claim.days_remaining !== null ? `${claim.days_remaining} days remaining` : 'No deadline available'}
                                               </div>
-                                              <div className="h-4 w-px bg-white/5" />
+                                              <div className="h-4 w-px bg-[#E7EEF2]" />
                                               <EvidenceQualityBadge validation={validateEvidencePolicy(claim, claim.matchedDocs)} claim={claim} matchedDocs={claim.matchedDocs} />
                                             </div>
                                           </div>
 
                                           <div className="flex flex-col items-end gap-1">
-                                            <span className="text-sm font-sans font-bold italic text-white tracking-tight">
+                                            <span className="text-[15px] font-semibold tabular-nums tracking-tight text-[#182026]">
                                               {formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}
                                             </span>
-                                            <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">ESTIMATED RECOVERY VALUE</span>
+                                            <span className="text-[10px] text-[#8A99A5]">Estimated recovery value</span>
                                           </div>
                                         </div>
 
                                         <div className="flex items-center gap-4 ml-8">
                                           <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                              <Button variant="ghost" className="h-10 w-10 p-0 text-white/20 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                                              <Button variant="ghost" className="h-9 w-9 rounded-md p-0 text-[#66737F] hover:bg-[#F3F7FA] hover:text-[#182026]">
                                                 <MoreHorizontal className="h-4 w-4" />
                                               </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-1">
-                                              <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-tight">ACTION_VECTOR</div>
-                                              <DropdownMenuItem asChild className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight">
-                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>VIEW_PARAMETERS</Link>
+                                            <DropdownMenuContent align="end" className="w-56 rounded-md border border-[#DCE8EE] bg-white p-1 shadow-[0_12px_32px_rgba(24,32,38,0.10)]">
+                                              <div className="mb-1 border-b border-[#E7EEF2] px-3 py-2 text-[11px] font-medium tracking-tight text-[#66737F]">Recovery actions</div>
+                                              <DropdownMenuItem asChild className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
+                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>View recovery record</Link>
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
+                                                className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                                                 onClick={async () => {
                                                   try {
                                                     const res = await api.getRecoveryDetail(claim.id, activeSlug);
@@ -2930,21 +2894,21 @@ export default function Recoveries() {
                                                     toast({ title: 'Error loading documents', description: e?.message });
                                                   }
                                                 }}>
-                                                PROOF_DOCUMENTS_RETRIEVAL
+                                                View proof documents
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
+                                                className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                                                 onClick={() => {
                                                   setEvidencePackClaim(claim);
                                                   setEvidencePackOpen(true);
                                                 }}>
-                                                AUDIT_PACKAGE_VIEW
+                                                View evidence package
                                               </DropdownMenuItem>
 
                                               {claim.status === 'Denied' && (
                                                 <DropdownMenuItem
-                                                  className="text-[10px] font-sans font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
+                                                  className="cursor-pointer rounded px-3 py-2 text-[11px] font-medium tracking-tight text-[#9B4354] hover:bg-[#FFF7F8]"
                                                   onClick={async () => {
                                                     const truth = await resolveClaimFilingTruth(claim);
                                                     if (truth.linkedDisputeId) {
@@ -2953,7 +2917,7 @@ export default function Recoveries() {
                                                     }
                                                     toast({ title: 'Resubmission blocked', description: truth.blockedReason });
                                                   }}>
-                                                  RESUBMIT_ENHANCED_AUDIT
+                                                  Review resubmission
                                                 </DropdownMenuItem>
                                               )}
                                             </DropdownMenuContent>
@@ -2962,9 +2926,9 @@ export default function Recoveries() {
                                           <Link
                                             to={`/recoveries/${claim.id}`}
                                             state={{ claim }}
-                                            className="flex items-center gap-2 text-[9px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-tight"
+                                            className="group/link flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#0B74DE]"
                                           >
-                                            NODE_SPEC
+                                            Open record
                                             <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />
                                           </Link>
                                         </div>
@@ -2982,27 +2946,27 @@ export default function Recoveries() {
 
                   {/* Phase 3: Resolve Detection Modal */}
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
-                    <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
-                      <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-                        <DialogTitle className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">RESOLUTION_PARAMETER_ENTRY</DialogTitle>
-                        <DialogDescription className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
-                          Complete resolution vectors and finalize node status
+                    <DialogContent className="max-w-md overflow-hidden rounded-lg border border-[#DCE8EE] bg-white p-0 shadow-[0_18px_48px_rgba(24,32,38,0.14)]">
+                      <DialogHeader className="border-b border-[#E7EEF2] px-6 py-5">
+                        <DialogTitle className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">Record resolution</DialogTitle>
+                        <DialogDescription className="mt-1 text-[12px] leading-5 text-[#66737F]">
+                          Record the confirmed outcome and keep the recovery lifecycle complete.
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
-                        <div className="space-y-6 px-8 py-8">
+                        <div className="space-y-5 px-6 py-5">
                           <div>
-                            <Label className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DETECTION_UUID</Label>
-                            <p className="text-[10px] font-sans font-bold text-emerald-500/60 mt-1.5 uppercase">{selectedDetection.id}</p>
+                            <Label className="text-[11px] font-medium tracking-tight text-[#66737F]">Recovery ID</Label>
+                            <p className="mt-1 text-[11px] text-[#4D5B66]">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">ANOMALY_VECTOR_TYPE</Label>
-                            <p className="text-[11px] font-sans font-bold text-white/60 uppercase mt-1.5 tracking-tight">
-                              {selectedDetection.type?.replace(/_/g, '_') || selectedDetection.anomaly_type?.replace(/_/g, '_')}
+                            <Label className="text-[11px] font-medium tracking-tight text-[#66737F]">Recovery type</Label>
+                            <p className="mt-1 text-[12px] text-[#4D5B66]">
+                              {(selectedDetection.type || selectedDetection.anomaly_type || 'Not available').replace(/_/g, ' ')}
                             </p>
                           </div>
                           <div>
-                            <Label htmlFor="resolve-amount" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">FINAL_SETTLEMENT_VAL</Label>
+                            <Label htmlFor="resolve-amount" className="text-[11px] font-medium tracking-tight text-[#66737F]">Confirmed payout amount</Label>
                             <Input
                               id="resolve-amount"
                               type="number"
@@ -3010,22 +2974,22 @@ export default function Recoveries() {
                               value={resolveAmount}
                               onChange={(e) => setResolveAmount(e.target.value)}
                               placeholder="0.00"
-                              className="mt-2 h-10 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl"
+                              className="mt-2 h-10 rounded-md border-[#DCE8EE] bg-white text-[12px] text-[#182026] placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-[#0B74DE]/10"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="resolve-notes" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">Resolution note</Label>
+                            <Label htmlFor="resolve-notes" className="text-[11px] font-medium tracking-tight text-[#66737F]">Resolution note</Label>
                             <Textarea
                               id="resolve-notes"
                               value={resolveNotes}
                               onChange={(e) => setResolveNotes(e.target.value)}
                               placeholder="Add the payout confirmation or resolution details Margin should record."
-                              className="mt-2 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
+                              className="mt-2 min-h-[100px] rounded-md border-[#DCE8EE] bg-white text-[12px] text-[#182026] placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-[#0B74DE]/10"
                             />
                           </div>
                         </div>
                       )}
-                      <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02] flex sm:justify-end gap-3">
+                      <DialogFooter className="flex gap-3 border-t border-[#E7EEF2] bg-[#FAFAF7] px-6 py-4 sm:justify-end">
                         <Button
                           variant="ghost"
                           onClick={() => {
@@ -3034,7 +2998,7 @@ export default function Recoveries() {
                             setResolveNotes('');
                             setResolveAmount('');
                           }}
-                          className="h-10 px-6 font-sans font-bold text-[10px] text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
+                          className="h-10 rounded-md border border-[#DCE8EE] bg-white px-4 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
                           Cancel
                         </Button>
                         <Button
@@ -3080,8 +3044,8 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all">
-                          COMMIT_RESOLUTION_LINK
+                          className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 text-[11px] font-medium tracking-tight text-white hover:bg-[#0968C8]">
+                          Save resolution
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -3089,47 +3053,47 @@ export default function Recoveries() {
 
                   {/* Phase 3: Status Update Modal */}
                   <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
-                    <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
-                      <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-                        <DialogTitle className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">NODE_STATUS_OVERRIDE</DialogTitle>
-                        <DialogDescription className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
-                          Update claim status and inject audit log entry
+                    <DialogContent className="max-w-md overflow-hidden rounded-lg border border-[#DCE8EE] bg-white p-0 shadow-[0_18px_48px_rgba(24,32,38,0.14)]">
+                      <DialogHeader className="border-b border-[#E7EEF2] px-6 py-5">
+                        <DialogTitle className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">Update recovery state</DialogTitle>
+                        <DialogDescription className="mt-1 text-[12px] leading-5 text-[#66737F]">
+                          Update the lifecycle state and retain the reason in the recovery record.
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
-                        <div className="space-y-6 px-8 py-8">
+                        <div className="space-y-5 px-6 py-5">
                           <div>
-                            <Label className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DETECTION_UUID</Label>
-                            <p className="text-[10px] font-sans font-bold text-emerald-500/60 mt-1.5 uppercase">{selectedDetection.id}</p>
+                            <Label className="text-[11px] font-medium tracking-tight text-[#66737F]">Recovery ID</Label>
+                            <p className="mt-1 text-[11px] text-[#4D5B66]">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label htmlFor="status-select" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">TARGET_STATE</Label>
+                            <Label htmlFor="status-select" className="text-[11px] font-medium tracking-tight text-[#66737F]">New recovery state</Label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                              <SelectTrigger id="status-select" className="mt-2 h-10 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white rounded-xl uppercase tracking-tight">
+                              <SelectTrigger id="status-select" className="mt-2 h-10 rounded-md border-[#DCE8EE] bg-white text-[12px] text-[#182026]">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
-                                <SelectItem value="pending" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_PENDING</SelectItem>
-                                <SelectItem value="reviewed" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_REVIEWED</SelectItem>
-                                <SelectItem value="disputed" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_DISPUTED</SelectItem>
-                                <SelectItem value="resolved" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_RESOLVED</SelectItem>
+                              <SelectContent className="rounded-md border border-[#DCE8EE] bg-white p-1 text-[11px] text-[#182026] shadow-[0_12px_32px_rgba(24,32,38,0.10)]">
+                                <SelectItem value="pending" className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">Pending</SelectItem>
+                                <SelectItem value="reviewed" className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">Reviewed</SelectItem>
+                                <SelectItem value="disputed" className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">Disputed</SelectItem>
+                                <SelectItem value="resolved" className="rounded px-2.5 py-2 hover:bg-[#F7FAFC] focus:bg-[#F7FAFC]">Resolved</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="status-notes" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">INJECT_ANNOTATION</Label>
-                            <span className="text-[8px] font-sans font-bold text-white/10 ml-2 uppercase">(OPTIONAL)</span>
+                            <Label htmlFor="status-notes" className="text-[11px] font-medium tracking-tight text-[#66737F]">Record note</Label>
+                            <span className="ml-2 text-[10px] text-[#8A99A5]">Optional</span>
                             <Textarea
                               id="status-notes"
                               value={statusUpdateNotes}
                               onChange={(e) => setStatusUpdateNotes(e.target.value)}
-                              placeholder="INPUT_AUDIT_DATA_VECT..."
-                              className="mt-2 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
+                              placeholder="Explain why this recovery state changed."
+                              className="mt-2 min-h-[100px] rounded-md border-[#DCE8EE] bg-white text-[12px] text-[#182026] placeholder:text-[#8A99A5] focus:border-[#0B74DE] focus:ring-[#0B74DE]/10"
                             />
                           </div>
                         </div>
                       )}
-                      <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02] flex sm:justify-end gap-3">
+                      <DialogFooter className="flex gap-3 border-t border-[#E7EEF2] bg-[#FAFAF7] px-6 py-4 sm:justify-end">
                         <Button
                           variant="ghost"
                           onClick={() => {
@@ -3138,8 +3102,8 @@ export default function Recoveries() {
                             setStatusUpdateNotes('');
                             setSelectedStatus('pending');
                           }}
-                          className="h-10 px-6 font-sans font-bold text-[10px] text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
-                          ABORT_ACTION
+                          className="h-10 rounded-md border border-[#DCE8EE] bg-white px-4 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
+                          Cancel
                         </Button>
                         <Button
                           onClick={async () => {
@@ -3179,8 +3143,8 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all">
-                          COMMIT_STATE_CHANGE
+                          className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 text-[11px] font-medium tracking-tight text-white hover:bg-[#0968C8]">
+                          Save state
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -3188,16 +3152,14 @@ export default function Recoveries() {
 
                   {/* Mark All Read Modal */}
                   <Dialog open={markAllReadModalOpen} onOpenChange={setMarkAllReadModalOpen}>
-                    <DialogContent className="max-w-xs bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
-                      <div className="px-8 py-10 text-center">
-                        <div className="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group">
-                          <Mail className="h-6 w-6 text-white/20 group-hover:text-emerald-500 transition-colors animate-pulse" />
-                        </div>
-                        <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight mb-2">
-                          GLOBAL ENTRY SYNC
+                    <DialogContent className="max-w-xs overflow-hidden rounded-lg border border-[#DCE8EE] bg-white p-0 shadow-[0_18px_48px_rgba(24,32,38,0.14)]">
+                      <div className="px-6 py-7 text-center">
+
+                        <h3 className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">
+                          Mark recovery records as reviewed
                         </h3>
-                        <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mb-8 leading-relaxed">
-                          All active nodes will be marked as [REVIEWED] in the primary ledger.
+                        <p className="mb-6 mt-2 text-[12px] leading-5 text-[#66737F]">
+                          This updates the review state for all active recovery records in this workspace.
                         </p>
                         <div className="flex flex-col gap-2">
                           <Button
@@ -3208,14 +3170,14 @@ export default function Recoveries() {
                               });
                               setMarkAllReadModalOpen(false);
                             }}
-                            className="h-11 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all group">
-                            EXECUTE MASS SYNC
+                            className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] text-[11px] font-medium tracking-tight text-white hover:bg-[#0968C8]">
+                            Mark all as reviewed
                           </Button>
                           <Button
                             variant="ghost"
                             onClick={() => setMarkAllReadModalOpen(false)}
-                            className="h-10 text-[9px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
-                            ABORT SESSION
+                            className="h-10 text-[11px] font-medium tracking-tight text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]">
+                            Cancel
                           </Button>
                         </div>
                       </div>
@@ -3226,13 +3188,13 @@ export default function Recoveries() {
 
                 {/* File Anyway Confirmation Modal for Medium-Strength Claims */}
                 <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
-                  <DialogContent className="bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl max-w-lg max-h-[85vh] overflow-hidden p-0">
-                    <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-                      <DialogTitle className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">
-                        CORRELATION STRENGTH AUDIT
+                  <DialogContent className="bg-white border border-[#DCE8EE] shadow-2xl backdrop-blur-3xl rounded-2xl max-w-lg max-h-[85vh] overflow-hidden p-0">
+                    <DialogHeader className="border-b border-[#E7EEF2] px-6 py-5">
+                      <DialogTitle className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">
+                        Evidence review before filing
                       </DialogTitle>
-                      <DialogDescription className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1 leading-relaxed">
-                        Analysis of neural match vectors and risk-adjusted recovery recommendations
+                      <DialogDescription className="mt-1 text-[12px] leading-5 text-[#66737F]">
+                        Review the evidence posture and filing safeguards before sending this recovery to the controlled filing queue.
                       </DialogDescription>
                     </DialogHeader>
                     {claimToFile && (() => {
@@ -3241,67 +3203,64 @@ export default function Recoveries() {
                       const claimType = claimToFile.anomaly_type || claimToFile.type || claimToFile.claim_type || 'Unknown';
                       const claimDate = claimToFile.discovery_date || claimToFile.created || claimToFile.created_at;
                       return (
-                        <div className="space-y-6 py-8 px-8 overflow-y-auto max-h-[calc(85vh-160px)]">
+                        <div className="max-h-[calc(85vh-160px)] space-y-5 overflow-y-auto px-6 py-5">
                           {/* Claim Details */}
-                          <div className="bg-white/5 border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
-                            <div className="bg-white/[0.05] border-b border-white/5 px-4 py-3 flex items-center gap-2">
-                              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                              <h4 className="text-[8px] font-sans font-bold text-white/40 uppercase tracking-tight">RAW_NODE_PARAMETERS</h4>
+                          <div className="overflow-hidden border border-[#DCE8EE] bg-white">
+                            <div className="border-b border-[#E7EEF2] bg-[#F7FAFC] px-4 py-3">
+                              <h4 className="text-[12px] font-medium tracking-tight text-[#4D5B66]">Recovery record</h4>
                             </div>
-                            <div className="divide-y divide-white/5">
+                            <div className="divide-y divide-[#E7EEF2]">
                               <div className="flex justify-between items-center px-4 py-3">
-                                <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">UUID</span>
-                                <span className="text-[9px] font-sans font-bold text-emerald-500/60 uppercase">{claimToFile.id?.slice(0, 16) || 'N/A'}</span>
+                                <span className="text-[11px] text-[#66737F]">Recovery ID</span>
+                                <span className="text-[11px] text-[#4D5B66]">{claimToFile.id?.slice(0, 16) || 'Not available'}</span>
                               </div>
                               <div className="flex justify-between items-center px-4 py-3">
-                                <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">ESTIMATED_VAL</span>
-                                <span className="text-[10px] font-sans font-bold text-white">${typeof claimAmount === 'number' ? claimAmount.toFixed(2) : claimAmount}</span>
+                                <span className="text-[11px] text-[#66737F]">Estimated value</span>
+                                <span className="text-[12px] font-semibold tabular-nums text-[#182026]">${typeof claimAmount === 'number' ? claimAmount.toFixed(2) : claimAmount}</span>
                               </div>
                               <div className="flex justify-between items-center px-4 py-3">
-                                <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">ANOMALY_VECTOR</span>
-                                <span className="text-[9px] font-sans font-bold text-white/60 uppercase tracking-tight">{String(claimType).replace(/_/g, '_')}</span>
+                                <span className="text-[11px] text-[#66737F]">Recovery type</span>
+                                <span className="text-[11px] text-[#4D5B66]">{String(claimType).replace(/_/g, ' ')}</span>
                               </div>
                               {claimDate && (
                                 <div className="flex justify-between items-center px-4 py-3">
-                                  <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">INDEX_COORD</span>
-                                  <span className="text-[9px] font-sans font-bold text-white/40 uppercase">{new Date(claimDate).toLocaleDateString().replace(/\//g, '_')}</span>
+                                  <span className="text-[11px] text-[#66737F]">Discovery date</span>
+                                  <span className="text-[11px] text-[#4D5B66]">{new Date(claimDate).toLocaleDateString()}</span>
                                 </div>
                               )}
                             </div>
                           </div>
 
                           {/* Assessment Summary */}
-                          <div className="bg-white/[0.02] border border-white/10 rounded-xl p-6 relative group overflow-hidden">
-                            <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                              <Hexagon className="w-12 h-12 text-white" strokeWidth={1} />
-                            </div>
+                          <div className="bg-[#F7FAFC] border border-[#DCE8EE] rounded-xl p-6 relative group overflow-hidden">
+
                             <div className="flex flex-col gap-1">
-                              <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">INTEGRITY_SCORE</span>
+                              <span className="text-[11px] font-medium tracking-tight text-[#66737F]">Evidence strength</span>
                               <div className="flex items-baseline gap-2">
                                 <span className={cn(
                                   "text-4xl font-sans font-bold tracking-tighter",
-                                  strength.score >= 80 ? "text-emerald-500" : strength.score >= 50 ? "text-amber-500" : "text-red-500"
+                                  strength.score >= 80 ? "text-emerald-500" : strength.score >= 50 ? "text-[#9B4354]" : "text-red-500"
                                 )}>
                                   {strength.score}
                                 </span>
-                                <span className="text-xs font-sans font-bold text-white/10 uppercase font-bold">/ 100 PTS</span>
+                                <span className="text-[11px] text-[#8A99A5]">/ 100</span>
                               </div>
                             </div>
                           </div>
 
                           {/* Detailed Breakdown */}
                           <div className="space-y-3">
-                            <h4 className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">VECTOR_DECOMPOSITION</h4>
+                            <h4 className="text-[12px] font-medium tracking-tight text-[#4D5B66]">Evidence-strength basis</h4>
                             <div className="space-y-2">
                               {strength.factors.map((f, i) => (
-                                <div key={i} className="bg-white/5 rounded-xl border border-white/5 p-4 flex justify-between items-center group/item hover:border-white/10 transition-colors">
+                                <div key={i} className="flex items-center justify-between border border-[#E7EEF2] bg-white px-4 py-3">
                                   <div className="space-y-1">
-                                    <span className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight group-hover/item:text-white transition-colors">{f.label.replace(/ /g, '_')}</span>
-                                    <p className="text-[9px] font-sans font-bold text-white/20 uppercase italic tracking-tight">{f.reason}</p>
+                                    <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{f.label}</span>
+                                    <p className="text-[10px] leading-4 text-[#8A99A5]">{f.reason}</p>
                                   </div>
                                   <div className="text-right">
-                                    <span className="text-xs font-sans font-bold text-emerald-500/50">{f.value}</span>
-                                    <span className="text-[10px] font-sans font-bold text-white/5 font-bold"> / {f.max}</span>
+                                    <span className="text-[12px] font-medium tabular-nums text-[#0B74DE]">{f.value}</span>
+                                    <span className="text-[10px] text-[#8A99A5]"> / {f.max}</span>
                                   </div>
                                 </div>
                               ))}
@@ -3309,24 +3268,24 @@ export default function Recoveries() {
                           </div>
 
                           {/* Advisory Note */}
-                          <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl px-5 py-4">
-                            <p className="text-[10px] font-sans font-bold text-amber-500/60 leading-relaxed uppercase tracking-tight italic">
-                              <span className="font-bold text-amber-500 not-italic mr-2">Review note:</span>
+                          <div className="bg-[#FFF7F8] border border-[#F0D7DE] rounded-xl px-5 py-4">
+                            <p className="text-[11px] leading-5 text-[#9B4354]">
+                              <span className="mr-2 font-medium">Review note:</span>
                               Add the missing supporting records before Margin can safely move this recovery toward filing. Do not bypass the review gate.
                             </p>
                           </div>
                         </div>
                       );
                     })()}
-                    <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02] flex sm:justify-end gap-3">
+                    <DialogFooter className="flex gap-3 border-t border-[#E7EEF2] bg-[#FAFAF7] px-6 py-4 sm:justify-end">
                       <Button
                         variant="ghost"
                         onClick={() => {
                           setFileAnywayModalOpen(false);
                           setClaimToFile(null);
                         }}
-                        className="h-10 px-6 font-sans font-bold text-[10px] text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
-                        ABORT SESSION
+                        className="h-10 rounded-md border border-[#DCE8EE] bg-white px-4 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
+                        Cancel
                       </Button>
                       <Button
                         onClick={async () => {
@@ -3353,9 +3312,8 @@ export default function Recoveries() {
                             setClaimToFile(null);
                           }
                         }}
-                        className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all">
-                        <ArrowUpFromLine className="h-4 w-4 mr-2" />
-                        MANUAL OVERRIDE RUN
+                        className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 text-[11px] font-medium tracking-tight text-white hover:bg-[#0968C8]">
+                        Continue to filing review
                       </Button>
                     </DialogFooter>
                   </DialogContent>
@@ -3388,28 +3346,28 @@ export default function Recoveries() {
 
                 {/* Claim Details Modal - Institutional Banking Style */}
                 <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-                  <DialogContent className="bg-[#0c0c0c] border border-white/10 text-white max-w-2xl max-h-[90vh] overflow-hidden p-0 rounded-2xl shadow-2xl backdrop-blur-3xl">
+                  <DialogContent className="max-h-[90vh] max-w-2xl overflow-hidden rounded-lg border border-[#DCE8EE] bg-white p-0 text-[#182026] shadow-[0_18px_48px_rgba(24,32,38,0.14)]">
                     {/* Header - Institutional Style */}
-                    <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+                    <div className="border-b border-[#E7EEF2] px-6 py-5">
                       <div className="flex justify-between items-start">
                         <div>
-                          <div className="text-[8px] font-sans font-bold text-white/20 mb-1.5 uppercase tracking-tight">NODE SPECIFICATION LEDGER</div>
-                          <DialogTitle className="text-xl font-sans font-bold italic text-white tracking-tight">
-                            Claim Data Matrix
+                          <div className="mb-1 text-[11px] font-medium tracking-tight text-[#66737F]">Recovery record</div>
+                          <DialogTitle className="font-lora text-[26px] font-normal tracking-tight text-[#182026]">
+                            Claim detail
                           </DialogTitle>
                         </div>
                         {detectionDetails && (
                           <>
                             <div
-                              className="text-[10px] font-sans font-bold text-emerald-500/60 cursor-pointer hover:text-emerald-500 transition-colors uppercase tracking-tight"
+                              className="cursor-pointer text-[11px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:text-[#0968C8]"
                               onClick={() => {
                                 navigator.clipboard.writeText(detectionDetails.id || '');
                                 toast({ title: 'Copied', description: 'Claim ID copied to clipboard' });
                               }}
                               title="Click to copy">
-                              REF://{(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
+                              {detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || 'Recovery record'}
                             </div>
-                            <div className="text-[9px] font-sans font-bold text-white/10 mt-1 uppercase tracking-tight">
+                            <div className="mt-1 text-[10px] text-[#8A99A5]">
                               {detectionDetails.created_at || detectionDetails.discovery_date
                                 ? format(new Date(detectionDetails.created_at || detectionDetails.discovery_date), 'dd_MMM_yyyy HH:mm')
                                 : 'INDEX_PENDING'
@@ -3419,49 +3377,43 @@ export default function Recoveries() {
                         )}
                       </div>
                       {detectionDetails && (
-                        <div className="mt-3 flex items-center gap-3">
-                          <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                          <div className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                            {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, '_')}
-                          </div>
+                        <div className="mt-3 text-[11px] text-[#66737F]">
+                          {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery claim').replace(/_/g, ' ')}
                         </div>
                       )}
                       {detectionDetails && (
                         <Link
                           to={`/recoveries/${detectionDetails.id}`}
                           state={{ claim: detectionDetails }}
-                          className="mt-4 inline-flex items-center text-[10px] font-sans font-bold text-emerald-500/40 hover:text-emerald-500 transition-colors uppercase tracking-tight group">
-                          ACCESS FULL TELEMETRY
+                          className="group mt-4 inline-flex items-center text-[11px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:text-[#0968C8]">
+                          Open full recovery record
                           <ArrowRight className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" />
                         </Link>
                       )}
                     </div>
 
                     {detectionDetails && (
-                      <div className="px-8 py-8 space-y-8 overflow-y-auto max-h-[calc(90vh-140px)]">
+                      <div className="max-h-[calc(90vh-140px)] space-y-5 overflow-y-auto px-6 py-5">
                         {/* Summary Card - Institutional Style */}
-                        <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
-                          <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4">
-                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">EXECUTIVE SUMMARY</h4>
+                        <div className="overflow-hidden border border-[#DCE8EE] bg-white">
+                          <div className="bg-[#F7FAFC] border-b border-[#E7EEF2] px-6 py-4">
+                            <h4 className="text-[12px] font-medium tracking-tight text-[#4D5B66]">Recovery summary</h4>
                           </div>
-                          <div className="divide-y divide-white/5">
+                          <div className="divide-y divide-[#E7EEF2]">
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">EXPECTED RECOVERY</span>
-                              <span className="text-lg font-sans font-bold italic text-white tracking-tighter">
+                              <span className="text-[11px] text-[#66737F]">Expected recovery</span>
+                              <span className="text-[16px] font-semibold tabular-nums tracking-tight text-[#182026]">
                                 {formatCurrency(detectionDetails.guaranteedAmount || detectionDetails.amount || detectionDetails.estimated_value || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">CURRENT STATE</span>
-                              <div className="flex items-center gap-2">
-                                <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                                <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">{detectionDetails.status || 'PENDING'}</span>
-                              </div>
+                              <span className="text-[11px] text-[#66737F]">Current state</span>
+                              <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{detectionDetails.status || 'Pending'}</span>
                             </div>
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">EVIDENCE COUNT</span>
-                              <span className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">
-                                {detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} FILE NODES
+                              <span className="text-[11px] text-[#66737F]">Evidence count</span>
+                              <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">
+                                {detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} linked documents
                               </span>
                             </div>
                           </div>
@@ -3470,38 +3422,38 @@ export default function Recoveries() {
 
                         {/* Claim Info Section */}
                         <div className="space-y-4">
-                          <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">TECHNICAL TELEMETRY</h4>
+                          <h4 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Record identifiers</h4>
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CLAIM UUID</div>
+                            <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                              <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Recovery ID</div>
                               <div className="text-[10px] font-sans font-bold text-emerald-500/60 mt-2 uppercase tracking-tight">{detectionDetails.id?.slice(0, 16) || '—'}...</div>
                             </div>
-                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">SYNC NODE ID</div>
-                              <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sync_id || 'N/A'}</div>
+                            <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                              <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Sync ID</div>
+                              <div className="text-[10px] font-sans font-bold text-[#4D5B66] mt-2 uppercase tracking-tight">{detectionDetails.sync_id || 'N/A'}</div>
                             </div>
-                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">VECTOR TYPE</div>
-                              <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">
+                            <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                              <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Recovery type</div>
+                              <div className="text-[10px] font-sans font-bold text-[#4D5B66] mt-2 uppercase tracking-tight">
                                 {detectionDetails.anomaly_type?.replace(/_/g, '_').toUpperCase() || '—'}
                               </div>
                             </div>
-                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">THREAT LEVEL</div>
-                              <Badge className="mt-2 bg-white/5 hover:bg-white/10 text-white/60 border-white/10 text-[9px] font-sans font-bold uppercase tracking-tight">
+                            <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                              <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Severity</div>
+                              <Badge className="mt-2 bg-white/5 hover:bg-white/10 text-[#4D5B66] border-[#DCE8EE] text-[9px] font-sans font-bold uppercase tracking-tight">
                                 {detectionDetails.severity?.toUpperCase() || 'UNKNOWN'}
                               </Badge>
                             </div>
                             {detectionDetails.sku && (
-                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">SKU INDEX</div>
-                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sku}</div>
+                              <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                                <div className="text-[11px] font-medium tracking-tight text-[#66737F]">SKU</div>
+                                <div className="text-[10px] font-sans font-bold text-[#4D5B66] mt-2 uppercase tracking-tight">{detectionDetails.sku}</div>
                               </div>
                             )}
                             {detectionDetails.asin && (
-                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">ASIN COORD</div>
-                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.asin}</div>
+                              <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                                <div className="text-[11px] font-medium tracking-tight text-[#66737F]">ASIN</div>
+                                <div className="text-[10px] font-sans font-bold text-[#4D5B66] mt-2 uppercase tracking-tight">{detectionDetails.asin}</div>
                               </div>
                             )}
                           </div>
@@ -3513,36 +3465,36 @@ export default function Recoveries() {
 
                           return (
                             <div className="space-y-4">
-                              <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">EVIDENCE AUTHENTICATION</h4>
-                              <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
-                                <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4 flex items-center justify-between">
-                                  <h4 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">VALIDATION STATUS</h4>
+                              <h4 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Evidence and policy checks</h4>
+                              <div className="overflow-hidden border border-[#DCE8EE] bg-white">
+                                <div className="bg-[#F7FAFC] border-b border-[#E7EEF2] px-6 py-4 flex items-center justify-between">
+                                  <h4 className="text-[12px] font-medium tracking-tight text-[#4D5B66]">Validation status</h4>
                                   <span className={cn(
                                     "text-[10px] font-sans font-bold uppercase tracking-tight",
-                                    validation.quality === 'strong' ? "text-emerald-500" : validation.quality === 'medium' ? "text-amber-500" : "text-red-500"
+                                    validation.quality === 'strong' ? "text-emerald-500" : validation.quality === 'medium' ? "text-[#9B4354]" : "text-red-500"
                                   )}>
-                                    {validation.quality.toUpperCase()}_CONFIDENCE
+                                    {validation.quality} confidence
                                   </span>
                                 </div>
                                 <div className="p-6 space-y-6">
                                   {/* Quality Summary */}
                                   <div>
-                                    <div className="text-[10px] font-sans font-semibold text-[#111827] uppercase tracking-tight">Recommended next step</div>
-                                    <div className="text-[9px] font-sans font-bold text-white/20 uppercase mt-2 tracking-tight leading-relaxed">{validation.recommendationText}</div>
+                                    <div className="text-[12px] font-medium tracking-tight text-[#182026]">Recommended next step</div>
+                                    <div className="mt-2 text-[11px] leading-5 text-[#66737F]">{validation.recommendationText}</div>
                                   </div>
 
                                   {/* Field Verification */}
                                   <div className="space-y-3">
-                                    <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">FIELD INTEGRITY INDEX</p>
+                                    <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Field checks</p>
                                     <div className="grid grid-cols-1 gap-2">
                                       {validation.fieldChecks.map((check, i) => (
-                                        <div key={i} className="flex items-center justify-between text-[10px] font-sans font-bold py-2.5 border-b border-white/5 last:border-0 group/field uppercase tracking-tight">
-                                          <span className="text-white/40 uppercase tracking-tighter group-hover/field:text-white/60 transition-colors">{check.label.replace(/ /g, '_')}</span>
+                                        <div key={i} className="group/field flex items-center justify-between border-b border-[#E7EEF2] py-2.5 text-[11px] last:border-0">
+                                          <span className="text-[#66737F] transition-colors group-hover/field:text-[#4D5B66]">{check.label}</span>
                                           <span className={cn(
-                                            "font-bold uppercase tracking-tight",
-                                            check.present ? "text-emerald-500/50" : check.required ? "text-red-500/50" : "text-white/10"
+                                            "text-[10px] font-medium tracking-tight",
+                                            check.present ? "text-[#2F6C54]" : check.required ? "text-[#B42318]" : "text-[#8A99A5]"
                                           )}>
-                                            {check.present ? "VALIDATED" : check.required ? "MISSING_CRITICAL" : "OPTIONAL_NULL"}
+                                            {check.present ? "Present" : check.required ? "Required" : "Not available"}
                                           </span>
                                         </div>
                                       ))}
@@ -3551,11 +3503,11 @@ export default function Recoveries() {
 
                                   {/* Policy Notes */}
                                   {validation.warnings.length > 0 && (
-                                    <div className="space-y-3 pt-4 border-t border-white/5">
+                                    <div className="space-y-3 pt-4 border-t border-[#E7EEF2]">
                                       <p className="text-[9px] font-sans font-bold text-red-500/40 uppercase tracking-tight">POLICY CONFLICT WARNINGS</p>
                                       <ul className="space-y-2">
                                         {validation.warnings.map((w, i) => (
-                                          <li key={i} className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight pl-4 relative before:content-['>'] before:absolute before:left-0 before:text-red-500/30 leading-relaxed">{w}</li>
+                                          <li key={i} className="text-[9px] font-sans font-bold text-[#66737F] uppercase tracking-tight pl-4 relative before:content-['>'] before:absolute before:left-0 before:text-red-500/30 leading-relaxed">{w}</li>
                                         ))}
                                       </ul>
                                     </div>
@@ -3567,62 +3519,62 @@ export default function Recoveries() {
                         })()}
 
                         {/* Financial Information - Institutional Style */}
-                        <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
-                          <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4">
-                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">FINANCIAL LEDGER</h4>
+                        <div className="overflow-hidden border border-[#DCE8EE] bg-white">
+                          <div className="bg-[#F7FAFC] border-b border-[#E7EEF2] px-6 py-4">
+                            <h4 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Financial information</h4>
                           </div>
-                          <div className="divide-y divide-white/5">
+                          <div className="divide-y divide-[#E7EEF2]">
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">NET ESTIMATED VALUE</span>
-                              <span className="text-[11px] font-sans font-bold text-white tracking-tight">
+                              <span className="text-[11px] text-[#66737F]">Estimated recovery value</span>
+                              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">
                                 {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">CURRENCY CODE</span>
-                              <span className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">{detectionDetails.currency || 'USD'}</span>
+                              <span className="text-[11px] text-[#66737F]">Currency</span>
+                              <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{detectionDetails.currency || 'USD'}</span>
                             </div>
                           </div>
                         </div>
 
                         {/* Dates & Deadlines */}
                         <div className="space-y-4">
-                          <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">TEMPORAL MARKERS</h4>
+                          <h4 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Timing and deadlines</h4>
                           <div className="grid grid-cols-2 gap-4">
                             {detectionDetails.discovery_date && (
-                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DISCOVERY INDEX</div>
-                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">
+                              <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                                <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Discovery date</div>
+                                <div className="text-[10px] font-sans font-bold text-[#4D5B66] mt-2 uppercase tracking-tight">
                                   {format(new Date(detectionDetails.discovery_date), 'dd_MMM_yyyy')}
                                 </div>
                               </div>
                             )}
                             {detectionDetails.deadline_date && (
-                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">EXPIRY COORD</div>
+                              <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                                <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Filing deadline</div>
                                 <div className={`text-[10px] font-sans font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
-                                  ? 'text-amber-500'
-                                  : 'text-white/60'
+                                  ? 'text-[#9B4354]'
+                                  : 'text-[#4D5B66]'
                                   }`}>
                                   {format(new Date(detectionDetails.deadline_date), 'dd_MMM_yyyy')}
                                 </div>
                               </div>
                             )}
                             {detectionDetails.days_remaining !== undefined && (
-                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">COUNTDOWN VAL</div>
+                              <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                                <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Time remaining</div>
                                 <div className={`text-[10px] font-sans font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining <= 3 ? 'text-red-500' :
-                                  detectionDetails.days_remaining <= 7 ? 'text-amber-500' :
-                                    'text-white/60'
+                                  detectionDetails.days_remaining <= 7 ? 'text-[#9B4354]' :
+                                    'text-[#4D5B66]'
                                   }`}>
-                                  {detectionDetails.days_remaining}_DAYS_REMAINING
+                                  {detectionDetails.days_remaining} days remaining
                                 </div>
                               </div>
                             )}
                             {detectionDetails.created_at && (
-                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CREATION STAMP</div>
-                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">
+                              <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4">
+                                <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Record created</div>
+                                <div className="text-[10px] font-sans font-bold text-[#4D5B66] mt-2 uppercase tracking-tight">
                                   {format(new Date(detectionDetails.created_at), 'dd_MMM_yyyy HH:mm')}
                                 </div>
                               </div>
@@ -3634,10 +3586,10 @@ export default function Recoveries() {
                         {/* Related Event IDs */}
                         {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
                           <div className="space-y-4">
-                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">LINKED TRANSACTION IDS</h4>
+                            <h4 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Linked transactions</h4>
                             <div className="flex flex-wrap gap-2">
                               {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
-                                <Badge key={idx} variant="outline" className="font-sans font-bold text-[9px] bg-white/5 border-white/10 text-white/60 uppercase tracking-tight">
+                                <Badge key={idx} variant="outline" className="font-sans font-bold text-[9px] bg-white/5 border-[#DCE8EE] text-[#4D5B66] uppercase tracking-tight">
                                   {eventId}
                                 </Badge>
                               ))}
@@ -3648,9 +3600,9 @@ export default function Recoveries() {
                         {/* Evidence Data */}
                         {detectionDetails.evidence && (
                           <div className="space-y-4">
-                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">RAW EVIDENCE DUMP</h4>
-                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 max-h-48 overflow-auto">
-                              <pre className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                            <h4 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Source evidence</h4>
+                            <div className="bg-[#F7FAFC] border border-[#E7EEF2] rounded-xl p-4 max-h-48 overflow-auto">
+                              <pre className="text-[9px] font-sans font-bold text-[#66737F] uppercase tracking-tight">
                                 {JSON.stringify(detectionDetails.evidence, null, 2)}
                               </pre>
                             </div>
@@ -3660,14 +3612,14 @@ export default function Recoveries() {
                         {/* Details/Description */}
                         {detectionDetails.details && (
                           <div className="space-y-4">
-                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">ANOMALY NARRATIVE</h4>
-                            <p className="text-[10px] font-sans font-bold text-white/40 bg-white/[0.02] border border-white/5 p-4 rounded-xl leading-relaxed uppercase tracking-tight">{detectionDetails.details}</p>
+                            <h4 className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Recovery narrative</h4>
+                            <p className="rounded-md border border-[#E7EEF2] bg-[#F7FAFC] p-4 text-[11px] leading-5 text-[#4D5B66]">{detectionDetails.details}</p>
                           </div>
                         )}
 
 
                         {/* Claim Timeline & Escalation */}
-                        <div className="border-t border-white/5 pt-6">
+                        <div className="border-t border-[#E7EEF2] pt-6">
                           <ClaimNegotiationTimeline
                             claim={detectionDetails}
                             maxEscalations={2}
@@ -3683,14 +3635,14 @@ export default function Recoveries() {
                         </div>
                       </div>
                     )}
-                    <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02]">
+                    <DialogFooter className="flex gap-3 border-t border-[#E7EEF2] bg-[#FAFAF7] px-6 py-4">
 
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setDetailsModalOpen(false)}
-                        className="h-10 px-6 text-[10px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
-                        CLOSE SESSION
+                        className="h-10 rounded-md border border-[#DCE8EE] bg-white px-4 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
+                        Close
                       </Button>
                       <Button
                         size="sm"
@@ -3699,9 +3651,8 @@ export default function Recoveries() {
                           setEvidencePackOpen(true);
                           setDetailsModalOpen(false);
                         }}
-                        className="h-10 px-6 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all">
-                        <FileText className="h-3.5 w-3.5 mr-2" />
-                        VIEW_AUDIT_PACK
+                        className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 text-[11px] font-medium tracking-tight text-white hover:bg-[#0968C8]">
+                        View evidence package
                       </Button>
 
                     </DialogFooter>
