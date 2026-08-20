@@ -1,9 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { 
-  ChevronRight, CircleCheck, Search, TrendingUp, 
-  Target, FileCheck, ExternalLink, History, 
-  BarChart3, DollarSign, Filter, X, ArrowUpRight
-} from 'lucide-react';
+import { ChevronRight, Search, X } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -207,81 +203,46 @@ export default function ApprovedReimbursements() {
   return (
     <PageLayout title="Approved Reimbursements" noPadding>
       <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
-        {/* Forensic Identity Header */}
-        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="h-px w-6 bg-[#0B74DE]" />
-              <span className="text-[10px] font-bold uppercase tracking-tight text-[#0B74DE]">Outcome Registry</span>
-            </div>
-            
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
-              <div className="max-w-3xl">
-                <h1 className="mb-4 font-lora text-[42px] font-normal leading-tight tracking-tight text-[#111827]">
-                  Approved Reimbursements
-                </h1>
-                <p className="text-[16px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
-                  Every row in this registry represents a confirmed recovery outcome. These are disputes that have passed Amazon's verification, been approved for payout, and reconciled against your bank settlement records.
-                </p>
+        {/* Ledger header */}
+        <div className="border-b border-[#DCE8EE] bg-white px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1280px] flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <div className="flex items-center gap-2">
+                <div className="h-px w-4 bg-[#0B74DE]" />
+                <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Outcome ledger</span>
               </div>
-              
-              <div className="flex flex-wrap items-center gap-4">
-                <Button variant="outline" className="h-10 border-[#E5E7EB] bg-white text-[12px] font-bold uppercase tracking-tight text-[#4B5563] hover:bg-[#F3F5F4]">
-                  <BarChart3 className="mr-2 h-4 w-4" />
-                  Export Ledger
-                </Button>
-                <Button className="h-10 bg-[#0B74DE] text-white hover:bg-[#005FBA] text-[12px] font-bold uppercase tracking-tight shadow-none">
-                  <TrendingUp className="mr-2 h-4 w-4" />
-                  View Impact Report
-                </Button>
-              </div>
+              <h1 className="mt-3 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026]">Approved reimbursements</h1>
+              <p className="mt-2 text-[14px] leading-6 tracking-tight text-[#66737F]">Confirmed recovery outcomes that Amazon approved for payout and Margin reconciled against the recorded settlement trail.</p>
             </div>
+            <Button className="h-10 rounded-md bg-[#0B74DE] px-4 text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">View impact report</Button>
           </div>
         </div>
 
-        {/* Outcome Metrics Strip */}
-        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8 py-4">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-12 gap-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#059669]">
-                <Target className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Approval Rate</p>
-                <p className="text-[15px] font-bold text-[#111827]">96.2%</p>
-              </div>
+        {/* Outcome metrics */}
+        <div className="border-b border-[#DCE8EE] bg-white px-4 py-3 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-[1280px] grid-cols-1 divide-y divide-[#E7EEF2] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div className="py-2.5 sm:pr-7">
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Approval rate</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">96.2%</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Recorded approval rate across resolved reimbursement outcomes.</p>
             </div>
-            
-            <div className="h-8 w-px bg-[#E5E7EB] hidden md:block" />
-            
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EFF6FF] text-[#0B74DE]">
-                <DollarSign className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Total Reimbursed</p>
-                <p className="text-[15px] font-bold text-[#111827]">{formatMoney(DISPLAY_TOTAL_AMOUNT)}</p>
-              </div>
+            <div className="py-2.5 sm:px-7">
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Total reimbursed</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(DISPLAY_TOTAL_AMOUNT)}</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Settlement value confirmed in this outcome registry.</p>
             </div>
-
-            <div className="h-8 w-px bg-[#E5E7EB] hidden md:block" />
-
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563]">
-                <FileCheck className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Registry Entries</p>
-                <p className="text-[15px] font-bold text-[#111827]">{APPROVED_REIMBURSEMENTS.length} Resolved</p>
-              </div>
+            <div className="py-2.5 sm:pl-7">
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Registry entries</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{APPROVED_REIMBURSEMENTS.length} resolved</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Each entry has a recorded closeout and proof reference.</p>
             </div>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="mx-auto max-w-7xl px-8 py-12">
+        <div className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8">
           {/* Synthesis / Search Bar */}
-          <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
             <div className="relative flex-1 max-w-xl">
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF]" />
               <input
@@ -298,10 +259,7 @@ export default function ApprovedReimbursements() {
 
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white p-1 shadow-sm">
-                <div className="flex items-center gap-2 px-3 py-1.5 text-[12px] font-semibold text-[#4B5563]">
-                  <Filter className="h-3.5 w-3.5" />
-                  <span>Filter</span>
-                </div>
+                <div className="px-3 py-1.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">Closeout</div>
                 <div className="h-4 w-px bg-[#E5E7EB]" />
                 <select
                   value={closeoutFilter}
@@ -317,17 +275,17 @@ export default function ApprovedReimbursements() {
           </div>
 
           {/* Outcome Ledger Table */}
-          <div className="rounded-xl border border-[#E5E7EB] bg-white shadow-sm overflow-hidden">
+          <div className="overflow-hidden rounded-md border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left">
                 <thead>
                   <tr className="border-b border-[#F3F5F4] bg-[#F9FAFB]">
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Dispute Artifact</th>
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Registry Ref</th>
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Amazon Context</th>
-                    <th className="px-6 py-4 text-right text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Value</th>
-                    <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Resolution State</th>
-                    <th className="px-6 py-4 text-right text-[11px] font-bold uppercase tracking-tight text-[#9CA3AF]">Outcome Date</th>
+                    <th className="px-5 py-3 text-[12px] font-medium tracking-tight text-[#66737F]">Recovery outcome</th>
+                    <th className="px-5 py-3 text-[12px] font-medium tracking-tight text-[#66737F]">Registry reference</th>
+                    <th className="px-5 py-3 text-[12px] font-medium tracking-tight text-[#66737F]">Amazon case</th>
+                    <th className="px-5 py-3 text-right text-[12px] font-medium tracking-tight text-[#66737F]">Reimbursed</th>
+                    <th className="px-5 py-3 text-[12px] font-medium tracking-tight text-[#66737F]">Closeout</th>
+                    <th className="px-5 py-3 text-right text-[12px] font-medium tracking-tight text-[#66737F]">Recorded</th>
                     <th className="w-12 px-6 py-4" />
                   </tr>
                 </thead>
@@ -338,46 +296,33 @@ export default function ApprovedReimbursements() {
                       onClick={() => setSelectedItem(item)}
                       className="group cursor-pointer transition-colors hover:bg-[#F3F5F4]/50"
                     >
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F3F5F4] text-[#4B5563] group-hover:bg-white group-hover:shadow-sm transition-all">
-                            <FileCheck className="h-4.5 w-4.5" strokeWidth={1.5} />
-                          </div>
-                          <div>
-                            <p className="text-[14px] font-semibold tracking-tight text-[#111827]">{item.disputeName}</p>
-                            <p className="text-[12px] font-medium text-[#9CA3AF]">{item.seller}</p>
-                          </div>
+                      <td className="px-5 py-4">
+                        <div>
+                          <p className="text-[14px] font-medium tracking-tight text-[#182026]">{item.disputeName}</p>
+                          <p className="mt-1 text-[12px] text-[#66737F]">{item.seller}</p>
                         </div>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-5 py-4">
                         <span className="font-mono text-[12px] font-medium text-[#4B5563]">{item.caseNumber}</span>
                       </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[12px] font-semibold text-[#111827]">{item.amazonCaseId}</span>
-                          <ExternalLink className="h-3 w-3 text-[#9CA3AF] opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
+                      <td className="px-5 py-4">
+                        <span className="text-[12px] font-medium text-[#182026]">{item.amazonCaseId}</span>
                       </td>
-                      <td className="px-6 py-5 text-right">
+                      <td className="px-5 py-4 text-right">
                         <span className="text-[15px] font-bold tabular-nums tracking-tight text-[#111827]">
                           {formatMoney(item.amount)}
                         </span>
                       </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-1.5 w-1.5 rounded-full",
-                            item.closeout.includes('reconciled') ? "bg-emerald-500" : 
-                            item.closeout.includes('match') ? "bg-blue-500" : "bg-amber-500"
-                          )} />
-                          <span className="text-[12px] font-semibold text-[#4B5563]">{item.closeout}</span>
+                      <td className="px-5 py-4">
+                        <div className="border-l-2 border-[#B7C6D0] pl-2.5">
+                          <p className="text-[12px] font-medium text-[#182026]">{item.closeout}</p>
+                          <p className="mt-1 text-[10px] font-medium tracking-tight text-[#66737F]">{item.proofReference}</p>
                         </div>
-                        <p className="mt-0.5 text-[10px] font-medium text-[#9CA3AF]">{item.proofReference}</p>
                       </td>
-                      <td className="px-6 py-5 text-right">
+                      <td className="px-5 py-4 text-right">
                         <span className="text-[12px] font-semibold text-[#6B7280]">{item.updated}</span>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-5 py-4">
                         <ChevronRight className="h-4 w-4 text-[#E5E7EB] group-hover:text-[#111827] group-hover:translate-x-0.5 transition-all" />
                       </td>
                     </tr>
@@ -397,7 +342,7 @@ export default function ApprovedReimbursements() {
             </div>
           </div>
           
-          <div className="mt-8 flex items-center justify-between border-t border-[#E5E7EB] pt-8">
+          <div className="mt-6 flex items-center justify-between border-t border-[#DCE8EE] pt-5">
             <p className="text-[12px] font-medium text-[#9CA3AF]">
               Showing {filteredRows.length} of {APPROVED_REIMBURSEMENTS.length} registry entries
             </p>
@@ -410,14 +355,14 @@ export default function ApprovedReimbursements() {
 
         {/* Resolution Side-Sheet */}
         <Sheet open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
-          <SheetContent className="w-full sm:max-w-[540px] border-l border-[#E5E7EB] bg-white p-0 shadow-2xl">
+          <SheetContent className="w-full border-l border-[#DCE8EE] bg-white p-0 shadow-[0_18px_45px_rgba(24,32,38,0.16)] sm:max-w-[560px]">
             {selectedItem && (
               <div className="flex h-full flex-col">
-                <SheetHeader className="border-b border-[#F3F5F4] p-8">
-                  <div className="flex items-center justify-between mb-6">
+                <SheetHeader className="border-b border-[#DCE8EE] p-4 sm:p-5">
+                  <div className="mb-4 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="h-px w-4 bg-[#059669]" />
-                      <span className="text-[10px] font-bold uppercase tracking-tight text-[#059669]">Resolution Artifact</span>
+                      <div className="h-px w-4 bg-[#0B74DE]" />
+                      <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Resolution record</span>
                     </div>
                     <Button 
                       variant="ghost" 
@@ -429,52 +374,52 @@ export default function ApprovedReimbursements() {
                     </Button>
                   </div>
                   
-                  <SheetTitle className="font-lora text-[28px] font-normal leading-tight tracking-tight text-[#111827] mb-2">
+                  <SheetTitle className="mb-2 font-lora text-[27px] font-normal leading-tight tracking-tight text-[#182026]">
                     {selectedItem.disputeName}
                   </SheetTitle>
                   <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant="outline" className="bg-[#F3F5F4] border-transparent text-[#6B7280] font-bold text-[10px] uppercase tracking-tight px-2 py-0.5">
+                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[11px] font-medium tracking-tight text-[#4D5B66]">
                       {selectedItem.caseNumber}
                     </Badge>
-                    <Badge variant="outline" className="bg-emerald-50 border-transparent text-emerald-700 font-bold text-[10px] uppercase tracking-tight px-2 py-0.5">
+                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[11px] font-medium tracking-tight text-[#4D5B66]">
                       {selectedItem.closeout}
                     </Badge>
                   </div>
                 </SheetHeader>
 
-                <div className="flex-1 overflow-y-auto p-8">
-                  <div className="space-y-10">
+                <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
+                  <div className="space-y-6 pb-3">
                     {/* Financial Outcome */}
-                    <div>
-                      <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Financial Outcome</h3>
-                      <div className="rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="text-[13px] font-medium text-[#6B7280]">Reimbursed Amount</span>
-                          <span className="text-[24px] font-bold text-[#111827]">{formatMoney(selectedItem.amount)}</span>
+                    <section>
+                      <div className="flex items-baseline justify-between gap-4">
+                        <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Financial outcome</h3>
+                        <p className="text-[11px] font-medium text-[#66737F]">Settlement confirmed</p>
+                      </div>
+                      <div className="mt-3 divide-y divide-[#E7EEF2] rounded-md border border-[#DCE8EE] bg-white sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                        <div className="p-3 sm:col-span-1">
+                          <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Reimbursed amount</p>
+                          <p className="mt-1 text-[20px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(selectedItem.amount)}</p>
                         </div>
-                        <div className="h-px bg-[#E5E7EB] mb-4" />
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Settlement ID</p>
-                            <p className="mt-1 text-[13px] font-semibold text-[#111827]">{selectedItem.settlementId || 'Pending'}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">Proof Ref</p>
-                            <p className="mt-1 text-[13px] font-semibold text-[#111827]">{selectedItem.proofReference}</p>
-                          </div>
+                        <div className="p-3">
+                          <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Settlement ID</p>
+                          <p className="mt-1 break-words text-[13px] font-medium text-[#182026]">{selectedItem.settlementId || 'Pending'}</p>
+                        </div>
+                        <div className="p-3">
+                          <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Proof reference</p>
+                          <p className="mt-1 break-words text-[13px] font-medium text-[#182026]">{selectedItem.proofReference}</p>
                         </div>
                       </div>
-                    </div>
+                    </section>
 
                     {/* Reimbursement Trail */}
-                    <div>
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF]">Reimbursement Trail</h3>
-                        <span className="text-[10px] font-bold text-[#0B74DE] uppercase tracking-tight">Verified Chain</span>
+                    <section className="border-t border-[#E7EEF2] pt-5">
+                      <div className="flex items-baseline justify-between gap-4">
+                        <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Reimbursement trail</h3>
+                        <span className="text-[11px] font-medium text-[#66737F]">Verified chain</span>
                       </div>
                       
-                      <div className="relative space-y-8 pl-6">
-                        <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[#E5E7EB]" />
+                      <div className="relative mt-4 space-y-5 pl-6">
+                        <div className="absolute bottom-2 left-[6px] top-2 w-px bg-[#DCE8EE]" />
                         
                         {/* Step 1 */}
                         <div className="relative">
@@ -491,10 +436,7 @@ export default function ApprovedReimbursements() {
                           <div>
                             <p className="text-[13px] font-bold text-[#111827]">Case Filed</p>
                             <p className="mt-1 text-[12px] text-[#6B7280]">Submitted to Amazon Support on {selectedItem.filingDate || 'prior date'}.</p>
-                            <div className="mt-2 flex items-center gap-2 text-[11px] font-semibold text-[#0B74DE]">
-                              <span>Amazon Case: {selectedItem.amazonCaseId}</span>
-                              <ArrowUpRight className="h-3 w-3" />
-                            </div>
+                            <p className="mt-2 text-[11px] font-medium text-[#0B74DE]">Amazon case: {selectedItem.amazonCaseId}</p>
                           </div>
                         </div>
                         
@@ -516,17 +458,17 @@ export default function ApprovedReimbursements() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </section>
                   </div>
                 </div>
 
-                <div className="border-t border-[#F3F5F4] bg-[#F9FAFB] p-8">
-                  <div className="flex items-center gap-4">
-                    <Button className="flex-1 bg-[#111827] text-white hover:bg-[#1F2937] text-[12px] font-bold uppercase tracking-tight h-11 rounded-lg shadow-none">
-                      Download Proof Pack
+                <div className="shrink-0 border-t border-[#DCE8EE] bg-[#FAFAF7] p-4 sm:p-5">
+                  <div className="flex gap-3">
+                    <Button className="h-10 flex-1 rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">
+                      Download proof pack
                     </Button>
-                    <Button variant="outline" className="flex-1 border-[#E5E7EB] bg-white text-[#4B5563] hover:bg-[#F3F5F4] text-[12px] font-bold uppercase tracking-tight h-11 rounded-lg">
-                      View Original Case
+                    <Button variant="outline" className="h-10 flex-1 rounded-md border-[#DCE8EE] bg-white text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]">
+                      View original case
                     </Button>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { 
-  Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, 
-  LogOut, FileText, LifeBuoy, User, Plug,
+  Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight,
+  MoreHorizontal as MoreIcon, LogOut, FileText, LifeBuoy, User, Plug,
   Box, Menu, Search, Bell, Send, Headset, Gift, Copy, Check, X, 
   CreditCard, Mail, Upload, Inbox, RefreshCw 
 } from 'lucide-react';
@@ -20,6 +20,10 @@ import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuSeparator, DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 
 const prefetchRoute = (path: string) => {
   try {
@@ -199,6 +203,7 @@ export function Sidebar({
     { title: 'Help', icon: LifeBuoy, href: tenantRoute(currentTenantSlug, '/help') },
     { title: 'Latest Changes', icon: NotebookPen, href: tenantRoute(currentTenantSlug, '/whats-new') }
   ];
+  const isMoreActive = utilityItems.some((item) => location.pathname === item.href);
   const NavItemComponent = React.memo(({
     item,
     variant = 'default'
@@ -430,22 +435,57 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* Utility destinations */}
+      {/* Account utilities fold */}
       <div className={cn("mt-auto border-t border-white/5 py-2.5", isCollapsed ? "px-2" : "px-3")}>
-        <nav className={cn("flex flex-col", isCollapsed ? "items-center gap-0.5" : "gap-0.5")} aria-label="Account utilities">
-          {utilityItems.map((item) => <NavItemComponent key={item.title} item={item} variant="utility" />)}
-          <button
-            type="button"
-            onClick={() => setSignOutOpen(true)}
-            className={cn(
-              "group flex w-full items-center rounded-[6px] text-white/40 transition-colors hover:bg-white/5 hover:text-white",
-              isCollapsed ? "h-9 w-10 justify-center" : "gap-2.5 px-2.5 py-2"
-            )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              aria-label="More account options"
+              className={cn(
+                "group flex w-full items-center rounded-[6px] text-white/40 transition-colors hover:bg-white/5 hover:text-white",
+                isCollapsed ? "h-9 w-10 justify-center" : "gap-2.5 px-2.5 py-1.5",
+                isMoreActive && "bg-white/10 text-white"
+              )}
+            >
+              <MoreIcon className={cn("h-[16px] w-[16px] shrink-0", isMoreActive && "text-[#0B74DE]")} strokeWidth={1.5} />
+              {!isCollapsed && <span className="text-[13px] font-medium tracking-tight">More</span>}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side={isCollapsed ? 'right' : 'top'}
+            align="start"
+            sideOffset={8}
+            className="w-56 rounded-[6px] border border-white/10 bg-[#1A1918] p-1.5 text-white shadow-2xl"
           >
-            <LogOut className="h-[16px] w-[16px] shrink-0" strokeWidth={1.5} />
-            {!isCollapsed && <span className="text-[13px] font-medium tracking-tight">Sign out</span>}
-          </button>
-        </nav>
+            {utilityItems.map((item) => {
+              const itemIsActive = location.pathname === item.href;
+              return (
+                <DropdownMenuItem key={item.title} asChild className="p-0 focus:bg-transparent">
+                  <Link
+                    to={item.href}
+                    onMouseEnter={() => prefetchRoute(item.href)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-[5px] px-3 py-2 text-[13px] font-medium tracking-tight text-white/65 outline-none transition-colors hover:bg-white/10 hover:text-white",
+                      itemIsActive && "bg-white/10 text-white"
+                    )}
+                  >
+                    <item.icon className={cn("h-[16px] w-[16px]", itemIsActive && "text-[#0B74DE]")} strokeWidth={1.5} />
+                    <span>{item.title}</span>
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })}
+            <DropdownMenuSeparator className="my-1 bg-white/10" />
+            <DropdownMenuItem
+              onSelect={() => setSignOutOpen(true)}
+              className="flex cursor-pointer items-center gap-3 rounded-[5px] px-3 py-2 text-[13px] font-medium tracking-tight text-white/65 outline-none focus:bg-white/10 focus:text-white"
+            >
+              <LogOut className="h-[16px] w-[16px]" strokeWidth={1.5} />
+              <span>Sign out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Sign Out confirmation */}
