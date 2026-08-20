@@ -24,7 +24,10 @@ async function getClerkBrowserToken(): Promise<string> {
     return '';
   }
 
-  const token = await clerk.session.getToken({ skipCache: true }).catch(() => null);
+  // Normal application requests must use Clerk's token cache. Forcing skipCache here
+  // turns every concurrent API request into a session-refresh POST and can rate-limit
+  // the active Clerk session before protected workspace actions reach Margin.
+  const token = await clerk.session.getToken().catch(() => null);
   return String(token || '').trim();
 }
 
