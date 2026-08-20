@@ -2018,11 +2018,11 @@ export default function DisputeCases() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[1440px]">
+                  <table className="w-full min-w-[1240px]">
                     <thead className="border-b border-[#E7EEF2] bg-[#F7FAFC]">
                       <tr className="text-left">
-                        {['Queue record', 'Record status', 'Amount at stake', 'Evidence', 'Next action', 'Updated', 'Actions'].map((header) => (
-                          <th key={header} className="px-5 py-3 text-[10px] font-medium tracking-tight text-[#66737F]">
+                        {['Recovery record', 'Filing and proof', 'Financial trail', 'Next controlled action', 'Last movement', ''].map((header) => (
+                          <th key={header || 'actions'} className="px-5 py-3 text-[10px] font-medium tracking-tight text-[#66737F]">
                             {header}
                           </th>
                         ))}
@@ -2063,10 +2063,8 @@ export default function DisputeCases() {
                       return (
                         <tr key={row.dispute_case_id} className="align-top transition-colors hover:bg-[#F7FAFC]">
                             <td className="px-5 py-4">
-                              <div className="min-w-[220px] space-y-2">
-                                <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">
-                                  {recordIdentifierLabel}
-                                </div>
+                              <div className="min-w-[210px] space-y-2">
+                                <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Recovery record</div>
                                 {canOpenCaseDetail ? (
                                   <Link to={`/recoveries/${row.dispute_case_id}`} state={{ claim: row }} className="inline-flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#0B74DE] hover:text-[#0968C8]">
                                     {recordIdentifier}
@@ -2076,148 +2074,76 @@ export default function DisputeCases() {
                                     {recordIdentifier}
                                   </span>
                                 )}
-                                <div className="flex flex-wrap gap-2">
-                                  <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
-                                    {hasRealDisputeCase ? 'Real dispute case' : 'Detection-only'}
-                                  </Badge>
-                                  {syntheticOpportunityReference ? (
-                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
-                                      Synthetic ref
-                                    </Badge>
-                                  ) : null}
-                                  {threadBackfilled ? (
-                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
-                                      Thread-linked
-                                    </Badge>
-                                  ) : null}
+                                <div className="text-[11px] leading-5 text-[#66737F]">
+                                  {recordType} · {row.store_name || 'Amazon recovery record'}
                                 </div>
-                                <div className="space-y-1 text-[11px] text-[#66737F]">
-                                  <div>Entity: {entityLabel}</div>
-                                  <div>Row Type: {rowTypeLabel}</div>
-                                  <div>Linked Dispute Case: {row.linked_dispute_case_id || 'Not Available'}</div>
-                                  <div>Origin: {caseOriginLabel}</div>
-                                  <div>Store: {row.store_name || 'Not Available'}</div>
-                                  <div>Type: {recordType}</div>
+                                <div className="flex flex-wrap gap-1.5">
+                                  <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
+                                    {hasRealDisputeCase ? 'Dispute case' : 'Detection record'}
+                                  </Badge>
+                                  {threadBackfilled ? (
+                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">Amazon thread</Badge>
+                                  ) : null}
                                 </div>
                                 <div className="border-t border-[#E7EEF2] pt-2 text-[10px] tracking-tight text-[#66737F]">
-                                  <span className="text-[#8A99A5]">Case progress:</span>{' '}
-                                  <span className={cn('font-semibold', progressSnapshot.toneClass)}>{progressSnapshot.label}</span>
+                                  <span className="text-[#8A99A5]">Progress:</span>{' '}
+                                  <span className={cn('font-medium', progressSnapshot.toneClass)}>{progressSnapshot.label}</span>
                                 </div>
                               </div>
                             </td>
 
                             <td className="px-5 py-4">
-                              <div className="grid min-w-[220px] grid-cols-1 gap-2">
-                                <Badge variant="outline" className={cn('w-fit justify-start border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
-                                {gateState ? (
-                                  <Badge variant="outline" className={cn('w-fit justify-start border', postureBadgeClass(gateState.tone))}>
-                                    Gate: {gateState.label}
-                                  </Badge>
-                                ) : null}
-                                {row.filing_status ? (
-                                  <div className="text-[11px] text-[#66737F]">
-                                    Filing state: {formatSellerFilingStatus(row)}
-                                  </div>
-                                ) : null}
-                              </div>
-                            </td>
-
-                            <td className="px-5 py-4">
-                              <div className="min-w-[220px] space-y-1 text-[12px] text-[#4D5B66]">
-                                <div className="flex justify-between gap-4"><span className="text-[#8A99A5]">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-[#8A99A5]">Amazon approval</span><span>{formatMoney(approvedAmount, row.currency)}</span></div>
-                                  <div className="flex justify-between gap-4"><span className="text-[#8A99A5]">Paid back (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
-                                  <div className="pt-1">
-                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]">
-                                    Payout status: {financialStatusLabel(financialSummary?.payout_status)}
-                                    </Badge>
-                                  </div>
-                                <div className="text-[10px] leading-4 text-[#66737F]">{financialStatusDetail(financialSummary)}</div>
-                              </div>
-                            </td>
-
-                            <td className="px-5 py-4">
-                              <div className="min-w-[190px] max-w-[220px] space-y-2.5">
-                                <Badge variant="outline" className={cn('w-fit max-w-full border', badgeClass(row.evidence_state))}>
-                                  {evidenceStatus}
-                                </Badge>
-                                <div className="space-y-1.5 text-[11px] text-[#66737F]">
-                                  <div className="flex items-start justify-between gap-3">
-                                    <span className="text-[#8A99A5]">Source documents</span>
-                                    <span className="text-right text-[#4D5B66]">{row.matched_document_count ? `${row.matched_document_count} linked` : 'No linked documents'}</span>
-                                  </div>
-                                  <div className="space-y-1">
-                                    <div className="text-[#8A99A5]">Needed now</div>
-                                    <div className="break-words leading-5 text-[#4D5B66]">
-                                      {evidenceDetail(row)}
-                                    </div>
-                                  </div>
-                                  {evidenceNeeds.length ? (
-                                    <div className="space-y-1">
-                                      <div className="text-[#8A99A5]">Specific gaps</div>
-                                      <div className="break-words leading-5 text-[#4D5B66]">
-                                        {evidenceNeeds.slice(0, 2).map((item) => item.detail).join(' ')}
-                                      </div>
-                                    </div>
+                              <div className="min-w-[235px] space-y-2">
+                                <div className="flex flex-wrap gap-1.5">
+                                  <Badge variant="outline" className={cn('border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
+                                  {gateState ? (
+                                    <Badge variant="outline" className={cn('border', postureBadgeClass(gateState.tone))}>Gate: {gateState.label}</Badge>
                                   ) : null}
                                 </div>
+                                <div className="text-[11px] text-[#4D5B66]">Filing: {formatSellerFilingStatus(row)}</div>
+                                <div className="border-t border-[#E7EEF2] pt-2">
+                                  <div className="flex items-center justify-between gap-3">
+                                    <Badge variant="outline" className={cn('w-fit max-w-full border', badgeClass(row.evidence_state))}>{evidenceStatus}</Badge>
+                                    <span className="text-[10px] text-[#8A99A5]">{row.matched_document_count ? `${row.matched_document_count} source docs` : 'No source docs'}</span>
+                                  </div>
+                                  <p className="mt-1.5 text-[11px] leading-5 text-[#66737F]">{evidenceNeeds[0]?.title || evidenceDetail(row)}</p>
+                                </div>
                               </div>
                             </td>
 
                             <td className="px-5 py-4">
-                              <div className="min-w-[280px] space-y-3">
-                                <div className="flex flex-wrap items-center gap-2">
+                              <div className="min-w-[210px] space-y-2">
+                                <div className="grid grid-cols-3 gap-3 text-[10px]">
+                                  <div><div className="text-[#8A99A5]">Requested</div><div className="mt-1 font-medium text-[#182026]">{formatMoney(row.requested_amount, row.currency)}</div></div>
+                                  <div><div className="text-[#8A99A5]">Approved</div><div className="mt-1 font-medium text-[#182026]">{formatMoney(approvedAmount, row.currency)}</div></div>
+                                  <div><div className="text-[#8A99A5]">Paid</div><div className="mt-1 font-medium text-[#182026]">{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</div></div>
+                                </div>
+                                <div className="border-t border-[#E7EEF2] pt-2">
+                                  <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]">Payout: {financialStatusLabel(financialSummary?.payout_status)}</Badge>
+                                  <p className="mt-1.5 text-[10px] leading-4 text-[#66737F]">{financialStatusDetail(financialSummary)}</p>
+                                </div>
+                              </div>
+                            </td>
+
+                            <td className="px-5 py-4">
+                              <div className="min-w-[270px] space-y-2">
+                                <div className="flex flex-wrap items-center gap-1.5">
                                   <p className="text-[13px] font-medium tracking-tight text-[#182026]">{nextActionLabel}</p>
-                                  <Badge variant="outline" className={cn('border', postureBadgeClass(posture.tone))}>
-                                    {posture.headline}
-                                  </Badge>
-                                  {row.filing_strategy ? (
-                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
-                                      Filing: {formatAutonomyLabel(row.filing_strategy)}
-                                    </Badge>
-                                  ) : null}
+                                  <Badge variant="outline" className={cn('border', postureBadgeClass(posture.tone))}>{posture.headline}</Badge>
                                 </div>
                                 <p className="text-[11px] leading-5 text-[#4D5B66]">{posture.detail}</p>
-                                <p className="text-[11px] leading-5 text-[#66737F]">
-                                  Filing state: {filingTruthLine(row)}
-                                </p>
-                                {safeDecisionExplanation ? (
-                                  <p className="text-[11px] leading-5 text-[#66737F]">
-                                    Why this record is in this state: {safeDecisionExplanation}
-                                  </p>
-                                ) : null}
-                                {safeManualReviewReason ? (
-                                  <p className="text-[11px] leading-5 text-[#66737F]">
-                                    Needs review because: {safeManualReviewReason}
-                                  </p>
-                                ) : null}
-                                {safeQuarantineReason ? (
-                                  <p className="text-[11px] leading-5 text-[#66737F]">
-                                    Held because: {safeQuarantineReason}
-                                  </p>
-                                ) : null}
-                                {posture.strengths.length ? (
-                                  <div className="flex flex-wrap gap-2">
-                                    {posture.strengths.map((item) => (
-                                      <span
-                                        key={`${row.dispute_case_id}-strength-${item}`}
-                                        className="rounded-md border border-[#BFE0CF] bg-[#F4FAF7] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#2F6C54]"
-                                      >
-                                        {item}
-                                      </span>
-                                    ))}
+                                <p className="text-[11px] leading-5 text-[#66737F]">{filingTruthLine(row)}</p>
+                                {safeDecisionExplanation ? <p className="text-[10px] leading-4 text-[#8A99A5]">Context: {safeDecisionExplanation}</p> : null}
+                                {(posture.strengths.length || posture.risks.length) ? (
+                                  <div className="flex flex-wrap gap-1.5 text-[10px]">
+                                    {posture.strengths.slice(0, 1).map((item) => <span key={`${row.dispute_case_id}-strength-${item}`} className="rounded-md border border-[#BFE0CF] bg-[#F4FAF7] px-2 py-1 text-[#2F6C54]">Verified: {item}</span>)}
+                                    {posture.risks.slice(0, 1).map((item) => <span key={`${row.dispute_case_id}-risk-${item}`} className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2 py-1 text-[#4D5B66]">Watch: {item}</span>)}
                                   </div>
                                 ) : null}
-                                {posture.risks.length ? (
-                                  <div className="flex flex-wrap gap-2">
-                                    {posture.risks.map((item) => (
-                                      <span
-                                        key={`${row.dispute_case_id}-risk-${item}`}
-                                        className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#4D5B66]"
-                                      >
-                                        {item}
-                                      </span>
-                                    ))}
+                                {(safeManualReviewReason || safeQuarantineReason) ? (
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {safeManualReviewReason ? <span className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2 py-1 text-[10px] text-[#4D5B66]">Review: {safeManualReviewReason}</span> : null}
+                                    {safeQuarantineReason ? <span className="rounded-md border border-[#F1C9C5] bg-[#FFF8F7] px-2 py-1 text-[10px] text-[#B42318]">Held: {safeQuarantineReason}</span> : null}
                                   </div>
                                 ) : null}
                               </div>
