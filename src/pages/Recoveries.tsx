@@ -2540,40 +2540,19 @@ export default function Recoveries() {
                   <TabsTrigger
                     value="claims"
                     className="group relative flex-1 rounded px-3 text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026] data-[state=active]:bg-[#F3F7FF] data-[state=active]:text-[#0B74DE] sm:flex-none">
-                    <div className="flex items-center justify-center gap-2">
-                      Open opportunities
-                      {tabCounts.claimsCount > 0 && (
-                        <span className="rounded border border-[#DCE8EE] bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-[#8A99A5] group-data-[state=active]:border-[#BFD8F6] group-data-[state=active]:text-[#0B74DE]">
-                          {tabCounts.claimsCount}
-                        </span>
-                      )}
-                    </div>
+                    <span>Open opportunities</span>
 
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
                     className="group relative flex-1 rounded px-3 text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026] data-[state=active]:bg-[#F3F7FF] data-[state=active]:text-[#0B74DE] sm:flex-none">
-                    <div className="flex items-center justify-center gap-2">
-                      Evidence-ready
-                      {tabCounts.evidenceMatchingCount > 0 && (
-                        <span className="rounded border border-[#DCE8EE] bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-[#8A99A5] group-data-[state=active]:border-[#BFD8F6] group-data-[state=active]:text-[#0B74DE]">
-                          {tabCounts.evidenceMatchingCount}
-                        </span>
-                      )}
-                    </div>
+                    <span>Evidence-ready</span>
 
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
                     className="group relative flex-1 rounded px-3 text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026] data-[state=active]:bg-[#F3F7FF] data-[state=active]:text-[#0B74DE] sm:flex-none">
-                    <div className="flex items-center justify-center gap-2">
-                      Filed with Amazon
-                      {tabCounts.disputeCasesCount > 0 && (
-                        <span className="rounded border border-[#DCE8EE] bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-[#8A99A5] group-data-[state=active]:border-[#BFD8F6] group-data-[state=active]:text-[#0B74DE]">
-                          {tabCounts.disputeCasesCount}
-                        </span>
-                      )}
-                    </div>
+                    <span>Filed with Amazon</span>
 
                   </TabsTrigger>
                 </TabsList>

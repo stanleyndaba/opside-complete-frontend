@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
@@ -19,8 +18,6 @@ import {
   getPayoutProofStatus,
   getProofStatus,
   getQuarantineReason,
-  payoutProofTone,
-  proofStatusTone
 } from '@/lib/disputeProof';
 import { cn } from '@/lib/utils';
 
@@ -85,16 +82,43 @@ function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
 
 function badgeClass(value: string | null | undefined) {
   const key = String(value || '').toLowerCase();
-  if (['approved', 'reconciled', 'completed', 'credited', 'charged'].includes(key)) return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20';
-  if (['rejected', 'denied', 'failed'].includes(key)) return 'bg-red-500/10 text-red-300 border-red-500/20';
-  if (['filed', 'submitted', 'filing', 'submitting'].includes(key)) return 'bg-blue-500/10 text-blue-300 border-blue-500/20';
-  if (['pending', 'retrying', 'pending_approval'].includes(key)) return 'bg-amber-500/10 text-amber-300 border-amber-500/20';
-  return 'bg-white/5 text-white/50 border-white/10';
+  if (['approved', 'reconciled', 'completed', 'credited', 'charged'].includes(key)) return 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]';
+  if (['rejected', 'denied', 'failed'].includes(key)) return 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]';
+  if (['filed', 'submitted', 'filing', 'submitting'].includes(key)) return 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]';
+  if (['pending', 'retrying', 'pending_approval'].includes(key)) return 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]';
+  return 'border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]';
 }
 
 function formatMoney(amount: number | null | undefined, currency = 'USD') {
-  if (amount == null) return 'Not Available';
+  if (amount == null) return 'Not available';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
+}
+
+function lightProofStatusTone(value: string | null | undefined) {
+  switch (String(value || '').toLowerCase()) {
+    case 'filing_ready':
+      return 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]';
+    case 'manual_review':
+    case 'supportable_but_not_case_eligible':
+      return 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]';
+    case 'ineligible':
+      return 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]';
+    default:
+      return 'border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]';
+  }
+}
+
+function lightPayoutProofTone(value: string | null | undefined) {
+  switch (String(value || '').toLowerCase()) {
+    case 'verified':
+      return 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]';
+    case 'awaiting_payout':
+      return 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]';
+    case 'quarantined':
+      return 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]';
+    default:
+      return 'border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]';
+  }
 }
 
 export function DisputeCasesTable(_props: DisputeCasesTableProps) {
@@ -184,45 +208,45 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
 
   if (loading) {
     return (
-      <div className="py-16 flex items-center justify-center gap-3 text-white/40">
-        <Loader2 className="w-4 h-4 animate-spin" />
-        <span className="text-[10px] font-sans font-bold uppercase tracking-tight">Loading dispute queue preview...</span>
+      <div className="border border-[#DCE8EE] bg-[#FAFAF7] px-6 py-12 text-center">
+        <Loader2 className="mx-auto h-4 w-4 animate-spin text-[#0B74DE]" />
+        <p className="mt-3 font-lora text-[20px] font-normal tracking-tight text-[#182026]">Loading filed cases.</p>
+        <p className="mt-2 text-[12px] leading-5 text-[#66737F]">Margin is refreshing the current Amazon filing record.</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="py-16 flex flex-col items-center justify-center gap-4 text-center">
-        <AlertCircle className="w-5 h-5 text-white/40" />
-        <div className="space-y-1">
-          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">Dispute queue unavailable</p>
-          <p className="text-[10px] font-sans text-white/35">{error}</p>
-        </div>
+      <div className="border border-[#F1C9C5] bg-[#FFF8F7] px-6 py-10 text-center">
+        <AlertCircle className="mx-auto h-4 w-4 text-[#B42318]" />
+        <p className="mt-3 font-lora text-[20px] font-normal tracking-tight text-[#182026]">Filed cases could not be loaded.</p>
+        <p className="mx-auto mt-2 max-w-md text-[12px] leading-5 text-[#66737F]">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between px-2">
-        <div className="space-y-1">
-          <h2 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">Dispute Queue Preview</h2>
-          <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
-            Showing {rows.length} of {filteredResults} {source === 'legacy' ? 'legacy dispute cases' : 'backend-filtered cases'}
+    <div className="space-y-5">
+      <div className="flex flex-col gap-4 border border-[#DCE8EE] bg-white px-5 py-4 shadow-[0_2px_8px_rgba(24,32,38,0.03)] lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-3xl">
+          <div className="text-[11px] font-medium tracking-tight text-[#66737F]">Filed case record</div>
+          <h2 className="mt-2 font-lora text-[24px] font-normal tracking-tight text-[#182026]">Track what Amazon has received.</h2>
+          <p className="mt-2 text-[12px] leading-5 text-[#66737F]">
+            Each submitted case keeps filing status, evidence posture, payment verification, and the next controlled action together.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {source === 'legacy' ? (
-            <Badge variant="outline" className="border-amber-500/20 bg-amber-500/10 text-amber-300">
-              Legacy fallback
+            <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] text-[10px] font-medium tracking-tight text-[#66737F]">
+              Limited case details
             </Badge>
           ) : null}
           {activeTenantSlug && (
-            <Button asChild className="h-8 px-4 text-[9px] font-sans font-bold uppercase tracking-tight bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 rounded-lg">
+            <Button asChild className="h-9 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-3 text-[11px] font-medium tracking-tight text-white hover:bg-[#0968C8]">
               <Link to="/dispute-cases">
-                Open Full Queue
-                <ArrowRight className="w-3 h-3 ml-2" />
+                Open full filing queue
+                <ArrowRight className="ml-2 h-3.5 w-3.5" />
               </Link>
             </Button>
           )}
@@ -230,77 +254,94 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
       </div>
 
       {rows.length === 0 ? (
-        <div className="py-16 flex flex-col items-center justify-center gap-2 text-center bg-white/[0.01] border border-white/5 rounded-2xl">
-          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/40">No dispute queue records available</p>
+        <div className="border border-[#DCE8EE] bg-[#FAFAF7] px-6 py-12 text-center">
+          <p className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">No filed cases are in this view.</p>
+          <p className="mx-auto mt-2 max-w-md text-[12px] leading-5 text-[#66737F]">Submitted recovery cases will appear here as Margin receives and reconciles Amazon updates.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {rows.map((row) => (
-            <Card key={row.dispute_case_id} className="bg-white/[0.01] border-white/5 text-white rounded-2xl">
-              <CardContent className="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                {(() => {
-                  const isLegacyRow = source === 'legacy';
-                  const proofStatus = getProofStatus(row);
-                  const missingRequirements = getMissingRequirements(row);
-                  const manualReviewReason = getManualReviewReason(row);
-                  const payoutProofStatus = getPayoutProofStatus(row);
-                  const quarantineReason = getQuarantineReason(row);
-                  const recordId = row.linked_dispute_case_id || row.dispute_case_id;
-                  const filingStatusLabel = isLegacyRow ? 'Not Available' : (row.filing_status || 'Not Available');
-                  const evidenceStateLabel = isLegacyRow ? 'Not Available' : (row.evidence_state || 'Not Available');
-                  const proofStatusLabel = isLegacyRow ? 'Not Available' : (proofStatus ? formatProofStatus(proofStatus) : null);
-                  const payoutProofLabel = isLegacyRow ? 'Not Available' : (payoutProofStatus && payoutProofStatus !== 'not_applicable' ? formatPayoutProofStatus(payoutProofStatus) : null);
-                  const nextActionLabel = isLegacyRow ? 'Not Available' : (row.next_action || 'Not Available');
-                  const approvedLabel = isLegacyRow ? 'Not Available' : formatMoney(row.approved_amount, row.currency);
-                  const recoveredLabel = isLegacyRow ? 'Not Available' : formatMoney(row.actual_payout_amount, row.currency);
-                  const matchedDocsLabel = isLegacyRow ? 'Not Available' : String(row.matched_document_count);
+        <div className="overflow-hidden border border-[#DCE8EE] bg-white">
+          <div className="hidden border-b border-[#E7EEF2] bg-[#F7FAFC] px-5 py-3 lg:grid lg:grid-cols-[minmax(0,1.3fr)_minmax(220px,0.9fr)_minmax(0,0.8fr)] lg:gap-6">
+            <span className="text-[10px] font-medium tracking-tight text-[#66737F]">Filed recovery</span>
+            <span className="text-[10px] font-medium tracking-tight text-[#66737F]">Financial record</span>
+            <span className="text-[10px] font-medium tracking-tight text-[#66737F]">Evidence and next action</span>
+          </div>
+          <div className="divide-y divide-[#E7EEF2]">
+            {rows.map((row) => {
+              const isLegacyRow = source === 'legacy';
+              const proofStatus = getProofStatus(row);
+              const missingRequirements = getMissingRequirements(row);
+              const manualReviewReason = getManualReviewReason(row);
+              const payoutProofStatus = getPayoutProofStatus(row);
+              const quarantineReason = getQuarantineReason(row);
+              const recordId = row.linked_dispute_case_id || row.dispute_case_id;
+              const filingStatusLabel = isLegacyRow ? 'Not available' : (row.filing_status || 'Not available');
+              const evidenceStateLabel = isLegacyRow ? 'Not available' : (row.evidence_state || 'Not available');
+              const proofStatusLabel = isLegacyRow ? 'Not available' : (proofStatus ? formatProofStatus(proofStatus) : null);
+              const payoutProofLabel = isLegacyRow ? 'Not available' : (payoutProofStatus && payoutProofStatus !== 'not_applicable' ? formatPayoutProofStatus(payoutProofStatus) : null);
+              const nextActionLabel = isLegacyRow ? 'Not available' : (row.next_action || 'Not available');
+              const approvedLabel = isLegacyRow ? 'Not available' : formatMoney(row.approved_amount, row.currency);
+              const recoveredLabel = isLegacyRow ? 'Not available' : formatMoney(row.actual_payout_amount, row.currency);
+              const matchedDocsLabel = isLegacyRow
+                ? 'Not available'
+                : row.matched_document_count > 0
+                  ? `${row.matched_document_count} linked document${row.matched_document_count === 1 ? '' : 's'}`
+                  : 'No linked documents';
 
-                  return (
-                    <>
-                <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Link to={`/recoveries/${recordId}`} className="text-sm font-sans font-bold text-white hover:text-emerald-300">
-                      {row.case_number || row.dispute_case_id}
-                    </Link>
-                    <Badge variant="outline" className={cn('border', badgeClass(row.status))}>{row.status || 'Not Available'}</Badge>
-                    <Badge variant="outline" className={cn('border', badgeClass(filingStatusLabel))}>{filingStatusLabel}</Badge>
-                    <Badge variant="outline" className={cn('border', badgeClass(evidenceStateLabel))}>{evidenceStateLabel}</Badge>
-                    {proofStatusLabel ? (
-                      <Badge variant="outline" className={cn('border', isLegacyRow ? badgeClass('Not Available') : proofStatusTone(proofStatus))}>
-                        Proof: {proofStatusLabel}
-                      </Badge>
-                    ) : null}
-                    {payoutProofLabel ? (
-                      <Badge variant="outline" className={cn('border', isLegacyRow ? badgeClass('Not Available') : payoutProofTone(payoutProofStatus))}>
-                        Payout: {payoutProofLabel}
-                      </Badge>
-                    ) : null}
-                  </div>
-                  <div className="text-[11px] font-sans text-white/45 space-y-1">
-                    <div>Next Action: {nextActionLabel}</div>
-                    <div>Requested: {formatMoney(row.requested_amount, row.currency)} | Approved: {approvedLabel} | Recovered: {recoveredLabel}</div>
-                    {!isLegacyRow && missingRequirements.length ? (
-                      <div>Missing: {formatRequirementList(missingRequirements, 2)}</div>
-                    ) : null}
-                    {!isLegacyRow && manualReviewReason ? (
-                      <div>Review: {formatDisputeReason(manualReviewReason)}</div>
-                    ) : null}
-                    {!isLegacyRow && quarantineReason ? (
-                      <div>Quarantine: {quarantineReason}</div>
-                    ) : null}
+              return (
+                <div key={row.dispute_case_id} className="px-5 py-5 transition-colors hover:bg-[#F7FAFC]">
+                  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(220px,0.9fr)_minmax(0,0.8fr)] lg:gap-6">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Link to={`/recoveries/${recordId}`} className="text-[13px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:text-[#0968C8]">
+                          {row.case_number || row.dispute_case_id}
+                        </Link>
+                        <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', badgeClass(row.status))}>{row.status || 'Not available'}</Badge>
+                        <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', badgeClass(filingStatusLabel))}>{filingStatusLabel}</Badge>
+                      </div>
+                      <div className="mt-3 space-y-1 text-[11px] leading-5 text-[#66737F]">
+                        <p><span className="font-medium text-[#4D5B66]">Next action:</span> {nextActionLabel}</p>
+                        {!isLegacyRow && missingRequirements.length ? <p><span className="font-medium text-[#4D5B66]">Still needed:</span> {formatRequirementList(missingRequirements, 2)}</p> : null}
+                        {!isLegacyRow && manualReviewReason ? <p><span className="font-medium text-[#4D5B66]">Review note:</span> {formatDisputeReason(manualReviewReason)}</p> : null}
+                        {!isLegacyRow && quarantineReason ? <p><span className="font-medium text-[#4D5B66]">Filing note:</span> {quarantineReason}</p> : null}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3 border-y border-[#E7EEF2] py-4 lg:border-y-0 lg:py-0">
+                      <div>
+                        <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Requested</div>
+                        <div className="mt-1 text-[12px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(row.requested_amount, row.currency)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Approved</div>
+                        <div className="mt-1 text-[12px] font-semibold tabular-nums tracking-tight text-[#182026]">{approvedLabel}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Recovered</div>
+                        <div className="mt-1 text-[12px] font-semibold tabular-nums tracking-tight text-[#182026]">{recoveredLabel}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex min-w-0 flex-col items-start gap-3 lg:items-end">
+                      <div className="flex flex-wrap gap-2 lg:justify-end">
+                        <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', badgeClass(evidenceStateLabel))}>{evidenceStateLabel}</Badge>
+                        {proofStatusLabel ? <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', isLegacyRow ? badgeClass('Not available') : lightProofStatusTone(proofStatus))}>Proof: {proofStatusLabel}</Badge> : null}
+                        {payoutProofLabel ? <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', isLegacyRow ? badgeClass('Not available') : lightPayoutProofTone(payoutProofStatus))}>Payout: {payoutProofLabel}</Badge> : null}
+                      </div>
+                      <p className="text-[11px] text-[#66737F] lg:text-right">{matchedDocsLabel}</p>
+                      <Link to={`/recoveries/${recordId}`} className="inline-flex h-8 items-center rounded-md border border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:border-[#BFD8F6] hover:bg-[#F3F7FF] hover:text-[#0B74DE]">
+                        Open recovery record
+                        <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-                <div className="text-[11px] font-sans text-white/40">
-                  Matched Docs: {matchedDocsLabel}
-                </div>
-                    </>
-                  );
-                })()}
-              </CardContent>
-            </Card>
-          ))}
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
   );
 }
+
+export default DisputeCasesTable;
