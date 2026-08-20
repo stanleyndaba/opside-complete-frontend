@@ -5,11 +5,9 @@ import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { 
-  ChevronRight, Search, X, Settings, Bell, 
-  FileText, Zap, Shield, AlertCircle, RefreshCw, DollarSign,
-  CheckCircle2, Clock, Filter, Mail, Database,
-  ArrowUpRight, Info
+import {
+  ChevronRight, Search, Settings, Bell, AlertCircle, RefreshCw,
+  Clock
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
@@ -420,49 +418,49 @@ export default function NotificationHub() {
 
   return (
     <PageLayout title="Notifications" noPadding>
-      <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
-        {/* Forensic Identity Header */}
-        <div className="border-b border-[#E5E7EB] bg-white px-8 py-10">
-          <div className="mx-auto max-w-5xl">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <div className="h-px w-6 bg-[#0B74DE]" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0B74DE]">Activity Hub</span>
+      <div className="min-h-screen bg-[#FAFAF7] text-[#111827]">
+        <div className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
+          <div className="mx-auto max-w-[1180px]">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Workspace activity</p>
+                <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Notifications</h1>
+                <p className="mt-2.5 max-w-xl text-[14px] leading-6 text-[#66737F]">Review system events, recovery activity, and actions that need your attention.</p>
               </div>
               <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 gap-2 px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] hover:bg-[#F3F5F4] hover:text-[#111827]">
+                  <Button variant="outline" size="sm" className="h-9 gap-2 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
                     <Settings className="h-3.5 w-3.5" />
                     Preferences
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-full border-l border-[#E5E7EB] bg-white p-0 text-[#111827] sm:max-w-[450px]">
-                  <SheetHeader className="border-b border-[#E5E7EB] px-6 py-6 text-left">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">Configuration</div>
-                    <SheetTitle className="mt-2 font-lora text-2xl font-normal tracking-tight">Notification settings</SheetTitle>
-                    <p className="text-[13px] text-[#6B7280] leading-relaxed">Manage how and where you receive operational updates.</p>
+                  <SheetContent side="right" className="w-full border-l border-[#DCE8EE] bg-white p-0 text-[#111827] sm:max-w-[450px]">
+                  <SheetHeader className="border-b border-[#DCE8EE] px-6 py-6 text-left">
+                    <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Delivery settings</p>
+                    <SheetTitle className="mt-1.5 font-lora text-2xl font-normal tracking-tight text-[#182026]">Notification settings</SheetTitle>
+                    <p className="mt-2 text-[13px] leading-5 text-[#66737F]">Manage how and where you receive operational updates.</p>
                   </SheetHeader>
-                  <div className="h-[calc(100vh-140px)] overflow-y-auto px-6 py-8">
-                    <div className="space-y-8">
+                  <div className="h-[calc(100vh-154px)] overflow-y-auto px-6 py-6">
+                    <div className="space-y-7">
                       {Object.keys(CATEGORY_DESCRIPTIONS).map(category => (
                         <div key={category}>
-                          <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wider text-[#111827]">{category}</h3>
-                          <p className="mb-4 text-[11px] text-[#6B7280]">{CATEGORY_DESCRIPTIONS[category]}</p>
-                          <div className="divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+                          <h3 className="mb-1 text-[14px] font-semibold tracking-tight text-[#182026]">{category}</h3>
+                          <p className="mb-3 text-[12px] leading-5 text-[#66737F]">{CATEGORY_DESCRIPTIONS[category]}</p>
+                          <div className="divide-y divide-[#E7EEF2] border-y border-[#E7EEF2]">
                             {preferences.filter(p => p.category === category).map(pref => (
-                              <div key={pref.id} className="py-4">
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="text-[13px] font-semibold tracking-tight">{pref.title}</span>
+                              <div key={pref.id} className="py-3.5">
+                                <div className="mb-1.5 flex items-center justify-between">
+                                  <span className="text-[13px] font-semibold tracking-tight text-[#182026]">{pref.title}</span>
                                 </div>
-                                <p className="mb-4 text-[11px] text-[#6B7280] leading-relaxed">{pref.description}</p>
-                                <div className="flex items-center gap-6">
+                                <p className="mb-3 text-[12px] leading-5 text-[#66737F]">{pref.description}</p>
+                                <div className="flex items-center gap-5">
                                   <div className="flex items-center gap-2">
                                     <Switch checked={pref.inApp} onCheckedChange={(v) => updatePreference(pref.id, 'inApp', v)} className="scale-75" />
-                                    <span className="text-[11px] font-medium text-[#6B7280]">In-App</span>
+                                    <span className="text-[12px] font-medium text-[#66737F]">In-app</span>
                                   </div>
                                   <div className="flex items-center gap-2">
                                     <Switch checked={pref.email} onCheckedChange={(v) => updatePreference(pref.id, 'email', v)} className="scale-75" />
-                                    <span className="text-[11px] font-medium text-[#6B7280]">Email</span>
+                                    <span className="text-[12px] font-medium text-[#66737F]">Email</span>
                                   </div>
                                 </div>
                               </div>
@@ -475,47 +473,42 @@ export default function NotificationHub() {
                 </SheetContent>
               </Sheet>
             </div>
-            <h1 className="mb-4 font-lora text-[32px] font-normal leading-tight tracking-tight text-[#111827]">
-              System events and recovery activity
-            </h1>
-            <p className="max-w-2xl text-[15px] font-normal leading-relaxed tracking-tight text-[#6B7280]">
-              Forensic activity log for the Margin workspace. Track automated sync progress, evidence readiness, and case-payout milestones.
-            </p>
+
           </div>
         </div>
 
         {/* Readiness Strip */}
-        <div className="border-b border-[#E5E7EB] bg-[#F9FAFB] px-8 py-3">
-          <div className="mx-auto flex max-w-5xl items-center justify-between">
-            <div className="flex items-center gap-8">
+        <div className="border-b border-[#DCE8EE] bg-white px-4 py-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1180px] flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
               <div className="flex items-center gap-2">
-                <div className={cn("h-1.5 w-1.5 rounded-full", unreadCount > 0 ? "bg-[#0B74DE]" : "bg-[#9CA3AF]")} />
-                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Unread:</span>
-                <span className="text-[11px] font-bold text-[#111827]">{unreadCount} Updates</span>
+                <div className={cn("h-1.5 w-1.5 rounded-full", unreadCount > 0 ? "bg-[#0B74DE]" : "bg-[#AAB6BE]")} />
+                <span className="text-[13px] text-[#66737F]">Unread</span>
+                <span className="text-[13px] font-semibold tracking-tight text-[#182026]">{unreadCount}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="h-3.5 w-3.5 text-[#9CA3AF]" />
-                <span className="text-[11px] font-semibold uppercase tracking-tight text-[#6B7280]">Last Refresh:</span>
-                <span className="text-[11px] font-bold text-[#111827]">{loading ? "Updating..." : "Live"}</span>
+                <Clock className="h-3.5 w-3.5 text-[#66737F]" aria-hidden="true" />
+                <span className="text-[13px] text-[#66737F]">Inbox status</span>
+                <span className="text-[13px] font-semibold tracking-tight text-[#182026]">{loading ? 'Updating' : 'Live'}</span>
               </div>
               <div className="flex items-center gap-3">
-                <button onClick={handleMarkAllRead} disabled={unreadCount === 0} className="text-[11px] font-bold text-[#0B74DE] hover:underline disabled:opacity-40 disabled:no-underline">Mark all read</button>
-                <div className="h-3 w-px bg-[#E5E7EB]" />
-                <button onClick={handleRefresh} disabled={loading} className="text-[11px] font-bold text-[#6B7280] hover:text-[#111827]">Refresh</button>
+                <button onClick={handleMarkAllRead} disabled={unreadCount === 0} className="text-[13px] font-medium tracking-tight text-[#0B74DE] hover:text-[#005FBA] disabled:cursor-not-allowed disabled:opacity-40">Mark all read</button>
+                <span className="h-3 w-px bg-[#DCE8EE]" />
+                <button onClick={handleRefresh} disabled={loading} className="text-[13px] font-medium tracking-tight text-[#4D5B66] hover:text-[#182026] disabled:cursor-not-allowed disabled:opacity-40">Refresh</button>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="relative w-48">
-                <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#9CA3AF]" />
-                <input 
-                  type="text" 
-                  placeholder="Filter activity..." 
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative min-w-[190px] flex-1 sm:flex-none">
+                <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#66737F]" aria-hidden="true" />
+                <input
+                  type="text"
+                  placeholder="Search notifications"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-8 w-full rounded-md border border-[#E5E7EB] bg-white pl-8 pr-3 text-[11px] font-medium tracking-tight outline-none focus:border-[#0B74DE] focus:ring-0"
+                  className="h-9 w-full rounded-md border border-[#DCE8EE] bg-[#FAFAF7] pl-8.5 pr-3 text-[13px] tracking-tight text-[#182026] outline-none placeholder:text-[#8A97A2] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15 sm:w-[210px]"
                 />
               </div>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-2">
                 <FilterSelect value={typeFilter} onChange={setTypeFilter} options={[
                   { value: 'all', label: 'All types' },
                   { value: 'financial', label: 'Financial' },
@@ -536,7 +529,7 @@ export default function NotificationHub() {
                 {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
                   <button
                     onClick={() => { setSearchQuery(''); setTypeFilter('all'); setDateFilter('all'); setStatusFilter('all'); }}
-                    className="h-8 rounded-md border border-[#E5E7EB] px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] hover:bg-[#F3F5F4] hover:text-[#111827]"
+                    className="h-9 rounded-md border border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]"
                   >
                     Clear
                   </button>
@@ -546,25 +539,35 @@ export default function NotificationHub() {
           </div>
         </div>
 
-        <div className="mx-auto max-w-5xl px-8 py-12">
-          {filteredNotifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F3F5F4]">
-                <Bell className="h-6 w-6 text-[#9CA3AF]" />
+        <main className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
+          {error ? (
+            <div className="mb-5 flex items-start gap-3 rounded-[10px] border border-rose-200 bg-rose-50 px-4 py-3.5 text-[13px] leading-5 text-rose-800" role="alert">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <div>
+                <p className="font-semibold tracking-tight">Notifications could not refresh</p>
+                <p className="mt-0.5">{error}</p>
               </div>
-              <h3 className="text-[14px] font-semibold text-[#111827]">No activity detected</h3>
-              <p className="mt-1 text-[12px] text-[#6B7280]">Try adjusting your filters or check back later.</p>
+            </div>
+          ) : null}
+
+          {filteredNotifications.length === 0 ? (
+            <div className="rounded-[10px] border border-[#DCE8EE] bg-white px-5 py-14 text-center shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
+              <div className="mx-auto mb-3 flex h-9 w-9 items-center justify-center rounded-md border border-[#DCE8EE] bg-[#F7FAFC]">
+                <Bell className="h-4 w-4 text-[#66737F]" aria-hidden="true" />
+              </div>
+              <h2 className="text-[16px] font-semibold tracking-tight text-[#182026]">No notifications found</h2>
+              <p className="mx-auto mt-1.5 max-w-sm text-[13px] leading-5 text-[#66737F]">Try adjusting your filters or check back when new workspace activity arrives.</p>
               {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
-                <Button variant="outline" size="sm" onClick={() => { setSearchQuery(''); setTypeFilter('all'); setDateFilter('all'); setStatusFilter('all'); }} className="mt-6 h-8 text-[11px] font-bold uppercase tracking-tight">Clear all filters</Button>
+                <Button variant="outline" size="sm" onClick={() => { setSearchQuery(''); setTypeFilter('all'); setDateFilter('all'); setStatusFilter('all'); }} className="mt-5 h-9 rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]">Clear filters</Button>
               )}
             </div>
           ) : (
-            <div className="space-y-12">
+            <div className="space-y-7">
               {Object.entries(groupedNotifications).map(([group, items]) => (
                 items.length > 0 && (
                   <div key={group}>
-                    <h3 className="mb-4 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">{group}</h3>
-                    <div className="divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+                    <h2 className="mb-3 text-[13px] font-medium tracking-tight text-[#66737F]">{group}</h2>
+                    <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
                       {items.map((notif) => (
                         <ActivityRow 
                           key={notif.id} 
@@ -589,87 +592,62 @@ export default function NotificationHub() {
               ))}
             </div>
           )}
-        </div>
+        </main>
 
-        {/* Registry Footer */}
-        <div className="mx-auto max-w-5xl px-8 pb-20 pt-10">
-          <div className="border-t border-[#E5E7EB] pt-8 text-center">
-            <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">
-              <Shield className="h-3 w-3" />
-              Communication Registry • US-EAST-1
-            </div>
-          </div>
+        {/* Delivery record */}
+        <div className="mx-auto max-w-[1180px] px-4 pb-10 pt-2 sm:px-6 lg:px-8">
+          <p className="border-t border-[#DCE8EE] pt-5 text-[12px] leading-5 text-[#66737F]">Notification delivery and read state are recorded separately. Opening a notification does not complete a required case or audit action.</p>
         </div>
       </div>
     </PageLayout>
   );
 }
 
-function ActivityRow({ notification, onRead, onNavigate }: { 
-  notification: Notification, 
+function ActivityRow({ notification, onRead, onNavigate }: {
+  notification: Notification,
   onRead: () => void,
   onNavigate: () => void
 }) {
-  const Icon = useMemo(() => {
-    const type = notification.type.toLowerCase();
-    if (type.includes('payout') || type.includes('payment') || type.includes('funds') || type.includes('paid')) return DollarSign;
-    if (type.includes('claim') || type.includes('recovery') || type.includes('case')) return FileText;
-    if (type.includes('evidence') || type.includes('document') || type.includes('invoice')) return Shield;
-    if (type.includes('sync')) return RefreshCw;
-    if (type.includes('security') || type.includes('update')) return Zap;
-    return Bell;
-  }, [notification.type]);
+  const eventLabel = notification.systemSignal?.eventType.replace(/\./g, ' ') || notification.type.replace(/_/g, ' ');
 
   return (
-    <div 
+    <div
       className={cn(
-        "group flex items-center justify-between py-5 transition-colors",
-        notification.read ? "opacity-75 hover:bg-[#F3F5F4]/30" : "bg-white hover:bg-[#F8FAFB]"
+        'group flex flex-col gap-4 px-4 py-4 transition-colors sm:flex-row sm:items-start sm:justify-between sm:px-5',
+        notification.read ? 'bg-white hover:bg-[#F7FAFC]' : 'bg-[#FBFDFF] hover:bg-[#F4F9FE]'
       )}
       onClick={onRead}
     >
-      <div className="flex items-start gap-5">
-        <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white shadow-sm">
-          <Icon className="h-4.5 w-4.5 text-[#4B5563]" strokeWidth={1.5} />
-        </div>
-        <div className="min-w-0">
-          <div className="flex items-center gap-3">
-            <span className="text-[14px] font-semibold tracking-tight text-[#111827]">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start gap-2.5">
+          {!notification.read ? <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0B74DE]" aria-label="Unread" /> : <span className="mt-2 h-1.5 w-1.5 shrink-0" aria-hidden="true" />}
+          <div className="min-w-0">
+            <p className="text-[14px] font-semibold leading-5 tracking-tight text-[#182026]">
               {renderNotificationMessage(notification.title)}
-            </span>
-            {!notification.read && <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />}
-          </div>
-          <div className="mt-1 flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-tight text-[#9CA3AF]">
-              {notification.systemSignal?.eventType.replace(/\./g, ' ') || notification.type.replace(/_/g, ' ')}
-            </span>
-            <div className="h-1 w-1 rounded-full bg-[#E5E7EB]" />
-            <span className="text-[11px] font-medium text-[#6B7280]">{notification.timestamp}</span>
-          </div>
-          {notification.message && (
-            <p className="mt-2 max-w-2xl text-[12px] leading-relaxed tracking-tight text-[#6B7280]">
-              {renderNotificationMessage(notification.message)}
             </p>
-          )}
-          {notification.actionLabel && (
-            <p className="mt-3 text-[11px] font-semibold tracking-tight text-[#0B74DE]">
-              {notification.actionLabel} →
-            </p>
-          )}
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] leading-5 text-[#66737F]">
+              <span className="capitalize">{eventLabel}</span>
+              <span className="h-1 w-1 rounded-full bg-[#DCE8EE]" aria-hidden="true" />
+              <span>{notification.timestamp}</span>
+            </div>
+            {notification.message ? (
+              <p className="mt-2 max-w-2xl text-[13px] leading-5 text-[#4D5B66]">
+                {renderNotificationMessage(notification.message)}
+              </p>
+            ) : null}
+          </div>
         </div>
       </div>
-      
-      <div className="flex shrink-0 items-center gap-4 px-4 opacity-0 transition-opacity group-hover:opacity-100">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={(e) => { e.stopPropagation(); onNavigate(); }}
-          className="h-8 gap-1.5 border-[#E5E7EB] px-3 text-[11px] font-bold uppercase tracking-tight text-[#111827] hover:bg-[#F3F5F4]"
-        >
-          {notification.actionLabel || 'View'}
-          <ArrowUpRight className="h-3 w-3" />
-        </Button>
-      </div>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={(event) => { event.stopPropagation(); onNavigate(); }}
+        className="h-8 w-fit shrink-0 gap-1 rounded-md border-[#DCE8EE] bg-white px-3 text-[12px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC] hover:text-[#005FBA]"
+      >
+        {notification.actionLabel || 'View'}
+        <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </Button>
     </div>
   );
 }
@@ -677,12 +655,12 @@ function ActivityRow({ notification, onRead, onNavigate }: {
 function FilterSelect({ value, onChange, options }: { value: string, onChange: (v: string) => void, options: { value: string, label: string }[] }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-8 w-auto min-w-[100px] border-[#E5E7EB] bg-white px-3 text-[11px] font-semibold tracking-tight text-[#6B7280] focus:ring-0">
+      <SelectTrigger className="h-9 w-auto min-w-[104px] rounded-md border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#4D5B66] focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent className="border-[#E5E7EB] bg-white shadow-xl">
+      <SelectContent className="rounded-md border-[#DCE8EE] bg-white shadow-[0_14px_30px_rgba(24,32,38,0.10)]">
         {options.map(opt => (
-          <SelectItem key={opt.value} value={opt.value} className="text-[11px] font-medium text-[#111827] focus:bg-[#F3F5F4]">
+          <SelectItem key={opt.value} value={opt.value} className="text-[13px] font-medium text-[#182026] focus:bg-[#F7FAFC]">
             {opt.label}
           </SelectItem>
         ))}
