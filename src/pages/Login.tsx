@@ -526,6 +526,7 @@ const Login = () => {
   };
 
   const bootstrapWorkspaceWithClerkToken = async (emailAddress: string, sessionToken: string) => {
+    const preferredTenantSlug = normalizeTenantSlug(localStorage.getItem('active_tenant_slug'));
     clearStoredTenantContext();
     const auditIntentId = searchParams.get('auditIntentId') || localStorage.getItem('pending_audit_intent_id');
 
@@ -540,7 +541,7 @@ const Login = () => {
       },
       body: JSON.stringify({
         workspaceName,
-        preferredTenantSlug: normalizeTenantSlug(localStorage.getItem('active_tenant_slug')),
+        preferredTenantSlug,
         foundingReservation: !isAuditIntent && (intent === 'onboarding' || hasFoundingReservationContext()),
         auditIntentId,
       }),
