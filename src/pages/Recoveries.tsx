@@ -2760,6 +2760,29 @@ export default function Recoveries() {
                                   const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
                                   const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
                                   const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at);
+                                  const evidenceValidation = validateEvidencePolicy(claim, claim.matchedDocs);
+                                  const sourceDocumentCount = Array.isArray(claim.matchedDocs)
+                                    ? claim.matchedDocs.length
+                                    : (claim.matchedCount || (claim as any)._matchedCount || 0);
+                                  const primaryProofGap = evidenceValidation.missingRequired[0] || null;
+                                  const proofLabel = evidenceValidation.quality === 'strong'
+                                    ? 'Evidence ready'
+                                    : evidenceValidation.quality === 'medium'
+                                      ? 'Evidence needs review'
+                                      : 'Source records needed';
+                                  const nextControl = claim.status === 'Submitted'
+                                    ? { label: 'Monitor Amazon response', detail: 'Amazon has the case. Margin is waiting for a source-backed response.' }
+                                    : claim.status === 'Reimbursed'
+                                      ? { label: 'Verify reimbursement', detail: 'Confirm the paid amount against the expected recovery record.' }
+                                      : claim.status === 'Denied'
+                                        ? { label: 'Review resubmission', detail: 'Reassess the rejection and the supporting proof before filing again.' }
+                                        : evidenceValidation.recommendation === 'file_now'
+                                          ? { label: 'Review for controlled filing', detail: 'The record meets the current evidence threshold for a seller-approved filing review.' }
+                                          : { label: 'Strengthen the record', detail: primaryProofGap ? `Add ${primaryProofGap.toLowerCase()} before filing.` : 'Review the evidence posture before filing.' };
+                                  const approvedAmount = [claim.approved_amount, claim.amazon_approved_amount, claim.approvedAmount]
+                                    .find((value) => typeof value === 'number' && Number.isFinite(value));
+                                  const paidAmount = [claim.actual_payout_amount, claim.reimbursed_amount, claim.reimbursedAmount, claim.paid_amount]
+                                    .find((value) => typeof value === 'number' && Number.isFinite(value));
 
                                   return (
                                     <div
@@ -2790,60 +2813,60 @@ export default function Recoveries() {
                                           />
                                         </div>
 
-                                        <div className="flex items-center gap-8 min-w-0 flex-1">
-                                          <div className="flex h-7 w-7 shrink-0 items-center justify-center border border-[#DCE8EE] bg-[#F7FAFC] text-[10px] font-medium tabular-nums text-[#66737F]">
-                                            {claim.id.slice(0, 1)}
+                                        <div className="grid min-w-0 flex-1 grid-cols-[minmax(210px,1.15fr)_minmax(195px,0.95fr)_minmax(195px,0.85fr)_minmax(230px,1.05fr)] gap-x-6 gap-y-4">
+                                          <div className="min-w-0 space-y-2">
+                                            <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Recovery record</div>
+                                            <Link to={`/recoveries/${claim.id}`} state={{ claim }} className="inline-flex text-[13px] font-medium tracking-tight text-[#182026] transition-colors hover:text-[#0B74DE]">
+                                              {claim.claim_number || claim.id.slice(0, 16)}
+                                            </Link>
+                                            <p className="line-clamp-2 text-[11px] leading-5 text-[#66737F]">{claim.details || (claim.type || claim.anomaly_type || 'Amazon recovery exception').replace(/_/g, ' ')}</p>
+                                            <div className="flex flex-wrap gap-1.5 text-[10px] text-[#8A99A5]">
+                                              <span>{(claim.type || claim.anomaly_type || 'Recovery').replace(/_/g, ' ')}</span>
+                                              {claim.sku ? <><span>·</span><span>SKU {claim.sku}</span></> : null}
+                                              {claim.asin ? <><span>·</span><span>ASIN {claim.asin}</span></> : null}
+                                            </div>
+                                            <div className="border-t border-[#E7EEF2] pt-2 text-[10px] text-[#8A99A5]">Detected {format(claimDate, 'dd MMM yyyy, HH:mm')}</div>
                                           </div>
 
-                                          <div className="flex flex-col min-w-0 flex-1">
-                                            <div className="flex items-center gap-4 mb-1.5">
-                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                                <span className="text-[12px] font-medium tracking-tight text-[#182026] transition-colors hover:text-[#0B74DE]">
-                                                  {claim.claim_number || claim.id.slice(0, 16)}
-                                                </span>
-                                              </Link>
-                                              <span className="text-[10px] text-[#8A99A5]">
-                                                {format(claimDate, 'dd MMM yyyy, HH:mm')}
-                                              </span>
-                                            </div>
-
-                                            <div className="mb-2 flex items-center gap-2 text-[11px] leading-4 text-[#66737F]">
-                                              <span className="max-w-md truncate">{claim.details}</span>
-                                              <span className="text-[#C4D1D8]">·</span>
-                                              <span className="text-[#8A99A5]">SKU {claim.sku || 'Not available'}</span>
-                                            </div>
-
-                                            <div className="flex items-center gap-3 flex-wrap">
-                                              <div className={cn(
+                                          <div className="min-w-0 space-y-2">
+                                            <div className="flex flex-wrap items-center gap-1.5">
+                                              <span className={cn(
                                                 "rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-tight",
                                                 claim.status === 'Submitted' ? "border-[#D8E7FF] bg-[#F3F7FF] text-[#0B74DE]" :
                                                   claim.status === 'Reimbursed' ? "border-[#CFE4DB] bg-[#F4FAF7] text-[#2F6C54]" :
                                                     claim.status === 'Denied' ? "border-[#F0D7DE] bg-[#FFF7F8] text-[#9B4354]" :
                                                       "border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]"
-                                              )}>
-                                                {claim.status}
-                                              </div>
-                                              <div className="h-4 w-px bg-[#E7EEF2]" />
+                                              )}>{claim.status}</span>
                                               {(() => {
                                                 const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
                                                 return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : null;
                                               })()}
-                                              <div className={cn(
-                                                "text-[10px] font-medium tracking-tight",
-                                                isCritical ? "text-[#B42318]" : isUrgent ? "text-[#0B74DE]" : "text-[#8A99A5]"
-                                              )}>
-                                                {claim.days_remaining !== null ? `${claim.days_remaining} days remaining` : 'No deadline available'}
-                                              </div>
-                                              <div className="h-4 w-px bg-[#E7EEF2]" />
-                                              <EvidenceQualityBadge validation={validateEvidencePolicy(claim, claim.matchedDocs)} claim={claim} matchedDocs={claim.matchedDocs} />
                                             </div>
+                                            <div className="border-t border-[#E7EEF2] pt-2">
+                                              <div className="flex items-center justify-between gap-2">
+                                                <span className="text-[11px] font-medium tracking-tight text-[#4D5B66]">{proofLabel}</span>
+                                                <span className="text-[10px] text-[#8A99A5]">{sourceDocumentCount} source {sourceDocumentCount === 1 ? 'record' : 'records'}</span>
+                                              </div>
+                                              <p className="mt-1.5 text-[11px] leading-5 text-[#66737F]">{primaryProofGap ? `Needed: ${primaryProofGap}` : evidenceValidation.recommendationText}</p>
+                                            </div>
+                                            <div className={cn("text-[10px] font-medium tracking-tight", isCritical ? "text-[#B42318]" : isUrgent ? "text-[#0B74DE]" : "text-[#8A99A5]")}>{claim.days_remaining !== null ? `${claim.days_remaining} days remaining` : 'No deadline available'}</div>
                                           </div>
 
-                                          <div className="flex flex-col items-end gap-1">
-                                            <span className="text-[15px] font-semibold tabular-nums tracking-tight text-[#182026]">
-                                              {formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}
-                                            </span>
-                                            <span className="text-[10px] text-[#8A99A5]">Estimated recovery value</span>
+                                          <div className="min-w-0 space-y-2">
+                                            <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Financial truth</div>
+                                            <div className="grid grid-cols-1 gap-1.5 text-[11px]">
+                                              <div className="flex items-center justify-between gap-3"><span className="text-[#8A99A5]">Expected</span><span className="font-medium tabular-nums text-[#182026]">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</span></div>
+                                              <div className="flex items-center justify-between gap-3"><span className="text-[#8A99A5]">Approved</span><span className="font-medium tabular-nums text-[#182026]">{typeof approvedAmount === 'number' ? formatCurrency(approvedAmount, claim.currency || 'USD') : 'Not confirmed'}</span></div>
+                                              <div className="flex items-center justify-between gap-3"><span className="text-[#8A99A5]">Paid</span><span className="font-medium tabular-nums text-[#182026]">{typeof paidAmount === 'number' ? formatCurrency(paidAmount, claim.currency || 'USD') : 'Not confirmed'}</span></div>
+                                            </div>
+                                            <div className="border-t border-[#E7EEF2] pt-2 text-[10px] leading-4 text-[#66737F]">{claim.expectedPayoutDate || claim.expected_payout_date ? `Expected payout ${format(new Date(claim.expectedPayoutDate || claim.expected_payout_date), 'dd MMM yyyy')}` : 'No payout confirmation recorded'}</div>
+                                          </div>
+
+                                          <div className="min-w-0 space-y-2">
+                                            <div className="flex items-center justify-between gap-2"><span className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Next controlled action</span><EvidenceQualityBadge validation={evidenceValidation} claim={claim} matchedDocs={claim.matchedDocs} /></div>
+                                            <p className="text-[13px] font-medium tracking-tight text-[#182026]">{nextControl.label}</p>
+                                            <p className="text-[11px] leading-5 text-[#4D5B66]">{nextControl.detail}</p>
+                                            <div className="border-t border-[#E7EEF2] pt-2 text-[10px] leading-4 text-[#66737F]">Current lifecycle: {claim.status || 'Pending'}</div>
                                           </div>
                                         </div>
 
