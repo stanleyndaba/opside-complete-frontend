@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload, Layers } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, ChevronDown, CircleCheck, CircleSlash, HelpCircle, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload, Layers, LogOut, Settings2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -21,12 +21,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTenant } from '@/contexts/TenantContext';
 import { useSession } from '@/contexts/SessionContext';
 import { selectApprovedReimbursementRows, type ApprovedReimbursementViewRow } from '@/lib/approvedReimbursementTruth';
+import { SignOutDialog } from '@/components/routes/SignOutDialog';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
   forceTransparent?: boolean;
-  onContactSupport?: (defaults?: { email?: string }) => void;
 }
 
 // Quick search result type
@@ -67,8 +67,7 @@ export function Navbar({
   className,
   sidebarCollapsed = false,
   onToggleSidebar,
-  forceTransparent,
-  onContactSupport
+  forceTransparent
 }: NavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -134,6 +133,7 @@ export function Navbar({
     company_name?: string;
     amazon_seller_id?: string;
     amazon_display_name?: string;
+    amazon_marketplaces?: string[];
     amazon_connected?: boolean;
     amazon_status?: 'connected' | 'not_connected' | 'unknown';
     stripe_connected?: boolean;
@@ -168,6 +168,9 @@ export function Navbar({
             company_name: me.company_name,
             amazon_seller_id: status?.amazon_account?.seller_id || undefined,
             amazon_display_name: status?.amazon_account?.display_name || undefined,
+            amazon_marketplaces: Array.isArray(status?.amazon_account?.marketplaces)
+              ? status.amazon_account.marketplaces.filter((marketplace: unknown): marketplace is string => typeof marketplace === 'string' && marketplace.trim())
+              : [],
             amazon_connected: status?.amazon_connected ?? false,
             amazon_status: status
               ? (status.amazon_connected ? 'connected' : 'not_connected')
@@ -188,7 +191,10 @@ export function Navbar({
             amazon_connected: status.amazon_connected ?? false,
             amazon_status: status.amazon_connected ? 'connected' : 'not_connected',
             amazon_seller_id: status.amazon_account?.seller_id,
-            amazon_display_name: status.amazon_account?.display_name
+            amazon_display_name: status.amazon_account?.display_name,
+            amazon_marketplaces: Array.isArray(status.amazon_account?.marketplaces)
+              ? status.amazon_account.marketplaces.filter((marketplace: unknown): marketplace is string => typeof marketplace === 'string' && marketplace.trim())
+              : []
           }));
         }
       } catch (e) {
@@ -230,20 +236,10 @@ export function Navbar({
         ? 'Loading...'
         : 'Member';
 
-  const memberSinceLabel =
-    userProfile?.created_at
-      ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-      : (isProfileLoading ? 'Loading...' : '—');
-  const handleContactSupport = useCallback(() => {
-    if (onContactSupport) {
-      onContactSupport({
-        email: userProfile?.email || undefined
-      });
-      return;
-    }
-
-    navigate('/contact');
-  }, [navigate, onContactSupport, userProfile?.email]);
+  const activeWorkspaceName = tenant?.name || tenant?.slug || activeTenantSlug || 'Workspace';
+  const amazonMarketplaces = userProfile?.amazon_marketplaces || [];
+  const amazonActionPath = userProfile?.amazon_connected ? '/integrations-hub' : '/connect-amazon';
+  const [signOutOpen, setSignOutOpen] = useState(false);
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
@@ -777,101 +773,96 @@ export function Navbar({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="group/account flex items-center gap-3 rounded-[7px] px-3 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-[#4B5563] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]">
-                  <User className="h-5 w-5 text-[#9CA3AF] transition-colors group-hover/account:text-[#0B74DE]" />
+                <button className="group/account flex items-center gap-2.5 rounded-[7px] px-3 py-2 text-[12px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F1F2F0] hover:text-[#0B74DE]">
+                  <User className="h-4.5 w-4.5 text-[#8A99A5] transition-colors group-hover/account:text-[#0B74DE]" strokeWidth={1.7} />
                   <span className="hidden sm:inline">Account</span>
-                  <ChevronDown className="h-3 w-3 text-[#9CA3AF] transition-colors group-hover/account:text-[#0B74DE]" />
+                  <ChevronDown className="h-3.5 w-3.5 text-[#8A99A5] transition-colors group-hover/account:text-[#0B74DE]" strokeWidth={1.7} />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="mt-0 w-[352px] overflow-hidden rounded-[8px] border border-[#E5E7EB] bg-white p-0 shadow-[0_16px_40px_rgba(17,24,39,0.10)]">
-                <div className="border-b border-[#E5E7EB] bg-white px-4 py-4">
-                  <div className="min-w-0">
-                    <h3 className="truncate text-[13px] font-sans font-semibold tracking-tight text-[#111827]">
-                      {accountDisplayName}
-                    </h3>
-                    <p className="mt-1 truncate font-sans text-[11px] text-[#6B7280]">
-                      {accountEmail}
-                    </p>
-                    <div className="mt-4 border-t border-[#E5E7EB] pt-3">
+              <DropdownMenuContent align="end" sideOffset={12} className="w-[360px] overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-0 shadow-[0_16px_40px_rgba(24,32,38,0.10)]">
+                <div className="px-4 pb-3 pt-4">
+                  <h3 className="truncate font-lora text-[19px] font-normal tracking-tight text-[#182026]">{accountDisplayName}</h3>
+                  <p className="mt-1 truncate text-[11px] text-[#66737F]">{accountEmail}</p>
+                  <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#E7EEF2] pt-3">
+                    <div className="min-w-0">
                       <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Active workspace</p>
-                      <p className="mt-1 truncate text-[12px] font-medium tracking-tight text-[#182026]">{tenant?.name || tenant?.slug || activeTenantSlug || 'Workspace'}</p>
+                      <p className="mt-1 truncate text-[12px] font-medium tracking-tight text-[#182026]">{activeWorkspaceName}</p>
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
-                      <div className="min-w-0">
-                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
-                          Role
-                        </div>
-                        <div className="mt-1 truncate text-[12px] font-sans font-medium tracking-tight text-[#111827]">
-                          {accountRoleLabel}
-                        </div>
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
-                          Member since
-                        </div>
-                        <div className="mt-1 truncate text-[12px] font-sans font-medium tracking-tight text-[#111827]">
-                          {memberSinceLabel}
-                        </div>
-                      </div>
+                    <span className="shrink-0 rounded-full border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#4D5B66]">{accountRoleLabel}</span>
+                  </div>
+                </div>
+
+                <div className="border-y border-[#E7EEF2] bg-[#FAFAF7] px-4 py-3">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[#DCE8EE] bg-white text-[#4D5B66]">
+                      {userProfile?.amazon_connected
+                        ? <CircleCheck className="h-4 w-4 text-[#2F6C54]" strokeWidth={1.7} />
+                        : <CircleSlash className="h-4 w-4 text-[#66737F]" strokeWidth={1.7} />}
                     </div>
-                    <div className="mt-4 border-t border-[#E5E7EB] pt-3 font-sans text-[11px] tracking-tight text-[#6B7280]">
-                      {connectedPlatformsCount > 0
-                        ? `${connectedPlatformsCount} source${connectedPlatformsCount === 1 ? '' : 's'} connected`
-                        : 'No sources connected yet'}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-[12px] font-medium tracking-tight text-[#182026]">Amazon Seller Central</p>
+                        <span className={cn(
+                          'shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-medium tracking-tight',
+                          userProfile?.amazon_connected
+                            ? 'border-[#CFE4DB] bg-[#F4FAF7] text-[#2F6C54]'
+                            : 'border-[#DCE8EE] bg-white text-[#66737F]'
+                        )}>{amazonStatusLabel}</span>
+                      </div>
+                      <p className="mt-1 text-[11px] leading-4 text-[#66737F]">
+                        {userProfile?.amazon_connected
+                          ? (userProfile.amazon_display_name || 'Connected for this workspace.')
+                          : userProfile?.amazon_status === 'unknown'
+                            ? 'Margin could not verify the connection state right now.'
+                            : 'Connect Amazon to give Margin live recovery context.'}
+                      </p>
+                      {userProfile?.amazon_connected && amazonMarketplaces.length > 0 && (
+                        <p className="mt-1.5 truncate text-[10px] font-medium tracking-tight text-[#4D5B66]">{amazonMarketplaces.join(' · ')}</p>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => navigate(tenantRoute(activeTenantSlug, amazonActionPath))}
+                        className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:text-[#075EA8]"
+                      >
+                        {userProfile?.amazon_connected ? 'Manage Amazon' : 'Connect Amazon'}
+                        <ArrowRight className="h-3 w-3" strokeWidth={2} />
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="px-4 pt-3">
+                <div className="p-2">
                   <DropdownMenuItem
-                    onSelect={handleContactSupport}
-                    className="flex cursor-pointer items-center gap-3 rounded-[6px] bg-[#F3F5F4] px-3.5 py-3 text-[#4B5563] outline-none transition-colors hover:bg-[#EDEFEF] hover:text-[#111827] focus:bg-[#EDEFEF] focus:text-[#111827]"
+                    onSelect={() => navigate(tenantRoute(activeTenantSlug, '/settings'))}
+                    className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-[#4D5B66] outline-none transition-colors hover:bg-[#F3F7FA] hover:text-[#182026] focus:bg-[#F3F7FA] focus:text-[#182026]"
                   >
-                    <Mail className="h-4 w-4 text-[#9CA3AF]" />
-                    <div className="min-w-0">
-                      <div className="text-[11px] font-sans font-semibold uppercase tracking-tight text-[#111827]">
-                        Contact Us
-                      </div>
-                      <div className="mt-0.5 font-sans text-[10px] tracking-tight text-[#6B7280]">
-                        Send a support query from this workspace.
-                      </div>
-                    </div>
+                    <Settings2 className="h-4 w-4 text-[#66737F]" strokeWidth={1.65} />
+                    <span className="text-[12px] font-medium tracking-tight">Account &amp; Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => navigate(tenantRoute(activeTenantSlug, '/help'))}
+                    className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-[#4D5B66] outline-none transition-colors hover:bg-[#F3F7FA] hover:text-[#182026] focus:bg-[#F3F7FA] focus:text-[#182026]"
+                  >
+                    <HelpCircle className="h-4 w-4 text-[#66737F]" strokeWidth={1.65} />
+                    <span className="text-[12px] font-medium tracking-tight">Help &amp; Support</span>
                   </DropdownMenuItem>
                 </div>
 
-                <div className="px-4 py-4">
-                  <div className="rounded-[6px] bg-[#F3F5F4] px-3.5 py-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
-                        Amazon
-                      </div>
-                      <div className="shrink-0 rounded-full bg-white px-2 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#365B7D]">
-                        {amazonStatusLabel}
-                      </div>
-                    </div>
-                    <div className="mt-3 min-w-0">
-                      <div className="text-[13px] font-sans font-semibold tracking-tight text-[#111827]">
-                        {amazonConnectionHeadline}
-                      </div>
-                      <p className="mt-1.5 font-sans text-[11px] leading-[1.5] text-[#4B5563]">
-                        {userProfile?.amazon_connected
-                          ? (userProfile?.amazon_display_name || 'Margin can keep your Amazon records up to date.')
-                          : 'Connect Amazon to keep your records up to date.'}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                      className="mt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#111827] transition-colors hover:text-[#4B5563]"
-                    >
-                      Open integrations
-                    </button>
-                  </div>
+                <div className="border-t border-[#E7EEF2] bg-white p-2">
+                  <DropdownMenuItem
+                    onSelect={() => setSignOutOpen(true)}
+                    className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-[#4D5B66] outline-none transition-colors hover:bg-[#F7FAFC] hover:text-[#182026] focus:bg-[#F7FAFC] focus:text-[#182026]"
+                  >
+                    <LogOut className="h-4 w-4 text-[#66737F]" strokeWidth={1.65} />
+                    <span className="text-[12px] font-medium tracking-tight">Sign out</span>
+                  </DropdownMenuItem>
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
       </header>
+      <SignOutDialog open={signOutOpen} onOpenChange={setSignOutOpen} />
     </>
   );
 }

@@ -3161,13 +3161,6 @@ export function Dashboard() {
       <Navbar
         sidebarCollapsed={isSidebarCollapsed}
         forceTransparent
-        onContactSupport={(defaults) => {
-          const defaultEmail = defaults?.email?.trim();
-          if (defaultEmail) {
-            setContactEmail((current) => current.trim() || defaultEmail);
-          }
-          setQuickNoticeOpen(true);
-        }}
       />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />

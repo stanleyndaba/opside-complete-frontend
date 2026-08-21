@@ -5,8 +5,9 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { useAuth, useUser } from '@clerk/react';
+import { useAuth, useClerk, useUser } from '@clerk/react';
 import { supabase } from '@/lib/supabaseClient';
+import { api } from '@/lib/api';
 import { SESSION_RECOVERY_EVENT, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
 import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
 
@@ -19,6 +20,7 @@ interface SessionContextType {
     isPaidUser: boolean;
     showSessionTimeout: () => void;
     hideSessionTimeout: () => void;
+    signOut: () => Promise<void>;
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -78,6 +80,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         getToken: getClerkToken,
         userId: clerkUserId,
     } = useAuth();
+    const { signOut: clerkSignOut } = useClerk();
     const { user: clerkUser } = useUser();
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(false);
@@ -104,11 +107,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const clearStoredAuthContext = useCallback(() => {
         if (typeof window === 'undefined') return;
 
-        localStorage.removeItem('session_token');
-        localStorage.removeItem('user_id');
-        localStorage.removeItem('user_email');
-        localStorage.removeItem('active_tenant_id');
-        localStorage.removeItem('active_tenant_slug');
+        const authContextKeys = [
+            'session_token',
+            'user_id',
+            'user_email',
+            'active_tenant_id',
+            'active_tenant_slug'
+        ];
+        authContextKeys.forEach((key) => {
+            localStorage.removeItem(key);
+            sessionStorage.removeItem(key);
+        });
         clearDemoSession();
     }, []);
 
@@ -296,6 +305,40 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         };
     }, [applyDemoSession, clerkUser, clerkUserId, ensureActiveDemoSession, getClerkToken, handleSessionExpiry, isClerkLoaded, isClerkSignedIn]);
 
+    const signOut = useCallback(async () => {
+        if (ensureActiveDemoSession()) {
+            clearDemoSession();
+        } else {
+            if (!isClerkLoaded) {
+                throw new Error('Margin is still verifying this browser session. Please try again in a moment.');
+            }
+
+            try {
+                await clerkSignOut();
+            } catch (error) {
+                throw new Error(error instanceof Error && error.message
+                    ? `Margin could not sign this browser out: ${error.message}`
+                    : 'Margin could not sign this browser out. Please try again.');
+            }
+        }
+
+        setIsSessionValid(false);
+        setAuthToken(null);
+        setUserId(null);
+        setUserEmail(null);
+        setIsPaidUser(false);
+        clearSessionRecoveryPending();
+        clearSessionRecoverySuppression();
+        clearStoredAuthContext();
+
+        // Clerk is the authority for browser authentication. The following calls clear
+        // compatibility residue only and cannot turn a failed Clerk sign-out into success.
+        await Promise.allSettled([
+            supabase.auth.signOut({ scope: 'local' }),
+            api.logout()
+        ]);
+    }, [clearStoredAuthContext, clerkSignOut, ensureActiveDemoSession, isClerkLoaded]);
+
     const showSessionTimeout = useCallback(() => {
         clearSessionRecoverySuppression();
         handleSessionExpiry();
@@ -314,7 +357,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             userEmail,
             isPaidUser,
             showSessionTimeout,
-            hideSessionTimeout
+            hideSessionTimeout,
+            signOut
         }}>
             {children}
         </SessionContext.Provider>
