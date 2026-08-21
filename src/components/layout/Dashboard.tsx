@@ -1224,7 +1224,6 @@ export function Dashboard() {
   const [dashboardAutoFileGateStatus, setDashboardAutoFileGateStatus] = useState<AutoFileGateStatus | null>(null);
   const [dashboardAutoFileLoading, setDashboardAutoFileLoading] = useState<boolean>(true);
   const [dashboardAutoFileSaving, setDashboardAutoFileSaving] = useState<boolean>(false);
-  const [dashboardAutoFileError, setDashboardAutoFileError] = useState<string | null>(null);
   // Evidence stats
   const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
@@ -1248,7 +1247,6 @@ export function Dashboard() {
     if (!options?.silent) {
       setDashboardAutoFileLoading(true);
     }
-    setDashboardAutoFileError(null);
 
     try {
       const response = await api.getAutoFilePreference(activeSlug);
@@ -1258,11 +1256,9 @@ export function Dashboard() {
         return true;
       }
 
-      setDashboardAutoFileError(response.error || 'Auto-File status unavailable');
       return false;
     } catch (error) {
       console.error('Failed to load dashboard Auto-File preference:', error);
-      setDashboardAutoFileError('Auto-File status unavailable');
       return false;
     } finally {
       if (!options?.silent) {
@@ -1282,21 +1278,18 @@ export function Dashboard() {
 
   const handleDashboardAutoFileChange = useCallback(async (enabled: boolean) => {
     if (!activeSlug) {
-      setDashboardAutoFileError('Workspace context required');
       return;
     }
 
     const previousValue = dashboardAutoFileEnabled;
     const previousGateStatus = dashboardAutoFileGateStatus;
     setDashboardAutoFileSaving(true);
-    setDashboardAutoFileError(null);
 
     try {
       const response = await api.saveAutoFilePreference(enabled, activeSlug);
       if (!response.ok || !response.data?.data) {
         setDashboardAutoFileEnabled(previousValue);
         setDashboardAutoFileGateStatus(previousGateStatus);
-        setDashboardAutoFileError(response.error || 'Auto-File could not be saved');
         toast({
           title: 'Auto-File not saved',
           description: response.error || 'Margin could not update this control.',
@@ -1308,10 +1301,7 @@ export function Dashboard() {
       setDashboardAutoFileEnabled(response.data.data.enabled);
       setDashboardAutoFileGateStatus(response.data.data.gateStatus ?? null);
 
-      const refreshed = await loadDashboardAutoFilePreference({ silent: true });
-      if (!refreshed) {
-        setDashboardAutoFileError('Saved, but latest gate status could not be refreshed');
-      }
+      await loadDashboardAutoFilePreference({ silent: true });
 
       toast({
         title: response.data.data.enabled ? 'Auto-File enabled' : 'Auto-File paused',
@@ -1323,7 +1313,6 @@ export function Dashboard() {
       console.error('Failed to save dashboard Auto-File preference:', error);
       setDashboardAutoFileEnabled(previousValue);
       setDashboardAutoFileGateStatus(previousGateStatus);
-      setDashboardAutoFileError('Auto-File could not be saved');
       toast({
         title: 'Auto-File not saved',
         description: 'Margin could not update this control.',
@@ -3157,21 +3146,6 @@ export function Dashboard() {
     recoveredCurrency,
   ]);
   const isOverviewLoading = !dashboardSummary && !launchMonitor;
-  const dashboardAutoFileStatusCopy = dashboardAutoFileLoading
-    ? 'Checking Auto-File control.'
-    : dashboardAutoFileSaving
-      ? 'Saving seller intent.'
-      : dashboardAutoFileError
-        ? dashboardAutoFileError
-        : dashboardAutoFileEnabled
-          ? dashboardAutoFileGateStatus?.message || 'Eligible cases can submit automatically when filing gates are clear.'
-          : 'Cases will wait for your review before filing.';
-  const dashboardAutoFileStatusTone = dashboardAutoFileError
-    ? 'text-[#BE3A4A]'
-    : dashboardAutoFileEnabled && dashboardAutoFileGateStatus?.primaryBlocker
-      ? 'text-[#BE3A4A]'
-      : 'text-[#66737F]';
-
   if (!activeSlug) {
     return (
       <div className="platform-vitality-dashboard relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#FAFAF7] text-[#111827]">
@@ -3264,43 +3238,20 @@ export function Dashboard() {
                         </button>
                       </div>
 
-                      <section className="w-full rounded-[8px] border border-[#DCE8EE] bg-white px-3 py-2.5 shadow-[0_2px_8px_rgba(24,32,38,0.03)] sm:w-[328px]">
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-2">
-                            <span className={cn(
-                              "h-1.5 w-1.5 rounded-full",
-                              dashboardAutoFileError
-                                ? "bg-[#BE3A4A]"
-                                : dashboardAutoFileEnabled
-                                  ? "bg-[#5BC9A8]"
-                                  : "bg-[#8A99A5]"
-                            )} />
-                            <span className="text-[11px] font-sans font-medium text-[#182026]">
-                              Auto-File
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Switch
-                              checked={dashboardAutoFileEnabled}
-                              onCheckedChange={(checked) => {
-                                void handleDashboardAutoFileChange(checked);
-                              }}
-                              disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
-                              aria-label="Dashboard Auto-File seller-controlled filing switch"
-                              className="data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#D1D5DB]"
-                            />
-                            <span className="min-w-9 text-right text-[10px] font-sans font-medium text-[#66737F]">
-                              {dashboardAutoFileSaving ? 'Saving' : dashboardAutoFileEnabled ? 'On' : 'Off'}
-                            </span>
-                          </div>
-                        </div>
-                        <p className={cn(
-                          "mt-1.5 line-clamp-2 text-left text-[10px] font-sans leading-4",
-                          dashboardAutoFileStatusTone
-                        )}>
-                          {dashboardAutoFileStatusCopy}
-                        </p>
-                      </section>
+                      <div className="flex shrink-0 items-center gap-2.5 px-1 py-1">
+                        <Switch
+                          checked={dashboardAutoFileEnabled}
+                          onCheckedChange={(checked) => {
+                            void handleDashboardAutoFileChange(checked);
+                          }}
+                          disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
+                          aria-label="Autofile seller-controlled filing switch"
+                          className="h-5 w-9 border border-[#B8C4CE] data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#8A99A5]"
+                        />
+                        <span className="text-[13px] font-sans font-medium text-[#182026]">
+                          Autofile
+                        </span>
+                      </div>
                     </div>
                     <p className="text-[10px] font-sans text-[#8A99A5]">
                       {discrepancyHeaderLastUpdatedLabel}
