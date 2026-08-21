@@ -35,5 +35,9 @@ requireMatch(navbar, /Connect Amazon/, 'Disconnected Amazon context must provide
 requireMatch(navbar, /<SignOutDialog open=\{signOutOpen\}/, 'Account menu must use the shared secure Sign Out dialog.');
 requireMatch(sidebar, /<SignOutDialog open=\{signOutOpen\}/, 'Sidebar Sign Out must use the same secure dialog.');
 requireMatch(appAccessGate, /Navigate to=\{`\/login\?next=\$\{encodeURIComponent\(next\)\}`\} replace/, 'Protected routes must fail closed to Login with their original next path.');
+requireMatch(appAccessGate, /CLERK_HYDRATION_RECOVERY_DELAY_MS = 8000/, 'Protected-route hydration must have a bounded recovery deadline.');
+requireMatch(appAccessGate, /sessionStorage\.setItem\(CLERK_HYDRATION_RECOVERY_KEY, 'true'\)[\s\S]*window\.location\.reload\(\)/, 'A stalled Clerk hydration may perform only a guarded recovery reload.');
+requireMatch(appAccessGate, /if \(hydrationRecoveryRequired\)[\s\S]*<AppAccessRecovery next=\{next\} \/>/, 'A second unresolved hydration state must render a fail-closed recovery path rather than an indefinite loader.');
+requireMatch(appAccessGate, /Margin could not restore this browser session/, 'The recovery screen must state the bounded session-restoration failure truthfully.');
 
 console.log('Account and Sign Out contract checks passed.');

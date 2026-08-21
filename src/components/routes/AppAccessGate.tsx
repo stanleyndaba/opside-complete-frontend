@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, BadgePercent } from 'lucide-react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 
@@ -11,6 +11,9 @@ type AppAccessGateProps = {
   children: React.ReactNode;
 };
 
+const CLERK_HYDRATION_RECOVERY_KEY = 'margin:clerk-hydration-recovery-attempt';
+const CLERK_HYDRATION_RECOVERY_DELAY_MS = 8000;
+
 function AppAccessLoader() {
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] px-5 text-[#182026]">
@@ -21,6 +24,53 @@ function AppAccessLoader() {
         </span>
       </div>
     </div>
+  );
+}
+
+function AppAccessRecovery({ next }: { next: string }) {
+  const loginPath = `/login?next=${encodeURIComponent(next)}`;
+
+  const retryRestoration = () => {
+    try {
+      sessionStorage.removeItem(CLERK_HYDRATION_RECOVERY_KEY);
+    } catch {
+      // Storage is only a one-reload loop guard; a manual retry remains safe without it.
+    }
+    window.location.reload();
+  };
+
+  return (
+    <main className="min-h-screen bg-[#FAFAF7] px-5 py-6 text-[#182026] sm:px-8 sm:py-8">
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-2xl items-center">
+        <section className="w-full border-y border-[#DCE8EE] py-8 sm:py-10">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[#DCE8EE] bg-white text-[#0B74DE]">
+            <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+          </div>
+          <p className="mt-6 text-[12px] font-medium tracking-tight text-[#66737F]">Session restoration</p>
+          <h1 className="mt-2 font-lora text-[32px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[40px]">
+            Margin could not restore this browser session.
+          </h1>
+          <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#5F6D77]">
+            Your workspace has not been opened. Reload to try restoring the existing session again, or sign in to continue securely.
+          </p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={retryRestoration}
+              className="inline-flex h-10 items-center justify-center rounded-md bg-[#0B74DE] px-4 text-[13px] font-medium tracking-tight text-white transition-colors hover:bg-[#075EA8]"
+            >
+              Reload Margin
+            </button>
+            <Link
+              to={loginPath}
+              className="inline-flex h-10 items-center justify-center rounded-md border border-[#DCE8EE] bg-white px-4 text-[13px] font-medium tracking-tight text-[#182026] transition-colors hover:bg-[#F7FAFC]"
+            >
+              Sign in
+            </Link>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
 
@@ -119,6 +169,7 @@ export function AppAccessGate({ children }: AppAccessGateProps) {
   const { authToken, isAuthReady, isSessionValid, userEmail } = useSession();
   const hasDemoSession = isDemoSessionActive();
   const hasAuthenticatedSession = isSessionValid && Boolean(authToken) && authToken !== DEMO_SESSION_TOKEN;
+  const [hydrationRecoveryRequired, setHydrationRecoveryRequired] = useState(false);
   const isDemoWorkspaceRoute = isDemoWorkspacePath(location.pathname);
   const canOpenInternalDemoWorkspace = hasAuthenticatedSession && isInternalDemoAccessEmail(userEmail);
 
@@ -128,8 +179,42 @@ export function AppAccessGate({ children }: AppAccessGateProps) {
     }
   }, [canOpenInternalDemoWorkspace, hasDemoSession, isDemoWorkspaceRoute, userEmail]);
 
+  useEffect(() => {
+    if (isAuthReady || typeof window === 'undefined') {
+      if (isAuthReady) {
+        try {
+          sessionStorage.removeItem(CLERK_HYDRATION_RECOVERY_KEY);
+        } catch {
+          // The gate remains fail-closed even when storage is unavailable.
+        }
+      }
+      setHydrationRecoveryRequired(false);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      try {
+        const alreadyRetried = sessionStorage.getItem(CLERK_HYDRATION_RECOVERY_KEY) === 'true';
+        if (!alreadyRetried) {
+          sessionStorage.setItem(CLERK_HYDRATION_RECOVERY_KEY, 'true');
+          window.location.reload();
+          return;
+        }
+      } catch {
+        // A storage failure must never admit a protected route. Show recovery instead.
+      }
+      setHydrationRecoveryRequired(true);
+    }, CLERK_HYDRATION_RECOVERY_DELAY_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isAuthReady]);
+
   // SessionContext remains unresolved until Clerk has conclusively restored or rejected browser authentication.
   if (!isAuthReady) {
+    if (hydrationRecoveryRequired) {
+      const next = `${location.pathname}${location.search}${location.hash}`;
+      return <AppAccessRecovery next={next} />;
+    }
     return <AppAccessLoader />;
   }
 
