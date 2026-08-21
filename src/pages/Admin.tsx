@@ -21,6 +21,7 @@ import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { ArrowUpRight, Loader2, Mail, Megaphone, Send, ShieldCheck, Users } from 'lucide-react';
 
 type PublishMode = 'draft' | 'publish';
+type AdminAccessState = 'checking' | 'allowed' | 'denied';
 
 const INITIAL_FORM = {
   title: '',
@@ -104,7 +105,8 @@ function apiFailureMessage(response: { error?: string; data?: unknown }, fallbac
 }
 
 export default function Admin() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminAccess, setAdminAccess] = useState<AdminAccessState>('checking');
+  const isAdmin = adminAccess === 'allowed';
   const [form, setForm] = useState(INITIAL_FORM);
   const [broadcastForm, setBroadcastForm] = useState(INITIAL_BROADCAST_FORM);
   const [savedUpdate, setSavedUpdate] = useState<ProductUpdateRecord | null>(null);
@@ -132,16 +134,30 @@ export default function Admin() {
   const whatsNewHref = tenantRoute(activeSlug, '/whats-new');
 
   useEffect(() => {
-    try {
-      setIsAdmin(localStorage.getItem('clario.admin') === 'true');
-    } catch {
-      setIsAdmin(false);
-    }
+    let isMounted = true;
+
+    const loadAdminAccess = async () => {
+      const response = await api.checkProductUpdateAdminAccess();
+      if (!isMounted) return;
+
+      setAdminAccess(
+        response.ok && response.data?.success && response.data.data?.allowed
+          ? 'allowed'
+          : 'denied'
+      );
+    };
+
+    void loadAdminAccess();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
-    void loadLatestUpdates();
-  }, [activeSlug]);
+    if (isAdmin) {
+      void loadLatestUpdates();
+    }
+  }, [activeSlug, isAdmin]);
 
   const resolvedSlug = useMemo(() => {
     return cleanSlug(form.slug || form.title);
@@ -180,15 +196,6 @@ export default function Admin() {
     const count = splitEmails(broadcastForm.audience_emails).length;
     return `${count} selected test email${count === 1 ? '' : 's'}`;
   }, [broadcastForm.audience_type, broadcastForm.audience_emails]);
-
-  const toggleAdmin = (value: boolean) => {
-    setIsAdmin(value);
-    try {
-      localStorage.setItem('clario.admin', value ? 'true' : 'false');
-    } catch {
-      // Local admin mode is a UI convenience; server-side admin checks still apply.
-    }
-  };
 
   const loadLatestUpdates = async () => {
     setLoadingLatest(true);
@@ -344,6 +351,38 @@ export default function Admin() {
     }
   };
 
+  if (adminAccess === 'checking') {
+    return (
+      <PageLayout title="Admin Control" midnight>
+        <div className="min-h-[50vh] bg-[#050505] -m-4 lg:-m-6 flex items-center justify-center px-6 text-white">
+          <div className="flex items-center gap-3 text-sm text-white/60">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Verifying admin access…
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <PageLayout title="Admin Control" midnight>
+        <div className="min-h-[50vh] bg-[#050505] -m-4 lg:-m-6 flex items-center justify-center px-6 text-white">
+          <div className="max-w-md border border-white/10 bg-white/[0.03] p-7 text-center">
+            <ShieldCheck className="mx-auto h-5 w-5 text-white/70" />
+            <h1 className="mt-4 text-xl font-semibold tracking-tight text-white">Admin access required</h1>
+            <p className="mt-2 text-sm leading-6 text-white/55">
+              This publication console is available only to active Margin platform administrators.
+            </p>
+            <Button asChild variant="outline" className="mt-5 border-white/15 bg-transparent text-white hover:bg-white/10">
+              <Link to={whatsNewHref}>Open What’s New</Link>
+            </Button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout title="Admin Control" midnight>
       <div className="min-h-screen bg-[#050505] relative overflow-hidden -m-4 lg:-m-6 text-white">
@@ -365,12 +404,9 @@ export default function Admin() {
                   A small operator console for product rollouts and user/integration control. Drafts do not notify users; publishing is the broadcast trigger.
                 </p>
               </div>
-              <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
-                <div>
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Admin mode</div>
-                  <div className="text-sm font-sans font-bold text-white">{isAdmin ? 'Enabled' : 'Locked'}</div>
-                </div>
-                <Switch checked={isAdmin} onCheckedChange={toggleAdmin} />
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Publication access</div>
+                <div className="mt-1 text-sm font-sans font-bold text-white">Server verified</div>
               </div>
             </div>
           </header>
@@ -395,12 +431,6 @@ export default function Admin() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-5 p-6">
-                {!isAdmin && (
-                  <div className="rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] p-4 text-xs leading-5 text-amber-100/80">
-                    Enable admin mode to use this console. The backend still requires a real admin account or internal API permission before publishing.
-                  </div>
-                )}
-
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label className="text-[10px] uppercase tracking-tight text-white/40">Title</Label>

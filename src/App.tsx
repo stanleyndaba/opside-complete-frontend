@@ -415,7 +415,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/data-upload" element={appRoute(<FoundingActivationGate><DataUpload /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/pricing/standard-agreement" element={appRoute(<StandardAgreement />)} />
                         <Route path="/app/:tenantSlug/pricing-adjust" element={appRoute(<PricingAdjust />)} />
-                        <Route path="/app/:tenantSlug/admin" element={appRoute(<Admin />)} />
+                        <Route path="/app/:tenantSlug/admin" element={appRoute(<AdminOnly><Admin /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/users-integrations" element={appRoute(<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/amazon-auth-test" element={appRoute(<AdminOnly><AmazonAuthTest /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/test/agent1" element={appRoute(<Agent1Test />)} />

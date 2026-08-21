@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, Clock, ExternalLink, Send } from 'lucide-react';
+import { ArrowRight, Clock, ExternalLink, RefreshCw, Send } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { api, type ProductUpdateRecord } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
@@ -29,17 +29,21 @@ function formatMonthGroup(value?: string | null): string {
 
 function resolveCtaHref(href: string | null | undefined, tenantSlug: string | null): string | null {
   const normalized = String(href || '').trim();
-  if (!normalized) return null;
+  if (!normalized || normalized.startsWith('//') || /[\u0000-\u001F\u007F]/.test(normalized)) return null;
   if (/^https?:\/\//i.test(normalized) || normalized.startsWith('mailto:')) {
     return normalized;
   }
-  return tenantRoute(tenantSlug, normalized);
+  if (normalized.startsWith('/')) {
+    return tenantRoute(tenantSlug, normalized);
+  }
+  return null;
 }
 
 export default function WhatsNew() {
   const [updates, setUpdates] = useState<ProductUpdateRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const { tenant } = useTenant();
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const location = useLocation();
@@ -81,7 +85,7 @@ export default function WhatsNew() {
     return () => {
       mounted = false;
     };
-  }, [activeSlug]);
+  }, [activeSlug, loadAttempt]);
 
   const groups = useMemo(() => {
     return updates.reduce<Record<string, ProductUpdateRecord[]>>((acc, update) => {
@@ -107,7 +111,19 @@ export default function WhatsNew() {
 
         <main className="mx-auto max-w-[980px] px-4 py-7 sm:px-6 lg:px-8">
           {loading ? <div className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 text-[13px] text-[#66737F]">Loading published product updates.</div> : null}
-          {!loading && error ? <div className="rounded-[10px] border border-rose-200 bg-rose-50 px-5 py-4 text-[13px] text-rose-700">{error}</div> : null}
+          {!loading && error ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-[10px] border border-rose-200 bg-rose-50 px-5 py-4 text-[13px] text-rose-700">
+              <span>{error}</span>
+              <button
+                type="button"
+                onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-rose-200 bg-white px-2.5 font-medium text-rose-700 transition-colors hover:bg-rose-100"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Try again
+              </button>
+            </div>
+          ) : null}
           {!loading && !error && orderedMonths.length === 0 ? (
             <div className="rounded-[10px] border border-[#DCE8EE] bg-white p-5"><h2 className="text-[16px] font-semibold tracking-tight text-[#182026]">No published updates yet</h2><p className="mt-1.5 text-[13px] leading-5 text-[#66737F]">New Margin release records will appear here as they are published.</p></div>
           ) : null}
@@ -124,7 +140,7 @@ export default function WhatsNew() {
                     <p className="mt-2 text-[14px] leading-6 text-[#66737F]">{update.summary}</p>
                     {update.highlights.length > 0 ? <ul className="mt-4 divide-y divide-[#E7EEF2] border-t border-[#E7EEF2]">{update.highlights.map((item, itemIndex) => <li key={itemIndex} className="py-2.5 text-[13px] leading-5 text-[#4D5B66]">{item}</li>)}</ul> : null}
                     {update.body ? <p className="mt-4 text-[13px] leading-6 text-[#66737F]">{update.body}</p> : null}
-                    {update.cta_text && ctaHref ? <a href={ctaHref} className="mt-4 inline-flex h-9 items-center gap-2 rounded-md border border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:bg-[#F7FAFC]">{update.cta_text}{/^https?:\/\//i.test(ctaHref) ? <ExternalLink className="h-3.5 w-3.5" /> : <ArrowRight className="h-3.5 w-3.5" />}</a> : null}
+                    {update.cta_text && ctaHref ? <a href={ctaHref} target={/^https?:\/\//i.test(ctaHref) ? '_blank' : undefined} rel={/^https?:\/\//i.test(ctaHref) ? 'noopener noreferrer' : undefined} className="mt-4 inline-flex h-9 items-center gap-2 rounded-md border border-[#DCE8EE] bg-white px-3 text-[13px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:bg-[#F7FAFC]">{update.cta_text}{/^https?:\/\//i.test(ctaHref) ? <ExternalLink className="h-3.5 w-3.5" /> : <ArrowRight className="h-3.5 w-3.5" />}</a> : null}
                   </article>;
                 })}
               </div>

@@ -944,6 +944,8 @@ export const api = {
     const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
     return requestJson<{ success: boolean; data: ProductUpdateRecord[] }>(`/api/product-updates${query}`);
   },
+  checkProductUpdateAdminAccess: () =>
+    requestJson<{ success: boolean; data: { allowed: boolean } }>('/api/product-updates/admin-access'),
   createProductUpdate: (body: ProductUpdateInput) =>
     requestJson<{ success: boolean; data: ProductUpdateRecord }>('/api/product-updates', {
       method: 'POST',
