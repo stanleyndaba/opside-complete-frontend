@@ -38,7 +38,6 @@ import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { SyncLogModal } from '@/components/modals/SyncLogModal';
 import { format, formatDistanceToNow, formatDistanceToNowStrict } from 'date-fns';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { useAiExplanation } from '@/hooks/useAiExplanation';
@@ -161,12 +160,6 @@ const toTitleCase = (value: string) =>
 const formatLaunchEventTypeLabel = (value: LaunchMonitorEvent['event_type']) =>
   toTitleCase(value.replace(/_/g, ' '));
 
-const formatLaunchSourceLabel = (value: LaunchMonitorEvent['source_table']) =>
-  toTitleCase(value.replace(/_/g, ' '));
-
-const formatLaunchStatusLabel = (value?: string | null) =>
-  value ? toTitleCase(value.replace(/_/g, ' ')) : null;
-
 const isTechnicalQueueDetail = (value?: string | null) => {
   const normalized = String(value || '').toLowerCase();
   return (
@@ -175,19 +168,6 @@ const isTechnicalQueueDetail = (value?: string | null) => {
     normalized.includes('upstash.com/docs/redis') ||
     normalized.includes('dispatch queue cannot safely accept more work')
   );
-};
-
-const formatOperatorFeedDetail = (value?: string | null) => {
-  const raw = String(value || '').trim();
-  if (isTechnicalQueueDetail(raw)) {
-    return 'Automatic filing is paused because Margin filing capacity is temporarily unavailable. This case is safely held and will retry when filing capacity is available.';
-  }
-
-  return raw
-    .replace(/\s*\(redis_quota_exceeded:[^)]+\)/gi, '')
-    .replace(/https?:\/\/\S+/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim() || 'Operational status updated.';
 };
 
 const normalizeIssueTypeKey = (value?: string | null) =>
@@ -1007,42 +987,6 @@ const getRequiredDocumentationItems = (policy: any) => {
   return getRequiredEvidenceItems(policy).map((label) => ({ label, detail: '' }));
 };
 
-const formatOperatorFeedSummary = (event: LaunchMonitorEvent) => {
-  const type = String(event.event_type || '').toLowerCase();
-  const title = String(event.title || '').trim();
-  const caseRef = event.amazon_case_id
-    ? event.amazon_case_id
-    : event.dispute_case_id
-      ? event.dispute_case_id
-      : null;
-
-  if (type.includes('blocked') || type.includes('hold')) {
-    return caseRef ? `Case ${caseRef} placed under safety review.` : 'Case placed under safety review.';
-  }
-
-  if (type.includes('unmatched') || type.includes('email')) {
-    return caseRef ? `Unmatched email detected for ${caseRef}.` : 'Unmatched Amazon email detected.';
-  }
-
-  if (type.includes('filed')) {
-    return caseRef ? `Case ${caseRef} filed into Amazon review.` : 'Case filed into Amazon review.';
-  }
-
-  if (type.includes('thread')) {
-    return caseRef ? `Amazon thread changed for ${caseRef}.` : 'Amazon thread change recorded.';
-  }
-
-  if (type.includes('notification')) {
-    return caseRef ? `Notification issue recorded for ${caseRef}.` : 'Notification delivery issue recorded.';
-  }
-
-  if (title) {
-    return title.endsWith('.') ? title : `${title}.`;
-  }
-
-  return caseRef ? `Operational update recorded for ${caseRef}.` : 'Operational update recorded.';
-};
-
 type DashboardTab = 'overview' | 'discrepancies' | 'disputes' | 'evidence';
 
 const parseDashboardTab = (rawTab: string | null): DashboardTab | null => {
@@ -1074,7 +1018,6 @@ export function Dashboard() {
     [explicitTab, uploadSyncId]
   );
   const [activeTab, setActiveTab] = useState<DashboardTab>(resolvedDashboardTab);
-  const [expandedOperatorEventId, setExpandedOperatorEventId] = useState<string | null>(null);
   const [pipelineWindow, setPipelineWindow] = useState('90d');
   const isSyncScopedDetections = Boolean(uploadSyncId);
 
@@ -3510,128 +3453,6 @@ export function Dashboard() {
                             </div>
                           </div>
                         ))}
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="relative">
-                        <div className="rounded-[2px] border border-[#D8E3E8] bg-white p-5 shadow-none">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
-                                Compact intelligence feed
-                              </div>
-                              <p className="mt-2 max-w-2xl text-[12px] font-sans leading-6 text-[#6B7280]">
-                                Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
-                              </p>
-                            </div>
-                            <div className="px-3 py-1.5 text-right">
-                              <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
-                                Reading mode
-                              </div>
-                              <div className="mt-0.5 text-[10px] font-sans font-semibold leading-5 text-[#111827]">
-                                Most recent first
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-5">
-                          {launchMonitor?.recent_events === null ? (
-                            <div className="rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
-                              Not Available
-                            </div>
-                          ) : (launchMonitor?.recent_events || []).length === 0 ? (
-                            <div className="rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-4 py-6 text-[12px] font-sans text-[#6B7280]">
-                              No recent operational events recorded for this tenant.
-                            </div>
-                          ) : (
-                            <ScrollArea className="h-[560px] w-full">
-                              <div className="overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white">
-                                {launchMonitor?.recent_events?.map((event) => {
-                                  const eventTimestamp = new Date(event.timestamp);
-                                  const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
-                                    ? 'Time unavailable'
-                                    : formatDistanceToNow(eventTimestamp, { addSuffix: true });
-                                  const formattedStatus = formatLaunchStatusLabel(event.status);
-                                  const detailText = formatOperatorFeedDetail(event.detail);
-                                  const summaryText = formatOperatorFeedSummary(event);
-                                  const isExpanded = expandedOperatorEventId === event.id;
-                                  const metaItems = [
-                                    event.amazon_case_id ? `Amazon case ${event.amazon_case_id}` : null,
-                                    formattedStatus ? `Current state ${formattedStatus}` : null,
-                                    event.dispute_case_id ? 'Linked to dispute case' : 'Operator log only',
-                                    formatLaunchSourceLabel(event.source_table)
-                                  ].filter(Boolean) as string[];
-
-                                  return (
-                                    <div
-                                      key={event.id}
-                                      className="border-b border-[#E5E7EB] last:border-b-0"
-                                    >
-                                      <div
-                                        role="button"
-                                        tabIndex={0}
-                                        className="group/feed grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-2.5 text-left transition-colors hover:bg-[#F8FAFC]"
-                                        onClick={() => setExpandedOperatorEventId(current => current === event.id ? null : event.id)}
-                                        onKeyDown={(keyEvent) => {
-                                          if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
-                                            keyEvent.preventDefault();
-                                            setExpandedOperatorEventId(current => current === event.id ? null : event.id);
-                                          }
-                                        }}
-                                      >
-                                        <div className="min-w-0 truncate text-[13px] font-sans font-normal leading-5 text-[#1F2937]">
-                                          {summaryText}
-                                        </div>
-
-                                        <div className="flex shrink-0 items-center gap-3">
-                                          <span className="text-[11px] font-sans text-[#6B7280]">
-                                            {eventTimeLabel}
-                                          </span>
-                                          {event.dispute_case_id ? (
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              className="h-7 rounded-[2px] border border-[#D8E3E8] bg-white px-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#111827] transition-colors hover:bg-[#F8FAFB]"
-                                              onClick={(clickEvent) => {
-                                                clickEvent.stopPropagation();
-                                                navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`), { state: { claim: event } });
-                                              }}
-                                            >
-                                              Open Case
-                                            </Button>
-                                          ) : null}
-                                          <span className="w-3 text-center text-[12px] font-sans text-[#9CA3AF] opacity-0 transition-opacity group-hover/feed:opacity-100">
-                                            {isExpanded ? '−' : '>'}
-                                          </span>
-                                        </div>
-                                      </div>
-
-                                      <div className={cn(
-                                        "grid transition-all duration-200 ease-out",
-                                        isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                                      )}>
-                                        <div className="overflow-hidden">
-                                          <div className="border-t border-[#E5E7EB] bg-[#F8FAFC] px-4 py-3">
-                                            <p className="text-[12px] font-sans leading-5 text-[#4B5563]">
-                                              {detailText}
-                                            </p>
-                                            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-[#6B7280]">
-                                              {metaItems.map((item) => (
-                                                <span key={item}>{item}</span>
-                                              ))}
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </ScrollArea>
-                          )}
-                          </div>
-                        </div>
                       </div>
                     </div>
 
