@@ -114,11 +114,11 @@ const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'und
 const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
 const DEMO_PIPELINE_ROW_COUNT = 11;
-const PIPELINE_EXPLAINER_CLASS = 'mt-1.5 max-w-3xl text-sm font-normal leading-5 text-[#546575]';
-const PIPELINE_META_CLASS = 'mt-2 text-[11px] font-medium tracking-tight text-[#7B8A97]';
-const PIPELINE_PROGRESS_LABEL_CLASS = 'mt-1 text-[13px] font-semibold tracking-tight text-[#111827]';
-const PIPELINE_PROGRESS_VALUE_CLASS = 'text-right text-[11px] font-semibold tabular-nums tracking-tight text-[#6B7C88]';
-const PIPELINE_PROGRESS_TRACK_CLASS = 'mt-3 h-1 overflow-hidden rounded-none bg-[#E5E7EB]';
+const PIPELINE_EXPLAINER_CLASS = 'mt-1.5 max-w-3xl text-[13px] font-normal leading-5 text-[#4D5B66]';
+const PIPELINE_META_CLASS = 'mt-2 text-[11px] font-medium tracking-tight text-[#66737F]';
+const PIPELINE_PROGRESS_LABEL_CLASS = 'mt-1 font-lora text-[16px] font-normal tracking-tight text-[#182026]';
+const PIPELINE_PROGRESS_VALUE_CLASS = 'text-right text-[11px] font-medium tabular-nums tracking-tight text-[#66737F]';
+const PIPELINE_PROGRESS_TRACK_CLASS = 'mt-3 h-1.5 overflow-hidden rounded-full bg-[#E7EEF2]';
 
 type ActiveFilingPreview = {
   currentAction: string;
@@ -2579,9 +2579,9 @@ function toneClasses(tone: RowTone) {
       };
     case 'inFlight':
       return {
-        card: 'border-[#D8E3E8] bg-white',
-        badge: 'border-[#E5D8B5] bg-[#FFF8E8] text-[#8A5A00]',
-        chip: 'border-[#E5D8B5] bg-[#FFF8E8] text-[#8A5A00]',
+        card: 'border-[#C9DCF1] bg-white',
+        badge: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
+        chip: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
       };
     case 'submitted':
       return {
@@ -2612,7 +2612,7 @@ function toneClasses(tone: RowTone) {
 
 function LoadingState({ label }: { label: string }) {
   return (
-    <div className="rounded-[2px] border border-[#D8E3E8] bg-white p-4">
+    <div className="rounded-[8px] border border-[#D8E3E8] bg-white p-4">
       <div className="flex items-center gap-3 text-[12px] font-medium text-[#6B7C88]">
         <RefreshCw className="h-4 w-4 animate-spin text-[#8FA0AD]" />
         <span>{label}</span>
@@ -2627,7 +2627,7 @@ function LoadingState({ label }: { label: string }) {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="rounded-[2px] border border-dashed border-[#D8E3E8] bg-white px-4 py-5 text-sm leading-6 text-[#6B7C88]">
+    <div className="rounded-[8px] border border-dashed border-[#D8E3E8] bg-white px-4 py-5 text-sm leading-6 text-[#6B7C88]">
       {message}
     </div>
   );
@@ -2635,7 +2635,7 @@ function EmptyState({ message }: { message: string }) {
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="flex items-start gap-3 rounded-[2px] border border-[#F3C6C6] bg-[#FFF3F3] px-4 py-4 text-sm leading-6 text-[#8A2F2F]">
+    <div className="flex items-start gap-3 rounded-[8px] border border-[#F3C6C6] bg-[#FFF3F3] px-4 py-4 text-sm leading-6 text-[#8A2F2F]">
       <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#A23A3A]" />
       <div>{message}</div>
     </div>
@@ -2658,17 +2658,15 @@ function PipelineSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-3 px-5 py-4">
+    <section className="space-y-4 px-5 py-5 sm:px-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-            <h2 className="text-[15px] font-sans font-semibold tracking-tight text-[#111827]">{title}</h2>
-            <div className="text-[13px] font-sans font-semibold tracking-tight text-[#4B5563]">{amount}</div>
+        <div className="min-w-0 space-y-1.5">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2 className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">{title}</h2>
+            <div className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{amount}</div>
           </div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-sans text-[#6B7C88]">
-            <span>{detail}</span>
-            <span className="text-[#8FA0AD]">{countLabel}</span>
-          </div>
+          <p className="max-w-3xl text-[13px] leading-5 text-[#4D5B66]">{detail}</p>
+          <p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{countLabel}</p>
         </div>
         {action}
       </div>
@@ -2728,12 +2726,12 @@ function DisputeCard({
 }) {
   const classes = toneClasses(tone);
   return (
-    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
-      <CardContent className="grid gap-3 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-4">
+    <Card className={cn('rounded-[10px] border shadow-[0_2px_8px_rgba(24,32,38,0.03)]', classes.card)}>
+      <CardContent className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(260px,0.78fr)_auto] lg:items-start lg:p-5">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{disputeTypeLabel(row)}</span>
-            <span className="text-[11px] font-semibold uppercase tracking-tight text-[#8FA0AD]">Ref {disputeReference(row)}</span>
+            <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-tight', classes.badge)}>{disputeTypeLabel(row)}</span>
+            <span className="text-[11px] font-semibold tracking-tight text-[#8FA0AD]">Ref {disputeReference(row)}</span>
           </div>
           <h3 className="mt-2 text-[14px] font-medium tracking-tight text-[#111827]">{disputeTitle(row)}</h3>
           <p className={PIPELINE_EXPLAINER_CLASS}>{detail}</p>
@@ -2768,16 +2766,16 @@ function ReadyFilingCard({
   const confidence = Math.max(1, Math.min(99, preview.confidence));
 
   return (
-    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[10px] border shadow-[0_2px_8px_rgba(24,32,38,0.03)]', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-tight', classes.badge)}>
                 Seller decision
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-[#8FA0AD]">Ref {disputeReference(row)}</span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-[#047857]">{preview.priority}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-[#8FA0AD]">Ref {disputeReference(row)}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-[#047857]">{preview.priority}</span>
             </div>
 
             <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -2794,7 +2792,7 @@ function ReadyFilingCard({
               {preview.evidenceDocs.slice(0, 4).map((doc) => (
                 <span
                   key={doc}
-                  className="inline-flex max-w-full rounded-[2px] border border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#546575]"
+                  className="inline-flex max-w-full rounded-[8px] border border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#546575]"
                 >
                   <span className="truncate">{doc}</span>
                 </span>
@@ -2805,8 +2803,8 @@ function ReadyFilingCard({
           <div className="min-w-0 lg:border-l lg:border-[#D8E3E8] lg:pl-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-tight text-[#7B8A97]">Evidence confidence</div>
-                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{confidence}% ready</div>
+                <div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Proof posture</div>
+                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{confidence}% source-ready</div>
               </div>
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {preview.daysLeft} days left
@@ -2814,7 +2812,7 @@ function ReadyFilingCard({
             </div>
 
             <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-none bg-[#111827]" style={{ width: `${confidence}%` }} />
+              <div className="h-full rounded-full bg-[#0B74DE]" style={{ width: `${confidence}%` }} />
             </div>
 
             <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#546575]">
@@ -2843,16 +2841,16 @@ function ReadyFilingCard({
           </div>
 
           <div className="flex flex-col gap-3 lg:items-end">
-            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold tracking-tight', classes.chip)}>
               <FileCheck2 className="h-3.5 w-3.5" />
               Seller controlled
             </span>
 
             <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
-              <Button asChild size="sm" className="h-9 w-full rounded-[2px] border border-[#111827] bg-[#111827] px-4 font-sans text-[10px] font-semibold uppercase tracking-tight text-white hover:bg-[#020617] hover:text-white">
+              <Button asChild size="sm" className="h-9 w-full rounded-[8px] border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
                 <Link to={decisionHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
               </Button>
-              <Button asChild size="sm" variant="outline" className="h-9 w-full rounded-[2px] border-[#D8E3E8] bg-white text-[10px] font-semibold uppercase tracking-tight text-[#111827] hover:bg-[#F3F6F8] hover:text-[#111827]">
+              <Button asChild size="sm" variant="outline" className="h-9 w-full rounded-[8px] border-[#D8E3E8] bg-white text-[10px] font-semibold tracking-tight text-[#111827] hover:bg-[#F3F6F8] hover:text-[#111827]">
                 <Link to={decisionHref}>Review Packet<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
               </Button>
             </div>
@@ -2888,21 +2886,21 @@ function ActiveFilingCard({
   const progress = Math.max(5, Math.min(98, preview.progress));
 
   return (
-    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[10px] border shadow-[0_2px_8px_rgba(24,32,38,0.03)]', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-tight', classes.badge)}>
                 Live filing
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-amber-200/70">{preview.stageLabel}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-[#8A99A5]">Ref {disputeReference(row)}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-[#0B74DE]">{preview.stageLabel}</span>
             </div>
 
             <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
-              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+              <h3 className="text-[14px] font-medium tracking-tight text-[#182026]">{disputeTitle(row)}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(disputeAmount(row), row.currency)}</span>
             </div>
 
             <p className={PIPELINE_EXPLAINER_CLASS}>{preview.currentAction}</p>
@@ -2914,7 +2912,7 @@ function ActiveFilingCard({
               {preview.evidenceDocs.slice(0, 4).map((doc) => (
                 <span
                   key={doc}
-                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                  className="inline-flex max-w-full rounded-full border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#66737F]"
                 >
                   <span className="truncate">{doc}</span>
                 </span>
@@ -2922,10 +2920,10 @@ function ActiveFilingCard({
             </div>
           </div>
 
-          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+          <div className="min-w-0 lg:border-l lg:border-[#DCE8EE] lg:pl-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Live stage</div>
+                <div className="text-[10px] font-semibold tracking-tight text-[#8A99A5]">Live stage</div>
                 <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.stageLabel}</div>
               </div>
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
@@ -2934,28 +2932,28 @@ function ActiveFilingCard({
             </div>
 
             <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-amber-300 shadow-[0_0_16px_rgba(252,211,77,0.35)]" style={{ width: `${progress}%` }} />
+              <div className="h-full rounded-full bg-[#0B74DE]" style={{ width: `${progress}%` }} />
             </div>
 
-            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Amazon route</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.amazonRoute}</span>
+                <span className="text-[#8A99A5]">Amazon route</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.amazonRoute}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Evidence packet</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.evidencePacket}</span>
+                <span className="text-[#8A99A5]">Evidence packet</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.evidencePacket}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Policy check</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.policyWindow}</span>
+                <span className="text-[#8A99A5]">Policy check</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.policyWindow}</span>
               </div>
             </div>
 
             <div className="mt-3 space-y-1.5">
               {preview.activity.slice(0, 3).map((event, index, visibleEvents) => (
-                <div key={`${event}-${index}`} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
-                  <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', index === visibleEvents.length - 1 ? 'bg-amber-300' : 'bg-white/18')} />
+                <div key={`${event}-${index}`} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#66737F]">
+                  <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', index === visibleEvents.length - 1 ? 'bg-[#0B74DE]' : 'bg-[#DCE8EE]')} />
                   <span className="truncate">{event}</span>
                 </div>
               ))}
@@ -2963,7 +2961,7 @@ function ActiveFilingCard({
           </div>
 
           <div className="flex flex-col gap-3 lg:items-end">
-            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold tracking-tight', classes.chip)}>
               <Clock3 className="h-3.5 w-3.5" />
               Submitting live
             </span>
@@ -2978,8 +2976,8 @@ function ActiveFilingCard({
                 { label: 'Last movement', value: timeLabel || null },
               ].filter((item) => item.value).map((item) => (
                 <div key={item.label} className="flex items-start justify-between gap-3">
-                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
-                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                  <span className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -3010,21 +3008,21 @@ function FiledFilingCard({
   const submittedLabel = proof?.submitted_at ? formatTimestamp(proof.submitted_at) : null;
 
   return (
-    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[10px] border shadow-[0_2px_8px_rgba(24,32,38,0.03)]', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-tight', classes.badge)}>
                 Filed with Amazon
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-blue-200/70">Amazon case {amazonCase}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-[#8A99A5]">Ref {disputeReference(row)}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-blue-200/70">Amazon case {amazonCase}</span>
             </div>
 
             <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
-              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</span>
+              <h3 className="text-[14px] font-medium tracking-tight text-[#182026]">{disputeTitle(row)}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(disputeAmount(row), row.currency)}</span>
             </div>
 
             <p className={PIPELINE_EXPLAINER_CLASS}>{preview.submissionSummary}</p>
@@ -3036,7 +3034,7 @@ function FiledFilingCard({
               {preview.receiptDocs.slice(0, 3).map((doc) => (
                 <span
                   key={doc}
-                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                  className="inline-flex max-w-full rounded-full border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#66737F]"
                 >
                   <span className="truncate">{doc}</span>
                 </span>
@@ -3044,10 +3042,10 @@ function FiledFilingCard({
             </div>
           </div>
 
-          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+          <div className="min-w-0 lg:border-l lg:border-[#DCE8EE] lg:pl-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Amazon case tracker</div>
+                <div className="text-[10px] font-semibold tracking-tight text-[#8A99A5]">Amazon case tracker</div>
                 <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.trackerStage}</div>
               </div>
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
@@ -3056,31 +3054,31 @@ function FiledFilingCard({
             </div>
 
             <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-blue-300 shadow-[0_0_16px_rgba(147,197,253,0.35)]" style={{ width: `${progress}%` }} />
+              <div className="h-full rounded-full bg-[#66A9E8]" style={{ width: `${progress}%` }} />
             </div>
 
-            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Amazon status</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.amazonStatus}</span>
+                <span className="text-[#8A99A5]">Amazon status</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.amazonStatus}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Proof packet</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.proofPacket}</span>
+                <span className="text-[#8A99A5]">Proof packet</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.proofPacket}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Proof quality</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.confidence}</span>
+                <span className="text-[#8A99A5]">Proof quality</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.confidence}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Response window</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.responseWindow}</span>
+                <span className="text-[#8A99A5]">Response window</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.responseWindow}</span>
               </div>
             </div>
 
             <div className="mt-3 space-y-1.5">
               {preview.checks.slice(0, 3).map((check) => (
-                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#66737F]">
                   <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
                   <span className="truncate">{check}</span>
                 </div>
@@ -3089,16 +3087,16 @@ function FiledFilingCard({
           </div>
 
           <div className="flex flex-col gap-3 lg:items-end">
-            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold tracking-tight', classes.chip)}>
               <FileCheck2 className="h-3.5 w-3.5" />
               Receipt locked
             </span>
 
             <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
-              <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+              <Button asChild size="sm" className="h-10 w-full rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
                 <Link to={detailHref}>View Case<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
               </Button>
-              <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+              <Button asChild size="sm" variant="outline" className="h-9 w-full rounded-md border-[#DCE8EE] bg-white text-[10px] font-semibold tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
                 <Link to={detailHref}>Audit Proof<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
               </Button>
             </div>
@@ -3114,8 +3112,8 @@ function FiledFilingCard({
                 { label: 'Payout signal', value: preview.payoutSignal },
               ].filter((item) => item.value && item.value !== NOT_AVAILABLE).map((item) => (
                 <div key={item.label} className="flex items-start justify-between gap-3">
-                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
-                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                  <span className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -3147,21 +3145,21 @@ function PayoutTrackingCard({
   const title = ledgerMeta(row) !== 'Identity not available' ? ledgerMeta(row) : ledgerReference(row);
 
   return (
-    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[10px] border shadow-[0_2px_8px_rgba(24,32,38,0.03)]', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-tight', classes.badge)}>
                 Amazon approved
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-violet-200/70">{preview.daysWaiting} day{preview.daysWaiting === 1 ? '' : 's'} waiting</span>
+              <span className="text-[11px] font-semibold tracking-tight text-[#8A99A5]">Ref {ledgerReference(row)}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-violet-200/70">{preview.daysWaiting} day{preview.daysWaiting === 1 ? '' : 's'} waiting</span>
             </div>
 
             <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{title}</h3>
-              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(approvedAmount, row.currency)}</span>
+              <h3 className="text-[14px] font-medium tracking-tight text-[#182026]">{title}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(approvedAmount, row.currency)}</span>
             </div>
 
             <p className={PIPELINE_EXPLAINER_CLASS}>{preview.approvalSummary}</p>
@@ -3173,7 +3171,7 @@ function PayoutTrackingCard({
               {preview.watchedReports.slice(0, 3).map((report) => (
                 <span
                   key={report}
-                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                  className="inline-flex max-w-full rounded-full border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#66737F]"
                 >
                   <span className="truncate">{report}</span>
                 </span>
@@ -3181,10 +3179,10 @@ function PayoutTrackingCard({
             </div>
           </div>
 
-          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+          <div className="min-w-0 lg:border-l lg:border-[#DCE8EE] lg:pl-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Settlement tracker</div>
+                <div className="text-[10px] font-semibold tracking-tight text-[#8A99A5]">Settlement tracker</div>
                 <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.settlementStage}</div>
               </div>
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
@@ -3193,32 +3191,32 @@ function PayoutTrackingCard({
             </div>
 
             <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-violet-300 shadow-[0_0_16px_rgba(196,181,253,0.35)]" style={{ width: `${progress}%` }} />
+              <div className="h-full rounded-full bg-[#9B91D6]" style={{ width: `${progress}%` }} />
             </div>
 
-            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Reconciliation source</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.reconciliationSource}</span>
+                <span className="text-[#8A99A5]">Reconciliation source</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.reconciliationSource}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Expected deposit</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.expectedDeposit}</span>
+                <span className="text-[#8A99A5]">Expected deposit</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.expectedDeposit}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Variance</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.variance}</span>
+                <span className="text-[#8A99A5]">Variance</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.variance}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Risk</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.payoutRisk}</span>
+                <span className="text-[#8A99A5]">Risk</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.payoutRisk}</span>
               </div>
             </div>
 
             <div className="mt-3 space-y-1.5">
               {preview.ledgerChecks.slice(0, 3).map((check) => (
-                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-300" />
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#66737F]">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#9B91D6]" />
                   <span className="truncate">{check}</span>
                 </div>
               ))}
@@ -3226,17 +3224,17 @@ function PayoutTrackingCard({
           </div>
 
           <div className="flex flex-col gap-3 lg:items-end">
-            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold tracking-tight', classes.chip)}>
               <Clock3 className="h-3.5 w-3.5" />
               Payout watch
             </span>
 
             {detailHref ? (
               <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
-                <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+                <Button asChild size="sm" className="h-10 w-full rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
                   <Link to={detailHref}>Open Recovery<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
                 </Button>
-                <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+                <Button asChild size="sm" variant="outline" className="h-9 w-full rounded-md border-[#DCE8EE] bg-white text-[10px] font-semibold tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
                   <Link to={detailHref}>Audit Payout<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
                 </Button>
               </div>
@@ -3253,8 +3251,8 @@ function PayoutTrackingCard({
                 { label: 'Last movement', value: timeLabel || null },
               ].filter((item) => item.value && item.value !== NOT_AVAILABLE).map((item) => (
                 <div key={item.label} className="flex items-start justify-between gap-3">
-                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
-                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                  <span className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -3285,21 +3283,21 @@ function CompletedRecoveryCard({
   const title = ledgerMeta(row) !== 'Identity not available' ? ledgerMeta(row) : ledgerReference(row);
 
   return (
-    <Card className={cn('rounded-[2px] border shadow-none', classes.card)}>
+    <Card className={cn('rounded-[10px] border shadow-[0_2px_8px_rgba(24,32,38,0.03)]', classes.card)}>
       <CardContent className="p-4">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>
+              <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-tight', classes.badge)}>
                 Recovered
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
-              <span className="text-[11px] font-semibold uppercase tracking-tight text-emerald-200/70">{preview.daysToRecover} day closeout</span>
+              <span className="text-[11px] font-semibold tracking-tight text-[#8A99A5]">Ref {ledgerReference(row)}</span>
+              <span className="text-[11px] font-semibold tracking-tight text-emerald-200/70">{preview.daysToRecover} day closeout</span>
             </div>
 
             <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 className="text-[14px] font-medium tracking-tight text-white/90">{title}</h3>
-              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-white">{formatMoney(recoveredAmount, row.currency)}</span>
+              <h3 className="text-[14px] font-medium tracking-tight text-[#182026]">{title}</h3>
+              <span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(recoveredAmount, row.currency)}</span>
             </div>
 
             <p className={PIPELINE_EXPLAINER_CLASS}>{preview.recoverySummary}</p>
@@ -3311,7 +3309,7 @@ function CompletedRecoveryCard({
               {preview.proofDocs.slice(0, 3).map((doc) => (
                 <span
                   key={doc}
-                  className="inline-flex max-w-full rounded-full border border-white/10 bg-white/[0.035] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-white/60"
+                  className="inline-flex max-w-full rounded-full border border-[#DCE8EE] bg-[#F7FAFC] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#66737F]"
                 >
                   <span className="truncate">{doc}</span>
                 </span>
@@ -3319,10 +3317,10 @@ function CompletedRecoveryCard({
             </div>
           </div>
 
-          <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+          <div className="min-w-0 lg:border-l lg:border-[#DCE8EE] lg:pl-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">Recovery closeout</div>
+                <div className="text-[10px] font-semibold tracking-tight text-[#8A99A5]">Recovery closeout</div>
                 <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{preview.closureStage}</div>
               </div>
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
@@ -3331,32 +3329,32 @@ function CompletedRecoveryCard({
             </div>
 
             <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-emerald-300 shadow-[0_0_16px_rgba(110,231,183,0.35)]" style={{ width: `${progress}%` }} />
+              <div className="h-full rounded-full bg-[#5BC9A8]" style={{ width: `${progress}%` }} />
             </div>
 
-            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-white/48">
+            <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Payout proof</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.payoutProof}</span>
+                <span className="text-[#8A99A5]">Payout proof</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.payoutProof}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Reconciliation source</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.reconciliationSource}</span>
+                <span className="text-[#8A99A5]">Reconciliation source</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.reconciliationSource}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Deposit trail</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.depositTrail}</span>
+                <span className="text-[#8A99A5]">Deposit trail</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.depositTrail}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/30">Variance</span>
-                <span className="max-w-[72%] text-right text-white/68">{preview.variance}</span>
+                <span className="text-[#8A99A5]">Variance</span>
+                <span className="max-w-[72%] text-right text-[#4D5B66]">{preview.variance}</span>
               </div>
             </div>
 
             <div className="mt-3 space-y-1.5">
               {preview.checks.slice(0, 3).map((check) => (
-                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-white/46">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
+                <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#66737F]">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#5BC9A8]" />
                   <span className="truncate">{check}</span>
                 </div>
               ))}
@@ -3364,17 +3362,17 @@ function CompletedRecoveryCard({
           </div>
 
           <div className="flex flex-col gap-3 lg:items-end">
-            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', classes.chip)}>
+            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold tracking-tight', classes.chip)}>
               <FileCheck2 className="h-3.5 w-3.5" />
               Money landed
             </span>
 
             {detailHref ? (
               <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
-                <Button asChild size="sm" className="h-10 w-full px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+                <Button asChild size="sm" className="h-10 w-full rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
                   <Link to={detailHref}>Open Recovery<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
                 </Button>
-                <Button asChild size="sm" variant="outline" className="h-9 w-full border-white/12 bg-transparent text-[10px] font-bold uppercase tracking-tight text-white/72 hover:bg-white/[0.05] hover:text-white">
+                <Button asChild size="sm" variant="outline" className="h-9 w-full rounded-md border-[#DCE8EE] bg-white text-[10px] font-semibold tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
                   <Link to={detailHref}>View Receipt<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
                 </Button>
               </div>
@@ -3390,8 +3388,8 @@ function CompletedRecoveryCard({
                 { label: 'Confirmed', value: timeLabel || null },
               ].filter((item) => item.value && item.value !== NOT_AVAILABLE).map((item) => (
                 <div key={item.label} className="flex items-start justify-between gap-3">
-                  <span className="text-[11px] font-medium tracking-tight text-white/34">{item.label}</span>
-                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#c4c4c4]">{item.value}</span>
+                  <span className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{item.label}</span>
+                  <span className="max-w-[66%] text-right text-[11px] font-semibold tracking-tight text-[#4D5B66]">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -3589,7 +3587,7 @@ export default function FilingPipeline() {
       amount: formatMoney(readyTotal),
       countLabel: `${readyRows.length} seller decision${readyRows.length === 1 ? '' : 's'} waiting`,
       action: readyRows.length ? (
-        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+        <Button asChild size="sm" className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
           <Link to={disputeCasesHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
@@ -3673,7 +3671,7 @@ export default function FilingPipeline() {
       amount: formatMoney(totalAmount(attentionRows.map(disputeAmount))),
       countLabel: `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} gated`,
       action: attentionRows.length ? (
-        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-[#0052FF] text-[#FFFFFF] border border-[#0052FF] hover:bg-[#0047DD] hover:text-[#FFFFFF] rounded-lg uppercase tracking-tight">
+        <Button asChild size="sm" className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
           <Link to={disputeCasesHref}>Review queue<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
@@ -3692,7 +3690,7 @@ export default function FilingPipeline() {
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
               nextStep={filingNextStep(row, 'attention')}
               proofRows={hasSubmissionStateDivergence(row) ? filedProofRows(row) : undefined}
-              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('attention').chip)}><AlertCircle className="h-3.5 w-3.5" />{hasSubmissionStateDivergence(row) ? 'Proof needs reconciliation' : attentionReason(row)}</span>}
+              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold tracking-tight', toneClasses('attention').chip)}><AlertCircle className="h-3.5 w-3.5" />{hasSubmissionStateDivergence(row) ? 'Proof needs reconciliation' : attentionReason(row)}</span>}
             />
           ))}
         </div>
@@ -3759,66 +3757,31 @@ export default function FilingPipeline() {
   ];
 
   return (
-    <PageLayout title="Submission Flow" noPadding>
-      <div className="platform-vitality-page filing-pipeline-ledger min-h-screen bg-[#FAFAF7] text-[#111827] relative overflow-hidden">
-        <style>{`
-          .filing-pipeline-ledger [class*="text-white"] { color: #111827 !important; }
-          .filing-pipeline-ledger [class*="text-white/30"],
-          .filing-pipeline-ledger [class*="text-white/32"],
-          .filing-pipeline-ledger [class*="text-white/34"],
-          .filing-pipeline-ledger [class*="text-white/36"],
-          .filing-pipeline-ledger [class*="text-white/38"],
-          .filing-pipeline-ledger [class*="text-white/40"],
-          .filing-pipeline-ledger [class*="text-white/42"],
-          .filing-pipeline-ledger [class*="text-white/46"],
-          .filing-pipeline-ledger [class*="text-white/48"],
-          .filing-pipeline-ledger [class*="text-white/50"],
-          .filing-pipeline-ledger [class*="text-white/60"],
-          .filing-pipeline-ledger [class*="text-white/62"],
-          .filing-pipeline-ledger [class*="text-white/64"],
-          .filing-pipeline-ledger [class*="text-white/66"],
-          .filing-pipeline-ledger [class*="text-white/68"],
-          .filing-pipeline-ledger [class*="text-white/70"],
-          .filing-pipeline-ledger [class*="text-white/72"],
-          .filing-pipeline-ledger [class*="text-white/75"] { color: #6B7C88 !important; }
-          .filing-pipeline-ledger [class*="border-white"] { border-color: #D8E3E8 !important; }
-          .filing-pipeline-ledger [class*="bg-white/"] { background-color: #F8FAFB !important; }
-          .filing-pipeline-ledger [class*="bg-[#0052FF]"],
-          .filing-pipeline-ledger [class*="bg-[#0B74DE]"] { background-color: #0B74DE !important; color: #FFFFFF !important; border-color: #0B74DE !important; }
-          .filing-pipeline-ledger [class*="bg-[#0052FF]"] *,
-          .filing-pipeline-ledger [class*="bg-[#0B74DE]"] * { color: #FFFFFF !important; }
-        `}</style>
-        <div
-          className="fixed inset-0 pointer-events-none opacity-[0.03]"
-          style={{
-            backgroundImage:
-              `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-          }}
-        />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
+    <PageLayout title="Filing pipeline" noPadding>
+      <div className="filing-pipeline-ledger relative min-h-screen overflow-hidden bg-[#FAFAF7] text-[#182026]">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#FAFAF7] via-[#FAFAF7] to-[#F3F7F9]" />
 
         <div className="relative z-10 mx-auto max-w-[1280px] px-5 pt-8 pb-16 sm:px-6 lg:px-8 space-y-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
-              <h1 className="text-[24px] font-sans font-semibold text-[#111827] tracking-tight">Submissions and Payouts</h1>
-              <p className="text-sm text-[#546575] font-sans max-w-3xl">
+              <h1 className="font-lora text-[28px] font-normal tracking-tight text-[#182026]">Submissions and payouts</h1>
+              <p className="max-w-3xl text-[13px] leading-5 text-[#4D5B66]">
                 See what is proof-complete, submitting, with Amazon, blocked, awaiting payout, or confirmed recovered—without reconstructing queue logic.
               </p>
             </div>
             <div className="flex flex-col items-start gap-2 lg:items-end">
               {lastUpdatedLabel ? (
-                <div className="inline-flex items-center rounded-[2px] border border-[#D8E3E8] bg-white px-3 py-1 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
+                <div className="inline-flex items-center rounded-[8px] border border-[#D8E3E8] bg-white px-3 py-1 text-[10px] font-sans font-semibold tracking-tight text-[#4B5563]">
                   Submission flow live
                   <span className="ml-2 text-[#8FA0AD]">{lastUpdatedLabel}</span>
                 </div>
               ) : null}
-              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#6B7C88]">
+              <div className="text-[10px] font-sans font-semibold tracking-tight text-[#6B7C88]">
                 {latestMovement ? `Pipeline refreshed ${lastUpdatedLabel}` : 'Pipeline update time unavailable'}
               </div>
               <Button
                 onClick={() => void refreshAll()}
-                className="h-9 rounded-[2px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-semibold uppercase tracking-tight text-[#111827] hover:bg-[#F3F6F8] hover:text-[#111827]"
+                className="h-9 rounded-[8px] border border-[#D8E3E8] bg-white px-4 font-sans text-[10px] font-semibold tracking-tight text-[#111827] hover:bg-[#F3F6F8] hover:text-[#111827]"
               >
                 <RefreshCw className={cn('w-3 h-3 mr-2', refreshing ? 'animate-spin' : '')} />
                 Refresh
@@ -3826,10 +3789,10 @@ export default function FilingPipeline() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white text-[#111827]">
+          <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white text-[#182026] shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
             <div className="px-5 py-4">
               <div className="min-w-0">
-                <p className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#7B8A97]">Current filing snapshot</p>
+                <p className="text-[10px] font-sans font-semibold tracking-tight text-[#7B8A97]">Current filing snapshot</p>
                 <p className="mt-2 text-sm font-sans font-semibold tracking-tight text-[#111827]">
                   {readyRows.length > 0
                     ? `${formatMoney(readyTotal)} is ready to file now while ${formatMoney(inMotionTotal)} is already moving through Amazon or payout follow-up.`
@@ -3843,23 +3806,23 @@ export default function FilingPipeline() {
                 <p className="mt-2 text-xs font-sans text-[#6B7C88]">
                   Margin files only when proof requirements are met; blocked cases stay out of filing until the recorded issue is cleared.
                 </p>
-                <p className="mt-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#8FA0AD]">
+                <p className="mt-2 text-[10px] font-sans font-semibold tracking-tight text-[#8FA0AD]">
                   Scope: ready, submitting, filed, gated, payout, and recovered truth from the current account
                 </p>
               </div>
             </div>
-            <div className="border-t border-[#D8E3E8] px-5 py-4">
+              <div className="border-t border-[#DCE8EE] px-5 py-4">
               <div className="mb-4 flex flex-wrap gap-2">
                 {snapshotPills.map((pill) => (
                   <span
                     key={pill}
-                    className="rounded-[2px] border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-1 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#546575]"
+                    className="rounded-[8px] border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-1 text-[10px] font-sans font-semibold tracking-tight text-[#546575]"
                   >
                     {pill}
                   </span>
                 ))}
                 {totalVisibleRecords > 0 ? (
-                  <span className="rounded-[2px] border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-1 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#546575]">
+                  <span className="rounded-[8px] border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-1 text-[10px] font-sans font-semibold tracking-tight text-[#546575]">
                     {totalVisibleRecords} records in pipeline view
                   </span>
                 ) : null}
@@ -3871,8 +3834,8 @@ export default function FilingPipeline() {
                   { label: 'Needs attention', value: formatMoney(totalAmount(attentionRows.map(disputeAmount))), detail: attentionRows.length ? `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} blocked with recorded reasons` : 'No blockers visible right now' },
                   { label: 'Recovered', value: formatMoney(recoveredTotal), detail: completedRows.length ? `${completedRows.length} payout-confirmed item${completedRows.length === 1 ? '' : 's'}` : 'No recovered payouts confirmed yet' },
                 ].map((card) => (
-                  <div key={card.label} className="rounded-[2px] border border-[#D8E3E8] bg-white p-3">
-                    <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#7B8A97]">{card.label}</div>
+                  <div key={card.label} className="rounded-[8px] border border-[#DCE8EE] bg-[#FCFDFE] p-3">
+                    <div className="text-[10px] font-sans font-semibold tracking-tight text-[#7B8A97]">{card.label}</div>
                     <div className="mt-2 text-left text-lg font-sans font-semibold tracking-tight text-[#111827] tabular-nums">{card.value}</div>
                     <div className="mt-1 text-[11px] font-sans leading-5 tracking-tight text-[#6B7C88]">{card.detail}</div>
                   </div>
@@ -3881,28 +3844,26 @@ export default function FilingPipeline() {
             </div>
           </div>
 
-          <Card className="overflow-hidden rounded-[2px] border-[#D8E3E8] bg-white text-[#111827] shadow-none">
-            <CardHeader className="border-b border-[#D8E3E8] bg-white px-5 py-4">
-              <div className="flex flex-col gap-3">
-                <div>
-                  <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#7B8A97]">Conversion surface</div>
-                  <h2 className="mt-2 text-xl font-sans font-semibold tracking-tight text-[#111827]">Confirmed claims moving through filing</h2>
-                  <p className="mt-1 text-xs font-sans leading-5 text-[#6B7C88]">
-                    Each tab answers one question: what can file, what is filing, what is already with Amazon, what is approved, and what is already recovered.
-                  </p>
-                </div>
+          <Card className="overflow-hidden rounded-[10px] border-[#DCE8EE] bg-white text-[#182026] shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+            <CardHeader className="border-b border-[#DCE8EE] bg-white px-5 py-5 sm:px-6">
+              <div>
+                <div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Filing lifecycle</div>
+                <h2 className="mt-1 font-lora text-[24px] font-normal tracking-tight text-[#182026]">Recovery cases under Margin’s control</h2>
+                <p className="mt-1.5 max-w-3xl text-[12px] leading-5 text-[#66737F]">
+                  Each stage shows what Margin has established, what Amazon has received, what remains under watch, and the next controlled action.
+                </p>
               </div>
             </CardHeader>
 
             <CardContent className="p-0">
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="w-full">
                 <div className="overflow-x-auto border-b border-[#D8E3E8]">
-                  <TabsList className="h-auto w-full min-w-max justify-start gap-8 rounded-none bg-transparent px-6 py-0 text-left">
+                  <TabsList className="h-auto w-full min-w-max justify-start gap-7 rounded-none bg-transparent px-6 py-0 text-left">
                     {pipelineTabs.map((tab) => (
                       <TabsTrigger
                         key={tab.value}
                         value={tab.value}
-                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[14px] font-sans font-semibold tracking-tight text-[#7B8A97] shadow-none ring-0 transition-colors hover:text-[#111827] data-[state=active]:border-[#0B74DE] data-[state=active]:bg-transparent data-[state=active]:text-[#0B74DE] data-[state=active]:shadow-none"
+                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[13px] font-medium tracking-tight text-[#66737F] shadow-none ring-0 transition-colors hover:text-[#182026] data-[state=active]:border-[#0B74DE] data-[state=active]:bg-transparent data-[state=active]:text-[#0B74DE] data-[state=active]:shadow-none"
                       >
                         {tab.label}
                       </TabsTrigger>
