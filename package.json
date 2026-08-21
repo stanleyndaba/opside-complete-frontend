@@ -10,6 +10,7 @@
     "build:dev": "vite build --mode development",
     "test:audit-duration": "node scripts/run-audit-duration-test.mjs",
     "test:payment-return-auth": "node scripts/run-payment-return-auth-context-test.mjs",
+    "test:account-signout": "node scripts/test-account-signout-contract.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "analyze": "vite build && rollup-plugin-visualizer --template treemap --sourcemap false --gzipSize true --brotliSize true dist/*.js --filename dist/bundle-report.html"
