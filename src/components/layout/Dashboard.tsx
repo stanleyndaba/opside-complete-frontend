@@ -1216,7 +1216,6 @@ export function Dashboard() {
   const upcomingPaymentsLoadedRef = useRef(false);
   const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
   const [quickNoticeOpen, setQuickNoticeOpen] = useState<boolean>(false);
-  const [contactEmail, setContactEmail] = useState<string>('');
   const [contactSubject, setContactSubject] = useState<string>('');
   const [contactQuery, setContactQuery] = useState<string>('');
   const [contactSubmitting, setContactSubmitting] = useState<boolean>(false);
@@ -1330,18 +1329,8 @@ export function Dashboard() {
   ]);
 
   const handleContactSupportSubmit = useCallback(async () => {
-    const email = contactEmail.trim();
     const subject = contactSubject.trim();
     const query = contactQuery.trim();
-
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast({
-        title: 'Email needs a second look',
-        description: 'Use a valid reply email, or leave it blank and Margin will use your account email.',
-        variant: 'destructive',
-      });
-      return;
-    }
 
     if (!subject || !query) {
       toast({
@@ -1360,11 +1349,7 @@ export function Dashboard() {
         message: query,
         severity: 'normal',
         source_page: 'dashboard_contact_us_modal',
-        metadata: {
-          contact_email: email || undefined,
-          support_recipient: 'support@margin-finance.com',
-          tenant_slug: activeSlug || null,
-        },
+        idempotency_key: crypto.randomUUID(),
       });
 
       if (!response.ok || !response.data?.success) {
@@ -1372,11 +1357,12 @@ export function Dashboard() {
       }
 
       toast({
-        title: 'Query sent',
-        description: 'Support received your message at support@margin-finance.com.',
+        title: `Request saved: ${response.data.request.request_id.slice(0, 8)}`,
+        description: response.data.request.delivery?.internal_notification?.status === 'accepted' || response.data.request.delivery?.internal_notification?.status === 'delivered'
+          ? 'Margin saved your request and accepted the support notification for delivery.'
+          : 'Margin saved your request. Support notification delivery is still being recorded.',
       });
       setQuickNoticeOpen(false);
-      setContactEmail('');
       setContactSubject('');
       setContactQuery('');
     } catch (err: any) {
@@ -1388,7 +1374,7 @@ export function Dashboard() {
     } finally {
       setContactSubmitting(false);
     }
-  }, [activeSlug, contactEmail, contactQuery, contactSubject, toast]);
+  }, [contactQuery, contactSubject, toast]);
 
   const [showDiscrepancyModal, setShowDiscrepancyModal] = useState<boolean>(false);
   const [showProofNeededModal, setShowProofNeededModal] = useState<boolean>(false);
@@ -4031,21 +4017,8 @@ export function Dashboard() {
           </DialogHeader>
           <div className="space-y-5 px-5 py-5">
             <p className="max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-[#4B5563]">
-              Send a tracked message to support@margin-finance.com. Include anything we should know about your workspace, filing, evidence, or billing question.
+Send a tracked message to support@margin-finance.com. Margin uses the verified email on your account for reply routing. Include anything we should know about your workspace, filing, evidence, or billing question.
             </p>
-            <div className="grid gap-3 border-t border-[#E5E7EB] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
-              <label htmlFor="contact-email" className="pt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#66737F]">
-                Reply email
-              </label>
-              <Input
-                id="contact-email"
-                type="email"
-                value={contactEmail}
-                onChange={(event) => setContactEmail(event.target.value)}
-                placeholder="Uses your account email if left blank"
-                className="h-11 rounded-none border-0 border-b border-[#CFE0EA] bg-transparent px-0 text-[12px] font-sans text-[#111827] placeholder:text-[#9CA3AF] focus-visible:border-[#0B74DE] focus-visible:ring-0"
-              />
-            </div>
             <div className="grid gap-3 border-t border-[#E5E7EB] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
               <label htmlFor="contact-subject" className="pt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-[#66737F]">
                 Subject
@@ -4064,7 +4037,7 @@ export function Dashboard() {
                   Your query
                 </label>
                 <p className="mt-1.5 text-[10px] font-sans leading-4 tracking-tight text-[#8A97A3]">
-                  This is saved as a support request and emailed to Margin.
+This is saved as a support request. Margin records notification delivery separately from the request itself.
                 </p>
               </div>
               <Textarea

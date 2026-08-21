@@ -44,6 +44,8 @@ const faqs = [
   },
 ];
 
+type SupportDeliveryState = 'not_available' | 'pending' | 'accepted' | 'delivered' | 'failed' | 'bounced' | 'complained';
+
 type SupportHistoryItem = {
   request_id: string;
   status: string;
@@ -51,7 +53,20 @@ type SupportHistoryItem = {
   subject: string;
   message: string;
   severity?: string | null;
+  created?: boolean;
   created_at: string;
+  delivery?: {
+    internal_notification: {
+      status: SupportDeliveryState;
+      provider_message_id: string | null;
+      attempt_count: number;
+    };
+    seller_acknowledgement: {
+      status: SupportDeliveryState;
+      provider_message_id: string | null;
+      attempt_count: number;
+    };
+  };
 };
 
 const formatLabel = (value: string | null | undefined) =>
@@ -105,6 +120,7 @@ export default function Help() {
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [requests, setRequests] = useState<SupportHistoryItem[]>([]);
   const [lastSubmitted, setLastSubmitted] = useState<SupportHistoryItem | null>(null);
+  const [submissionIdempotencyKey, setSubmissionIdempotencyKey] = useState<string | null>(null);
   const [expandedRequests, setExpandedRequests] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
   const { tenant, planLimits, isReady } = useTenant();
@@ -162,7 +178,7 @@ export default function Help() {
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!contactForm.subject || !contactForm.category || !contactForm.message) {
+    if (!contactForm.subject.trim() || !contactForm.category || !contactForm.message.trim()) {
       toast({
         title: 'Please fill in the required fields',
         description: 'Subject, topic, and message are required before a support request can be submitted.',
@@ -180,6 +196,8 @@ export default function Help() {
       return;
     }
 
+    const idempotencyKey = submissionIdempotencyKey || crypto.randomUUID();
+    setSubmissionIdempotencyKey(idempotencyKey);
     setSubmitting(true);
     try {
       const response = await api.createSupportRequest({
@@ -188,10 +206,7 @@ export default function Help() {
         message: contactForm.message,
         additional_context: contactForm.additionalContext || undefined,
         source_page: 'help',
-        metadata: {
-          tenant_slug: tenant.slug,
-          tenant_name: tenant.name,
-        },
+        idempotency_key: idempotencyKey,
       });
 
       if (!response.ok || !response.data?.success || !response.data?.request) {
@@ -208,9 +223,13 @@ export default function Help() {
         additionalContext: '',
       });
 
+      setSubmissionIdempotencyKey(null);
+      const notificationState = submittedRequest.delivery?.internal_notification?.status;
       toast({
-        title: `Request submitted: ${submittedRequest.request_id.slice(0, 8)}`,
-        description: `Status: ${formatLabel(submittedRequest.status)}.`,
+        title: `Request saved: ${submittedRequest.request_id.slice(0, 8)}`,
+        description: notificationState === 'accepted' || notificationState === 'delivered'
+          ? 'Margin saved your request and accepted the support notification for delivery.'
+          : 'Margin saved your request. Support notification delivery is still being recorded.',
       });
     } catch (err: any) {
       toast({
@@ -310,6 +329,7 @@ export default function Help() {
                       id="subject"
                       value={contactForm.subject}
                       onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                      maxLength={180}
                       placeholder="Short summary of the issue"
                       className="h-10 rounded-md border-[#DCE8EE] bg-[#FAFAF7] px-3 text-[13px] text-[#182026] placeholder:text-[#8A97A2] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                     />
@@ -342,6 +362,7 @@ export default function Help() {
                     id="additional-context"
                     value={contactForm.additionalContext}
                     onChange={(e) => setContactForm({ ...contactForm, additionalContext: e.target.value })}
+                    maxLength={500}
                     placeholder="Optional case, invoice, or workflow reference"
                     className="h-10 rounded-md border-[#DCE8EE] bg-[#FAFAF7] px-3 text-[13px] text-[#182026] placeholder:text-[#8A97A2] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                   />
@@ -355,6 +376,7 @@ export default function Help() {
                     id="message"
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                    maxLength={10000}
                     placeholder="Describe the issue, page, workflow, or claim context."
                     rows={5}
                     className="min-h-[132px] resize-none rounded-md border-[#DCE8EE] bg-[#FAFAF7] px-3 py-2.5 text-[13px] leading-5 text-[#182026] placeholder:text-[#8A97A2] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
@@ -375,7 +397,8 @@ export default function Help() {
                       <p className="font-medium tracking-tight text-[#182026]">Latest request</p>
                       <p className="mt-1">Request ID: {lastSubmitted.request_id}</p>
                       <p>Status: {formatLabel(lastSubmitted.status)}</p>
-                      <p className="mt-1 text-[#66737F]">Submitted {formatTimestamp(lastSubmitted.created_at)}. Follow-up happens through recorded support handling, not a live chat workflow on this page.</p>
+                      <p className="mt-1">Support notification: {formatLabel(lastSubmitted.delivery?.internal_notification?.status || 'pending')}.</p>
+                      <p className="mt-1 text-[#66737F]">Submitted {formatTimestamp(lastSubmitted.created_at)}. This page records your request; follow-up happens by email, not through live chat or an in-app conversation.</p>
                     </div>
                   )}
                 </div>
@@ -444,6 +467,9 @@ export default function Help() {
                               </p>
                               <p className="whitespace-pre-wrap text-[13px] leading-5 text-[#4D5B66]">
                                 {request.message?.trim() || 'No message was recorded for this request.'}
+                              </p>
+                              <p className="text-[12px] text-[#66737F]">
+                                Support notification: {formatLabel(request.delivery?.internal_notification?.status || 'pending')}.
                               </p>
                             </div>
                           )}

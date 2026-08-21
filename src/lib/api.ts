@@ -870,6 +870,7 @@ export const api = {
     additional_context?: string;
     source_page?: string;
     metadata?: Record<string, any>;
+    idempotency_key?: string;
   }) => requestJson<{
     success: boolean;
     request: {
@@ -879,6 +880,20 @@ export const api = {
       category: string;
       subject: string;
       message: string;
+      severity?: string | null;
+      created?: boolean;
+      delivery?: {
+        internal_notification: {
+          status: 'pending' | 'accepted' | 'delivered' | 'failed' | 'bounced' | 'complained';
+          provider_message_id: string | null;
+          attempt_count: number;
+        };
+        seller_acknowledgement: {
+          status: 'not_available' | 'pending' | 'accepted' | 'delivered' | 'failed' | 'bounced' | 'complained';
+          provider_message_id: string | null;
+          attempt_count: number;
+        };
+      };
     };
   }>('/api/support/requests', {
     method: 'POST',
@@ -893,7 +908,20 @@ export const api = {
       subject: string;
       message: string;
       severity?: string | null;
+      created?: boolean;
       created_at: string;
+      delivery?: {
+        internal_notification: {
+          status: 'pending' | 'accepted' | 'delivered' | 'failed' | 'bounced' | 'complained';
+          provider_message_id: string | null;
+          attempt_count: number;
+        };
+        seller_acknowledgement: {
+          status: 'not_available' | 'pending' | 'accepted' | 'delivered' | 'failed' | 'bounced' | 'complained';
+          provider_message_id: string | null;
+          attempt_count: number;
+        };
+      };
     }>;
   }>(`/api/support/requests?limit=${limit}`),
   createPublicSupportContact: (body: {
