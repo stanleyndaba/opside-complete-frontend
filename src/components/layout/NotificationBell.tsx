@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { ArrowRight, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   HoverCard,
@@ -125,7 +125,7 @@ const getNotificationPreview = (notification: any) => {
 
   if (type === 'product_update') {
     return {
-      eyebrow: 'Product update',
+      eyebrow: 'Platform update',
       header: rawTitle || (payload.title ? `New in Margin: ${payload.title}` : 'New in Margin'),
       message: rawMessage || payload.summary || 'A new Margin rollout is available.',
       tone: 'neutral' as NotificationTone,
@@ -322,7 +322,11 @@ export function NotificationBell({
       message: preview.message,
       timestamp: formatNotificationTimestamp(n.created_at),
       href: systemSignal ? resolveSystemSignalHref(n, activeSlug) : getHrefForType(n.type),
-      actionLabel: systemSignal ? getSystemSignalActionLabel(n) : null,
+      actionLabel: systemSignal
+        ? getSystemSignalActionLabel(n)
+        : String(n.type || '').toLowerCase() === 'product_update'
+          ? 'Open What’s New'
+          : null,
       read: n.status === 'read' || n.seller_state === 'read' || n.seller_state === 'acknowledged',
       type: n.type,
       tone: preview.tone,
@@ -476,8 +480,11 @@ export function NotificationBell({
                         {notification.message}
                       </p>
                       {notification.actionLabel && (
-                        <p className="mt-2.5 text-[10px] font-medium tracking-tight text-[#0B74DE]">
-                          {notification.actionLabel} →
+                        <p className="mt-2.5 inline-flex items-center gap-1 text-[10px] font-medium tracking-tight text-[#0B74DE]">
+                          {notification.actionLabel}
+                          {notification.type === 'product_update'
+                            ? <ArrowRight className="h-3 w-3" strokeWidth={2} />
+                            : '→'}
                         </p>
                       )}
                     </div>

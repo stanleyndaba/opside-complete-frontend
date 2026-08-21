@@ -75,6 +75,21 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
     }).format(amount);
   };
 
+  const concisePlatformUpdateSummary = (payload: any): string => {
+    const raw = [
+      payload?.message,
+      payload?.summary,
+      payload?.payload?.summary,
+      payload?.data?.summary
+    ].find((value) => typeof value === 'string' && value.trim());
+    const normalized = typeof raw === 'string'
+      ? raw.replace(/\s+/g, ' ').trim()
+      : '';
+
+    if (!normalized) return 'A new Margin update is ready to review.';
+    return normalized.length > 132 ? `${normalized.slice(0, 129).trimEnd()}…` : normalized;
+  };
+
   const connect = useCallback(() => {
     // Close existing connection if any
     if (eventSourceRef.current) {
@@ -233,10 +248,22 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
                 });
                 break;
 
-              case 'notification':
-                // Persisted notifications are re-fetched by NotificationsProvider.
-                // Avoid rendering raw SSE payloads as source-of-truth UI records here.
+              case 'notification': {
+                // Persisted notifications are re-fetched by NotificationsProvider. A Platform
+                // update toast is an ephemeral receipt of a newly delivered canonical record;
+                // historical notification fetches never create a toast.
+                const notificationType = String(
+                  data?.type || data?.notification?.type || data?.data?.type || ''
+                ).toLowerCase();
+                if (notificationType === 'product_update') {
+                  toast({
+                    title: 'Platform update',
+                    description: concisePlatformUpdateSummary(data),
+                    duration: 6000,
+                  });
+                }
                 break;
+              }
 
               case 'heartbeat':
                 // Silent - just keep connection alive
