@@ -756,7 +756,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Pending review',
         detail: 'Margin is still checking whether this discrepancy should move forward.',
         actionLabel: 'View finding',
-        tone: 'border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]',
+        tone: 'border-[#D9D1FF] bg-[#F7F5FF] text-[#5B4BB7]',
         Icon: Clock,
       };
     case 'detected':
@@ -802,7 +802,7 @@ const getFindingMovementMeta = (
       Icon: ArrowRight,
     },
     evidence_needed: {
-      tone: 'border-[#FEDF89] bg-[#FFFAEB] text-[#B54708]',
+      tone: 'border-[#F4C6CD] bg-[#FFF6F7] text-[#8B3541]',
       Icon: Clock,
     },
     ready_to_file: {
@@ -2339,22 +2339,22 @@ export function Dashboard() {
       case 'completed':
         return {
           label: 'Completed',
-          tone: 'border-emerald-500/25 bg-emerald-500/[0.08] text-emerald-100'
+          tone: 'border-[#B9E6D3] bg-[#F4FBF7] text-[#26785E]'
         };
       case 'processing':
         return {
           label: 'Processing',
-          tone: 'border-amber-500/25 bg-amber-500/[0.08] text-amber-100'
+          tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]'
         };
       case 'pending':
         return {
           label: 'Pending',
-          tone: 'border-sky-500/25 bg-sky-500/[0.08] text-sky-100'
+          tone: 'border-[#DCE8EE] bg-[#F5F8FA] text-[#4D5B66]'
         };
       case 'failed':
         return {
           label: 'Failed',
-          tone: 'border-red-500/25 bg-red-500/[0.08] text-red-100'
+          tone: 'border-[#F4C6CD] bg-[#FFF6F7] text-[#8B3541]'
         };
       default:
         return {
@@ -3104,8 +3104,8 @@ export function Dashboard() {
         label: 'Needs proof',
         value: pluralize(blockedPipelineCount, 'case'),
         detail: blockedDetail,
-        tone: blockedPipelineCount > 0 ? 'border-[#FEDF89] bg-[#FFFAEB]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
-        dotTone: blockedPipelineCount > 0 ? 'bg-[#B54708]' : 'bg-[#D1D5DB]',
+        tone: blockedPipelineCount > 0 ? 'border-[#F4C6CD] bg-[#FFF6F7]' : 'border-[#DCE8EE] bg-[#FAFAF7]',
+        dotTone: blockedPipelineCount > 0 ? 'bg-[#BE3A4A]' : 'bg-[#B8C4CE]',
         active: blockedPipelineCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
       },
@@ -3167,10 +3167,10 @@ export function Dashboard() {
           ? dashboardAutoFileGateStatus?.message || 'Eligible cases can submit automatically when filing gates are clear.'
           : 'Cases will wait for your review before filing.';
   const dashboardAutoFileStatusTone = dashboardAutoFileError
-    ? 'text-[#d0b673]'
+    ? 'text-[#BE3A4A]'
     : dashboardAutoFileEnabled && dashboardAutoFileGateStatus?.primaryBlocker
-      ? 'text-[#d0b673]'
-      : 'text-[#6B7280]';
+      ? 'text-[#BE3A4A]'
+      : 'text-[#66737F]';
 
   if (!activeSlug) {
     return (
@@ -3214,113 +3214,120 @@ export function Dashboard() {
         <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
           <div className="relative pt-8">
             <div className="relative mx-auto w-full max-w-full px-8 pb-8 text-[#111827]">
-              {/* Command Center Header */}
-              <div className="mb-10 flex items-start justify-between gap-6">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-1 rounded-[8px] bg-[#F3F4F2] p-1">
-                    <button
-                      onClick={() => handleTabChange('overview')}
-                      className={cn(
-                        "rounded-[6px] px-3 py-1.5 text-[11px] font-sans tracking-tight transition-all duration-200",
-                        activeTab === 'overview'
-                          ? "bg-white font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.08)]"
-                          : "text-[#6B7280] hover:bg-white/70 hover:text-[#111827]"
-                      )}
-                    >
-                      Overview
-                    </button>
-                    <button
-                      onClick={() => handleTabChange('discrepancies')}
-                      className={cn(
-                        "rounded-[6px] px-3 py-1.5 text-[11px] font-sans tracking-tight transition-all duration-200",
-                        activeTab === 'discrepancies'
-                          ? "bg-white font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.08)]"
-                          : "text-[#6B7280] hover:bg-white/70 hover:text-[#111827]"
-                      )}
-                    >
-                      Issues Found
-                    </button>
-                    <button
-                      onClick={() => handleTabChange('evidence')}
-                      className={cn(
-                        "rounded-[6px] px-3 py-1.5 text-[11px] font-sans tracking-tight transition-all duration-200",
-                        activeTab === 'evidence'
-                          ? "bg-white font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.08)]"
-                          : "text-[#6B7280] hover:bg-white/70 hover:text-[#111827]"
-                      )}
-                    >
-                      Evidence
-                    </button>
+              {/* Recovery control header */}
+              <header className="mb-7 border-b border-[#DCE8EE] pb-5">
+                <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+                  <div className="min-w-0">
+                    <p className="text-[12px] font-sans font-medium text-[#66737F]">
+                      Recovery control
+                    </p>
+                    <h1 className="mt-1 font-lora text-[30px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[34px]">
+                      Your recovery position
+                    </h1>
                   </div>
-                </div>
-                <div className="flex shrink-0 flex-col items-end gap-2">
-                  <div className="flex flex-col items-end gap-2">
-                    <div className="w-[360px] max-w-[calc(100vw-4rem)] rounded-[8px] bg-white/70 px-3 py-2 shadow-[0_1px_2px_rgba(17,24,39,0.04)]">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-2">
-                          <span className={cn(
-                            "h-1.5 w-1.5 rounded-full",
-                            dashboardAutoFileError
-                              ? "bg-[#F59E0B]"
-                              : dashboardAutoFileEnabled
-                                ? "bg-[#10B981]"
-                                : "bg-[#9CA3AF]"
-                          )} />
-                          <span className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#111827]">
-                            Auto-File
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={dashboardAutoFileEnabled}
-                            onCheckedChange={(checked) => {
-                              void handleDashboardAutoFileChange(checked);
-                            }}
-                            disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
-                            aria-label="Dashboard Auto-File seller-controlled filing switch"
-                            className="data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#D1D5DB]"
-                          />
-                          <span className="min-w-9 text-right text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
-                            {dashboardAutoFileSaving ? 'Saving' : dashboardAutoFileEnabled ? 'On' : 'Off'}
-                          </span>
-                        </div>
+
+                  <div className="flex flex-col gap-3 sm:items-end">
+                    <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:flex-nowrap">
+                      <div className="flex items-center gap-1 rounded-[8px] border border-[#DCE8EE] bg-white p-1 shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+                        <button
+                          onClick={() => handleTabChange('overview')}
+                          className={cn(
+                            "rounded-[6px] px-3 py-1.5 text-[12px] font-sans transition-colors duration-200",
+                            activeTab === 'overview'
+                              ? "bg-[#EEF5FB] font-medium text-[#182026]"
+                              : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
+                          )}
+                        >
+                          Overview
+                        </button>
+                        <button
+                          onClick={() => handleTabChange('discrepancies')}
+                          className={cn(
+                            "rounded-[6px] px-3 py-1.5 text-[12px] font-sans transition-colors duration-200",
+                            activeTab === 'discrepancies'
+                              ? "bg-[#EEF5FB] font-medium text-[#182026]"
+                              : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
+                          )}
+                        >
+                          Issues found
+                        </button>
+                        <button
+                          onClick={() => handleTabChange('evidence')}
+                          className={cn(
+                            "rounded-[6px] px-3 py-1.5 text-[12px] font-sans transition-colors duration-200",
+                            activeTab === 'evidence'
+                              ? "bg-[#EEF5FB] font-medium text-[#182026]"
+                              : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
+                          )}
+                        >
+                          Evidence
+                        </button>
                       </div>
-                      <p className={cn(
-                        "mt-1.5 line-clamp-2 text-left text-[10px] font-sans leading-4 tracking-tight",
-                        dashboardAutoFileStatusTone
-                      )}>
-                        {dashboardAutoFileStatusCopy}
-                      </p>
+
+                      <section className="w-full rounded-[8px] border border-[#DCE8EE] bg-white px-3 py-2.5 shadow-[0_2px_8px_rgba(24,32,38,0.03)] sm:w-[328px]">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2">
+                            <span className={cn(
+                              "h-1.5 w-1.5 rounded-full",
+                              dashboardAutoFileError
+                                ? "bg-[#BE3A4A]"
+                                : dashboardAutoFileEnabled
+                                  ? "bg-[#5BC9A8]"
+                                  : "bg-[#8A99A5]"
+                            )} />
+                            <span className="text-[11px] font-sans font-medium text-[#182026]">
+                              Auto-File
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Switch
+                              checked={dashboardAutoFileEnabled}
+                              onCheckedChange={(checked) => {
+                                void handleDashboardAutoFileChange(checked);
+                              }}
+                              disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
+                              aria-label="Dashboard Auto-File seller-controlled filing switch"
+                              className="data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#D1D5DB]"
+                            />
+                            <span className="min-w-9 text-right text-[10px] font-sans font-medium text-[#66737F]">
+                              {dashboardAutoFileSaving ? 'Saving' : dashboardAutoFileEnabled ? 'On' : 'Off'}
+                            </span>
+                          </div>
+                        </div>
+                        <p className={cn(
+                          "mt-1.5 line-clamp-2 text-left text-[10px] font-sans leading-4",
+                          dashboardAutoFileStatusTone
+                        )}>
+                          {dashboardAutoFileStatusCopy}
+                        </p>
+                      </section>
                     </div>
-                  </div>
-                  <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-[#6B7280]">
-                    {discrepancyHeaderLastUpdatedLabel}
+                    <p className="text-[10px] font-sans text-[#8A99A5]">
+                      {discrepancyHeaderLastUpdatedLabel}
+                    </p>
                   </div>
                 </div>
-              </div>
+              </header>
 
               {activeTab === 'overview' ? (
-                <div className="relative space-y-5 text-[#111827]">
-                <div className="relative z-10 space-y-5">
-                  {/* Main Content - 3 columns */}
-                  <div className="space-y-5">
-                    <div className="relative group/pipeline-grid space-y-4">
-                      <div className="hidden" />
-                      <div className="relative overflow-hidden rounded-none surgical-border bg-white p-5 surgical-shadow transition-colors duration-200 hover:bg-white">
-                        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                <div className="relative space-y-5 text-[#182026]">
+                  <div className="relative z-10 space-y-5">
+                    <div className="space-y-5">
+                      <section aria-labelledby="recovery-pipeline-heading" className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_2px_8px_rgba(24,32,38,0.03)] sm:p-6">
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                           <div>
-                            <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
-                              One-click pipeline
-                            </div>
-                            <p className="mt-2 text-[12px] font-sans leading-5 text-[#4B5563]">
-                              Click any stage to jump straight to the work behind it.
+                            <h2 id="recovery-pipeline-heading" className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">
+                              Recovery pipeline
+                            </h2>
+                            <p className="mt-1.5 text-[12px] font-sans leading-5 text-[#66737F]">
+                              Select any stage to open the work that supports it.
                             </p>
                           </div>
                           <Select value={pipelineWindow} onValueChange={setPipelineWindow}>
-                            <SelectTrigger className="h-8 w-[150px] self-start rounded-[2px] border-[#D8E3E8] bg-[#FAFAF7] px-3 text-[10px] font-sans font-semibold tracking-tight text-[#4B5563] shadow-none focus:ring-0 focus:ring-offset-0 lg:self-auto">
+                            <SelectTrigger className="h-9 w-[160px] self-start rounded-[8px] border-[#DCE8EE] bg-[#FAFAF7] px-3 text-[11px] font-sans font-medium text-[#4D5B66] shadow-none focus:ring-0 focus:ring-offset-0 lg:self-auto">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent align="end" className="rounded-xl border-[#E5E7EB] bg-white text-[11px] font-sans">
+                            <SelectContent align="end" className="rounded-[8px] border-[#DCE8EE] bg-white text-[11px] font-sans text-[#4D5B66] shadow-[0_8px_24px_rgba(24,32,38,0.08)]">
                               <SelectItem value="90d">Last 90 days</SelectItem>
                               <SelectItem value="30d">Last 30 days</SelectItem>
                               <SelectItem value="12m">Last 12 months</SelectItem>
@@ -3328,135 +3335,127 @@ export function Dashboard() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+
+                        <div className="mt-5 grid overflow-hidden rounded-[8px] border border-[#DCE8EE] sm:grid-cols-2 xl:grid-cols-5">
                           {overviewPipelineStages.map((stage) => (
                             <button
                               key={stage.label}
                               onClick={stage.onClick}
-                              className={cn("group/stage relative min-h-[108px] overflow-hidden rounded-none px-4 py-3.5 text-left shadow-none transition-colors duration-200 hover:border-[#8FA0AD]", stage.active ? stage.tone : "border border-[#E9E9EC] bg-white")}
+                              className={cn(
+                                "group/stage min-h-[142px] border-b border-[#DCE8EE] px-4 py-4 text-left transition-colors duration-200 hover:bg-[#F8FBFD] sm:[&:nth-child(odd)]:border-r xl:border-b-0 xl:border-r xl:[&:nth-child(odd)]:border-r xl:last:border-r-0",
+                                stage.active ? stage.tone : "bg-white"
+                              )}
                             >
-                              <div className="absolute inset-x-0 top-0 h-px bg-[#D8E3E8] opacity-0 transition-opacity duration-200 group-hover/stage:opacity-100" />
                               <div className="flex items-center gap-2">
-                                <span className="relative flex h-2.5 w-2.5 items-center justify-center">
-                                  <span className={cn("relative h-2 w-2 rounded-full", stage.dotTone)} />
-                                </span>
-                                <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#6B7280]">
+                                <span className={cn("h-2 w-2 rounded-full", stage.dotTone)} />
+                                <span className="text-[11px] font-sans font-medium text-[#4D5B66]">
                                   {stage.label}
-                                </div>
+                                </span>
                               </div>
-                              <div className="mt-3 text-[15px] font-sans font-semibold tracking-tight text-[#111827]">
+                              <div className="mt-4 text-[18px] font-sans font-medium leading-none tracking-tight text-[#182026]">
                                 {isOverviewLoading ? (
-                                  <Skeleton className="h-5 w-20 bg-[#E5E7EB]" />
+                                  <Skeleton className="h-5 w-20 bg-[#E8EFF3]" />
                                 ) : (
                                   stage.value
                                 )}
                               </div>
-                              <div className="mt-2 text-[10px] font-sans leading-5 text-[#6B7280]">
+                              <p className="mt-3 text-[11px] font-sans leading-5 text-[#66737F]">
                                 {stage.detail}
-                              </div>
+                              </p>
                               {'footerDetail' in stage && stage.footerDetail ? (
                                 <>
-                                  <div className="mt-3 h-px w-full bg-[#E5E7EB]" />
-                                  <div className="mt-2 text-[10px] font-sans font-medium leading-5 text-[#6B7280]">
+                                  <div className="mt-3 h-px w-full bg-[#DCE8EE]" />
+                                  <p className="mt-2 text-[10px] font-sans leading-4 text-[#66737F]">
                                     {stage.footerDetail}
-                                  </div>
+                                  </p>
                                 </>
                               ) : null}
                             </button>
                           ))}
                         </div>
-                      </div>
+                      </section>
 
-                      <div className="relative grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_repeat(2,minmax(220px,0.55fr))]">
-                        <div className="relative overflow-hidden rounded-none surgical-border bg-white p-6 surgical-shadow transition-colors duration-200 hover:bg-white">
-                          <div className="hidden" />
-                          <div className="relative">
-                            <div className="flex flex-wrap items-center justify-between gap-3">
-                              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
-                                Recovery pipeline
-                              </div>
-                              <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
-                                <span className="relative flex h-2 w-2">
-                                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#111827]/20" />
-                                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#111827]" />
-                                </span>
+                      <section aria-labelledby="recovery-position-heading" className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.65fr)_minmax(220px,0.65fr)]">
+                        <article className="rounded-[10px] border border-[#DCE8EE] bg-white p-6 shadow-[0_2px_8px_rgba(24,32,38,0.03)] xl:p-7">
+                          <div className="flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                              <p className="text-[11px] font-sans font-medium text-[#66737F]">
+                                Recovery position
+                              </p>
+                              <div className="mt-2 flex items-center gap-2 text-[11px] font-sans font-medium text-[#4D5B66]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
                                 {overviewCurrentStatus.value}
                               </div>
                             </div>
-                            <div className="mt-4 flex flex-wrap items-end gap-3">
+                            <div className="text-right">
+                              <p className="text-[10px] font-sans text-[#8A99A5]">Recovery value in view</p>
                               {isOverviewLoading ? (
-                                <Skeleton className="h-12 w-48 bg-[#E5E7EB]" />
+                                <Skeleton className="mt-2 ml-auto h-9 w-32 bg-[#E8EFF3]" />
                               ) : (
-                                <>
-                                  <div className="text-[40px] font-sans font-[250] leading-none tracking-tight text-[#111827] xl:text-[52px]">
-                                    {overviewFoundValueLabel}
-                                  </div>
-                                  <div className="mb-1 inline-flex items-center border-l border-[#D1D5DB] pl-3 text-[10px] font-sans font-medium tracking-tight text-[#111827]">
-                                    {pluralize(detectedOpportunitiesCount, 'issue')} found
-                                  </div>
-                                </>
+                                <p className="mt-1 text-[34px] font-sans font-light leading-none tracking-tight text-[#182026] sm:text-[40px]">
+                                  {overviewFoundValueLabel}
+                                </p>
                               )}
-                            </div>
-                            <h2 className="mt-5 max-w-4xl text-[26px] font-sans font-semibold leading-[1.08] tracking-tight text-[#111827] xl:text-[34px]">
-                              {overviewHeadline}
-                            </h2>
-                            <p className="mt-4 max-w-3xl text-[12px] font-sans leading-6 text-[#4B5563]">
-                              {overviewNarrative}
-                            </p>
-                            <div className="mt-4 h-px w-full max-w-3xl bg-[#E5E7EB]" />
-                            <div className="mt-3 text-[13px] font-sans font-[300] tracking-tight text-[#111827]">
-                              +$3,210 this week
-                            </div>
-                            <div className="mt-5 flex flex-wrap gap-2">
-                              {readyToFileCount > 0 ? (
-                                <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#B9E6D3] bg-[#F4FBF7] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#047857]">
-                                  <span className="h-1.5 w-1.5 rounded-full bg-[#10B981]" />
-                                  {pluralize(readyToFileCount, 'case')} ready to file
-                                </div>
-                              ) : null}
-                              <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#9CA3AF]" />
-                                {overviewNeedsFromYou.detail}
-                              </div>
-                              {latestDashboardSignalLabel ? (
-                                <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#D8E3E8] bg-[#FAFAF7] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-[#4B5563]">
-                                  <span className="h-1.5 w-1.5 rounded-full bg-[#B8C4CE]" />
-                                  {latestDashboardSignalLabel}
-                                </div>
-                              ) : null}
-                            </div>
-                          </div>
-                        </div>
-                        {overviewHeroMetrics.map((item, index) => (
-                          <div
-                            key={item.label}
-                            className="relative min-h-[150px] overflow-hidden rounded-[2px] border border-[#D8E3E8] bg-white p-5 shadow-none transition-colors duration-200 hover:bg-[#F8FAFB] xl:min-h-[164px]"
-                          >
-                            <div className={cn(
-                              "hidden",
-                              index === 0 ? "" : ""
-                            )} />
-                            <div className="relative">
-                              <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#4B5563]">
-                                {item.label}
-                              </div>
-                              <div className="mt-4 text-[28px] font-sans font-semibold leading-none tracking-tight text-[#111827]">
-                                {isOverviewLoading ? (
-                                  <Skeleton className="h-8 w-28 bg-[#E5E7EB]" />
-                                ) : (
-                                  item.value
-                                )}
-                              </div>
-                              <p className="mt-4 text-[12px] font-sans leading-6 text-[#6B7280]">
-                                {item.detail}
+                              <p className="mt-2 text-[10px] font-sans text-[#66737F]">
+                                {pluralize(detectedOpportunitiesCount, 'issue')} found
                               </p>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
 
-                  </div>
+                          <h2 id="recovery-position-heading" className="mt-7 max-w-3xl font-lora text-[28px] font-normal leading-[1.16] tracking-tight text-[#182026] xl:text-[34px]">
+                            {overviewHeadline}
+                          </h2>
+                          <p className="mt-4 max-w-3xl text-[13px] font-sans leading-6 text-[#4D5B66]">
+                            {overviewNarrative}
+                          </p>
+
+                          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[#DCE8EE] pt-4">
+                            <span className="text-[11px] font-sans font-medium text-[#66737F]">Change this week</span>
+                            <span className="text-[14px] font-sans font-medium tracking-tight text-[#182026]">+$3,210</span>
+                          </div>
+
+                          <div className="mt-5 flex flex-wrap gap-2">
+                            {readyToFileCount > 0 ? (
+                              <div className="inline-flex items-center gap-2 rounded-[6px] border border-[#B9E6D3] bg-[#F4FBF7] px-3 py-1.5 text-[10px] font-sans font-medium text-[#26785E]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#5BC9A8]" />
+                                {pluralize(readyToFileCount, 'case')} ready to file
+                              </div>
+                            ) : null}
+                            <div className="inline-flex items-center gap-2 rounded-[6px] border border-[#DCE8EE] bg-[#FAFAF7] px-3 py-1.5 text-[10px] font-sans text-[#4D5B66]">
+                              <span className="h-1.5 w-1.5 rounded-full bg-[#8A99A5]" />
+                              {overviewNeedsFromYou.detail}
+                            </div>
+                            {latestDashboardSignalLabel ? (
+                              <div className="inline-flex items-center gap-2 rounded-[6px] border border-[#DCE8EE] bg-[#FAFAF7] px-3 py-1.5 text-[10px] font-sans text-[#4D5B66]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#66A9E8]" />
+                                {latestDashboardSignalLabel}
+                              </div>
+                            ) : null}
+                          </div>
+                        </article>
+
+                        {overviewHeroMetrics.map((item) => (
+                          <article
+                            key={item.label}
+                            className="flex min-h-[186px] flex-col rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_2px_8px_rgba(24,32,38,0.03)] transition-colors duration-200 hover:bg-[#F8FBFD]"
+                          >
+                            <p className="text-[11px] font-sans font-medium text-[#66737F]">
+                              {item.label}
+                            </p>
+                            <div className="mt-5 text-[30px] font-sans font-medium leading-none tracking-tight text-[#182026]">
+                              {isOverviewLoading ? (
+                                <Skeleton className="h-8 w-28 bg-[#E8EFF3]" />
+                              ) : (
+                                item.value
+                              )}
+                            </div>
+                            <p className="mt-auto pt-5 text-[12px] font-sans leading-6 text-[#66737F]">
+                              {item.detail}
+                            </p>
+                          </article>
+                        ))}
+                      </section>
+                    </div>
 
                   {/* System Activity - Audit Registry Sidebar */}
                   <div className="hidden lg:col-span-1">
@@ -3548,7 +3547,7 @@ export function Dashboard() {
                                             <div className={cn(
                                               "px-2 py-0.5 text-xs font-bold border",
                                               notification.type === 'funds_deposited' || notification.type === 'refund_approved' ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
-                                                notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-amber-50 text-amber-700 border-amber-100" :
+                                                notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? "bg-[#FFF6F7] text-[#8B3541] border-[#F4C6CD]" :
                                                   "bg-blue-50 text-blue-700 border-blue-100"
                                             )}>
                                               {notification.type.replace(/_/g, ' ')}
@@ -3613,44 +3612,44 @@ export function Dashboard() {
                 <div className="space-y-4">
                   {/* Issues Found View */}
                   <div className="relative space-y-4">
-                    <div className="border-b border-[#E9E9EC] pb-4">
+                    <div className="border-b border-[#DCE8EE] pb-5">
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                         <div className="max-w-3xl">
-                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Issues found</div>
-                          <h2 className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                          <p className="text-[11px] font-sans font-medium text-[#66737F]">Issues found</p>
+                          <h2 className="mt-2 font-lora text-[26px] font-normal leading-tight tracking-tight text-[#182026]">
                             {issuesFoundHeading}
                           </h2>
-                          <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-[#50525B]">
+                          <p className="mt-3 text-[12px] font-sans leading-5 text-[#4D5B66]">
                             {issuesFoundProofHeadline}
                           </p>
-                          <p className="mt-2 max-w-3xl text-[11px] font-sans leading-5 text-[#6B7280]">
+                          <p className="mt-2 max-w-3xl text-[11px] font-sans leading-5 text-[#66737F]">
                             {issuesFoundDescription}
                           </p>
                         </div>
                         {latestDashboardSignalLabel ? (
-                          <div className="flex shrink-0 items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                          <div className="flex shrink-0 items-center gap-2 rounded-[6px] border border-[#DCE8EE] bg-white px-3 py-2 text-[10px] font-sans text-[#4D5B66] shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#66A9E8]" />
                             {latestDashboardSignalLabel}
                           </div>
                         ) : null}
                       </div>
 
-                      <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2 border-t border-[#F0F0F2] pt-3">
+                      <div className="mt-5 flex flex-wrap gap-x-8 gap-y-3 border-t border-[#DCE8EE] pt-4">
                         {issuesFoundSummaryRows.map((item) => (
                           <div key={item.label} className="min-w-[140px]">
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
+                            <p className="text-[10px] font-sans text-[#8A99A5]">
                               {item.label}
-                            </div>
-                            <div
+                            </p>
+                            <p
                               className={cn(
-                                "mt-1 text-[13px] font-sans font-medium leading-none tracking-tight",
+                                "mt-1 text-[14px] font-sans font-medium leading-none tracking-tight",
                                 item.valueTone === 'muted'
-                                  ? 'text-[#50525B]'
-                                  : 'text-[#1B1C20]'
+                                  ? 'text-[#4D5B66]'
+                                  : 'text-[#182026]'
                               )}
                             >
                               {item.value}
-                            </div>
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -3755,7 +3754,7 @@ export function Dashboard() {
                           </div>
                         </div>
                         {isSyncScopedDetections && syncScopedResultCapDisclosure ? (
-                          <div className="border-b border-amber-500/20 px-4 py-3 text-[11px] font-sans leading-5 tracking-tight text-amber-100">
+                          <div className="border-b border-[#F4C6CD] bg-[#FFF6F7] px-4 py-3 text-[11px] font-sans leading-5 text-[#8B3541]">
                             {syncScopedResultCapDisclosure}
                           </div>
                         ) : null}
@@ -4004,14 +4003,14 @@ export function Dashboard() {
                   </div>
                 </div>
               ) : activeTab === 'evidence' ? (
-                <div className="space-y-6">
-                  <div className="relative">
+                <div className="space-y-5">
+                  <div className="relative overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
                     <EvidenceMatchingTable />
                   </div>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  <div className="bg-white border border-[#E9E9EC] rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                <div className="space-y-5">
+                  <div className="relative overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
                     <DisputeCasesTable />
                   </div>
                 </div>
@@ -4022,16 +4021,16 @@ export function Dashboard() {
       </div>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
-        <DialogContent className="max-w-md bg-white border border-[#E9E9EC] p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
-          <DialogHeader className="px-6 py-5 border-b border-[#F0F0F2] bg-[#FAFAFB]">
-            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">CONFIGURE_TERMINAL_OVERRIDE</DialogTitle>
-            <DialogDescription className="text-[10px] text-[#858792] font-serif mt-1 uppercase tracking-tight">Select active operational modules for the command grid.</DialogDescription>
+        <DialogContent className="max-w-md overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.10)]">
+          <DialogHeader className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-6 py-5">
+            <DialogTitle className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">Configure workspace shortcuts</DialogTitle>
+            <DialogDescription className="mt-1 text-[11px] font-sans leading-5 text-[#66737F]">Choose the operational modules shown in your workspace.</DialogDescription>
           </DialogHeader>
           <div className="p-6 max-h-[400px] overflow-y-auto space-y-2">
             {QUICK_ActionS.map((a) => (
-              <label key={a.id} className="flex items-center gap-4 p-4 hover:bg-[#FAFAFB] transition-colors cursor-pointer group rounded-lg border border-transparent hover:border-[#F0F0F2]">
+              <label key={a.id} className="group flex cursor-pointer items-center gap-4 rounded-[8px] border border-transparent p-4 transition-colors hover:border-[#DCE8EE] hover:bg-[#F8FBFD]">
                 <Checkbox
-                  className="border-[#C8D8FF] data-[state=checked]:bg-emerald-500 data-[state=checked]:border-none"
+                  className="border-[#C8D8FF] data-[state=checked]:border-[#0B74DE] data-[state=checked]:bg-[#0B74DE]"
                   checked={selectedQuickActions.includes(a.id)}
                   onCheckedChange={(c) => {
                     setSelectedQuickActions(prev => {
@@ -4042,24 +4041,24 @@ export function Dashboard() {
                   }}
                 />
                 <div className="flex flex-col">
-                  <span className="text-[11px] font-mono font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">{a.label.replace('_', ' ')}</span>
-                  <span className="text-[9px] text-[#858792] font-mono uppercase tracking-tight">{a.subtitle.replace('_', ' ')}</span>
+                  <span className="text-[12px] font-sans font-medium text-[#182026] transition-colors group-hover:text-[#0B74DE]">{a.label.replace('_', ' ')}</span>
+                  <span className="text-[10px] font-sans text-[#8A99A5]">{a.subtitle.replace('_', ' ')}</span>
                 </div>
               </label>
             ))}
           </div>
-          <div className="px-6 py-4 border-t border-[#F0F0F2] bg-[#FAFAFB] flex justify-end gap-3">
+          <div className="flex justify-end gap-3 border-t border-[#DCE8EE] bg-[#FAFAF7] px-6 py-4">
             <button
               onClick={() => setQuickActionsEditOpen(false)}
-              className="px-4 py-2 text-[10px] font-mono font-bold text-[#858792] hover:text-[#0B74DE] uppercase tracking-tight transition-colors"
+              className="rounded-[8px] px-4 py-2 text-[11px] font-sans font-medium text-[#66737F] transition-colors hover:bg-white hover:text-[#182026]"
             >
-              ABORT_CHANGES
+              Cancel
             </button>
             <button
-              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
+              className="rounded-[8px] border border-[#0B74DE] bg-[#0B74DE] px-4 py-2 text-[11px] font-sans font-medium text-white transition-colors hover:bg-[#0968C8]"
               onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Quick actions updated', description: 'Your workspace shortcuts were saved.' }); } catch { } setQuickActionsEditOpen(false); }}
             >
-              SAVE_CONFIGURATION
+              Save changes
             </button>
           </div>
         </DialogContent>
@@ -4142,32 +4141,32 @@ export function Dashboard() {
       </Dialog>
 
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-        <DialogContent className="max-w-sm bg-white border border-[#E9E9EC] p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
-          <DialogHeader className="px-6 py-5 border-b border-[#F0F0F2] bg-[#FAFAFB]">
-            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-tight">PROVISION_ACCESS_INVITE</DialogTitle>
-            <DialogDescription className="text-[10px] text-[#858792] font-serif mt-1 uppercase tracking-tight">Authorize read-only access for internal personnel.</DialogDescription>
+        <DialogContent className="max-w-sm overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.10)]">
+          <DialogHeader className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-6 py-5">
+            <DialogTitle className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">Invite workspace access</DialogTitle>
+            <DialogDescription className="mt-1 text-[11px] font-sans leading-5 text-[#66737F]">Invite a teammate with read-only access to this workspace.</DialogDescription>
           </DialogHeader>
           <div className="p-6">
             <Input
               type="email"
-              placeholder="IDENTITY@CORPORATION.SYS"
+              placeholder="name@company.com"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
-              className="h-10 bg-[#FAFAFB] border-[#E9E9EC] text-[11px] font-mono text-white placeholder:text-[#9CA3AF] focus:border-emerald-500/30 rounded-lg"
+              className="h-10 rounded-[8px] border-[#DCE8EE] bg-[#FAFAF7] text-[12px] font-sans text-[#182026] placeholder:text-[#8A99A5] focus-visible:border-[#0B74DE] focus-visible:ring-0"
             />
           </div>
-          <div className="px-6 py-4 border-t border-[#F0F0F2] bg-[#FAFAFB] flex justify-end gap-3">
+          <div className="flex justify-end gap-3 border-t border-[#DCE8EE] bg-[#FAFAF7] px-6 py-4">
             <button
               onClick={() => setInviteOpen(false)}
-              className="px-4 py-2 text-[10px] font-mono font-bold text-[#858792] hover:text-[#0B74DE] uppercase tracking-tight transition-colors"
+              className="rounded-[8px] px-4 py-2 text-[11px] font-sans font-medium text-[#66737F] transition-colors hover:bg-white hover:text-[#182026]"
             >
-              CANCEL_AUTHORIZATION
+              Cancel
             </button>
             <button
-              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
+              className="rounded-[8px] border border-[#0B74DE] bg-[#0B74DE] px-4 py-2 text-[11px] font-sans font-medium text-white transition-colors hover:bg-[#0968C8]"
               onClick={async () => { if (!inviteEmail) return; try { await api.post(`/api/team/invite?tenantSlug=${activeSlug}`, { email: inviteEmail }); toast({ title: 'Invite sent', description: 'The workspace invitation is being prepared.' }); } catch (e: any) { toast({ title: 'Invite could not be sent', description: e?.message || 'Access provision failed.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}
             >
-              SEND_CREDENTIALS
+              Send invite
             </button>
           </div>
         </DialogContent>
@@ -4175,16 +4174,16 @@ export function Dashboard() {
 
       {/* Finding detail modal */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
-        <DialogContent className="platform-vitality-page max-h-[72vh] w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-lg border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
+        <DialogContent className="platform-vitality-page max-h-[72vh] w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.10)]">
           {activeDiscrepancy ? (
             <>
               <DialogHeader className="border-b border-[#E9E9EC] px-4 pb-2.5 pt-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
-                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
+                    <div className="text-[10px] font-sans text-[#8A99A5]">
                       Finding detail
                     </div>
-                    <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
+                    <DialogTitle className="mt-1 font-lora text-[21px] font-normal leading-tight tracking-tight text-[#182026]">
                       {activeDiscrepancyCopy?.title || formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
                     <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
@@ -4200,7 +4199,7 @@ export function Dashboard() {
                           }
                           void findingExplanation.openFor(String(activeDiscrepancy.id));
                         }}
-                        className="mt-2 text-[11px] font-sans font-medium tracking-tight text-[#50525B] underline decoration-white/20 underline-offset-4 transition-colors hover:text-[#0B74DE]"
+                        className="mt-2 text-[11px] font-sans font-medium text-[#4D5B66] underline decoration-[#DCE8EE] underline-offset-4 transition-colors hover:text-[#0B74DE]"
                       >
                         Explain
                       </button>
@@ -4231,7 +4230,7 @@ export function Dashboard() {
                             ? 'Recovery value'
                             : 'Estimated value'}
                       </div>
-                      <div className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
+                      <div className="mt-1 text-[17px] font-sans font-medium tracking-tight text-[#182026]">
                         {activeDiscrepancy.valueLabel === 'no_recovery_value'
                           ? 'Not claim-ready'
                           : typeof activeDiscrepancy.estimatedRecovery === 'number'
@@ -4412,7 +4411,7 @@ export function Dashboard() {
             </>
           ) : (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-6 w-6 text-white animate-spin" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#0B74DE]" />
             </div>
           )}
         </DialogContent>
@@ -4420,16 +4419,16 @@ export function Dashboard() {
 
       {/* Proof needed modal */}
       <Dialog open={showProofNeededModal} onOpenChange={setShowProofNeededModal}>
-        <DialogContent className="platform-vitality-page max-h-[70vh] w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-lg border border-[#E5E7EB] bg-white p-0 text-[#111827] shadow-[0_24px_70px_rgba(17,24,39,0.12)] backdrop-blur-xl">
+        <DialogContent className="platform-vitality-page max-h-[70vh] w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.10)]">
           {activeDiscrepancy ? (
             <>
               <DialogHeader className="border-b border-[#E9E9EC] px-4 pb-2.5 pt-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
-                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
-                      Proof needed (Documentation)
+                    <div className="text-[10px] font-sans text-[#8A99A5]">
+                      Proof required
                     </div>
-                    <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
+                    <DialogTitle className="mt-1 font-lora text-[21px] font-normal leading-tight tracking-tight text-[#182026]">
                       Evidence required for this finding
                     </DialogTitle>
                     <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
@@ -4448,8 +4447,8 @@ export function Dashboard() {
                     <span className={cn(
                       "border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
                       activeDiscrepancy.claimReadiness === 'not_claim_ready'
-                        ? "border-amber-500/20 bg-amber-500/[0.08] text-amber-100"
-                        : "border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-100"
+                        ? "border-[#F4C6CD] bg-[#FFF6F7] text-[#8B3541]"
+                        : "border-[#B9E6D3] bg-[#F4FBF7] text-[#26785E]"
                     )}>
                       {activeDiscrepancy.reviewTier === 'monitoring'
                         ? 'Monitoring'
@@ -4521,7 +4520,7 @@ export function Dashboard() {
                         Margin keeps looking across connected repositories before asking the seller. If one required document is not found, upload it in Evidence Locker and Margin can attach it to the filing workflow.
                       </p>
                       {activeDiscrepancy.whyNotClaimReady ? (
-                        <p className="mt-3 border-l border-amber-500/25 pl-3 text-[11px] font-sans leading-4 tracking-tight text-amber-100/75">
+                        <p className="mt-3 border-l border-[#F4C6CD] pl-3 text-[11px] font-sans leading-4 tracking-tight text-[#8B3541]">
                           {activeDiscrepancy.whyNotClaimReady}
                         </p>
                       ) : null}
@@ -4635,8 +4634,8 @@ export function Dashboard() {
                 </div>
               </div>
 
-              <DialogFooter className="flex flex-col gap-2 border-t border-[#E9E9EC] px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-[10px] font-sans leading-4 tracking-tight text-[#6B7280]">
+              <DialogFooter className="flex flex-col gap-2 border-t border-[#DCE8EE] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[10px] font-sans leading-4 text-[#66737F]">
                   Proof guidance is derived from configured Amazon references, backend finding truth, and the stored deadline. It is not a filing guarantee.
                 </div>
                 <div className="flex items-center gap-3">
@@ -4645,14 +4644,14 @@ export function Dashboard() {
                       setShowProofNeededModal(false);
                       navigate(tenantRoute(activeSlug, '/evidence-locker'));
                     }}
-                    className="h-8 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white hover:bg-[#005FBA]"
+                    className="h-8 rounded-[8px] border border-[#0B74DE] bg-[#0B74DE] px-3.5 text-[10px] font-sans font-medium text-white hover:bg-[#0968C8]"
                   >
                     Open Evidence Locker
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setShowProofNeededModal(false)}
-                    className="h-8 rounded-md border-[#E5E7EB] bg-white px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-[#4B5563] hover:border-[#D8E7FF] hover:bg-[#F3F7FF] hover:text-[#0052FF]"
+                    className="h-8 rounded-[8px] border-[#DCE8EE] bg-white px-3.5 text-[10px] font-sans font-medium text-[#4D5B66] hover:border-[#BFD2DE] hover:bg-[#F8FBFD] hover:text-[#182026]"
                   >
                     Close
                   </Button>
@@ -4661,7 +4660,7 @@ export function Dashboard() {
             </>
           ) : (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-6 w-6 animate-spin text-white" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#0B74DE]" />
             </div>
           )}
         </DialogContent>
@@ -4669,13 +4668,13 @@ export function Dashboard() {
 
       {/* Enter Amazon Case ID Modal */}
       <Dialog open={caseIdModalOpen} onOpenChange={setCaseIdModalOpen}>
-        <DialogContent className="max-w-md bg-white border border-[#E9E9EC] shadow-3xl rounded-xl p-6 backdrop-blur-3xl">
+        <DialogContent className="max-w-md rounded-[10px] border border-[#DCE8EE] bg-white p-6 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.10)]">
           <DialogHeader>
-            <DialogTitle className="text-xl font-serif font-medium text-white uppercase tracking-tight">
-              Link Amazon Case ID
+            <DialogTitle className="font-lora text-[24px] font-normal tracking-tight text-[#182026]">
+              Link Amazon case ID
             </DialogTitle>
-            <DialogDescription className="text-xs text-[#D8D8DE]0 font-serif mt-2">
-              Enter the Case ID provided by Amazon Seller Support to track this claim.
+            <DialogDescription className="mt-2 text-[11px] font-sans leading-5 text-[#66737F]">
+              Enter the case ID provided by Amazon Seller Support to track this claim.
             </DialogDescription>
           </DialogHeader>
 
@@ -4684,7 +4683,7 @@ export function Dashboard() {
               value={caseIdInput}
               onChange={(e) => setCaseIdInput(e.target.value)}
               placeholder="e.g. CASE-123456789"
-              className="bg-[#FAFAFB] border-[#E9E9EC] text-white placeholder:text-[#858792] font-mono h-12"
+              className="h-11 rounded-[8px] border-[#DCE8EE] bg-[#FAFAF7] text-[12px] font-sans text-[#182026] placeholder:text-[#8A99A5] focus-visible:border-[#0B74DE] focus-visible:ring-0"
               disabled={isLinkingCase}
             />
           </div>
@@ -4693,7 +4692,7 @@ export function Dashboard() {
             <Button
               variant="outline"
               onClick={() => setCaseIdModalOpen(false)}
-              className="px-4 py-2 bg-[#FAFAFB] border-[#E9E9EC] text-[10px] font-mono font-bold text-[#6B7280] hover:text-[#0B74DE] uppercase tracking-tight h-10"
+              className="h-10 rounded-[8px] border-[#DCE8EE] bg-[#FAFAF7] px-4 py-2 text-[11px] font-sans font-medium text-[#66737F] hover:bg-white hover:text-[#182026]"
               disabled={isLinkingCase}
             >
               Cancel
@@ -4701,7 +4700,7 @@ export function Dashboard() {
             <Button
               onClick={handleCaseIdUpdate}
               disabled={!caseIdInput.trim() || isLinkingCase}
-              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-tight rounded-lg flex items-center h-10"
+              className="flex h-10 items-center rounded-[8px] border border-[#0B74DE] bg-[#0B74DE] px-5 py-2 text-[11px] font-sans font-medium text-white transition-colors hover:bg-[#0968C8]"
             >
               {isLinkingCase ? (
                 <>
