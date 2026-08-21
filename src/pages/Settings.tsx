@@ -66,6 +66,7 @@ const Settings = () => {
   const [sellerProfile, setSellerProfile] = useState<SellerProfile>({});
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
+  const [connectivityError, setConnectivityError] = useState<string | null>(null);
   const [autoFileEnabled, setAutoFileEnabled] = useState<boolean | null>(null);
   const [autoFileGateStatus, setAutoFileGateStatus] = useState<AutoFileGateStatus | null>(null);
   const [loadingAutoFile, setLoadingAutoFile] = useState(true);
@@ -82,6 +83,7 @@ const Settings = () => {
     const loadSellerProfile = async () => {
       setLoadingProfile(true);
       setProfileError(null);
+      setConnectivityError(null);
       try {
         const [meRes, statusRes] = await Promise.all([
           api.getMe(activeTenantSlug),
@@ -122,10 +124,18 @@ const Settings = () => {
           };
         }
 
+        if (!meRes.ok) {
+          setProfileError('Margin could not load the current account record. Refresh the page before relying on these values.');
+        }
+        if (!statusRes.ok) {
+          setConnectivityError('Margin could not load the current connection record. Refresh the page before relying on these values.');
+        }
+
         setSellerProfile(nextProfile);
       } catch (error) {
         console.error('Failed to load settings profile:', error);
         setProfileError('Margin could not load the current account record. Refresh the page before relying on these values.');
+        setConnectivityError('Margin could not load the current connection record. Refresh the page before relying on these values.');
       } finally {
         setLoadingProfile(false);
       }
@@ -220,6 +230,7 @@ const Settings = () => {
   };
 
   const supportTier = tenant ? SUPPORT_TIER_COPY[tenant.plan] : 'Not available';
+  const connectivityKnown = !loadingProfile && !connectivityError;
   const isAmazonConnected = sellerProfile.amazon_connected ?? false;
   const linkedMarketplaces = sellerProfile.linked_marketplaces || [];
   const paypalActive = sellerProfile.paypal_connected ?? false;
@@ -254,6 +265,7 @@ const Settings = () => {
 
   const profileValue = (value: string | null | undefined, fallback = 'Not available'): string => {
     if (loadingProfile) return 'Loading…';
+    if (profileError) return 'Unavailable';
     return value || fallback;
   };
 
@@ -380,6 +392,12 @@ const Settings = () => {
                 </Button>
               </div>
 
+              {connectivityError && (
+                <div className="mb-3 flex items-start gap-2 rounded-[8px] border border-rose-200 bg-rose-50 p-3 text-rose-700">
+                  <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                  <p className="text-[12px] leading-5">{connectivityError}</p>
+                </div>
+              )}
               <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
                 <div className="divide-y divide-[#E7EEF2]">
                   <div className="flex items-center justify-between p-4 sm:p-5">
@@ -389,14 +407,14 @@ const Settings = () => {
                       </div>
                       <div>
                         <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Amazon Seller Central</p>
-                        <p className="text-[14px] font-semibold text-[#182026]">{loadingProfile ? 'Checking connection' : isAmazonConnected ? 'Linked' : 'Not connected'}</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{loadingProfile ? 'Checking connection' : !connectivityKnown ? 'Unavailable' : isAmazonConnected ? 'Linked' : 'Not connected'}</p>
                       </div>
                     </div>
                     <Badge variant="outline" className={cn(
                       "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
                       isAmazonConnected ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]" : "border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]"
                     )}>
-                      {loadingProfile ? 'Checking' : isAmazonConnected ? 'Active' : 'Required'}
+                      {loadingProfile ? 'Checking' : !connectivityKnown ? 'Unavailable' : isAmazonConnected ? 'Active' : 'Required'}
                     </Badge>
                   </div>
 
@@ -407,14 +425,14 @@ const Settings = () => {
                       </div>
                       <div>
                         <p className="text-[12px] font-medium tracking-tight text-[#66737F]">PayPal Billing</p>
-                        <p className="text-[14px] font-semibold text-[#182026]">{loadingProfile ? 'Checking connection' : paypalActive ? 'Connected' : 'Not available'}</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{loadingProfile ? 'Checking connection' : !connectivityKnown ? 'Unavailable' : paypalActive ? 'Connected' : 'Not available'}</p>
                       </div>
                     </div>
                     <Badge variant="outline" className={cn(
                       "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
                       paypalActive ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]" : "border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]"
                     )}>
-                      {loadingProfile ? 'Checking' : paypalActive ? 'Active' : 'Inactive'}
+                      {loadingProfile ? 'Checking' : !connectivityKnown ? 'Unavailable' : paypalActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
 
@@ -422,7 +440,7 @@ const Settings = () => {
                     <div className="p-4 sm:p-5">
                       <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Last Ingest</p>
                       <p className="mt-1 text-[14px] font-semibold text-[#182026]">
-                        {sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
+                        {loadingProfile ? 'Loading…' : !connectivityKnown ? 'Unavailable' : sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
                       </p>
                     </div>
                     <div className="p-4 sm:p-5">
@@ -430,6 +448,8 @@ const Settings = () => {
                       <div className="mt-2 flex flex-wrap gap-2">
                         {loadingProfile ? (
                           <span className="text-[13px] font-medium text-[#9CA3AF]">Loading linked marketplaces</span>
+                        ) : !connectivityKnown ? (
+                          <span className="text-[13px] font-medium text-[#9CA3AF]">Connection record unavailable</span>
                         ) : linkedMarketplaces.length > 0 ? (
                           linkedMarketplaces.map((mId) => (
                             <Badge key={mId} variant="outline" className="bg-[#F7FAFC] text-[#4D5B66] border-[#DCE8EE] font-bold text-[10px] px-2 py-0.5 rounded-md tracking-tight">
