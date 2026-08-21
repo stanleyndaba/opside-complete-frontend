@@ -351,13 +351,17 @@ export default function Admin() {
     }
   };
 
+  const fieldLabel = 'text-[11px] font-semibold text-[#51606C]';
+  const fieldInput = 'border-[#DCE8EE] bg-white text-[#182026] placeholder:text-[#94A3AD] shadow-none focus-visible:border-[#0B74DE] focus-visible:ring-[#0B74DE]/15';
+  const surface = 'rounded-2xl border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.025)]';
+
   if (adminAccess === 'checking') {
     return (
-      <PageLayout title="Admin Control" midnight>
-        <div className="min-h-[50vh] bg-[#050505] -m-4 lg:-m-6 flex items-center justify-center px-6 text-white">
-          <div className="flex items-center gap-3 text-sm text-white/60">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Verifying admin access…
+      <PageLayout title="Admin Control">
+        <div className="-m-4 flex min-h-[50vh] items-center justify-center bg-[#FAFAF7] px-6 lg:-m-6">
+          <div className="flex items-center gap-3 text-sm text-[#66737F]">
+            <Loader2 className="h-4 w-4 animate-spin text-[#0B74DE]" />
+            Verifying publication authority…
           </div>
         </div>
       </PageLayout>
@@ -366,15 +370,17 @@ export default function Admin() {
 
   if (!isAdmin) {
     return (
-      <PageLayout title="Admin Control" midnight>
-        <div className="min-h-[50vh] bg-[#050505] -m-4 lg:-m-6 flex items-center justify-center px-6 text-white">
-          <div className="max-w-md border border-white/10 bg-white/[0.03] p-7 text-center">
-            <ShieldCheck className="mx-auto h-5 w-5 text-white/70" />
-            <h1 className="mt-4 text-xl font-semibold tracking-tight text-white">Admin access required</h1>
-            <p className="mt-2 text-sm leading-6 text-white/55">
-              This publication console is available only to active Margin platform administrators.
+      <PageLayout title="Admin Control">
+        <div className="-m-4 flex min-h-[50vh] items-center justify-center bg-[#FAFAF7] px-6 lg:-m-6">
+          <div className="w-full max-w-md rounded-2xl border border-[#DCE8EE] bg-white p-8 text-center shadow-[0_12px_30px_rgba(24,32,38,0.05)]">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#EEF6FE] text-[#0B74DE]">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <h1 className="mt-5 font-lora text-2xl font-normal tracking-tight text-[#182026]">Admin access required</h1>
+            <p className="mt-3 text-sm leading-6 text-[#66737F]">
+              This publication workspace is available only to active Margin platform administrators.
             </p>
-            <Button asChild variant="outline" className="mt-5 border-white/15 bg-transparent text-white hover:bg-white/10">
+            <Button asChild variant="outline" className="mt-6 border-[#DCE8EE] bg-white text-[#33414B] hover:bg-[#F5F8FA]">
               <Link to={whatsNewHref}>Open What’s New</Link>
             </Button>
           </div>
@@ -384,474 +390,217 @@ export default function Admin() {
   }
 
   return (
-    <PageLayout title="Admin Control" midnight>
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden -m-4 lg:-m-6 text-white">
-        <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.07),transparent_65%)] pointer-events-none" />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.025] pointer-events-none" />
-
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-12 space-y-6">
-          <header className="border-b border-white/10 pb-8">
-            <div className="flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-              <div className="h-px w-8 bg-white/25" />
-              Admin surface
-            </div>
-            <div className="mt-5 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h1 className="text-4xl md:text-5xl font-sans font-bold tracking-tight text-white">
-                  Margin Control
-                </h1>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50 font-sans">
-                  A small operator console for product rollouts and user/integration control. Drafts do not notify users; publishing is the broadcast trigger.
+    <PageLayout title="Admin Control">
+      <div className="-m-4 min-h-screen bg-[#FAFAF7] text-[#182026] lg:-m-6">
+        <div className="border-b border-[#DCE8EE] bg-white">
+          <div className="mx-auto max-w-7xl px-5 py-8 sm:px-7 lg:px-9 lg:py-10">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-2 text-xs font-medium text-[#66737F]">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#0B74DE]" />
+                  Server-owned publication authority
+                </div>
+                <h1 className="mt-3 font-lora text-3xl font-normal tracking-tight text-[#182026] sm:text-4xl">Admin Control</h1>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[#66737F]">
+                  Prepare product communications, manage their delivery boundary, and keep a durable record of what Margin has published.
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Publication access</div>
-                <div className="mt-1 text-sm font-sans font-bold text-white">Server verified</div>
+              <div className="flex items-center gap-3 rounded-xl border border-[#DCE8EE] bg-[#F8FBFD] px-4 py-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#EAF4FE] text-[#0B74DE]">
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-[#182026]">Publication access</div>
+                  <div className="mt-0.5 text-xs text-[#66737F]">Verified by Margin server authority</div>
+                </div>
               </div>
             </div>
-          </header>
+          </div>
+        </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_0.8fr]">
-            <div className="space-y-6">
-            <Card className="rounded-3xl border-white/10 bg-[#0b0b0b] text-white shadow-2xl">
-              <CardHeader className="border-b border-white/10 px-6 py-5">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <CardTitle className="flex items-center gap-2 text-sm font-sans font-bold uppercase tracking-tight text-white">
+        <div className="mx-auto max-w-7xl px-5 py-7 sm:px-7 lg:px-9 lg:py-9">
+          <div className="grid items-start gap-7 xl:grid-cols-[minmax(0,1fr)_340px]">
+            <main className="space-y-7">
+              <section className={surface}>
+                <div className="flex flex-col gap-4 border-b border-[#E5EDF1] px-5 py-5 sm:px-6 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="flex gap-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EAF4FE] text-[#0B74DE]">
                       <Megaphone className="h-4 w-4" />
-                      Product Updates
-                    </CardTitle>
-                    <CardDescription className="mt-2 max-w-xl text-xs leading-5 text-white/45">
-                      Create the Latest Changes record, then publish when you want Agent 10 to send in-app and email rollout notifications.
-                    </CardDescription>
+                    </div>
+                    <div>
+                      <h2 className="font-lora text-xl font-normal tracking-tight text-[#182026]">Product update</h2>
+                      <p className="mt-1 max-w-2xl text-sm leading-6 text-[#66737F]">
+                        Save a draft freely. Publishing establishes the seller-visible record and creates one durable broadcast job according to the channels selected below.
+                      </p>
+                    </div>
                   </div>
-                  <Badge variant="outline" className="border-emerald-400/20 bg-emerald-400/10 text-emerald-200">
-                    Publish sends
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-5 p-6">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-tight text-white/40">Title</Label>
-                    <Input
-                      value={form.title}
-                      onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
-                      placeholder="Product Updates Are Now Live"
-                      className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-tight text-white/40">Slug</Label>
-                    <Input
-                      value={form.slug}
-                      onChange={(event) => setForm((prev) => ({ ...prev, slug: event.target.value }))}
-                      placeholder={resolvedSlug || 'auto-generated-from-title'}
-                      className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                    />
-                  </div>
+                  <Badge variant="outline" className="w-fit border-[#B7D8F4] bg-[#F1F8FE] text-[#1262A3]">Controlled publish</Badge>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-[10px] uppercase tracking-tight text-white/40">Summary</Label>
-                  <Textarea
-                    variant="dark"
-                    value={form.summary}
-                    onChange={(event) => setForm((prev) => ({ ...prev, summary: event.target.value }))}
-                    placeholder="A concise seller-facing explanation of what shipped."
-                    className="min-h-[92px] resize-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-tight text-white/40">Highlights</Label>
-                    <Textarea
-                      variant="dark"
-                      value={form.highlights}
-                      onChange={(event) => setForm((prev) => ({ ...prev, highlights: event.target.value }))}
-                      placeholder={'One highlight per line\nKeep it to 2-5 bullets'}
-                      className="min-h-[128px]"
-                    />
-                  </div>
-                  <div className="space-y-4">
+                <div className="space-y-6 p-5 sm:p-6">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label className="text-[10px] uppercase tracking-tight text-white/40">Body</Label>
-                      <Textarea
-                        variant="dark"
-                        value={form.body}
-                        onChange={(event) => setForm((prev) => ({ ...prev, body: event.target.value }))}
-                        placeholder="Optional detail shown on What's New and in email context."
-                        className="min-h-[80px]"
-                      />
+                      <Label className={fieldLabel}>Title</Label>
+                      <Input value={form.title} onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))} placeholder="Product Updates Are Now Live" className={fieldInput} />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Input
-                        value={form.tag}
-                        onChange={(event) => setForm((prev) => ({ ...prev, tag: event.target.value }))}
-                        placeholder="Tag"
-                        className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                      />
-                      <Input
-                        value={form.cta_href}
-                        onChange={(event) => setForm((prev) => ({ ...prev, cta_href: event.target.value }))}
-                        placeholder="/whats-new"
-                        className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                      />
+                    <div className="space-y-2">
+                      <Label className={fieldLabel}>Slug</Label>
+                      <Input value={form.slug} onChange={(event) => setForm((prev) => ({ ...prev, slug: event.target.value }))} placeholder={resolvedSlug || 'Auto-generated from title'} className={fieldInput} />
                     </div>
                   </div>
+
+                  <div className="space-y-2">
+                    <Label className={fieldLabel}>Summary</Label>
+                    <Textarea value={form.summary} onChange={(event) => setForm((prev) => ({ ...prev, summary: event.target.value }))} placeholder="A concise seller-facing explanation of what changed." className={'min-h-[92px] resize-none ' + fieldInput} />
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label className={fieldLabel}>Highlights</Label>
+                      <Textarea value={form.highlights} onChange={(event) => setForm((prev) => ({ ...prev, highlights: event.target.value }))} placeholder={'One highlight per line\nKeep it to 2–5 concise points'} className={'min-h-[130px] ' + fieldInput} />
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label className={fieldLabel}>Detail</Label>
+                        <Textarea value={form.body} onChange={(event) => setForm((prev) => ({ ...prev, body: event.target.value }))} placeholder="Optional operating context shown in What’s New and email context." className={'min-h-[82px] ' + fieldInput} />
+                      </div>
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label className={fieldLabel}>Category</Label>
+                          <Input value={form.tag} onChange={(event) => setForm((prev) => ({ ...prev, tag: event.target.value }))} placeholder="Platform" className={fieldInput} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className={fieldLabel}>CTA destination</Label>
+                          <Input value={form.cta_href} onChange={(event) => setForm((prev) => ({ ...prev, cta_href: event.target.value }))} placeholder="/whats-new" className={fieldInput} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-[#DCE8EE] bg-[#F8FBFD] p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-[#182026]">
+                      <ShieldCheck className="h-4 w-4 text-[#0B74DE]" />
+                      Delivery boundary
+                    </div>
+                    <p className="mt-1 text-xs leading-5 text-[#66737F]">Choose the channels deliberately. The published record remains canonical even if both delivery channels are off.</p>
+                    <div className="mt-4 grid grid-cols-1 divide-y divide-[#DCE8EE] md:grid-cols-2 md:divide-x md:divide-y-0">
+                      <label className="flex items-center justify-between gap-4 py-3 md:py-1 md:pr-5">
+                        <span>
+                          <span className="block text-sm font-medium text-[#182026]">In-app notification</span>
+                          <span className="mt-1 block text-xs leading-5 text-[#66737F]">Create notification records and realtime updates.</span>
+                        </span>
+                        <Switch checked={form.notify_in_app} onCheckedChange={(value) => setForm((prev) => ({ ...prev, notify_in_app: value }))} />
+                      </label>
+                      <label className="flex items-center justify-between gap-4 pt-3 md:pl-5 md:pt-1">
+                        <span>
+                          <span className="block text-sm font-medium text-[#182026]">Email broadcast</span>
+                          <span className="mt-1 block text-xs leading-5 text-[#66737F]">Send a rollout email through Agent 10.</span>
+                        </span>
+                        <Switch checked={form.notify_email} onCheckedChange={(value) => setForm((prev) => ({ ...prev, notify_email: value }))} />
+                      </label>
+                    </div>
+                  </div>
+
+                  {error && <div className="rounded-xl border border-[#F3C8C8] bg-[#FFF7F7] px-4 py-3 text-sm leading-6 text-[#A33A3A]">{error}</div>}
+                  {success && <div className="rounded-xl border border-[#C7E8D1] bg-[#F3FBF5] px-4 py-3 text-sm leading-6 text-[#277545]">{success}</div>}
+
+                  <div className="flex flex-wrap items-center gap-3 border-t border-[#E5EDF1] pt-5">
+                    <Button type="button" disabled={!isAdmin || loading !== null} onClick={() => submitUpdate('draft')} variant="outline" className="border-[#DCE8EE] bg-white text-[#33414B] hover:bg-[#F5F8FA]">
+                      {loading === 'draft' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                      Save draft
+                    </Button>
+                    <Button type="button" disabled={!isAdmin || loading !== null} onClick={() => submitUpdate('publish')} className="bg-[#0B74DE] text-white hover:bg-[#0967C5]">
+                      {loading === 'publish' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Megaphone className="mr-2 h-4 w-4" />}
+                      Publish update
+                    </Button>
+                    <Button asChild variant="ghost" className="text-[#52606B] hover:bg-[#F1F6F9] hover:text-[#182026]">
+                      <Link to={whatsNewHref}>Open What’s New <ArrowUpRight className="ml-2 h-4 w-4" /></Link>
+                    </Button>
+                  </div>
+
+                  {(savedUpdate || broadcastJob) && (
+                    <div className="grid grid-cols-1 gap-3 rounded-xl border border-[#DCE8EE] bg-[#F8FBFD] p-4 sm:grid-cols-3">
+                      <div><div className="text-[11px] font-medium text-[#66737F]">Current record</div><div className="mt-1 break-all font-mono text-xs text-[#33414B]">{savedUpdate?.slug || 'Not available'}</div></div>
+                      <div><div className="text-[11px] font-medium text-[#66737F]">Publication status</div><div className="mt-1 text-sm font-semibold text-[#182026]">{savedUpdate?.status || 'Not available'}</div></div>
+                      <div><div className="text-[11px] font-medium text-[#66737F]">Broadcast job</div><div className="mt-1 text-sm font-semibold text-[#182026]">{broadcastJob?.status || 'Not started'}</div></div>
+                    </div>
+                  )}
                 </div>
+              </section>
 
-                <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.025] p-4 md:grid-cols-2">
-                  <label className="flex items-center justify-between gap-4">
-                    <span>
-                      <span className="block text-sm font-sans font-bold text-white">In-app notification</span>
-                      <span className="block text-xs text-white/40">Create notification records and realtime updates.</span>
-                    </span>
-                    <Switch
-                      checked={form.notify_in_app}
-                      onCheckedChange={(value) => setForm((prev) => ({ ...prev, notify_in_app: value }))}
-                    />
-                  </label>
-                  <label className="flex items-center justify-between gap-4">
-                    <span>
-                      <span className="block text-sm font-sans font-bold text-white">Email broadcast</span>
-                      <span className="block text-xs text-white/40">Send rollout email through Agent 10.</span>
-                    </span>
-                    <Switch
-                      checked={form.notify_email}
-                      onCheckedChange={(value) => setForm((prev) => ({ ...prev, notify_email: value }))}
-                    />
-                  </label>
-                </div>
-
-                {error && (
-                  <div className="rounded-2xl border border-red-400/20 bg-red-500/[0.08] p-4 text-xs leading-5 text-red-100">
-                    {error}
-                  </div>
-                )}
-                {success && (
-                  <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.08] p-4 text-xs leading-5 text-emerald-100">
-                    {success}
-                  </div>
-                )}
-
-                <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
-                  <Button
-                    type="button"
-                    disabled={!isAdmin || loading !== null}
-                    onClick={() => submitUpdate('draft')}
-                    variant="outline"
-                    className="border-white/15 bg-white/[0.02] text-white hover:bg-white/10"
-                  >
-                    {loading === 'draft' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Save draft
-                  </Button>
-                  <Button
-                    type="button"
-                    disabled={!isAdmin || loading !== null}
-                    onClick={() => submitUpdate('publish')}
-                    className="bg-white text-black hover:bg-white/85"
-                  >
-                    {loading === 'publish' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Megaphone className="mr-2 h-4 w-4" />}
-                    Publish and send
-                  </Button>
-                  <Button asChild variant="ghost" className="text-white/70 hover:bg-white/10 hover:text-white">
-                    <Link to={whatsNewHref}>
-                      Open What's New
-                      <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-
-                {(savedUpdate || broadcastJob) && (
-                  <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-xs text-white/60 md:grid-cols-3">
-                    <div>
-                      <div className="uppercase tracking-tight text-white/30">Current record</div>
-                      <div className="mt-1 font-mono text-white/80">{savedUpdate?.slug || 'Not available'}</div>
-                    </div>
-                    <div>
-                      <div className="uppercase tracking-tight text-white/30">Status</div>
-                      <div className="mt-1 font-mono text-white/80">{savedUpdate?.status || 'Not available'}</div>
-                    </div>
-                    <div>
-                      <div className="uppercase tracking-tight text-white/30">Broadcast job</div>
-                      <div className="mt-1 font-mono text-white/80">{broadcastJob?.status || 'Not started'}</div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-3xl border-white/10 bg-[#0b0b0b] text-white shadow-2xl">
-              <CardHeader className="border-b border-white/10 px-6 py-5">
-                <div className="flex flex-wrap items-start justify-between gap-4">
+              <section className={surface}>
+                <div className="flex gap-3 border-b border-[#E5EDF1] px-5 py-5 sm:px-6">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F0F6FA] text-[#52606B]"><Mail className="h-4 w-4" /></div>
                   <div>
-                    <CardTitle className="flex items-center gap-2 text-sm font-sans font-bold uppercase tracking-tight text-white">
-                      <Mail className="h-4 w-4" />
-                      User Broadcast
-                    </CardTitle>
-                    <CardDescription className="mt-2 max-w-xl text-xs leading-5 text-white/45">
-                      Compose a direct message from Margin. Save drafts freely; test sends and final sends are explicit actions.
-                    </CardDescription>
-                  </div>
-                  <Badge variant="outline" className="border-sky-400/20 bg-sky-400/10 text-sky-100">
-                    Manual only
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-5 p-6">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-tight text-white/40">Subject</Label>
-                    <Input
-                      value={broadcastForm.subject}
-                      onChange={(event) => setBroadcastForm((prev) => ({ ...prev, subject: event.target.value }))}
-                      placeholder="A quick update from Margin"
-                      className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-tight text-white/40">Heading</Label>
-                    <Input
-                      value={broadcastForm.heading}
-                      onChange={(event) => setBroadcastForm((prev) => ({ ...prev, heading: event.target.value }))}
-                      placeholder="A quick update from Margin"
-                      className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                    />
+                    <h2 className="font-lora text-xl font-normal tracking-tight text-[#182026]">User broadcast</h2>
+                    <p className="mt-1 text-sm leading-6 text-[#66737F]">Compose a direct message from Margin. Drafts, test sends, and final sends are intentionally separate actions.</p>
                   </div>
                 </div>
+                <div className="space-y-6 p-5 sm:p-6">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="space-y-2"><Label className={fieldLabel}>Subject</Label><Input value={broadcastForm.subject} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, subject: event.target.value }))} placeholder="A quick update from Margin" className={fieldInput} /></div>
+                    <div className="space-y-2"><Label className={fieldLabel}>Heading</Label><Input value={broadcastForm.heading} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, heading: event.target.value }))} placeholder="A quick update from Margin" className={fieldInput} /></div>
+                  </div>
+                  <div className="space-y-2"><Label className={fieldLabel}>Summary / intro</Label><Textarea value={broadcastForm.summary} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, summary: event.target.value }))} placeholder="Short context before the main message. Omit if the body is enough." className={'min-h-[80px] resize-none ' + fieldInput} /></div>
+                  <div className="space-y-2"><Label className={fieldLabel}>Body</Label><Textarea value={broadcastForm.body} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, body: event.target.value }))} placeholder="Write the direct message. Keep it specific, calm, and useful." className={'min-h-[140px] ' + fieldInput} /></div>
 
-                <div className="space-y-2">
-                  <Label className="text-[10px] uppercase tracking-tight text-white/40">Summary / intro</Label>
-                  <Textarea
-                    variant="dark"
-                    value={broadcastForm.summary}
-                    onChange={(event) => setBroadcastForm((prev) => ({ ...prev, summary: event.target.value }))}
-                    placeholder="Short context before the main message. Omit if the body is enough."
-                    className="min-h-[80px] resize-none"
-                  />
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                    <div className="space-y-2"><Label className={fieldLabel}>Optional highlights</Label><Textarea value={broadcastForm.highlights} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, highlights: event.target.value }))} placeholder={'One note per line\nExample: No action needed'} className={'min-h-[112px] ' + fieldInput} /></div>
+                    <div className="space-y-4">
+                      <div className="space-y-2"><Label className={fieldLabel}>Audience</Label><select value={broadcastForm.audience_type} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, audience_type: event.target.value as ManualBroadcastAudienceType }))} className="h-10 w-full rounded-md border border-[#DCE8EE] bg-white px-3 text-sm text-[#182026] outline-none focus:border-[#0B74DE] focus:ring-2 focus:ring-[#0B74DE]/15"><option value="test_emails">Selected / test emails</option><option value="all_users">All users</option><option value="active_users">Active users only</option></select></div>
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2"><div className="space-y-2"><Label className={fieldLabel}>CTA label</Label><Input value={broadcastForm.cta_label} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, cta_label: event.target.value }))} placeholder="CTA label" className={fieldInput} /></div><div className="space-y-2"><Label className={fieldLabel}>CTA destination</Label><Input value={broadcastForm.cta_url} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, cta_url: event.target.value }))} placeholder="/app or https://…" className={fieldInput} /></div></div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2"><Label className={fieldLabel}>Selected / test emails</Label><Textarea value={broadcastForm.audience_emails} onChange={(event) => setBroadcastForm((prev) => ({ ...prev, audience_emails: event.target.value }))} placeholder={'mvelocloud7@gmail.com\nanother@example.com'} className={'min-h-[86px] ' + fieldInput} /></div>
+
+                  <div className="rounded-xl border border-[#DCE8EE] bg-[#F8FBFD] p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div><div className="text-[11px] font-medium text-[#66737F]">Audience preview</div><div className="mt-1 text-sm font-semibold text-[#182026]">{audienceLabel}</div></div>
+                      <Badge variant="outline" className="border-[#DCE8EE] bg-white text-[#52606B]">{savedBroadcast?.recipient_count_preview ?? 'Save'} recipients</Badge>
+                    </div>
+                    <div className="mt-4 rounded-lg border border-[#DCE8EE] bg-white p-4">
+                      <div className="text-[11px] font-medium text-[#66737F]">Email preview</div>
+                      <div className="mt-2 text-lg font-semibold text-[#182026]">{savedBroadcast?.preview?.email_heading || broadcastForm.heading || 'Heading preview'}</div>
+                      {(savedBroadcast?.preview?.email_summary || broadcastForm.summary) && <div className="mt-2 text-sm leading-6 text-[#66737F]">{savedBroadcast?.preview?.email_summary || broadcastForm.summary}</div>}
+                      <div className="mt-4 whitespace-pre-wrap text-sm leading-6 text-[#52606B]">{savedBroadcast?.preview?.email_body || broadcastForm.body || 'Body preview appears here after you write the message.'}</div>
+                      {(savedBroadcast?.preview?.email_highlights?.length || splitHighlights(broadcastForm.highlights).length) ? <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-[#66737F]">{(savedBroadcast?.preview?.email_highlights || splitHighlights(broadcastForm.highlights)).map((item) => <li key={item}>{item}</li>)}</ul> : null}
+                    </div>
+                  </div>
+
+                  {broadcastError && <div className="rounded-xl border border-[#F3C8C8] bg-[#FFF7F7] px-4 py-3 text-sm leading-6 text-[#A33A3A]">{broadcastError}</div>}
+                  {broadcastSuccess && <div className="rounded-xl border border-[#C7E8D1] bg-[#F3FBF5] px-4 py-3 text-sm leading-6 text-[#277545]">{broadcastSuccess}</div>}
+
+                  <div className="flex flex-wrap items-center gap-3 border-t border-[#E5EDF1] pt-5">
+                    <Button type="button" disabled={!isAdmin || broadcastLoading !== null} onClick={saveBroadcastDraft} variant="outline" className="border-[#DCE8EE] bg-white text-[#33414B] hover:bg-[#F5F8FA]">{broadcastLoading === 'draft' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}Save draft</Button>
+                    <Button type="button" disabled={!isAdmin || broadcastLoading !== null} onClick={testSendBroadcast} variant="outline" className="border-[#B7D8F4] bg-[#F1F8FE] text-[#1262A3] hover:bg-[#E7F3FD]">{broadcastLoading === 'test' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}Send test</Button>
+                    <Button type="button" disabled={!isAdmin || broadcastLoading !== null} onClick={sendBroadcast} className="bg-[#0B74DE] text-white hover:bg-[#0967C5]">{broadcastLoading === 'send' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}Confirm and send</Button>
+                  </div>
+
+                  {savedBroadcast && <div className="grid grid-cols-2 gap-3 rounded-xl border border-[#DCE8EE] bg-[#F8FBFD] p-4 text-sm sm:grid-cols-4"><div><div className="text-[11px] font-medium text-[#66737F]">Broadcast</div><div className="mt-1 truncate font-mono text-xs text-[#33414B]">{savedBroadcast.id}</div></div><div><div className="text-[11px] font-medium text-[#66737F]">Status</div><div className="mt-1 font-semibold text-[#182026]">{savedBroadcast.status}</div></div><div><div className="text-[11px] font-medium text-[#66737F]">Sent</div><div className="mt-1 font-semibold text-[#182026]">{savedBroadcast.sent_count || 0}/{savedBroadcast.recipient_count || 0}</div></div><div><div className="text-[11px] font-medium text-[#66737F]">Failed</div><div className="mt-1 font-semibold text-[#182026]">{savedBroadcast.failed_count || 0}</div></div></div>}
                 </div>
+              </section>
+            </main>
 
-                <div className="space-y-2">
-                  <Label className="text-[10px] uppercase tracking-tight text-white/40">Body</Label>
-                  <Textarea
-                    variant="dark"
-                    value={broadcastForm.body}
-                    onChange={(event) => setBroadcastForm((prev) => ({ ...prev, body: event.target.value }))}
-                    placeholder="Write the direct message. Keep it specific, calm, and useful."
-                    className="min-h-[140px]"
-                  />
+            <aside className="space-y-5 xl:sticky xl:top-6">
+              <section className={surface}>
+                <div className="p-5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F0F6FA] text-[#52606B]"><Users className="h-4 w-4" /></div>
+                  <h2 className="mt-4 font-lora text-xl font-normal tracking-tight text-[#182026]">Users & integrations</h2>
+                  <p className="mt-2 text-sm leading-6 text-[#66737F]">Manage user access, waitlist entries, and integration truth in the dedicated operations workspace.</p>
+                  <Button asChild variant="outline" className="mt-5 w-full border-[#DCE8EE] bg-white text-[#33414B] hover:bg-[#F5F8FA]"><Link to={usersIntegrationsHref}>Open operations <ArrowUpRight className="ml-2 h-4 w-4" /></Link></Button>
                 </div>
+              </section>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-tight text-white/40">Optional highlights</Label>
-                    <Textarea
-                      variant="dark"
-                      value={broadcastForm.highlights}
-                      onChange={(event) => setBroadcastForm((prev) => ({ ...prev, highlights: event.target.value }))}
-                      placeholder={'One note per line\nExample: No action needed'}
-                      className="min-h-[112px]"
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] uppercase tracking-tight text-white/40">Audience</Label>
-                      <select
-                        value={broadcastForm.audience_type}
-                        onChange={(event) => setBroadcastForm((prev) => ({ ...prev, audience_type: event.target.value as ManualBroadcastAudienceType }))}
-                        className="h-10 w-full rounded-md border border-white/10 bg-white/[0.04] px-3 text-sm text-white outline-none focus:border-white/20"
-                      >
-                        <option className="bg-[#0b0b0b]" value="test_emails">Selected / test emails</option>
-                        <option className="bg-[#0b0b0b]" value="all_users">All users</option>
-                        <option className="bg-[#0b0b0b]" value="active_users">Active users only</option>
-                      </select>
-                    </div>
-                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                      <Input
-                        value={broadcastForm.cta_label}
-                        onChange={(event) => setBroadcastForm((prev) => ({ ...prev, cta_label: event.target.value }))}
-                        placeholder="CTA label"
-                        className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                      />
-                      <Input
-                        value={broadcastForm.cta_url}
-                        onChange={(event) => setBroadcastForm((prev) => ({ ...prev, cta_url: event.target.value }))}
-                        placeholder="/app or https://..."
-                        className="border-white/10 bg-white/[0.04] text-white placeholder:text-white/25"
-                      />
-                    </div>
-                  </div>
+              <section className={surface}>
+                <div className="border-b border-[#E5EDF1] px-5 py-5"><div className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#0B74DE]" /><h2 className="font-lora text-xl font-normal tracking-tight text-[#182026]">Published records</h2></div><p className="mt-2 text-sm leading-6 text-[#66737F]">Read-only confirmation from the public Product Updates API.</p></div>
+                <div className="space-y-3 p-4">
+                  {loadingLatest && <div className="flex items-center gap-2 px-1 py-2 text-sm text-[#66737F]"><Loader2 className="h-4 w-4 animate-spin text-[#0B74DE]" />Loading published updates…</div>}
+                  {!loadingLatest && latestUpdates.length === 0 && <div className="rounded-xl border border-dashed border-[#DCE8EE] bg-[#FAFAF7] p-4 text-sm leading-6 text-[#66737F]">No published updates yet.</div>}
+                  {!loadingLatest && latestUpdates.slice(0, 4).map((update) => <article key={update.id} className="rounded-xl border border-[#E5EDF1] bg-[#FCFDFC] p-4"><div className="text-sm font-semibold leading-5 text-[#182026]">{update.title}</div><div className="mt-1 text-sm leading-5 text-[#66737F]">{update.summary}</div><div className="mt-3 space-y-1 text-xs text-[#66737F]"><div>Published {formatDate(update.published_at)}</div><div>Broadcast {formatDate(update.broadcasted_at)}</div></div></article>)}
                 </div>
-
-                <div className="space-y-2">
-                  <Label className="text-[10px] uppercase tracking-tight text-white/40">Selected / test emails</Label>
-                  <Textarea
-                    variant="dark"
-                    value={broadcastForm.audience_emails}
-                    onChange={(event) => setBroadcastForm((prev) => ({ ...prev, audience_emails: event.target.value }))}
-                    placeholder={'mvelo@margin-finance.com\nanother@example.com'}
-                    className="min-h-[86px]"
-                  />
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <div className="text-[10px] uppercase tracking-tight text-white/30">Audience preview</div>
-                      <div className="mt-1 text-sm font-sans font-bold text-white">{audienceLabel}</div>
-                    </div>
-                    <Badge variant="outline" className="border-white/10 text-white/60">
-                      {savedBroadcast?.recipient_count_preview ?? 'Save'} recipients
-                    </Badge>
-                  </div>
-                  <div className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4">
-                    <div className="text-[10px] uppercase tracking-tight text-white/30">Email preview</div>
-                    <div className="mt-3 text-lg font-sans font-bold text-white">
-                      {savedBroadcast?.preview?.email_heading || broadcastForm.heading || 'Heading preview'}
-                    </div>
-                    {(savedBroadcast?.preview?.email_summary || broadcastForm.summary) && (
-                      <div className="mt-2 text-sm leading-6 text-white/50">
-                        {savedBroadcast?.preview?.email_summary || broadcastForm.summary}
-                      </div>
-                    )}
-                    <div className="mt-4 whitespace-pre-wrap text-sm leading-6 text-white/65">
-                      {savedBroadcast?.preview?.email_body || broadcastForm.body || 'Body preview appears here after you write the message.'}
-                    </div>
-                    {(savedBroadcast?.preview?.email_highlights?.length || splitHighlights(broadcastForm.highlights).length) ? (
-                      <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-white/55">
-                        {(savedBroadcast?.preview?.email_highlights || splitHighlights(broadcastForm.highlights)).map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </div>
-                </div>
-
-                {broadcastError && (
-                  <div className="rounded-2xl border border-red-400/20 bg-red-500/[0.08] p-4 text-xs leading-5 text-red-100">
-                    {broadcastError}
-                  </div>
-                )}
-                {broadcastSuccess && (
-                  <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.08] p-4 text-xs leading-5 text-emerald-100">
-                    {broadcastSuccess}
-                  </div>
-                )}
-
-                <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
-                  <Button
-                    type="button"
-                    disabled={!isAdmin || broadcastLoading !== null}
-                    onClick={saveBroadcastDraft}
-                    variant="outline"
-                    className="border-white/15 bg-white/[0.02] text-white hover:bg-white/10"
-                  >
-                    {broadcastLoading === 'draft' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Save draft
-                  </Button>
-                  <Button
-                    type="button"
-                    disabled={!isAdmin || broadcastLoading !== null}
-                    onClick={testSendBroadcast}
-                    variant="outline"
-                    className="border-sky-300/20 bg-sky-300/[0.06] text-sky-100 hover:bg-sky-300/[0.12]"
-                  >
-                    {broadcastLoading === 'test' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
-                    Send test
-                  </Button>
-                  <Button
-                    type="button"
-                    disabled={!isAdmin || broadcastLoading !== null}
-                    onClick={sendBroadcast}
-                    className="bg-white text-black hover:bg-white/85"
-                  >
-                    {broadcastLoading === 'send' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-                    Confirm and send
-                  </Button>
-                </div>
-
-                {savedBroadcast && (
-                  <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-black/30 p-4 text-xs text-white/60 md:grid-cols-4">
-                    <div>
-                      <div className="uppercase tracking-tight text-white/30">Broadcast</div>
-                      <div className="mt-1 truncate font-mono text-white/80">{savedBroadcast.id}</div>
-                    </div>
-                    <div>
-                      <div className="uppercase tracking-tight text-white/30">Status</div>
-                      <div className="mt-1 font-mono text-white/80">{savedBroadcast.status}</div>
-                    </div>
-                    <div>
-                      <div className="uppercase tracking-tight text-white/30">Sent</div>
-                      <div className="mt-1 font-mono text-white/80">{savedBroadcast.sent_count || 0}/{savedBroadcast.recipient_count || 0}</div>
-                    </div>
-                    <div>
-                      <div className="uppercase tracking-tight text-white/30">Failed</div>
-                      <div className="mt-1 font-mono text-white/80">{savedBroadcast.failed_count || 0}</div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="rounded-3xl border-white/10 bg-[#0b0b0b] text-white">
-                <CardHeader className="border-b border-white/10 px-6 py-5">
-                  <CardTitle className="flex items-center gap-2 text-sm font-sans font-bold uppercase tracking-tight">
-                    <Users className="h-4 w-4" />
-                    Users & Integrations
-                  </CardTitle>
-                  <CardDescription className="mt-2 text-xs leading-5 text-white/45">
-                    The only retained admin operations page. Manage users, account access, waitlist entries, and integration truth from there.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <Button asChild className="w-full bg-white text-black hover:bg-white/85">
-                    <Link to={usersIntegrationsHref}>
-                      Open Users & Integrations
-                      <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="rounded-3xl border-white/10 bg-[#0b0b0b] text-white">
-                <CardHeader className="border-b border-white/10 px-6 py-5">
-                  <CardTitle className="flex items-center gap-2 text-sm font-sans font-bold uppercase tracking-tight">
-                    <ShieldCheck className="h-4 w-4" />
-                    Published Records
-                  </CardTitle>
-                  <CardDescription className="mt-2 text-xs leading-5 text-white/45">
-                    Read-only confirmation from the public Product Updates API.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3 p-6">
-                  {loadingLatest && (
-                    <div className="flex items-center gap-2 text-xs text-white/45">
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      Loading published updates...
-                    </div>
-                  )}
-                  {!loadingLatest && latestUpdates.length === 0 && (
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4 text-xs leading-5 text-white/45">
-                      No published updates yet.
-                    </div>
-                  )}
-                  {!loadingLatest && latestUpdates.slice(0, 4).map((update) => (
-                    <div key={update.id} className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
-                      <div className="text-sm font-sans font-bold text-white">{update.title}</div>
-                      <div className="mt-1 text-xs leading-5 text-white/45">{update.summary}</div>
-                      <div className="mt-3 flex flex-wrap gap-2 text-[10px] uppercase tracking-tight text-white/35">
-                        <span>Published {formatDate(update.published_at)}</span>
-                        <span>Broadcast {formatDate(update.broadcasted_at)}</span>
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
+              </section>
+            </aside>
           </div>
         </div>
       </div>
