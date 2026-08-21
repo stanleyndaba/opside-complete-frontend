@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRight, BadgePercent } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 
 import { useSession } from '@/contexts/SessionContext';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
-import { getFrontendAuthContext } from '@/lib/authSession';
 import { DEMO_SESSION_TOKEN, isDemoSessionActive, isDemoWorkspacePath, isInternalDemoAccessEmail, seedDemoSession } from '@/lib/demoSession';
 
 type AppAccessGateProps = {
@@ -118,43 +117,10 @@ function AppAccessGateway() {
 export function AppAccessGate({ children }: AppAccessGateProps) {
   const location = useLocation();
   const { authToken, isAuthReady, isSessionValid, userEmail } = useSession();
-  const [isRecoveringBrowserSession, setIsRecoveringBrowserSession] = useState(false);
-  const [hasRecoveredBrowserSession, setHasRecoveredBrowserSession] = useState(false);
   const hasDemoSession = isDemoSessionActive();
-  const hasAuthenticatedSession = (isSessionValid && Boolean(authToken) && authToken !== DEMO_SESSION_TOKEN) || hasRecoveredBrowserSession;
+  const hasAuthenticatedSession = isSessionValid && Boolean(authToken) && authToken !== DEMO_SESSION_TOKEN;
   const isDemoWorkspaceRoute = isDemoWorkspacePath(location.pathname);
   const canOpenInternalDemoWorkspace = hasAuthenticatedSession && isInternalDemoAccessEmail(userEmail);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const recoverSessionFromBrowserAuth = async () => {
-      if (!isAuthReady || hasDemoSession || hasAuthenticatedSession) {
-        return;
-      }
-
-      setIsRecoveringBrowserSession(true);
-      try {
-        const context = await getFrontendAuthContext();
-        if (cancelled) return;
-
-        if (context.token && !context.isDemoSession) {
-          setHasRecoveredBrowserSession(true);
-          window.dispatchEvent(new Event('margin:session-updated'));
-        }
-      } finally {
-        if (!cancelled) {
-          setIsRecoveringBrowserSession(false);
-        }
-      }
-    };
-
-    void recoverSessionFromBrowserAuth();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [hasAuthenticatedSession, hasDemoSession, isAuthReady]);
 
   useEffect(() => {
     if (isDemoWorkspaceRoute && canOpenInternalDemoWorkspace && !hasDemoSession) {
@@ -162,7 +128,8 @@ export function AppAccessGate({ children }: AppAccessGateProps) {
     }
   }, [canOpenInternalDemoWorkspace, hasDemoSession, isDemoWorkspaceRoute, userEmail]);
 
-  if (!isAuthReady || isRecoveringBrowserSession) {
+  // SessionContext remains unresolved until Clerk has conclusively restored or rejected browser authentication.
+  if (!isAuthReady) {
     return <AppAccessLoader />;
   }
 
@@ -178,7 +145,8 @@ export function AppAccessGate({ children }: AppAccessGateProps) {
     return <>{children}</>;
   }
 
-  return <AppAccessGateway />;
+  const next = `${location.pathname}${location.search}${location.hash}`;
+  return <Navigate to={`/login?next=${encodeURIComponent(next)}`} replace />;
 }
 
 export default AppAccessGate;

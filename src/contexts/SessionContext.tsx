@@ -5,11 +5,10 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { useAuth, useUser } from '@clerk/react';
 import { supabase } from '@/lib/supabaseClient';
-import { SESSION_RECOVERY_EVENT, attemptSilentSessionRefresh, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
+import { SESSION_RECOVERY_EVENT, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
 import { clearDemoSession, DEMO_SESSION_EVENT, DEMO_SESSION_TOKEN, DEMO_USER_EMAIL, DEMO_USER_ID, isDemoSessionActive } from '@/lib/demoSession';
-
-const MARGIN_SESSION_UPDATED_EVENT = 'margin:session-updated';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -73,8 +72,15 @@ function getStoredDemoEmail() {
 }
 
 export function SessionProvider({ children }: { children: ReactNode }) {
+    const {
+        isLoaded: isClerkLoaded,
+        isSignedIn: isClerkSignedIn,
+        getToken: getClerkToken,
+        userId: clerkUserId,
+    } = useAuth();
+    const { user: clerkUser } = useUser();
     const [userEmail, setUserEmail] = useState<string | null>(null);
-    const [isSessionValid, setIsSessionValid] = useState(true);
+    const [isSessionValid, setIsSessionValid] = useState(false);
     const [isAuthReady, setIsAuthReady] = useState(false);
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [userId, setUserId] = useState<string | null>(null);
@@ -105,28 +111,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('active_tenant_slug');
         clearDemoSession();
     }, []);
-
-    const applyStoredSession = useCallback(() => {
-        if (typeof window === 'undefined') return false;
-        if (ensureActiveDemoSession()) {
-            applyDemoSession();
-            return true;
-        }
-
-        const storedToken = localStorage.getItem('session_token');
-        if (!storedToken) {
-            return false;
-        }
-
-        setIsSessionValid(true);
-        setAuthToken(storedToken);
-        setUserId(localStorage.getItem('user_id'));
-        setUserEmail(localStorage.getItem('user_email'));
-        setIsAuthReady(true);
-        clearSessionRecoveryPending();
-        clearSessionRecoverySuppression();
-        return true;
-    }, [applyDemoSession, ensureActiveDemoSession]);
 
     const expireSessionLocally = useCallback(() => {
         if (ensureActiveDemoSession()) {
@@ -183,170 +167,72 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         }
     }, [applyDemoSession, ensureActiveDemoSession]);
 
-    // Get user email and ID on mount
+    // Resolve protected-route authority from Clerk before any route may be treated as authenticated or logged out.
     useEffect(() => {
-        const getUser = async () => {
-            try {
-                if (ensureActiveDemoSession()) {
-                    applyDemoSession();
-                    return;
-                }
+        let cancelled = false;
 
-                const { data: { session } } = await supabase.auth.getSession();
-                const { data: { user } } = await supabase.auth.getUser();
-                const token = session?.access_token || localStorage.getItem('session_token') || null;
-
-                if (token) {
-                    localStorage.setItem('session_token', token);
-                    setAuthToken(token);
-                }
-
-                if (user?.email) {
-                    setUserEmail(user.email);
-                    localStorage.setItem('user_email', user.email);
-
-                    // Fetch the payment status from our fortress users table
-                    const { data: profile } = await supabase
-                        .from('users')
-                        .select('is_paid_beta')
-                        .eq('id', user.id)
-                        .maybeSingle();
-
-                    setIsPaidUser(!!profile?.is_paid_beta);
-                }
-                // Store user ID for API calls
-                if (user?.id) {
-                    setUserId(user.id);
-                    localStorage.setItem('user_id', user.id);
-                }
-            } finally {
-                setIsAuthReady(true);
-            }
-        };
-        getUser();
-    }, [applyDemoSession, ensureActiveDemoSession]);
-
-    // Listen for auth state changes
-    useEffect(() => {
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        const hydrateClerkSession = async () => {
             if (ensureActiveDemoSession()) {
                 applyDemoSession();
                 return;
             }
 
-            if (event === 'SIGNED_OUT') {
-                if (applyStoredSession()) {
-                    return;
+            if (!isClerkLoaded) {
+                setIsAuthReady(false);
+                return;
+            }
+
+            if (!isClerkSignedIn || !clerkUserId) {
+                if (!cancelled) {
+                    setIsSessionValid(false);
+                    setAuthToken(null);
+                    setUserId(null);
+                    setUserEmail(null);
+                    setIsPaidUser(false);
+                    clearStoredAuthContext();
+                    setIsAuthReady(true);
                 }
+                return;
+            }
+
+            const token = await getClerkToken().catch(() => null);
+            if (cancelled) return;
+
+            if (!token) {
+                // Clerk is loaded but has not provided a usable token. This is not authenticated authority.
                 setIsSessionValid(false);
-                clearSessionRecoveryPending();
-                localStorage.removeItem('user_id');
-                localStorage.removeItem('user_email');
-                localStorage.removeItem('session_token');
-                localStorage.removeItem('active_tenant_id');
-                localStorage.removeItem('active_tenant_slug');
                 setAuthToken(null);
                 setUserId(null);
                 setUserEmail(null);
                 setIsPaidUser(false);
+                clearStoredAuthContext();
                 setIsAuthReady(true);
-            } else if (event === 'SIGNED_IN') {
-                setIsSessionValid(true);
-                clearSessionRecoveryPending();
-                clearSessionRecoverySuppression();
-                if (session.access_token) {
-                    localStorage.setItem('session_token', session.access_token);
-                    setAuthToken(session.access_token);
-                }
-                if (session.user?.email) {
-                    setUserEmail(session.user.email);
-                    localStorage.setItem('user_email', session.user.email);
-                    
-                    // Re-verify payment status on re-auth
-                    supabase
-                        .from('users')
-                        .select('is_paid_beta')
-                        .eq('id', session.user.id)
-                        .maybeSingle()
-                        .then(({ data }) => {
-                            setIsPaidUser(!!data?.is_paid_beta);
-                        });
-                }
-                // Store user_id for API calls
-                if (session.user?.id) {
-                    setUserId(session.user.id);
-                    localStorage.setItem('user_id', session.user.id);
-                }
-                setIsAuthReady(true);
-            } else if (event === 'TOKEN_REFRESHED') {
-                setIsSessionValid(true);
-                clearSessionRecoveryPending();
-                if (session?.access_token) {
-                    localStorage.setItem('session_token', session.access_token);
-                    setAuthToken(session.access_token);
-                }
-                if (session?.user?.email) {
-                    setUserEmail(session.user.email);
-                }
-                if (session?.user?.id) {
-                    setUserId(session.user.id);
-                    localStorage.setItem('user_id', session.user.id);
-                }
-                setIsAuthReady(true);
-            } else if (event === 'INITIAL_SESSION') {
-                const storedToken = localStorage.getItem('session_token');
-                const accessToken = session?.access_token || storedToken || null;
-                setIsSessionValid(Boolean(accessToken));
-                setAuthToken(accessToken);
-                if (accessToken) {
-                    clearSessionRecoveryPending();
-                }
-
-                if (accessToken) {
-                    localStorage.setItem('session_token', accessToken);
-                } else {
-                    localStorage.removeItem('session_token');
-                }
-
-                const resolvedEmail = session?.user?.email || localStorage.getItem('user_email');
-                if (resolvedEmail) {
-                    setUserEmail(resolvedEmail);
-                    localStorage.setItem('user_email', resolvedEmail);
-                } else {
-                    setUserEmail(null);
-                    localStorage.removeItem('user_email');
-                }
-
-                const resolvedUserId = session?.user?.id || localStorage.getItem('user_id');
-                if (resolvedUserId) {
-                    setUserId(resolvedUserId);
-                    localStorage.setItem('user_id', resolvedUserId);
-                } else {
-                    setUserId(null);
-                    localStorage.removeItem('user_id');
-                }
-
-                setIsAuthReady(true);
-            } else {
-                setIsAuthReady(true);
+                return;
             }
-        });
 
-        return () => subscription.unsubscribe();
-    }, [applyDemoSession, applyStoredSession, ensureActiveDemoSession]);
-
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-
-        const handleStoredSessionUpdated = () => {
-            applyStoredSession();
+            const resolvedEmail = clerkUser?.primaryEmailAddress?.emailAddress || null;
+            setIsSessionValid(true);
+            setAuthToken(token);
+            setUserId(clerkUserId);
+            setUserEmail(resolvedEmail);
+            setIsPaidUser(false);
+            localStorage.setItem('session_token', token);
+            localStorage.setItem('user_id', clerkUserId);
+            if (resolvedEmail) {
+                localStorage.setItem('user_email', resolvedEmail);
+            } else {
+                localStorage.removeItem('user_email');
+            }
+            clearSessionRecoveryPending();
+            clearSessionRecoverySuppression();
+            setIsAuthReady(true);
         };
 
-        window.addEventListener(MARGIN_SESSION_UPDATED_EVENT, handleStoredSessionUpdated as EventListener);
+        void hydrateClerkSession();
         return () => {
-            window.removeEventListener(MARGIN_SESSION_UPDATED_EVENT, handleStoredSessionUpdated as EventListener);
+            cancelled = true;
         };
-    }, [applyStoredSession]);
+    }, [applyDemoSession, clearStoredAuthContext, clerkUser, clerkUserId, ensureActiveDemoSession, getClerkToken, isClerkLoaded, isClerkSignedIn]);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -374,20 +260,24 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 return;
             }
 
-            const refreshed = await attemptSilentSessionRefresh();
-            if (refreshed && mounted) {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session?.access_token) {
+            // A 401 received before Clerk finishes restoring browser state is not proof that the seller is logged out.
+            if (!isClerkLoaded) {
+                return;
+            }
+
+            if (isClerkSignedIn && clerkUserId) {
+                const clerkToken = await getClerkToken().catch(() => null);
+                if (!mounted) return;
+
+                if (clerkToken) {
                     setIsSessionValid(true);
-                    setAuthToken(session.access_token);
-                    localStorage.setItem('session_token', session.access_token);
-                    if (session.user?.id) {
-                        setUserId(session.user.id);
-                        localStorage.setItem('user_id', session.user.id);
-                    }
-                    if (session.user?.email) {
-                        setUserEmail(session.user.email);
-                        localStorage.setItem('user_email', session.user.email);
+                    setAuthToken(clerkToken);
+                    setUserId(clerkUserId);
+                    setUserEmail(clerkUser?.primaryEmailAddress?.emailAddress || null);
+                    localStorage.setItem('session_token', clerkToken);
+                    localStorage.setItem('user_id', clerkUserId);
+                    if (clerkUser?.primaryEmailAddress?.emailAddress) {
+                        localStorage.setItem('user_email', clerkUser.primaryEmailAddress.emailAddress);
                     }
                     clearSessionRecoveryPending();
                     clearSessionRecoverySuppression();
@@ -404,7 +294,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             mounted = false;
             window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         };
-    }, [applyDemoSession, ensureActiveDemoSession, handleSessionExpiry]);
+    }, [applyDemoSession, clerkUser, clerkUserId, ensureActiveDemoSession, getClerkToken, handleSessionExpiry, isClerkLoaded, isClerkSignedIn]);
 
     const showSessionTimeout = useCallback(() => {
         clearSessionRecoverySuppression();

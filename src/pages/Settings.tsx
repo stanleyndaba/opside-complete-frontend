@@ -5,8 +5,7 @@ import {
   Store, Shield, User, 
   Settings as SettingsIcon, 
   AlertCircle, RefreshCw,
-  Activity, Info as InfoIcon,
-  CreditCard
+  Activity, Info as InfoIcon
 } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -32,9 +31,6 @@ interface SellerProfile {
   created_at?: string;
   last_login?: string;
   amazon_connected?: boolean;
-  paypal_connected?: boolean;
-  paypal_email?: string | null;
-  billing_provider?: string | null;
 }
 
 const SUPPORT_TIER_COPY: Record<'free' | 'starter' | 'professional' | 'enterprise', string> = {
@@ -104,9 +100,6 @@ const Settings = () => {
             company_name: basicData.company_name,
             amazon_seller_id: basicData.amazon_seller_id,
             amazon_connected: basicData.amazon_connected || false,
-            paypal_connected: basicData.paypal_connected || false,
-            paypal_email: basicData.paypal_email || null,
-            billing_provider: basicData.billing_provider || null,
             created_at: basicData.created_at,
             last_login: basicData.last_login || basicData.last_login_at,
           };
@@ -233,7 +226,6 @@ const Settings = () => {
   const connectivityKnown = !loadingProfile && !connectivityError;
   const isAmazonConnected = sellerProfile.amazon_connected ?? false;
   const linkedMarketplaces = sellerProfile.linked_marketplaces || [];
-  const paypalActive = sellerProfile.paypal_connected ?? false;
 
   const autoFileStateKnown = typeof autoFileEnabled === 'boolean';
   const autoFileGateCopy = loadingAutoFile
@@ -418,23 +410,6 @@ const Settings = () => {
                     </Badge>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 sm:p-5">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#F7FAFC] text-[#4D5B66]">
-                        <CreditCard className="h-5 w-5" strokeWidth={1.5} />
-                      </div>
-                      <div>
-                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">PayPal Billing</p>
-                        <p className="text-[14px] font-semibold text-[#182026]">{loadingProfile ? 'Checking connection' : !connectivityKnown ? 'Unavailable' : paypalActive ? 'Connected' : 'Not available'}</p>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className={cn(
-                      "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
-                      paypalActive ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]" : "border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]"
-                    )}>
-                      {loadingProfile ? 'Checking' : !connectivityKnown ? 'Unavailable' : paypalActive ? 'Active' : 'Inactive'}
-                    </Badge>
-                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 divide-y divide-[#E7EEF2] md:divide-x md:divide-y-0">
                     <div className="p-4 sm:p-5">
