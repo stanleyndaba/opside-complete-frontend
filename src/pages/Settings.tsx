@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { 
   Store, Shield, User, 
   Settings as SettingsIcon, 
-  ChevronRight, AlertCircle, RefreshCw,
-  Trash2, Activity, Info as InfoIcon,
+  AlertCircle, RefreshCw,
+  Activity, Info as InfoIcon,
   CreditCard
 } from 'lucide-react';
 
@@ -34,15 +34,14 @@ interface SellerProfile {
   amazon_connected?: boolean;
   paypal_connected?: boolean;
   paypal_email?: string | null;
-  paypal_payment_token?: string | null;
   billing_provider?: string | null;
 }
 
-const SUPPORT_TIER_COPY: Record<'community' | 'email' | 'priority' | 'dedicated', string> = {
-  community: 'Community',
-  email: 'Email',
-  priority: 'Priority',
-  dedicated: 'Dedicated'
+const SUPPORT_TIER_COPY: Record<'free' | 'starter' | 'professional' | 'enterprise', string> = {
+  free: 'Community',
+  starter: 'Email',
+  professional: 'Priority',
+  enterprise: 'Dedicated'
 };
 
 const marketplaceNames: Record<string, { name: string; flag: string }> = {
@@ -61,16 +60,18 @@ const marketplaceNames: Record<string, { name: string; flag: string }> = {
 const Settings = () => {
   const navigate = useNavigate();
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
-  const { tenant, planLimits, isReady } = useTenant();
+  const { tenant, isReady } = useTenant();
 
   const activeTenantSlug = tenantSlug || tenant?.slug || null;
   const [sellerProfile, setSellerProfile] = useState<SellerProfile>({});
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const [autoFileEnabled, setAutoFileEnabled] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [autoFileEnabled, setAutoFileEnabled] = useState<boolean | null>(null);
   const [autoFileGateStatus, setAutoFileGateStatus] = useState<AutoFileGateStatus | null>(null);
   const [loadingAutoFile, setLoadingAutoFile] = useState(true);
   const [savingAutoFile, setSavingAutoFile] = useState(false);
   const [autoFileError, setAutoFileError] = useState<string | null>(null);
+  const [autoFileSaveNotice, setAutoFileSaveNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (!activeTenantSlug) {
@@ -80,6 +81,7 @@ const Settings = () => {
 
     const loadSellerProfile = async () => {
       setLoadingProfile(true);
+      setProfileError(null);
       try {
         const [meRes, statusRes] = await Promise.all([
           api.getMe(activeTenantSlug),
@@ -102,7 +104,6 @@ const Settings = () => {
             amazon_connected: basicData.amazon_connected || false,
             paypal_connected: basicData.paypal_connected || false,
             paypal_email: basicData.paypal_email || null,
-            paypal_payment_token: basicData.paypal_payment_token || null,
             billing_provider: basicData.billing_provider || null,
             created_at: basicData.created_at,
             last_login: basicData.last_login || basicData.last_login_at,
@@ -124,6 +125,7 @@ const Settings = () => {
         setSellerProfile(nextProfile);
       } catch (error) {
         console.error('Failed to load settings profile:', error);
+        setProfileError('Margin could not load the current account record. Refresh the page before relying on these values.');
       } finally {
         setLoadingProfile(false);
       }
@@ -135,6 +137,7 @@ const Settings = () => {
   const loadAutoFilePreference = useCallback(async (options?: { silent?: boolean }): Promise<boolean> => {
     if (!activeTenantSlug) {
       setLoadingAutoFile(false);
+      setAutoFileEnabled(null);
       setAutoFileGateStatus(null);
       return false;
     }
@@ -152,10 +155,18 @@ const Settings = () => {
         return true;
       }
 
+      if (!options?.silent) {
+        setAutoFileEnabled(null);
+        setAutoFileGateStatus(null);
+      }
       setAutoFileError(response.error || 'Failed to load auto-file setting');
       return false;
     } catch (error) {
       console.error('Failed to load auto-file preference:', error);
+      if (!options?.silent) {
+        setAutoFileEnabled(null);
+        setAutoFileGateStatus(null);
+      }
       setAutoFileError('Failed to load auto-file setting');
       return false;
     } finally {
@@ -179,6 +190,7 @@ const Settings = () => {
     const previousGateStatus = autoFileGateStatus;
     setSavingAutoFile(true);
     setAutoFileError(null);
+    setAutoFileSaveNotice(null);
 
     try {
       const response = await api.saveAutoFilePreference(enabled, activeTenantSlug);
@@ -191,6 +203,7 @@ const Settings = () => {
 
       setAutoFileEnabled(response.data.data.enabled);
       setAutoFileGateStatus(response.data.data.gateStatus ?? null);
+      setAutoFileSaveNotice('Saved. This filing preference now applies to your current workspace.');
 
       const refreshed = await loadAutoFilePreference({ silent: true });
       if (!refreshed) {
@@ -206,20 +219,23 @@ const Settings = () => {
     }
   };
 
-  const supportTier = planLimits?.supportTier ? SUPPORT_TIER_COPY[planLimits.supportTier] : 'Not available';
+  const supportTier = tenant ? SUPPORT_TIER_COPY[tenant.plan] : 'Not available';
   const isAmazonConnected = sellerProfile.amazon_connected ?? false;
   const linkedMarketplaces = sellerProfile.linked_marketplaces || [];
-  const paypalActive = !!sellerProfile.paypal_payment_token || !!sellerProfile.paypal_email;
+  const paypalActive = sellerProfile.paypal_connected ?? false;
 
+  const autoFileStateKnown = typeof autoFileEnabled === 'boolean';
   const autoFileGateCopy = loadingAutoFile
     ? 'Checking saved seller intent and filing gates.'
     : savingAutoFile
       ? 'Saving seller intent and confirming backend truth.'
-      : autoFileEnabled
-        ? autoFileGateStatus?.message || 'Auto-File is on. System filing gates will still be checked before any submission.'
-        : 'Auto-File is off. Global filing gates, payment checks, and evidence requirements remain unchanged.';
+      : !autoFileStateKnown
+        ? 'Margin could not confirm the saved filing preference. Refresh the page before changing this setting.'
+        : autoFileEnabled
+          ? autoFileGateStatus?.message || 'Auto-File is on. System filing gates will still be checked before any submission.'
+          : 'Auto-File is off. Global filing gates, payment checks, and evidence requirements remain unchanged.';
 
-  const autoFileGateMeta = autoFileGateStatus && autoFileEnabled
+  const autoFileGateMeta = autoFileGateStatus && autoFileEnabled === true
     ? [
         autoFileGateStatus.globalFilingEnabled === null
           ? 'Global gate unknown'
@@ -236,7 +252,13 @@ const Settings = () => {
       ].join(' · ')
     : null;
 
+  const profileValue = (value: string | null | undefined, fallback = 'Not available'): string => {
+    if (loadingProfile) return 'Loading…';
+    return value || fallback;
+  };
+
   const formatDate = (dateString?: string): string => {
+    if (loadingProfile) return 'Loading…';
     if (!dateString) return 'Not available';
     try {
       const date = new Date(dateString);
@@ -288,7 +310,13 @@ const Settings = () => {
                   <p className="mt-1 text-[13px] text-[#66737F]">Your account identity and access role in this workspace.</p>
                 </div>
               </div>
-              
+
+              {profileError && (
+                <div className="mb-3 flex items-start gap-2 rounded-[8px] border border-rose-200 bg-rose-50 p-3 text-rose-700">
+                  <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                  <p className="text-[12px] leading-5">{profileError}</p>
+                </div>
+              )}
               <div className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)]">
                 <div className="divide-y divide-[#E7EEF2]">
                   <div className="flex items-center justify-between p-4 sm:p-5">
@@ -297,11 +325,11 @@ const Settings = () => {
                         <User className="h-5 w-5" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">User Name</p>
-                        <p className="text-[14px] font-semibold text-[#182026]">{sellerProfile.name || 'Not set'}</p>
+                        <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Account Name</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{profileValue(sellerProfile.name, 'Not set')}</p>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="h-9 text-[13px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]">Edit</Button>
+                    <span className="text-right text-[12px] leading-5 text-[#66737F]">Managed through your Margin sign-in record</span>
                   </div>
 
                   <div className="flex items-center justify-between p-4 sm:p-5">
@@ -311,20 +339,20 @@ const Settings = () => {
                       </div>
                       <div>
                         <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Email Address</p>
-                        <p className="text-[14px] font-semibold text-[#182026]">{sellerProfile.email || 'Not available'}</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{profileValue(sellerProfile.email)}</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F6FAFE] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#0B74DE]">Verified</Badge>
+                    <span className="text-right text-[12px] leading-5 text-[#66737F]">Managed through your Margin sign-in record</span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 divide-y divide-[#E7EEF2] md:divide-x md:divide-y-0">
                     <div className="p-4 sm:p-5">
                       <p className="text-[12px] font-medium tracking-tight text-[#66737F]">User ID</p>
-                      <p className="mt-1 text-[13px] font-semibold text-[#182026] break-all">{sellerProfile.id || 'Not available'}</p>
+                      <p className="mt-1 text-[13px] font-semibold text-[#182026] break-all">{profileValue(sellerProfile.id)}</p>
                     </div>
                     <div className="p-4 sm:p-5">
                       <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Workspace Role</p>
-                      <p className="mt-1 text-[14px] font-semibold text-[#182026]">{sellerProfile.role || 'Member'}</p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#182026]">{profileValue(sellerProfile.role)}</p>
                     </div>
                     <div className="p-4 sm:p-5">
                       <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Last Login</p>
@@ -361,14 +389,14 @@ const Settings = () => {
                       </div>
                       <div>
                         <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Amazon Seller Central</p>
-                        <p className="text-[14px] font-semibold text-[#182026]">{isAmazonConnected ? 'Linked' : 'Not connected'}</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{loadingProfile ? 'Checking connection' : isAmazonConnected ? 'Linked' : 'Not connected'}</p>
                       </div>
                     </div>
                     <Badge variant="outline" className={cn(
                       "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
                       isAmazonConnected ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]" : "border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]"
                     )}>
-                      {isAmazonConnected ? 'Active' : 'Required'}
+                      {loadingProfile ? 'Checking' : isAmazonConnected ? 'Active' : 'Required'}
                     </Badge>
                   </div>
 
@@ -379,14 +407,14 @@ const Settings = () => {
                       </div>
                       <div>
                         <p className="text-[12px] font-medium tracking-tight text-[#66737F]">PayPal Billing</p>
-                        <p className="text-[14px] font-semibold text-[#182026]">{paypalActive ? 'Connected' : 'Not available'}</p>
+                        <p className="text-[14px] font-semibold text-[#182026]">{loadingProfile ? 'Checking connection' : paypalActive ? 'Connected' : 'Not available'}</p>
                       </div>
                     </div>
                     <Badge variant="outline" className={cn(
                       "rounded-md border px-2 py-0.5 text-[12px] font-medium tracking-tight",
                       paypalActive ? "border-[#DCE8EE] bg-[#F6FAFE] text-[#0B74DE]" : "border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]"
                     )}>
-                      {paypalActive ? 'Active' : 'Inactive'}
+                      {loadingProfile ? 'Checking' : paypalActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
 
@@ -400,7 +428,9 @@ const Settings = () => {
                     <div className="p-4 sm:p-5">
                       <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Linked Marketplaces</p>
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {linkedMarketplaces.length > 0 ? (
+                        {loadingProfile ? (
+                          <span className="text-[13px] font-medium text-[#9CA3AF]">Loading linked marketplaces</span>
+                        ) : linkedMarketplaces.length > 0 ? (
                           linkedMarketplaces.map((mId) => (
                             <Badge key={mId} variant="outline" className="bg-[#F7FAFC] text-[#4D5B66] border-[#DCE8EE] font-bold text-[10px] px-2 py-0.5 rounded-md tracking-tight">
                               {marketplaceNames[mId]?.flag || 'GL'} · {marketplaceNames[mId]?.name || mId}
@@ -432,29 +462,33 @@ const Settings = () => {
                         {savingAutoFile && <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#0B74DE]" />}
                       </div>
                       <p className="text-[13px] leading-relaxed text-[#66737F]">
-                        {autoFileEnabled
-                          ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
-                          : 'Cases will wait for your manual review and approval before filing.'}
+                        {!autoFileStateKnown
+                          ? 'Margin is confirming the saved filing preference before this control becomes available.'
+                          : autoFileEnabled
+                            ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
+                            : 'Cases will wait for your manual review and approval before filing.'}
                       </p>
                       <div className="mt-4 flex items-center gap-3">
                         <div className={cn(
                           "h-2 w-2 rounded-full",
-                          autoFileEnabled ? "bg-[#0B74DE]" : "bg-[#9CA3AF]"
+                          !autoFileStateKnown ? "bg-[#9CA3AF]" : autoFileEnabled ? "bg-[#0B74DE]" : "bg-[#9CA3AF]"
                         )} />
                         <span className="text-[12px] font-medium tracking-tight text-[#4D5B66]">
-                          {autoFileEnabled ? 'Seller authority: delegated when gates are clear' : 'Seller authority: manual approval required'}
+                          {!autoFileStateKnown
+                            ? 'Seller authority: not yet confirmed'
+                            : autoFileEnabled ? 'Seller authority: delegated when gates are clear' : 'Seller authority: manual approval required'}
                         </span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <Switch
-                        checked={autoFileEnabled}
+                        checked={autoFileEnabled === true}
                         onCheckedChange={(checked) => void handleAutoFileChange(checked)}
-                        disabled={loadingAutoFile || savingAutoFile}
+                        disabled={loadingAutoFile || savingAutoFile || !autoFileStateKnown}
                         className="data-[state=checked]:bg-[#0B74DE]"
                       />
                       <span className="text-[12px] font-medium tracking-tight text-[#4D5B66]">
-                        {savingAutoFile ? 'Updating' : autoFileEnabled ? 'On' : 'Off'}
+                        {savingAutoFile ? 'Updating' : !autoFileStateKnown ? 'Unavailable' : autoFileEnabled ? 'On' : 'Off'}
                       </span>
                     </div>
                   </div>
@@ -475,6 +509,12 @@ const Settings = () => {
                       <p className="text-[12px] font-medium tracking-tight text-[#0B74DE]">
                         {autoFileGateMeta}
                       </p>
+                    </div>
+                  )}
+                  {autoFileSaveNotice && !autoFileError && (
+                    <div className="mt-4 flex items-center gap-2 rounded-lg bg-[#F1FBF7] p-3 text-[#287D65]">
+                      <Shield className="h-3.5 w-3.5" />
+                      <p className="text-[12px] font-medium">{autoFileSaveNotice}</p>
                     </div>
                   )}
                   {autoFileError && (
@@ -530,11 +570,7 @@ const Settings = () => {
                     <h3 className="text-[16px] font-semibold tracking-tight text-rose-800">Workspace management</h3>
                     <p className="mt-1 text-[13px] text-rose-600/80">Manage workspace membership and access persistence.</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button variant="ghost" className="h-9 rounded-md border border-rose-200 text-[13px] font-medium tracking-tight text-rose-700 hover:bg-rose-50 hover:text-rose-800">
-                      Leave Workspace
-                    </Button>
-                  </div>
+                  <p className="max-w-xs text-right text-[12px] leading-5 text-rose-700/80">Workspace membership changes are managed by your workspace owner.</p>
                 </div>
               </div>
             </section>
