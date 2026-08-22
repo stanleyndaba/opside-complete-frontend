@@ -182,7 +182,8 @@ export function proofStatusTone(value: string | null | undefined): string {
 export function formatPayoutProofStatus(value: string | null | undefined): string {
   const normalized = normalizeToken(value);
   const labels: Record<string, string> = {
-    verified: 'Verified',
+    verified: 'Verified from financial events',
+    recorded_unverified: 'Recorded — financial-event proof pending',
     awaiting_payout: 'Awaiting payout',
     quarantined: 'Quarantined',
     not_applicable: 'Not applicable',
@@ -194,6 +195,8 @@ export function payoutProofTone(value: string | null | undefined): string {
   switch (normalizeToken(value)) {
     case 'verified':
       return 'border-white/15 bg-white/10 text-white/80';
+    case 'recorded_unverified':
+      return 'border-amber-500/20 bg-amber-500/10 text-amber-300';
     case 'awaiting_payout':
       return 'border-blue-500/20 bg-blue-500/10 text-blue-300';
     case 'quarantined':
