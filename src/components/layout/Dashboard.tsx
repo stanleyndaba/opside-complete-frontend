@@ -2798,6 +2798,7 @@ export function Dashboard() {
     syncTriggered
   ]);
   const overviewNarrative = useMemo(() => {
+    const narrativeNeedsEvidenceCount = launchMetrics?.agent7_needs_evidence_count ?? 0;
     const latestEventTimestamp = latestOperationalEvent?.timestamp
       ? new Date(latestOperationalEvent.timestamp)
       : null;
@@ -2807,8 +2808,8 @@ export function Dashboard() {
         ? `Last checked ${formattedLastUpdated}.`
         : 'Margin is establishing the latest recovery position.';
 
-    if (needsEvidenceCount > 0) {
-      return `${lastCheckedSummary} ${pluralize(needsEvidenceCount, 'recovery')} need${needsEvidenceCount === 1 ? 's' : ''} purchase evidence before Margin can move ${needsEvidenceCount === 1 ? 'it' : 'them'} forward. Nothing has been filed without that proof.`;
+    if (narrativeNeedsEvidenceCount > 0) {
+      return `${lastCheckedSummary} ${pluralize(narrativeNeedsEvidenceCount, 'recovery')} need${narrativeNeedsEvidenceCount === 1 ? 's' : ''} purchase evidence before Margin can move ${narrativeNeedsEvidenceCount === 1 ? 'it' : 'them'} forward. Nothing has been filed without that proof.`;
     }
     if (primaryBlocker) {
       return `${lastCheckedSummary} Margin is holding ${pluralize(primaryBlocker.count, 'recovery')} until the records establish the next justified step.`;
@@ -2825,6 +2826,7 @@ export function Dashboard() {
     formattedLastUpdated,
     formatCurrencyWithSelection,
     latestOperationalEvent,
+    launchMetrics,
     needsSync,
     primaryBlocker,
     recoveredCashTotal,
