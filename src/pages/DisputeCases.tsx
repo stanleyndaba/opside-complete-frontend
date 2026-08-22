@@ -68,23 +68,25 @@ type QueueSummaryState = {
   page_size: number;
 };
 
+const CASE_BADGE_BASE = 'border-0 px-2 py-0.5 text-[10px] font-normal leading-4 tracking-tight';
+
 const STATUS_BADGE_STYLES: Record<string, string> = {
-  pending: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
-  filed: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
-  submitted: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
-  rejected: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
-  denied: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
-  approved: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
-  reconciled: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
-  pending_approval: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
-  pending_safety_verification: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
-  failed: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
-  retrying: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
-  billed: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
-  charged: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
-  credited: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
-  completed: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
-  default: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#66737F]'
+  pending: 'bg-[#F1F5F7] text-[#4D5B66]',
+  filed: 'bg-[#EDF5FF] text-[#0B74DE]',
+  submitted: 'bg-[#EDF5FF] text-[#0B74DE]',
+  rejected: 'bg-[#FFF0EF] text-[#B42318]',
+  denied: 'bg-[#FFF0EF] text-[#B42318]',
+  approved: 'bg-[#EEF8F2] text-[#2F6C54]',
+  reconciled: 'bg-[#EEF8F2] text-[#2F6C54]',
+  pending_approval: 'bg-[#F1F5F7] text-[#4D5B66]',
+  pending_safety_verification: 'bg-[#F1F5F7] text-[#4D5B66]',
+  failed: 'bg-[#FFF0EF] text-[#B42318]',
+  retrying: 'bg-[#F1F5F7] text-[#4D5B66]',
+  billed: 'bg-[#EEF8F2] text-[#2F6C54]',
+  charged: 'bg-[#EEF8F2] text-[#2F6C54]',
+  credited: 'bg-[#EEF8F2] text-[#2F6C54]',
+  completed: 'bg-[#EEF8F2] text-[#2F6C54]',
+  default: 'bg-[#F1F5F7] text-[#66737F]'
 };
 
 function formatLabel(value: string | null | undefined) {
@@ -298,7 +300,7 @@ function evidenceHeadline(row: QueueRow) {
   const missing = proofNeedsFor(row);
   const linkedCount = Number(row.matched_document_count || 0);
 
-  if (missing.length > 0 && linkedCount === 0) return 'Needs source records';
+  if (missing.length > 0 && linkedCount === 0) return 'Source records';
   if (missing.length > 0) return 'Proof incomplete';
   if (linkedCount > 0) return 'Proof linked';
   return 'No proof linked';
@@ -998,11 +1000,11 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
 
 function postureBadgeClass(tone: FilingPosture['tone']) {
   const map: Record<FilingPosture['tone'], string> = {
-    ready: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
-    attention: 'border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]',
-    blocked: 'border-[#F1C9C5] bg-[#FFF8F7] text-[#B42318]',
-    in_flight: 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]',
-    resolved: 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]',
+    ready: 'bg-[#EEF8F2] text-[#2F6C54]',
+    attention: 'bg-[#F1F5F7] text-[#4D5B66]',
+    blocked: 'bg-[#FFF0EF] text-[#B42318]',
+    in_flight: 'bg-[#EDF5FF] text-[#0B74DE]',
+    resolved: 'bg-[#EEF8F2] text-[#2F6C54]',
   };
 
   return map[tone];
@@ -2078,11 +2080,11 @@ export default function DisputeCases() {
                                   {recordType} · {row.store_name || 'Amazon recovery record'}
                                 </div>
                                 <div className="flex flex-wrap gap-1.5">
-                                  <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
+                                  <Badge variant="outline" className={cn(CASE_BADGE_BASE, 'bg-[#F1F5F7] text-[#66737F]')}>
                                     {hasRealDisputeCase ? 'Dispute case' : 'Detection record'}
                                   </Badge>
                                   {threadBackfilled ? (
-                                    <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">Amazon thread</Badge>
+                                    <Badge variant="outline" className={cn(CASE_BADGE_BASE, 'bg-[#F1F5F7] text-[#66737F]')}>Amazon thread</Badge>
                                   ) : null}
                                 </div>
                                 <div className="border-t border-[#E7EEF2] pt-2 text-[10px] tracking-tight text-[#66737F]">
@@ -2095,15 +2097,15 @@ export default function DisputeCases() {
                             <td className="px-5 py-4">
                               <div className="min-w-[235px] space-y-2">
                                 <div className="flex flex-wrap gap-1.5">
-                                  <Badge variant="outline" className={cn('border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
+                                  <Badge variant="outline" className={cn(CASE_BADGE_BASE, badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
                                   {gateState ? (
-                                    <Badge variant="outline" className={cn('border', postureBadgeClass(gateState.tone))}>Gate: {gateState.label}</Badge>
+                                    <Badge variant="outline" className={cn(CASE_BADGE_BASE, postureBadgeClass(gateState.tone))}>Gate: {gateState.label}</Badge>
                                   ) : null}
                                 </div>
                                 <div className="text-[11px] text-[#4D5B66]">Filing: {formatSellerFilingStatus(row)}</div>
                                 <div className="border-t border-[#E7EEF2] pt-2">
                                   <div className="flex items-center justify-between gap-3">
-                                    <Badge variant="outline" className={cn('w-fit max-w-full border', badgeClass(row.evidence_state))}>{evidenceStatus}</Badge>
+                                    <Badge variant="outline" className={cn('w-fit max-w-full', CASE_BADGE_BASE, badgeClass(row.evidence_state))}>{evidenceStatus}</Badge>
                                     <span className="text-[10px] text-[#8A99A5]">{row.matched_document_count ? `${row.matched_document_count} source docs` : 'No source docs'}</span>
                                   </div>
                                   <p className="mt-1.5 text-[11px] leading-5 text-[#66737F]">{evidenceNeeds[0]?.title || evidenceDetail(row)}</p>
@@ -2119,7 +2121,7 @@ export default function DisputeCases() {
                                   <div><div className="text-[#8A99A5]">Paid</div><div className="mt-1 font-medium text-[#182026]">{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</div></div>
                                 </div>
                                 <div className="border-t border-[#E7EEF2] pt-2">
-                                  <Badge variant="outline" className="border-[#DCE8EE] bg-[#F7FAFC] text-[#4D5B66]">Payout: {financialStatusLabel(financialSummary?.payout_status)}</Badge>
+                                  <Badge variant="outline" className={cn(CASE_BADGE_BASE, 'bg-[#F1F5F7] text-[#4D5B66]')}>Payout: {financialStatusLabel(financialSummary?.payout_status)}</Badge>
                                   <p className="mt-1.5 text-[10px] leading-4 text-[#66737F]">{financialStatusDetail(financialSummary)}</p>
                                 </div>
                               </div>
@@ -2129,21 +2131,21 @@ export default function DisputeCases() {
                               <div className="min-w-[270px] space-y-2">
                                 <div className="flex flex-wrap items-center gap-1.5">
                                   <p className="text-[13px] font-medium tracking-tight text-[#182026]">{nextActionLabel}</p>
-                                  <Badge variant="outline" className={cn('border', postureBadgeClass(posture.tone))}>{posture.headline}</Badge>
+                                  <Badge variant="outline" className={cn(CASE_BADGE_BASE, postureBadgeClass(posture.tone))}>{posture.headline}</Badge>
                                 </div>
                                 <p className="text-[11px] leading-5 text-[#4D5B66]">{posture.detail}</p>
                                 <p className="text-[11px] leading-5 text-[#66737F]">{filingTruthLine(row)}</p>
                                 {safeDecisionExplanation ? <p className="text-[10px] leading-4 text-[#8A99A5]">Context: {safeDecisionExplanation}</p> : null}
                                 {(posture.strengths.length || posture.risks.length) ? (
                                   <div className="flex flex-wrap gap-1.5 text-[10px]">
-                                    {posture.strengths.slice(0, 1).map((item) => <span key={`${row.dispute_case_id}-strength-${item}`} className="rounded-md border border-[#BFE0CF] bg-[#F4FAF7] px-2 py-1 text-[#2F6C54]">Verified: {item}</span>)}
-                                    {posture.risks.slice(0, 1).map((item) => <span key={`${row.dispute_case_id}-risk-${item}`} className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2 py-1 text-[#4D5B66]">Watch: {item}</span>)}
+                                    {posture.strengths.slice(0, 1).map((item) => <span key={`${row.dispute_case_id}-strength-${item}`} className="rounded-full bg-[#EEF8F2] px-2 py-1 font-normal leading-4 text-[#2F6C54]">Verified: {item}</span>)}
+                                    {posture.risks.slice(0, 1).map((item) => <span key={`${row.dispute_case_id}-risk-${item}`} className="rounded-full bg-[#F1F5F7] px-2 py-1 font-normal leading-4 text-[#4D5B66]">Watch: {item}</span>)}
                                   </div>
                                 ) : null}
                                 {(safeManualReviewReason || safeQuarantineReason) ? (
                                   <div className="flex flex-wrap gap-1.5">
-                                    {safeManualReviewReason ? <span className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] px-2 py-1 text-[10px] text-[#4D5B66]">Review: {safeManualReviewReason}</span> : null}
-                                    {safeQuarantineReason ? <span className="rounded-md border border-[#F1C9C5] bg-[#FFF8F7] px-2 py-1 text-[10px] text-[#B42318]">Held: {safeQuarantineReason}</span> : null}
+                                    {safeManualReviewReason ? <span className="rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">Review: {safeManualReviewReason}</span> : null}
+                                    {safeQuarantineReason ? <span className="rounded-full bg-[#FFF0EF] px-2 py-1 text-[10px] font-normal leading-4 text-[#B42318]">Held: {safeQuarantineReason}</span> : null}
                                   </div>
                                 ) : null}
                               </div>
@@ -2157,7 +2159,7 @@ export default function DisputeCases() {
                                 </div>
                                 <div>{row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available'}</div>
                                 {isRecentTimestamp(row.updated_at) ? (
-                                  <Badge variant="outline" className="w-fit border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#66737F]">
+                                  <Badge variant="outline" className={cn('w-fit', CASE_BADGE_BASE, 'bg-[#F1F5F7] text-[#66737F]')}>
                                     Recently updated
                                   </Badge>
                                 ) : null}
