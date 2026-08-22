@@ -372,8 +372,8 @@ const DEMO_FINDING_MOVEMENTS = [
   },
   {
     state: 'ready_to_file',
-    label: 'Ready to file',
-    detail: 'Evidence and policy checks are aligned for seller review.',
+    label: 'Evidence-ready',
+    detail: 'Evidence and policy checks are aligned for the next justified recovery action.',
     next_action_label: 'Open filing review',
   },
   {
@@ -585,14 +585,15 @@ const formatIssueStatusLabel = (status?: string | null) => {
     case 'pending':
       return 'Pending review';
     case 'detected':
-      return 'Issue found';
+      return 'Under review';
     case 'filed':
+      return 'With Amazon';
     case 'converted':
-      return 'Moved to claim';
+      return 'Evidence-ready';
     case 'resolved':
       return 'Closed';
     case 'ready_to_file':
-      return 'Ready to file';
+      return 'Evidence-ready';
     default:
       return normalized ? toTitleCase(normalized.replace(/_/g, ' ')) : 'Needs review';
   }
@@ -610,7 +611,7 @@ const formatFindingValueLabel = (result: any) => {
   const label = String(result?.value_label || 'estimated_recovery').toLowerCase();
   if (label === 'potential_exposure') return 'Potential exposure';
   if (label === 'no_recovery_value') return 'No recovery value';
-  return 'Estimated value';
+  return 'Amount under review';
 };
 
 const cleanSellerText = (value?: unknown) => {
@@ -721,24 +722,24 @@ const getFindingStateMeta = (status?: string | null) => {
   switch (normalized) {
     case 'ready_to_file':
       return {
-        label: 'Ready to file',
-        detail: 'Policy and identifier checks passed, so this can move into a recovery case.',
+        label: 'Evidence-ready',
+        detail: 'Policy and identifier checks passed, so this is prepared for the next justified recovery action.',
         actionLabel: 'View finding',
         tone: 'border-[#B9E6D3] bg-[#F4FBF7] text-[#047857]',
         Icon: CheckCircle,
       };
     case 'filed':
       return {
-        label: 'Filed with Amazon',
-        detail: 'This discrepancy is already in Amazon review through a filed case.',
+        label: 'With Amazon',
+        detail: 'This evidence-backed recovery is actively being followed with Amazon.',
         actionLabel: 'Open cases',
         tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]',
         Icon: Send,
       };
     case 'converted':
       return {
-        label: 'Moved to case',
-        detail: 'This finding has already been turned into a recovery case for follow-through.',
+        label: 'Evidence-ready',
+        detail: 'This finding is now held in the controlled recovery workflow for follow-through.',
         actionLabel: 'Open cases',
         tone: 'border-[#D9D1FF] bg-[#F7F5FF] text-[#5B4BB7]',
         Icon: ArrowRight,
@@ -753,16 +754,16 @@ const getFindingStateMeta = (status?: string | null) => {
       };
     case 'pending':
       return {
-        label: 'Pending review',
-        detail: 'Margin is still checking whether this discrepancy should move forward.',
+        label: 'Under review',
+        detail: 'Margin is still checking whether this discrepancy is supportable.',
         actionLabel: 'View finding',
         tone: 'border-[#D9D1FF] bg-[#F7F5FF] text-[#5B4BB7]',
         Icon: Clock,
       };
     case 'detected':
       return {
-        label: 'Issue found',
-        detail: 'Margin found a discrepancy, but it still needs review before it becomes a case.',
+        label: 'Under review',
+        detail: 'Margin is checking this discrepancy against the records before it can become a recovery case.',
         actionLabel: 'View finding',
         tone: 'border-[#C8D8FF] bg-[#F2F7FF] text-[#0B74DE]',
         Icon: Info,
@@ -1290,7 +1291,7 @@ export function Dashboard() {
         setDashboardAutoFileEnabled(previousValue);
         setDashboardAutoFileGateStatus(previousGateStatus);
         toast({
-          title: 'Auto-File not saved',
+          title: 'Filing authority not saved',
           description: response.error || 'Margin could not update this control.',
           variant: 'destructive',
         });
@@ -1303,10 +1304,10 @@ export function Dashboard() {
       await loadDashboardAutoFilePreference({ silent: true });
 
       toast({
-        title: response.data.data.enabled ? 'Auto-File enabled' : 'Auto-File paused',
+        title: response.data.data.enabled ? 'Approved filing authority enabled' : 'Review before filing enabled',
         description: response.data.data.enabled
-          ? 'Eligible cases can submit automatically when filing gates are clear.'
-          : 'Cases will wait for your review before filing.',
+          ? 'Margin may submit only evidence-complete cases that meet the rules you approved.'
+          : 'Margin will prepare evidence-backed work for your approval before each new filing.',
       });
     } catch (error) {
       console.error('Failed to save dashboard Auto-File preference:', error);
@@ -2298,7 +2299,7 @@ export function Dashboard() {
     if (activeTab === 'discrepancies' && isSyncScopedDetections) {
       return `Upload processed: ${syncScopedIssuesUpdatedLabel}`;
     }
-    return `Updated ${headerLastUpdated}`;
+    return `Last checked ${headerLastUpdated} · Your position reflects the records Margin has examined.`;
   }, [activeTab, headerLastUpdated, isSyncScopedDetections, syncScopedIssuesUpdatedLabel]);
   const latestDashboardSignalLabel = useMemo(() => {
     if (!latestDashboardSignal?.timestamp) return null;
@@ -2761,27 +2762,27 @@ export function Dashboard() {
       return 'Margin is pulling your latest Amazon activity now.';
     }
     if (needsEvidenceCount > 0) {
-      return `Amazon needs more proof before ${pluralize(needsEvidenceCount, 'case')} can keep moving.`;
+      return `${pluralize(needsEvidenceCount, 'recovery')} need${needsEvidenceCount === 1 ? 's' : ''} purchase evidence before Margin can act. We have not filed anything without that proof.`;
     }
     if (safetyVerificationCount > 0 || insufficientDataCount > 0) {
-      return `Verified identifiers are still missing on ${pluralize(safetyVerificationCount + insufficientDataCount, 'case')}, so Margin is holding them safely.`;
+      return `Margin is verifying the identifiers and records for ${pluralize(safetyVerificationCount + insufficientDataCount, 'recovery')}. Nothing will move forward until it is supportable.`;
     }
     if (approvedCount > 0 && paidCount === 0) {
-      return `Amazon has approved ${pluralize(approvedCount, 'case')}; payout confirmation is the next checkpoint.`;
+      return `Amazon has indicated recovery on ${pluralize(approvedCount, 'case')}. Margin is checking when and how the money appears in your settlement.`;
     }
     if (filedCount > 0) {
-      return `Margin already has ${pluralize(filedCount, 'case')} moving with Amazon.`;
+      return `Margin is carrying ${pluralize(filedCount, 'evidence-backed case')} with Amazon. You do not need to chase an update right now.`;
     }
     if (readyCount > 0) {
-      return `Margin has ${pluralize(readyCount, 'case')} ready to file with full supporting truth.`;
+      return `${pluralize(readyCount, 'case')} ${readyCount === 1 ? 'is' : 'are'} evidence-ready. Margin has prepared the work; it will move only under your current filing authority.`;
     }
     if (detectedOpportunitiesCount > 0) {
-      return `Margin has ${pluralize(detectedOpportunitiesCount, 'issue')} in view and is turning supportable ones into cases.`;
+      return `We are checking ${pluralize(detectedOpportunitiesCount, 'Amazon event')} against your records. Nothing will move forward until it is supportable.`;
     }
     if (recoveredCashTotal > 0) {
-      return `Margin has already confirmed ${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} back to this account.`;
+      return `Margin verified ${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} in payout. The recovery record stays open until the final financial state is clear.`;
     }
-    return 'Margin is connected and watching this account for missed reimbursements.';
+    return 'Margin examined the records in scope. No justified recovery action is open right now.';
   }, [
     activeSyncId,
     approvedClaimsCount,
@@ -2800,22 +2801,25 @@ export function Dashboard() {
     const latestEventTimestamp = latestOperationalEvent?.timestamp
       ? new Date(latestOperationalEvent.timestamp)
       : null;
-    const latestMovementSummary = latestEventTimestamp && !Number.isNaN(latestEventTimestamp.getTime())
-      ? `Last movement ${formatDistanceToNow(latestEventTimestamp, { addSuffix: true })}: ${latestOperationalEvent?.title}.`
+    const lastCheckedSummary = latestEventTimestamp && !Number.isNaN(latestEventTimestamp.getTime())
+      ? `Last checked ${formatDistanceToNow(latestEventTimestamp, { addSuffix: true })}.`
       : dashboardSummary
-        ? `Recovery summary refreshed ${formattedLastUpdated}.`
-        : 'Margin is assembling your latest filing, thread, and notification truth.';
+        ? `Last checked ${formattedLastUpdated}.`
+        : 'Margin is establishing the latest recovery position.';
 
+    if (needsEvidenceCount > 0) {
+      return `${lastCheckedSummary} ${pluralize(needsEvidenceCount, 'recovery')} need${needsEvidenceCount === 1 ? 's' : ''} purchase evidence before Margin can move ${needsEvidenceCount === 1 ? 'it' : 'them'} forward. Nothing has been filed without that proof.`;
+    }
     if (primaryBlocker) {
-      return `${latestMovementSummary} ${primaryBlocker.label} is the main thing holding up ${pluralize(primaryBlocker.count, 'case')} right now.`;
+      return `${lastCheckedSummary} Margin is holding ${pluralize(primaryBlocker.count, 'recovery')} until the records establish the next justified step.`;
     }
     if (needsSync) {
-      return `${latestMovementSummary} A refresh is still needed to pull the latest Amazon records.`;
+      return `${lastCheckedSummary} Margin needs a fresh Amazon record pull before it can update this position.`;
     }
     if (recoveredCashTotal > 0) {
-      return `${latestMovementSummary} ${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} is already confirmed as paid back while Margin keeps watching what can move next.`;
+      return `${lastCheckedSummary} Margin has verified the payout recorded here and is still watching the remaining recovery work.`;
     }
-    return `${latestMovementSummary} The status cards beside this summary show whether Amazon is waiting, whether you need to step in, and what Margin is doing next.`;
+    return `${lastCheckedSummary} No action is needed from you. Margin is still checking the records in scope.`;
   }, [
     dashboardSummary,
     formattedLastUpdated,
@@ -2853,57 +2857,57 @@ export function Dashboard() {
       }
       if (needsEvidenceCount > 0) {
         return {
-          label: 'Current status',
-          value: 'Needs your input',
-          detail: `Amazon asked for more proof on ${pluralize(needsEvidenceCount, 'case')}.`
+          label: 'Recovery state',
+          value: 'Evidence needed',
+          detail: `Margin will not advance ${pluralize(needsEvidenceCount, 'recovery')} until the missing proof is clear.`
         };
       }
       if (safetyVerificationCount > 0 || insufficientDataCount > 0) {
         return {
-          label: 'Current status',
-          value: 'Awaiting verified identifiers',
-          detail: `${pluralize(safetyVerificationCount + insufficientDataCount, 'case')} are paused until shipment or product truth is confirmed.`
+          label: 'Recovery state',
+          value: 'Evidence needed',
+          detail: `${pluralize(safetyVerificationCount + insufficientDataCount, 'recovery')} remain under review while Margin verifies the identifiers and records.`
         };
       }
       if (approvedCount > 0 && paidCount === 0) {
         return {
-          label: 'Current status',
-          value: 'Approved, awaiting payout',
-          detail: `${pluralize(approvedCount, 'case')} are approved and waiting for payout confirmation.`
+          label: 'Recovery state',
+          value: 'Payout check',
+          detail: `${pluralize(approvedCount, 'case')} have Amazon action to verify against the settlement outcome.`
         };
       }
       if (filedCount > 0) {
         return {
-          label: 'Current status',
-          value: 'Waiting on Amazon',
-          detail: `${pluralize(filedCount, 'case')} are already filed and currently in Amazon review.`
+          label: 'Recovery state',
+          value: 'With Amazon',
+          detail: `${pluralize(filedCount, 'evidence-backed case')} ${filedCount === 1 ? 'is' : 'are'} in active recovery with Amazon.`
         };
       }
       if (readyCount > 0) {
         return {
-          label: 'Current status',
-          value: 'Ready to file',
-          detail: `${pluralize(readyCount, 'case')} fully passed the truth gate and can move forward safely.`
+          label: 'Recovery state',
+          value: 'Evidence-backed',
+          detail: `${pluralize(readyCount, 'case')} ${readyCount === 1 ? 'is' : 'are'} prepared for the next justified action.`
         };
       }
       if (detectedOpportunitiesCount > 0) {
         return {
-          label: 'Current status',
-          value: 'Reviewing new issues',
-          detail: `${pluralize(detectedOpportunitiesCount, 'issue')} are in view and Margin is sorting what is supportable.`
+          label: 'Recovery state',
+          value: 'Under review',
+          detail: `Margin is checking ${pluralize(detectedOpportunitiesCount, 'Amazon event')} against the records in scope.`
         };
       }
       if (recoveredCashTotal > 0) {
         return {
-          label: 'Current status',
-          value: 'Watching for the next issue',
-          detail: `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} has already been confirmed back to this account.`
+          label: 'Recovery state',
+          value: 'Paid and verified',
+          detail: `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} has been matched to the expected recovery record.`
         };
       }
       return {
-        label: 'Current status',
-        value: 'Watching for issues',
-        detail: 'Margin is connected and checking for missed reimbursements.'
+        label: 'Recovery state',
+        value: 'No open recovery action',
+        detail: 'Margin examined the records in scope and is continuing to watch for a justified recovery action.'
       };
     })();
 
@@ -2989,8 +2993,8 @@ export function Dashboard() {
       }
       return {
         label: 'Needs from you',
-        value: 'Nothing needed',
-        detail: 'Margin is watching for issues and you do not need to act right now.'
+        value: 'No action needed',
+        detail: 'No action is needed from you. Margin is still checking the records in scope.'
       };
     })();
 
@@ -3024,6 +3028,38 @@ export function Dashboard() {
   const inMotionClaimsCount = filedClaimsCount + approvedClaimsCount;
   const inMotionValueTotal = filedValueTotal + approvedValueTotal;
   const blockedPipelineCount = needsEvidenceCount + safetyVerificationCount + insufficientDataCount;
+  const filingAuthority = useMemo(() => {
+    if (dashboardAutoFileLoading) {
+      return {
+        label: 'Checking filing authority',
+        detail: 'Margin is confirming the current seller-approved filing boundary.'
+      };
+    }
+
+    if (!dashboardAutoFileEnabled) {
+      return {
+        label: 'Review before filing',
+        detail: 'Margin prepares evidence-backed work. You approve each new filing.'
+      };
+    }
+
+    const authorityPaused = dashboardAutoFileGateStatus?.globalFilingEnabled === false
+      || dashboardAutoFileGateStatus?.queueAvailable === false
+      || dashboardAutoFileGateStatus?.paymentRequired === true;
+
+    if (authorityPaused) {
+      return {
+        label: 'Filing authority paused',
+        detail: 'Margin can continue examining and preparing work. No new filing will be submitted until you change this.'
+      };
+    }
+
+    return {
+      label: 'Approved filing authority',
+      detail: 'Margin may submit only evidence-complete cases that meet the rules you approved.'
+    };
+  }, [dashboardAutoFileEnabled, dashboardAutoFileGateStatus, dashboardAutoFileLoading]);
+
   const overviewFoundValueLabel = useMemo(
     () => formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency),
     [estimatedValueTotal, formatCurrencyWithSelection, recoveredCurrency]
@@ -3038,18 +3074,18 @@ export function Dashboard() {
   );
   const overviewHeroMetrics = useMemo(() => ([
     {
-      label: 'With Amazon',
-      value: overviewInMotionValueLabel,
-      detail: inMotionClaimsCount > 0
-        ? `${pluralize(inMotionClaimsCount, 'case')} filed, under review, or awaiting payout`
-        : 'Nothing is moving with Amazon yet'
+        label: 'With Amazon',
+        value: overviewInMotionValueLabel,
+        detail: inMotionClaimsCount > 0
+          ? `${pluralize(inMotionClaimsCount, 'case')} filed, under review, or in payout check`
+          : 'No evidence-backed case is with Amazon yet.'
     },
     {
-      label: 'Recovered',
-      value: overviewPaidBackValueLabel,
-      detail: recoveredCashTotal > 0
-        ? `${pluralize(recoveredClaimsCount, 'case')} confirmed back to this account`
-        : 'No payout has been confirmed yet'
+        label: 'Paid and verified',
+        value: overviewPaidBackValueLabel,
+        detail: recoveredCashTotal > 0
+          ? `${pluralize(recoveredClaimsCount, 'case')} matched to the expected recovery record`
+          : 'Margin has not verified a payout yet.'
     }
   ]), [
     inMotionClaimsCount,
@@ -3067,16 +3103,16 @@ export function Dashboard() {
 
     return [
       {
-        label: 'Found',
-        value: pluralize(detectedOpportunitiesCount, 'issue'),
-        detail: detectedOpportunitiesCount > 0 ? `${overviewFoundValueLabel} detected in view` : 'No issues in view',
+        label: 'Under review',
+        value: pluralize(detectedOpportunitiesCount, 'event'),
+        detail: detectedOpportunitiesCount > 0 ? `${overviewFoundValueLabel} under review` : 'No Amazon events are under review.',
         tone: detectedOpportunitiesCount > 0 ? 'border-[#C8D8FF] bg-[#F2F7FF]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
         dotTone: detectedOpportunitiesCount > 0 ? 'bg-[#0B74DE]' : 'bg-[#D1D5DB]',
         active: detectedOpportunitiesCount > 0,
         onClick: () => handleTabChange('discrepancies')
       },
       {
-        label: 'Needs proof',
+        label: 'Evidence needed',
         value: pluralize(blockedPipelineCount, 'case'),
         detail: blockedDetail,
         tone: blockedPipelineCount > 0 ? 'border-[#F4C6CD] bg-[#FFF6F7]' : 'border-[#DCE8EE] bg-[#FAFAF7]',
@@ -3085,9 +3121,9 @@ export function Dashboard() {
         onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
       },
       {
-        label: 'In Amazon review',
+        label: 'With Amazon',
         value: pluralize(filedClaimsCount, 'case'),
-        detail: filedClaimsCount > 0 ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in review` : 'No filed cases in review',
+        detail: filedClaimsCount > 0 ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in active recovery` : 'No evidence-backed case is with Amazon yet.',
         footerDetail: 'Oldest waiting 5 days',
         tone: filedClaimsCount > 0 ? 'border-[#C8D8FF] bg-[#F2F7FF]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
         dotTone: filedClaimsCount > 0 ? 'bg-[#0B74DE]' : 'bg-[#D1D5DB]',
@@ -3095,18 +3131,18 @@ export function Dashboard() {
         onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
       },
       {
-        label: 'Waiting for payout',
+        label: 'Payout check',
         value: pluralize(approvedClaimsCount, 'case'),
-        detail: approvedClaimsCount > 0 ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} approved` : 'No approved cases awaiting payout',
+        detail: approvedClaimsCount > 0 ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} awaiting payout verification` : 'No Amazon action is awaiting payout verification.',
         tone: approvedClaimsCount > 0 ? 'border-[#D9D1FF] bg-[#F7F5FF]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
         dotTone: approvedClaimsCount > 0 ? 'bg-[#5B4BB7]' : 'bg-[#D1D5DB]',
         active: approvedClaimsCount > 0,
         onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
       },
       {
-        label: 'Paid back',
+        label: 'Paid and verified',
         value: overviewPaidBackValueLabel,
-        detail: recoveredCashTotal > 0 ? `${pluralize(recoveredClaimsCount, 'case')} confirmed` : 'Nothing confirmed yet',
+        detail: recoveredCashTotal > 0 ? `${pluralize(recoveredClaimsCount, 'case')} matched to the expected recovery record` : 'Margin has not verified a payout yet.',
         tone: recoveredCashTotal > 0 ? 'border-[#B9E6D3] bg-[#F4FBF7]' : 'border-[#E9E9EC] bg-[#FAFAFB]',
         dotTone: recoveredCashTotal > 0 ? 'bg-[#2B7A5A]' : 'bg-[#D1D5DB]',
         active: recoveredCashTotal > 0,
@@ -3191,7 +3227,7 @@ export function Dashboard() {
                               : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
                           )}
                         >
-                          Overview
+                          Position
                         </button>
                         <button
                           onClick={() => handleTabChange('discrepancies')}
@@ -3202,7 +3238,7 @@ export function Dashboard() {
                               : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
                           )}
                         >
-                          Issues found
+                          Work in progress
                         </button>
                         <button
                           onClick={() => handleTabChange('evidence')}
@@ -3213,7 +3249,7 @@ export function Dashboard() {
                               : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
                           )}
                         >
-                          Evidence
+                          Proof record
                         </button>
                       </div>
 
@@ -3224,12 +3260,17 @@ export function Dashboard() {
                             void handleDashboardAutoFileChange(checked);
                           }}
                           disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
-                          aria-label="Autofile seller-controlled filing switch"
+                          aria-label="Filing authority seller-controlled switch"
                           className="h-5 w-9 border border-[#B8C4CE] data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#8A99A5]"
                         />
-                        <span className="text-[13px] font-sans font-medium text-[#182026]">
-                          Autofile
-                        </span>
+                        <div className="min-w-0">
+                          <p className="text-[13px] font-sans font-medium text-[#182026]">
+                            {filingAuthority.label}
+                          </p>
+                          <p className="mt-0.5 max-w-[300px] text-[10px] font-sans leading-4 text-[#66737F]">
+                            {filingAuthority.detail}
+                          </p>
+                        </div>
                       </div>
                     </div>
                     <p className="text-[10px] font-sans text-[#8A99A5]">
@@ -3247,10 +3288,10 @@ export function Dashboard() {
                         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                           <div>
                             <h2 id="recovery-pipeline-heading" className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">
-                              Recovery pipeline
+                              Recovery in motion
                             </h2>
                             <p className="mt-1.5 text-[12px] font-sans leading-5 text-[#66737F]">
-                              Select any stage to open the work that supports it.
+                              Each event must earn its next step.
                             </p>
                           </div>
                           <Select value={pipelineWindow} onValueChange={setPipelineWindow}>
@@ -3318,7 +3359,7 @@ export function Dashboard() {
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-[10px] font-sans text-[#8A99A5]">Recovery value in view</p>
+                              <p className="text-[10px] font-sans text-[#8A99A5]">Amount under review</p>
                               {isOverviewLoading ? (
                                 <Skeleton className="mt-2 ml-auto h-9 w-32 bg-[#E8EFF3]" />
                               ) : (
@@ -3326,8 +3367,11 @@ export function Dashboard() {
                                   {overviewFoundValueLabel}
                                 </p>
                               )}
-                              <p className="mt-2 text-[10px] font-sans text-[#66737F]">
-                                {pluralize(detectedOpportunitiesCount, 'issue')} found
+                              <p className="mt-2 max-w-[205px] text-[10px] font-sans leading-4 text-[#66737F]">
+                                Not recovered. Margin is still establishing what the records support.
+                              </p>
+                              <p className="mt-1 text-[10px] font-sans text-[#66737F]">
+                                {pluralize(detectedOpportunitiesCount, 'Amazon event')} under review
                               </p>
                             </div>
                           </div>
@@ -3339,9 +3383,10 @@ export function Dashboard() {
                             {overviewNarrative}
                           </p>
 
-                          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[#DCE8EE] pt-4">
-                            <span className="text-[11px] font-sans font-medium text-[#66737F]">Change this week</span>
-                            <span className="text-[14px] font-sans font-medium tracking-tight text-[#182026]">+$3,210</span>
+                          <div className="mt-5 border-t border-[#DCE8EE] pt-4">
+                            <p className="text-[11px] font-sans leading-5 text-[#66737F]">
+                              Amounts are not recovered until Margin verifies the payout against the expected recovery record.
+                            </p>
                           </div>
 
                           <div className="mt-5 flex flex-wrap gap-2">
@@ -3545,7 +3590,7 @@ export function Dashboard() {
                     <div className="border-b border-[#DCE8EE] pb-5">
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                         <div className="max-w-3xl">
-                          <p className="text-[11px] font-sans font-medium text-[#66737F]">Issues found</p>
+                          <p className="text-[11px] font-sans font-medium text-[#66737F]">Work in progress</p>
                           <h2 className="mt-2 font-lora text-[26px] font-normal leading-tight tracking-tight text-[#182026]">
                             {issuesFoundHeading}
                           </h2>
@@ -4145,7 +4190,7 @@ This is saved as a support request. Margin records notification delivery separat
                           ? 'Potential exposure'
                           : activeDiscrepancy.valueLabel === 'no_recovery_value'
                             ? 'Recovery value'
-                            : 'Estimated value'}
+                            : 'Amount under review'}
                       </div>
                       <div className="mt-1 text-[17px] font-sans font-medium tracking-tight text-[#182026]">
                         {activeDiscrepancy.valueLabel === 'no_recovery_value'
