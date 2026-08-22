@@ -1050,7 +1050,14 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
   outstanding_amount: apiData.outstanding_amount ?? null,
   variance_amount: apiData.variance_amount ?? null,
   financial_payout_status: apiData.financial_payout_status ?? null,
+  financial_reversal_state: apiData.financial_reversal_state ?? null,
+  financial_truth_limitation: apiData.financial_truth_limitation ?? null,
   financial_payout_proof: apiData.financial_payout_proof ?? null,
+  accounting_truth: apiData.accounting_truth ?? null,
+  closure_truth: apiData.closure_truth ?? null,
+  safety_evaluations: apiData.safety_evaluations ?? null,
+  unit_quantity_source: apiData.unit_quantity_source ?? 'unavailable',
+  unit_value_provenance: apiData.unit_value_provenance ?? 'unavailable',
   billed_amount: apiData.billed_amount ?? null,
   expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || null,
   createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || null,
@@ -1817,6 +1824,34 @@ export default function CaseDetail() {
   const financialPayoutStatus = typeof backendTruthCase?.financial_payout_status === 'string'
     ? backendTruthCase.financial_payout_status
     : null;
+  const financialReversalState = typeof backendTruthCase?.financial_reversal_state === 'string'
+    ? backendTruthCase.financial_reversal_state
+    : null;
+  const financialTruthLimitation = typeof backendTruthCase?.financial_truth_limitation === 'string'
+    ? backendTruthCase.financial_truth_limitation
+    : null;
+  const accountingTruth = backendTruthCase?.accounting_truth && typeof backendTruthCase.accounting_truth === 'object'
+    ? backendTruthCase.accounting_truth
+    : null;
+  const closureTruth = backendTruthCase?.closure_truth && typeof backendTruthCase.closure_truth === 'object'
+    ? backendTruthCase.closure_truth
+    : null;
+  const safetyEvaluations = backendTruthCase?.safety_evaluations && typeof backendTruthCase.safety_evaluations === 'object'
+    ? backendTruthCase.safety_evaluations
+    : {};
+  const safetyEvaluationLabel = (key: 'prior_reimbursement' | 'inventory_adjustment' | 'duplicate_claim', yesLabel: string, noLabel: string) => {
+    const state = safetyEvaluations?.[key]?.state;
+    if (state === 'yes') return yesLabel;
+    if (state === 'no') return noLabel;
+    return 'Not assessed';
+  };
+  const hasSafetyBlock = ['prior_reimbursement', 'inventory_adjustment', 'duplicate_claim']
+    .some((key) => safetyEvaluations?.[key]?.state === 'yes');
+  const hasUnassessedSafety = ['prior_reimbursement', 'inventory_adjustment', 'duplicate_claim']
+    .some((key) => safetyEvaluations?.[key]?.state === 'not_assessed');
+  const unitValueProvenance = typeof backendTruthCase?.unit_value_provenance === 'string'
+    ? backendTruthCase.unit_value_provenance
+    : 'unavailable';
   const billedAmount = typeof backendTruthCase?.billed_amount === 'number' ? backendTruthCase.billed_amount : null;
   const trustedApprovedAmount = hasTrustedApprovalTruth(backendTruthCase) ? approvedAmount : null;
   const trustedRecoveredAmount = hasTrustedPayoutTruth(backendTruthCase) ? verifiedPaidAmount : null;
@@ -2742,10 +2777,10 @@ export default function CaseDetail() {
                     <ClaimRecordMetric label="Estimated claim value" value={formatCurrencyOrDash(claimRecordEstimatedClaimValue, effectiveCase?.currency || 'USD')} className="p-3" />
                     <ClaimRecordMetric label="Approved amount" value={formatCurrencyOrDash(claimRecordApprovedAmount, effectiveCase?.currency || 'USD')} detail={claimRecordApprovedAmount === null ? 'Approval has not been independently verified.' : undefined} className="p-3" />
                     <ClaimRecordMetric label="Recorded payout" value={formatCurrencyOrDash(claimRecordRecordedPayoutAmount, effectiveCase?.currency || 'USD')} detail={claimRecordRecordedPayoutAmount === null ? 'No recorded payout.' : 'Recorded operationally; not payment proof by itself.'} className="p-3" />
-                    <ClaimRecordMetric label="Verified paid" value={formatCurrencyOrDash(claimRecordVerifiedPaidAmount, effectiveCase?.currency || 'USD')} detail={claimRecordVerifiedPaidAmount === null ? 'No matching financial payment verified.' : 'Verified from matching financial-event evidence.'} className="p-3" />
-                    <ClaimRecordMetric label="Outstanding" value={formatCurrencyOrDash(outstandingAmount, effectiveCase?.currency || 'USD')} detail={outstandingAmount === null ? 'Unavailable until a payment target is established.' : undefined} className="p-3" />
-                    <ClaimRecordMetric label="Variance" value={formatCurrencyOrDash(varianceAmount, effectiveCase?.currency || 'USD')} detail={varianceAmount === null ? 'Unavailable until reconciliation.' : undefined} className="p-3" />
-                    <ClaimRecordMetric label="Payment status" value={financialPayoutStatus ? toStatusLabel(financialPayoutStatus) : NOT_AVAILABLE} detail={payoutProofStatus ? `Proof: ${formatPayoutProofStatus(payoutProofStatus)}` : 'Payment proof unavailable.'} className="p-3" />
+                    <ClaimRecordMetric label="Verified paid" value={formatCurrencyOrDash(claimRecordVerifiedPaidAmount, effectiveCase?.currency || 'USD')} detail={claimRecordVerifiedPaidAmount === null ? (financialTruthLimitation || 'Not available. No canonical financial payment has been established.') : 'Verified from matching financial-event evidence.'} className="p-3" />
+                    <ClaimRecordMetric label="Outstanding" value={formatCurrencyOrDash(outstandingAmount, effectiveCase?.currency || 'USD')} detail={outstandingAmount === null ? 'Not available until a payment target is established.' : undefined} className="p-3" />
+                    <ClaimRecordMetric label="Variance" value={formatCurrencyOrDash(varianceAmount, effectiveCase?.currency || 'USD')} detail={varianceAmount === null ? 'Not available until reconciliation.' : undefined} className="p-3" />
+                    <ClaimRecordMetric label="Payment status" value={financialPayoutStatus ? toStatusLabel(financialPayoutStatus) : NOT_AVAILABLE} detail={financialReversalState === 'reversed' ? 'A reimbursement reversal is established; this record is not closed.' : financialReversalState === 'review_required' ? 'A reversal-equivalent event requires review; this record is not closed.' : payoutProofStatus ? `Proof: ${formatPayoutProofStatus(payoutProofStatus)}` : 'Payment proof unavailable.'} className="p-3" />
                     <ClaimRecordMetric label="Legacy billed amount" value={formatCurrencyOrDash(claimRecordLegacyBilledAmount, effectiveCase?.currency || 'USD')} className="p-3" />
                   </div>
                   <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,0.34fr)]">
@@ -2822,13 +2857,23 @@ export default function CaseDetail() {
                           {selectedMetric === 'payout' && 'Expected Payout Date'}
                           {selectedMetric === 'confidence' && 'Analysis Precision'}
                           {selectedMetric === 'units' && 'Inventory Units'}
-                          {selectedMetric === 'cost' && 'Verified Cost Basis'}
+                          {selectedMetric === 'cost' && `Cost basis: ${String(unitValueProvenance).replace(/_/g, ' ')}`}
                         </div>
                       </div>
                     </div>
                   </div>
                 </ClaimRecordSection>
 
+                <dl className="mt-3 grid gap-3 lg:grid-cols-2">
+                  <ClaimRecordField label="Accounting status">
+                    {accountingTruth?.status ? toStatusLabel(accountingTruth.status) : NOT_AVAILABLE}
+                    {accountingTruth?.limitation && <span className="block mt-1 text-[10px] text-[#6B7C88]">{accountingTruth.limitation}</span>}
+                  </ClaimRecordField>
+                  <ClaimRecordField label="Financial closure">
+                    {closureTruth?.state ? toStatusLabel(closureTruth.state) : NOT_AVAILABLE}
+                    {closureTruth?.reason && <span className="block mt-1 text-[10px] text-[#6B7C88]">{closureTruth.reason}</span>}
+                  </ClaimRecordField>
+                </dl>
                 <AccountingReconciliationWidget caseId={effectiveCase.id} tenantSlug={activeSlug} />
 
                 <ClaimRecordSection title="Evidence Packet" eyebrow="Proof and claim basis">
@@ -2939,7 +2984,7 @@ export default function CaseDetail() {
                 </ClaimRecordSection>
 
                 <ClaimRecordSection title="Account Safety" eyebrow="Duplicate and protection checks">
-                  {(effectiveCase.prior_reimbursement_detected || effectiveCase.inventory_adjustment_applied || effectiveCase.duplicate_blocked) ? (
+                  {hasSafetyBlock ? (
                     <div className="mb-5 flex gap-3 border border-blue-500/20 bg-blue-500/10 p-4">
                       <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-blue-300" />
                       <div>
@@ -2957,17 +3002,19 @@ export default function CaseDetail() {
                     <div className="mb-5 flex gap-3 border border-[#D8E3E8] bg-[#F8FAFB] p-4">
                       <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#6B7C88]" />
                       <div>
-                        <div className="text-xs font-bold text-[#6B7C88]">No active duplicate-protection block shown</div>
+                        <div className="text-xs font-bold text-[#6B7C88]">{hasUnassessedSafety ? 'Safety evaluation incomplete' : 'No active duplicate-protection block shown'}</div>
                         <p className="mt-1 text-xs text-[#6B7C88] leading-relaxed font-semibold">
-                          Prior reimbursement, inventory adjustment, and duplicate block fields are all clear on this record.
+                          {hasUnassessedSafety
+                            ? 'One or more duplicate-protection checks have not been assessed for this record.'
+                            : 'Recorded reimbursement, adjustment, and duplicate checks are clear on this record.'}
                         </p>
                       </div>
                     </div>
                   )}
                   <dl className="grid gap-3 sm:grid-cols-3">
-                    <ClaimRecordField label="Prior reimbursement">{effectiveCase.prior_reimbursement_detected ? 'Detected' : 'Not detected'}</ClaimRecordField>
-                    <ClaimRecordField label="Inventory adjustment">{effectiveCase.inventory_adjustment_applied ? 'Applied' : 'Not applied'}</ClaimRecordField>
-                    <ClaimRecordField label="Duplicate blocked">{effectiveCase.duplicate_blocked ? 'Blocked' : 'Not blocked'}</ClaimRecordField>
+                    <ClaimRecordField label="Prior reimbursement">{safetyEvaluationLabel('prior_reimbursement', 'Detected', 'No')}</ClaimRecordField>
+                    <ClaimRecordField label="Inventory adjustment">{safetyEvaluationLabel('inventory_adjustment', 'Applied', 'No')}</ClaimRecordField>
+                    <ClaimRecordField label="Duplicate blocked">{safetyEvaluationLabel('duplicate_claim', 'Blocked', 'No')}</ClaimRecordField>
                   </dl>
                 </ClaimRecordSection>
 
