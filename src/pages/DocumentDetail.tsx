@@ -1,35 +1,26 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { tenantRoute } from '@/lib/routes';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   ArrowLeft,
   FileText,
-  Check,
+  CheckCircle2,
   Download,
   RefreshCw,
   Cloud,
   Calendar,
   Hash,
   AlertCircle,
-  CheckCircle2,
   Clock,
   Link2,
-  Eye,
-  Sparkles,
-  Hexagon,
   Copy,
-  Square,
   Activity,
   Shield,
-  Search,
   Database,
-  Terminal,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
@@ -40,24 +31,30 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
 import { formatAutonomyLabel, getIngestionTruth, getParsingTruth, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 
+const chipTone = (tone: 'neutral' | 'success' | 'info' | 'danger' = 'neutral') => {
+  const tones = {
+    neutral: 'bg-[#F1F5F7] text-[#4D5B66]',
+    success: 'bg-[#EEF8F2] text-[#2F6C54]',
+    info: 'bg-[#EDF5FF] text-[#0B74DE]',
+    danger: 'bg-[#FFF0EF] text-[#B42318]',
+  };
+  return tones[tone];
+};
+
 export default function DocumentDetail() {
   const { id, documentId, tenantSlug } = useParams();
   const { tenant, isReady } = useTenant();
   const activeTenantSlug = tenantSlug || tenant?.slug;
   if (!activeTenantSlug && isReady) {
-    throw new Error("tenantSlug required for DocumentDetail");
+    throw new Error('tenantSlug required for DocumentDetail');
   }
+
   const docId = (documentId as string) || (id as string) || '';
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const location = useLocation();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
-
-  const mainClass = useMemo(() => {
-    return isSidebarCollapsed ? 'ml-16' : 'ml-[282px]';
-  }, [isSidebarCollapsed]);
+  const toggleSidebar = () => setIsSidebarCollapsed((current) => !current);
+  const mainClass = useMemo(() => (isSidebarCollapsed ? 'ml-16' : 'ml-[282px]'), [isSidebarCollapsed]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -66,15 +63,16 @@ export default function DocumentDetail() {
   const [matchedClaims, setMatchedClaims] = useState<any[]>([]);
   const [documentHistory, setDocumentHistory] = useState<any[]>([]);
   const [triggeringParse, setTriggeringParse] = useState(false);
+
   const fetchDocumentDetail = async (setLoadingState = true) => {
     if (!docId || !activeTenantSlug) return;
-
     if (setLoadingState) setLoading(true);
+
     try {
       const [docRes, linkedClaimsRes, auditRes] = await Promise.all([
         api.getDocumentWithParsedData(docId, activeTenantSlug),
         api.getDocumentLinkedClaims(docId, activeTenantSlug),
-        api.getDocumentAuditTrail(docId, activeTenantSlug)
+        api.getDocumentAuditTrail(docId, activeTenantSlug),
       ]);
 
       if (docRes.ok && docRes.data) {
@@ -85,22 +83,14 @@ export default function DocumentDetail() {
         setError(docRes.error || 'Failed to load document');
       }
 
-      if (linkedClaimsRes.ok && linkedClaimsRes.data?.linkedClaims) {
-        setMatchedClaims(linkedClaimsRes.data.linkedClaims);
-      } else {
-        setMatchedClaims([]);
-      }
-
-      if (auditRes.ok && auditRes.data?.events) {
-        const events = [...auditRes.data.events].sort((a, b) =>
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-        );
-        setDocumentHistory(events);
-      } else {
-        setDocumentHistory([]);
-      }
-    } catch (e: any) {
-      setError(e?.message || 'Failed to load document');
+      setMatchedClaims(linkedClaimsRes.ok && linkedClaimsRes.data?.linkedClaims ? linkedClaimsRes.data.linkedClaims : []);
+      setDocumentHistory(
+        auditRes.ok && auditRes.data?.events
+          ? [...auditRes.data.events].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+          : [],
+      );
+    } catch (requestError: any) {
+      setError(requestError?.message || 'Failed to load document');
     } finally {
       if (setLoadingState) setLoading(false);
     }
@@ -125,70 +115,22 @@ export default function DocumentDetail() {
   const handleTriggerParsing = async () => {
     if (!docId) return;
     setTriggeringParse(true);
+
     try {
-      const res = await api.reparseDocument(docId, activeTenantSlug);
-      if (res.ok) {
+      const response = await api.reparseDocument(docId, activeTenantSlug);
+      if (response.ok) {
         await fetchDocumentDetail(false);
         toast({
-          title: 'Parsing Triggered',
-          description: 'Document parsing has been initiated. The page will refresh from backend truth.',
+          title: 'Parsing started',
+          description: 'Margin will refresh this document from backend truth as parsing progresses.',
         });
       } else {
-        toast({
-          title: 'Failed to Trigger Parsing',
-          description: res.error || 'Please try again.',
-          variant: 'destructive',
-        });
+        toast({ title: 'Unable to start parsing', description: response.error || 'Please try again.', variant: 'destructive' });
       }
-    } catch (e: any) {
-      toast({
-        title: 'Error',
-        description: e?.message || 'Failed to trigger parsing',
-        variant: 'destructive',
-      });
+    } catch (requestError: any) {
+      toast({ title: 'Unable to start parsing', description: requestError?.message || 'Please try again.', variant: 'destructive' });
     } finally {
       setTriggeringParse(false);
-    }
-  };
-
-  const getParserStatusBadge = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'completed':
-        return (
-          <div className="px-2.5 py-1 bg-white/5 border border-white/10 text-[10px] font-sans font-bold text-white/80 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
-            <CheckCircle2 className="w-3 h-3" />
-            FULL_PARSE
-          </div>
-        );
-      case 'partial':
-        return (
-          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[10px] font-sans font-bold text-amber-400 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
-            <AlertCircle className="w-3 h-3" />
-            PARTIAL_PARSE
-          </div>
-        );
-      case 'pending':
-      case 'processing':
-        return (
-          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[10px] font-sans font-bold text-amber-500 uppercase tracking-tight flex items-center gap-1.5 rounded-sm animate-pulse">
-            <Clock className="w-3 h-3" />
-            PROCESSING
-          </div>
-        );
-      case 'failed':
-        return (
-          <div className="px-2.5 py-1 bg-rose-500/10 border border-rose-500/20 text-[10px] font-sans font-bold text-rose-500 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
-            <AlertCircle className="w-3 h-3" />
-            ERROR
-          </div>
-        );
-      default:
-        return (
-          <div className="px-2.5 py-1 bg-white/5 border border-white/10 text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
-            <Activity className="w-3 h-3" />
-            {status || 'UNKNOWN'}
-          </div>
-        );
     }
   };
 
@@ -196,9 +138,7 @@ export default function DocumentDetail() {
   const parsingTruth = getParsingTruth(documentData || {});
   const ingestionTruth = getIngestionTruth(documentData || {});
   const parserConfidence = parsingTruth.confidence;
-  const parserConfidenceLabel = parserConfidence != null
-    ? `${(parserConfidence * 100).toFixed(0)}%`
-    : 'Unknown';
+  const parserConfidenceLabel = parserConfidence != null ? `${(parserConfidence * 100).toFixed(0)}%` : 'Unknown';
   const extractedDataPointCount =
     (extracted.order_ids?.length || 0) +
     (extracted.asins?.length || 0) +
@@ -214,547 +154,391 @@ export default function DocumentDetail() {
     if (status === 'pending' || status === 'processing') {
       return {
         usable: false,
-        label: 'NO',
-        reason: parsingOperationalSummary || 'Parsing is still in progress',
+        label: 'Not ready',
+        reason: parsingOperationalSummary || 'Parsing is still in progress.',
         nextStep: parsingTruth.operationalExplanation?.next_action
           ? formatAutonomyLabel(parsingTruth.operationalExplanation.next_action)
-          : 'Wait for parsing to complete before this document can support a case.'
+          : 'Wait for parsing to complete before this document can support a case.',
       };
     }
     if (status === 'failed') {
       return {
         usable: false,
-        label: 'NO',
-        reason: parsingOperationalSummary || documentData?.parser_error || 'Parsing failed',
+        label: 'Needs review',
+        reason: parsingOperationalSummary || documentData?.parser_error || 'Parsing failed.',
         nextStep: parsingTruth.operationalExplanation?.next_action
           ? formatAutonomyLabel(parsingTruth.operationalExplanation.next_action)
-          : 'Re-run parsing or manually review the source document.'
+          : 'Re-run parsing or review the source document manually.',
       };
     }
     if (extractedDataPointCount === 0 && !(parsedData?.line_items?.length > 0)) {
-      return { usable: false, label: 'NO', reason: 'No structured fields were extracted', nextStep: 'Review the file manually or re-run parsing with a better source document.' };
+      return { usable: false, label: 'Needs review', reason: 'No structured fields were extracted.', nextStep: 'Review the source document manually or re-run parsing with a better file.' };
     }
     if (matchedClaims.length === 0) {
-      return { usable: false, label: 'NO', reason: 'Not linked to any case yet', nextStep: 'Wait for matching or link this document to the correct case manually.' };
+      return { usable: false, label: 'Unlinked', reason: 'Not linked to a recovery record yet.', nextStep: 'Wait for matching or link this document to the correct recovery record manually.' };
     }
     if (status === 'partial') {
       return {
         usable: false,
-        label: 'LIMITED',
-        reason: parsingTruth.explanation?.reason || 'The parser preserved some usable truth, but this document is only partially parsed.',
-        nextStep: 'Review the preserved fields before using this document in case review.'
+        label: 'Limited',
+        reason: parsingTruth.explanation?.reason || 'Some usable fields were preserved, but parsing is incomplete.',
+        nextStep: 'Review the preserved fields before using this document in case review.',
       };
     }
     if (parserConfidence == null) {
-      return { usable: false, label: 'NO', reason: 'Extraction confidence is unknown', nextStep: 'Review extracted fields manually before relying on this document in case review.' };
+      return { usable: false, label: 'Needs review', reason: 'Extraction confidence is unknown.', nextStep: 'Review extracted fields manually before relying on this document in case review.' };
     }
     if (parserConfidence < 0.5) {
-      return { usable: false, label: 'NO', reason: 'Extraction confidence is low', nextStep: 'Manual review is required before this document supports case review.' };
+      return { usable: false, label: 'Needs review', reason: 'Extraction confidence is low.', nextStep: 'Manual review is required before this document supports case review.' };
     }
-    return { usable: true, label: 'YES', reason: 'Structured extraction completed and linked to a case', nextStep: 'Document can support case review. Filing-usable evidence is confirmed later through case links.' };
+    return {
+      usable: true,
+      label: 'Ready for review',
+      reason: 'Structured extraction is complete and the document is linked to a recovery record.',
+      nextStep: 'The document can support case review. Filing-usable evidence is confirmed later through case links.',
+    };
   })();
 
-  if (loading || error) {
-    return (
-      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
+  const parserStatus = String(parsingTruth.status || 'unknown').toLowerCase();
+  const parserChip = (() => {
+    if (parserStatus === 'completed') return { label: 'Parsed', tone: 'success' as const, icon: CheckCircle2 };
+    if (parserStatus === 'partial') return { label: 'Partially parsed', tone: 'neutral' as const, icon: AlertCircle };
+    if (parserStatus === 'pending' || parserStatus === 'processing') return { label: 'Parsing', tone: 'info' as const, icon: Clock };
+    if (parserStatus === 'failed') return { label: 'Parsing needs attention', tone: 'danger' as const, icon: AlertCircle };
+    return { label: parserStatus || 'Unknown', tone: 'neutral' as const, icon: Activity };
+  })();
+  const ParserIcon = parserChip.icon;
 
-        <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
-        <div className="flex-1 flex h-full overflow-hidden">
-          <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-          <main className={cn('platform-vitality-page flex-1 transition-all duration-300 overflow-y-auto font-sans', mainClass)}>
-            <div className="flex items-center justify-center min-h-[500px]">
-              {loading ? (
-                <div className="text-center">
-                  <div className="relative flex h-8 w-8 mx-auto mb-6">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/20 opacity-20"></span>
-                    <span className="relative inline-flex rounded-full h-8 w-8 bg-white/10 border border-white/10"></span>
-                  </div>
-                  <div className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">LOADING...</div>
-                </div>
-              ) : (
-                <div className="text-center p-12 bg-rose-500/[0.02] border border-rose-500/10 rounded-xl max-w-md">
-                  <AlertCircle className="w-12 h-12 mx-auto text-rose-500/20 mb-6" />
-                  <div className="text-sm font-sans font-bold text-rose-500 uppercase tracking-tight mb-4">LOAD_FAILURE</div>
-                  <div className="text-xs text-rose-500/40 mb-8 font-sans font-bold tracking-tight">{error}</div>
-                  <Link to={tenantRoute(activeTenantSlug, '/evidence-locker')}>
-                    <Button variant="ghost" className="text-[11px] font-sans font-bold text-white/40 hover:text-white border border-white/5 hover:border-white/10 tracking-tight">
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      RETURN_TO_DOCUMENTS
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </main>
-        </div>
+  const documentName = String(documentData?.name || 'Unnamed document');
+  const documentType = String(documentData?.content_type || documentData?.type || 'Not available');
+  const sourceName = String(documentData?.source || documentData?.provider || 'Not available');
+  const documentCreatedAt = documentData?.created_at ? format(new Date(documentData.created_at), 'yyyy-MM-dd HH:mm:ss') : 'Not available';
+  const metadataItems = [
+    { label: 'Document ID', value: docId, icon: Hash },
+    { label: 'Document type', value: documentType, icon: Database },
+    { label: 'Source', value: sourceName, icon: Cloud },
+    { label: 'Added', value: documentCreatedAt, icon: Calendar },
+  ];
+
+  const handleDownload = async () => {
+    if (!docId) return;
+    try {
+      const response = await api.getDocumentDownload(docId, activeTenantSlug);
+      if (response.ok && response.data?.url) {
+        window.open(response.data.url, '_blank');
+      } else {
+        toast({ title: 'Download unavailable', description: response.error || 'Could not get a document download URL.', variant: 'destructive' });
+      }
+    } catch (requestError: any) {
+      toast({ title: 'Download unavailable', description: requestError?.message || 'Could not download this document.', variant: 'destructive' });
+    }
+  };
+
+  const shell = (content: React.ReactNode) => (
+    <div className="platform-vitality-page relative flex h-screen min-h-screen flex-col overflow-hidden bg-[#FAFAF7] text-[#182026]">
+      <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
+      <div className="flex h-full flex-1 overflow-hidden bg-[#FAFAF7]">
+        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+        <main className={cn('flex-1 overflow-y-auto bg-[#FAFAF7] font-sans transition-all duration-300', mainClass)}>{content}</main>
       </div>
+    </div>
+  );
+
+  if (loading || error) {
+    return shell(
+      <div className="flex min-h-[500px] items-center justify-center px-6">
+        {loading ? (
+          <div className="text-center">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#DCE8EE] bg-white">
+              <RefreshCw className="h-4 w-4 animate-spin text-[#0B74DE]" />
+            </div>
+            <p className="mt-4 text-[12px] text-[#66737F]">Opening document record…</p>
+          </div>
+        ) : (
+          <div className="max-w-md rounded-[10px] border border-[#F3D1CC] bg-white px-6 py-7 text-center shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+            <AlertCircle className="mx-auto h-6 w-6 text-[#B42318]" />
+            <h1 className="mt-4 font-lora text-[22px] font-normal tracking-tight text-[#182026]">Document unavailable</h1>
+            <p className="mt-2 text-[12px] leading-5 text-[#66737F]">{error}</p>
+            <Link to={tenantRoute(activeTenantSlug, '/evidence-locker')}>
+              <Button variant="outline" className="mt-5 h-9 border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#182026]">
+                <ArrowLeft className="mr-2 h-3.5 w-3.5" />
+                Back to documents
+              </Button>
+            </Link>
+          </div>
+        )}
+      </div>,
     );
   }
 
-  return (
-    <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#F9FAFB] text-[#111827]">
-      {/* Background Matrix Pattern / Noise */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#F9FAFB] via-[#F9FAFB] to-[#F3F6F8]" />
-
-      <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
-      <div className="flex-1 flex h-full overflow-hidden">
-        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-        <main className={cn('platform-vitality-page flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
-          <div className="relative pt-8">
-            <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
-
-              {/* Analysis Header */}
-              <div className="flex items-center justify-between mb-10">
-                <div className="flex items-center gap-6">
-                  <Link to={tenantRoute(activeTenantSlug, '/evidence-locker')}>
-                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0 text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all">
-                      <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">DOCUMENT_DETAILS</span>
-                    <div className="flex items-center gap-3">
-                      <h1 className="text-xl font-sans font-bold text-white tracking-tight uppercase">
-                        {documentData?.name?.replace(' ', '_') || 'UNNAMED_DOCUMENT'}
-                      </h1>
-                      <div className="h-1.5 w-1.5 rounded-full bg-white/40" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  {getParserStatusBadge(parsingTruth.status)}
-                  <div className="h-6 w-[1px] bg-white/10 mx-2" />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-10 px-5 text-[10px] font-sans font-bold text-white/40 hover:text-blue-400 hover:bg-blue-500/10 border border-white/5 hover:border-blue-500/20 transition-all uppercase tracking-tight rounded-lg"
-                    onClick={handleTriggerParsing}
-                    disabled={triggeringParse}>
-                    {triggeringParse ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5 mr-2" />}
-                    {triggeringParse ? 'PROCESSING...' : 'REFRESH_DATA'}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-10 px-5 text-[10px] font-sans font-bold text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/10 transition-all uppercase tracking-tight rounded-lg"
-                    onClick={async () => {
-                      if (!docId) return;
-                      try {
-                        const response = await api.getDocumentDownload(docId, activeTenantSlug);
-                        if (response.ok && response.data?.url) {
-                          window.open(response.data.url, '_blank');
-                        } else {
-                          toast({ title: 'Download Failed', description: response.error || 'Could not get download URL', variant: 'destructive' });
-                        }
-                      } catch (err: any) {
-                        toast({ title: 'Download Error', description: err?.message || 'Failed to download', variant: 'destructive' });
-                      }
-                    }}>
-                    <Download className="w-3.5 h-3.5 mr-2" />
-                    DOWNLOAD
-                  </Button>
-                </div>
+  return shell(
+    <div className="mx-auto w-full max-w-[1600px] px-4 pb-10 pt-8 sm:px-6 lg:px-8">
+      <header className="border-b border-[#DCE8EE] pb-5">
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+          <div className="min-w-0">
+            <Link to={tenantRoute(activeTenantSlug, '/evidence-locker')} className="inline-flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#0B74DE]">
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Documentation
+            </Link>
+            <div className="mt-4 flex min-w-0 items-start gap-3">
+              <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] border border-[#DCE8EE] bg-white text-[#4D5B66]">
+                <FileText className="h-4.5 w-4.5" strokeWidth={1.6} />
               </div>
-
-              {/* Main Matrix Tabs */}
-              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
-                <Tabs defaultValue="extracted" className="p-0">
-                      <div className="px-8 bg-white/[0.02] border-b border-white/5">
-                        <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto scrollbar-hide">
-                          {[
-                        { value: 'extracted', label: 'EXTRACTED_DATA' },
-                        { value: 'matches', label: 'LINKED_CASES', count: matchedClaims.length },
-                        { value: 'raw', label: 'TEXT_PREVIEW' },
-                            { value: 'parsing', label: 'STATUS' }
-                      ].map((tab) => (
-                        <TabsTrigger
-                          key={tab.value}
-                          value={tab.value}
-                          className="relative h-16 px-0 text-[11px] font-sans font-bold text-white/20 bg-transparent data-[state=active]:bg-transparent rounded-none border-0 shadow-none transition-all hover:text-white group data-[state=active]:text-blue-400 uppercase tracking-tight"
-                        >
-                          <div className="flex items-center gap-2.5">
-                            {tab.label}
-                            {tab.count !== undefined && (
-                              <span className="text-[9px] px-1.5 py-0.5 bg-white/5 rounded-full text-white/40 group-data-[state=active]:bg-blue-500/10 group-data-[state=active]:text-blue-400">
-                                {tab.count}
-                              </span>
-                            )}
-                          </div>
-                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-500 opacity-0 group-data-[state=active]:opacity-100 shadow-[0_0_10px_rgba(59,130,246,0.45)] transition-all" />
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                  </div>
-
-                  {/* Extracted Intelligence Tab - Two-Column Key-Value Layout */}
-                  <TabsContent value="extracted" className="p-0 m-0 outline-none">
-                    <div className="flex flex-col">
-                      {/* Header */}
-                      <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">INTELLIGENCE_STREAM</span>
-                          <div className="h-3 w-[1px] bg-white/10 mx-2" />
-                          <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">FORENSIC_DATA_POINTS</span>
-                        </div>
-                      </div>
-
-                      {/* Two-Column Key-Value Table */}
-                      <div className="px-8 py-6">
-                        <div className="border border-white/5 rounded-lg overflow-hidden bg-white/[0.01]">
-                          {[ 
-                            { id: '01', label: 'ORDER_IDENTIFIERS', data: extracted.order_ids, type: 'tags' },
-                            { id: '02', label: 'ASIN_SKU_RESOURCES', data: [...(extracted.asins || []), ...(extracted.skus || [])], type: 'tags' },
-                            { id: '03', label: 'FINANCIAL_VALUES', data: extracted.amounts, type: 'currency' },
-                            { id: '04', label: 'LOGISTICS_TRACKING', data: extracted.tracking_numbers, type: 'tags' },
-                            { id: '05', label: 'INVOICE_REFERENCES', data: extracted.invoice_numbers, type: 'tags' },
-                            { id: '06', label: 'TEMPORAL_MARKERS', data: extracted.dates, type: 'tags' }
-                          ].map((row, idx) => (
-                            <div
-                              key={row.id}
-                              className={cn(
-                                "group flex items-start hover:bg-white/[0.02] transition-all",
-                                idx !== 5 && "border-b border-white/5"
-                              )}
-                            >
-                              {/* Left Column - Label */}
-                              <div className="w-[220px] flex-shrink-0 px-5 py-4 bg-white/[0.02] border-r border-white/5 flex items-center">
-                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight group-hover:text-white/60 transition-colors">
-                                  {row.label}
-                                </span>
-                              </div>
-
-                              {/* Right Column - Values */}
-                              <div className="flex-1 px-5 py-4 flex items-center flex-wrap gap-2">
-                                {row.data?.length > 0 ? (
-                                  row.type === 'currency' ? (
-                                    // Financial values - larger, emphasized
-                                    <div className="flex items-center gap-3">
-                                      {row.data.map((val: any, i: number) => (
-                                        <React.Fragment key={i}>
-                                          <span className="text-base font-sans font-bold text-white tracking-tight">
-                                            ${typeof val === 'number' ? val.toFixed(2) : val}
-                                          </span>
-                                          {i < row.data.length - 1 && (
-                                            <span className="text-white/10">·</span>
-                                          )}
-                                        </React.Fragment>
-                                      ))}
-                                    </div>
-                                  ) : (
-                                    // Regular values - inline with separator
-                                    <span className="text-[12px] font-sans font-bold text-white/70 tracking-tight">
-                                      {row.data.map((val: any, i: number) => (
-                                        <React.Fragment key={i}>
-                                          <span className="hover:text-white transition-colors cursor-default">{val}</span>
-                                          {i < row.data.length - 1 && (
-                                            <span className="text-white/20 mx-2">·</span>
-                                          )}
-                                        </React.Fragment>
-                                      ))}
-                                    </span>
-                                  )
-                                ) : (
-                                  <span className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">—</span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Footer Stats */}
-                      <div className="px-8 pb-8 flex items-center justify-between">
-                        <div className="flex items-center gap-10">
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">EXTRACT_CONFIDENCE</span>
-                            <div className="flex items-center gap-2">
-                              <div className={cn("h-1.5 w-1.5 rounded-full", parserConfidence != null ? "bg-blue-400" : "bg-white/20")} />
-                              <span className={cn("text-lg font-sans font-bold tracking-tight", parserConfidence != null ? "text-white" : "text-white/60")}>
-                                {parserConfidenceLabel}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="h-8 w-[1px] bg-white/5" />
-
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">PARSE_STRATEGY</span>
-                            <span className={cn("text-lg font-sans font-bold tracking-tight", parsingTruth.status === 'failed' ? "text-rose-400" : parsingTruth.status === 'partial' ? "text-amber-400" : "text-white/80")}>
-                              {formatAutonomyLabel(parsingTruth.strategy || parsingTruth.status)}
-                            </span>
-                            <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">
-                              {parsingTruth.explanation?.reason || 'No parser explanation recorded.'}
-                            </span>
-                            {parsingTruth.operationalState ? (
-                              <span className="text-[10px] font-sans font-bold text-amber-100/60 tracking-tight">
-                                Runtime: {formatAutonomyLabel(parsingTruth.operationalState)}
-                                {parsingOperationalSummary ? ` · ${parsingOperationalSummary}` : ''}
-                              </span>
-                            ) : null}
-                          </div>
-
-                          <div className="h-8 w-[1px] bg-white/5" />
-
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">CASE_SUPPORT</span>
-                            <span className={cn("text-lg font-sans font-bold tracking-tight", evidenceDecision.usable ? "text-white" : "text-rose-400")}>
-                              {evidenceDecision.label}
-                            </span>
-                            <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">{evidenceDecision.reason}</span>
-                          </div>
-
-                          <div className="h-8 w-[1px] bg-white/5" />
-
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">DATA_POINTS</span>
-                            <span className="text-lg font-sans font-bold text-white/60 tracking-tight">
-                              {(extracted.order_ids?.length || 0) +
-                                (extracted.asins?.length || 0) +
-                                (extracted.skus?.length || 0) +
-                                (extracted.amounts?.length || 0) +
-                                (extracted.tracking_numbers?.length || 0) +
-                                (extracted.invoice_numbers?.length || 0) +
-                                (extracted.dates?.length || 0)}
-                            </span>
-                            {ingestionTruth.strategy ? (
-                              <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">
-                                Intake: {formatAutonomyLabel(ingestionTruth.strategy)}
-                              </span>
-                            ) : null}
-                          </div>
-                        </div>
-
-                        <div className="max-w-sm text-right">
-                          <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mb-1">NEXT_STEP</div>
-                          <div className="text-[11px] font-sans font-bold text-white/60 tracking-tight leading-relaxed">
-                            {evidenceDecision.nextStep}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  {/* Linked Objects Tab */}
-                  <TabsContent value="matches" className="p-0 m-0 outline-none">
-                    <div className="flex flex-col min-h-[400px]">
-                      {matchedClaims.length > 0 ? (
-                        <div className="divide-y divide-white/5">
-                          {matchedClaims.map((match, idx) => (
-                            <div key={idx} className="group relative flex items-center justify-between py-8 px-8 hover:bg-white/[0.02] transition-all duration-300">
-                              <div className="absolute left-0 top-4 bottom-4 w-[2px] bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.45)] opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                              <div className="flex items-start gap-8">
-                                <div className="mt-1.5 p-3 rounded-xl bg-white/5 border border-white/10">
-                                  <Shield className="h-5 w-5 text-white/70" />
-                                </div>
-
-                                <div className="space-y-4">
-                                  <div className="flex items-center gap-6">
-                                    <div className="flex flex-col gap-1">
-                                      <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">ASSOCIATED_CLAIM</span>
-                                      <span className="text-sm font-sans font-bold text-white group-hover:text-blue-400 transition-colors uppercase tracking-tight">
-                                        {match.claimNumber || `CLAIM_${match.claimId?.slice(0, 8)}`}
-                                      </span>
-                                    </div>
-                                    <div className="h-8 w-[1px] bg-white/5" />
-                                    <div className="flex flex-col gap-1">
-                                      <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">MATCH_METHOD</span>
-                                      <span className="text-xs font-sans font-bold text-white/60 tracking-tight">
-                                        {match.matchType?.replace(/_/g, ' ') || 'LINKED'}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex items-center gap-4">
-                                    <div className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-[10px] font-sans font-bold text-blue-400 uppercase tracking-tight rounded-full">
-                                      {match.confidence != null ? `${(match.confidence * 100).toFixed(0)}%_CONFIDENCE` : 'UNKNOWN_CONFIDENCE'}
-                                    </div>
-                                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                                      CASE_TYPE: <span className="text-white/60">{match.claimType || 'UNKNOWN'}</span>
-                                    </div>
-                                  </div>
-
-                                  <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                                    LINKED_AT: <span className="text-white/60">{match.linkDate ? format(new Date(match.linkDate), 'yyyy-MM-dd HH:mm') : 'UNKNOWN'}</span>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <Link to={tenantRoute(activeTenantSlug, `/recoveries/${match.claimId}`)}>
-                                <Button variant="ghost" className="h-12 px-6 text-[11px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all uppercase tracking-tight group/btn">
-                                  VIEW_CLAIM
-                                  <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                                </Button>
-                              </Link>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center py-32">
-                          <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
-                            <Link2 className="h-8 w-8 text-white/10" />
-                          </div>
-                          <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_LINKED_CASES</span>
-                          <p className="text-xs text-white/10 mt-4 font-sans font-bold uppercase tracking-tight">This document is not linked to a case yet.</p>
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-
-                  {/* Forensic Stream Tab */}
-                  <TabsContent value="raw" className="p-0 m-0 outline-none">
-                    <div className="flex flex-col min-h-[400px]">
-                      {(() => {
-                        const rawText = documentData?.raw_text_preview || parsedData?.raw_text_preview;
-                        const lines = rawText ? rawText.split('\n') : [];
-
-                        if (!rawText) return (
-                          <div className="flex flex-col items-center justify-center py-32">
-                            <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
-                              <Terminal className="h-8 w-8 text-white/10" />
-                            </div>
-                            <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_EXTRACTED_TEXT_AVAILABLE</span>
-                            <Button
-                              variant="ghost"
-                              className="mt-8 text-[11px] font-sans font-bold text-white/40 hover:text-blue-400 hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/20 uppercase tracking-tight"
-                              onClick={handleTriggerParsing}
-                              disabled={triggeringParse}
-                            >
-                              EXTRACT_DATA
-                            </Button>
-                          </div>
-                        );
-
-                        return (
-                          <>
-                            <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
-                              <div className="flex items-center gap-4">
-                                <Terminal className="h-3.5 w-3.5 text-white/70" />
-                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">PREVIEW_OF_EXTRACTED_TEXT</span>
-                                <div className="h-3 w-[1px] bg-white/10 mx-2" />
-                                <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">{lines.length} LINES</span>
-                              </div>
-                              <button
-                                onClick={() => {
-                                  navigator.clipboard.writeText(rawText);
-                                  toast({ title: 'Stream Data Copied', description: 'Raw intelligence output has been copied to clipboard.' });
-                                }}
-                                className="text-[10px] font-sans font-bold text-white/20 hover:text-blue-400 transition-colors uppercase tracking-tight flex items-center gap-2"
-                              >
-                                <Copy className="h-3.5 w-3.5" />
-                                COPY_ALL
-                              </button>
-                            </div>
-
-                            <div className="font-sans font-bold text-xs leading-relaxed max-h-[800px] overflow-hidden tracking-tight">
-                              {/* Line Numbers */}
-                              <div className="bg-[#080808] border-r border-white/5 p-6 text-right select-none text-white/10 min-w-[4rem]">
-                                {lines.map((_, i) => (
-                                  <div key={i} className="h-5">{(i + 1).toString().padStart(3, '0')}</div>
-                                ))}
-                              </div>
-                              {/* Content */}
-                              <div className="flex-1 overflow-auto p-6 text-white/60 whitespace-pre scrollbar-thin scrollbar-thumb-white/10">
-                                {lines.map((text, i) => (
-                                  <div key={i} className="h-5 hover:bg-white/[0.03] transition-colors px-2 -mx-2 rounded-sm group relative">
-                                    <div className="absolute left-0 w-1 h-full bg-blue-500 opacity-0 group-hover:opacity-100" />
-                                    {text || ' '}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </>
-                        );
-                      })()}
-                    </div>
-                  </TabsContent>
-
-                  {/* Node Status Tab */}
-                  <TabsContent value="parsing" className="p-8 m-0 outline-none">
-                    <div className="max-w-4xl mx-auto space-y-8">
-                      {docId && (
-                        <ParsingStatus
-                          documentId={docId}
-                          autoPoll={false}
-                          documentData={documentData}
-                          onRefresh={() => fetchDocumentDetail(false)}
-                        />
-                      )}
-
-                      <div className="rounded-xl border border-white/5 overflow-hidden shadow-2xl">
-                        <div className="bg-white/[0.03] border-b border-white/10 py-5 px-6 flex items-center justify-between backdrop-blur-md">
-                          <div className="flex items-center gap-4">
-                            <Clock className="w-3.5 h-3.5 text-white/70" />
-                            <h4 className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">DOCUMENT_HISTORY</h4>
-                          </div>
-                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                            {documentHistory.length} EVENTS
-                          </span>
-                        </div>
-
-                        <div className="bg-[#0a0a0a] p-6">
-                          {documentHistory.length > 0 ? (
-                            <div className="space-y-4">
-                              {documentHistory.map((event) => (
-                                <div key={event.id} className="border border-white/5 rounded-lg p-4 bg-white/[0.02]">
-                                  <div className="flex items-center justify-between gap-4 mb-2">
-                                    <span className="text-[10px] font-sans font-bold text-white/80 uppercase tracking-tight">
-                                      {String(event.eventType || 'unknown').replace(/_/g, ' ')}
-                                    </span>
-                                    <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                                      {event.timestamp ? format(new Date(event.timestamp), 'yyyy-MM-dd HH:mm:ss') : 'UNKNOWN'}
-                                    </span>
-                                  </div>
-                                  <p className="text-sm font-sans font-bold text-white/70 tracking-tight leading-relaxed">
-                                    {event.narrative}
-                                  </p>
-                                  {event.actor && (
-                                    <div className="mt-2 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                                      Actor: <span className="text-white/60 normal-case">{event.actor}</span>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="text-center py-10">
-                              <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_DOCUMENT_HISTORY</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
-
-              {/* Registry Metadata Footer */}
-              <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8">
-                {[
-                  { label: 'DOCUMENT_ID', value: docId, icon: Hash },
-                  { label: 'DOCUMENT_TYPE', value: documentData?.content_type || documentData?.type || 'Not available', icon: Database },
-                  { label: 'SOURCE', value: documentData?.source || documentData?.provider || 'Not available', icon: Cloud },
-                  { label: 'CREATED_AT', value: documentData?.created_at ? format(new Date(documentData.created_at), 'yyyy-MM-dd HH:mm:ss') : 'Not available', icon: Calendar }
-                ].map((item, i) => (
-                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-5 group hover:border-white/10 transition-all">
-                    <div className="flex items-center gap-3 mb-4">
-                      <item.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-blue-400 transition-colors" />
-                      <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">{item.label}</span>
-                    </div>
-                    <div className="font-sans font-bold text-[11px] text-white/60 group-hover:text-white transition-colors truncate tracking-tight">
-                      {item.value}
-                    </div>
-                  </div>
-                ))}
+              <div className="min-w-0">
+                <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Document record</p>
+                <h1 className="mt-1 break-words font-lora text-[26px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[32px]">{documentName}</h1>
+                <p className="mt-2 text-[12px] leading-5 text-[#66737F]">{documentType} · {sourceName}</p>
               </div>
             </div>
           </div>
-        </main>
+
+          <div className="flex flex-wrap items-center gap-2 self-start xl:justify-end">
+            <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-normal tracking-tight', chipTone(parserChip.tone))}>
+              <ParserIcon className={cn('h-3.5 w-3.5', parserStatus === 'pending' || parserStatus === 'processing' ? 'animate-spin' : '')} strokeWidth={1.7} />
+              {parserChip.label}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#0B74DE]"
+              onClick={handleTriggerParsing}
+              disabled={triggeringParse}
+            >
+              <RefreshCw className={cn('mr-2 h-3.5 w-3.5', triggeringParse && 'animate-spin')} />
+              {triggeringParse ? 'Refreshing…' : 'Refresh parsing'}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#0B74DE]"
+              onClick={handleDownload}
+            >
+              <Download className="mr-2 h-3.5 w-3.5" />
+              Download
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <section className="min-w-0 overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+          <Tabs defaultValue="extracted" className="w-full">
+            <div className="border-b border-[#DCE8EE] px-5 sm:px-6">
+              <TabsList className="-mb-px flex h-auto w-full justify-start gap-6 overflow-x-auto rounded-none bg-transparent p-0">
+                {[
+                  { value: 'extracted', label: 'Extracted fields' },
+                  { value: 'matches', label: 'Linked cases', count: matchedClaims.length },
+                  { value: 'raw', label: 'Text preview' },
+                  { value: 'parsing', label: 'Processing & history' },
+                ].map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="group relative h-auto shrink-0 rounded-none border-b-2 border-transparent bg-transparent px-0 py-3 text-[11px] font-normal tracking-tight text-[#66737F] shadow-none transition-colors hover:text-[#182026] data-[state=active]:border-[#0B74DE] data-[state=active]:bg-transparent data-[state=active]:font-medium data-[state=active]:text-[#182026] data-[state=active]:shadow-none"
+                  >
+                    {tab.label}
+                    {tab.count !== undefined ? <span className="ml-1.5 rounded-full bg-[#F1F5F7] px-1.5 py-0.5 text-[9px] font-normal text-[#66737F] group-data-[state=active]:bg-[#EDF5FF] group-data-[state=active]:text-[#0B74DE]">{tab.count}</span> : null}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
+
+            <TabsContent value="extracted" className="m-0 outline-none">
+              <div className="px-5 py-5 sm:px-6 sm:py-6">
+                <div className="flex flex-col gap-1 border-b border-[#E7EEF2] pb-5 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <h2 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Extracted fields</h2>
+                    <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Fields observed in this document. They remain subject to case-level evidence review.</p>
+                  </div>
+                  <span className="mt-2 text-[10px] font-medium tracking-tight text-[#66737F] sm:mt-0">{extractedDataPointCount} fields observed</span>
+                </div>
+
+                <div className="mt-5 divide-y divide-[#E7EEF2] rounded-[8px] border border-[#DCE8EE]">
+                  {[
+                    { label: 'Order identifiers', data: extracted.order_ids, type: 'tags' },
+                    { label: 'ASIN & SKU', data: [...(extracted.asins || []), ...(extracted.skus || [])], type: 'tags' },
+                    { label: 'Financial values', data: extracted.amounts, type: 'currency' },
+                    { label: 'Tracking references', data: extracted.tracking_numbers, type: 'tags' },
+                    { label: 'Invoice references', data: extracted.invoice_numbers, type: 'tags' },
+                    { label: 'Dates', data: extracted.dates, type: 'tags' },
+                  ].map((row) => (
+                    <div key={row.label} className="grid gap-3 px-4 py-4 transition-colors hover:bg-[#F8FBFD] sm:grid-cols-[180px_minmax(0,1fr)] sm:px-5">
+                      <p className="text-[10px] font-medium tracking-tight text-[#66737F]">{row.label}</p>
+                      <div className="min-w-0">
+                        {row.data?.length > 0 ? (
+                          row.type === 'currency' ? (
+                            <div className="flex flex-wrap gap-x-3 gap-y-1 text-[14px] font-medium tracking-tight text-[#182026]">
+                              {row.data.map((value: any, index: number) => <span key={`${row.label}-${index}`}>${typeof value === 'number' ? value.toFixed(2) : value}</span>)}
+                            </div>
+                          ) : (
+                            <div className="flex flex-wrap gap-1.5">
+                              {row.data.map((value: any, index: number) => <span key={`${row.label}-${index}`} className="rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">{String(value)}</span>)}
+                            </div>
+                          )
+                        ) : <span className="text-[11px] text-[#8A99A5]">Not found in this document</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="matches" className="m-0 outline-none">
+              <div className="min-h-[360px]">
+                {matchedClaims.length > 0 ? (
+                  <div className="divide-y divide-[#E7EEF2]">
+                    {matchedClaims.map((match, index) => (
+                      <div key={`${match.claimId || 'claim'}-${index}`} className="flex flex-col gap-4 px-5 py-5 transition-colors hover:bg-[#F8FBFD] sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                        <div className="flex min-w-0 items-start gap-3">
+                          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] bg-[#F1F5F7] text-[#4D5B66]">
+                            <Shield className="h-4 w-4" strokeWidth={1.6} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Linked recovery record</p>
+                            <p className="mt-1 truncate text-[13px] font-medium tracking-tight text-[#182026]">{match.claimNumber || `Claim ${match.claimId?.slice(0, 8) || 'not available'}`}</p>
+                            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-[#66737F]">
+                              <span>Match: {String(match.matchType || 'Linked').replace(/_/g, ' ')}</span>
+                              <span>Linked: {match.linkDate ? format(new Date(match.linkDate), 'yyyy-MM-dd HH:mm') : 'Not available'}</span>
+                              <span>Type: {match.claimType || 'Not available'}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-3">
+                          <span className={cn('rounded-full px-2 py-1 text-[10px] font-normal tracking-tight', chipTone(match.confidence != null && match.confidence >= 0.5 ? 'success' : 'neutral'))}>
+                            {match.confidence != null ? `${(match.confidence * 100).toFixed(0)}% match` : 'Match confidence unavailable'}
+                          </span>
+                          <Button asChild variant="outline" size="sm" className="h-8 border-[#DCE8EE] bg-white px-3 text-[10px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#0B74DE]">
+                            <Link to={tenantRoute(activeTenantSlug, `/recoveries/${match.claimId}`)}>Open record <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link>
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F1F5F7] text-[#66737F]"><Link2 className="h-4 w-4" strokeWidth={1.6} /></div>
+                    <h2 className="mt-4 font-lora text-[20px] font-normal tracking-tight text-[#182026]">No linked recovery records</h2>
+                    <p className="mt-2 max-w-sm text-[11px] leading-5 text-[#66737F]">This document is not linked to a recovery record yet. Margin will keep its document and matching truth separate until a link is recorded.</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="raw" className="m-0 outline-none">
+              {(() => {
+                const rawText = documentData?.raw_text_preview || parsedData?.raw_text_preview;
+                const lines = rawText ? rawText.split('\n') : [];
+                if (!rawText) {
+                  return (
+                    <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F1F5F7] text-[#66737F]"><FileText className="h-4 w-4" strokeWidth={1.6} /></div>
+                      <h2 className="mt-4 font-lora text-[20px] font-normal tracking-tight text-[#182026]">No extracted text yet</h2>
+                      <p className="mt-2 max-w-sm text-[11px] leading-5 text-[#66737F]">Run parsing to request a server-backed text extraction. This action does not change the original document.</p>
+                      <Button variant="outline" className="mt-5 h-9 border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#0B74DE]" onClick={handleTriggerParsing} disabled={triggeringParse}>
+                        <RefreshCw className={cn('mr-2 h-3.5 w-3.5', triggeringParse && 'animate-spin')} />
+                        {triggeringParse ? 'Refreshing…' : 'Refresh parsing'}
+                      </Button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div>
+                    <div className="flex flex-col gap-3 border-b border-[#DCE8EE] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                      <div>
+                        <h2 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Text preview</h2>
+                        <p className="mt-1 text-[11px] text-[#66737F]">{lines.length} extracted lines</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(rawText);
+                          toast({ title: 'Text copied', description: 'The extracted text preview was copied to your clipboard.' });
+                        }}
+                        className="inline-flex items-center gap-1.5 self-start text-[11px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:text-[#075EA8]"
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                        Copy text
+                      </button>
+                    </div>
+                    <div className="grid max-h-[560px] overflow-auto bg-[#FBFCFD] font-mono text-[11px] leading-5 sm:grid-cols-[56px_minmax(0,1fr)]">
+                      <div className="hidden select-none border-r border-[#E7EEF2] bg-[#F5F8FA] py-5 text-right text-[#9AA8B2] sm:block">
+                        {lines.map((_: string, index: number) => <div key={index} className="h-5 pr-4">{index + 1}</div>)}
+                      </div>
+                      <div className="min-w-0 whitespace-pre-wrap px-5 py-5 text-[#4D5B66]">
+                        {lines.map((text: string, index: number) => <div key={index} className="min-h-5 rounded px-1 transition-colors hover:bg-[#EDF5FF]">{text || ' '}</div>)}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </TabsContent>
+
+            <TabsContent value="parsing" className="m-0 outline-none">
+              <div className="space-y-5 px-5 py-5 sm:px-6 sm:py-6">
+                {docId ? <ParsingStatus documentId={docId} autoPoll={false} documentData={documentData} onRefresh={() => fetchDocumentDetail(false)} /> : null}
+                <section className="overflow-hidden rounded-[8px] border border-[#DCE8EE]">
+                  <div className="flex items-center justify-between border-b border-[#E7EEF2] bg-[#F7FAFC] px-4 py-3">
+                    <div className="flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#4D5B66]"><Clock className="h-3.5 w-3.5" /> Document history</div>
+                    <span className="text-[10px] text-[#66737F]">{documentHistory.length} events</span>
+                  </div>
+                  {documentHistory.length > 0 ? (
+                    <div className="divide-y divide-[#E7EEF2] bg-white">
+                      {documentHistory.map((event, index) => (
+                        <div key={event.id || index} className="px-4 py-4">
+                          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between">
+                            <p className="text-[11px] font-medium tracking-tight text-[#182026]">{String(event.eventType || 'Unknown event').replace(/_/g, ' ')}</p>
+                            <span className="text-[10px] text-[#8A99A5]">{event.timestamp ? format(new Date(event.timestamp), 'yyyy-MM-dd HH:mm:ss') : 'Not available'}</span>
+                          </div>
+                          <p className="mt-2 text-[12px] leading-5 text-[#4D5B66]">{event.narrative || 'No event narrative recorded.'}</p>
+                          {event.actor ? <p className="mt-2 text-[10px] text-[#66737F]">Actor: {event.actor}</p> : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : <div className="bg-white px-4 py-8 text-center text-[11px] text-[#66737F]">No document history is recorded yet.</div>}
+                </section>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </section>
+
+        <aside className="space-y-5">
+          <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+            <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Evidence position</p>
+            <div className="mt-3 flex items-center justify-between gap-3">
+              <h2 className="font-lora text-[21px] font-normal tracking-tight text-[#182026]">{evidenceDecision.label}</h2>
+              <span className={cn('rounded-full px-2 py-1 text-[10px] font-normal tracking-tight', chipTone(evidenceDecision.usable ? 'success' : parserStatus === 'failed' ? 'danger' : 'neutral'))}>{evidenceDecision.usable ? 'Usable in review' : 'Not filing proof'}</span>
+            </div>
+            <p className="mt-3 text-[12px] leading-5 text-[#4D5B66]">{evidenceDecision.reason}</p>
+            <div className="mt-4 border-t border-[#E7EEF2] pt-4">
+              <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Next justified step</p>
+              <p className="mt-1.5 text-[11px] leading-5 text-[#66737F]">{evidenceDecision.nextStep}</p>
+            </div>
+          </section>
+
+          <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+            <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Extraction summary</p>
+            <div className="mt-4 space-y-4">
+              <div className="flex items-end justify-between gap-4"><div><p className="text-[10px] text-[#8A99A5]">Confidence</p><p className="mt-1 text-[20px] font-medium tracking-tight text-[#182026]">{parserConfidenceLabel}</p></div><span className={cn('mb-1 h-2 w-2 rounded-full', parserConfidence != null ? 'bg-[#0B74DE]' : 'bg-[#B8C4CE]')} /></div>
+              <div className="border-t border-[#E7EEF2] pt-4"><p className="text-[10px] text-[#8A99A5]">Parsing strategy</p><p className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">{formatAutonomyLabel(parsingTruth.strategy || parsingTruth.status)}</p><p className="mt-1.5 text-[11px] leading-5 text-[#66737F]">{parsingTruth.explanation?.reason || 'No parser explanation recorded.'}</p></div>
+              {parsingTruth.operationalState ? <div className="border-t border-[#E7EEF2] pt-4"><p className="text-[10px] text-[#8A99A5]">Current processing state</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">{formatAutonomyLabel(parsingTruth.operationalState)}{parsingOperationalSummary ? ` · ${parsingOperationalSummary}` : ''}</p></div> : null}
+              {ingestionTruth.strategy ? <div className="border-t border-[#E7EEF2] pt-4"><p className="text-[10px] text-[#8A99A5]">Intake source</p><p className="mt-1 text-[11px] text-[#4D5B66]">{formatAutonomyLabel(ingestionTruth.strategy)}</p></div> : null}
+            </div>
+          </section>
+
+          <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
+            <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Document provenance</p>
+            <dl className="mt-4 space-y-4">
+              {metadataItems.map((item) => (
+                <div key={item.label} className="flex gap-3">
+                  <item.icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8A99A5]" strokeWidth={1.6} />
+                  <div className="min-w-0"><dt className="text-[10px] text-[#8A99A5]">{item.label}</dt><dd className="mt-1 break-words text-[11px] leading-5 text-[#4D5B66]">{item.value}</dd></div>
+                </div>
+              ))}
+            </dl>
+          </section>
+        </aside>
       </div>
-    </div>
+    </div>,
   );
 }
