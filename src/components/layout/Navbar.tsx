@@ -22,6 +22,7 @@ import { useTenant } from '@/contexts/TenantContext';
 import { useSession } from '@/contexts/SessionContext';
 import { selectApprovedReimbursementRows, type ApprovedReimbursementViewRow } from '@/lib/approvedReimbursementTruth';
 import { SignOutDialog } from '@/components/routes/SignOutDialog';
+import { FinancialClosureChooser } from '@/components/layout/FinancialClosureChooser';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -746,6 +747,7 @@ export function Navbar({
           </div>
         </div>
       </header>
+      <FinancialClosureChooser />
       <SignOutDialog open={signOutOpen} onOpenChange={setSignOutOpen} />
     </>
   );
