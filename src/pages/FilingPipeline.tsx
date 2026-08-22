@@ -3510,6 +3510,7 @@ export default function FilingPipeline() {
     }
   }, [loadDisputes, loadLedger]);
 
+  const isDemoTenant = activeSlug === 'demo-workspace';
   const demoSeedTimestamp = useMemo(() => Date.now(), []);
   const liveReadyRows = useMemo(() => (disputeRows || []).filter(isReadyDisputeRow), [disputeRows]);
   const liveBeingFiledRows = useMemo(() => (disputeRows || []).filter(isBeingFiledDisputeRow), [disputeRows]);
@@ -3544,12 +3545,12 @@ export default function FilingPipeline() {
     [demoSeedTimestamp]
   );
 
-  const readyRows = useMemo(() => [...demoReadyRows, ...liveReadyRows], [demoReadyRows, liveReadyRows]);
-  const beingFiledRows = useMemo(() => [...demoBeingFiledRows, ...liveBeingFiledRows], [demoBeingFiledRows, liveBeingFiledRows]);
-  const filedRows = useMemo(() => [...demoFiledRows, ...liveFiledRows], [demoFiledRows, liveFiledRows]);
-  const attentionRows = useMemo(() => [...demoAttentionRows, ...liveAttentionRows], [demoAttentionRows, liveAttentionRows]);
-  const approvedRows = useMemo(() => [...demoApprovedRows, ...liveApprovedRows], [demoApprovedRows, liveApprovedRows]);
-  const completedRows = useMemo(() => [...demoCompletedRows, ...liveCompletedRows], [demoCompletedRows, liveCompletedRows]);
+  const readyRows = useMemo(() => [...(isDemoTenant ? demoReadyRows : []), ...liveReadyRows], [demoReadyRows, isDemoTenant, liveReadyRows]);
+  const beingFiledRows = useMemo(() => [...(isDemoTenant ? demoBeingFiledRows : []), ...liveBeingFiledRows], [demoBeingFiledRows, isDemoTenant, liveBeingFiledRows]);
+  const filedRows = useMemo(() => [...(isDemoTenant ? demoFiledRows : []), ...liveFiledRows], [demoFiledRows, isDemoTenant, liveFiledRows]);
+  const attentionRows = useMemo(() => [...(isDemoTenant ? demoAttentionRows : []), ...liveAttentionRows], [demoAttentionRows, isDemoTenant, liveAttentionRows]);
+  const approvedRows = useMemo(() => [...(isDemoTenant ? demoApprovedRows : []), ...liveApprovedRows], [demoApprovedRows, isDemoTenant, liveApprovedRows]);
+  const completedRows = useMemo(() => [...(isDemoTenant ? demoCompletedRows : []), ...liveCompletedRows], [demoCompletedRows, isDemoTenant, liveCompletedRows]);
 
   const readyTotal = useMemo(() => totalAmount(readyRows.map(disputeAmount)), [readyRows]);
   const inMotionTotal = useMemo(() => totalAmount([...beingFiledRows.map(disputeAmount), ...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)]), [approvedRows, beingFiledRows, filedRows]);

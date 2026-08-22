@@ -72,7 +72,7 @@ const hasRejectionTruth = (row: QueueRow) =>
   row.has_rejection_truth === true && hasFiledTruth(row);
 
 const hasAmazonResponseTruth = (row: QueueRow) =>
-  true; // Ensure appeal candidates correctly populate from backend queue data
+  row.has_amazon_response_truth === true && hasFiledTruth(row);
 
 const isDenied = (status: string | null | undefined) =>
   ['rejected', 'denied', 'lost'].includes(String(status || '').trim().toLowerCase());

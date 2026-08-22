@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronRight, Search, X } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
+import { useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
+import { api } from '@/lib/api';
 
 type ApprovedReimbursement = {
   caseNumber: string;
@@ -12,176 +14,159 @@ type ApprovedReimbursement = {
   seller: string;
   disputeName: string;
   amount: number;
+  currency: string;
   proofReference: string;
   closeout: string;
-  updated: string;
-  settlementId?: string;
-  filingDate?: string;
-  approvalDate?: string;
+  updated: string | null;
+  settlementId: string | null;
+  filingDate: string | null;
+  approvalDate: string | null;
 };
 
-const APPROVED_REIMBURSEMENTS: ApprovedReimbursement[] = [
-  {
-    caseNumber: 'REC-2034-XFER',
-    amazonCaseId: '16874192034',
-    seller: 'Northstar Home Goods',
-    disputeName: 'Inbound shipment shortage',
-    amount: 184.72,
-    proofReference: 'AMZ-PAID-XFER-2034',
-    closeout: 'Paid and reconciled',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99201-AMZ',
-    filingDate: 'Jul 10, 2026',
-    approvalDate: 'Jul 15, 2026'
-  },
-  {
-    caseNumber: 'REC-9051-INB',
-    amazonCaseId: '16912090511',
-    seller: 'Northstar Home Goods',
-    disputeName: 'Inbound shipment shortage',
-    amount: 569.5,
-    proofReference: 'AMZ-PAID-INB-90511',
-    closeout: 'Paid and reconciled',
-    updated: 'Jul 18, 2026',
-    settlementId: 'SET-99182-AMZ',
-    filingDate: 'Jul 08, 2026',
-    approvalDate: 'Jul 14, 2026'
-  },
-  {
-    caseNumber: 'REC-7162-XFER',
-    amazonCaseId: '16882957162',
-    seller: 'Blue Ridge Supply',
-    disputeName: 'Warehouse transfer loss',
-    amount: 312.18,
-    proofReference: 'AMZ-PAID-INB-7162',
-    closeout: 'Clean settlement match',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99205-AMZ',
-    filingDate: 'Jul 12, 2026',
-    approvalDate: 'Jul 17, 2026'
-  },
-  {
-    caseNumber: 'REC-3418-DMG',
-    amazonCaseId: '16865503418',
-    seller: 'Atlas Pet Co',
-    disputeName: 'Damaged FBA inventory',
-    amount: 96.44,
-    proofReference: 'AMZ-PAID-DMG-3418',
-    closeout: 'Paid with variance note',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99198-AMZ',
-    filingDate: 'Jul 11, 2026',
-    approvalDate: 'Jul 16, 2026'
-  },
-  {
-    caseNumber: 'REC-7440-RWR',
-    amazonCaseId: '16890187440',
-    seller: 'Cedar Peak Brands',
-    disputeName: 'Refund without return',
-    amount: 57.9,
-    proofReference: 'AMZ-PAID-RWR-7440',
-    closeout: 'Paid and reconciled',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99202-AMZ',
-    filingDate: 'Jul 13, 2026',
-    approvalDate: 'Jul 18, 2026'
-  },
-  {
-    caseNumber: 'REC-6329-FEE',
-    amazonCaseId: '16877846329',
-    seller: 'Sierra Wellness',
-    disputeName: 'FBA fee overcharge',
-    amount: 128.36,
-    proofReference: 'AMZ-PAID-FEE-6329',
-    closeout: 'Paid and reconciled',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99195-AMZ',
-    filingDate: 'Jul 09, 2026',
-    approvalDate: 'Jul 14, 2026'
-  },
-  {
-    caseNumber: 'REC-0551-LOST',
-    amazonCaseId: '16899730551',
-    seller: 'Mason Outdoor',
-    disputeName: 'Lost inventory adjustment',
-    amount: 421.65,
-    proofReference: 'AMZ-PAID-LOST-0551',
-    closeout: 'Clean settlement match',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99208-AMZ',
-    filingDate: 'Jul 14, 2026',
-    approvalDate: 'Jul 18, 2026'
-  },
-  {
-    caseNumber: 'REC-6690-RET',
-    amazonCaseId: '16884276690',
-    seller: 'Harbor Kids',
-    disputeName: 'Customer return not received',
-    amount: 73.28,
-    proofReference: 'AMZ-PAID-RET-6690',
-    closeout: 'Paid and reconciled',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99199-AMZ',
-    filingDate: 'Jul 11, 2026',
-    approvalDate: 'Jul 16, 2026'
-  },
-  {
-    caseNumber: 'REC-0427-REM',
-    amazonCaseId: '16871960427',
-    seller: 'Pioneer Tools',
-    disputeName: 'Removal order damage',
-    amount: 267.11,
-    proofReference: 'AMZ-PAID-REM-0427',
-    closeout: 'Paid with variance note',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99192-AMZ',
-    filingDate: 'Jul 07, 2026',
-    approvalDate: 'Jul 13, 2026'
-  },
-  {
-    caseNumber: 'REC-8273-SET',
-    amazonCaseId: '16900418273',
-    seller: 'Orion Baby',
-    disputeName: 'Settlement reimbursement gap',
-    amount: 144.83,
-    proofReference: 'AMZ-PAID-SET-8273',
-    closeout: 'Paid and reconciled',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99210-AMZ',
-    filingDate: 'Jul 15, 2026',
-    approvalDate: 'Jul 19, 2026'
-  },
-  {
-    caseNumber: 'REC-3702-DISP',
-    amazonCaseId: '16869453702',
-    seller: 'Luma Beauty',
-    disputeName: 'Inventory disposal error',
-    amount: 219.47,
-    proofReference: 'AMZ-PAID-DISP-3702',
-    closeout: 'Clean settlement match',
-    updated: 'Jul 19, 2026',
-    settlementId: 'SET-99188-AMZ',
-    filingDate: 'Jul 06, 2026',
-    approvalDate: 'Jul 12, 2026'
-  },
-];
+type RecoveryLedgerRow = {
+  linked_dispute_case_id?: string | null;
+  dispute_case_id?: string | null;
+  detection_result_id?: string | null;
+  case_number?: string | null;
+  provider_case_id?: string | null;
+  merchant_reference?: string | null;
+  case_type?: string | null;
+  anomaly_type?: string | null;
+  store_name?: string | null;
+  currency?: string | null;
+  has_approval_truth?: boolean | null;
+  last_updated_at?: string | null;
+  submission_proof?: { submitted_at?: string | null } | null;
+};
 
-const DISPLAY_TOTAL_AMOUNT = 24631.44;
+type FinancialSummary = {
+  input_id: string;
+  dispute_case_id: string | null;
+  detection_result_id: string | null;
+  verified_paid_amount: number;
+  variance_amount: number | null;
+  payout_status: 'not_paid' | 'partially_paid' | 'paid';
+  proof_of_payment: {
+    amount: number;
+    currency: string;
+    event_date: string | null;
+    reference_id: string | null;
+    settlement_id: string | null;
+    payout_batch_id: string | null;
+    source: string | null;
+  } | null;
+};
 
-const formatMoney = (value: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+
+const formatMoney = (value: number, currency = 'USD') =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value);
+
+const formatDate = (value: string | null | undefined) => {
+  if (!value) return 'Not available';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? 'Not available'
+    : new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+};
 
 const closeoutFilters = ['All closeouts', 'Paid and reconciled', 'Clean settlement match', 'Paid with variance note'];
 
 export default function ApprovedReimbursements() {
+  const { tenantSlug } = useParams<{ tenantSlug?: string }>();
+  const { tenant, isReady } = useTenant();
+  const activeSlug = tenantSlug || tenant?.slug || '';
   const [query, setQuery] = useState('');
   const [closeoutFilter, setCloseoutFilter] = useState(closeoutFilters[0]);
   const [selectedItem, setSelectedItem] = useState<ApprovedReimbursement | null>(null);
+  const [records, setRecords] = useState<ApprovedReimbursement[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isReady || !activeSlug) return;
+    let cancelled = false;
+
+    const loadVerifiedOutcomes = async () => {
+      setLoading(true);
+      setLoadError(null);
+      try {
+        const ledgerResponse = await api.getRecoveriesLedger({ page: 1, page_size: 500, sort_by: 'last_updated_at', sort_dir: 'desc' }, activeSlug);
+        if (!ledgerResponse.ok || !ledgerResponse.data?.success) {
+          throw new Error(ledgerResponse.error || 'Unable to load recovery outcomes.');
+        }
+
+        const ledgerRows = (ledgerResponse.data.rows || []) as RecoveryLedgerRow[];
+        const caseIds = Array.from(new Set(ledgerRows
+          .map((row) => row.linked_dispute_case_id || row.dispute_case_id || row.detection_result_id)
+          .filter((value): value is string => Boolean(value))));
+        if (!caseIds.length) {
+          if (!cancelled) setRecords([]);
+          return;
+        }
+
+        const financialResponse = await api.getRecoveryFinancialEvents({ caseIds }, activeSlug);
+        if (!financialResponse.ok || !financialResponse.data?.success) {
+          throw new Error(financialResponse.error || 'Unable to load payout proof.');
+        }
+
+        const summaries = financialResponse.data.summaries as FinancialSummary[];
+        const summaryByKey = new Map<string, FinancialSummary>();
+        for (const summary of summaries) {
+          for (const key of [summary.input_id, summary.dispute_case_id, summary.detection_result_id]) {
+            if (key) summaryByKey.set(key, summary);
+          }
+        }
+
+        const nextRecords = ledgerRows.flatMap((row): ApprovedReimbursement[] => {
+          const caseId = row.linked_dispute_case_id || row.dispute_case_id || row.detection_result_id || null;
+          const financial = caseId ? summaryByKey.get(caseId) : null;
+          const proof = financial?.proof_of_payment || null;
+          if (
+            row.has_approval_truth !== true ||
+            !financial ||
+            financial.payout_status !== 'paid' ||
+            financial.verified_paid_amount <= 0 ||
+            !proof
+          ) {
+            return [];
+          }
+
+          const hasVariance = Math.abs(financial.variance_amount || 0) > 0.01;
+          return [{
+            caseNumber: row.case_number || 'Case reference unavailable',
+            amazonCaseId: row.provider_case_id || row.merchant_reference || 'Amazon reference unavailable',
+            seller: row.store_name || 'Store unavailable',
+            disputeName: row.case_type || row.anomaly_type || 'Recovery outcome',
+            amount: financial.verified_paid_amount,
+            currency: proof.currency || row.currency || 'USD',
+            proofReference: proof.settlement_id || proof.payout_batch_id || proof.reference_id || 'Financial event recorded',
+            closeout: hasVariance ? 'Paid with variance note' : (proof.settlement_id || proof.payout_batch_id ? 'Clean settlement match' : 'Paid and reconciled'),
+            updated: proof.event_date || row.last_updated_at || null,
+            settlementId: proof.settlement_id || proof.payout_batch_id || null,
+            filingDate: row.submission_proof?.submitted_at || null,
+            approvalDate: row.last_updated_at || null,
+          }];
+        });
+
+        if (!cancelled) setRecords(nextRecords);
+      } catch (error: any) {
+        if (!cancelled) {
+          setRecords([]);
+          setLoadError(error?.message || 'Unable to load verified reimbursement outcomes.');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    void loadVerifiedOutcomes();
+    return () => { cancelled = true; };
+  }, [activeSlug, isReady]);
 
   const filteredRows = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return APPROVED_REIMBURSEMENTS.filter((item) => {
+    return records.filter((item) => {
       const matchesCloseout = closeoutFilter === closeoutFilters[0] || item.closeout === closeoutFilter;
 
       if (!normalizedQuery) return matchesCloseout;
@@ -198,7 +183,15 @@ export default function ApprovedReimbursements() {
 
       return searchable.includes(normalizedQuery) && matchesCloseout;
     });
-  }, [closeoutFilter, query]);
+  }, [closeoutFilter, query, records]);
+
+  const totalByCurrency = useMemo(() => records.reduce<Record<string, number>>((totals, item) => {
+    totals[item.currency] = (totals[item.currency] || 0) + item.amount;
+    return totals;
+  }, {}), [records]);
+  const totalLabel = Object.entries(totalByCurrency)
+    .map(([currency, amount]) => formatMoney(amount, currency))
+    .join(' · ') || 'Not available';
 
   return (
     <PageLayout title="Approved Reimbursements" noPadding>
@@ -212,7 +205,7 @@ export default function ApprovedReimbursements() {
                 <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Outcome ledger</span>
               </div>
               <h1 className="mt-3 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026]">Approved reimbursements</h1>
-              <p className="mt-2 text-[14px] leading-6 tracking-tight text-[#66737F]">Confirmed recovery outcomes that Amazon approved for payout and Margin reconciled against the recorded settlement trail.</p>
+              <p className="mt-2 text-[14px] leading-6 tracking-tight text-[#66737F]">Cases with both a recorded approval and positive payment evidence linked to the tenant’s financial event trail.</p>
             </div>
             <Button className="h-10 rounded-md bg-[#0B74DE] px-4 text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">View impact report</Button>
           </div>
@@ -222,19 +215,19 @@ export default function ApprovedReimbursements() {
         <div className="border-b border-[#DCE8EE] bg-white px-4 py-3 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-[1280px] grid-cols-1 divide-y divide-[#E7EEF2] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             <div className="py-2.5 sm:pr-7">
-              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Approval rate</p>
-              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">96.2%</p>
-              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Recorded approval rate across resolved reimbursement outcomes.</p>
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Approval evidence</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{records.length} recorded</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Each displayed outcome has filing-linked approval truth.</p>
             </div>
             <div className="py-2.5 sm:px-7">
-              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Total reimbursed</p>
-              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(DISPLAY_TOTAL_AMOUNT)}</p>
-              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Settlement value confirmed in this outcome registry.</p>
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Verified paid</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{totalLabel}</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Positive reimbursement events matched to these outcomes.</p>
             </div>
             <div className="py-2.5 sm:pl-7">
-              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Registry entries</p>
-              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{APPROVED_REIMBURSEMENTS.length} resolved</p>
-              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Each entry has a recorded closeout and proof reference.</p>
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Payout proof</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{records.length} linked</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Each entry exposes a recorded settlement, payout batch, or event reference.</p>
             </div>
           </div>
         </div>
@@ -310,7 +303,7 @@ export default function ApprovedReimbursements() {
                       </td>
                       <td className="px-5 py-4 text-right">
                         <span className="text-[15px] font-bold tabular-nums tracking-tight text-[#111827]">
-                          {formatMoney(item.amount)}
+                          {formatMoney(item.amount, item.currency)}
                         </span>
                       </td>
                       <td className="px-5 py-4">
@@ -335,8 +328,8 @@ export default function ApprovedReimbursements() {
                   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F3F5F4] text-[#9CA3AF]">
                     <Search className="h-6 w-6" />
                   </div>
-                  <h3 className="text-[15px] font-bold text-[#111827]">No outcomes found</h3>
-                  <p className="mt-1 text-[13px] text-[#6B7280]">Adjust your search or filter to find specific records.</p>
+                  <h3 className="text-[15px] font-bold text-[#111827]">{loading ? 'Loading verified outcomes' : (loadError ? 'Outcome ledger unavailable' : 'No verified outcomes found')}</h3>
+                  <p className="mt-1 text-[13px] text-[#6B7280]">{loading ? 'Loading tenant-scoped approval and payment evidence.' : (loadError || 'No records currently meet both the approval and verified-payment criteria.')}</p>
                 </div>
               )}
             </div>
@@ -344,7 +337,7 @@ export default function ApprovedReimbursements() {
           
           <div className="mt-6 flex items-center justify-between border-t border-[#DCE8EE] pt-5">
             <p className="text-[12px] font-medium text-[#9CA3AF]">
-              Showing {filteredRows.length} of {APPROVED_REIMBURSEMENTS.length} registry entries
+              Showing {filteredRows.length} of {records.length} verified outcomes
             </p>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" disabled className="text-[12px] font-bold text-[#9CA3AF]">Previous</Button>
@@ -398,7 +391,7 @@ export default function ApprovedReimbursements() {
                       <div className="mt-3 divide-y divide-[#E7EEF2] rounded-md border border-[#DCE8EE] bg-white sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                         <div className="p-3 sm:col-span-1">
                           <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Reimbursed amount</p>
-                          <p className="mt-1 text-[20px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(selectedItem.amount)}</p>
+                          <p className="mt-1 text-[20px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(selectedItem.amount, selectedItem.currency)}</p>
                         </div>
                         <div className="p-3">
                           <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Settlement ID</p>
@@ -454,7 +447,7 @@ export default function ApprovedReimbursements() {
                           <div className="absolute -left-[23px] top-1 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]" />
                           <div>
                             <p className="text-[13px] font-bold text-[#111827]">Payout Reconciled</p>
-                            <p className="mt-1 text-[12px] text-[#6B7280]">Confirmed in bank settlement on {selectedItem.updated}.</p>
+                            <p className="mt-1 text-[12px] text-[#6B7280]">Payment evidence recorded on {formatDate(selectedItem.updated)}.</p>
                           </div>
                         </div>
                       </div>
