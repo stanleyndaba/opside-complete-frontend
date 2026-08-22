@@ -30,6 +30,10 @@ import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 type ProviderKey = 'amazon' | 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive' | 'quickbooks' | 'xero';
 type SecondaryProviderKey = Exclude<ProviderKey, 'amazon'>;
+type AccountingProviderKey = Extract<ProviderKey, 'quickbooks' | 'xero'>;
+
+const isAccountingProvider = (provider: ProviderKey): provider is AccountingProviderKey =>
+  provider === 'quickbooks' || provider === 'xero';
 
 type IntegrationProviderStatus = {
   provider: ProviderKey;
@@ -45,6 +49,10 @@ type IntegrationProviderStatus = {
   has_data: boolean;
   account_email?: string;
   scopes?: string[];
+  accounting_read_status?: 'pending' | 'verified' | 'no_data' | 'failed' | 'reconnect_required';
+  accounting_last_read_at?: string;
+  accounting_record_count?: number;
+  accounting_record_types?: Array<'bill' | 'purchase' | 'accpay'>;
 };
 
 type IntegrationStatusDTO = {
@@ -227,6 +235,7 @@ export default function IntegrationsHub() {
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [providerLoading, setProviderLoading] = useState<string | null>(null);
   const [disconnectingProvider, setDisconnectingProvider] = useState<string | null>(null);
+  const [accountingVerificationProvider, setAccountingVerificationProvider] = useState<AccountingProviderKey | null>(null);
   const [ingestingGmail, setIngestingGmail] = useState(false);
   const [ingestingAll, setIngestingAll] = useState(false);
   const [savingFilters, setSavingFilters] = useState(false);
@@ -431,17 +440,21 @@ export default function IntegrationsHub() {
         return;
       }
 
-      const supportsDirectProviderDisconnect = provider === 'gmail' || provider === 'outlook' || provider === 'gdrive' || provider === 'dropbox' || provider === 'quickbooks' || provider === 'xero';
-      const res = sourceId
-        ? await api.disconnectEvidenceSource(sourceId)
-        : supportsDirectProviderDisconnect
-          ? await api.disconnectDocsProvider(provider)
-          : { ok: false, error: 'No tenant-scoped connection record found for this provider' };
+      const supportsDirectProviderDisconnect = provider === 'gmail' || provider === 'outlook' || provider === 'gdrive' || provider === 'dropbox';
+      const res = isAccountingProvider(provider)
+        ? await api.disconnectAccountingProvider(provider, activeSlug || undefined)
+        : sourceId
+          ? await api.disconnectEvidenceSource(sourceId)
+          : supportsDirectProviderDisconnect
+            ? await api.disconnectDocsProvider(provider)
+            : { ok: false, error: 'No tenant-scoped connection record found for this provider' };
       
       if (res.ok) {
         toast({
           title: `${providerName} Disconnected`,
-          description: `Your ${providerName} account has been disconnected.`,
+          description: isAccountingProvider(provider)
+            ? `Your ${providerName} credential has been revoked for this workspace. Historical financial evidence remains inactive.`
+            : `Your ${providerName} account has been disconnected.`,
         });
 
         await refreshIntegrationTruth();
@@ -461,6 +474,41 @@ export default function IntegrationsHub() {
       });
     } finally {
       setDisconnectingProvider(null);
+    }
+  };
+
+  const handleRequestAccountingVerification = async (provider: AccountingProviderKey) => {
+    if (!activeSlug) {
+      toast({ title: 'Workspace context required', description: 'Select a workspace before requesting financial evidence verification.', variant: 'destructive' });
+      return;
+    }
+
+    try {
+      setAccountingVerificationProvider(provider);
+      const result = await api.requestAccountingVerification(provider, activeSlug);
+      if (!result.ok) {
+        toast({
+          title: 'Verification could not start',
+          description: result.error || 'Margin could not schedule the provider read.',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      toast({
+        title: 'Financial evidence verification scheduled',
+        description: 'Margin will update this connection after the server-side provider read completes.'
+      });
+      await refreshIntegrationTruth();
+    } catch (error) {
+      console.error(`Failed to request ${provider} verification:`, error);
+      toast({
+        title: 'Verification could not start',
+        description: 'Margin could not schedule the provider read. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setAccountingVerificationProvider(null);
     }
   };
 
@@ -609,9 +657,34 @@ export default function IntegrationsHub() {
           refreshIntegrationTruth().catch(() => undefined);
         } catch { }
       };
+      const handleAccountingSync = (event: Event) => {
+        try {
+          const evt = JSON.parse((event as MessageEvent).data);
+          const providerName = evt?.provider === 'quickbooks' ? 'QuickBooks' : evt?.provider === 'xero' ? 'Xero' : 'Accounting provider';
+          if (evt?.status === 'in_progress') {
+            toast({ title: 'Financial evidence verification', description: `${providerName} is being verified through a read-only provider check.` });
+          } else if (evt?.status === 'completed') {
+            toast({
+              title: 'Financial evidence verified',
+              description: evt?.readStatus === 'no_data'
+                ? `${providerName} access was verified; no eligible Phase-0 records were returned.`
+                : `${providerName} financial evidence is now available.`
+            });
+            refreshIntegrationTruth().catch(() => undefined);
+          } else if (evt?.status === 'failed') {
+            toast({
+              title: 'Financial evidence needs attention',
+              description: evt?.error || `${providerName} could not complete the verification read.`,
+              variant: 'destructive'
+            });
+            refreshIntegrationTruth().catch(() => undefined);
+          }
+        } catch { }
+      };
       es.addEventListener('evidence_ingestion_started', handleEvidenceStarted as EventListener);
       es.addEventListener('evidence_ingestion_completed', handleEvidenceCompleted as EventListener);
       es.addEventListener('evidence_ingestion_failed', handleEvidenceFailed as EventListener);
+      es.addEventListener('accounting_sync', handleAccountingSync as EventListener);
       es.onmessage = (e) => {
         try {
           const evt = JSON.parse(e.data);
@@ -627,6 +700,7 @@ export default function IntegrationsHub() {
         es.removeEventListener('evidence_ingestion_started', handleEvidenceStarted as EventListener);
         es.removeEventListener('evidence_ingestion_completed', handleEvidenceCompleted as EventListener);
         es.removeEventListener('evidence_ingestion_failed', handleEvidenceFailed as EventListener);
+        es.removeEventListener('accounting_sync', handleAccountingSync as EventListener);
         es.close();
       };
     } catch { }
@@ -695,9 +769,12 @@ export default function IntegrationsHub() {
             : xeroConnected === 'true' ? 'Xero'
               : 'provider';
 
+      const accountingProvider = providerName === 'QuickBooks' || providerName === 'Xero';
       toast({
         title: `${providerName} Connected Successfully`,
-        description: email ? `${providerName} connected for ${email}. Evidence ingestion will begin automatically.` : `${providerName} has been connected successfully.`,
+        description: accountingProvider
+          ? `${providerName} OAuth is connected. Margin is now verifying read-only financial evidence access.`
+          : email ? `${providerName} connected for ${email}. Evidence ingestion will begin automatically.` : `${providerName} has been connected successfully.`,
       });
 
       // Refresh integration status to update UI
@@ -852,12 +929,12 @@ export default function IntegrationsHub() {
 
   const getProviderDisplayState = (provider: ProviderKey): IntegrationProviderStatus => {
     const providerStatus = getProviderState(provider);
-    if (provider === 'amazon') {
+    if (provider === 'amazon' || isAccountingProvider(provider)) {
       return providerStatus;
     }
 
     const evidenceSource = getEvidenceSourceTruth(provider as SecondaryProviderKey);
-    if (isDemoWorkspace && SECONDARY_PROVIDERS.includes(provider as SecondaryProviderKey)) {
+    if (isDemoWorkspace && SECONDARY_PROVIDERS.includes(provider as SecondaryProviderKey) && !isAccountingProvider(provider)) {
       const demoSource = getDemoEvidenceSource(provider as SecondaryProviderKey, evidenceSource);
       return {
         ...providerStatus,
@@ -914,6 +991,43 @@ export default function IntegrationsHub() {
     if (providerStatus.ingestion_state === 'stale') return 'Connected, stale';
     if (!providerStatus.has_data) return providerStatus.last_ingest_at ? 'Connected, no data' : 'Connected, unverified';
     return 'Connected';
+  };
+
+  const describeFinancialEvidenceState = (providerStatus: IntegrationProviderStatus) => {
+    if (!providerStatus.connected) return 'Not connected';
+    switch (providerStatus.accounting_read_status) {
+      case 'verified':
+        return 'Financial evidence available';
+      case 'no_data':
+        return 'Read verified — no eligible records';
+      case 'reconnect_required':
+        return 'Reconnect required';
+      case 'failed':
+        return 'Verification needs attention';
+      case 'pending':
+      default:
+        return 'OAuth connected — verification pending';
+    }
+  };
+
+  const describeFinancialEvidenceDetail = (providerStatus: IntegrationProviderStatus) => {
+    if (!providerStatus.connected) {
+      return 'Connect read-only accounting records so Margin can use supplier, purchase and cost context when recovery evidence requires it.';
+    }
+    if (providerStatus.accounting_read_status === 'verified') {
+      const count = providerStatus.accounting_record_count ?? 0;
+      return `${count} ${count === 1 ? 'eligible record is' : 'eligible records are'} available as financial evidence.`;
+    }
+    if (providerStatus.accounting_read_status === 'no_data') {
+      return 'Margin completed a read-only provider check. No eligible Phase-0 records were returned.';
+    }
+    if (providerStatus.accounting_read_status === 'reconnect_required') {
+      return providerStatus.error_message || 'The provider authorization needs to be refreshed before Margin can read financial evidence.';
+    }
+    if (providerStatus.accounting_read_status === 'failed') {
+      return providerStatus.error_message || 'Margin could not verify this provider read. Try verification again or reconnect the source.';
+    }
+    return 'Margin is verifying read-only access to the approved accounting records.';
   };
 
   const getStoreOperationalState = (store: any) => {
@@ -1483,8 +1597,8 @@ export default function IntegrationsHub() {
             {/* Harvesting Nodes Title */}
             <motion.div variants={itemVariants} className="mt-3">
               <div>
-                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence repositories</p>
-                <h2 className="mt-1 text-[20px] font-semibold tracking-tight text-[#182026]">Connect the records that can support review</h2>
+                <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence and financial sources</p>
+                <h2 className="mt-1 text-[20px] font-semibold tracking-tight text-[#182026]">Connect the records that can support recovery review</h2>
               </div>
             </motion.div>
 
@@ -1505,9 +1619,10 @@ export default function IntegrationsHub() {
 
                 const providerState = getProviderDisplayState(p);
                 const sourceTruth = getEvidenceSourceTruth(p);
-                const evidenceSource = isDemoWorkspace ? getDemoEvidenceSource(p, sourceTruth) : sourceTruth;
+                const evidenceSource = isDemoWorkspace && !isAccountingProvider(p) ? getDemoEvidenceSource(p, sourceTruth) : sourceTruth;
                 const isParked = !isDemoWorkspace && PARKED_SECONDARY_PROVIDERS.includes(p);
                 const connected = !isParked && (providerState.connected || evidenceSource?.connected === true);
+                const isAccounting = isAccountingProvider(p);
                 const meta = providerMeta[p];
 
                 return (
@@ -1520,7 +1635,7 @@ export default function IntegrationsHub() {
                       </div>
 
                       <h3 className="text-[15px] font-semibold tracking-tight text-[#182026]">{meta.name}</h3>
-                      <p className="mt-1 text-[12px] text-[#66737F]">Evidence repository</p>
+                      <p className="mt-1 text-[12px] text-[#66737F]">{isAccounting ? 'Financial evidence' : 'Evidence repository'}</p>
 
                       <div className="flex-1">
                         {isParked ? (
@@ -1543,35 +1658,71 @@ export default function IntegrationsHub() {
                           </div>
                         ) : connected ? (
                           <div className="space-y-4">
-                            <div className="border-t border-[#E7EEF2] pt-3">
-                              <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Operational state</span>
-                              <span className="block truncate text-[13px] font-medium tracking-tight text-[#4D5B66]">
-                                {describeProviderState(providerState)}
-                              </span>
-                              <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
-                                {providerState.account_email || providerState.error_message || 'Account not available'}
-                              </span>
-                              <span className="text-[12px] text-[#66737F] block mt-1 font-sans tracking-tight">
-                                Last ingest: {formatDateTime(providerState.last_ingest_at)}
-                              </span>
-                              {evidenceSource ? (
-                                <>
-                              <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
-                                {evidenceSource.ingestable ? 'Ingestable source confirmed.' : `Connected, not ingestable: ${humanizeSkippedReason(evidenceSource.ingestable_reason)}`}
-                              </span>
-                              <span className="text-[12px] text-[#66737F] block mt-1 font-sans tracking-tight">
-                                    Stored {evidenceSource.documents_count} • Parsed {evidenceSource.parsed_count} • Ready to match {evidenceSource.match_ready_count}
-                              </span>
-                              <span className="text-[12px] text-gray-600 block mt-1 font-sans tracking-tight">
-                                    Case-linked and filing-usable evidence is confirmed later in dispute workflows.
-                              </span>
-                            </>
-                          ) : (
-                                <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
-                                  Ingestion truth unavailable for this provider.
+                            {isAccounting ? (
+                              <>
+                                <div className="border-t border-[#E7EEF2] pt-3">
+                                  <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Financial evidence state</span>
+                                  <span className="block text-[13px] font-medium tracking-tight text-[#4D5B66]">
+                                    {describeFinancialEvidenceState(providerState)}
+                                  </span>
+                                  {providerState.account_email && (
+                                    <span className="mt-2 block truncate text-[12px] tracking-tight text-[#66737F]">
+                                      {providerState.account_email}
+                                    </span>
+                                  )}
+                                  <p className="mt-2 text-[12px] leading-5 text-[#66737F]">
+                                    {describeFinancialEvidenceDetail(providerState)}
+                                  </p>
+                                  <span className="mt-2 block text-[12px] tracking-tight text-[#66737F]">
+                                    Last verified: {formatDateTime(providerState.accounting_last_read_at)}
+                                  </span>
+                                  <span className="mt-2 block border-l-2 border-[#0B74DE] bg-[#F6FAFE] px-2.5 py-2 text-[12px] leading-5 text-[#4D5B66]">
+                                    Read-only · Bills and purchases only
+                                  </span>
+                                </div>
+                                {(providerState.accounting_read_status === 'failed' || providerState.accounting_read_status === 'reconnect_required') && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={accountingVerificationProvider === p}
+                                    className="h-8 w-full rounded-md border-[#DCE8EE] bg-white text-[12px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]"
+                                    onClick={() => handleRequestAccountingVerification(p)}
+                                  >
+                                    {accountingVerificationProvider === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin mx-auto" /> : 'Retry verification'}
+                                  </Button>
+                                )}
+                              </>
+                            ) : (
+                              <div className="border-t border-[#E7EEF2] pt-3">
+                                <span className="mb-1 block text-[12px] font-medium tracking-tight text-[#66737F]">Operational state</span>
+                                <span className="block truncate text-[13px] font-medium tracking-tight text-[#4D5B66]">
+                                  {describeProviderState(providerState)}
                                 </span>
-                              )}
-                            </div>
+                                <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
+                                  {providerState.account_email || providerState.error_message || 'Account not available'}
+                                </span>
+                                <span className="text-[12px] text-[#66737F] block mt-1 font-sans tracking-tight">
+                                  Last ingest: {formatDateTime(providerState.last_ingest_at)}
+                                </span>
+                                {evidenceSource ? (
+                                  <>
+                                    <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
+                                      {evidenceSource.ingestable ? 'Ingestable source confirmed.' : `Connected, not ingestable: ${humanizeSkippedReason(evidenceSource.ingestable_reason)}`}
+                                    </span>
+                                    <span className="text-[12px] text-[#66737F] block mt-1 font-sans tracking-tight">
+                                      Stored {evidenceSource.documents_count} • Parsed {evidenceSource.parsed_count} • Ready to match {evidenceSource.match_ready_count}
+                                    </span>
+                                    <span className="text-[12px] text-gray-600 block mt-1 font-sans tracking-tight">
+                                      Case-linked and filing-usable evidence is confirmed later in dispute workflows.
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span className="text-[12px] text-[#66737F] block mt-2 font-sans tracking-tight">
+                                    Ingestion truth unavailable for this provider.
+                                  </span>
+                                )}
+                              </div>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"
@@ -1585,14 +1736,20 @@ export default function IntegrationsHub() {
                         ) : (
                           <div className="space-y-4">
                             <p className="mb-4 text-[12px] leading-5 text-[#66737F]">
-                              {providerState.needs_reconnect ? 'Reconnect this repository to restore evidence ingestion.' : 'Establish persistent monitoring of this repository for financial artifacts.'}
+                              {isAccounting
+                                ? providerState.needs_reconnect
+                                  ? 'Reconnect this financial evidence source so Margin can verify read-only accounting access again.'
+                                  : 'Connect your accounting records so Margin can use supplier, purchase and cost context when recovery evidence requires it.'
+                                : providerState.needs_reconnect
+                                  ? 'Reconnect this repository to restore evidence ingestion.'
+                                  : 'Establish persistent monitoring of this repository for financial artifacts.'}
                             </p>
                             <Button
                               className="h-9 w-full rounded-md border-[#DCE8EE] bg-white text-[13px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC] gap-2"
                               onClick={() => handleConnectDocSource(p)}
                               disabled={providerLoading === p}
                             >
-                              {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Link2 className="w-3.5 h-3.5 text-[#182026]/70" /> Connect</>}
+                              {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Link2 className="w-3.5 h-3.5 text-[#182026]/70" /> {isAccounting ? 'Connect financial evidence' : 'Connect'}</>}
                             </Button>
                           </div>
                         )}

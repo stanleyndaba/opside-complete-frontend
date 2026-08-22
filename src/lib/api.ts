@@ -2084,6 +2084,24 @@ export const api = {
   }>(`/api/evidence/sources/${encodeURIComponent(id)}`, { method: 'DELETE' }),
   disconnectDocsProvider: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'quickbooks' | 'xero') =>
     requestJson<any>(`/api/v1/integrations/${encodeURIComponent(provider)}/disconnect`, { method: 'POST' }),
+  requestAccountingVerification: (provider: 'quickbooks' | 'xero', tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for accounting verification');
+    return requestJson<{
+      ok: boolean;
+      provider: 'quickbooks' | 'xero';
+      jobId?: string;
+      status?: 'pending';
+      message?: string;
+    }>(`/api/v1/integrations/${encodeURIComponent(provider)}/sync?tenantSlug=${encodeURIComponent(tenantSlug)}`, { method: 'POST' });
+  },
+  disconnectAccountingProvider: (provider: 'quickbooks' | 'xero', tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for accounting disconnect');
+    return requestJson<{
+      ok: boolean;
+      provider?: 'quickbooks' | 'xero';
+      message?: string;
+    }>(`/api/v1/integrations/${encodeURIComponent(provider)}/disconnect?tenantSlug=${encodeURIComponent(tenantSlug)}`, { method: 'POST' });
+  },
 
   getMatchingMetrics: (days?: number) =>
     requestJson<{
@@ -2327,6 +2345,10 @@ export const api = {
         has_data: boolean;
         account_email?: string;
         scopes?: string[];
+        accounting_read_status?: 'pending' | 'verified' | 'no_data' | 'failed' | 'reconnect_required';
+        accounting_last_read_at?: string;
+        accounting_record_count?: number;
+        accounting_record_types?: Array<'bill' | 'purchase' | 'accpay'>;
       }>;
       providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }>;
     }>(`/api/v1/integrations/status?tenantSlug=${slug}`);
