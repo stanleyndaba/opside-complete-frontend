@@ -135,9 +135,11 @@ export function Sidebar({
       ? 'Enterprise'
       : tenant?.plan === 'professional'
         ? 'Pro'
-        : tenant?.plan === 'starter' || tenant?.plan === 'free'
-          ? 'Basic'
-          : null;
+        : tenant?.plan === 'starter'
+          ? 'Core'
+          : tenant?.plan === 'free'
+            ? 'Audit access'
+            : null;
 
   // Reset state when tenant changes to prevent flicker
   React.useEffect(() => {
@@ -215,7 +217,7 @@ export function Sidebar({
             <Box className="h-4 w-4" strokeWidth={1.6} />
           </div>
           <div className="min-w-0">
-            <p className="text-[12px] font-semibold tracking-tight text-[#182026]">Financial Evidence</p>
+            <p className="text-[12px] font-semibold tracking-tight text-[#182026]">Financial closure</p>
             <div className="mt-1 flex items-center gap-1.5 text-[10px] font-medium tracking-tight text-[#66737F]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
               {financialEvidenceConnectionCount == null
@@ -227,35 +229,35 @@ export function Sidebar({
       </div>
       <div className="border-y border-[#E7EEF2] px-4 py-3">
         <p className="text-[11px] leading-[1.5] tracking-tight text-[#4D5B66]">
-          Manage the Amazon, document, and read-only accounting sources Margin uses to establish recovery evidence.
+          Keep payouts, reversals, settlements, and books connected to the proof Margin uses to confirm financial closure.
         </p>
       </div>
       <div className="flex items-center justify-between bg-[#FAFAF7] px-4 py-3 text-[10px] font-semibold tracking-tight text-[#4D5B66]">
-        <span>Open financial evidence</span>
+        <span>Open financial closure</span>
         <span aria-hidden="true" className="text-[13px] leading-none">→</span>
       </div>
     </div>
   );
   const navGroups: Array<{ label: string; items: NavItem[] }> = [
     {
-      label: 'Workspace',
-      items: [{ title: 'Overview', icon: Gauge, href: overviewHref }]
+      label: 'Recovery position',
+      items: [{ title: 'Position', icon: Gauge, href: overviewHref }]
     },
     {
-      label: 'Recovery',
+      label: 'Recovery in motion',
       items: [
-        { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
-        { title: 'Dispute Claims', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-        { title: 'Submission Structure', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
-        { title: 'Appeal Claims', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
+        { title: 'Recovery work', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
+        { title: 'With Amazon', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
+        { title: 'Filing authority', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
+        { title: 'Appeals & responses', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
       ]
     },
     {
-      label: 'Records',
+      label: 'Proof & closure',
       items: [
-        { title: 'Documentation', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+        { title: 'Proof record', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
         {
-          title: 'Financial Evidence',
+          title: 'Financial closure',
           icon: Box,
           href: tenantRoute(currentTenantSlug, '/integrations-hub'),
           hoverContent: financialEvidenceHoverContent
@@ -263,8 +265,8 @@ export function Sidebar({
       ]
     },
     {
-      label: 'Activity',
-      items: [{ title: 'Notifications', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }]
+      label: 'Updates',
+      items: [{ title: 'Updates', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }]
     }
   ];
   const utilityItems: NavItem[] = [
@@ -497,7 +499,7 @@ export function Sidebar({
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
               className="group flex min-w-0 flex-1 items-center justify-between rounded-[6px] bg-white/[0.04] px-3 py-2 transition-colors hover:bg-white/[0.07]"
             >
-              <span className="truncate text-[12px] font-sans font-medium text-white/60 group-hover:text-white">Upgrade Plan</span>
+              <span className="truncate text-[12px] font-sans font-medium text-white/60 group-hover:text-white">Recovery control plan</span>
               <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/20 group-hover:text-white" />
             </Link>
             {subscriptionTierLabel && (
@@ -544,7 +546,7 @@ export function Sidebar({
               )}
             >
               <MoreIcon className={cn("h-[16px] w-[16px] shrink-0", isMoreActive && "text-[#0B74DE]")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[13px] font-medium tracking-tight">More</span>}
+              {!isCollapsed && <span className="text-[13px] font-medium tracking-tight">Settings &amp; access</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
