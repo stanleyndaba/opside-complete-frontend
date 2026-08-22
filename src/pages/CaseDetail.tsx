@@ -43,6 +43,11 @@ import {
 } from '@/lib/disputeProof';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
+import {
+  isCaseDetailDemoWorkspace,
+  selectCaseDetailEventFailureState,
+  selectCaseDetailFailureState,
+} from '@/lib/caseDetailTruthSafety';
 
 interface CaseEvent {
   timestamp: string;
@@ -568,7 +573,7 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   currency: 'USD'
 });
 
-const isDemoWorkspaceSlug = (slug?: string | null) => normalizeTenantSlug(slug) === 'demo-workspace';
+const isDemoWorkspaceSlug = (slug?: string | null) => isCaseDetailDemoWorkspace(slug);
 
 const isMissingDemoValue = (value: unknown) => {
   if (value === null || value === undefined) return true;
@@ -1065,6 +1070,7 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
     (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku : '-',
   asin: apiData.asin || apiData.evidence?.asin || null,
   fnsku: apiData.fnsku || apiData.evidence?.fnsku || apiData.evidence?.FNSKU || null,
+  identity_truth: apiData.identity_truth ?? null,
   productName: apiData.productName || apiData.details || apiData.anomaly_type || 'Unknown Product',
   facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || null,
   unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? null,
@@ -1458,6 +1464,7 @@ export default function CaseDetail() {
   const [pdfPreviewTitle, setPdfPreviewTitle] = useState('PDF Preview');
   const [pdfPreviewLabel, setPdfPreviewLabel] = useState('Document Preview');
   const [caseData, setCaseData] = useState<any | null>(null);
+  const caseDataRef = useRef<any | null>(null);
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
   const [selectedMetric, setSelectedMetric] = useState('payout');
@@ -1467,6 +1474,7 @@ export default function CaseDetail() {
   const [sendingReply, setSendingReply] = useState(false);
   const [selectedReplyAttachmentIds, setSelectedReplyAttachmentIds] = useState<string[]>([]);
   const [caseEvents, setCaseEvents] = useState<any[]>([]);
+  const caseEventsRef = useRef<any[]>([]);
   const [eventsResolvedForCaseId, setEventsResolvedForCaseId] = useState<string | null>(null);
   const [eventsLoading, setEventsLoading] = useState(false);
   const activeTabRef = useRef(activeTab);
@@ -1515,6 +1523,7 @@ export default function CaseDetail() {
         const displayCase = isDemoWorkspaceSlug(activeSlug)
           ? hydrateDemoCaseDetail(normalized, currentCaseId)
           : normalized;
+        caseDataRef.current = displayCase;
         setCaseData(displayCase);
         if (Array.isArray(displayCase?.documents)) {
           setMatchedDocs(displayCase.documents);
@@ -1525,23 +1534,34 @@ export default function CaseDetail() {
         setError(null);
       } else {
         const failureReason = res.error || 'Case details unavailable';
-        const fallbackCase = buildUnavailableCaseDetail(currentCaseId, failureReason);
-        const displayCase = isDemoWorkspaceSlug(activeSlug)
-          ? hydrateDemoCaseDetail(fallbackCase, currentCaseId)
-          : fallbackCase;
-        setCaseData(displayCase);
-        setMatchedDocs(Array.isArray(displayCase?.documents) ? displayCase.documents : []);
-        setError(failureReason);
+        const failureState = selectCaseDetailFailureState({
+          tenantSlug: activeSlug,
+          caseId: currentCaseId,
+          failureReason,
+          lastKnownCase: caseDataRef.current,
+          buildUnavailableCase: buildUnavailableCaseDetail,
+          hydrateDemoCase: hydrateDemoCaseDetail,
+        });
+        caseDataRef.current = failureState.caseData;
+        setCaseData(failureState.caseData);
+        setMatchedDocs(Array.isArray(failureState.caseData?.documents) ? failureState.caseData.documents : []);
+        setStatusFeedUnavailable(true);
+        setError(failureState.error);
       }
     } catch (err: any) {
       const failureReason = err?.message || 'Case details unavailable';
-      const fallbackCase = buildUnavailableCaseDetail(currentCaseId, failureReason);
-      const displayCase = isDemoWorkspaceSlug(activeSlug)
-        ? hydrateDemoCaseDetail(fallbackCase, currentCaseId)
-        : fallbackCase;
-      setCaseData(displayCase);
-      setMatchedDocs(Array.isArray(displayCase?.documents) ? displayCase.documents : []);
-      setError(failureReason);
+      const failureState = selectCaseDetailFailureState({
+        tenantSlug: activeSlug,
+        caseId: currentCaseId,
+        failureReason,
+        lastKnownCase: caseData,
+        buildUnavailableCase: buildUnavailableCaseDetail,
+        hydrateDemoCase: hydrateDemoCaseDetail,
+      });
+      setCaseData(failureState.caseData);
+      setMatchedDocs(Array.isArray(failureState.caseData?.documents) ? failureState.caseData.documents : []);
+      setStatusFeedUnavailable(true);
+      setError(failureState.error);
     } finally {
       setHasResolvedBackend(true);
       if (showLoading) setLoading(false);
@@ -1556,16 +1576,34 @@ export default function CaseDetail() {
     try {
       const response = await api.getRecoveryEvents(currentCaseId, activeSlug);
       if (response.ok && Array.isArray(response.data)) {
-        setCaseEvents(response.data.length || !isDemoWorkspaceSlug(activeSlug)
+        const resolvedEvents = response.data.length || !isDemoWorkspaceSlug(activeSlug)
           ? response.data
-          : buildDemoCaseEvents(currentCaseId));
+          : buildDemoCaseEvents(currentCaseId);
+        caseEventsRef.current = resolvedEvents;
+        setCaseEvents(resolvedEvents);
         eventsResolvedForCaseIdRef.current = currentCaseId;
         setEventsResolvedForCaseId(currentCaseId);
       } else {
-        setCaseEvents(isDemoWorkspaceSlug(activeSlug) ? buildDemoCaseEvents(currentCaseId) : []);
+        const failureState = selectCaseDetailEventFailureState({
+          tenantSlug: activeSlug,
+          caseId: currentCaseId,
+          lastKnownEvents: caseEventsRef.current,
+          buildDemoEvents: buildDemoCaseEvents,
+        });
+        caseEventsRef.current = failureState.events;
+        setCaseEvents(failureState.events);
+        setStatusFeedUnavailable(true);
       }
     } catch {
-      setCaseEvents(isDemoWorkspaceSlug(activeSlug) ? buildDemoCaseEvents(currentCaseId) : []);
+      const failureState = selectCaseDetailEventFailureState({
+        tenantSlug: activeSlug,
+        caseId: currentCaseId,
+        lastKnownEvents: caseEventsRef.current,
+        buildDemoEvents: buildDemoCaseEvents,
+      });
+      caseEventsRef.current = failureState.events;
+      setCaseEvents(failureState.events);
+      setStatusFeedUnavailable(true);
     } finally {
       setEventsLoading(false);
     }
@@ -3031,7 +3069,14 @@ export default function CaseDetail() {
                       {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-[#9CA3AF]">-</span>}
                     </ClaimRecordField>
                     <ClaimRecordField label="FNSKU">
-                      {effectiveCase.fnsku ? effectiveCase.fnsku : <span className="text-[#9CA3AF]">-</span>}
+                      <span className="flex flex-col gap-1">
+                        <span>{effectiveCase.fnsku ? effectiveCase.fnsku : <span className="text-[#9CA3AF]">-</span>}</span>
+                        {effectiveCase?.identity_truth?.fnsku?.state === 'conflicted' ? (
+                          <span className="text-[10px] text-[#6B7C88]">Observed FNSKUs conflict; identity is not treated as matched.</span>
+                        ) : effectiveCase?.identity_truth?.fnsku?.state === 'unavailable' ? (
+                          <span className="text-[10px] text-[#6B7C88]">FNSKU not available in the observed case evidence.</span>
+                        ) : null}
+                      </span>
                     </ClaimRecordField>
                     <ClaimRecordField label="Warehouse">
                       <span className="inline-flex items-center gap-2">
