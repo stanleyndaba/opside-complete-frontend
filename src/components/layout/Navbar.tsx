@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowRight, ArrowUpDown, ChevronDown, CircleCheck, CircleSlash, HelpCircle, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload, Layers, LogOut, Settings2 } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, ChevronDown, CircleCheck, CircleSlash, HelpCircle, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Upload, Layers, LogOut, Settings2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -241,79 +241,9 @@ export function Navbar({
   const amazonActionPath = userProfile?.amazon_connected ? '/integrations-hub' : '/connect-amazon';
   const [signOutOpen, setSignOutOpen] = useState(false);
 
-  // Fetch count of connected platforms
-  const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
   const [approvedReimbursements, setApprovedReimbursements] = useState<ApprovedReimbursementViewRow[]>([]);
   const [approvedReimbursementsLoading, setApprovedReimbursementsLoading] = useState(false);
   const [approvedReimbursementsError, setApprovedReimbursementsError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchConnectionsCount = async () => {
-      if (!activeTenantSlug) {
-        setConnectedPlatformsCount(0);
-        return;
-      }
-
-      const normalizedTenantSlug = normalizeTenantSlug(activeTenantSlug);
-      if (normalizedTenantSlug === 'demo-workspace' || normalizedTenantSlug === 'acme-corp') {
-        setConnectedPlatformsCount(3);
-        return;
-      }
-
-      try {
-        const [statusRes, sourcesRes] = await Promise.all([
-          api.getIntegrationsStatus(activeTenantSlug),
-          api.getEvidenceSources(activeTenantSlug)
-        ]);
-        
-        if (statusRes.ok && sourcesRes.ok) {
-          const status = statusRes.data;
-          const sources = sourcesRes.data.sources || [];
-          let count = 0;
-          
-          const platforms = ['amazon', 'stripe', 'gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
-          
-          platforms.forEach((p) => {
-            if (p === 'amazon') {
-              if ((status && (status as any)[`${p}_connected`]) || (status as any)?.amazon_connected) count++;
-            } else if (p === 'stripe') {
-              if (status && (status as any)[`${p}_connected`]) count++;
-            } else {
-              let isConnected = false;
-              try {
-                const statusObj = status as any;
-                if (statusObj?.providerIngest?.[p]?.connected === true) isConnected = true;
-                const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-                if (!isConnected && statusObj?.providerIngest?.[capitalized]?.connected === true) isConnected = true;
-                if (!isConnected && statusObj?.providers?.[p] === true) isConnected = true;
-                if (!isConnected && statusObj?.providers?.[capitalized] === true) isConnected = true;
-                if (!isConnected && p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) isConnected = true;
-                if (!isConnected && p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) isConnected = true;
-                if (!isConnected && statusObj && statusObj[`${p}_connected`] === true) isConnected = true;
-                if (!isConnected && sources.some((s: any) => {
-                  const sLower = s.provider?.toLowerCase() || '';
-                  const pLower = p.toLowerCase();
-                  return s.status === 'connected' && 
-                         (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
-                })) {
-                  isConnected = true;
-                }
-              } catch (e) {
-                console.error("Error checking connection status for", p, e);
-              }
-              if (isConnected) count++;
-            }
-          });
-          
-          setConnectedPlatformsCount(count);
-        }
-      } catch (e) {
-        console.error("Failed to fetch connections count", e);
-      }
-    };
-    
-    fetchConnectionsCount();
-  }, [activeTenantSlug]);
 
   useEffect(() => {
     const fetchApprovedReimbursements = async () => {
@@ -652,71 +582,7 @@ export function Navbar({
                   iconClassName="h-5 w-5"
                 />
 
-                {/* Approved reimbursements */}
-                <HoverCard openDelay={100} closeDelay={200}>
-                  <HoverCardTrigger asChild>
-                    <button
-                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                      className="flex h-9 w-9 items-center justify-center rounded-[7px] transition-colors hover:bg-[#F1F2F0]"
-                      aria-label="Approved reimbursements"
-                    >
-                      <Layers className="h-5 w-5 text-[#0B74DE]" strokeWidth={1.85} />
-                    </button>
-                  </HoverCardTrigger>
-                  <HoverCardContent
-                    side="bottom"
-                    align="center"
-                    sideOffset={10}
-                    className="w-[420px] overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_16px_40px_rgba(24,32,38,0.10)]"
-                  >
-                    <div className="border-b border-[#DCE8EE] px-4 py-3.5">
-                      <div className="flex items-baseline justify-between gap-4">
-                        <div>
-                          <p className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Approved reimbursements</p>
-                          <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Recent verified outcome records.</p>
-                        </div>
-                        <span className="shrink-0 text-[11px] font-medium tabular-nums text-[#66737F]">{approvedReimbursements.length} recent</span>
-                      </div>
-                    </div>
-                    <div className="max-h-[352px] overflow-y-auto">
-                      {approvedReimbursementsLoading ? (
-                        <p className="px-4 py-7 text-center text-[12px] text-[#66737F]">Loading approved reimbursements…</p>
-                      ) : approvedReimbursementsError ? (
-                        <p className="px-4 py-7 text-center text-[12px] text-[#66737F]">Unable to load approved reimbursements.</p>
-                      ) : approvedReimbursements.length === 0 ? (
-                        <p className="px-4 py-7 text-center text-[12px] leading-5 text-[#66737F]">No production-verified approved reimbursement records yet.</p>
-                      ) : (
-                        <div className="divide-y divide-[#E7EEF2]">
-                          {approvedReimbursements.map((row) => (
-                            <button
-                              key={`${row.routeId}-${row.caseReference}`}
-                              type="button"
-                              onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                              className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-4 px-4 py-3 text-left transition-colors hover:bg-[#F7FAFC]"
-                            >
-                              <div className="min-w-0">
-                                <p className="truncate text-[12px] font-medium tracking-tight text-[#182026]">{row.caseReference}</p>
-                                <p className="mt-1 text-[11px] leading-4 text-[#66737F]">{row.payoutTruth}</p>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(row.amount, row.currency)}</p>
-                                <p className="mt-1 text-[10px] text-[#66737F]">{formatStamp(row.lastUpdatedAt)}</p>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
-                      className="flex w-full items-center justify-between border-t border-[#DCE8EE] bg-[#FAFAF7] px-4 py-3 text-left text-[12px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F3F7FA] hover:text-[#0B74DE]"
-                    >
-                      <span>Open reimbursement ledger</span>
-                      <span aria-hidden="true">→</span>
-                    </button>
-                  </HoverCardContent>
-                </HoverCard>
+
               </div>
 
             </div>
@@ -724,49 +590,67 @@ export function Navbar({
 
           {/* Right Group - Connect & Account */}
           <div className="ml-6 flex items-center gap-x-4">
-            {/* Integrations Icon */}
             <HoverCard openDelay={100} closeDelay={200}>
               <HoverCardTrigger asChild>
                 <button
-                  onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                  className="relative flex h-10 w-10 items-center justify-center rounded-[7px] text-[#6B7280] transition-all hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
-                  aria-label="Integrations Hub">
-                  <Box className="h-5 w-5" />
-                  <span className="pointer-events-none absolute right-0 top-0 z-10 flex h-4 min-w-4 translate-x-1/4 -translate-y-1/4 select-none items-center justify-center rounded-full bg-[#0B74DE] px-[3px] text-center font-sans text-[9px] font-bold leading-4 text-[#FFFFFF] tabular-nums shadow-none">
-                    {connectedPlatformsCount}
-                  </span>
+                  onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
+                  className="flex h-10 w-10 items-center justify-center rounded-[7px] text-[#6B7280] transition-colors hover:bg-[#F1F2F0] hover:text-[#0B74DE]"
+                  aria-label="Approved reimbursements"
+                >
+                  <Layers className="h-5 w-5" strokeWidth={1.85} />
                 </button>
               </HoverCardTrigger>
               <HoverCardContent
                 side="bottom"
                 align="center"
                 sideOffset={10}
-                className="w-[304px] overflow-hidden rounded-[8px] border border-[#E5E7EB] bg-white p-0 shadow-[0_16px_40px_rgba(17,24,39,0.10)]">
-                <div className="px-4 pb-3 pt-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-[#F3F5F4] text-[#4B5563]">
-                      <Box className="h-4 w-4" strokeWidth={1.6} />
+                className="w-[420px] overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_16px_40px_rgba(24,32,38,0.10)]"
+              >
+                <div className="border-b border-[#DCE8EE] px-4 py-3.5">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <div>
+                      <p className="font-lora text-[18px] font-normal tracking-tight text-[#182026]">Approved reimbursements</p>
+                      <p className="mt-1 text-[11px] leading-4 text-[#66737F]">Recent verified outcome records.</p>
                     </div>
-                    <div className="min-w-0">
-                      <div className="text-[12px] font-sans font-semibold tracking-tight text-[#111827]">Integrations Hub</div>
-                      <div className="mt-1 flex items-center gap-1.5 text-[10px] font-sans font-medium tracking-tight text-[#6B7280]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                        {connectedPlatformsCount} platform{connectedPlatformsCount === 1 ? '' : 's'} connected
-                      </div>
-                    </div>
+                    <span className="shrink-0 text-[11px] font-medium tabular-nums text-[#66737F]">{approvedReimbursements.length} recent</span>
                   </div>
                 </div>
-                <div className="border-t border-[#E5E7EB] px-4 py-3">
-                  <p className="text-[11px] font-sans leading-[1.5] tracking-tight text-[#4B5563]">
-                    Connect the sources Margin uses to reconcile your records and evidence.
-                  </p>
+                <div className="max-h-[352px] overflow-y-auto">
+                  {approvedReimbursementsLoading ? (
+                    <p className="px-4 py-7 text-center text-[12px] text-[#66737F]">Loading approved reimbursements…</p>
+                  ) : approvedReimbursementsError ? (
+                    <p className="px-4 py-7 text-center text-[12px] text-[#66737F]">Unable to load approved reimbursements.</p>
+                  ) : approvedReimbursements.length === 0 ? (
+                    <p className="px-4 py-7 text-center text-[12px] leading-5 text-[#66737F]">No production-verified approved reimbursement records yet.</p>
+                  ) : (
+                    <div className="divide-y divide-[#E7EEF2]">
+                      {approvedReimbursements.map((row) => (
+                        <button
+                          key={`${row.routeId}-${row.caseReference}`}
+                          type="button"
+                          onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
+                          className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-4 px-4 py-3 text-left transition-colors hover:bg-[#F7FAFC]"
+                        >
+                          <div className="min-w-0">
+                            <p className="truncate text-[12px] font-medium tracking-tight text-[#182026]">{row.caseReference}</p>
+                            <p className="mt-1 text-[11px] leading-4 text-[#66737F]">{row.payoutTruth}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[13px] font-semibold tabular-nums tracking-tight text-[#182026]">{formatMoney(row.amount, row.currency)}</p>
+                            <p className="mt-1 text-[10px] text-[#66737F]">{formatStamp(row.lastUpdatedAt)}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <button
-                  onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                  className="flex w-full items-center justify-between border-t border-[#E5E7EB] bg-[#FAFAF7] px-4 py-3 text-left text-[10px] font-sans font-semibold tracking-tight text-[#111827] transition-colors hover:bg-[#F3F5F4] hover:text-[#0B74DE]"
+                  type="button"
+                  onClick={() => navigate(tenantRoute(activeTenantSlug, '/approved-reimbursements'))}
+                  className="flex w-full items-center justify-between border-t border-[#DCE8EE] bg-[#FAFAF7] px-4 py-3 text-left text-[12px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F3F7FA] hover:text-[#0B74DE]"
                 >
-                  <span>Open integrations</span>
-                  <span aria-hidden="true" className="text-[13px] leading-none">→</span>
+                  <span>Open reimbursement ledger</span>
+                  <span aria-hidden="true">→</span>
                 </button>
               </HoverCardContent>
             </HoverCard>

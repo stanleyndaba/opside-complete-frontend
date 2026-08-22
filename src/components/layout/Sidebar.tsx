@@ -81,6 +81,7 @@ interface NavItem {
   icon: React.ElementType;
   href: string;
   count?: number | null;
+  hoverContent?: React.ReactNode;
 }
 
 export function Sidebar({
@@ -95,6 +96,7 @@ export function Sidebar({
   const { tenant, isReady } = useTenant();
   const { isAuthReady, authToken, isSessionValid } = useSession();
   const [claimCount, setClaimCount] = useState<number | null>(null);
+  const [financialEvidenceConnectionCount, setFinancialEvidenceConnectionCount] = useState<number | null>(null);
   const { unreadCount } = useNotifications();
   const [signOutOpen, setSignOutOpen] = useState(false);
   // States for referral functionality
@@ -168,8 +170,72 @@ export function Sidebar({
     return () => { cancelled = true; };
   }, [authToken, currentTenantSlug, isAuthReady, isReady, isSessionValid]);
 
+  React.useEffect(() => {
+    if (!isReady || !isAuthReady || !authToken || !isSessionValid || !currentTenantSlug) {
+      setFinancialEvidenceConnectionCount(null);
+      return;
+    }
+
+    let cancelled = false;
+    const fetchFinancialEvidenceConnectionCount = async () => {
+      try {
+        const [statusResponse, sourcesResponse] = await Promise.all([
+          api.getIntegrationsStatus(currentTenantSlug),
+          api.getEvidenceSources(currentTenantSlug)
+        ]);
+
+        if (!statusResponse.ok || !sourcesResponse.ok || cancelled) {
+          if (!cancelled) setFinancialEvidenceConnectionCount(null);
+          return;
+        }
+
+        const providerKeys = new Set(
+          (sourcesResponse.data?.sources || [])
+            .filter((source: any) => source?.status === 'connected' && typeof source?.provider === 'string')
+            .map((source: any) => source.provider.toLowerCase())
+        );
+        if ((statusResponse.data as any)?.amazon_connected) providerKeys.add('amazon');
+        setFinancialEvidenceConnectionCount(providerKeys.size);
+      } catch {
+        if (!cancelled) setFinancialEvidenceConnectionCount(null);
+      }
+    };
+
+    fetchFinancialEvidenceConnectionCount();
+    return () => { cancelled = true; };
+  }, [authToken, currentTenantSlug, isAuthReady, isReady, isSessionValid]);
+
   const overviewHref = tenantRoute(currentTenantSlug, '');
   const pricingAdjustHref = tenantRoute(currentTenantSlug, '/pricing-adjust');
+  const financialEvidenceHoverContent = (
+    <div className="w-[300px] overflow-hidden rounded-[8px] border border-[#DCE8EE] bg-white text-[#182026] shadow-[0_16px_40px_rgba(24,32,38,0.10)]">
+      <div className="px-4 pb-3 pt-4">
+        <div className="flex items-start gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-[#F3F5F4] text-[#4D5B66]">
+            <Box className="h-4 w-4" strokeWidth={1.6} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[12px] font-semibold tracking-tight text-[#182026]">Financial Evidence</p>
+            <div className="mt-1 flex items-center gap-1.5 text-[10px] font-medium tracking-tight text-[#66737F]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+              {financialEvidenceConnectionCount == null
+                ? 'Connection status available in workspace'
+                : `${financialEvidenceConnectionCount} source${financialEvidenceConnectionCount === 1 ? '' : 's'} connected`}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="border-y border-[#E7EEF2] px-4 py-3">
+        <p className="text-[11px] leading-[1.5] tracking-tight text-[#4D5B66]">
+          Manage the Amazon, document, and read-only accounting sources Margin uses to establish recovery evidence.
+        </p>
+      </div>
+      <div className="flex items-center justify-between bg-[#FAFAF7] px-4 py-3 text-[10px] font-semibold tracking-tight text-[#4D5B66]">
+        <span>Open financial evidence</span>
+        <span aria-hidden="true" className="text-[13px] leading-none">→</span>
+      </div>
+    </div>
+  );
   const navGroups: Array<{ label: string; items: NavItem[] }> = [
     {
       label: 'Workspace',
@@ -186,7 +252,15 @@ export function Sidebar({
     },
     {
       label: 'Records',
-      items: [{ title: 'Documentation', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') }]
+      items: [
+        { title: 'Documentation', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+        {
+          title: 'Financial Evidence',
+          icon: Box,
+          href: tenantRoute(currentTenantSlug, '/integrations-hub'),
+          hoverContent: financialEvidenceHoverContent
+        }
+      ]
     },
     {
       label: 'Activity',
@@ -246,38 +320,50 @@ export function Sidebar({
         : variant === 'utility'
           ? "h-10 w-10"
           : "h-11 w-11";
+      const collapsedLink = (
+        <Link
+          to={item.href}
+          onMouseEnter={handlePrefetch}
+          className={cn(
+            "group relative flex w-full items-center justify-center transition-all duration-200",
+            collapsedBaseClasses,
+            isActive
+              ? "bg-white/10 text-white"
+              : "text-white/40 hover:bg-white/5 hover:text-white"
+          )}
+          style={{ willChange: 'background-color' }}>
+          {isActive && (
+            <motion.span
+              layoutId="active-indicator-collapsed"
+              className="absolute bottom-2 left-0 top-2 w-[2px] bg-[#0B74DE]"
+            />
+          )}
+          <item.icon
+            className={cn(
+              "transition-colors duration-200",
+              variant === 'core' ? "h-[18px] w-[18px]" : "h-[17px] w-[17px]",
+              isActive ? "text-[#0B74DE]" : "text-inherit"
+            )}
+            strokeWidth={1.5}
+          />
+        </Link>
+      );
+
+      if (item.hoverContent) {
+        return (
+          <HoverCard openDelay={100} closeDelay={200}>
+            <HoverCardTrigger asChild>{collapsedLink}</HoverCardTrigger>
+            <HoverCardContent side="right" align="start" sideOffset={12} className="w-auto border-0 bg-transparent p-0 shadow-none">
+              {item.hoverContent}
+            </HoverCardContent>
+          </HoverCard>
+        );
+      }
 
       return (
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to={item.href}
-                onMouseEnter={handlePrefetch}
-                className={cn(
-                  "group relative flex w-full items-center justify-center transition-all duration-200",
-                  collapsedBaseClasses,
-                  isActive
-                    ? "bg-white/10 text-white"
-                    : "text-white/40 hover:bg-white/5 hover:text-white"
-                )}
-                style={{ willChange: 'background-color' }}>
-                {isActive && (
-                  <motion.span
-                    layoutId="active-indicator-collapsed"
-                    className="absolute bottom-2 left-0 top-2 w-[2px] bg-[#0B74DE]"
-                  />
-                )}
-                <item.icon
-                  className={cn(
-                    "transition-colors duration-200",
-                    variant === 'core' ? "h-[18px] w-[18px]" : "h-[17px] w-[17px]",
-                    isActive ? "text-[#0B74DE]" : "text-inherit"
-                  )}
-                  strokeWidth={1.5}
-                />
-              </Link>
-            </TooltipTrigger>
+            <TooltipTrigger asChild>{collapsedLink}</TooltipTrigger>
             <TooltipContent side="right" className="rounded-[4px] border border-white/10 bg-[#1A1A1A] px-3 py-2 text-white shadow-xl">
               <div className="text-[11px] font-sans font-medium tracking-tight">
                 {item.title}
@@ -287,7 +373,7 @@ export function Sidebar({
         </TooltipProvider>
       );
     }
-    return (
+    const expandedLink = (
       <Link
         to={item.href}
         onMouseEnter={handlePrefetch}
@@ -337,6 +423,19 @@ export function Sidebar({
         )}
       </Link>
     );
+
+    if (item.hoverContent) {
+      return (
+        <HoverCard openDelay={100} closeDelay={200}>
+          <HoverCardTrigger asChild>{expandedLink}</HoverCardTrigger>
+          <HoverCardContent side="right" align="start" sideOffset={12} className="w-auto border-0 bg-transparent p-0 shadow-none">
+            {item.hoverContent}
+          </HoverCardContent>
+        </HoverCard>
+      );
+    }
+
+    return expandedLink;
   });
   return (
     <aside
