@@ -278,14 +278,15 @@ const hasTrustedApprovalTruth = (caseData: any) => Boolean(
   hasTrustedFilingTruth(caseData) && caseData?.has_approval_truth === true
 );
 
-const hasTrustedPayoutTruth = (caseData: any) => Boolean(
-  caseData?.has_payout === true &&
-  (
-    positiveAmount(caseData?.actual_payout_amount) !== null ||
-    positiveAmount(caseData?.recovered_amount) !== null ||
-    caseData?.payout_proof_status === 'verified'
-  )
-);
+const hasTrustedPayoutTruth = (caseData: any) => {
+  const verifiedPaid = Number(caseData?.verified_paid_amount);
+  return Boolean(
+    caseData?.payout_proof_status === 'verified' &&
+    Number.isFinite(verifiedPaid) &&
+    verifiedPaid > 0 &&
+    ['paid', 'partially_paid'].includes(normalizeLifecycleValue(caseData?.financial_payout_status))
+  );
+};
 
 const getCaseBlockerSummary = (caseData: any) => {
   const blockers = Array.isArray(caseData?.block_reasons)
@@ -1042,14 +1043,21 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
   estimated_claim_value: claimAmountUnknown ? null : (apiData.estimated_claim_value ?? apiData.estimated_recovery_amount ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null),
   requested_amount: claimAmountUnknown ? null : (apiData.requested_amount ?? apiData.claim_amount ?? apiData.guaranteedAmount ?? null),
   approved_amount: apiData.approved_amount ?? null,
+  recorded_payout_amount: apiData.recorded_payout_amount ?? apiData.actual_payout_amount ?? apiData.recovered_amount ?? null,
   recovered_amount: apiData.recovered_amount ?? apiData.actual_payout_amount ?? null,
   actual_payout_amount: apiData.actual_payout_amount ?? apiData.recovered_amount ?? null,
+  verified_paid_amount: apiData.verified_paid_amount ?? null,
+  outstanding_amount: apiData.outstanding_amount ?? null,
+  variance_amount: apiData.variance_amount ?? null,
+  financial_payout_status: apiData.financial_payout_status ?? null,
+  financial_payout_proof: apiData.financial_payout_proof ?? null,
   billed_amount: apiData.billed_amount ?? null,
   expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || null,
   createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || null,
   sku: (apiData.sku && apiData.sku !== 'N/A') ? apiData.sku :
     (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku : '-',
   asin: apiData.asin || apiData.evidence?.asin || null,
+  fnsku: apiData.fnsku || apiData.evidence?.fnsku || apiData.evidence?.FNSKU || null,
   productName: apiData.productName || apiData.details || apiData.anomaly_type || 'Unknown Product',
   facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || null,
   unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? null,
@@ -1143,101 +1151,27 @@ const getRequiredDocsForClaimType = (claimType?: string): string[] => {
   ];
 };
 
-// Generate narrative "What Happened" story for a claim
+// Generated context is intentionally conservative. Structured backend finding truth remains the only
+// source permitted to state a specific Amazon event, eligibility, filing, approval, or recovery outcome.
 const generateNarrative = (claim: any): string => {
-  const caseType = (claim.anomaly_type || claim.claim_type || claim.case_type || '').toLowerCase();
-  const amount = claim.guaranteedAmount || claim.amount || claim.estimated_value || claim.claim_amount || 0;
-  const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  const sku = claim.sku || claim.evidence?.sku || 'N/A';
-  const asin = claim.asin || claim.evidence?.asin || 'N/A';
-  const orderId = claim.order_id || claim.evidence?.order_id || '';
-  const facility = claim.facility || claim.evidence?.fulfillment_center || '';
-  const units = claim.units_lost || claim.unitsLost || claim.quantity || claim.units || '';
-  const dateStr = claim.discovery_date || claim.created_at || claim.createdDate;
-  const detectionDate = dateStr ? new Date(dateStr).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+  const caseType = String(claim?.anomaly_type || claim?.claim_type || claim?.case_type || 'discrepancy')
+    .replace(/[_-]+/g, ' ')
+    .trim() || 'discrepancy';
+  const sku = String(claim?.sku || claim?.evidence?.sku || '').trim();
+  const asin = String(claim?.asin || claim?.evidence?.asin || '').trim();
+  const candidateAmount = [
+    claim?.estimated_claim_value,
+    claim?.estimated_recovery_amount,
+    claim?.estimated_value,
+    claim?.claim_amount,
+    claim?.requested_amount,
+  ].find((value) => typeof value === 'number' && Number.isFinite(value));
+  const estimateText = typeof candidateAmount === 'number'
+    ? ` The current estimated claim value is ${candidateAmount.toLocaleString('en-US', { style: 'currency', currency: claim?.currency || 'USD' })}; it is not an approval or payment.`
+    : ' No monetary estimate is currently available.';
+  const identity = [sku ? `SKU ${sku}` : null, asin ? `ASIN ${asin}` : null].filter(Boolean).join(' / ');
 
-  // Determine case category for professional narrative
-  const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
-  const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy') || caseType.includes('inbound');
-  const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
-  const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
-  const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
-
-  // Build professional executive summary based on case type
-  let narrative = '';
-
-  if (isFeeCase) {
-    narrative = `Amazon FBA has applied incorrect fulfillment fees to ASIN ${asin}`;
-    if (caseType.includes('storage') || caseType.includes('lts')) {
-      narrative += ` based on erroneous storage fee calculations. The product has been consistently overcharged for storage fees`;
-    } else if (caseType.includes('commission')) {
-      narrative += ` resulting in referral fee overcharges. Amazon's system has applied incorrect commission rates`;
-    } else {
-      narrative += ` based on incorrect dimensional/weight data in Amazon's catalog system. The product has been consistently mis-measured`;
-    }
-    narrative += `, resulting in oversized/overweight fee categorization when the product should fall within standard rates. `;
-    narrative += `This systematic measurement error has resulted in cumulative overcharges totaling ${formattedAmount}.`;
-  } else if (isLostCase) {
-    const unitText = units ? `${units} units` : 'inventory';
-    if (caseType.includes('inbound') || caseType.includes('shipment')) {
-      narrative = `Amazon received an inbound shipment containing ${unitText} of SKU ${sku}`;
-      if (facility) narrative += ` at fulfillment center ${facility}`;
-      if (detectionDate) narrative += ` on ${detectionDate}`;
-      narrative += `, but the full quantity was not checked into available inventory. `;
-      narrative += `The shipment shows as "Receiving Discrepancy" with ${unitText} remaining unaccounted for after 30+ days. `;
-    } else {
-      narrative = `Amazon's inventory management system shows ${unitText} of SKU ${sku} as missing from fulfillment center${facility ? ` ${facility}` : ''}. `;
-      narrative += `These units were properly received but have since disappeared from available inventory without corresponding customer orders or removals. `;
-    }
-    narrative += `This inventory discrepancy represents a recoverable value of ${formattedAmount}.`;
-  } else if (isDamagedCase) {
-    const unitText = units ? `${units} units` : 'inventory';
-    narrative = `Amazon FBA has reported ${unitText} of SKU ${sku} as damaged while in Amazon's possession`;
-    if (facility) narrative += ` at fulfillment center ${facility}`;
-    narrative += `. The damage occurred during `;
-    if (caseType.includes('carrier')) {
-      narrative += `carrier transit to the fulfillment center, `;
-    } else if (caseType.includes('inbound')) {
-      narrative += `the inbound receiving process, `;
-    } else {
-      narrative += `warehouse handling and storage, `;
-    }
-    narrative += `which falls under Amazon's responsibility for product care. `;
-    narrative += `This damage has resulted in a loss of ${formattedAmount} that qualifies for seller reimbursement.`;
-  } else if (isRefundCase) {
-    narrative = `Amazon issued a customer refund for Order ${orderId || 'N/A'}`;
-    if (caseType.includes('switcheroo')) {
-      narrative += `, but the customer returned a different item than what was originally purchased. This "switcheroo" fraud `;
-    } else if (caseType.includes('wrong_item')) {
-      narrative += `, but the returned item does not match the original product. The wrong item `;
-    } else if (caseType.includes('empty_box')) {
-      narrative += `, but the return package was received empty or with missing contents. This `;
-    } else {
-      narrative += `, however the return was never received at the fulfillment center. After the standard return window (45+ days), this `;
-    }
-    narrative += `qualifies for seller reimbursement under Amazon's FBA policy. `;
-    narrative += `The unrecovered value totals ${formattedAmount}.`;
-  } else if (isChargebackCase) {
-    narrative = `A payment chargeback/claim was filed against Order ${orderId || 'N/A'}`;
-    if (caseType.includes('atoz')) {
-      narrative += ` through Amazon's A-to-Z Guarantee program. `;
-    } else {
-      narrative += ` that was not properly defended. `;
-    }
-    narrative += `Delivery confirmation and tracking data show the order was successfully delivered to the customer, making this claim eligible for dispute. `;
-    narrative += `The contested amount is ${formattedAmount}.`;
-  } else {
-    // Fallback for unknown case types
-    const typeDisplay = caseType.replace(/_/g, ' ') || 'discrepancy';
-    narrative = `Margin's audit engine detected a ${typeDisplay} affecting SKU ${sku}`;
-    if (asin !== 'N/A') narrative += ` (ASIN: ${asin})`;
-    if (detectionDate) narrative += ` on ${detectionDate}`;
-    narrative += `. `;
-    narrative += `Based on automated analysis of fulfillment records, this ${typeDisplay} represents a recoverable value of ${formattedAmount}. `;
-    narrative += `The case has been flagged for review and submission to Amazon Seller Support.`;
-  }
-
-  return narrative;
+  return `Margin generated this context from the current ${caseType} case fields${identity ? ` for ${identity}` : ''}. It is not independent proof of an Amazon event, eligibility, filing, approval, or reimbursement.${estimateText} Review the linked evidence and current filing status before taking action.`;
 };
 
 function ClaimRecordSection({
@@ -1547,6 +1481,11 @@ export default function CaseDetail() {
   const formatCurrencyOrDash = (value?: number | null, currency: string = 'USD') => {
     if (typeof value !== 'number' || Number.isNaN(value)) return NOT_AVAILABLE;
     return value.toLocaleString('en-US', { style: 'currency', currency });
+  };
+
+  const formatQuantityOrDash = (value?: number | null) => {
+    if (typeof value !== 'number' || !Number.isFinite(value)) return NOT_AVAILABLE;
+    return value.toLocaleString('en-US');
   };
 
   const normalizeStatus = (s?: string): 'Open' | 'In Progress' | 'Approved' | 'Denied' | 'Unknown' => {
@@ -1861,12 +1800,26 @@ export default function CaseDetail() {
   const estimatedClaimValue = typeof backendTruthCase?.estimated_claim_value === 'number' ? backendTruthCase.estimated_claim_value : null;
   const requestedAmount = typeof backendTruthCase?.requested_amount === 'number' ? backendTruthCase.requested_amount : null;
   const approvedAmount = typeof backendTruthCase?.approved_amount === 'number' ? backendTruthCase.approved_amount : null;
-  const recoveredAmount = typeof backendTruthCase?.actual_payout_amount === 'number'
-    ? backendTruthCase.actual_payout_amount
-    : (typeof backendTruthCase?.recovered_amount === 'number' ? backendTruthCase.recovered_amount : null);
+  const recordedPayoutAmount = typeof backendTruthCase?.recorded_payout_amount === 'number'
+    ? backendTruthCase.recorded_payout_amount
+    : (typeof backendTruthCase?.actual_payout_amount === 'number'
+      ? backendTruthCase.actual_payout_amount
+      : (typeof backendTruthCase?.recovered_amount === 'number' ? backendTruthCase.recovered_amount : null));
+  const verifiedPaidAmount = typeof backendTruthCase?.verified_paid_amount === 'number'
+    ? backendTruthCase.verified_paid_amount
+    : null;
+  const outstandingAmount = typeof backendTruthCase?.outstanding_amount === 'number'
+    ? backendTruthCase.outstanding_amount
+    : null;
+  const varianceAmount = typeof backendTruthCase?.variance_amount === 'number'
+    ? backendTruthCase.variance_amount
+    : null;
+  const financialPayoutStatus = typeof backendTruthCase?.financial_payout_status === 'string'
+    ? backendTruthCase.financial_payout_status
+    : null;
   const billedAmount = typeof backendTruthCase?.billed_amount === 'number' ? backendTruthCase.billed_amount : null;
   const trustedApprovedAmount = hasTrustedApprovalTruth(backendTruthCase) ? approvedAmount : null;
-  const trustedRecoveredAmount = hasTrustedPayoutTruth(backendTruthCase) ? recoveredAmount : null;
+  const trustedRecoveredAmount = hasTrustedPayoutTruth(backendTruthCase) ? verifiedPaidAmount : null;
   const trustedBilledAmount = hasTrustedPayoutTruth(backendTruthCase) && positiveAmount(billedAmount) !== null ? billedAmount : null;
   const explicitValuePerUnit = typeof backendTruthCase?.value_per_unit === 'number' ? backendTruthCase.value_per_unit : null;
   const backendUnitCost = typeof backendTruthCase?.unitCost === 'number'
@@ -1890,27 +1843,36 @@ export default function CaseDetail() {
   const claimRecordUnitDerivedAmount = claimRecordUnitValue !== null && claimRecordUnitCount !== null
     ? Number((claimRecordUnitValue * claimRecordUnitCount).toFixed(2))
     : null;
-  const claimRecordDemoAmount = caseId === 'ACME-CASE-2005' ? 569.50 : null;
-  const claimRecordBaseAmount = claimRecordDemoAmount ?? firstPositiveAmount(
-    requestedAmount,
-    estimatedClaimValue,
-    approvedAmount,
-    recoveredAmount,
-    effectiveCase?.guaranteedAmount,
-    effectiveCase?.claim_amount,
-    effectiveCase?.estimated_recovery_amount,
-    effectiveCase?.estimated_value,
-    effectiveCase?.amount,
-    effectiveCase?.evidence?.total_amount,
-    claimRecordUnitDerivedAmount,
-    1284.66
-  ) ?? 1284.66;
-  const claimRecordRequestedAmount = claimRecordDemoAmount ?? (firstPositiveAmount(requestedAmount, effectiveCase?.requested_amount, effectiveCase?.claim_amount, claimRecordBaseAmount) ?? claimRecordBaseAmount);
-  const claimRecordEstimatedClaimValue = claimRecordDemoAmount ?? (firstPositiveAmount(estimatedClaimValue, effectiveCase?.estimated_claim_value, effectiveCase?.estimated_recovery_amount, claimRecordRequestedAmount) ?? claimRecordRequestedAmount);
-  const claimRecordApprovedAmount = claimRecordDemoAmount ?? (firstPositiveAmount(trustedApprovedAmount, approvedAmount, effectiveCase?.approved_amount, claimRecordRequestedAmount) ?? claimRecordRequestedAmount);
-  const claimRecordRecoveredAmount = claimRecordDemoAmount ?? (firstPositiveAmount(trustedRecoveredAmount, recoveredAmount, effectiveCase?.actual_payout_amount, effectiveCase?.recovered_amount, claimRecordApprovedAmount) ?? claimRecordApprovedAmount);
-  const claimRecordLegacyBilledAmount = claimRecordDemoAmount ?? firstPositiveAmount(trustedBilledAmount, billedAmount, effectiveCase?.billed_amount);
-  const claimRecordDisplayBilledAmount = claimRecordDemoAmount ?? (claimRecordLegacyBilledAmount ?? Number((claimRecordRecoveredAmount * 0.15).toFixed(2)));
+  const claimRecordDemoAmount = isDemoWorkspaceSlug(activeSlug) && caseId === 'ACME-CASE-2005' ? 569.50 : null;
+  const firstFiniteAmount = (...values: unknown[]) => {
+    for (const value of values) {
+      if (value === null || value === undefined || value === '') continue;
+      const amount = Number(value);
+      if (Number.isFinite(amount)) return Number(amount.toFixed(2));
+    }
+    return null;
+  };
+  const claimRecordRequestedAmount = claimRecordDemoAmount ?? firstFiniteAmount(requestedAmount, effectiveCase?.requested_amount, effectiveCase?.claim_amount);
+  const claimRecordEstimatedClaimValue = claimRecordDemoAmount ?? firstFiniteAmount(estimatedClaimValue, effectiveCase?.estimated_claim_value, effectiveCase?.estimated_recovery_amount, effectiveCase?.estimated_value, claimRecordUnitDerivedAmount);
+  const claimRecordApprovedAmount = claimRecordDemoAmount ?? firstFiniteAmount(trustedApprovedAmount);
+  const claimRecordRecordedPayoutAmount = claimRecordDemoAmount ?? firstFiniteAmount(recordedPayoutAmount);
+  const claimRecordVerifiedPaidAmount = claimRecordDemoAmount ?? firstFiniteAmount(trustedRecoveredAmount);
+  const claimRecordLegacyBilledAmount = claimRecordDemoAmount ?? firstFiniteAmount(trustedBilledAmount, billedAmount, effectiveCase?.billed_amount);
+  const inventoryQuantity = (value: unknown): number | null => {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+  const inventoryEvidence = effectiveCase?.evidence || {};
+  const inventoryTotalInput = inventoryQuantity(inventoryEvidence.total_input);
+  const inventoryTotalOutput = inventoryQuantity(inventoryEvidence.total_output);
+  const inventoryCalculatedStock = inventoryQuantity(inventoryEvidence.calculated_stock)
+    ?? (inventoryTotalInput !== null && inventoryTotalOutput !== null ? inventoryTotalInput - inventoryTotalOutput : null);
+  const inventoryWarehouseBalance = inventoryQuantity(inventoryEvidence.ending_warehouse_balance);
+  const inventoryDiscrepancy = inventoryQuantity(inventoryEvidence.discrepancy)
+    ?? (inventoryCalculatedStock !== null && inventoryWarehouseBalance !== null
+      ? Math.max(0, inventoryCalculatedStock - inventoryWarehouseBalance)
+      : null);
   const resolvedClaimType = effectiveCase?.anomaly_type ? String(effectiveCase.anomaly_type).replace(/_/g, ' ') : NOT_AVAILABLE;
   const resolvedMatchMethod = effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type
     ? String(effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type).replace(/_/g, ' ')
@@ -1949,7 +1911,7 @@ export default function CaseDetail() {
   const findingNarrative = sellerSummary?.summary
     || (effectiveCase?.truth_unavailable ? NOT_AVAILABLE : generateNarrative(effectiveCase));
   const displayedMatchedDocs = useMemo(() => {
-    if (caseId !== 'ACME-CASE-2005') return matchedDocs;
+    if (!isDemoWorkspaceSlug(activeSlug) || caseId !== 'ACME-CASE-2005') return matchedDocs;
     const baseDocs = Array.isArray(matchedDocs) ? matchedDocs.slice(0, 3).map((doc: any, idx: number) => {
       const amountText = '$569.50';
       const docText = String(doc?.matchType || doc?.type || '').toLowerCase();
@@ -1999,7 +1961,7 @@ export default function CaseDetail() {
         evidence: 'Accounting ledger excerpt tied to the reimbursement trail.',
       }
     ];
-  }, [caseId, matchedDocs]);
+  }, [activeSlug, caseId, matchedDocs]);
   const findingPolicyEvidence = Array.isArray(policyBasis?.required_evidence)
     ? policyBasis.required_evidence.filter(Boolean)
     : [];
@@ -2214,7 +2176,7 @@ export default function CaseDetail() {
     return legacy && escalationPlaybooks[legacy as RejectionReason] ? legacy as RejectionReason : null;
   }, [effectiveCase?.rejection_category, effectiveCase?.rejection_code]);
   const lifecycleSteps = useMemo(() => {
-    if (caseId === 'ACME-CASE-2005') {
+    if (isDemoWorkspaceSlug(activeSlug) && caseId === 'ACME-CASE-2005') {
       return [
         { label: 'Detected', active: true },
         { label: 'Evidence', active: true },
@@ -2248,7 +2210,7 @@ export default function CaseDetail() {
       { label: 'Approved', active: hasApproval },
       { label: 'Recovered', active: hasPayout }
     ];
-  }, [backendTruthCase, caseId, effectiveCase?.id, effectiveCase?.truth_unavailable, hasResolvedBackend, matchedDocs.length]);
+  }, [activeSlug, backendTruthCase, caseId, effectiveCase?.id, effectiveCase?.truth_unavailable, hasResolvedBackend, matchedDocs.length]);
 
   useEffect(() => {
     return () => {
@@ -2742,9 +2704,16 @@ export default function CaseDetail() {
                           </div>
                         </div>
                       ) : (
-                        <p className="mt-2 font-sans text-[14px] font-medium leading-6 tracking-tight text-[#26333D]">
-                          {findingNarrative || NOT_AVAILABLE}
-                        </p>
+                        <>
+                          {!sellerSummary?.summary ? (
+                            <p className="mt-2 font-sans text-[10px] font-medium uppercase tracking-tight text-[#6B7C88]">
+                              Generated context from current case fields
+                            </p>
+                          ) : null}
+                          <p className="mt-2 font-sans text-[14px] font-medium leading-6 tracking-tight text-[#26333D]">
+                            {findingNarrative || NOT_AVAILABLE}
+                          </p>
+                        </>
                       )}
                       {aiExplainEnabled && caseId ? (
                         <button
@@ -2771,9 +2740,13 @@ export default function CaseDetail() {
                 <ClaimRecordSection title="Recovery Ledger" eyebrow="Financial Controls">
                   <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
                     <ClaimRecordMetric label="Estimated claim value" value={formatCurrencyOrDash(claimRecordEstimatedClaimValue, effectiveCase?.currency || 'USD')} className="p-3" />
-                    <ClaimRecordMetric label="Approved amount" value={formatCurrencyOrDash(claimRecordApprovedAmount, effectiveCase?.currency || 'USD')} className="p-3" />
-                    <ClaimRecordMetric label="Recovered amount" value={formatCurrencyOrDash(claimRecordRecoveredAmount, effectiveCase?.currency || 'USD')} className="p-3" />
-                    <ClaimRecordMetric label="Legacy billed amount" value={formatCurrencyOrDash(claimRecordDisplayBilledAmount, effectiveCase?.currency || 'USD')} className="p-3" />
+                    <ClaimRecordMetric label="Approved amount" value={formatCurrencyOrDash(claimRecordApprovedAmount, effectiveCase?.currency || 'USD')} detail={claimRecordApprovedAmount === null ? 'Approval has not been independently verified.' : undefined} className="p-3" />
+                    <ClaimRecordMetric label="Recorded payout" value={formatCurrencyOrDash(claimRecordRecordedPayoutAmount, effectiveCase?.currency || 'USD')} detail={claimRecordRecordedPayoutAmount === null ? 'No recorded payout.' : 'Recorded operationally; not payment proof by itself.'} className="p-3" />
+                    <ClaimRecordMetric label="Verified paid" value={formatCurrencyOrDash(claimRecordVerifiedPaidAmount, effectiveCase?.currency || 'USD')} detail={claimRecordVerifiedPaidAmount === null ? 'No matching financial payment verified.' : 'Verified from matching financial-event evidence.'} className="p-3" />
+                    <ClaimRecordMetric label="Outstanding" value={formatCurrencyOrDash(outstandingAmount, effectiveCase?.currency || 'USD')} detail={outstandingAmount === null ? 'Unavailable until a payment target is established.' : undefined} className="p-3" />
+                    <ClaimRecordMetric label="Variance" value={formatCurrencyOrDash(varianceAmount, effectiveCase?.currency || 'USD')} detail={varianceAmount === null ? 'Unavailable until reconciliation.' : undefined} className="p-3" />
+                    <ClaimRecordMetric label="Payment status" value={financialPayoutStatus ? toStatusLabel(financialPayoutStatus) : NOT_AVAILABLE} detail={payoutProofStatus ? `Proof: ${formatPayoutProofStatus(payoutProofStatus)}` : 'Payment proof unavailable.'} className="p-3" />
+                    <ClaimRecordMetric label="Legacy billed amount" value={formatCurrencyOrDash(claimRecordLegacyBilledAmount, effectiveCase?.currency || 'USD')} className="p-3" />
                   </div>
                   <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,0.34fr)]">
                     <dl className="grid gap-2.5 sm:grid-cols-2">
@@ -2801,10 +2774,10 @@ export default function CaseDetail() {
                         <span className="text-[11px] font-medium tracking-tight text-[#111827]">{backendConfidencePct !== null ? `${backendConfidencePct}%` : NOT_AVAILABLE}</span>
                       </ClaimRecordField>
                       {typeof trustedRecoveredAmount === 'number' && (
-                        <ClaimRecordField label="Actual Payout">
+                        <ClaimRecordField label="Verified paid">
                           <span className="text-[11px] font-medium tracking-tight text-[#111827]">{formatCurrencyOrDash(trustedRecoveredAmount, effectiveCase?.currency || 'USD')}</span>
                           <span className="ml-2 inline-flex items-center gap-1.5 text-[9px] text-[#111827]/70">
-                            <CheckCircle className="h-3 w-3" /> {toStatusLabel(effectiveCase.recovery_status || 'reconciled')}
+                            <CheckCircle className="h-3 w-3" /> Financial-event verified
                           </span>
                         </ClaimRecordField>
                       )}
@@ -3010,6 +2983,9 @@ export default function CaseDetail() {
                       <span className="mx-2 text-[#B8C9D2]">/</span>
                       {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-[#9CA3AF]">-</span>}
                     </ClaimRecordField>
+                    <ClaimRecordField label="FNSKU">
+                      {effectiveCase.fnsku ? effectiveCase.fnsku : <span className="text-[#9CA3AF]">-</span>}
+                    </ClaimRecordField>
                     <ClaimRecordField label="Warehouse">
                       <span className="inline-flex items-center gap-2">
                         <MapPin className="h-3.5 w-3.5 text-[#6B7C88]" />
@@ -3065,7 +3041,7 @@ export default function CaseDetail() {
                   </div>
                 </ClaimRecordSection>
 
-                {effectiveCase.evidence && (effectiveCase.evidence.total_input || effectiveCase.evidence.total_output) && (
+                {effectiveCase.evidence && (inventoryTotalInput !== null || inventoryTotalOutput !== null) && (
                   <ClaimRecordSection title="Audit Calculation" eyebrow="Inventory math">
                     <div className="flex items-center justify-between gap-4 border-b border-[#D8E3E8] pb-4">
                       <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-tight flex items-center gap-2">
@@ -3083,19 +3059,19 @@ export default function CaseDetail() {
                         <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-2">Inventory In (Input)</div>
                         <div className="flex justify-between text-[11px]">
                           <span className="text-[#6B7C88]">Total Receipts</span>
-                          <span className="text-[#07111A] font-sans font-bold">+{effectiveCase.evidence.total_receipts || 0}</span>
+                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_receipts) === null ? NOT_AVAILABLE : `+${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_receipts))}`}</span>
                         </div>
                         <div className="flex justify-between text-[11px]">
                           <span className="text-[#6B7C88]">Customer Returns</span>
-                          <span className="text-[#07111A] font-sans font-bold">+{effectiveCase.evidence.total_returns || 0}</span>
+                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_returns) === null ? NOT_AVAILABLE : `+${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_returns))}`}</span>
                         </div>
                         <div className="flex justify-between text-[11px]">
                           <span className="text-[#6B7C88]">Adjustments (In)</span>
-                          <span className="text-[#07111A] font-sans font-bold">+{effectiveCase.evidence.total_adjustments || 0}</span>
+                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_adjustments) === null ? NOT_AVAILABLE : `+${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_adjustments))}`}</span>
                         </div>
                         <div className="pt-2 border-t border-[#E4EDF1] flex justify-between text-xs font-bold">
-                          <span className="text-[#6B7C88] uppercase tracking-tight">Total Verified In</span>
-                          <span className="text-emerald-300 font-sans font-bold">{effectiveCase.evidence.total_input || 0}</span>
+                          <span className="text-[#6B7C88] uppercase tracking-tight">Total calculated in</span>
+                          <span className="text-emerald-300 font-sans font-bold">{formatQuantityOrDash(inventoryTotalInput)}</span>
                         </div>
                       </div>
 
@@ -3103,19 +3079,19 @@ export default function CaseDetail() {
                         <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-2">Inventory Out (Output)</div>
                         <div className="flex justify-between text-[11px]">
                           <span className="text-[#6B7C88]">Customer Shipments</span>
-                          <span className="text-[#07111A] font-sans font-bold">-{effectiveCase.evidence.total_shipments || 0}</span>
+                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_shipments) === null ? NOT_AVAILABLE : `-${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_shipments))}`}</span>
                         </div>
                         <div className="flex justify-between text-[11px]">
                           <span className="text-[#6B7C88]">Removals & Disposals</span>
-                          <span className="text-[#07111A] font-sans font-bold">-{effectiveCase.evidence.total_removals || 0}</span>
+                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_removals) === null ? NOT_AVAILABLE : `-${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_removals))}`}</span>
                         </div>
                         <div className="flex justify-between text-[11px]">
                           <span className="text-[#6B7C88]">Adjustments (Out)</span>
-                          <span className="text-[#07111A] font-sans font-bold">-0</span>
+                          <span className="text-[#07111A] font-sans font-bold">{NOT_AVAILABLE}</span>
                         </div>
                         <div className="pt-2 border-t border-[#E4EDF1] flex justify-between text-xs font-bold">
-                          <span className="text-[#6B7C88] uppercase tracking-tight">Total Verified Out</span>
-                          <span className="text-blue-300 font-sans font-bold">{effectiveCase.evidence.total_output || 0}</span>
+                          <span className="text-[#6B7C88] uppercase tracking-tight">Total calculated out</span>
+                          <span className="text-blue-300 font-sans font-bold">{formatQuantityOrDash(inventoryTotalOutput)}</span>
                         </div>
                       </div>
                     </div>
@@ -3123,18 +3099,18 @@ export default function CaseDetail() {
                     <div className="mt-8 pt-6 border-t border-[#D8E3E8] flex flex-wrap gap-x-16 gap-y-6">
                       <div>
                         <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-1.5">Expected Stock</div>
-                        <div className="text-lg font-sans font-bold text-[#07111A]">{effectiveCase.evidence.calculated_stock || (effectiveCase.evidence.total_input - effectiveCase.evidence.total_output) || 0}</div>
+                        <div className="text-lg font-sans font-bold text-[#07111A]">{formatQuantityOrDash(inventoryCalculatedStock)}</div>
                       </div>
                       <div className="text-[#B8C9D2] text-xl font-bold pt-2">vs</div>
                       <div>
                         <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-1.5">Warehouse Balance</div>
-                        <div className="text-lg font-sans font-bold text-[#07111A]">{effectiveCase.evidence.ending_warehouse_balance || 0}</div>
+                        <div className="text-lg font-sans font-bold text-[#07111A]">{formatQuantityOrDash(inventoryWarehouseBalance)}</div>
                       </div>
                       <div className="h-10 w-[1px] bg-[#F8FAFB] hidden md:block" />
                       <div>
                         <div className="text-[9px] font-bold text-emerald-400 uppercase tracking-tight mb-1.5">Detected Gap</div>
                         <div className="text-lg font-sans font-bold text-emerald-300">
-                          {effectiveCase.evidence.discrepancy || (Math.max(0, (effectiveCase.evidence.calculated_stock || (effectiveCase.evidence.total_input - effectiveCase.evidence.total_output) || 0) - (effectiveCase.evidence.ending_warehouse_balance || 0)))} Units
+                          {inventoryDiscrepancy === null ? NOT_AVAILABLE : `${formatQuantityOrDash(inventoryDiscrepancy)} Units`}
                         </div>
                       </div>
                     </div>
