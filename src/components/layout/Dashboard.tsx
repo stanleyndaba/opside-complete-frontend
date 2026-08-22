@@ -3206,7 +3206,7 @@ export function Dashboard() {
           <div className="relative pt-8">
             <div className="relative mx-auto w-full max-w-full px-8 pb-8 text-[#111827]">
               {/* Recovery control header */}
-              <header className="mb-7 border-b border-[#DCE8EE] pb-5">
+              <header className="mb-7">
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                   <div className="min-w-0">
                     <p className="text-[12px] font-sans font-medium text-[#66737F]">
@@ -3217,68 +3217,76 @@ export function Dashboard() {
                     </h1>
                   </div>
 
-                  <div className="flex flex-col gap-3 sm:items-end">
-                    <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:flex-nowrap">
-                      <div className="flex items-center gap-1 rounded-[8px] border border-[#DCE8EE] bg-white p-1 shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
-                        <button
-                          onClick={() => handleTabChange('overview')}
-                          className={cn(
-                            "rounded-[6px] px-3 py-1.5 text-[12px] font-sans transition-colors duration-200",
-                            activeTab === 'overview'
-                              ? "bg-[#EEF5FB] font-medium text-[#182026]"
-                              : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
-                          )}
-                        >
-                          Position
-                        </button>
-                        <button
-                          onClick={() => handleTabChange('discrepancies')}
-                          className={cn(
-                            "rounded-[6px] px-3 py-1.5 text-[12px] font-sans transition-colors duration-200",
-                            activeTab === 'discrepancies'
-                              ? "bg-[#EEF5FB] font-medium text-[#182026]"
-                              : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
-                          )}
-                        >
-                          Work in progress
-                        </button>
-                        <button
-                          onClick={() => handleTabChange('evidence')}
-                          className={cn(
-                            "rounded-[6px] px-3 py-1.5 text-[12px] font-sans transition-colors duration-200",
-                            activeTab === 'evidence'
-                              ? "bg-[#EEF5FB] font-medium text-[#182026]"
-                              : "text-[#66737F] hover:bg-[#FAFAF7] hover:text-[#182026]"
-                          )}
-                        >
-                          Proof record
-                        </button>
-                      </div>
-
-                      <div className="flex shrink-0 items-center gap-2.5 px-1 py-1">
-                        <Switch
-                          checked={dashboardAutoFileEnabled}
-                          onCheckedChange={(checked) => {
-                            void handleDashboardAutoFileChange(checked);
-                          }}
-                          disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
-                          aria-label="Filing authority seller-controlled switch"
-                          className="h-5 w-9 border border-[#B8C4CE] data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#8A99A5]"
-                        />
-                        <div className="min-w-0">
-                          <p className="text-[13px] font-sans font-medium text-[#182026]">
-                            {filingAuthority.label}
-                          </p>
-                          <p className="mt-0.5 max-w-[300px] text-[10px] font-sans leading-4 text-[#66737F]">
-                            {filingAuthority.detail}
-                          </p>
-                        </div>
-                      </div>
+                  <div className="flex shrink-0 items-center gap-2.5 self-start px-1 py-1 xl:self-auto">
+                    <Switch
+                      checked={dashboardAutoFileEnabled}
+                      onCheckedChange={(checked) => {
+                        void handleDashboardAutoFileChange(checked);
+                      }}
+                      disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
+                      aria-label="Filing authority seller-controlled switch"
+                      className="h-5 w-9 border border-[#B8C4CE] data-[state=checked]:bg-[#0B74DE] data-[state=unchecked]:bg-[#8A99A5]"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-sans font-medium text-[#182026]">
+                        {filingAuthority.label}
+                      </p>
+                      <p className="mt-0.5 max-w-[300px] text-[10px] font-sans leading-4 text-[#66737F]">
+                        {filingAuthority.detail}
+                      </p>
                     </div>
-                    <p className="text-[10px] font-sans text-[#8A99A5]">
-                      {discrepancyHeaderLastUpdatedLabel}
-                    </p>
                   </div>
+                </div>
+
+                <div className="mt-5 flex flex-col border-b border-[#DCE8EE] sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+                  <div
+                    role="tablist"
+                    aria-label="Recovery position views"
+                    className="-mb-px flex min-w-0 overflow-x-auto"
+                  >
+                    <button
+                      role="tab"
+                      aria-selected={activeTab === 'overview'}
+                      onClick={() => handleTabChange('overview')}
+                      className={cn(
+                        "shrink-0 border-b-2 px-0 py-3 pr-6 text-[12px] font-sans transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/30 focus-visible:ring-inset",
+                        activeTab === 'overview'
+                          ? "border-[#0B74DE] font-medium text-[#182026]"
+                          : "border-transparent text-[#66737F] hover:border-[#C7D7DF] hover:text-[#182026]"
+                      )}
+                    >
+                      Position
+                    </button>
+                    <button
+                      role="tab"
+                      aria-selected={activeTab === 'discrepancies'}
+                      onClick={() => handleTabChange('discrepancies')}
+                      className={cn(
+                        "shrink-0 border-b-2 px-0 py-3 pr-6 text-[12px] font-sans transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/30 focus-visible:ring-inset",
+                        activeTab === 'discrepancies'
+                          ? "border-[#0B74DE] font-medium text-[#182026]"
+                          : "border-transparent text-[#66737F] hover:border-[#C7D7DF] hover:text-[#182026]"
+                      )}
+                    >
+                      Work in progress
+                    </button>
+                    <button
+                      role="tab"
+                      aria-selected={activeTab === 'evidence'}
+                      onClick={() => handleTabChange('evidence')}
+                      className={cn(
+                        "shrink-0 border-b-2 px-0 py-3 text-[12px] font-sans transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/30 focus-visible:ring-inset",
+                        activeTab === 'evidence'
+                          ? "border-[#0B74DE] font-medium text-[#182026]"
+                          : "border-transparent text-[#66737F] hover:border-[#C7D7DF] hover:text-[#182026]"
+                      )}
+                    >
+                      Proof record
+                    </button>
+                  </div>
+                  <p className="pb-3 text-[10px] font-sans text-[#8A99A5] sm:text-right">
+                    {discrepancyHeaderLastUpdatedLabel}
+                  </p>
                 </div>
               </header>
 
