@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { RecoveryTruthRecord } from '@/components/cases/RecoveryTruthRecord';
+import { RecoveryProgressControl } from '@/components/cases/RecoveryProgressControl';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AiExplanationDialog } from '@/components/ai/AiExplanationDialog';
@@ -2283,22 +2284,13 @@ export default function CaseDetail() {
     return legacy && escalationPlaybooks[legacy as RejectionReason] ? legacy as RejectionReason : null;
   }, [effectiveCase?.rejection_category, effectiveCase?.rejection_code]);
   const lifecycleSteps = useMemo(() => {
-    if (isDemoWorkspaceSlug(activeSlug) && caseId === 'ACME-CASE-2005') {
-      return [
-        { label: 'Detected', active: true },
-        { label: 'Evidence', active: true },
-        { label: 'Filed', active: true },
-        { label: 'Approved', active: true },
-        { label: 'Recovered', active: false }
-      ];
-    }
     if (!hasResolvedBackend || effectiveCase?.truth_unavailable || !backendTruthCase) {
       return [
         { label: 'Detected', active: Boolean(caseId) },
         { label: 'Evidence', active: false },
         { label: 'Filed', active: false },
         { label: 'Approved', active: false },
-        { label: 'Recovered', active: false }
+        { label: 'Payment verified', active: false }
       ];
     }
     const billingStatus = String(effectiveCase?.billing_status || '').toLowerCase();
@@ -2315,7 +2307,7 @@ export default function CaseDetail() {
       { label: 'Evidence', active: hasEvidence },
       { label: 'Filed', active: hasSubmission },
       { label: 'Approved', active: hasApproval },
-      { label: 'Recovered', active: hasPayout }
+      { label: 'Payment verified', active: hasPayout }
     ];
   }, [activeSlug, backendTruthCase, caseId, effectiveCase?.id, effectiveCase?.truth_unavailable, hasResolvedBackend, matchedDocs.length]);
 
@@ -2688,181 +2680,71 @@ export default function CaseDetail() {
             )}
 
             {/* Tab 1 must begin with the authoritative Recovery Truth Record. The legacy context banner remains available only for the untouched Recovery Progress tab. */}
-            {activeTab === 'PROTOCOL' && (POLICY_MAP[effectiveCase.anomaly_type] || effectiveCase.safety_audit || matchedCount > 0 || nextStep) && (
-              <div className="flex flex-wrap items-center gap-6 py-2 mb-4">
-                {POLICY_MAP[effectiveCase.anomaly_type] && (
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">
-                        Generated Policy Reference
-                      </span>
-                      <a
-                        href={POLICY_MAP[effectiveCase.anomaly_type].link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 border border-[#D8E3E8] bg-white px-2 py-0.5 text-[10px] font-semibold tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F8FAFB]"
-                      >
-                        <Scale className="h-3 w-3" />
-                        {POLICY_MAP[effectiveCase.anomaly_type].code}
-                        {POLICY_MAP[effectiveCase.anomaly_type].clause && (
-                          <span className="ml-1 opacity-60 font-medium">({POLICY_MAP[effectiveCase.anomaly_type].clause})</span>
-                        )}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {effectiveCase.safety_audit && (
-                  <>
-                    <div className="h-4 w-[1px] bg-[#D8E3E8]" />
-                    <div className="group flex cursor-help items-center gap-2 border border-emerald-200 bg-emerald-50 px-2.5 py-1 transition-all hover:bg-emerald-100" title={`Safety Score: ${effectiveCase.safety_audit.score}%\nRisk of Warning: ${effectiveCase.safety_audit.risk_of_warning}\nVerified by: ${effectiveCase.safety_audit.verified_by}`}>
-                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-700" />
-                      <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-tight text-emerald-800">
-                        Submission Safety Audit Passed
-                      </span>
-                    </div>
-                  </>
-                )}
-
-                {!effectiveCase.safety_audit && (
-                  <>
-                    <div className="h-4 w-[1px] bg-[#D8E3E8]" />
-                    <div className="flex items-center gap-2 border border-[#D8E3E8] bg-white px-2.5 py-1">
-                      <Info className="h-3.5 w-3.5 text-[#6B7C88]" />
-                      <span className="text-[10px] font-semibold uppercase tracking-tight text-[#4D5B66]">
-                        {generatedContext?.trustLabel || 'Generated risk guidance'}
-                      </span>
-                    </div>
-                  </>
-                )}
-
-                <div className="h-4 w-[1px] bg-[#D8E3E8]" />
-                <div className="flex items-center gap-2 border border-[#D8E3E8] bg-white px-2.5 py-1">
-                  <FileText className="h-3.5 w-3.5 text-[#6B7C88]" />
-                  <span className="text-[10px] font-semibold uppercase tracking-tight text-[#4D5B66]">
-                    {matchedCount === null ? NOT_AVAILABLE : `${matchedCount} matched docs`}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Navigation Tabs */}
-            <div className="mb-5 flex gap-1 border-b border-[#DCE8EE]" role="tablist" aria-label="Case detail views">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'RECORD'}
-                onClick={() => setActiveTab('RECORD')}
-                className={cn(
-                  "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
-                  activeTab === 'RECORD' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
-                )}>
-                What we found
-                <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'RECORD' ? "scale-x-100" : "scale-x-0")} />
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'PROTOCOL'}
-                onClick={() => setActiveTab('PROTOCOL')}
-                className={cn(
-                  "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
-                  activeTab === 'PROTOCOL' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
-                )}>
-                Recovery progress
-                <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'PROTOCOL' ? "scale-x-100" : "scale-x-0")} />
-              </button>
-            </div>
-
-            {activeTab === 'RECORD' && (
-              <RecoveryTruthRecord
-                caseData={effectiveCase}
-                tenantSlug={activeSlug}
-                truthPresentation={recoveryTruthPresentation}
-                requestedLanguage={requestedRecoveryLanguage}
-                accountingBoundary={accountingClaimBoundary}
-                currency={effectiveCase?.currency || 'USD'}
-                requestedAmount={claimRecordRequestedAmount}
-                estimatedClaimValue={claimRecordEstimatedClaimValue}
-                approvedAmount={claimRecordApprovedAmount}
-                recordedPayoutAmount={claimRecordRecordedPayoutAmount}
-                verifiedPaidAmount={claimRecordVerifiedPaidAmount}
-                outstandingAmount={outstandingAmount}
-                varianceAmount={varianceAmount}
-                trustedApproval={hasTrustedApprovalTruth(backendTruthCase)}
-                trustedPayout={hasTrustedPayoutTruth(backendTruthCase)}
-                hasResolvedBackend={hasResolvedBackend}
-                hasSafetyBlock={hasSafetyBlock}
-                hasUnassessedSafety={hasUnassessedSafety}
-                proofStatus={proofStatus}
-                payoutProofStatus={payoutProofStatus}
-                filingStatus={formatSellerCaseFilingStatus(effectiveCase, proofStatus)}
-                filingTruthLine={getCaseFilingTruthLine(effectiveCase, proofStatus)}
-                nextStep={nextStep}
-                sellerSummary={sellerSummary}
-                policyBasis={policyBasis}
-                matchedDocuments={displayedMatchedDocs}
-                inventory={{
-                  totalInput: inventoryTotalInput,
-                  totalOutput: inventoryTotalOutput,
-                  calculatedStock: inventoryCalculatedStock,
-                  warehouseBalance: inventoryWarehouseBalance,
-                  discrepancy: inventoryDiscrepancy,
-                }}
-                findingNarrative={findingNarrative || NOT_AVAILABLE}
-                generatedNarrative={!sellerSummary?.summary}
-                financialTruthLimitation={financialTruthLimitation}
-                accountingTruth={accountingTruth}
-                closureTruth={closureTruth}
-                onOpenDocument={(documentId) => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(documentId)}`, '_blank')}
-              />
-            )}
-
             {activeTab === 'PROTOCOL' && (
-              <div className="flex flex-col gap-0 overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] divide-y divide-[#E7EEF2]">
-                {/* Row 1: Case Progress */}
-                <div className="bg-white px-4 py-5 sm:px-5">
-                  <div className="mb-5">
-                    <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Case progress</h3>
+              <div className="space-y-4">
+                <RecoveryProgressControl
+                  truthPresentation={recoveryTruthPresentation}
+                  lifecycleSteps={lifecycleSteps}
+                  nextStep={nextStep}
+                  missingRequirements={missingRequirements}
+                  proofStatus={proofStatus}
+                  financialPayoutStatus={financialPayoutStatus}
+                  financialReversalState={financialReversalState}
+                  accountingStatus={accountingTruth?.status}
+                  accountingLimitation={accountingTruth?.limitation}
+                  closureState={closureTruth?.state}
+                  closureReason={closureTruth?.reason}
+                  hasTrustedFiling={hasTrustedFilingTruth(backendTruthCase)}
+                  hasTrustedApproval={hasTrustedApprovalTruth(backendTruthCase)}
+                  hasTrustedPayout={hasTrustedPayoutTruth(backendTruthCase)}
+                  hasSafetyBlock={hasSafetyBlock}
+                  hasUnassessedSafety={hasUnassessedSafety}
+                  truthUnavailable={effectiveCase?.truth_unavailable === true}
+                  statusFeedUnavailable={statusFeedUnavailable}
+                />
+
+                {requestedAmount !== null ? (
+                  <section className="rounded-[10px] border border-[#DCE8EE] bg-white px-4 py-3 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:px-5">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Original requested recovery</p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">This is the amount originally requested. It is not, by itself, a verified payment or final financial outcome.</p>
+                      </div>
+                      <p className="shrink-0 text-[16px] font-semibold tracking-tight text-[#182026]">{formatCurrencyOrDash(requestedAmount, effectiveCase?.currency || 'USD')}</p>
+                    </div>
+                  </section>
+                ) : null}
+
+                {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && rejectionPlaybookReason ? (
+                  <section className="rounded-[10px] border border-red-200 bg-red-50 p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+                    <p className="text-[11px] font-semibold uppercase tracking-tight text-red-700">Amazon outcome requires attention</p>
+                    <h3 className="mt-1 font-lora text-[18px] font-normal tracking-tight text-red-950">{effectiveCase.rejection_reason || 'Amazon did not support the current recovery request.'}</h3>
+                    <p className="mt-2 max-w-3xl text-[12px] leading-5 text-red-900">Margin will only continue with a filing action where the existing case truth supports a safe canonical path.</p>
+                    <div className="mt-3">
+                      {canOpenCanonicalFiling ? (
+                        <Button type="button" variant="outline" className="border-red-300 bg-white text-red-900 hover:bg-red-100" onClick={() => openCanonicalFilingScreen('resubmit')}>Review filing action</Button>
+                      ) : (
+                        <p className="text-[11px] leading-5 text-red-800">No filing action is available from this record yet. The current proof and eligibility state must support it first.</p>
+                      )}
+                    </div>
+                  </section>
+                ) : null}
+
+                <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+                  <div className="mb-4 border-b border-[#E7EEF2] pb-3">
+                    <p className="text-[11px] font-medium tracking-tight text-[#66737F]">What happened</p>
+                    <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">Operational history</h3>
+                    <p className="mt-1 text-[11px] leading-5 text-[#66737F]">These are recorded operational events. They support the history of this recovery but do not, by themselves, establish financial closure.</p>
                   </div>
+                  <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} liveUpdatesUnavailable={statusFeedUnavailable} />
+                </section>
 
-                  <div className="space-y-6">
-                    {/* Horizontal Progress bar */}
-                    <div className="relative pt-2 pb-2 px-4">
-                      <div className="absolute top-[18px] left-0 right-0 h-px bg-[#D8E3E8]" />
-                      <div className="flex justify-between relative z-10">
-                        {lifecycleSteps.map((step, idx) => {
-                          return (
-                            <div key={step.label} className="flex flex-col items-center gap-2">
-                              <div className={cn(
-                                "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-medium tabular-nums transition-colors",
-                                step.active ? "border-[#66737F] bg-[#F1F3F4] text-[#182026]" : "border-[#DCE8EE] bg-white text-[#8A97A2]"
-                              )}>
-                                {idx + 1}
-                              </div>
-                              <span className={cn(
-                                "text-center text-[11px] font-medium tracking-tight",
-                                step.active ? "text-[#182026]" : "text-[#66737F]"
-                              )}>{step.label}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-4">
-                      <div className="mb-2 text-[12px] font-medium tracking-tight text-[#66737F]">Next system step</div>
-                      <div className="text-[15px] font-semibold tracking-tight text-[#182026]">{nextStep?.title || 'Unknown next step'}</div>
-                      <div className="mt-1 text-[11px] leading-relaxed text-[#6B7C88]">
-                        {sellerSafeOperationalText(nextStep?.description, 'The backend did not return next-step context for this case.')}
-                      </div>
-                    </div>
-
-                    {/* Timeline View */}
-                    <div className="rounded-md border border-[#DCE8EE] bg-white p-4 sm:p-5">
-                      <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} liveUpdatesUnavailable={statusFeedUnavailable} />
-                    </div>
-
+                <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+                  <div className="mb-4 border-b border-[#E7EEF2] pb-3">
+                    <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Amazon record</p>
+                    <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">What Amazon said and what Margin sent</h3>
+                    <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Inspect Amazon’s case state, messages, attachments, and any eligible evidence-backed reply from this recovery record.</p>
+                  </div>
                     <div className="space-y-4">
                       {isAmazonThreadBackfillCase ? (
                         <div className="border border-blue-200 bg-blue-50 px-4 py-4 text-sm text-blue-900">
@@ -3041,16 +2923,14 @@ export default function CaseDetail() {
                         </div>
                       ) : null}
                     </div>
+                </section>
 
+                <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-4 shadow-[0_1px_2px_rgba(24,32,38,0.03)] sm:p-5">
+                  <div className="mb-4 border-b border-[#E7EEF2] pb-3">
+                    <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Supporting evidence</p>
+                    <h3 className="mt-0.5 font-lora text-[18px] font-normal tracking-tight text-[#182026]">Documents and evidence history</h3>
+                    <p className="mt-1 text-[11px] leading-5 text-[#66737F]">Each item is supporting context for the case record. A document or event is not automatically proof of filing, payment, or closure.</p>
                   </div>
-                </div>
-
-                {/* Row 2: Evidence & Verification */}
-                <div className="bg-white p-4 sm:p-5">
-                  <div className="mb-6">
-                    <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Evidence and verification</h3>
-                  </div>
-
                   <div className="space-y-8">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 text-xs font-semibold text-[#6B7C88]">
@@ -3204,248 +3084,8 @@ export default function CaseDetail() {
                         </table>
                       </div>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                      <div className="space-y-4">
-                        <div className="text-[10px] text-[#6B7C88] font-bold mb-4 flex items-center gap-2 tracking-tight uppercase">
-                          Seller Identity
-                          <div className="h-px flex-1 bg-[#F8FAFB]" />
-                        </div>
-
-                        <div className="flex items-center gap-3 mb-6 bg-[#F8FAFB] p-3 border border-[#D8E3E8] rounded-[2px]">
-                          <div className="p-2 bg-[#F8FAFB] border border-[#D8E3E8] rounded-[2px]">
-                            <ShieldCheck className="h-4 w-4 text-[#4D5B66]" />
-                          </div>
-                          <div>
-                            <h4 className="text-[11px] font-bold text-[#07111A] tracking-tight">Seller Identity</h4>
-                            <p className="text-[10px] text-[#6B7C88] font-sans font-bold uppercase tracking-tight">{entityTypeLabel}</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="border-b border-[#E4EDF1] pb-2">
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">Seller ID</dt>
-                            <dd className="text-xs font-sans font-bold text-[#07111A]">{effectiveCase.seller_id || effectiveCase.user_id || NOT_AVAILABLE}</dd>
-                          </div>
-                          <div className="border-b border-[#E4EDF1] pb-2">
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">Store Name</dt>
-                            <dd className="text-xs font-bold text-[#07111A] truncate" title={resolvedStoreName || NOT_AVAILABLE}>
-                              {resolvedStoreName || NOT_AVAILABLE}
-                            </dd>
-                          </div>
-                          <div className="border-b border-[#E4EDF1] pb-2">
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">User ID</dt>
-                            <dd className="text-xs font-sans font-bold text-[#07111A]">{effectiveCase.user_id || effectiveCase.seller_id || NOT_AVAILABLE}</dd>
-                          </div>
-                          <div className="border-b border-[#E4EDF1] pb-2">
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">Permission Status</dt>
-                            <dd className="text-xs font-bold text-[#07111A] uppercase tracking-tight">{NOT_AVAILABLE}</dd>
-                          </div>
-                          <div>
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">Contact Method</dt>
-                            <dd className="text-xs font-bold text-[#07111A] uppercase tracking-tight">{NOT_AVAILABLE}</dd>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="text-[10px] text-[#6B7C88] font-bold mb-4 flex items-center gap-2 tracking-tight uppercase">
-                          Reference Data
-                          <div className="h-px flex-1 bg-[#F8FAFB]" />
-                        </div>
-                        <div className="space-y-3">
-                          <div className="border-b border-[#E4EDF1] pb-2">
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">Amazon Case ID</dt>
-                            <dd className="text-xs font-sans font-bold text-[#07111A]">
-                              {effectiveCase.amazonCaseId || <span className="text-[#6B7C88] font-normal">{NOT_AVAILABLE}</span>}
-                            </dd>
-                          </div>
-                          <div className="border-b border-[#E4EDF1] pb-2">
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">Prior Case</dt>
-                            <dd className="text-xs font-bold text-[#07111A] font-sans font-bold uppercase tracking-tight">{effectiveCase.prior_case_id || NOT_AVAILABLE}</dd>
-                          </div>
-                          <div>
-                            <dt className="text-[11px] text-[#6B7C88] font-medium mb-1">Claim Reference</dt>
-                            <dd className="text-xs font-sans font-bold text-[#07111A] uppercase tracking-tight">
-                              {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12)}
-                            </dd>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="text-[10px] text-[#6B7C88] font-bold mb-4 flex items-center gap-2 tracking-tight uppercase">
-                          Generated System Guidance
-                          <div className="h-px flex-1 bg-[#F8FAFB]" />
-                        </div>
-                        <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-[2px]">
-                          <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 tracking-tight uppercase mb-2">
-                            {generatedContext?.strategyLabel || NOT_AVAILABLE}
-                          </div>
-                          <p className="text-[11px] text-[#4D5B66] leading-relaxed font-bold">
-                            {effectiveCase.autonomous_logic_summary || nextStep?.description || NOT_AVAILABLE}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                </div>
-
-                {/* Row 3: Autonomous Strategy & Recovery Path */}
-                <div className="bg-white p-4 sm:p-5">
-                  <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Autonomous strategy and recovery path</h3>
-                      <p className="text-[10px] text-[#6B7C88] font-sans font-bold uppercase tracking-tight">Patient Zero → Settlement Ledger v4.2</p>
-                    </div>
-
-                    {/* Active Council Icons */}
-                    <div className="flex items-center gap-2 bg-[#F8FAFB] p-2 rounded-[2px] border border-[#E4EDF1]">
-                      <div className="px-2 border-r border-[#D8E3E8] mr-1">
-                        <span className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight">Active Council</span>
-                      </div>
-                      {(caseData?.playbook?.council || []).map((agent: any) => (
-                        <div key={agent.id} className="flex items-center gap-1.5 px-2 py-1 rounded-[2px] bg-[#F8FAFB] border border-[#E4EDF1] group hover:border-emerald-500/30 transition-all cursor-crosshair">
-                          <div className={cn(
-                            "w-1 h-1 rounded-[2px] animate-pulse",
-                            agent.status === 'SETTLED' ? "bg-emerald-500" : "bg-blue-500"
-                          )} />
-                          <span className="text-[10px] font-bold text-[#4D5B66] font-sans font-bold">{agent.agent}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-12">
-                    {/* Rejection Master / Escalation Playbook */}
-                    {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && rejectionPlaybookReason && escalationPlaybooks[rejectionPlaybookReason] && (
-                      <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-[2px] relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                          <ShieldAlert className="h-24 w-24 text-red-500" />
-                        </div>
-                        <div className="relative z-10">
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-red-500/20 rounded-[2px]">
-                              <Zap className="h-4 w-4 text-red-500" />
-                            </div>
-                            <div>
-                              <h4 className="text-sm font-bold text-[#07111A] tracking-tight">Escalation Playbook: {escalationPlaybooks[rejectionPlaybookReason].label}</h4>
-                              <p className="text-[10px] text-red-400 font-sans font-bold uppercase tracking-tight mt-0.5">Generated guidance from stored rejection memory</p>
-                            </div>
-                          </div>
-                          <p className="text-xs text-[#4D5B66] mb-6 leading-relaxed max-w-lg font-bold tracking-tight">
-                            {effectiveCase.rejection_reason || escalationPlaybooks[rejectionPlaybookReason].description}
-                          </p>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-4">
-                              <h5 className="text-[10px] font-bold text-[#6B7C88] uppercase tracking-tight">Required Maneuver</h5>
-                              <ul className="space-y-2.5">
-                                {escalationPlaybooks[rejectionPlaybookReason].actions.map((action, aIdx) => (
-                                  <li key={aIdx} className="flex items-start gap-3">
-                                    <div className="w-4 h-4 rounded-[2px] bg-red-500/20 flex items-center justify-center text-[9px] font-bold text-red-500 shrink-0 mt-0.5">{aIdx + 1}</div>
-                                    <span className="text-[11px] text-[#26333D] font-medium">{action}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                            <div className="flex flex-col justify-end gap-3">
-                              {canOpenCanonicalFiling ? (
-                                <button
-                                  className="w-full bg-red-500 hover:bg-red-600 text-[#07111A] font-bold text-xs h-9 transition-all rounded-[2px] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-red-500"
-                                  onClick={() => openCanonicalFilingScreen('resubmit')}
-                                >
-                                  {escalationPlaybooks[rejectionPlaybookReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
-                                </button>
-                              ) : (
-                                <div className="w-full rounded-[2px] border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-2 text-center text-[10px] font-bold uppercase tracking-tight text-[#6B7C88]">
-                                  Not available while filing is blocked
-                                </div>
-                              )}
-                              <p className="text-[9px] text-[#6B7C88] text-center">
-                                {canOpenCanonicalFiling ? `Escalation managed by ${AGENT_NAMES['refund_filing']}` : NOT_AVAILABLE}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* TWO-COLUMN STRATEGY GRID */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                      {/* Left: Tactical Playbook */}
-                      <div className="space-y-8">
-                        <div className="flex items-center gap-3 border-b border-[#E4EDF1] pb-4">
-                          <div className="p-2 bg-emerald-500/10 rounded-[2px]">
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-bold text-[#07111A] tracking-tight uppercase">Tactical Playbook</h4>
-                            <p className="text-[9px] text-[#6B7C88] font-sans font-bold">{generatedContext?.strategyLabel || 'Generated strategy from backend state'}</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-6">
-                          {(caseData?.playbook?.steps || []).map((action: string, idx: number) => (
-                            <div key={idx} className="flex items-start gap-4 group">
-                              <div className="w-5 h-5 rounded bg-[#F8FAFB] border border-[#D8E3E8] flex items-center justify-center text-[10px] font-sans font-bold text-[#6B7C88] group-hover:border-emerald-500/30 group-hover:text-emerald-500 transition-all shrink-0 mt-0.5 italic">
-                                0{idx + 1}
-                              </div>
-                              <span className="text-xs text-[#4D5B66] leading-relaxed font-bold tracking-tight">{action}</span>
-                            </div>
-                          ))}
-                          {(!caseData?.playbook?.steps || caseData.playbook.steps.length === 0) && (
-                            <div className="py-4 text-[11px] text-[#9CA3AF] font-sans font-bold">-</div>
-                          )}
-                        </div>
-
-                        <div className="pt-6 border-t border-[#E4EDF1]">
-                          <div className="flex items-center justify-between p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-[2px]">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xs font-bold text-[#4D5B66]">Requested Claim Amount</span>
-                            </div>
-                            <span className="text-sm font-sans font-bold text-emerald-500">
-                              {formatCurrencyOrDash(requestedAmount, effectiveCase?.currency || 'USD')}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right: Protection Protocols */}
-                      <div className="space-y-8">
-                        <div className="flex items-center gap-3 border-b border-[#E4EDF1] pb-4">
-                          <div className="p-2 bg-blue-500/10 rounded-[2px]">
-                            <ShieldCheck className="h-4 w-4 text-blue-400" />
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-bold text-[#07111A] tracking-tight uppercase">Continuous Protection</h4>
-                            <p className="text-[9px] text-[#6B7C88] font-sans font-bold">{generatedContext?.trustLabel || 'Generated risk guidance from backend signals'}</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-6">
-                          {(caseData?.protection_protocol || []).map((measure: string, idx: number) => (
-                            <div key={idx} className="flex items-start gap-4 group">
-                              <div className="w-1.5 h-1.5 rounded-[2px] bg-blue-500/30 mt-1.5 ring-4 ring-blue-500/5" />
-                              <span className="text-xs text-[#4D5B66] leading-relaxed font-bold tracking-tight">{measure}</span>
-                            </div>
-                          ))}
-                          {(!caseData?.protection_protocol || caseData.protection_protocol.length === 0) && (
-                            <div className="py-4 text-[11px] text-[#9CA3AF] font-sans font-bold">-</div>
-                          )}
-                        </div>
-
-                        <div className="pt-6 border-t border-[#E4EDF1]">
-                          <div className="flex items-center gap-3 p-4 bg-blue-500/[0.03] border border-blue-500/10 rounded-[2px]">
-                            <CheckCircle className="h-4 w-4 text-blue-400" />
-                            <div className="flex flex-col">
-                              <span className="text-xs font-bold text-[#4D5B66] uppercase tracking-tight">Current Next Step</span>
-                              <span className="text-[9px] text-[#6B7C88] font-sans font-bold uppercase">{nextStep?.title || 'Generated context unavailable'}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                </section>
               </div>
             )}
           </div>
