@@ -1970,33 +1970,6 @@ export default function CaseDetail() {
   const claimReadiness = String(findingTruth?.claim_readiness || effectiveCase?.claim_readiness || '').trim();
   const valueLabel = String(findingTruth?.value_label || effectiveCase?.value_label || '').trim();
   const whyNotClaimReady = findingTruth?.why_not_claim_ready || effectiveCase?.why_not_claim_ready || null;
-  const recoveryTruthPresentation = buildRecoveryTruthPresentation({
-    truthUnavailable: effectiveCase?.truth_unavailable === true,
-    hasTrustedFiling: hasTrustedFilingTruth(backendTruthCase),
-    hasTrustedApproval: hasTrustedApprovalTruth(backendTruthCase),
-    hasTrustedPayout: hasTrustedPayoutTruth(backendTruthCase),
-    filingStatus: backendTruthCase?.filing_status,
-    filingTruthLine: getCaseFilingTruthLine(effectiveCase, proofStatus),
-    claimReadiness,
-    financialPayoutStatus,
-    financialReversalState,
-    financialTruthLimitation,
-    verifiedPaidAmount,
-    outstandingAmount,
-    varianceAmount,
-    accountingStatus: accountingTruth?.status,
-    accountingLimitation: accountingTruth?.limitation,
-    closureState: closureTruth?.state,
-    closureReason: closureTruth?.reason,
-    hasSafetyBlock,
-    hasUnassessedSafety,
-    statusFeedUnavailable,
-  });
-  const requestedRecoveryLanguage = getRequestedRecoveryLanguage(claimRecordRequestedAmount);
-  const accountingClaimBoundary = getAccountingClaimBoundary({
-    status: accountingTruth?.status,
-    limitation: accountingTruth?.limitation,
-  });
   const isReviewOnlyFinding = ['review_only', 'monitoring'].includes(reviewTier) || claimReadiness === 'not_claim_ready';
   const findingReadinessLabel = !hasFindingTruth
     ? null
@@ -2082,6 +2055,33 @@ export default function CaseDetail() {
   const payoutProofStatus = typeof backendTruthCase?.payout_proof_status === 'string' && backendTruthCase.payout_proof_status.trim()
     ? backendTruthCase.payout_proof_status
     : null;
+  const recoveryTruthPresentation = buildRecoveryTruthPresentation({
+    truthUnavailable: effectiveCase?.truth_unavailable === true,
+    hasTrustedFiling: hasTrustedFilingTruth(backendTruthCase),
+    hasTrustedApproval: hasTrustedApprovalTruth(backendTruthCase),
+    hasTrustedPayout: hasTrustedPayoutTruth(backendTruthCase),
+    filingStatus: backendTruthCase?.filing_status,
+    filingTruthLine: getCaseFilingTruthLine(effectiveCase, proofStatus),
+    claimReadiness,
+    financialPayoutStatus,
+    financialReversalState,
+    financialTruthLimitation,
+    verifiedPaidAmount,
+    outstandingAmount,
+    varianceAmount,
+    accountingStatus: accountingTruth?.status,
+    accountingLimitation: accountingTruth?.limitation,
+    closureState: closureTruth?.state,
+    closureReason: closureTruth?.reason,
+    hasSafetyBlock,
+    hasUnassessedSafety,
+    statusFeedUnavailable,
+  });
+  const requestedRecoveryLanguage = getRequestedRecoveryLanguage(claimRecordRequestedAmount);
+  const accountingClaimBoundary = getAccountingClaimBoundary({
+    status: accountingTruth?.status,
+    limitation: accountingTruth?.limitation,
+  });
   const quarantineReason = typeof backendTruthCase?.quarantine_reason === 'string' && backendTruthCase.quarantine_reason.trim()
     ? sellerSafeOperationalText(backendTruthCase.quarantine_reason)
     : null;

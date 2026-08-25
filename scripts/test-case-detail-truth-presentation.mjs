@@ -3,8 +3,10 @@ import { transformSync } from 'esbuild';
 
 const sourcePath = new URL('../src/lib/caseDetailTruthPresentation.ts', import.meta.url);
 const componentPath = new URL('../src/components/cases/RecoveryTruthRecord.tsx', import.meta.url);
+const caseDetailPath = new URL('../src/pages/CaseDetail.tsx', import.meta.url);
 const source = readFileSync(sourcePath, 'utf8');
 const componentSource = readFileSync(componentPath, 'utf8');
+const caseDetailSource = readFileSync(caseDetailPath, 'utf8');
 const transformed = transformSync(source, { loader: 'ts', format: 'esm', target: 'es2022' }).code;
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(transformed).toString('base64')}`;
 const {
@@ -20,6 +22,10 @@ const assert = (condition, message) => {
 };
 
 const verdict = (input) => buildRecoveryTruthPresentation(input);
+
+const proofStatusDeclarationIndex = caseDetailSource.indexOf('const proofStatus =');
+const truthPresentationIndex = caseDetailSource.indexOf('const recoveryTruthPresentation =');
+assert(proofStatusDeclarationIndex !== -1 && truthPresentationIndex !== -1 && proofStatusDeclarationIndex < truthPresentationIndex, 'proofStatus must initialize before Recovery Truth presentation reads it.');
 
 // 1. Detection only
 assert(verdict({ claimReadiness: 'not_claim_ready' }).label === 'Evidence review in progress', 'Detection-only state must not imply recovery eligibility.');
