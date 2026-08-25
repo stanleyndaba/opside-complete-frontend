@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowRight, ArrowUpDown, ChevronDown, CircleCheck, CircleSlash, HelpCircle, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Upload, Layers, LogOut, Settings2 } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, ChevronDown, HelpCircle, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, CreditCard, Upload, Layers, LogOut, Settings2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -658,10 +658,12 @@ export function Navbar({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="group/account flex items-center gap-2.5 rounded-[7px] px-3 py-2 text-[12px] font-medium tracking-tight text-[#4D5B66] transition-colors hover:bg-[#F1F2F0] hover:text-[#0B74DE]">
-                  <User className="h-4.5 w-4.5 text-[#8A99A5] transition-colors group-hover/account:text-[#0B74DE]" strokeWidth={1.7} />
-                  <span className="hidden sm:inline">Account</span>
-                  <ChevronDown className="h-3.5 w-3.5 text-[#8A99A5] transition-colors group-hover/account:text-[#0B74DE]" strokeWidth={1.7} />
+                <button className="group/account flex h-9 items-center rounded-xl border border-[#E5E7EB] bg-white p-1 text-[12px] font-medium tracking-tight text-[#4D5B66] shadow-sm transition-colors hover:border-[#CBD7DE] hover:bg-[#F7FAFC] hover:text-[#182026] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/25">
+                  <span className="px-3 py-1.5">Account</span>
+                  <span aria-hidden="true" className="h-4 w-px bg-[#E5E7EB]" />
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg transition-colors group-hover/account:bg-white">
+                    <ChevronDown className="h-3.5 w-3.5 text-[#66737F] transition-colors group-hover/account:text-[#182026]" strokeWidth={1.7} />
+                  </span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="w-[360px] overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-0 shadow-[0_16px_40px_rgba(24,32,38,0.10)]">
@@ -679,10 +681,12 @@ export function Navbar({
 
                 <div className="border-y border-[#E7EEF2] bg-[#FAFAF7] px-4 py-3">
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[#DCE8EE] bg-white text-[#4D5B66]">
-                      {userProfile?.amazon_connected
-                        ? <CircleCheck className="h-4 w-4 text-[#2F6C54]" strokeWidth={1.7} />
-                        : <CircleSlash className="h-4 w-4 text-[#66737F]" strokeWidth={1.7} />}
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-md border border-[#DCE8EE] bg-white">
+                      <img
+                        src="/amazon-logo-transparent-circle.png"
+                        alt="Amazon"
+                        className="h-full w-full object-contain"
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-3">
