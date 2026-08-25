@@ -3035,11 +3035,7 @@ export default function CaseDetail() {
                                 </Button>
                               </div>
                             </>
-                          ) : (
-                            <div className="border border-[#D8E3E8] bg-white px-4 py-3 text-[11px] text-[#6B7C88]">
-                              {replyDisabledReason}
-                            </div>
-                          )}
+                          ) : null}
                         </div>
                       ) : null}
                     </div>

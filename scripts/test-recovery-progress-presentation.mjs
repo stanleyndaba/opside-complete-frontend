@@ -128,5 +128,6 @@ assert(caseDetailSource.includes('Reply is unavailable while this recovery is in
 assert(!caseDetailSource.includes('Reply stays disabled until this case is filing-ready.'), 'Reply controls must not present a resolved recovery as merely filing-ready.');
 assert(!caseDetailSource.includes('Reply is not available from the browser while this case is blocked from filing.'), 'No secondary reply fallback may revert a closure-review recovery to a filing-blocked state.');
 assert(!caseDetailSource.includes('Margin will not expose a reply action here until verified identifiers support a safe case path.'), 'Thread-only reply copy must be centralized in the state-aware reply explanation.');
+assert((caseDetailSource.match(/: replyDisabledReason/g) || []).length === 1, 'A disabled Amazon reply state must render one concise explanation, not duplicate control guidance.');
 
 console.log(`Recovery Progress Phase B.2/B.3 matrix passed (${assertions} assertions across 15 states).`);
