@@ -32,11 +32,29 @@ export function isChunkLoadError(error: unknown): boolean {
 }
 
 function getReloadKey(scope: string): string {
+  // Deliberately exclude cache-busting query parameters. A recovery reload must
+  // remain one-time per route rather than creating a reload loop with each nonce.
   const path = typeof window !== 'undefined'
-    ? `${window.location.pathname}${window.location.search}`
+    ? window.location.pathname
     : 'unknown';
 
   return `${CHUNK_RELOAD_PREFIX}:${scope}:${path}`;
+}
+
+function buildChunkRecoveryUrl(): string {
+  const url = new URL(window.location.href);
+  url.searchParams.set('__margin_chunk_recovery', String(Date.now()));
+  return url.toString();
+}
+
+export function reloadForChunkError(scope: string, options: { allowAnotherAttempt?: boolean } = {}): void {
+  if (typeof window === 'undefined') return;
+
+  if (options.allowAnotherAttempt) {
+    window.sessionStorage.removeItem(getReloadKey(scope));
+  }
+
+  window.location.replace(buildChunkRecoveryUrl());
 }
 
 export function shouldAutoReloadForChunkError(scope: string, error: unknown): boolean {

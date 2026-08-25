@@ -2,7 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AlertTriangle, RefreshCw, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { reportRuntimeError, shouldAutoReloadForChunkError } from '@/lib/runtimeErrorRecovery';
+import { reloadForChunkError, reportRuntimeError, shouldAutoReloadForChunkError } from '@/lib/runtimeErrorRecovery';
 
 interface BoundaryProps {
   children: ReactNode;
@@ -31,7 +31,7 @@ class RouteErrorBoundaryInner extends Component<BoundaryProps, BoundaryState> {
 
     if (shouldAutoReloadForChunkError('route', error)) {
       this.setState({ isRecoveringChunk: true });
-      window.setTimeout(() => window.location.reload(), 120);
+      window.setTimeout(() => reloadForChunkError('route'), 120);
     }
   }
 
@@ -46,7 +46,7 @@ class RouteErrorBoundaryInner extends Component<BoundaryProps, BoundaryState> {
   };
 
   private reloadPage = () => {
-    window.location.reload();
+    reloadForChunkError('route', { allowAnotherAttempt: true });
   };
 
   public render() {
