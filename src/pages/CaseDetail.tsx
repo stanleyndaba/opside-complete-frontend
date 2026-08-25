@@ -1990,6 +1990,7 @@ export default function CaseDetail() {
     closureReason: closureTruth?.reason,
     hasSafetyBlock,
     hasUnassessedSafety,
+    statusFeedUnavailable,
   });
   const requestedRecoveryLanguage = getRequestedRecoveryLanguage(claimRecordRequestedAmount);
   const accountingClaimBoundary = getAccountingClaimBoundary({

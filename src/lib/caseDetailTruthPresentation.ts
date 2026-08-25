@@ -38,6 +38,7 @@ export interface RecoveryTruthPresentationInput {
   closureReason?: string | null;
   hasSafetyBlock?: boolean;
   hasUnassessedSafety?: boolean;
+  statusFeedUnavailable?: boolean;
 }
 
 export interface RecoveryTruthPresentation {
@@ -57,12 +58,19 @@ const titleCase = (value?: string | null) => {
   return normalized.replace(/[_-]+/g, ' ');
 };
 
+const normalizeAccountingLimitation = (value?: string | null) => {
+  const suppliedLimitation = String(value || '').trim();
+  const looksLikeRuntimeFailure = /(?:is not a function|typeerror|referenceerror|cannot read|undefined)/i.test(suppliedLimitation);
+  return looksLikeRuntimeFailure ? null : (suppliedLimitation || null);
+};
+
 export function buildRecoveryTruthPresentation(input: RecoveryTruthPresentationInput): RecoveryTruthPresentation {
   const accountingState = normalize(input.accountingStatus);
   const closureState = normalize(input.closureState);
   const reversalState = normalize(input.financialReversalState);
   const paymentState = normalize(input.financialPayoutStatus);
   const readiness = normalize(input.claimReadiness);
+  const safeAccountingLimitation = normalizeAccountingLimitation(input.accountingLimitation);
   const conditions: CaseTruthCondition[] = [];
 
   if (input.hasTrustedPayout && typeof input.verifiedPaidAmount === 'number') {
@@ -104,10 +112,10 @@ export function buildRecoveryTruthPresentation(input: RecoveryTruthPresentationI
       category: 'outcome',
       tone: 'success',
     });
-  } else if (input.accountingLimitation || accountingState) {
+  } else if (safeAccountingLimitation || accountingState) {
     conditions.push({
       label: 'Accounting',
-      detail: input.accountingLimitation || `Accounting reconciliation is ${titleCase(accountingState)}.`,
+      detail: safeAccountingLimitation || `Accounting reconciliation is ${titleCase(accountingState)}.`,
       category: 'outcome',
       tone: 'attention',
     });
@@ -125,6 +133,15 @@ export function buildRecoveryTruthPresentation(input: RecoveryTruthPresentationI
       label: 'Safeguards',
       detail: 'One or more duplicate-protection checks have not been assessed. This is not the same as a clear safety result.',
       category: 'sufficiency',
+      tone: 'attention',
+    });
+  }
+
+  if (input.statusFeedUnavailable && !input.truthUnavailable) {
+    conditions.push({
+      label: 'Freshness',
+      detail: 'Live case updates are unavailable. Margin is showing the last known record and will retry the refresh.',
+      category: 'reconstructed',
       tone: 'attention',
     });
   }
@@ -167,6 +184,22 @@ export function buildRecoveryTruthPresentation(input: RecoveryTruthPresentationI
     };
   }
 
+  const accountingNeedsReview = Boolean(safeAccountingLimitation) || Boolean(accountingState && accountingState !== 'reconciled');
+  const needsReview = input.hasSafetyBlock || input.hasUnassessedSafety || reversalState === 'review_required' || accountingNeedsReview;
+
+  if (needsReview) {
+    return {
+      label: 'Open — review required',
+      explanation: input.hasTrustedPayout
+        ? 'Payment evidence is verified, but this recovery is not financially closed because accounting, reversal, or safeguard conditions still require review.'
+        : 'Margin cannot treat this recovery as clear to proceed or closed because accounting, reversal, or safeguard conditions still require review.',
+      tone: 'warning',
+      category: 'outcome',
+      conditions,
+      prohibitedImplication: 'Do not call this recovery paid out, reconciled, completed, or closed.',
+    };
+  }
+
   if (closureState === 'closed' || closureState === 'financially_closed') {
     return {
       label: 'Financially closed',
@@ -178,28 +211,25 @@ export function buildRecoveryTruthPresentation(input: RecoveryTruthPresentationI
     };
   }
 
-  const accountingNeedsReview = Boolean(input.accountingLimitation) || Boolean(accountingState && accountingState !== 'reconciled');
-  const needsReview = input.hasSafetyBlock || input.hasUnassessedSafety || reversalState === 'review_required' || accountingNeedsReview;
-
-  if (input.hasTrustedPayout && needsReview) {
-    return {
-      label: 'Open — review required',
-      explanation: 'Payment evidence is verified, but this recovery is not financially closed because accounting, reversal, or safeguard conditions still require review.',
-      tone: 'warning',
-      category: 'outcome',
-      conditions,
-      prohibitedImplication: 'Do not call this recovery paid out, reconciled, completed, or closed.',
-    };
-  }
-
   if (input.hasTrustedPayout) {
     return {
-      label: 'Payment verified — closure review continues',
+      label: paymentState === 'partially_paid' ? 'Partial payment verified — closure review continues' : 'Payment verified — closure review continues',
       explanation: input.closureReason || 'Margin has verified payment evidence. Final closure still depends on the remaining outcome checks.',
       tone: 'attention',
       category: 'outcome',
       conditions,
       prohibitedImplication: 'Do not treat verified payment as final financial closure.',
+    };
+  }
+
+  if (!input.hasTrustedPayout && ['paid', 'partially_paid'].includes(paymentState)) {
+    return {
+      label: 'Payment recorded — verification required',
+      explanation: 'A payment state is recorded, but Margin has not verified a matching financial event for this recovery.',
+      tone: 'attention',
+      category: 'outcome',
+      conditions,
+      prohibitedImplication: 'Do not treat a recorded payout as verified payment or financial closure.',
     };
   }
 
@@ -211,6 +241,17 @@ export function buildRecoveryTruthPresentation(input: RecoveryTruthPresentationI
       category: 'outcome',
       conditions,
       prohibitedImplication: 'Do not call this recovery paid or closed.',
+    };
+  }
+
+  if (!input.hasTrustedFiling && ['filed', 'submitted', 'resubmitted'].includes(normalize(input.filingStatus))) {
+    return {
+      label: 'Filing proof required',
+      explanation: 'An internal filed state is recorded, but Margin has not verified an Amazon submission reference for this recovery.',
+      tone: 'warning',
+      category: 'outcome',
+      conditions,
+      prohibitedImplication: 'Do not imply that this case was successfully filed with Amazon.',
     };
   }
 
@@ -262,9 +303,7 @@ export function getRequestedRecoveryLanguage(amount: number | null | undefined):
 
 export function getAccountingClaimBoundary(input: { status?: string | null; limitation?: string | null }) {
   const status = normalize(input.status);
-  const suppliedLimitation = String(input.limitation || '').trim();
-  const limitationLooksLikeRuntimeFailure = /(?:is not a function|typeerror|referenceerror|cannot read|undefined)/i.test(suppliedLimitation);
-  const safeLimitation = limitationLooksLikeRuntimeFailure ? '' : suppliedLimitation;
+  const safeLimitation = normalizeAccountingLimitation(input.limitation) || '';
   if (status === 'reconciled') {
     return {
       label: 'Accounting reconciliation',
