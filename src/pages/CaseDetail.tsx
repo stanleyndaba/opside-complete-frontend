@@ -2679,7 +2679,79 @@ export default function CaseDetail() {
               </div>
             )}
 
-            {/* Tab 1 must begin with the authoritative Recovery Truth Record. The legacy context banner remains available only for the untouched Recovery Progress tab. */}
+            <div className="mb-5 flex gap-1 border-b border-[#DCE8EE]" role="tablist" aria-label="Case detail views">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'RECORD'}
+                onClick={() => setActiveTab('RECORD')}
+                className={cn(
+                  "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
+                  activeTab === 'RECORD' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
+                )}
+              >
+                What we found
+                <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'RECORD' ? "scale-x-100" : "scale-x-0")} />
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'PROTOCOL'}
+                onClick={() => setActiveTab('PROTOCOL')}
+                className={cn(
+                  "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
+                  activeTab === 'PROTOCOL' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
+                )}
+              >
+                Recovery progress
+                <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'PROTOCOL' ? "scale-x-100" : "scale-x-0")} />
+              </button>
+            </div>
+
+            {activeTab === 'RECORD' && (
+              <RecoveryTruthRecord
+                caseData={effectiveCase}
+                tenantSlug={activeSlug}
+                truthPresentation={recoveryTruthPresentation}
+                requestedLanguage={requestedRecoveryLanguage}
+                accountingBoundary={accountingClaimBoundary}
+                currency={effectiveCase?.currency || 'USD'}
+                requestedAmount={claimRecordRequestedAmount}
+                estimatedClaimValue={claimRecordEstimatedClaimValue}
+                approvedAmount={claimRecordApprovedAmount}
+                recordedPayoutAmount={claimRecordRecordedPayoutAmount}
+                verifiedPaidAmount={claimRecordVerifiedPaidAmount}
+                outstandingAmount={outstandingAmount}
+                varianceAmount={varianceAmount}
+                trustedApproval={hasTrustedApprovalTruth(backendTruthCase)}
+                trustedPayout={hasTrustedPayoutTruth(backendTruthCase)}
+                hasResolvedBackend={hasResolvedBackend}
+                hasSafetyBlock={hasSafetyBlock}
+                hasUnassessedSafety={hasUnassessedSafety}
+                proofStatus={proofStatus}
+                payoutProofStatus={payoutProofStatus}
+                filingStatus={formatSellerCaseFilingStatus(effectiveCase, proofStatus)}
+                filingTruthLine={getCaseFilingTruthLine(effectiveCase, proofStatus)}
+                nextStep={nextStep}
+                sellerSummary={sellerSummary}
+                policyBasis={policyBasis}
+                matchedDocuments={displayedMatchedDocs}
+                inventory={{
+                  totalInput: inventoryTotalInput,
+                  totalOutput: inventoryTotalOutput,
+                  calculatedStock: inventoryCalculatedStock,
+                  warehouseBalance: inventoryWarehouseBalance,
+                  discrepancy: inventoryDiscrepancy,
+                }}
+                findingNarrative={findingNarrative || NOT_AVAILABLE}
+                generatedNarrative={!sellerSummary?.summary}
+                financialTruthLimitation={financialTruthLimitation}
+                accountingTruth={accountingTruth}
+                closureTruth={closureTruth}
+                onOpenDocument={(documentId) => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(documentId)}`, '_blank')}
+              />
+            )}
+
             {activeTab === 'PROTOCOL' && (
               <div className="space-y-4">
                 <RecoveryProgressControl

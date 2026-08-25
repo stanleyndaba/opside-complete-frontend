@@ -26,6 +26,10 @@ const verdict = (input) => buildRecoveryTruthPresentation(input);
 const proofStatusDeclarationIndex = caseDetailSource.indexOf('const proofStatus =');
 const truthPresentationIndex = caseDetailSource.indexOf('const recoveryTruthPresentation =');
 assert(proofStatusDeclarationIndex !== -1 && truthPresentationIndex !== -1 && proofStatusDeclarationIndex < truthPresentationIndex, 'proofStatus must initialize before Recovery Truth presentation reads it.');
+assert(caseDetailSource.includes('role="tablist"') && caseDetailSource.includes('aria-label="Case detail views"'), 'Case Detail must retain its accessible tab shell.');
+assert(caseDetailSource.includes('What we found') && caseDetailSource.includes('Recovery progress'), 'Case Detail must expose both seller-facing tab labels.');
+assert(caseDetailSource.includes("activeTab === 'RECORD' && (\n              <RecoveryTruthRecord"), 'The default What we found tab must render the Recovery Truth Record.');
+assert(caseDetailSource.includes("activeTab === 'PROTOCOL' && (\n              <div className=\"space-y-4\">"), 'The Recovery progress tab must retain its operational control body.');
 
 // 1. Detection only
 assert(verdict({ claimReadiness: 'not_claim_ready' }).label === 'Evidence review in progress', 'Detection-only state must not imply recovery eligibility.');
