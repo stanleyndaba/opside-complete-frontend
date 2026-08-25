@@ -2102,6 +2102,36 @@ export const api = {
       message?: string;
     }>(`/api/v1/integrations/${encodeURIComponent(provider)}/disconnect?tenantSlug=${encodeURIComponent(tenantSlug)}`, { method: 'POST' });
   },
+  getAccountingCoverage: (tenantSlug?: string, provider?: 'quickbooks' | 'xero') => {
+    if (!tenantSlug) throw new Error('tenantSlug required for accounting coverage');
+    const query = new URLSearchParams({ tenantSlug });
+    if (provider) query.set('provider', provider);
+    return requestJson<{ ok: boolean; data: { records: number; evidence: number; confirmedMappings: number; authoritativeCosts: number; sources: Array<Record<string, unknown>> } }>(`/api/v1/accounting/coverage?${query.toString()}`);
+  },
+  getAccountingMappingCandidates: (tenantSlug?: string, provider?: 'quickbooks' | 'xero') => {
+    if (!tenantSlug) throw new Error('tenantSlug required for accounting mapping candidates');
+    const query = new URLSearchParams({ tenantSlug });
+    if (provider) query.set('provider', provider);
+    return requestJson<{ ok: boolean; data: Array<Record<string, any>> }>(`/api/v1/accounting/mapping-candidates?${query.toString()}`);
+  },
+  createAccountingSellerMapping: (input: { evidenceId: string; sku: string; asin?: string; fnsku?: string; effectiveFrom?: string; effectiveTo?: string }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for accounting mapping');
+    return requestJson<{ ok: boolean; data: Record<string, unknown> }>(`/api/v1/accounting/mappings?tenantSlug=${encodeURIComponent(tenantSlug)}`, { method: 'POST', body: JSON.stringify(input) });
+  },
+  getAccountingSyncRuns: (tenantSlug?: string, provider?: 'quickbooks' | 'xero') => {
+    if (!tenantSlug) throw new Error('tenantSlug required for accounting sync history');
+    const query = new URLSearchParams({ tenantSlug });
+    if (provider) query.set('provider', provider);
+    return requestJson<{ ok: boolean; data: Array<Record<string, any>> }>(`/api/v1/accounting/sync-runs?${query.toString()}`);
+  },
+  getXeroOrganisations: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for Xero organisation selection');
+    return requestJson<{ ok: boolean; data: { selectedOrganisationId: string | null; selectedOrganisationName: string | null; organisations: Array<{ tenantId: string; tenantName: string | null }> } }>(`/api/v1/integrations/xero/organisations?tenantSlug=${encodeURIComponent(tenantSlug)}`);
+  },
+  selectXeroOrganisation: (organisationId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for Xero organisation selection');
+    return requestJson<{ ok: boolean; data?: { organisationId: string; organisationName: string | null; syncJobId: string }; error?: string }>(`/api/v1/integrations/xero/organisations/select?tenantSlug=${encodeURIComponent(tenantSlug)}`, { method: 'POST', body: JSON.stringify({ organisationId }) });
+  },
 
   getMatchingMetrics: (days?: number) =>
     requestJson<{

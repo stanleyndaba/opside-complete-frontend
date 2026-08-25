@@ -53,6 +53,9 @@ type IntegrationProviderStatus = {
   accounting_last_read_at?: string;
   accounting_record_count?: number;
   accounting_record_types?: Array<'bill' | 'purchase' | 'accpay'>;
+  accounting_organisation_id?: string;
+  accounting_organisation_name?: string;
+  accounting_organisation_selected_at?: string;
 };
 
 type IntegrationStatusDTO = {
@@ -236,6 +239,14 @@ export default function IntegrationsHub() {
   const [providerLoading, setProviderLoading] = useState<string | null>(null);
   const [disconnectingProvider, setDisconnectingProvider] = useState<string | null>(null);
   const [accountingVerificationProvider, setAccountingVerificationProvider] = useState<AccountingProviderKey | null>(null);
+  const [accountingCoverage, setAccountingCoverage] = useState<{ records: number; evidence: number; confirmedMappings: number; authoritativeCosts: number; sources: Array<Record<string, any>> } | null>(null);
+  const [accountingCandidates, setAccountingCandidates] = useState<Array<Record<string, any>>>([]);
+  const [showAccountingIntelligence, setShowAccountingIntelligence] = useState(false);
+  const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>(null);
+  const [mappingSku, setMappingSku] = useState('');
+  const [savingAccountingMapping, setSavingAccountingMapping] = useState(false);
+  const [xeroOrganisationSelection, setXeroOrganisationSelection] = useState<{ organisations: Array<{ tenantId: string; tenantName: string | null }>; selectedOrganisationId: string | null; selectedOrganisationName: string | null } | null>(null);
+  const [selectingXeroOrganisation, setSelectingXeroOrganisation] = useState(false);
   const [ingestingGmail, setIngestingGmail] = useState(false);
   const [ingestingAll, setIngestingAll] = useState(false);
   const [savingFilters, setSavingFilters] = useState(false);
@@ -340,11 +351,12 @@ export default function IntegrationsHub() {
   const refreshIntegrationTruth = async () => {
     if (!activeSlug) return;
 
-    const [statusRes, storesRes, evidenceStatusRes, evidenceSourcesRes] = await Promise.all([
+    const [statusRes, storesRes, evidenceStatusRes, evidenceSourcesRes, accountingCoverageRes] = await Promise.all([
       api.getIntegrationsStatus(activeSlug),
       api.getStores(activeSlug),
       api.getEvidenceStatus(activeSlug),
-      api.getEvidenceSources(activeSlug)
+      api.getEvidenceSources(activeSlug),
+      api.getAccountingCoverage(activeSlug)
     ]);
 
     if (statusRes.ok && statusRes.data) {
@@ -374,6 +386,10 @@ export default function IntegrationsHub() {
         ingestableCount: nextSourceTruth.ingestableCount || 0,
         skippedProviders: nextSourceTruth.skippedProviders || []
       });
+    }
+
+    if (accountingCoverageRes.ok && accountingCoverageRes.data) {
+      setAccountingCoverage(accountingCoverageRes.data);
     }
   };
 
@@ -509,6 +525,63 @@ export default function IntegrationsHub() {
       });
     } finally {
       setAccountingVerificationProvider(null);
+    }
+  };
+
+  const openAccountingIntelligence = async () => {
+    if (!activeSlug) return;
+    try {
+      const result = await api.getAccountingMappingCandidates(activeSlug);
+      if (!result.ok) throw new Error((result as any).error || 'Unable to load accounting mapping candidates.');
+      setAccountingCandidates(result.data || []);
+      setShowAccountingIntelligence(true);
+    } catch (error) {
+      toast({ title: 'Accounting intelligence unavailable', description: 'Margin could not load safe accounting mapping candidates.', variant: 'destructive' });
+    }
+  };
+
+  const saveAccountingMapping = async () => {
+    if (!activeSlug || !selectedEvidenceId || !mappingSku.trim()) return;
+    try {
+      setSavingAccountingMapping(true);
+      const result = await api.createAccountingSellerMapping({ evidenceId: selectedEvidenceId, sku: mappingSku.trim() }, activeSlug);
+      if (!result.ok) throw new Error((result as any).error || 'Unable to save mapping.');
+      toast({ title: 'Product mapping saved', description: 'Margin preserved your review and recalculated eligible accounting-derived cost evidence.' });
+      setSelectedEvidenceId(null);
+      setMappingSku('');
+      await openAccountingIntelligence();
+      await refreshIntegrationTruth();
+    } catch (error) {
+      toast({ title: 'Mapping not saved', description: 'Margin could not confirm that mapping. No cost truth was changed.', variant: 'destructive' });
+    } finally {
+      setSavingAccountingMapping(false);
+    }
+  };
+
+  const loadXeroOrganisationSelection = async () => {
+    if (!activeSlug) return;
+    try {
+      const result = await api.getXeroOrganisations(activeSlug);
+      if (!result.ok) throw new Error((result as any).error || 'Unable to load Xero organisations.');
+      setXeroOrganisationSelection(result.data);
+    } catch (error) {
+      toast({ title: 'Organisation selection unavailable', description: 'Margin could not load the organisations authorised by Xero.', variant: 'destructive' });
+    }
+  };
+
+  const selectConnectedXeroOrganisation = async (organisationId: string) => {
+    if (!activeSlug) return;
+    try {
+      setSelectingXeroOrganisation(true);
+      const result = await api.selectXeroOrganisation(organisationId, activeSlug);
+      if (!result.ok) throw new Error(result.error || 'Unable to select organisation.');
+      toast({ title: 'Xero organisation selected', description: 'Margin will now verify read-only financial evidence for this organisation.' });
+      setXeroOrganisationSelection(null);
+      await refreshIntegrationTruth();
+    } catch (error) {
+      toast({ title: 'Organisation not selected', description: 'Margin did not start an accounting read. Please try again.', variant: 'destructive' });
+    } finally {
+      setSelectingXeroOrganisation(false);
     }
   };
 
@@ -1594,6 +1667,83 @@ export default function IntegrationsHub() {
               </DialogContent>
             </Dialog>
 
+            <Dialog open={showAccountingIntelligence} onOpenChange={setShowAccountingIntelligence}>
+              <DialogContent className="max-h-[85vh] max-w-3xl overflow-y-auto rounded-[10px] border border-[#DCE8EE] bg-white text-[#182026]">
+                <DialogHeader>
+                  <DialogTitle className="font-lora text-[24px] font-normal">Accounting intelligence</DialogTitle>
+                  <DialogDescription>
+                    Margin shows only safe accounting evidence projections here. It never changes your books, and uncertain records remain unresolved until you review them.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                  {[
+                    ['Records', accountingCoverage?.records || 0],
+                    ['Evidence items', accountingCoverage?.evidence || 0],
+                    ['Confirmed mappings', accountingCoverage?.confirmedMappings || 0],
+                    ['Authoritative costs', accountingCoverage?.authoritativeCosts || 0]
+                  ].map(([label, value]) => (
+                    <div key={String(label)} className="rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-3">
+                      <p className="text-[11px] font-medium text-[#66737F]">{label}</p>
+                      <p className="mt-1 text-[20px] font-semibold">{value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-[14px] font-semibold">Line items needing product resolution</p>
+                    <p className="mt-1 text-[12px] text-[#66737F]">Confirm a Margin SKU only when the supplier line genuinely identifies that product. No ambiguous mapping is applied automatically.</p>
+                  </div>
+                  {accountingCandidates.length === 0 ? (
+                    <div className="rounded-md border border-dashed border-[#DCE8EE] p-4 text-[13px] text-[#66737F]">No safe accounting evidence is ready for mapping yet.</div>
+                  ) : accountingCandidates.slice(0, 50).map((candidate) => {
+                    const evidenceId = String(candidate.evidenceId || '');
+                    const mapping = candidate.mapping as Record<string, any> | null;
+                    const isSelected = selectedEvidenceId === evidenceId;
+                    return (
+                      <div key={evidenceId} className="rounded-md border border-[#DCE8EE] p-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-[13px] font-medium">{candidate.lineItemCode || candidate.lineItemName || 'Unlabelled accounting line'}</p>
+                            <p className="mt-1 text-[12px] text-[#66737F]">{candidate.provider} · {candidate.supplierName || 'Supplier unavailable'} · {candidate.referenceNumber || 'No reference'} · {candidate.quantity ?? 'Quantity unknown'}</p>
+                          </div>
+                          {mapping ? <Badge variant="outline">{String(mapping.status || 'mapped')}</Badge> : <Badge variant="outline" className="border-amber-200 text-amber-700">Review required</Badge>}
+                        </div>
+                        {mapping ? (
+                          <p className="mt-2 text-[12px] text-[#66737F]">Mapped to <strong>{String(mapping.sku || '')}</strong> by {String(mapping.mappingMethod || 'recorded mapping')}.</p>
+                        ) : isSelected ? (
+                          <div className="mt-3 flex gap-2">
+                            <Input value={mappingSku} onChange={(event) => setMappingSku(event.target.value)} placeholder="Margin SKU" className="h-9 text-[12px]" />
+                            <Button size="sm" disabled={!mappingSku.trim() || savingAccountingMapping} onClick={saveAccountingMapping}>
+                              {savingAccountingMapping ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : 'Confirm'}
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => { setSelectedEvidenceId(null); setMappingSku(''); }}>Cancel</Button>
+                          </div>
+                        ) : (
+                          <Button size="sm" variant="outline" className="mt-3 h-8 text-[12px]" onClick={() => { setSelectedEvidenceId(evidenceId); setMappingSku(''); }}>Map product</Button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog open={Boolean(xeroOrganisationSelection)} onOpenChange={(open) => !open && setXeroOrganisationSelection(null)}>
+              <DialogContent className="rounded-[10px] border border-[#DCE8EE] bg-white text-[#182026]">
+                <DialogHeader>
+                  <DialogTitle className="font-lora text-[24px] font-normal">Select your Xero organisation</DialogTitle>
+                  <DialogDescription>Margin will read only the organisation you select. It never silently switches organisations.</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2">
+                  {xeroOrganisationSelection?.organisations.map((organisation) => (
+                    <Button key={organisation.tenantId} variant="outline" disabled={selectingXeroOrganisation} className="h-auto w-full justify-start px-3 py-3 text-left" onClick={() => selectConnectedXeroOrganisation(organisation.tenantId)}>
+                      <span className="flex flex-col items-start"><strong>{organisation.tenantName || 'Unnamed Xero organisation'}</strong><span className="mt-1 text-[11px] text-[#66737F]">{organisation.tenantId}</span></span>
+                    </Button>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+
             {/* Harvesting Nodes Title */}
             <motion.div variants={itemVariants} className="mt-3">
               <div>
@@ -1670,6 +1820,12 @@ export default function IntegrationsHub() {
                                       {providerState.account_email}
                                     </span>
                                   )}
+                                  {p === 'xero' && (
+                                    <span className="mt-2 block text-[12px] tracking-tight text-[#66737F]">
+                                      Organisation: {providerState.accounting_organisation_name || 'Selection required'}
+                                      {providerState.accounting_organisation_selected_at ? ` · selected ${formatDateTime(providerState.accounting_organisation_selected_at)}` : ''}
+                                    </span>
+                                  )}
                                   <p className="mt-2 text-[12px] leading-5 text-[#66737F]">
                                     {describeFinancialEvidenceDetail(providerState)}
                                   </p>
@@ -1691,6 +1847,14 @@ export default function IntegrationsHub() {
                                     {accountingVerificationProvider === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin mx-auto" /> : 'Retry verification'}
                                   </Button>
                                 )}
+                                {p === 'xero' && (
+                                  <Button variant="outline" size="sm" className="h-8 w-full rounded-md border-[#DCE8EE] bg-white text-[12px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]" onClick={loadXeroOrganisationSelection}>
+                                    Select Xero organisation
+                                  </Button>
+                                )}
+                                <Button variant="outline" size="sm" className="h-8 w-full rounded-md border-[#DCE8EE] bg-white text-[12px] font-medium tracking-tight text-[#0B74DE] hover:bg-[#F7FAFC]" onClick={openAccountingIntelligence}>
+                                  Review accounting coverage
+                                </Button>
                               </>
                             ) : (
                               <div className="border-t border-[#E7EEF2] pt-3">
