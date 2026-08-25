@@ -8,6 +8,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
+import { RecoveryTruthRecord } from '@/components/cases/RecoveryTruthRecord';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AiExplanationDialog } from '@/components/ai/AiExplanationDialog';
@@ -48,6 +49,11 @@ import {
   selectCaseDetailEventFailureState,
   selectCaseDetailFailureState,
 } from '@/lib/caseDetailTruthSafety';
+import {
+  buildRecoveryTruthPresentation,
+  getAccountingClaimBoundary,
+  getRequestedRecoveryLanguage,
+} from '@/lib/caseDetailTruthPresentation';
 
 interface CaseEvent {
   timestamp: string;
@@ -1916,7 +1922,8 @@ export default function CaseDetail() {
   const claimRecordUnitDerivedAmount = claimRecordUnitValue !== null && claimRecordUnitCount !== null
     ? Number((claimRecordUnitValue * claimRecordUnitCount).toFixed(2))
     : null;
-  const claimRecordDemoAmount = isDemoWorkspaceSlug(activeSlug) && caseId === 'ACME-CASE-2005' ? 569.50 : null;
+  // Phase B preserves certified backend truth values; Tab 1 must not substitute a scenario amount for an observed, requested, approved, or verified financial fact.
+  const claimRecordDemoAmount: number | null = null;
   const firstFiniteAmount = (...values: unknown[]) => {
     for (const value of values) {
       if (value === null || value === undefined || value === '') continue;
@@ -1963,6 +1970,32 @@ export default function CaseDetail() {
   const claimReadiness = String(findingTruth?.claim_readiness || effectiveCase?.claim_readiness || '').trim();
   const valueLabel = String(findingTruth?.value_label || effectiveCase?.value_label || '').trim();
   const whyNotClaimReady = findingTruth?.why_not_claim_ready || effectiveCase?.why_not_claim_ready || null;
+  const recoveryTruthPresentation = buildRecoveryTruthPresentation({
+    truthUnavailable: effectiveCase?.truth_unavailable === true,
+    hasTrustedFiling: hasTrustedFilingTruth(backendTruthCase),
+    hasTrustedApproval: hasTrustedApprovalTruth(backendTruthCase),
+    hasTrustedPayout: hasTrustedPayoutTruth(backendTruthCase),
+    filingStatus: backendTruthCase?.filing_status,
+    filingTruthLine: getCaseFilingTruthLine(effectiveCase, proofStatus),
+    claimReadiness,
+    financialPayoutStatus,
+    financialReversalState,
+    financialTruthLimitation,
+    verifiedPaidAmount,
+    outstandingAmount,
+    varianceAmount,
+    accountingStatus: accountingTruth?.status,
+    accountingLimitation: accountingTruth?.limitation,
+    closureState: closureTruth?.state,
+    closureReason: closureTruth?.reason,
+    hasSafetyBlock,
+    hasUnassessedSafety,
+  });
+  const requestedRecoveryLanguage = getRequestedRecoveryLanguage(claimRecordRequestedAmount);
+  const accountingClaimBoundary = getAccountingClaimBoundary({
+    status: accountingTruth?.status,
+    limitation: accountingTruth?.limitation,
+  });
   const isReviewOnlyFinding = ['review_only', 'monitoring'].includes(reviewTier) || claimReadiness === 'not_claim_ready';
   const findingReadinessLabel = !hasFindingTruth
     ? null
@@ -2517,8 +2550,8 @@ export default function CaseDetail() {
               </div>
 
               <div className="mb-4 flex border-b border-[#D8E3E8]">
-                <div className="px-8 py-4 text-[12px] font-bold uppercase text-[#07111A]">Claim record</div>
-                <div className="px-8 py-4 text-[12px] font-bold uppercase text-[#6B7C88]">Resolution steps</div>
+                <div className="px-8 py-4 text-[12px] font-bold uppercase text-[#07111A]">What we found</div>
+                <div className="px-8 py-4 text-[12px] font-bold uppercase text-[#6B7C88]">Recovery progress</div>
               </div>
 
               <div className="grid grid-cols-1 gap-0 overflow-hidden rounded-[2px] border border-[#D8E3E8] divide-y divide-[#D8E3E8]">
@@ -2653,8 +2686,8 @@ export default function CaseDetail() {
               </div>
             )}
 
-            {/* Trust Banner - Policy & Confidence */}
-            {(POLICY_MAP[effectiveCase.anomaly_type] || effectiveCase.safety_audit || matchedCount > 0 || nextStep) && (
+            {/* Tab 1 must begin with the authoritative Recovery Truth Record. The legacy context banner remains available only for the untouched Recovery Progress tab. */}
+            {activeTab === 'PROTOCOL' && (POLICY_MAP[effectiveCase.anomaly_type] || effectiveCase.safety_audit || matchedCount > 0 || nextStep) && (
               <div className="flex flex-wrap items-center gap-6 py-2 mb-4">
                 {POLICY_MAP[effectiveCase.anomaly_type] && (
                   <div className="flex items-center gap-4">
@@ -2723,7 +2756,7 @@ export default function CaseDetail() {
                   "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
                   activeTab === 'RECORD' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
                 )}>
-                Claim record
+                What we found
                 <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'RECORD' ? "scale-x-100" : "scale-x-0")} />
               </button>
               <button
@@ -2735,480 +2768,53 @@ export default function CaseDetail() {
                   "relative px-4 py-3 text-[13px] font-medium tracking-tight transition-colors sm:px-5",
                   activeTab === 'PROTOCOL' ? "bg-[#F7FAFC] text-[#182026]" : "text-[#66737F] hover:bg-[#F7FAFC] hover:text-[#182026]"
                 )}>
-                Resolution steps
+                Recovery progress
                 <span className={cn("absolute inset-x-3 bottom-0 h-[2px] bg-[#0B74DE] transition-transform duration-200", activeTab === 'PROTOCOL' ? "scale-x-100" : "scale-x-0")} />
               </button>
             </div>
 
             {activeTab === 'RECORD' && (
-              <div className="space-y-4">
-                <ClaimRecordSection title="Case Brief" eyebrow="Seller-facing dossier">
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="min-w-0 max-w-4xl">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="outline" className="border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 font-sans text-[9px] font-medium uppercase tracking-tight text-[#4D5B66]">
-                          {entityTypeLabel}
-                        </Badge>
-                        {hasResolvedBackend && findingReadinessLabel && (
-                          <Badge variant="outline" className={cn(
-                            "rounded-[2px] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight",
-                            isReviewOnlyFinding
-                              ? "border-blue-200 bg-blue-50 text-blue-800"
-                              : "border-emerald-200 bg-emerald-50 text-emerald-800"
-                          )}>
-                            {findingReadinessLabel}
-                          </Badge>
-                        )}
-                        {hasResolvedBackend && claimReadiness === 'not_claim_ready' && (
-                          <Badge variant="outline" className="border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 font-sans text-[9px] font-medium uppercase tracking-tight text-[#6B7C88]">
-                            Not claim-ready
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="mt-4 font-sans text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">What Margin found</p>
-                      {!hasResolvedBackend ? (
-                        <div className="mt-3 flex items-start gap-3 border border-[#D8E3E8] bg-[#F8FAFB] px-4 py-3">
-                          <Loader2 className="mt-0.5 h-4 w-4 animate-spin text-[#6B7C88]" />
-                          <div>
-                            <p className="font-sans text-[12px] font-medium tracking-tight text-[#111827]">Loading backend case basis</p>
-                            <p className="mt-1 max-w-2xl font-sans text-[11px] leading-5 tracking-tight text-[#6B7C88]">
-                              Waiting for verified detection, evidence, policy, and filing movement before showing this explanation.
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          {!sellerSummary?.summary ? (
-                            <p className="mt-2 font-sans text-[10px] font-medium uppercase tracking-tight text-[#6B7C88]">
-                              Generated context from current case fields
-                            </p>
-                          ) : null}
-                          <p className="mt-2 font-sans text-[14px] font-medium leading-6 tracking-tight text-[#26333D]">
-                            {findingNarrative || NOT_AVAILABLE}
-                          </p>
-                        </>
-                      )}
-                      {aiExplainEnabled && caseId ? (
-                        <button
-                          type="button"
-                          onClick={() => { void caseExplanation.openFor(caseId); }}
-                          className="mt-3 font-sans text-[11px] font-medium tracking-tight text-[#4D5B66] underline decoration-[#CFE0EA] underline-offset-4 transition-colors hover:text-[#07111A]"
-                        >
-                          Explain
-                        </button>
-                      ) : null}
-                    </div>
-                    <div className="grid min-w-[260px] gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                      <ClaimRecordMetric label="Requested claim" value={formatCurrencyOrDash(claimRecordRequestedAmount, effectiveCase?.currency || 'USD')} tone="money" />
-                      <ClaimRecordMetric
-                        label="Current filing state"
-                        value={<ClaimRecordStatusBadge>{formatSellerCaseFilingStatus(effectiveCase, proofStatus)}</ClaimRecordStatusBadge>}
-                        detail={getCaseFilingTruthLine(effectiveCase, proofStatus)}
-                        tone="safe"
-                      />
-                    </div>
-                  </div>
-                </ClaimRecordSection>
-
-                <ClaimRecordSection title="Recovery Ledger" eyebrow="Financial Controls">
-                  <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
-                    <ClaimRecordMetric label="Estimated claim value" value={formatCurrencyOrDash(claimRecordEstimatedClaimValue, effectiveCase?.currency || 'USD')} className="p-3" />
-                    <ClaimRecordMetric label="Approved amount" value={formatCurrencyOrDash(claimRecordApprovedAmount, effectiveCase?.currency || 'USD')} detail={claimRecordApprovedAmount === null ? 'Approval has not been independently verified.' : undefined} className="p-3" />
-                    <ClaimRecordMetric label="Recorded payout" value={formatCurrencyOrDash(claimRecordRecordedPayoutAmount, effectiveCase?.currency || 'USD')} detail={claimRecordRecordedPayoutAmount === null ? 'No recorded payout.' : 'Recorded operationally; not payment proof by itself.'} className="p-3" />
-                    <ClaimRecordMetric label="Verified paid" value={formatCurrencyOrDash(claimRecordVerifiedPaidAmount, effectiveCase?.currency || 'USD')} detail={claimRecordVerifiedPaidAmount === null ? (financialTruthLimitation || 'Not available. No canonical financial payment has been established.') : 'Verified from matching financial-event evidence.'} className="p-3" />
-                    <ClaimRecordMetric label="Outstanding" value={formatCurrencyOrDash(outstandingAmount, effectiveCase?.currency || 'USD')} detail={outstandingAmount === null ? 'Not available until a payment target is established.' : undefined} className="p-3" />
-                    <ClaimRecordMetric label="Variance" value={formatCurrencyOrDash(varianceAmount, effectiveCase?.currency || 'USD')} detail={varianceAmount === null ? 'Not available until reconciliation.' : undefined} className="p-3" />
-                    <ClaimRecordMetric label="Payment status" value={financialPayoutStatus ? toStatusLabel(financialPayoutStatus) : NOT_AVAILABLE} detail={financialReversalState === 'reversed' ? 'A reimbursement reversal is established; this record is not closed.' : financialReversalState === 'review_required' ? 'A reversal-equivalent event requires review; this record is not closed.' : payoutProofStatus ? `Proof: ${formatPayoutProofStatus(payoutProofStatus)}` : 'Payment proof unavailable.'} className="p-3" />
-                    <ClaimRecordMetric label="Legacy billed amount" value={formatCurrencyOrDash(claimRecordLegacyBilledAmount, effectiveCase?.currency || 'USD')} className="p-3" />
-                  </div>
-                  <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,0.34fr)]">
-                    <dl className="grid gap-2.5 sm:grid-cols-2">
-                      <ClaimRecordField label="Requested Claim Amount" className="pb-2">
-                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">{formatCurrencyOrDash(claimRecordRequestedAmount, effectiveCase?.currency || 'USD')}</span>
-                      </ClaimRecordField>
-                      <ClaimRecordField label="Units Affected">
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-tight text-[#111827]">
-                          {typeof resolvedUnitsAffected === 'number' ? resolvedUnitsAffected : <span className="text-[#9CA3AF]">-</span>}
-                          {typeof resolvedUnitsAffected === 'number' && effectiveCase.units_is_verified ? (
-                            <Badge className="h-4 rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-1.5 text-[10px] font-medium tracking-tight text-[#4D5B66]">Verified</Badge>
-                          ) : typeof resolvedUnitsAffected === 'number' ? (
-                            <Badge className="h-4 rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-1.5 text-[10px] font-medium tracking-tight text-[#4D5B66]">Estimated</Badge>
-                          ) : null}
-                        </span>
-                      </ClaimRecordField>
-                      <ClaimRecordField label="Value Per Unit">
-                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">
-                          {explicitValuePerUnit === null
-                            ? NOT_AVAILABLE
-                            : `$${explicitValuePerUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                        </span>
-                      </ClaimRecordField>
-                      <ClaimRecordField label="Confidence Score">
-                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">{backendConfidencePct !== null ? `${backendConfidencePct}%` : NOT_AVAILABLE}</span>
-                      </ClaimRecordField>
-                      {typeof trustedRecoveredAmount === 'number' && (
-                        <ClaimRecordField label="Verified paid">
-                          <span className="text-[11px] font-medium tracking-tight text-[#111827]">{formatCurrencyOrDash(trustedRecoveredAmount, effectiveCase?.currency || 'USD')}</span>
-                          <span className="ml-2 inline-flex items-center gap-1.5 text-[9px] text-[#111827]/70">
-                            <CheckCircle className="h-3 w-3" /> Financial-event verified
-                          </span>
-                        </ClaimRecordField>
-                      )}
-                      <ClaimRecordField label="What may be owed">
-                        <span className="text-[11px] font-medium tracking-tight text-[#111827]">{findingAmountCopy}</span>
-                      </ClaimRecordField>
-                    </dl>
-                    <div className="border border-[#E5E7EB] bg-white">
-                      <div className="px-3 pt-3 border-b border-[#E5E7EB]">
-                        <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                          <SelectTrigger className="h-6 w-full border-0 bg-transparent p-0 text-[9px] font-bold text-[#6B7280] focus:ring-0 shadow-none tracking-tight">
-                            <SelectValue placeholder="Metric View" />
-                          </SelectTrigger>
-                          <SelectContent className="platform-vitality-page rounded-[2px] border-[#E5E7EB] bg-white text-[#111827] shadow-[0_12px_28px_rgba(17,24,39,0.08)]">
-                            <SelectItem value="payout" className="text-xs text-[#111827]">Expected Payout</SelectItem>
-                            <SelectItem value="confidence" className="text-xs text-[#111827]">Confidence Score</SelectItem>
-                            <SelectItem value="units" className="text-xs text-[#111827]">Units Affected</SelectItem>
-                            <SelectItem value="cost" className="text-xs text-[#111827]">Cost Per Unit</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="p-4">
-                        <div className="text-[18px] font-semibold text-[#111827] tabular-nums font-sans tracking-tight">
-                          {selectedMetric === 'payout' && (
-                            effectiveCase.expectedPayoutDate ? (
-                              (() => {
-                                const d = new Date(effectiveCase.expectedPayoutDate);
-                                return isNaN(d.getTime()) ? NOT_AVAILABLE : d.toLocaleDateString('en-US', {
-                                  month: 'short', day: 'numeric', year: 'numeric'
-                                });
-                              })()
-                            ) : NOT_AVAILABLE
-                          )}
-                          {selectedMetric === 'confidence' && (backendConfidencePct === null ? NOT_AVAILABLE : `${backendConfidencePct}%`)}
-                          {selectedMetric === 'units' && (backendUnitsAffected == null ? NOT_AVAILABLE : `${backendUnitsAffected} units`)}
-                          {selectedMetric === 'cost' && (
-                            typeof backendUnitCost === 'number' ? `$${backendUnitCost.toFixed(2)}` : NOT_AVAILABLE
-                          )}
-                        </div>
-                        <div className="text-[9px] text-[#9CA3AF] mt-1.5 font-bold tracking-tight">
-                          {selectedMetric === 'payout' && 'Expected Payout Date'}
-                          {selectedMetric === 'confidence' && 'Analysis Precision'}
-                          {selectedMetric === 'units' && 'Inventory Units'}
-                          {selectedMetric === 'cost' && `Cost basis: ${String(unitValueProvenance).replace(/_/g, ' ')}`}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </ClaimRecordSection>
-
-                <dl className="mt-3 grid gap-3 lg:grid-cols-2">
-                  <ClaimRecordField label="Accounting status">
-                    {accountingTruth?.status ? toStatusLabel(accountingTruth.status) : NOT_AVAILABLE}
-                    {accountingTruth?.limitation && <span className="block mt-1 text-[10px] text-[#6B7C88]">{accountingTruth.limitation}</span>}
-                  </ClaimRecordField>
-                  <ClaimRecordField label="Financial closure">
-                    {closureTruth?.state ? toStatusLabel(closureTruth.state) : NOT_AVAILABLE}
-                    {closureTruth?.reason && <span className="block mt-1 text-[10px] text-[#6B7C88]">{closureTruth.reason}</span>}
-                  </ClaimRecordField>
-                </dl>
-                <AccountingReconciliationWidget caseId={effectiveCase.id} tenantSlug={activeSlug} />
-
-                <ClaimRecordSection title="Evidence Packet" eyebrow="Proof and claim basis">
-                  <div className="grid gap-5 lg:grid-cols-2">
-                    <div>
-                      <p className="font-sans text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">Evidence used</p>
-                      <p className="mt-2 font-sans text-[13px] leading-6 tracking-tight text-[#4D5B66]">
-                        {sellerSummary?.evidence_summary || 'Structured backend evidence is attached to this case record.'}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-sans text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">Why this may be recoverable</p>
-                      <p className="mt-2 font-sans text-[13px] leading-6 tracking-tight text-[#4D5B66]">
-                        {sellerSummary?.recoverability_reason || 'Amazon records do not reconcile with the expected seller outcome. Margin is verifying identifiers, evidence, and policy support before filing.'}
-                      </p>
-                    </div>
-                  </div>
-                  <dl className="mt-5 grid gap-3 lg:grid-cols-2">
-                    <ClaimRecordField label="Proof Status">{proofStatus ? formatProofStatus(proofStatus) : NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Payout Proof">{payoutProofStatus ? formatPayoutProofStatus(payoutProofStatus) : NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Missing Requirements">{missingRequirements ? formatRequirementList(missingRequirements) : NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Manual Review Reason">{manualReviewReason ? formatDisputeReason(manualReviewReason) : NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Decision Explanation">{summarizeExplanationPayload(effectiveCase.explanation_payload) || NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Runtime Explanation">{summarizeOperationalExplanation(effectiveCase.operational_explanation) || NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Block Reasons">
-                      {Array.isArray(effectiveCase?.block_reasons) && effectiveCase.block_reasons.length
-                        ? effectiveCase.block_reasons.map((reason: string) => formatDisputeReason(reason)).join(', ')
-                        : NOT_AVAILABLE}
-                    </ClaimRecordField>
-                    <ClaimRecordField label="Quarantine Reason">{quarantineReason || NOT_AVAILABLE}</ClaimRecordField>
-                  </dl>
-                </ClaimRecordSection>
-
-                <ClaimRecordSection title="Amazon Filing Truth" eyebrow="Submission movement and policy support">
-                  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-                    <div>
-                      <div className="flex items-center justify-between gap-4">
-                        <p className="font-sans text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">Current filing movement</p>
-                        {filingMovement?.next_action_label && (
-                          <span className="shrink-0 border border-[#D8E3E8] bg-[#F8FAFB] px-3 py-1.5 font-sans text-[10px] font-medium uppercase tracking-tight text-[#4D5B66]">
-                            {filingMovement.next_action_label}
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-1.5 font-sans text-[13px] font-semibold tracking-tight text-[#111827]">
-                        {filingMovement?.label || nextStep?.title || NOT_AVAILABLE}
-                      </p>
-                      <p className="mt-2 max-w-3xl font-sans text-[12px] leading-5 tracking-tight text-[#6B7C88]">
-                        {sellerSafeOperationalText(
-                          filingMovement?.detail || nextStep?.description,
-                          'Margin is tracking this case through the filing workflow.'
-                        )}
-                      </p>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between gap-4">
-                        <p className="font-sans text-[10px] font-semibold uppercase tracking-tight text-[#6B7C88]">Policy basis</p>
-                        {policyBasis?.verification_status === 'policy_basis_pending_verification' && (
-                          <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-blue-100/80">Pending verification</span>
-                        )}
-                      </div>
-                      <p className="mt-2 font-sans text-[13px] font-semibold leading-tight tracking-tight text-[#111827]">
-                        {policyBasis?.title || 'Policy basis pending verification'}
-                      </p>
-                      <p className="mt-2 font-sans text-[12px] leading-5 tracking-tight text-[#6B7C88]">
-                        {policyBasis?.summary || 'Margin has not mapped this detector to a curated policy reference yet.'}
-                      </p>
-                      <div className="mt-3 flex flex-wrap gap-2 font-sans text-[10px] font-medium uppercase tracking-tight text-[#6B7C88]">
-                        {policyBasis?.source_url ? (
-                          <a href={policyBasis.source_url} target="_blank" rel="noreferrer" className="transition-colors hover:text-[#07111A]">
-                            {policyBasis.source_name || 'Amazon Seller Central'}
-                          </a>
-                        ) : (
-                          <span>{policyBasis?.source_name || 'Amazon Seller Central'}</span>
-                        )}
-                        <span className="text-[#B8C9D2]">/</span>
-                        <span>{policyBasis?.last_verified_at ? `Verified ${formatDateOrDash(policyBasis.last_verified_at)}` : 'Verification unavailable'}</span>
-                      </div>
-                      {findingPolicyEvidence.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {findingPolicyEvidence.slice(0, 4).map((item: string) => (
-                            <span key={item} className="border border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 font-sans text-[10px] font-medium tracking-tight text-[#4D5B66]">
-                              {item}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {whyNotClaimReady && (
-                    <p className="mt-5 border-t border-[#D8E3E8] pt-4 font-sans text-[12px] leading-5 tracking-tight text-blue-800">
-                      {whyNotClaimReady}
-                    </p>
-                  )}
-                  <dl className="mt-5 grid gap-3 lg:grid-cols-3">
-                    <ClaimRecordField label="Current Status">{toStatusLabel(effectiveCase.status || (statusFeedUnavailable ? 'unavailable' : '-'))}</ClaimRecordField>
-                    <ClaimRecordField label="Amazon Thread State">{formatThreadStateLabel(effectiveCase.case_state)}</ClaimRecordField>
-                    <ClaimRecordField label="Filing Status">{formatSellerCaseFilingStatus(effectiveCase, proofStatus)}</ClaimRecordField>
-                    <ClaimRecordField label="Filing Truth">{getCaseFilingTruthLine(effectiveCase, proofStatus)}</ClaimRecordField>
-                    <ClaimRecordField label="Eligibility">{formatEligibilityStatus(effectiveCase.eligibility_status)}</ClaimRecordField>
-                    <ClaimRecordField label="Filing Strategy">{effectiveCase.filing_strategy ? formatAutonomyLabel(effectiveCase.filing_strategy) : NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Runtime State">{effectiveCase.operational_state ? formatAutonomyLabel(effectiveCase.operational_state) : NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Recovery Status">{toStatusLabel(effectiveCase.recovery_status)}</ClaimRecordField>
-                    <ClaimRecordField label="Billing Status">{toStatusLabel(effectiveCase.billing_status)}</ClaimRecordField>
-                    <ClaimRecordField label="Issue Identified">{formatDateOrDash(effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date)}</ClaimRecordField>
-                    <ClaimRecordField label="Last Updated">{formatDateOrDash(effectiveCase.updated_at || effectiveCase.created_at || effectiveCase.createdDate)}</ClaimRecordField>
-                  </dl>
-                </ClaimRecordSection>
-
-                <ClaimRecordSection title="Account Safety" eyebrow="Duplicate and protection checks">
-                  {hasSafetyBlock ? (
-                    <div className="mb-5 flex gap-3 border border-blue-500/20 bg-blue-500/10 p-4">
-                      <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-blue-300" />
-                      <div>
-                        <div className="text-xs font-bold text-blue-300">Account Protection Active</div>
-                        <p className="mt-1 text-xs text-blue-100/78 leading-relaxed font-semibold">
-                          {effectiveCase.prior_reimbursement_detected
-                            ? `We detected a prior reimbursement for ${effectiveCase.sku}. This claim was blocked to prevent a duplicate filing.`
-                            : effectiveCase.inventory_adjustment_applied
-                              ? 'Amazon already processed an inventory adjustment. Claim was suppressed to protect your account.'
-                              : 'This claim was blocked by our protection system to keep your account safe.'}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="mb-5 flex gap-3 border border-[#D8E3E8] bg-[#F8FAFB] p-4">
-                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#6B7C88]" />
-                      <div>
-                        <div className="text-xs font-bold text-[#6B7C88]">{hasUnassessedSafety ? 'Safety evaluation incomplete' : 'No active duplicate-protection block shown'}</div>
-                        <p className="mt-1 text-xs text-[#6B7C88] leading-relaxed font-semibold">
-                          {hasUnassessedSafety
-                            ? 'One or more duplicate-protection checks have not been assessed for this record.'
-                            : 'Recorded reimbursement, adjustment, and duplicate checks are clear on this record.'}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                  <dl className="grid gap-3 sm:grid-cols-3">
-                    <ClaimRecordField label="Prior reimbursement">{safetyEvaluationLabel('prior_reimbursement', 'Detected', 'No')}</ClaimRecordField>
-                    <ClaimRecordField label="Inventory adjustment">{safetyEvaluationLabel('inventory_adjustment', 'Applied', 'No')}</ClaimRecordField>
-                    <ClaimRecordField label="Duplicate blocked">{safetyEvaluationLabel('duplicate_claim', 'Blocked', 'No')}</ClaimRecordField>
-                  </dl>
-                </ClaimRecordSection>
-
-                <ClaimRecordSection title="Source Details" eyebrow="Product, facility, identifiers, and source classification">
-                  <dl className="grid gap-3 lg:grid-cols-3">
-                    <ClaimRecordField label="Product">
-                      <span title={effectiveCase.productName || effectiveCase.title || 'Unknown Product'}>
-                        {effectiveCase.productName || effectiveCase.title || 'Unknown Product'}
-                      </span>
-                    </ClaimRecordField>
-                    <ClaimRecordField label="ASIN / SKU">
-                      {effectiveCase.asin && effectiveCase.asin !== 'N/A' ? effectiveCase.asin : <span className="text-[#9CA3AF]">-</span>}
-                      <span className="mx-2 text-[#B8C9D2]">/</span>
-                      {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-[#9CA3AF]">-</span>}
-                    </ClaimRecordField>
-                    <ClaimRecordField label="FNSKU">
-                      <span className="flex flex-col gap-1">
-                        <span>{effectiveCase.fnsku ? effectiveCase.fnsku : <span className="text-[#9CA3AF]">-</span>}</span>
-                        {effectiveCase?.identity_truth?.fnsku?.state === 'conflicted' ? (
-                          <span className="text-[10px] text-[#6B7C88]">Observed FNSKUs conflict; identity is not treated as matched.</span>
-                        ) : effectiveCase?.identity_truth?.fnsku?.state === 'unavailable' ? (
-                          <span className="text-[10px] text-[#6B7C88]">FNSKU not available in the observed case evidence.</span>
-                        ) : null}
-                      </span>
-                    </ClaimRecordField>
-                    <ClaimRecordField label="Warehouse">
-                      <span className="inline-flex items-center gap-2">
-                        <MapPin className="h-3.5 w-3.5 text-[#6B7C88]" />
-                        {resolvedFacility && !String(resolvedFacility).includes('UNKNOWN')
-                          ? resolvedFacility
-                          : <span className="text-[#9CA3AF]">-</span>}
-                      </span>
-                    </ClaimRecordField>
-                    <ClaimRecordField label="Amazon Case ID">
-                      <span className="flex flex-col gap-1">
-                        {effectiveCase.amazonCaseId ? (
-                          <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-sans font-bold text-emerald-400 hover:underline inline-flex items-center gap-1">
-                            {effectiveCase.amazonCaseId} <ExternalLink className="h-2.5 w-2.5" />
-                          </a>
-                        ) : <span className="text-[#9CA3AF]">-</span>}
-                        {effectiveCase.prior_case_id && (
-                          <span className="text-xs text-[#6B7C88] font-sans font-bold">Prior: {effectiveCase.prior_case_id}</span>
-                        )}
-                      </span>
-                    </ClaimRecordField>
-                    <ClaimRecordField label="Shipment warehouse">{effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || NOT_AVAILABLE}</ClaimRecordField>
-                    <ClaimRecordField label="Product Match">{backendEvidenceStatus}</ClaimRecordField>
-                    <ClaimRecordField label="Order Reference">
-                      <span className="underline underline-offset-2 decoration-white/20">{effectiveCase.order_id || NOT_AVAILABLE}</span>
-                    </ClaimRecordField>
-                    <ClaimRecordField label="Claim Type"><span className="capitalize">{resolvedClaimType}</span></ClaimRecordField>
-                    <ClaimRecordField label="Match Method"><span className="capitalize">{resolvedMatchMethod}</span></ClaimRecordField>
-                    <ClaimRecordField label="Detection">{AGENT_NAMES['detection'] || 'Automatic'}</ClaimRecordField>
-                  </dl>
-
-                  <div className="mt-6">
-                    <h4 className="flex items-center gap-2 text-[10px] font-bold text-[#6B7C88] border-b border-[#D8E3E8] pb-2.5 tracking-tight uppercase">
-                      <History className="h-3 w-3 text-blue-400" /> Platform Insights
-                    </h4>
-                    {effectiveCase.warehouse_history ? (
-                      <div className="mt-3 border border-blue-500/10 bg-blue-500/5 p-3">
-                        <div className="mb-2 flex items-center gap-2">
-                          <AlertCircle className="h-3 w-3 text-blue-400" />
-                          <span className="text-[11px] font-bold text-blue-400">Recurring Pattern Detected</span>
-                        </div>
-                        <p className="text-[11px] text-[#6B7C88] leading-relaxed font-bold">
-                          Warehouse <span className="text-[#07111A] font-semibold">{resolvedFacility ? String(resolvedFacility).split(' ')[0] : '-'}</span> has recorded <span className="text-[#07111A] font-semibold">{effectiveCase.warehouse_history.occurrence_count} similar discrepancies</span> for you, totaling <span className="text-[#07111A] font-semibold">${effectiveCase.warehouse_history.total_value_lost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span> in at-risk value.
-                        </p>
-                        <div className="mt-2 text-[9px] text-[#6B7C88] font-sans font-bold">
-                          {effectiveCase.warehouse_history.source || '-'}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="mt-3 border border-[#D8E3E8] bg-[#F8FAFB] p-3 text-center">
-                        <span className="text-[10px] text-[#6B7C88] font-medium">-</span>
-                      </div>
-                    )}
-                  </div>
-                </ClaimRecordSection>
-
-                {effectiveCase.evidence && (inventoryTotalInput !== null || inventoryTotalOutput !== null) && (
-                  <ClaimRecordSection title="Audit Calculation" eyebrow="Inventory math">
-                    <div className="flex items-center justify-between gap-4 border-b border-[#D8E3E8] pb-4">
-                      <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-tight flex items-center gap-2">
-                        <BarChart3 className="h-3.5 w-3.5" />
-                        Audit Calculation Breakdown
-                      </h4>
-                      <div className="flex items-center gap-2 text-[10px] text-[#6B7C88] font-sans">
-                        <Database className="h-3 w-3" />
-                        Real-time FBA Logs
-                      </div>
-                    </div>
-
-                    <div className="mt-5 grid grid-cols-1 gap-x-12 gap-y-6 md:grid-cols-2">
-                      <div className="space-y-3">
-                        <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-2">Inventory In (Input)</div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[#6B7C88]">Total Receipts</span>
-                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_receipts) === null ? NOT_AVAILABLE : `+${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_receipts))}`}</span>
-                        </div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[#6B7C88]">Customer Returns</span>
-                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_returns) === null ? NOT_AVAILABLE : `+${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_returns))}`}</span>
-                        </div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[#6B7C88]">Adjustments (In)</span>
-                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_adjustments) === null ? NOT_AVAILABLE : `+${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_adjustments))}`}</span>
-                        </div>
-                        <div className="pt-2 border-t border-[#E4EDF1] flex justify-between text-xs font-bold">
-                          <span className="text-[#6B7C88] uppercase tracking-tight">Total calculated in</span>
-                          <span className="text-emerald-300 font-sans font-bold">{formatQuantityOrDash(inventoryTotalInput)}</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-2">Inventory Out (Output)</div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[#6B7C88]">Customer Shipments</span>
-                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_shipments) === null ? NOT_AVAILABLE : `-${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_shipments))}`}</span>
-                        </div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[#6B7C88]">Removals & Disposals</span>
-                          <span className="text-[#07111A] font-sans font-bold">{inventoryQuantity(inventoryEvidence.total_removals) === null ? NOT_AVAILABLE : `-${formatQuantityOrDash(inventoryQuantity(inventoryEvidence.total_removals))}`}</span>
-                        </div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-[#6B7C88]">Adjustments (Out)</span>
-                          <span className="text-[#07111A] font-sans font-bold">{NOT_AVAILABLE}</span>
-                        </div>
-                        <div className="pt-2 border-t border-[#E4EDF1] flex justify-between text-xs font-bold">
-                          <span className="text-[#6B7C88] uppercase tracking-tight">Total calculated out</span>
-                          <span className="text-blue-300 font-sans font-bold">{formatQuantityOrDash(inventoryTotalOutput)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-8 pt-6 border-t border-[#D8E3E8] flex flex-wrap gap-x-16 gap-y-6">
-                      <div>
-                        <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-1.5">Expected Stock</div>
-                        <div className="text-lg font-sans font-bold text-[#07111A]">{formatQuantityOrDash(inventoryCalculatedStock)}</div>
-                      </div>
-                      <div className="text-[#B8C9D2] text-xl font-bold pt-2">vs</div>
-                      <div>
-                        <div className="text-[9px] font-bold text-[#6B7C88] uppercase tracking-tight mb-1.5">Warehouse Balance</div>
-                        <div className="text-lg font-sans font-bold text-[#07111A]">{formatQuantityOrDash(inventoryWarehouseBalance)}</div>
-                      </div>
-                      <div className="h-10 w-[1px] bg-[#F8FAFB] hidden md:block" />
-                      <div>
-                        <div className="text-[9px] font-bold text-emerald-400 uppercase tracking-tight mb-1.5">Detected Gap</div>
-                        <div className="text-lg font-sans font-bold text-emerald-300">
-                          {inventoryDiscrepancy === null ? NOT_AVAILABLE : `${formatQuantityOrDash(inventoryDiscrepancy)} Units`}
-                        </div>
-                      </div>
-                    </div>
-                  </ClaimRecordSection>
-                )}
-              </div>
+              <RecoveryTruthRecord
+                caseData={effectiveCase}
+                tenantSlug={activeSlug}
+                truthPresentation={recoveryTruthPresentation}
+                requestedLanguage={requestedRecoveryLanguage}
+                accountingBoundary={accountingClaimBoundary}
+                currency={effectiveCase?.currency || 'USD'}
+                requestedAmount={claimRecordRequestedAmount}
+                estimatedClaimValue={claimRecordEstimatedClaimValue}
+                approvedAmount={claimRecordApprovedAmount}
+                recordedPayoutAmount={claimRecordRecordedPayoutAmount}
+                verifiedPaidAmount={claimRecordVerifiedPaidAmount}
+                outstandingAmount={outstandingAmount}
+                varianceAmount={varianceAmount}
+                trustedApproval={hasTrustedApprovalTruth(backendTruthCase)}
+                trustedPayout={hasTrustedPayoutTruth(backendTruthCase)}
+                hasResolvedBackend={hasResolvedBackend}
+                hasSafetyBlock={hasSafetyBlock}
+                hasUnassessedSafety={hasUnassessedSafety}
+                proofStatus={proofStatus}
+                payoutProofStatus={payoutProofStatus}
+                filingStatus={formatSellerCaseFilingStatus(effectiveCase, proofStatus)}
+                filingTruthLine={getCaseFilingTruthLine(effectiveCase, proofStatus)}
+                nextStep={nextStep}
+                sellerSummary={sellerSummary}
+                policyBasis={policyBasis}
+                matchedDocuments={displayedMatchedDocs}
+                inventory={{
+                  totalInput: inventoryTotalInput,
+                  totalOutput: inventoryTotalOutput,
+                  calculatedStock: inventoryCalculatedStock,
+                  warehouseBalance: inventoryWarehouseBalance,
+                  discrepancy: inventoryDiscrepancy,
+                }}
+                findingNarrative={findingNarrative || NOT_AVAILABLE}
+                generatedNarrative={!sellerSummary?.summary}
+                financialTruthLimitation={financialTruthLimitation}
+                accountingTruth={accountingTruth}
+                closureTruth={closureTruth}
+                onOpenDocument={(documentId) => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(documentId)}`, '_blank')}
+              />
             )}
 
             {activeTab === 'PROTOCOL' && (
