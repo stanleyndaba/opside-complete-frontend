@@ -379,7 +379,7 @@ const toEntityLabel = (value?: string | null) => {
 const toEventSourceLabel = (value?: string | null) => {
   const normalized = String(value || '').trim().toLowerCase();
   if (!normalized) return NOT_AVAILABLE;
-  if (normalized === 'agent_event') return 'Agent Event';
+  if (normalized === 'agent_event') return 'Recovery event';
   if (normalized === 'notification') return 'Notification';
   return String(value).replace(/[_-]+/g, ' ');
 };
@@ -3133,7 +3133,7 @@ export default function CaseDetail() {
                         <div className="h-px flex-1 bg-[#D8E3E8]" />
                       </div>
                       <div className="text-[10px] font-medium text-[#6B7C88]">
-                        Reconstructed evidence-related history from notifications and agent events.
+                        Reconstructed evidence-related history from notifications and recorded recovery events.
                       </div>
 
                       <div className="overflow-hidden border border-[#D8E3E8] bg-white">

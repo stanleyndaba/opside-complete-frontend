@@ -130,4 +130,10 @@ assert(!caseDetailSource.includes('Reply is not available from the browser while
 assert(!caseDetailSource.includes('Margin will not expose a reply action here until verified identifiers support a safe case path.'), 'Thread-only reply copy must be centralized in the state-aware reply explanation.');
 assert((caseDetailSource.match(/: replyDisabledReason/g) || []).length === 1, 'A disabled Amazon reply state must render one concise explanation, not duplicate control guidance.');
 
-console.log(`Recovery Progress Phase B.2/B.3 matrix passed (${assertions} assertions across 15 states).`);
+// Phase B.4 freeze boundary: seller-facing history must not expose Margin internal-agent terminology.
+assert(caseDetailSource.includes("if (normalized === 'agent_event') return 'Recovery event';"), 'Internal event sources must use seller-safe recovery-event language.');
+assert(caseDetailSource.includes('notifications and recorded recovery events.'), 'Evidence history must describe neutral recorded recovery events.');
+assert(!caseDetailSource.includes("return 'Agent Event';"), 'Case Detail must not expose Agent Event as a seller-facing source label.');
+assert(!caseDetailSource.includes('notifications and agent events.'), 'Case Detail must not expose internal agent events in evidence-history guidance.');
+
+console.log(`Recovery Progress Phase B.2/B.3/B.4 matrix passed (${assertions} assertions across 15 states).`);
