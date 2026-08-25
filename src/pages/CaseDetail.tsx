@@ -704,7 +704,11 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
     caseData.actual_payout_amount ?? caseData.recovered_amount ?? caseData.approved_amount ?? caseData.requested_amount,
     1284.66
   );
-  const demoThreadAmount = caseReference === 'ACME-CASE-2005' ? 569.50 : Number(reimbursementAmount);
+  const normalizedReimbursementAmount = Number(reimbursementAmount);
+  const acmeVerifiedOutcomeAmount = Number(caseData?.verified_paid_amount ?? caseData?.approved_amount ?? reimbursementAmount);
+  const demoThreadAmount = caseReference === 'ACME-CASE-2005' && Number.isFinite(acmeVerifiedOutcomeAmount) && acmeVerifiedOutcomeAmount > 0
+    ? acmeVerifiedOutcomeAmount
+    : normalizedReimbursementAmount;
   const normalizedState = String(caseData.case_state || caseData.recovery_status || '').toLowerCase();
   const isRejected = normalizedState.includes('reject') || isRejectedDemoCaseReference(caseReference);
   const isFilingReceipt = hasDemoFilingReceiptThread(caseData, caseReference);
@@ -1994,7 +1998,6 @@ export default function CaseDetail() {
   const displayedMatchedDocs = useMemo(() => {
     if (!isDemoWorkspaceSlug(activeSlug) || caseId !== 'ACME-CASE-2005') return matchedDocs;
     const baseDocs = Array.isArray(matchedDocs) ? matchedDocs.slice(0, 3).map((doc: any, idx: number) => {
-      const amountText = '$569.50';
       const docText = String(doc?.matchType || doc?.type || '').toLowerCase();
       if (idx === 0 || docText.includes('ship')) {
         return {
@@ -2003,7 +2006,6 @@ export default function CaseDetail() {
           name: 'SHIP-ACME-2005.pdf',
           filename: 'SHIP-ACME-2005.pdf',
           original_filename: 'SHIP-ACME-2005.pdf',
-          displayAmount: amountText,
           matchType: 'shipping',
         };
       }
@@ -2014,7 +2016,6 @@ export default function CaseDetail() {
           name: 'INV-ACME-2005.pdf',
           filename: 'INV-ACME-2005.pdf',
           original_filename: 'INV-ACME-2005.pdf',
-          displayAmount: amountText,
           matchType: 'invoice',
         };
       }
@@ -2024,7 +2025,6 @@ export default function CaseDetail() {
         name: 'PO-ACME-2005.pdf',
         filename: 'PO-ACME-2005.pdf',
         original_filename: 'PO-ACME-2005.pdf',
-        displayAmount: amountText,
         matchType: 'purchase order',
       };
     }) : [];
@@ -2036,7 +2036,6 @@ export default function CaseDetail() {
         name: 'ACME-2005-ledger.pdf',
         filename: 'ACME-2005-ledger.pdf',
         original_filename: 'ACME-2005-ledger.pdf',
-        displayAmount: '$569.50',
         matchType: 'ledger',
         confidence_score: 0.95,
         evidence: 'Accounting ledger excerpt tied to the reimbursement trail.',
@@ -2088,6 +2087,10 @@ export default function CaseDetail() {
     : null;
   const approvalGuidance = useMemo(() => {
     const hasMatchedDocs = typeof matchedCount === 'number' && matchedCount > 0;
+    const hasCurrentFiling = hasTrustedFilingTruth(backendTruthCase);
+    const hasCurrentApproval = hasTrustedApprovalTruth(backendTruthCase);
+    const hasCurrentPayout = hasTrustedPayoutTruth(backendTruthCase);
+    const isFinanciallyClosed = recoveryTruthPresentation.label === 'Financially closed';
     const matchedDocsLabel = matchedCount === null
       ? NOT_AVAILABLE
       : `${matchedCount} matched ${matchedCount === 1 ? 'doc' : 'docs'}`;
@@ -2096,6 +2099,46 @@ export default function CaseDetail() {
     const normalizedProofStatus = String(proofStatus || '').toLowerCase();
     const normalizedPayoutProofStatus = String(payoutProofStatus || '').toLowerCase();
     const normalizedEligibilityStatus = String(effectiveCase?.eligibility_status || backendTruthCase?.eligibility_status || '').toLowerCase();
+
+    if (hasCurrentPayout) {
+      return {
+        description: isFinanciallyClosed
+          ? 'Payment is verified and the available closure checks establish financial closure for this recovery.'
+          : `Payment is verified. ${recoveryTruthPresentation.explanation}`,
+        helper: isFinanciallyClosed
+          ? 'No further recovery action is established from the current record unless a new linked event changes it.'
+          : 'Filing approval is a historical step for this recovery. Use Recovery progress to follow the remaining closure condition.',
+        chips: [
+          `Current state: ${recoveryTruthPresentation.label}`,
+          `Docs linked: ${matchedDocsLabel}`,
+          payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
+
+    if (hasCurrentApproval) {
+      return {
+        description: 'Amazon approval is established, but Margin has not yet verified the corresponding payment event.',
+        helper: 'Filing approval is complete. Margin is monitoring settlement activity and will verify the payment against this recovery when it appears.',
+        chips: [
+          'Current state: Approved — payment not verified',
+          `Docs linked: ${matchedDocsLabel}`,
+          payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
+
+    if (hasCurrentFiling) {
+      return {
+        description: 'Submission proof is recorded. Margin is waiting for Amazon’s outcome or an evidence request on the linked case.',
+        helper: 'Filing is already established for this recovery; seller approval is not the current action unless Margin requests additional evidence.',
+        chips: [
+          'Current state: Filed — awaiting Amazon outcome',
+          `Docs linked: ${matchedDocsLabel}`,
+          proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
 
     if (formattedRequirements) {
       return {
@@ -2260,6 +2303,7 @@ export default function CaseDetail() {
       ].filter(Boolean) as string[],
     };
   }, [
+    backendTruthCase,
     backendTruthCase?.eligibility_status,
     effectiveCase?.eligibility_status,
     effectiveCase?.safety_audit,
@@ -2269,6 +2313,7 @@ export default function CaseDetail() {
     payoutProofStatus,
     proofStatus,
     quarantineReason,
+    recoveryTruthPresentation,
   ]);
   const evidenceEvents = useMemo(
     () => (Array.isArray(caseEvents) ? caseEvents.filter(isEvidenceRelatedEvent) : []),
@@ -3019,9 +3064,9 @@ export default function CaseDetail() {
                                 ? Math.round((doc.confidence_score > 1 ? doc.confidence_score : doc.confidence_score * 100))
                                 : null);
                             const evidenceTitle = getDocumentEvidenceTitle(doc, idx);
-                            const evidenceSubtitle = String(getDocumentEvidenceSubtitle(doc) || doc.evidence || '').replace(/\$963\.10/g, '$569.50');
-                            const filename = String(doc.name || doc.filename || doc.original_filename || '').replace(/\$963\.10/g, '$569.50') || null;
-                            const displayAmount = String(doc.displayAmount || '').replace(/\$963\.10/g, '$569.50');
+                            const evidenceSubtitle = String(getDocumentEvidenceSubtitle(doc) || doc.evidence || '');
+                            const filename = String(doc.name || doc.filename || doc.original_filename || '') || null;
+                            const displayAmount = String(doc.displayAmount || '');
                             const documentIsPdf = isPdfArtifact(doc);
                             return (
                               <div key={doc.id || idx} className="group rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-3.5 transition-colors hover:bg-white">
