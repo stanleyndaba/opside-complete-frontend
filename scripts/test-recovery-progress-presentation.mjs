@@ -118,6 +118,7 @@ assert(caseDetailSource.includes("{ label: 'Payment verified', active: hasPayout
 
 // Phase B.3 integrated coherence: current outcome must outrank stale pre-filing guidance.
 assert(caseDetailSource.includes('if (hasCurrentPayout) {') && caseDetailSource.includes('Filing approval is a historical step for this recovery.'), 'A verified payment must prevent the header from directing the seller to approve an already-filed recovery.');
+assert(!caseDetailSource.includes('Payment is verified. ${recoveryTruthPresentation.explanation}'), 'The current-state header must not repeat the verified-payment conclusion.');
 assert(caseDetailSource.includes('if (hasCurrentApproval) {') && caseDetailSource.includes('Amazon approval is established, but Margin has not yet verified the corresponding payment event.'), 'An established approval must take precedence over pre-filing seller-approval guidance.');
 assert(!caseDetailSource.includes("caseReference === 'ACME-CASE-2005' ? 569.50"), 'ACME must not inject an unlabelled competing Amazon outcome amount.');
 assert(!caseDetailSource.includes("replace(/\\$963\\.10/g, '$569.50')"), 'Supporting evidence must not rewrite an authoritative payment amount to a conflicting scenario amount.');

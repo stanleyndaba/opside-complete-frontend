@@ -2104,7 +2104,7 @@ export default function CaseDetail() {
       return {
         description: isFinanciallyClosed
           ? 'Payment is verified and the available closure checks establish financial closure for this recovery.'
-          : `Payment is verified. ${recoveryTruthPresentation.explanation}`,
+          : recoveryTruthPresentation.explanation,
         helper: isFinanciallyClosed
           ? 'No further recovery action is established from the current record unless a new linked event changes it.'
           : 'Filing approval is a historical step for this recovery. Use Recovery progress to follow the remaining closure condition.',
