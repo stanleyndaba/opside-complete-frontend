@@ -107,19 +107,6 @@ const POLICY_MAP: Record<string, { code: string; title: string; link: string; cl
   }
 };
 
-const AGENT_NAMES: Record<string, string> = {
-  'data_sync': 'Agent 2: Sync Signal',
-  'detection': 'Agent 3: Inbound Inspector',
-  'evidence_ingestion': 'Agent 4: Evidence Harvester',
-  'document_parsing': 'Agent 5: Optical Reader',
-  'evidence_matching': 'Agent 6: Pattern Matcher',
-  'refund_filing': 'Agent 7',
-  'recoveries': 'Agent 8: Recovery Engine',
-  'billing': 'Agent 9: Ledger Bot',
-  'notifications': 'Agent 10: Comms Relay',
-  'learning': 'Agent 11: Logic Optimizer'
-};
-
 interface EscalationPlaybook {
   reason: RejectionReason;
   label: string;
@@ -464,12 +451,13 @@ const isPdfArtifact = (doc: any) => {
 const formatThreadStateLabel = (value?: string | null) => {
   const normalized = String(value || '').trim().toLowerCase();
   if (!normalized) return NOT_AVAILABLE;
+  if (normalized === 'paid') return 'Reimbursement recorded in thread';
   return normalized.replace(/_/g, ' ');
 };
 
 const getThreadStateTone = (value?: string | null) => {
   const normalized = String(value || '').trim().toLowerCase();
-  if (normalized === 'paid') return 'text-emerald-800 border-emerald-200 bg-emerald-50';
+  if (normalized === 'paid') return 'text-[#4D5B66] border-[#D8E3E8] bg-[#F8FAFB]';
   if (normalized === 'approved') return 'text-[#07111A] border-[#D8E3E8] bg-[#F8FAFB]';
   if (normalized === 'needs_evidence') return 'text-blue-800 border-blue-200 bg-blue-50';
   if (normalized === 'rejected') return 'text-red-800 border-red-200 bg-red-50';
@@ -1805,11 +1793,29 @@ export default function CaseDetail() {
     confirmedLinkedDisputeCaseId &&
     backendEligibilityStatus === 'READY'
   );
+  const replyDisabledReason = (() => {
+    if (backendTruthCase?.truth_unavailable) {
+      return 'Reply is unavailable until Margin restores authoritative case truth and can confirm a safe evidence-backed action.';
+    }
+    if (backendEligibilityStatus === 'THREAD_ONLY') {
+      return 'Amazon thread detected. Reply stays disabled until verified identifiers support a safe case path.';
+    }
+    if (hasTrustedPayoutTruth(backendTruthCase)) {
+      return 'Reply is unavailable while this recovery is in payment and closure review. Margin will only reopen the Amazon thread if a new evidence-backed action is justified.';
+    }
+    if (hasTrustedApprovalTruth(backendTruthCase)) {
+      return 'Reply is unavailable while Margin verifies the approved outcome and the related payment evidence.';
+    }
+    if (hasTrustedFilingTruth(backendTruthCase)) {
+      return 'Reply is unavailable while Margin waits for Amazon’s outcome or a supported evidence request on the linked case.';
+    }
+    return 'Reply is unavailable until the current case truth supports a safe evidence-backed action.';
+  })();
   const openCanonicalFilingScreen = useCallback((intent: 'submit' | 'resubmit') => {
     if (confirmedLinkedDisputeCaseId && activeSlug) {
       toast({
         title: intent === 'resubmit' ? 'Use Dispute Cases to retry filing' : 'Use Dispute Cases to file',
-        description: `Opening the canonical Agent 7 filing screen for dispute case ${confirmedLinkedDisputeCaseId}.`
+        description: `Opening the linked filing workspace for dispute case ${confirmedLinkedDisputeCaseId}.`
       });
       navigate(tenantRoute(activeSlug, '/dispute-cases'), {
         state: {
@@ -2876,12 +2882,13 @@ export default function CaseDetail() {
                         </div>
                       ) : null}
 
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-3">
                         <h4 className="text-sm font-semibold tracking-tight text-[#07111A]">Amazon Thread</h4>
                         <Badge variant="outline" className={cn("text-[10px] uppercase tracking-tight border", getThreadStateTone(backendTruthCase?.case_state))}>
                           {formatThreadStateLabel(backendTruthCase?.case_state)}
                         </Badge>
                       </div>
+                      <p className="text-[11px] leading-5 text-[#6B7C88]">Thread states describe Amazon communication records. They do not, by themselves, establish verified payment or financial closure.</p>
 
                       {!amazonThreadLinked ? (
                         <div className="border border-dashed border-[#D8E3E8] bg-[#F8FAFB] px-4 py-5 text-sm text-[#6B7C88]">
@@ -2971,9 +2978,7 @@ export default function CaseDetail() {
                             <div className="mt-1 text-[11px] text-[#6B7C88]">
                               {canReplyToAmazonThread
                                 ? 'Continue the linked Amazon support thread from inside Margin.'
-                                : backendEligibilityStatus === 'THREAD_ONLY'
-                                  ? 'Amazon thread detected. Reply stays disabled until verified identifiers support a safe case path.'
-                                  : 'Reply stays disabled until this case is filing-ready.'}
+                                : replyDisabledReason}
                             </div>
                           </div>
 

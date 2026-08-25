@@ -110,7 +110,7 @@ assert(caseDetailSource.includes('not, by itself, a verified payment or final fi
 assert(caseDetailSource.includes('A document or event is not automatically proof of filing, payment, or closure.'), 'Supporting-evidence section must distinguish artifacts from operational conclusions.');
 
 // Product-noise removal
-for (const internalLabel of ['Autonomous strategy and recovery path', 'Patient Zero', 'Active Council', 'Tactical Playbook', 'Continuous Protection', 'Generated System Guidance']) {
+for (const internalLabel of ['Autonomous strategy and recovery path', 'Patient Zero', 'Active Council', 'Tactical Playbook', 'Continuous Protection', 'Generated System Guidance', 'Agent 2:', 'Agent 3:', 'Agent 4:', 'Agent 5:', 'Agent 6:', 'Agent 7', 'Agent 8:', 'Agent 9:', 'Agent 10:', 'Agent 11:']) {
   assert(!caseDetailSource.includes(internalLabel), `Internal implementation label must not remain in Case Detail: ${internalLabel}`);
 }
 assert(caseDetailSource.includes('RecoveryProgressControl'), 'Case Detail must use the dedicated Recovery Progress control surface.');
@@ -122,5 +122,9 @@ assert(!caseDetailSource.includes('Payment is verified. ${recoveryTruthPresentat
 assert(caseDetailSource.includes('if (hasCurrentApproval) {') && caseDetailSource.includes('Amazon approval is established, but Margin has not yet verified the corresponding payment event.'), 'An established approval must take precedence over pre-filing seller-approval guidance.');
 assert(!caseDetailSource.includes("caseReference === 'ACME-CASE-2005' ? 569.50"), 'ACME must not inject an unlabelled competing Amazon outcome amount.');
 assert(!caseDetailSource.includes("replace(/\\$963\\.10/g, '$569.50')"), 'Supporting evidence must not rewrite an authoritative payment amount to a conflicting scenario amount.');
+assert(caseDetailSource.includes("if (normalized === 'paid') return 'Reimbursement recorded in thread';"), 'A paid Amazon-thread signal must be framed as an operational thread record, not a final recovery outcome.');
+assert(caseDetailSource.includes('Thread states describe Amazon communication records. They do not, by themselves, establish verified payment or financial closure.'), 'Amazon-thread records must visibly defer to certified payment and closure truth.');
+assert(caseDetailSource.includes('Reply is unavailable while this recovery is in payment and closure review.'), 'Reply controls must explain a verified-payment closure-review state without reverting to filing-ready language.');
+assert(!caseDetailSource.includes('Reply stays disabled until this case is filing-ready.'), 'Reply controls must not present a resolved recovery as merely filing-ready.');
 
 console.log(`Recovery Progress Phase B.2/B.3 matrix passed (${assertions} assertions across 15 states).`);
