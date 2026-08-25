@@ -3037,9 +3037,7 @@ export default function CaseDetail() {
                             </>
                           ) : (
                             <div className="border border-[#D8E3E8] bg-white px-4 py-3 text-[11px] text-[#6B7C88]">
-                              {backendEligibilityStatus === 'THREAD_ONLY'
-                                ? 'Amazon thread detected. Margin will not expose a reply action here until verified identifiers support a safe case path.'
-                                : 'Reply is not available from the browser while this case is blocked from filing.'}
+                              {replyDisabledReason}
                             </div>
                           )}
                         </div>

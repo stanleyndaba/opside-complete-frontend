@@ -126,5 +126,7 @@ assert(caseDetailSource.includes("if (normalized === 'paid') return 'Reimburseme
 assert(caseDetailSource.includes('Thread states describe Amazon communication records. They do not, by themselves, establish verified payment or financial closure.'), 'Amazon-thread records must visibly defer to certified payment and closure truth.');
 assert(caseDetailSource.includes('Reply is unavailable while this recovery is in payment and closure review.'), 'Reply controls must explain a verified-payment closure-review state without reverting to filing-ready language.');
 assert(!caseDetailSource.includes('Reply stays disabled until this case is filing-ready.'), 'Reply controls must not present a resolved recovery as merely filing-ready.');
+assert(!caseDetailSource.includes('Reply is not available from the browser while this case is blocked from filing.'), 'No secondary reply fallback may revert a closure-review recovery to a filing-blocked state.');
+assert(!caseDetailSource.includes('Margin will not expose a reply action here until verified identifiers support a safe case path.'), 'Thread-only reply copy must be centralized in the state-aware reply explanation.');
 
 console.log(`Recovery Progress Phase B.2/B.3 matrix passed (${assertions} assertions across 15 states).`);
