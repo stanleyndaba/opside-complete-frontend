@@ -29,6 +29,10 @@ const ACCEPTED_TYPES = [
   'Inventory', 'Financial events', 'Fees', 'Transfers',
 ];
 
+// UX visibility only. The backend independently requires durable provenance
+// and MARGIN_SYNTHETIC_TRAINING_TENANT_ID to authorize synthetic execution.
+const SYNTHETIC_S1_TRAINING_TENANT_SLUG = 'margin-finance-3';
+
 export default function DataUpload() {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -166,6 +170,7 @@ export default function DataUpload() {
 
   const hasValidFiles = files.some((file) => file.status === 'pending');
   const pendingFileCount = files.filter((file) => file.status === 'pending').length;
+  const isSyntheticTrainingWorkspace = isSignedIn && getActiveTenantSlug() === SYNTHETIC_S1_TRAINING_TENANT_SLUG;
 
   const startManualAudit = async () => {
     if (isBusy || submissionInFlightRef.current) return;
@@ -229,6 +234,71 @@ export default function DataUpload() {
       toast({
         variant: 'destructive',
         title: 'Reports were not submitted',
+        description: message,
+      });
+    } finally {
+      submissionInFlightRef.current = false;
+      setIsBusy(false);
+    }
+  };
+
+  const startSyntheticS1 = async () => {
+    if (isBusy || submissionInFlightRef.current) return;
+
+    const selectedFiles = files.filter((item) => item.status === 'pending');
+    if (selectedFiles.length === 0) return;
+
+    const tenantSlug = getActiveTenantSlug();
+    if (!isSyntheticTrainingWorkspace || !tenantSlug) {
+      setSubmissionError('Synthetic training is available only in the dedicated training workspace.');
+      return;
+    }
+
+    submissionInFlightRef.current = true;
+    setIsBusy(true);
+    setSubmissionError(null);
+    setFiles((current) => current.map((item) => selectedFiles.some((selected) => selected.id === item.id)
+      ? { ...item, status: 'uploading', error: undefined }
+      : item));
+
+    try {
+      const response = await api.ingestSyntheticTrainingReports(selectedFiles.map((item) => item.file));
+      const ingestion = response.data;
+      const byFileName = new Map((ingestion?.results || []).map((result) => [result.fileName, result]));
+
+      setFiles((current) => current.map((item) => {
+        const result = byFileName.get(item.file.name);
+        if (!result) return item;
+        return {
+          ...item,
+          status: result.success ? 'success' : 'error',
+          error: result.errors?.[0] || undefined,
+        };
+      }));
+
+      if (response.ok && ingestion?.manualAudit && continueManualAudit(ingestion.manualAudit, tenantSlug)) {
+        return;
+      }
+
+      if (response.ok && ingestion?.syncId && await restoreLatestManualAudit()) {
+        return;
+      }
+
+      const error = getBackendError(ingestion)
+        || response.error
+        || 'Margin could not confirm the S1 synthetic training audit.';
+      setSubmissionError(error);
+      toast({
+        variant: 'destructive',
+        title: 'S1 synthetic audit was not accepted',
+        description: error,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Margin could not submit the S1 synthetic training files.';
+      setSubmissionError(message);
+      toast({
+        variant: 'destructive',
+        title: 'S1 synthetic audit was not submitted',
         description: message,
       });
     } finally {
@@ -415,14 +485,29 @@ export default function DataUpload() {
                           {pendingFileCount > 0 ? `${pendingFileCount} report${pendingFileCount === 1 ? '' : 's'} ready for review.` : 'Add at least one supported report to continue.'}
                         </p>
                       </div>
-                      <Button
-                        onClick={startManualAudit}
-                        disabled={!hasValidFiles || isBusy}
-                        className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45"
-                      >
-                        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
-                        {isBusy ? 'Submitting reports' : 'Start manual report audit'}
-                      </Button>
+                      {isSyntheticTrainingWorkspace ? (
+                        <div className="max-w-md rounded-[10px] border border-amber-300 bg-amber-50 px-3 py-3 text-left sm:text-right">
+                          <p className="text-[11px] font-bold uppercase tracking-wide text-amber-900">Synthetic training only</p>
+                          <p className="mt-1 text-[12px] leading-5 text-amber-900">Runs S1 through the real parser and non-Transfer detectors. Commercial, claim, notification, and financial effects are suppressed.</p>
+                          <Button
+                            onClick={startSyntheticS1}
+                            disabled={!hasValidFiles || isBusy}
+                            className="mt-3 h-10 rounded-[10px] bg-amber-900 px-4 text-[13px] font-semibold text-white shadow-none hover:bg-amber-950 focus-visible:ring-2 focus-visible:ring-amber-700 focus-visible:ring-offset-2 disabled:opacity-45"
+                          >
+                            {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+                            {isBusy ? 'Running S1 synthetic audit' : 'Run S1 synthetic audit'}
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={startManualAudit}
+                          disabled={!hasValidFiles || isBusy}
+                          className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45"
+                        >
+                          {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+                          {isBusy ? 'Submitting reports' : 'Start manual report audit'}
+                        </Button>
+                      )}
                     </div>
                     {submissionError ? (
                       <div role="alert" className="mt-4 flex items-start gap-2 rounded-[10px] border border-[#A73549]/30 bg-[#FFE6EA] px-3 py-2.5 text-[12px] leading-5 text-[#A73549]">

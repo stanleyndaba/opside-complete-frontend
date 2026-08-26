@@ -180,6 +180,10 @@ export interface AuditTeaserSummary {
   commercialRoute?: string | null;
   commercialReason?: string | null;
   commercialEligibility?: string | null;
+  syntheticTraining?: boolean;
+  executionProvenance?: 'SYNTHETIC_TRAINING_ONLY';
+  trainingLabel?: 'SYNTHETIC TRAINING ONLY';
+  commercialSuppressed?: boolean;
 }
 
 export interface RecoveryWorkspaceSubscriptionStatus {
@@ -1107,6 +1111,18 @@ export const api = {
     return requestJson<CsvIngestionResponse>('/api/csv-upload/ingest', {
       method: 'POST',
       body: formData,
+    });
+  },
+  ingestSyntheticTrainingReports: (files: File[]) => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append('files', file, file.name));
+
+    return requestJson<CsvIngestionResponse>('/api/csv-upload/synthetic-training/ingest', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'x-margin-execution-provenance': 'SYNTHETIC_TRAINING_ONLY',
+      },
     });
   },
   getUserProfile: (tenantSlug?: string) => requestJson<{

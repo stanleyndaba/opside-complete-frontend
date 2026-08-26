@@ -1568,6 +1568,13 @@ export default function Audit() {
               </div>
             </div>
 
+            {teaser.syntheticTraining ? (
+              <section className="mt-5 rounded-[10px] border border-amber-300 bg-amber-50 px-4 py-3" aria-label="Synthetic training boundary">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-amber-900">{teaser.trainingLabel || 'SYNTHETIC TRAINING ONLY'}</p>
+                <p className="mt-1 text-[12px] leading-5 text-amber-900">This audit uses synthetic training input only. Findings and values are not seller, provider, recovery, claim, payment, or commercial truth. Commercial, claim, notification, and financial effects are suppressed.</p>
+              </section>
+            ) : null}
+
             {isAuthenticated ? (
               <dl className="grid border-b border-[#E8E7E1] text-left sm:grid-cols-2 lg:grid-cols-4">
                 <div className="border-b border-[#E8E7E1] py-3.5 sm:border-r sm:pr-4 lg:border-b-0"><dt className="text-[10px] font-semibold uppercase tracking-normal text-[#777A82]">Workspace</dt><dd className="mt-1 truncate text-[13px] font-medium text-[#191B20]">{activeWorkspaceLabel}</dd></div>
