@@ -31,5 +31,10 @@ expect(backendAudit.includes('private async getScheduleOperatingState'), 'backen
 expect(backendAudit.includes("state: 'awaiting_first_run'") && backendAudit.includes("state: 'blocked'"), 'schedule read model distinguishes initial and blocked lifecycle states');
 expect(backendAudit.includes("category: 'Audit'") && backendAudit.includes("category: 'Coverage'") && backendAudit.includes("category: 'Analysis'") && backendAudit.includes("category: 'Result'"), 'backend activity projection uses seller lifecycle categories');
 expect(backendAudit.includes('const amazon = { connected: Boolean(await this.getAmazonConnection(userId, tenantId)) };') && backendAudit.includes('operating, amazon'), 'schedule response exposes tenant-bound connection readiness');
+expect(frontendAudit.includes('auditHistoryError') && frontendAudit.includes('Retry history') && frontendAudit.includes('The audit shown on this page has not changed.'), 'history does not falsely present a failed read as an empty record and provides an in-context retry');
+expect(frontendAudit.includes('auditLogError') && frontendAudit.includes('Retry lifecycle'), 'activity failures remain visible in context with a retry action');
+expect(frontendAudit.includes('scheduleLoadError') && frontendAudit.includes('Retry schedule status') && frontendAudit.includes('No schedule change can be made until it is available.'), 'schedule failures prevent ambiguous or stale editing until workspace state is loaded');
+expect(frontendAudit.includes('Understanding your audit') && frontendAudit.includes('Amazon account data') && frontendAudit.includes('Evidence records') && frontendAudit.includes('Reconciliation checks'), 'pre-result audit explanation uses seller-understandable terminology');
+expect(!frontendAudit.includes('SP-API Node') && !frontendAudit.includes('Proof Synthesis') && !frontendAudit.includes('Financial Integrity') && !frontendAudit.includes('seven recovery detectors'), 'pre-result Audit UI does not expose internal or overreaching terms');
 
 console.log(`PASS ${assertions} assertions — Audit experience product contract`);

@@ -220,7 +220,7 @@ function getAuditState(step: AuditStep) {
     return {
       label: 'Analyzing',
       title: 'Margin is checking for recovery opportunities.',
-      description: 'The recovery detectors are reviewing synced FBA data for reimbursable patterns.',
+      description: 'Margin is reviewing the synced Amazon activity for potential recovery opportunities.',
     };
   }
 
@@ -308,14 +308,17 @@ export default function Audit() {
   const [auditHistory, setAuditHistory] = useState<AuditHistoryItem[]>([]);
   const [auditHistoryQuery, setAuditHistoryQuery] = useState('');
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [auditHistoryError, setAuditHistoryError] = useState<string | null>(null);
   const [auditLogEvents, setAuditLogEvents] = useState<AuditActivityEvent[]>([]);
   const [auditLogFilter, setAuditLogFilter] = useState('All');
   const [isAuditLogLoading, setIsAuditLogLoading] = useState(false);
+  const [auditLogError, setAuditLogError] = useState<string | null>(null);
   const [auditSchedule, setAuditSchedule] = useState<AuditScheduleRecord | null>(null);
   const [scheduleEntitled, setScheduleEntitled] = useState(false);
   const [scheduleExecution, setScheduleExecution] = useState<AuditScheduleExecutionStatus | null>(null);
   const [scheduleOperating, setScheduleOperating] = useState<AuditScheduleOperatingState | null>(null);
   const [amazonConnected, setAmazonConnected] = useState<boolean | null>(null);
+  const [scheduleLoadError, setScheduleLoadError] = useState<string | null>(null);
   const [scheduleForm, setScheduleForm] = useState({
     cadence: 'off' as 'off' | 'weekly' | 'biweekly' | 'monthly',
     preferred_day_of_week: 1,
@@ -389,9 +392,10 @@ export default function Audit() {
   const activeWorkspaceLabel = activeTenantSlug || 'Current workspace';
   const notificationsHref = activeTenantSlug ? tenantRoute(activeTenantSlug, '/notifications') : '/notifications';
   const canManageSavedSchedule = Boolean(auditSchedule);
-  const canSaveScheduleForm = scheduleForm.cadence === 'off'
+  const scheduleStatusAvailable = !scheduleLoadError && Boolean(scheduleOperating);
+  const canSaveScheduleForm = scheduleStatusAvailable && (scheduleForm.cadence === 'off'
     ? canManageSavedSchedule
-    : Boolean(scheduleEntitled && scheduleExecution?.available);
+    : Boolean(scheduleEntitled && scheduleExecution?.available));
   const expiringSoonValue = hasScopeValue ? formatMoney(Math.round(teaser.scopeValue * 0.28)) : '$0';
   const newShipmentSyncCopy = isAuthenticated
     ? audit?.status === 'completed'
@@ -521,10 +525,17 @@ export default function Audit() {
   const loadAuditHistory = async () => {
     if (!isAuthenticated) return;
     setIsHistoryLoading(true);
+    setAuditHistoryError(null);
     try {
       const freshToken = await ensureFreshAuditAuth();
       const response = await api.getAuditHistory(freshToken);
-      if (response.ok && response.data?.audits) setAuditHistory(response.data.audits);
+      if (response.ok && response.data?.audits) {
+        setAuditHistory(response.data.audits);
+        return;
+      }
+      setAuditHistoryError('Audit history could not be loaded. The audit shown on this page has not changed. Retry in a moment.');
+    } catch {
+      setAuditHistoryError('Audit history could not be loaded. The audit shown on this page has not changed. Retry in a moment.');
     } finally {
       setIsHistoryLoading(false);
     }
@@ -555,14 +566,17 @@ export default function Audit() {
   const loadAuditActivity = async () => {
     if (!audit?.id) return;
     setIsAuditLogLoading(true);
+    setAuditLogError(null);
     try {
       const freshToken = await ensureFreshAuditAuth();
       const response = await api.getAuditActivity(audit.id, freshToken);
       if (response.ok && response.data?.events) {
         setAuditLogEvents(response.data.events);
-      } else {
-        setError('Audit activity is not available for this workspace.');
+        return;
       }
+      setAuditLogError('Audit lifecycle could not be loaded for this workspace. Retry in a moment.');
+    } catch {
+      setAuditLogError('Audit lifecycle could not be loaded for this workspace. Retry in a moment.');
     } finally {
       setIsAuditLogLoading(false);
     }
@@ -576,34 +590,42 @@ export default function Audit() {
 
   const openScheduleDialog = async () => {
     setIsScheduleDialogOpen(true);
+    setScheduleLoadError(null);
+    setScheduleOperating(null);
+    setAmazonConnected(null);
     trackEvent('audit_schedule_opened', { source_page: '/audit' });
     try {
       const freshToken = await ensureFreshAuditAuth();
       const response = await api.getAuditSchedule(freshToken);
-      if (response.ok && response.data) {
-        const execution = response.data.execution || null;
-        setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
-        setScheduleExecution(execution);
-        setScheduleOperating(response.data.operating || null);
-        setAmazonConnected(Boolean(response.data.amazon?.connected));
-        setAuditSchedule(response.data.schedule);
-        if (response.data.schedule) {
-          setScheduleForm({
-            cadence: response.data.schedule.cadence,
-            preferred_day_of_week: response.data.schedule.preferred_day_of_week ?? 1,
-            preferred_day_of_month: response.data.schedule.preferred_day_of_month ?? 1,
-            preferred_time: response.data.schedule.preferred_time || '09:00',
-            timezone: response.data.schedule.timezone || scheduleForm.timezone,
-            is_paused: Boolean(response.data.schedule.is_paused),
-          });
-          setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused && Boolean(execution?.available));
-        }
+      if (!response.ok || !response.data) {
+        throw new Error('schedule_load_failed');
+      }
+
+      const execution = response.data.execution || null;
+      setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
+      setScheduleExecution(execution);
+      setScheduleOperating(response.data.operating || null);
+      setAmazonConnected(Boolean(response.data.amazon?.connected));
+      setAuditSchedule(response.data.schedule);
+      if (response.data.schedule) {
+        setScheduleForm({
+          cadence: response.data.schedule.cadence,
+          preferred_day_of_week: response.data.schedule.preferred_day_of_week ?? 1,
+          preferred_day_of_month: response.data.schedule.preferred_day_of_month ?? 1,
+          preferred_time: response.data.schedule.preferred_time || '09:00',
+          timezone: response.data.schedule.timezone || scheduleForm.timezone,
+          is_paused: Boolean(response.data.schedule.is_paused),
+        });
+        setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused && Boolean(execution?.available));
       }
     } catch {
       setScheduleEntitled(false);
       setScheduleExecution(null);
       setScheduleOperating(null);
       setAmazonConnected(null);
+      setAuditSchedule(null);
+      setWeeklyAuditEnabled(false);
+      setScheduleLoadError('Schedule status could not be loaded for this workspace. No schedule change can be made until it is available.');
     }
   };
 
@@ -1207,7 +1229,7 @@ export default function Audit() {
     ready: 'Your account is ready. Start the audit and Margin will check whether Amazon data is connected.',
     connect: 'Connect Amazon securely so Margin can scan FBA data and prepare the recovery scope.',
     syncing: 'Margin is syncing Amazon data. If Amazon is still blocked, this step will fail gracefully.',
-    detecting: 'The seven recovery detectors are reviewing synced FBA data for reimbursable patterns.',
+    detecting: 'Margin is reviewing the synced Amazon activity for potential recovery opportunities.',
     completed: teaser.message,
     failed: getSafeAuditStatusMessage(
       audit?.summary?.message,
@@ -1508,54 +1530,51 @@ export default function Audit() {
             {step !== 'completed' && (
               <section className="mb-6 mt-7 sm:mb-10 sm:mt-9">
                 <div className="mb-4 text-center sm:mb-6">
-                  <h2 className="text-[12px] font-medium text-[#0B74DE] sm:text-[13px]">Operational surface</h2>
+                  <h2 className="text-[12px] font-medium text-[#0B74DE] sm:text-[13px]">Understanding your audit</h2>
                   <p className="mt-1 text-[16px] font-medium leading-6 tracking-[-0.02em] text-[#182026] sm:text-[19px]">
-                    Record reconciliation behind your selling partner account
+                    Margin reviews the Amazon records available to this workspace and explains what happens next.
                   </p>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-3 sm:gap-6">
-                  {/* Card 1: SP-API Node */}
+                  {/* Available Amazon account data */}
                   <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
                     <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" />
                     </div>
-                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">SP-API Node</h3>
-                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Operational Reconciliation</p>
-                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Read-only account examination</p>
-                    <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Amazon account data</h3>
+                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Read-only Amazon access</p>
+                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Available seller records used for this audit</p>
                   </div>
 
-                  {/* Card 2: Proof Synthesis */}
+                  {/* Recorded evidence documentation */}
                   <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
                     <div className="mb-3 flex h-8 items-center gap-2 sm:mb-5 sm:h-9">
                       <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
                       <img src="/slack-icon-2019.png" alt="Slack" className="h-4 w-4 object-contain" />
                       <img src="/gd.png" alt="Google Drive" className="h-4 w-4 object-contain" />
                     </div>
-                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Proof Synthesis</h3>
-                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Evidence Ledger</p>
-                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Documents → cases → findings</p>
-                    <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Evidence records</h3>
+                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Recorded documentation</p>
+                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Documents remain separate from audit results</p>
                   </div>
 
-                  {/* Card 3: Financial Integrity */}
+                  {/* Reconciliation checks */}
                   <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
                     <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <div className="flex h-7 w-7 items-center justify-center bg-white rounded-full">
                         <ArrowRightLeft className="h-3.5 w-3.5 text-[#66737F] group-hover:text-[#0B74DE]" />
                       </div>
                     </div>
-                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Financial Integrity</h3>
-                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Transaction Mapping</p>
-                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Expected → paid → unresolved</p>
-                    <ArrowRight className="absolute right-5 top-5 h-3 w-3 text-[#D8E3EA] transition-colors group-hover:text-[#0B74DE]" />
+                    <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Reconciliation checks</h3>
+                    <p className="mt-0.5 text-[11px] font-medium text-[#4D5B66] sm:mt-1 sm:text-[12px]">Recorded activity review</p>
+                    <p className="mt-2 text-[10px] text-[#66737F] sm:mt-3 sm:text-[11px]">Potential differences need review before any action</p>
                   </div>
                 </div>
 
                 <div className="mt-8 border-t border-[#D8E3EA] pt-4">
                   <p className="text-[11px] leading-5 font-medium text-[#66737F] sm:text-[12px]">
-                    Read-only examination · Evidence-backed findings · Seller approval before action
+                    Read-only data review · potential opportunities · seller approval before any filing
                   </p>
                 </div>
               </section>
@@ -1834,6 +1853,13 @@ export default function Audit() {
               <div className="flex items-center gap-2 py-6 text-[13px] text-[#66737F]">
                 <Loader2 className="h-4 w-4 animate-spin" /> Loading audit history
               </div>
+            ) : auditHistoryError ? (
+              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-[13px] leading-5 text-amber-900" role="alert">
+                <p>{auditHistoryError}</p>
+                <Button variant="outline" size="sm" onClick={() => void loadAuditHistory()} className="mt-3 h-8 border-amber-200 bg-white px-3 text-[12px] font-medium text-amber-900 hover:bg-amber-100">
+                  Retry history
+                </Button>
+              </div>
             ) : auditHistory.length ? (
               <div className="grid gap-2">
                 {auditHistory
@@ -1896,7 +1922,14 @@ export default function Audit() {
               This is a workspace-owned run preference. It does not create proof, filing authority, reimbursement eligibility, payment, or case closure.
             </DialogDescription>
           </DialogHeader>
-          {scheduleOperating ? (
+          {scheduleLoadError ? (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-[13px] leading-5 text-amber-900" role="alert">
+              <p>{scheduleLoadError}</p>
+              <Button variant="outline" size="sm" onClick={() => void openScheduleDialog()} className="mt-3 h-8 border-amber-200 bg-white px-3 text-[12px] font-medium text-amber-900 hover:bg-amber-100">
+                Retry schedule status
+              </Button>
+            </div>
+          ) : scheduleOperating ? (
             <div className="rounded-lg border border-[#D8E3EA] bg-white p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -1928,61 +1961,65 @@ export default function Audit() {
           ) : (
             <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] text-[#66737F]">Loading schedule status for this workspace.</div>
           )}
-          {!scheduleEntitled ? (
+          {scheduleStatusAvailable && !scheduleEntitled ? (
             <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] text-[#4D5B66]">
               Recovery Workspace is required to create or resume an automatic audit schedule. Existing schedule preferences can still be paused or turned off.
             </div>
           ) : null}
-          {scheduleExecution && !scheduleExecution.available ? (
+          {scheduleStatusAvailable && scheduleExecution && !scheduleExecution.available ? (
             <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-[13px] leading-5 text-amber-900">
               Automatic execution is not active in this environment. Margin will not save a new active schedule because it could not run it. Use <span className="font-medium">Run Audit</span> for a manual audit; any existing preference can be paused or turned off.
             </div>
           ) : null}
-          {scheduleExecution?.available ? (
+          {scheduleStatusAvailable && scheduleExecution?.available ? (
             <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] leading-5 text-[#4D5B66]">
               Margin checks due schedules approximately every {scheduleExecution.cadence_minutes || 15} minutes. Completed supported audits appear in <Link to={notificationsHref} className="font-medium text-[#0B74DE] hover:text-[#075EA8]">Notifications</Link>; completion email is not enabled from this schedule.
             </div>
           ) : null}
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
-              Frequency
-              <select value={scheduleForm.cadence} onChange={(event) => setScheduleForm((current) => ({ ...current, cadence: event.target.value as AuditScheduleCadence }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]">
-                <option value="off">Off</option>
-                <option value="weekly">Weekly</option>
-                <option value="biweekly">Every two weeks</option>
-                <option value="monthly">Monthly</option>
-              </select>
-            </label>
-            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
-              Preferred time
-              <input value={scheduleForm.preferred_time} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_time: event.target.value }))} type="time" className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
-            </label>
-            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
-              Day of week
-              <select value={scheduleForm.preferred_day_of_week} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_week: Number(event.target.value) }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]">
-                {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, index) => <option key={day} value={index}>{day}</option>)}
-              </select>
-            </label>
-            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
-              Day of month
-              <input value={scheduleForm.preferred_day_of_month} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_month: Number(event.target.value) }))} min={1} max={28} type="number" className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
-            </label>
-            <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66] sm:col-span-2">
-              Timezone
-              <input value={scheduleForm.timezone} onChange={(event) => setScheduleForm((current) => ({ ...current, timezone: event.target.value }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
-            </label>
-          </div>
-          <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[12px] leading-5 text-[#66737F]">
-            <span className="font-medium text-[#182026]">Schedule instruction:</span> {scheduleForm.cadence === 'off' ? 'Automatic audits are off.' : `${scheduleForm.cadence === 'biweekly' ? 'Every two weeks' : scheduleForm.cadence.charAt(0).toUpperCase() + scheduleForm.cadence.slice(1)} at ${scheduleForm.preferred_time} (${scheduleForm.timezone}).`} This preference does not guarantee a completed audit; the recorded operating state above is the source of truth.
-          </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={() => void saveSchedule()} disabled={!canSaveScheduleForm || isScheduleSaving} className="h-10 rounded-[6px] bg-[#182026] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">
-              {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Save schedule
-            </Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!canManageSavedSchedule || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Pause</Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!canManageSavedSchedule || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Turn off</Button>
-          </div>
+          {scheduleStatusAvailable ? (
+            <>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
+                  Frequency
+                  <select value={scheduleForm.cadence} onChange={(event) => setScheduleForm((current) => ({ ...current, cadence: event.target.value as AuditScheduleCadence }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]">
+                    <option value="off">Off</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Every two weeks</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </label>
+                <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
+                  Preferred time
+                  <input value={scheduleForm.preferred_time} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_time: event.target.value }))} type="time" className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
+                </label>
+                <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
+                  Day of week
+                  <select value={scheduleForm.preferred_day_of_week} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_week: Number(event.target.value) }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]">
+                    {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, index) => <option key={day} value={index}>{day}</option>)}
+                  </select>
+                </label>
+                <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66]">
+                  Day of month
+                  <input value={scheduleForm.preferred_day_of_month} onChange={(event) => setScheduleForm((current) => ({ ...current, preferred_day_of_month: Number(event.target.value) }))} min={1} max={28} type="number" className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
+                </label>
+                <label className="grid gap-1 text-[12px] font-medium text-[#4D5B66] sm:col-span-2">
+                  Timezone
+                  <input value={scheduleForm.timezone} onChange={(event) => setScheduleForm((current) => ({ ...current, timezone: event.target.value }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
+                </label>
+              </div>
+              <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[12px] leading-5 text-[#66737F]">
+                <span className="font-medium text-[#182026]">Schedule instruction:</span> {scheduleForm.cadence === 'off' ? 'Automatic audits are off.' : `${scheduleForm.cadence === 'biweekly' ? 'Every two weeks' : scheduleForm.cadence.charAt(0).toUpperCase() + scheduleForm.cadence.slice(1)} at ${scheduleForm.preferred_time} (${scheduleForm.timezone}).`} This preference does not guarantee a completed audit; the recorded operating state above is the source of truth.
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Button onClick={() => void saveSchedule()} disabled={!canSaveScheduleForm || isScheduleSaving} className="h-10 rounded-[6px] bg-[#182026] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">
+                  {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                  Save schedule
+                </Button>
+                <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!canManageSavedSchedule || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Pause</Button>
+                <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!canManageSavedSchedule || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Turn off</Button>
+              </div>
+            </>
+          ) : null}
         </DialogContent>
       </Dialog>
 
@@ -2080,6 +2117,13 @@ export default function Audit() {
           <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
             {isAuditLogLoading ? (
               <div className="flex items-center gap-2 py-8 text-[13px] text-[#66737F]"><Loader2 className="h-4 w-4 animate-spin text-[#0B74DE]" /> Loading audit activity</div>
+            ) : auditLogError ? (
+              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-[13px] leading-5 text-amber-900" role="alert">
+                <p>{auditLogError}</p>
+                <Button variant="outline" size="sm" onClick={() => void loadAuditActivity()} className="mt-3 h-8 border-amber-200 bg-white px-3 text-[12px] font-medium text-amber-900 hover:bg-amber-100">
+                  Retry lifecycle
+                </Button>
+              </div>
             ) : auditLogEvents.filter((event) => auditLogFilter === 'All' || event.category === auditLogFilter).length ? (
               <div className="relative ml-1 border-l border-[#D8E3EA] pl-6">
                 {auditLogEvents
