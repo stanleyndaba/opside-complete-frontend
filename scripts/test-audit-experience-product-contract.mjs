@@ -16,6 +16,7 @@ function expect(condition, message) {
 }
 
 expect(frontendAudit.includes('selectedAuditIsLatest ? \'Latest audit\' : \'Selected audit from history\''), 'selected and latest audit identity is explicit');
+expect(frontendAudit.includes('title={selectedAuditSelectorLabel}') && frontendAudit.includes('<span className="truncate whitespace-nowrap">{selectedAuditSelectorLabel}</span>'), 'sidebar audit selector keeps long labels contained on one line while retaining the full label on hover');
 expect(frontendAudit.includes('setIsScopeDialogOpen(true)'), 'View Audit scope opens the dedicated Scope panel');
 expect(frontendAudit.includes('What Margin examined'), 'scope panel explains what the selected audit examined');
 expect(frontendAudit.includes('It does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter.'), 'scope panel preserves the truth boundary');
