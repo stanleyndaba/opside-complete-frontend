@@ -35,6 +35,10 @@ export default function DataUpload() {
     const submissionInFlightRef = useRef(false);
 
     const getActiveTenantSlug = () => localStorage.getItem('active_tenant_slug') || '';
+    const getEvidenceRecordsHref = () => {
+        const activeTenantSlug = getActiveTenantSlug();
+        return activeTenantSlug ? `/app/${encodeURIComponent(activeTenantSlug)}/evidence-locker` : '/audit';
+    };
 
     const continueManualAudit = useCallback((manualAudit: AuditRunRecord, tenantSlug: string) => {
         if (!manualAudit.id || !tenantSlug) return false;
@@ -434,9 +438,12 @@ export default function DataUpload() {
                                         </p>
                                     ) : null}
 
-                                    <div className="flex items-center gap-2 text-[11px] text-[#8C9BA6]">
+                                    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] text-[#8C9BA6]">
                                         <Ban className="h-3 w-3" />
                                         <span>PDFs, screenshots, invoices, and evidence documents belong in Evidence Records—not this operational report flow.</span>
+                                        <Link to={getEvidenceRecordsHref()} className="inline-flex items-center gap-1 font-medium text-[#0B74DE] hover:text-[#075EA8] hover:underline">
+                                            Go to Evidence Records <ArrowRight className="h-3 w-3" />
+                                        </Link>
                                     </div>
                                 </div>
                             )}

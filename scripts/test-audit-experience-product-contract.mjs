@@ -28,6 +28,7 @@ expect(frontendApi.includes('export interface AuditScheduleOperatingState'), 'fr
 expect(frontendApi.includes('operating: AuditScheduleOperatingState') && frontendApi.includes('amazon: { connected: boolean }'), 'schedule API contract includes operating state and connection readiness');
 expect(!dataUpload.includes('const [dateRange, setDateRange]'), 'manual report flow no longer presents an unpersisted audit-period selector');
 expect(dataUpload.includes('Manual report audit') && dataUpload.includes('Evidence Records—not this operational report flow'), 'manual report flow distinguishes operational reports from evidence documents');
+expect(dataUpload.includes('getEvidenceRecordsHref') && dataUpload.includes('/evidence-locker') && dataUpload.includes('Go to Evidence Records'), 'manual report flow offers a tenant-scoped route to the correct Evidence Records destination');
 expect(backendAudit.includes('private async getScheduleOperatingState'), 'backend derives schedule operating state from persisted data');
 expect(backendAudit.includes("state: 'awaiting_first_run'") && backendAudit.includes("state: 'blocked'"), 'schedule read model distinguishes initial and blocked lifecycle states');
 expect(backendAudit.includes("category: 'Audit'") && backendAudit.includes("category: 'Coverage'") && backendAudit.includes("category: 'Analysis'") && backendAudit.includes("category: 'Result'"), 'backend activity projection uses seller lifecycle categories');
