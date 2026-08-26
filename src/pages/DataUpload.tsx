@@ -6,7 +6,6 @@ import { useAuth } from '@clerk/react';
 import { api, type AuditRunRecord, type CsvIngestionResponse } from '@/lib/api';
 import {
   ArrowLeft,
-  ArrowRight,
   CheckCircle2,
   CircleAlert,
   FileSpreadsheet,
@@ -243,28 +242,22 @@ export default function DataUpload() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
       <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
-        <div className="mx-auto grid min-h-14 max-w-[1280px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex min-h-14 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link
-            to="/audit"
-            className="inline-flex min-w-0 justify-self-start items-center gap-2 rounded-md px-1.5 py-2 text-[13px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
+            to="/"
+            title="Margin home"
+            className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
           >
-            <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span className="hidden sm:inline">Back to Audit</span>
-            <span className="sm:hidden">Audit</span>
+            <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto shrink-0 object-contain" />
+            <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
           </Link>
 
-          <div className="min-w-0 text-center" aria-label="Manual report intake">
-            <p className="truncate text-[13px] font-semibold text-[#191B20]">Manual report intake</p>
-            <p className="hidden text-[11px] text-[#777A82] sm:block">Operational reports</p>
-          </div>
-
           <Link
-            to={getEvidenceRecordsHref()}
-            className="inline-flex min-w-0 justify-self-end items-center gap-1.5 rounded-md border border-[#D7D7D1] bg-white px-2.5 py-1.5 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3"
+            to="/audit"
+            className="inline-flex min-h-10 items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
           >
-            <span className="hidden sm:inline">Evidence Records</span>
-            <span className="sm:hidden">Evidence</span>
-            <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>Back to Audit</span>
           </Link>
         </div>
       </header>
