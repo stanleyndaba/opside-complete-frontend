@@ -45,8 +45,8 @@ export const AGENT_HIGHLIGHTS = [
 ];
 
 export const SITE_META = {
-  title: 'Margin | Claim-Ready Evidence Packs for Amazon FBA Reimbursements',
-  description: 'Margin turns scattered invoices, BOLs, PODs, shipment records, case history, and payout data into claim-ready Amazon FBA reimbursement evidence packs.',
+  title: 'Margin | Amazon FBA Recovery and Payout Visibility',
+  description: 'For Amazon FBA sellers with an unresolved recovery or recurring recovery work, Margin shows what is supported, keeps seller-approved recovery work moving, and distinguishes what was approved from what was paid.',
   url: 'https://margin-finance.com',
   image: 'https://margin-finance.com/margin-logo-reveal.gif',
   preloadImages: []

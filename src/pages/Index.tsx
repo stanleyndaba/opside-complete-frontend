@@ -60,32 +60,32 @@ const faqs = [
   {
     question: "What access does Margin need?",
     answer:
-      "For a Connected Audit, Margin uses read-only access to examine the Amazon records needed to reconcile your account. Margin does not file claims or take consequential action during the Audit. If you prefer not to connect Amazon, you can use the Manual-Report Audit and upload your Amazon operational reports instead.",
+      "Margin uses read-only access or the relevant Amazon report sources for the Audit. You can see the source coverage used for your result.",
   },
   {
     question: "Can Margin submit something without me?",
     answer:
-      "No. You review and approve a recovery before it is submitted. Margin prepares the work and tracks what happens after your decision.",
+      "No. Nothing is submitted to Amazon without your explicit approval for that recovery.",
   },
   {
     question: "What happens if Margin does not find anything to handle?",
     answer:
-      "You still receive a clear Audit result. Margin shows what was checked, what appears settled, what may need more evidence or time, and whether there is any next action worth taking.",
+      "You still receive a clear result: what Margin checked, what appears settled, what may need more evidence or time, and whether there is a sensible next step.",
   },
   {
     question: "How does Recover Once pricing work?",
     answer:
-      "If the Audit identifies a defined recovery Margin can take over, you receive a personalized fixed quote before any paid work begins. The quote states what Margin will handle, what you need to approve, and what outcome record you will receive.",
+      "If the Audit identifies a defined recovery Margin can take over, you receive a personalized fixed quote before paid work begins. The scope states what Margin will handle, what you need to approve, and what outcome record you will receive.",
   },
   {
     question: "What if I want Margin to keep looking?",
     answer:
-      "If your Audit shows recurring recovery work that you want off your team’s plate, Recovery Workspace keeps the evidence, cases, responses, and payout tracking together over time.",
+      "If the Audit shows recurring recovery work that you want off your team’s plate, Recovery Workspace keeps the evidence, cases, responses, and payout tracking together over time.",
   },
   {
     question: "What does payout verified mean?",
     answer:
-      "Margin compares the current supported recovery amount with the relevant Amazon approval and payment or settlement records, then keeps partial payments, reversals, and unresolved balances visible instead of treating every approval as final.",
+      "Margin compares the current supported recovery amount with the relevant Amazon approval and settlement records. Partial payments, reversals, and unresolved balances remain visible rather than being treated as complete.",
   },
 ];
 
@@ -151,8 +151,8 @@ function SectionTwo() {
           <motion.div {...revealProps}>
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-blue-500/50" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-400">The difference</span></div>
             <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-white md:text-[76px]" style={{ fontWeight: 400 }}>Finding the issue is only the first step.</h2>
-            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">Most recovery tools stop at the claim. The real work starts after the issue is found: collecting the proof, keeping the case together, meeting the deadline, responding to Amazon, and checking whether the money actually arrived.</p>
-            <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">Margin keeps the evidence, approval, case, response, and payout connected in one recovery record.</p>
+            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">Most recovery tools find or file a claim. The hard part comes after: proving the issue, keeping the case moving, responding to Amazon, and knowing whether the money actually arrived.</p>
+            <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">Margin keeps the proof, your approval, the case, the response, and the payout outcome in one recovery record.</p>
             <p className="mt-6 text-[17px] font-semibold leading-8 tracking-[-0.015em] text-blue-100 md:text-[19px]">You see the proof and the next decision. Margin keeps the recovery work moving.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">
@@ -161,8 +161,8 @@ function SectionTwo() {
               <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-tight text-slate-400">Most tools find a claim. Margin follows it through.</p>
               <div className="mt-7 divide-y divide-white/10 border-y border-white/10">
                 {[
-                  ["Find an issue", "Find the issue and show what supports it"],
-                  ["File or flag a claim", "Prepare the proof and wait for your approval"],
+                  ["Find or flag an issue", "Show what supports the issue"],
+                  ["File a claim", "Prepare the proof and wait for your approval"],
                   ["Show a case status", "Keep the response, next action, and deadline visible"],
                   ["Mark it complete", "Verify what Amazon paid, what reversed, and what is still unresolved"],
                 ].map(([other, margin]) => (
@@ -181,204 +181,29 @@ function SectionTwo() {
 }
 
 function ExistingOperationFitSection() {
-  const reduceMotion = useReducedMotion();
-  const [activeIcons, setActiveIcons] = useState(["amazon", "gmail", "gd", "quickbooks"]);
-  
-  const iconPool = [
-    { id: "amazon", src: "/amazon-logo-transparent-circle.png" },
-    { id: "gmail", src: "/gmailicon.png" },
-    { id: "gd", src: "/gd.png" },
-    { id: "quickbooks", src: "/quickbooks.png" },
-    { id: "slack", src: "/slack-icon-2019.png" },
-    { id: "xero", src: "/xero.png" },
-    { id: "dropbox", src: "/Dropbox_Icon.svg.png" },
-    { id: "outlook", src: "/outlookicon.webp" },
-    { id: "onedrive", src: "/onedriive.png" },
-    { id: "adobe", src: "/dobe.png" }
-  ];
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const interval = setInterval(() => {
-      const slotToChange = Math.floor(Math.random() * 4);
-      const currentIds = activeIcons;
-      let nextIcon;
-      do {
-        nextIcon = iconPool[Math.floor(Math.random() * iconPool.length)];
-      } while (currentIds.includes(nextIcon.id));
-      
-      const nextIcons = [...currentIds];
-      nextIcons[slotToChange] = nextIcon.id;
-      setActiveIcons(nextIcons);
-    }, 2400);
-    return () => clearInterval(interval);
-  }, [activeIcons, reduceMotion]);
-
   return (
-    <section
-      className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56"
-    >
+    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
       <div className={containerClass}>
-        <motion.div {...revealProps} className="mx-auto max-w-[860px] text-center">
-          <div className={sectionLabelClass}>Payout and financial clarity</div>
-          <h2 className="mt-3 font-lora text-[34px] leading-[1.03] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
-            Approved does not always mean paid.
-          </h2>
-          <p className="mx-auto mt-8 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
-            A case status can say approved while the amount is delayed, partial, reversed, or still missing from settlement. Margin compares what you expected, what Amazon approved, and what actually reached your account.
-          </p>
-        </motion.div>
-
-        <div className="mt-16 grid gap-7 lg:grid-cols-3">
-          {/* Tile 1: Operations Scan */}
-          <motion.article
-            {...revealProps}
-            className="border-t border-[var(--margin-border)] pt-5"
-          >
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
-              <div className="absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(201,214,222,0.3)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.3)_1px,transparent_1px)] [background-size:24px_24px]" />
-              
-              {!reduceMotion && (
-                <motion.div 
-                  className="absolute left-0 right-0 z-10 h-[1px] bg-gradient-to-r from-transparent via-[var(--margin-blue)] to-transparent opacity-40"
-                  animate={{ top: ["0%", "100%"] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                />
-              )}
-
-              <div className="relative space-y-4">
-                {[
-                  "Amazon synced",
-                  "Variance detected",
-                  "Settlement checked",
-                  "Recovery surfaced",
-                ].map((item, index) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="relative flex h-2 w-2 items-center justify-center">
-                      <motion.span
-                        className="absolute h-full w-full rounded-full bg-[var(--margin-blue)]"
-                        animate={reduceMotion ? undefined : { scale: [1, 1.8, 1], opacity: [0.4, 0.2, 0.4] }}
-                        transition={{ duration: 2, delay: index * 0.4, repeat: Infinity }}
-                      />
-                      <span className="h-1.5 w-1.5 rounded-full bg-[var(--margin-blue)]" />
-                    </div>
-                    <div className="flex-1 border-b border-[var(--margin-border-subtle)] pb-2 text-[13px] font-medium tracking-tight text-[var(--margin-text-secondary)]">
-                      {item}
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+          <motion.div {...revealProps}>
+            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-border-strong)]" /><span className={sectionLabelClass}>The money outcome</span></div>
+            <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>Approved does not always mean paid.</h2>
+            <p className={sectionBodyClass}>A case status can say approved while the amount is delayed, partial, reversed, or still missing from the settlement. Margin separates the case status from the final money outcome.</p>
+            <p className="mt-6 text-[16px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[18px]">A case status is not the money outcome.</p>
+            <p className="mt-3 max-w-[680px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">Margin gives operations and finance the same recovery record: what happened, what proof exists, what was approved, what was paid, and what still needs attention.</p>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="border-y border-[var(--margin-border)] bg-[var(--margin-surface)]">
+            <div className="border-b border-[var(--margin-border)] px-5 py-4 md:px-7"><p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">Money state</p></div>
+            <div className="divide-y divide-[var(--margin-border-subtle)] px-5 md:px-7">
+              {[
+                ["Expected", "What the supported recovery should be worth."],
+                ["Approved", "What Amazon said it would reimburse or resolve."],
+                ["Paid", "What appeared in the relevant settlement or payment record."],
+                ["Reversed", "What was later adjusted or taken back."],
+                ["Still unresolved", "What remains open, short, missing, or waiting for a next action."],
+              ].map(([state, detail]) => <div key={state} className="grid gap-2 py-5 sm:grid-cols-[180px_1fr] sm:items-start"><h3 className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{state}</h3><p className="text-[14px] leading-6 text-[var(--margin-text-secondary)]">{detail}</p></div>)}
             </div>
-            <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
-              The latest supported records are available.
-            </h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              See missing proof, deadlines, response status, seller approvals, and the next required action without relying on another spreadsheet or one person’s memory.
-            </p>
-          </motion.article>
-
-          {/* Tile 2: Finance Reconciliation */}
-          <motion.article
-            {...revealProps}
-            transition={{ ...revealProps.transition, delay: 0.06 }}
-            className="border-t border-[var(--margin-border)] pt-5"
-          >
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
-              <div className="grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4">
-                <div className="grid grid-cols-2 gap-3">
-                  {activeIcons.slice(0, 4).map((iconId, index) => {
-                    const icon = iconPool.find(i => i.id === iconId);
-                    return (
-                      <div
-                        key={index}
-                        className="relative flex h-14 items-center justify-center overflow-hidden rounded-[8px] border border-[var(--margin-border)] bg-white"
-                      >
-                        <AnimatePresence mode="wait">
-                          <motion.img 
-                            key={iconId}
-                            src={icon?.src} 
-                            alt="" 
-                            initial={{ rotateY: 90, opacity: 0 }}
-                            animate={{ rotateY: 0, opacity: 1 }}
-                            exit={{ rotateY: -90, opacity: 0 }}
-                            transition={{ duration: 0.4, ease: "easeInOut" }}
-                            className="max-h-7 max-w-8 object-contain" 
-                          />
-                        </AnimatePresence>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="font-mono text-[18px] text-[var(--margin-text-muted)] opacity-40">→</div>
-                <div className="rounded-[8px] border border-[var(--margin-border-subtle)] bg-[#F8FAFB] p-4">
-                  <div className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-[var(--margin-text-muted)]">
-                    Money state
-                  </div>
-                  <div className="mt-3 space-y-2 text-[12px] font-medium tracking-tight text-[var(--margin-text-primary)]">
-                    {["Expected", "Approved", "Paid", "Reversed", "Still unresolved"].map((item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <div className="h-1 w-1 rounded-full bg-[var(--margin-blue)]" />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
-              A case status is not the money outcome.
-            </h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              See what the supported records indicate: expected, approved, paid, reversed, or still unresolved. Approval is kept distinct from the payout outcome.
-            </p>
-          </motion.article>
-
-          {/* Tile 3: Decision Visibility */}
-          <motion.article
-            {...revealProps}
-            transition={{ ...revealProps.transition, delay: 0.12 }}
-            className="border-t border-[var(--margin-border)] pt-5"
-          >
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
-              <div className="space-y-3">
-                {[
-                  ["Case prepared", "Complete", "success"],
-                  ["Evidence ready", "Ready", "success"],
-                  ["Seller review required", "Approval", "warning"],
-                  ["Approve filing", "Decision", "warning"],
-                ].map(([item, label, status], index) => (
-                  <div
-                    key={item}
-                    className="flex items-center justify-between border-b border-[var(--margin-border-subtle)] pb-3 last:border-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={cn(
-                        "flex h-6 w-6 items-center justify-center rounded-full transition-colors",
-                        status === "success" ? "bg-emerald-500/10 text-emerald-600" : "bg-orange-500/10 text-orange-600"
-                      )}>
-                        <Check className="h-3.5 w-3.5" strokeWidth={3} />
-                      </div>
-                      <span className="text-[13px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
-                        {item}
-                      </span>
-                    </div>
-                    <span className={cn(
-                      "font-mono text-[9px] font-bold uppercase tracking-tight",
-                      status === "success" ? "text-emerald-600/70" : "text-orange-600/70"
-                    )}>
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">
-              Know what needs you—and what no longer does.
-            </h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">
-              Margin prepares and monitors the recovery work in the background. You see what was found, what needs your approval, and whether the money arrived.
-            </p>
-          </motion.article>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -410,12 +235,12 @@ function KineticHeroSection({
       <div className="pointer-events-none absolute inset-0 overflow-hidden"><motion.div className="absolute left-[-16%] top-[42%] h-px w-[62%] origin-left bg-gradient-to-r from-transparent via-[rgba(11,116,222,0.52)] to-transparent opacity-60" animate={reduceMotion ? undefined : { x: ["0%", "118%"], opacity: [0, 0.62, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} style={{ rotate: "-8deg" }} /></div>
       <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center">
         <div className="max-w-[1040px]">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="inline-block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis rounded-[5px] bg-white/[0.07] px-4 py-2 text-left text-[9px] font-semibold leading-relaxed uppercase tracking-tight text-blue-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl sm:px-3 sm:py-1.5 sm:text-[11px]">Amazon FBA recovery and payout visibility</motion.div>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="max-w-[760px] text-[13px] font-medium leading-6 text-blue-100 sm:text-[15px]">For Amazon FBA sellers with an unresolved recovery—or recovery work they are tired of carrying themselves.</motion.p>
           <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-white" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Find what Amazon missed. Get it handled.</motion.span>
             <motion.span className="block text-slate-400" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}>Know it was paid.</motion.span>
           </div>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[760px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]">Amazon can lose inventory, underpay a recovery, reverse a reimbursement, or leave a case unresolved. Margin finds supported recovery issues, prepares the evidence and recovery work you approve, and verifies what Amazon actually paid.</motion.p>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[760px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]">When an Amazon inventory, reimbursement, return, inbound, fee, or settlement record does not add up, Margin shows what is supported, handles the recovery work you approve, and checks the final money outcome.</motion.p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 sm:mt-10">
             <Button onClick={onAuditCta} aria-label="Run a free Recovery Audit" className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-6 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Run a free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" /></Button>
           </motion.div>
@@ -461,7 +286,7 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <h2 className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
-                <span className="text-[var(--margin-text-primary)] font-lora">Before you connect.</span> <span className="text-[var(--margin-text-muted)] font-lora">A few things to know.</span>
+                <span className="text-[var(--margin-text-primary)] font-lora">Before you run the Audit.</span> <span className="text-[var(--margin-text-muted)] font-lora">A few things to know.</span>
               </h2>
             </motion.div>
             <div className="mt-10 md:mt-14 max-w-4xl">
@@ -499,14 +324,14 @@ export default function Index() {
                   <div className="mb-5 flex items-center gap-3">
                     <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
                     <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                      See what Amazon may have missed
+                      Final step
                     </span>
                   </div>
                   <h2 className="font-lora mt-2 max-w-[760px] text-[36px] leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-                    <span className="text-[var(--margin-text-primary)] font-lora">Find out what is unresolved in your account.</span>
+                    <span className="text-[var(--margin-text-primary)] font-lora">See what Amazon still owes—and what is already settled.</span>
                   </h2>
                   <p className="mt-8 max-w-[740px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px]">
-                    Run a free Recovery Audit to see what Margin can establish, what may be recoverable, what proof is missing, and what the next sensible step is.
+                    Run a free Recovery Audit to see what Margin can establish, what may be recoverable, what proof is missing, and whether there is work worth managing.
                   </p>
                   <div className="mt-12 flex flex-col gap-3 sm:flex-row">
                     <Button
@@ -524,9 +349,9 @@ export default function Index() {
                 </motion.div>
                 <motion.div {...revealProps} className="border-y border-[var(--margin-border)] bg-white/50 p-8 md:p-12">
                   {[
-                    "No payment required.",
-                    "Read-only access.",
-                    "See findings before deciding."
+                    "Run the free Audit.",
+                    "Review what is supported.",
+                    "Decide whether there is work worth managing."
                   ].map((item) => (
                     <div
                       key={item}

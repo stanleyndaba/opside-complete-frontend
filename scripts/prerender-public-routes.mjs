@@ -595,27 +595,27 @@ const sellerboardAlternativeRoute = createAcquisitionRoute({
 const routes = [
   {
     path: '/',
-    title: 'Margin | Amazon FBA Reimbursement Workflow Automation',
+    title: 'Margin | Amazon FBA Recovery and Payout Visibility',
     description:
-      'Margin manages Amazon FBA reimbursement workflows after discrepancies are identified: evidence collection, filing, disputes, and payout reconciliation.',
-    ogTitle: 'Margin | Amazon FBA Reimbursement Workflow Automation',
+      'For Amazon FBA sellers with an unresolved recovery or recurring recovery work, Margin shows what is supported, keeps seller-approved recovery work moving, and distinguishes what was approved from what was paid.',
+    ogTitle: 'Margin | Amazon FBA Recovery and Payout Visibility',
     ogDescription:
-      'Amazon FBA reimbursement workflow management after discrepancies are identified, from evidence collection and filing to disputes and payout reconciliation.',
+      'For Amazon FBA sellers with an unresolved recovery or recurring recovery work: see what is supported, approve the work that moves forward, and understand the payout outcome.',
     shell: {
-      label: 'Always-on reimbursement workflow management for Amazon sellers',
-      h1: 'Finding a discrepancy is only the beginning.',
+      label: 'For Amazon FBA sellers with an unresolved recovery or recovery work they are tired of carrying themselves',
+      h1: 'Find what Amazon missed. Get it handled. Know it was paid.',
       intro:
-        'Margin turns scattered recovery proof - invoices, BOLs, PODs, shipment records, cost data, case history, and payout records - into claim-ready evidence packs so Amazon reimbursement cases move faster, survive rejections, and reconcile to payout.',
+        'When an Amazon inventory, reimbursement, return, inbound, fee, or settlement record does not add up, Margin shows what is supported, handles the recovery work the seller approves, and checks the final money outcome.',
       sections: [
         {
-          heading: 'What Margin does',
+          heading: 'What the free Recovery Audit shows',
           body:
-            'Every Amazon reimbursement claim has a clock. Margin keeps that clock visible while it organizes invoices, shipment records, Amazon reports, support files, reference IDs, sourcing costs, and payout activity into a reimbursement workflow.',
+            'The Audit shows what was found, what supports it, what needs a seller decision, and what happened to the money before any paid work is considered.',
         },
         {
           heading: 'How sellers stay in control',
           body:
-            'Sellers start read-only, review evidence before action, approve before filing, and keep approved recoveries without recovery commissions. Weak, duplicate, expired, unsupported, or low-confidence reimbursement issues are held back instead of being pushed into reckless filing volume.',
+            'Sellers start with read-only access, see the source coverage and proof behind a result, and approve a recovery before anything moves forward. Expected, approved, paid, reversed, and unresolved outcomes remain distinct.',
         },
       ],
     },

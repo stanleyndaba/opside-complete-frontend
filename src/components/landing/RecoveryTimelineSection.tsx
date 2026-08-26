@@ -5,31 +5,31 @@ const recoverySteps = [
   {
     number: "01",
     title: "Find",
-    body: "Margin identifies a possible recovery issue in your Amazon records.",
+    body: "Identifies a possible recovery issue in your Amazon records.",
     outcome: "A clear explanation of what does not add up.",
   },
   {
     number: "02",
-    title: "Prepare proof",
-    body: "The relevant shipment, inventory, settlement, invoice, and case records are connected to the issue.",
+    title: "Prove",
+    body: "Connects the relevant shipment, inventory, settlement, invoice, and case records.",
     outcome: "See what supports the recovery and what is missing.",
   },
   {
     number: "03",
-    title: "You approve",
-    body: "You review the recovery and decide whether it should move forward.",
+    title: "Approve",
+    body: "Puts the recovery in front of you before it moves forward.",
     outcome: "Nothing is submitted without your approval.",
   },
   {
     number: "04",
-    title: "Follow the case",
-    body: "Margin keeps the recovery response, deadline, and next required action visible.",
+    title: "Follow",
+    body: "Keeps the case response, deadline, and next required action visible.",
     outcome: "Know what Amazon said and what needs attention next.",
   },
   {
     number: "05",
-    title: "Verify the payout",
-    body: "Margin compares the supported recovery amount with the relevant approval and settlement records.",
+    title: "Verify",
+    body: "Compares the supported recovery amount with the relevant approval and settlement records.",
     outcome: "Know what was paid, reversed, or remains unresolved.",
   },
 ];
@@ -49,11 +49,7 @@ export const RecoveryTimelineSection: React.FC = () => {
           <motion.div {...revealProps} className="max-w-[560px]">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-white/20" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-300">How Margin handles a recovery</span></div>
             <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-white md:text-[76px]" style={{ fontWeight: 400 }}>Find it. Prove it. Approve it. Follow it. Verify it.</h2>
-            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">Margin prepares the recovery record, connects the supporting proof, tracks Amazon’s response, and checks what Amazon pays. You review the important decision and approve the action.</p>
-            <div className="mt-10 border-l border-blue-400/45 pl-5">
-              <p className="text-[16px] leading-7 text-slate-400">You should not have to chase every document, remember every deadline, or wonder whether an approved reimbursement reached your account.</p>
-              <p className="mt-4 text-[15px] font-semibold text-blue-200">You approve the action. Margin keeps the work moving.</p>
-            </div>
+            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-slate-300 md:text-[19px]">The recovery path keeps the proof, your approval, the case, and the payout outcome attached to the same record.</p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">
@@ -61,7 +57,7 @@ export const RecoveryTimelineSection: React.FC = () => {
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent" />
               <div className="border-b border-white/10 px-5 py-4 md:px-7">
                 <div className="flex items-center justify-between gap-4">
-                  <div><p className="font-mono text-[11px] font-medium uppercase tracking-tight text-slate-400">Recovery path</p><p className="mt-1 text-[15px] font-semibold tracking-[-0.02em] text-white">Find → Prepare proof → Approve → Follow → Verify</p></div>
+                  <div><p className="font-mono text-[11px] font-medium uppercase tracking-tight text-slate-400">Recovery path</p><p className="mt-1 text-[15px] font-semibold tracking-[-0.02em] text-white">Find → Prove → Approve → Follow → Verify</p></div>
                   <span className="hidden rounded-full border border-white/10 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-tight text-slate-300 sm:inline-flex">Seller controlled</span>
                 </div>
               </div>

@@ -24,7 +24,7 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     canonical: routeUrl('/'),
     ogTitle: SITE_META.title,
     ogDescription:
-      'Amazon FBA reimbursement workflow management after discrepancies are identified, from evidence collection and filing to disputes and payout reconciliation.',
+      'For Amazon FBA sellers with an unresolved recovery or recurring recovery work: see what is supported, approve the work that moves forward, and understand the payout outcome.',
     ogUrl: routeUrl('/'),
     image: SITE_META.image,
   },

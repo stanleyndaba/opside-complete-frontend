@@ -24,7 +24,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
           <motion.div {...revealProps} className="mb-6 flex items-center gap-3">
             <div className="h-[1px] w-8 bg-[var(--margin-border-strong)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-secondary)]">
-              See what your Audit actually shows
+              What your free Recovery Audit shows
             </span>
           </motion.div>
 
@@ -34,7 +34,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             className="font-lora text-[44px] leading-[0.96] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[66px] lg:text-[86px]"
             style={{ fontWeight: 400 }}
           >
-            See what your Audit actually shows.
+            See what happened—before you decide what to do next.
           </motion.h2>
 
           <motion.p
@@ -46,7 +46,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
           </motion.p>
         </div>
 
-        {/* Evidence surface */}
+        <div className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">Example recovery record</div>
         <div className="mb-20 border-y border-[var(--margin-border)]">
 
           {/* Step 1 */}
@@ -125,7 +125,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             Run a free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <p className="text-[13px] text-[var(--margin-text-muted)]">
-            Read-only access. No payment to run the Audit. Nothing is submitted without your approval.
+            No payment required. You decide what happens after the Audit.
           </p>
         </motion.div>
 
