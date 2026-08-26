@@ -332,7 +332,7 @@ export default function EvidenceLocker() {
     if (!window.confirm(confirmation)) return;
 
     try {
-      const response = await api.archiveDocument(selectedDoc.id, 'Archived from Evidence Locker by seller', activeSlug);
+      const response = await api.archiveDocument(selectedDoc.id, 'Archived from Evidence Records by seller', activeSlug);
       if (!response.ok) throw new Error(response.error || 'The artifact could not be archived.');
       toast({ title: 'Artifact archived safely', description: response.data?.message || 'The source artifact and its provenance remain preserved.' });
       setDetailOpen(false);
@@ -344,12 +344,12 @@ export default function EvidenceLocker() {
 
   if (!activeSlug) {
     return (
-      <PageLayout title="Evidence Locker" noPadding>
+      <PageLayout title="Evidence Records" noPadding>
         <div className="flex min-h-screen items-center justify-center bg-[#FAFAF7] px-6 text-center">
           <div className="max-w-md rounded-[10px] border border-[#DCE8EE] bg-white p-8 shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
             <ShieldAlert className="mx-auto h-7 w-7 text-[#66737F]" />
             <h1 className="mt-4 font-lora text-[25px] text-[#182026]">Workspace required</h1>
-            <p className="mt-2 text-[13px] leading-6 text-[#66737F]">Evidence Locker is available only inside an active Margin workspace.</p>
+            <p className="mt-2 text-[13px] leading-6 text-[#66737F]">Evidence Records is available only inside an active Margin workspace.</p>
           </div>
         </div>
       </PageLayout>
@@ -357,14 +357,14 @@ export default function EvidenceLocker() {
   }
 
   return (
-    <PageLayout title="Evidence Locker" noPadding>
+    <PageLayout title="Evidence Records" noPadding>
       <div className="min-h-screen bg-[#FAFAF7] text-[#182026]">
         <header className="border-b border-[#DCE8EE] bg-[#FAFAF7] px-4 py-7 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-[1180px] flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Evidence control</p>
-              <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[40px]">Evidence Locker</h1>
-              <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Store an artifact once, inspect where Margin has recorded it, and understand the boundary between a parsed document, a recovery relationship, and a case-level conclusion.</p>
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Recovery documentation</p>
+              <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[40px]">Evidence Records</h1>
+              <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Store an artifact once, inspect where Margin has recorded it, and understand the boundary between recorded document details, recovery relationships, and case-level conclusions.</p>
             </div>
             <div className="flex items-center gap-3 text-[12px] text-[#66737F]">
               <span>{latestTimestamp ? `Updated ${formatDistanceToNow(new Date(latestTimestamp), { addSuffix: true })}` : 'No evidence record loaded'}</span>
@@ -448,7 +448,7 @@ export default function EvidenceLocker() {
                   {loading && documents.length === 0 ? (
                     <TableRow><TableCell colSpan={5} className="h-64 text-center"><RefreshCw className="mx-auto mb-3 h-5 w-5 animate-spin text-[#66737F]" /><p className="text-[13px] text-[#66737F]">Loading evidence records</p></TableCell></TableRow>
                   ) : documents.length === 0 ? (
-                    <TableRow><TableCell colSpan={5} className="h-64 text-center"><FileText className="mx-auto mb-3 h-5 w-5 text-[#66737F]" /><h3 className="text-[15px] font-semibold tracking-tight">No artifacts in this view</h3><p className="mx-auto mt-2 max-w-md text-[12px] leading-5 text-[#66737F]">Evidence Locker stores source artifacts and their recorded recovery relationships. Provide an artifact when you want Margin to retain it for processing or future evidence matching.</p><Button className="mt-4 h-9 bg-[#0B74DE] text-[12px] hover:bg-[#075EA8]" onClick={() => openUploader()}><Upload className="mr-2 h-3.5 w-3.5" />Provide artifact</Button></TableCell></TableRow>
+                    <TableRow><TableCell colSpan={5} className="h-64 text-center"><FileText className="mx-auto mb-3 h-5 w-5 text-[#66737F]" /><h3 className="text-[15px] font-semibold tracking-tight">No artifacts in this view</h3><p className="mx-auto mt-2 max-w-md text-[12px] leading-5 text-[#66737F]">Evidence Records retains source artifacts and their recorded recovery relationships. Provide an artifact when you want Margin to preserve it for processing or future evidence matching.</p><Button className="mt-4 h-9 bg-[#0B74DE] text-[12px] hover:bg-[#075EA8]" onClick={() => openUploader()}><Upload className="mr-2 h-3.5 w-3.5" />Provide artifact</Button></TableCell></TableRow>
                   ) : documents.map((doc) => {
                     const status = lifecycleLabel(doc);
                     const relationship = relationshipSummary(doc);
@@ -469,7 +469,7 @@ export default function EvidenceLocker() {
             </div>
           </section>
 
-          <p className="mt-5 border-t border-[#DCE8EE] pt-5 text-[11px] leading-5 text-[#66737F]">A parsed artifact, a recorded recovery relationship, and case-level proof are different states. Evidence Locker preserves the artifact and its provenance; the relevant recovery record remains authoritative for current recovery, financial, payment, reversal, and closure truth.</p>
+          <p className="mt-5 border-t border-[#DCE8EE] pt-5 text-[11px] leading-5 text-[#66737F]">Recorded document details, a recovery relationship, and case-level proof are different states. Evidence Records preserves the artifact and its provenance; the relevant recovery record remains authoritative for current recovery, financial, payment, reversal, and closure truth.</p>
         </main>
       </div>
 

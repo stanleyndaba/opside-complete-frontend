@@ -24,13 +24,18 @@ check(apiSource.includes('/api/documents/upload?tenantSlug=${encodeURIComponent(
 check(apiSource.includes('archiveDocument: (documentId: string, reason: string, tenantSlug?: string)'), 'archive is exposed through the frontend API client');
 check(apiSource.includes('supersedeDocument: (documentId: string, replacementDocumentId: string, tenantSlug?: string)'), 'replacement lineage is exposed through the frontend API client');
 
-check(lockerSource.includes('api.uploadDocuments(files, activeSlug)'), 'Evidence Locker uses the restored upload contract');
+check(lockerSource.includes('api.uploadDocuments(files, activeSlug)'), 'Evidence Records uses the restored upload contract');
+check(lockerSource.includes('<PageLayout title="Evidence Records" noPadding>'), 'the principal evidence surface uses the Evidence Records page title');
+check(lockerSource.includes('>Evidence Records</h1>'), 'the principal evidence heading uses the institutional Evidence Records name');
+check(lockerSource.includes('>Recovery documentation</p>'), 'the principal evidence heading is framed as recovery documentation');
+check(lockerSource.includes('recorded document details, recovery relationships, and case-level conclusions.'), 'the principal evidence subtitle retains the recorded-details and case-conclusion boundary');
+check(!lockerSource.includes('>Evidence Locker</h1>'), 'the former consumer-storage page heading is absent from the principal evidence surface');
 check(lockerSource.includes('api.archiveDocument(selectedDoc.id'), 'Evidence Locker archives rather than hard-deletes artifacts');
 check(lockerSource.includes('api.supersedeDocument(replacementFor.id'), 'Evidence Locker records replacement lineage after storing a replacement artifact');
 check(lockerSource.includes('Full inspection'), 'Evidence Locker connects to the existing richer document inspection path');
 check(lockerSource.includes('Reconstructed from recorded events'), 'audit history is bounded as reconstructed recorded history');
 check(lockerSource.includes('What this does not establish'), 'artifact inspection explicitly declares the truth boundary');
-check(lockerSource.includes('A parsed artifact, a recorded recovery relationship, and case-level proof are different states.'), 'parsed, linked, and proof states remain distinct');
+check(lockerSource.includes('Recorded document details, a recovery relationship, and case-level proof are different states.'), 'recorded details, relationships, and proof states remain distinct');
 check(lockerSource.includes('total: documents.length'), 'displayed document metric is calculated from the rendered document dataset');
 check(lockerSource.includes('linked: documents.filter((doc) => doc.linked_case_count > 0).length'), 'displayed linked metric is calculated from the rendered document dataset');
 check(!lockerSource.includes('DEMO_DOCUMENT_ROWS'), 'fixture rows are not merged into the authenticated Evidence Locker dataset');

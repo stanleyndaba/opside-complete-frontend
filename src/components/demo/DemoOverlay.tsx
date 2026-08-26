@@ -25,7 +25,7 @@ const steps = [
     ]
   },
   {
-    id: 4, title: 'Evidence Ingestion', icon: Receipt, cta: { to: '/evidence-locker', label: 'Open Evidence Locker' }, bullets: [
+    id: 4, title: 'Evidence Ingestion', icon: Receipt, cta: { to: '/evidence-locker', label: 'Open Evidence Records' }, bullets: [
       'Connect Gmail, Outlook, Drive, Dropbox',
       'Metadata‑first, secure ingestion',
       'No manual uploads'

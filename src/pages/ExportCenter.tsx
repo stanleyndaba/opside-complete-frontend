@@ -35,7 +35,7 @@ export default function ExportCenter() {
     },
     {
       value: 'evidence-locker',
-      label: 'Evidence Locker Log',
+      label: 'Evidence Records Log',
       description: 'Inventory of all uploaded documents'
     }
   ];
@@ -268,7 +268,7 @@ export default function ExportCenter() {
 
               {reportType === 'evidence-locker' && (
                 <div className="space-y-2">
-                  <h4 className="font-medium">Evidence Locker Log</h4>
+                  <h4 className="font-medium">Evidence Records Log</h4>
                   <p className="text-sm text-muted-foreground">
                     This document inventory includes: Document Name, File Type, Upload Date,
                     Processing Status, and Linked SKUs Count.

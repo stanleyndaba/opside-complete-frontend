@@ -1603,7 +1603,7 @@ export function Dashboard() {
         }
         toast({
           title: 'INGESTION_STARTED',
-          description: response.data?.message || 'Evidence ingestion was queued. Review the Evidence Locker for final FULL, DEGRADED, or REJECTED intake states.'
+          description: response.data?.message || 'Evidence ingestion was queued. Review Evidence Records for final FULL, DEGRADED, or REJECTED intake states.'
         });
         await fetchDashboardSummary();
       } catch (error: any) {
@@ -4404,7 +4404,7 @@ This is saved as a support request. Margin records notification delivery separat
                       Evidence required for this finding
                     </DialogTitle>
                     <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
-                      Margin checks connected sources first. If the proof cannot be found automatically, upload it in Evidence Locker so the case can keep moving.
+                      Margin checks connected sources first. If the proof cannot be found automatically, upload it in Evidence Records so the case can keep moving.
                     </DialogDescription>
                   </div>
                 </div>
@@ -4489,7 +4489,7 @@ This is saved as a support request. Margin records notification delivery separat
                         If proof is missing
                       </div>
                       <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
-                        Margin keeps looking across connected repositories before asking the seller. If one required document is not found, upload it in Evidence Locker and Margin can attach it to the filing workflow.
+                        Margin keeps looking across connected repositories before asking the seller. If one required document is not found, upload it in Evidence Records and Margin can attach it to the filing workflow.
                       </p>
                       {activeDiscrepancy.whyNotClaimReady ? (
                         <p className="mt-3 border-l border-[#F4C6CD] pl-3 text-[11px] font-sans leading-4 tracking-tight text-[#8B3541]">
@@ -4618,7 +4618,7 @@ This is saved as a support request. Margin records notification delivery separat
                     }}
                     className="h-8 rounded-[8px] border border-[#0B74DE] bg-[#0B74DE] px-3.5 text-[10px] font-sans font-medium text-white hover:bg-[#0968C8]"
                   >
-                    Open Evidence Locker
+                    Open Evidence Records
                   </Button>
                   <Button
                     variant="outline"

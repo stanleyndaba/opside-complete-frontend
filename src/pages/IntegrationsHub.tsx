@@ -2334,7 +2334,7 @@ export default function IntegrationsHub() {
 
             <div className="flex items-center gap-6">
               <button onClick={() => navigate(tenantRoute(activeSlug || 'default', '/evidence-locker'))} className="text-[13px] font-medium tracking-tight text-[#0B74DE] hover:text-[#005FBA] transition-colors">
-                Evidence Locker
+                Evidence Records
               </button>
               <span className="text-[12px] leading-5 text-[#66737F]">
                 Evidence state is confirmed in the workflows where it is used.
