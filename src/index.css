@@ -185,3 +185,44 @@ html, body, #root {
   transform: translate3d(-115%, 0, 0);
   animation: agentic-scan 8s linear infinite;
 }
+
+/* ============================================================
+   MARGIN LANDING — EDITORIAL EVIDENCE TREATMENT
+   Scoped to the public landing page: keep Lora, remove generic
+   glass, scan, scale-hover, and ambient-motion conventions.
+   ============================================================ */
+.margin-landing-editorial {
+  font-family: "Avenir Next", Avenir, "Helvetica Neue", Arial, sans-serif;
+  background: #F2F3EE;
+}
+
+.margin-landing-editorial .landing-pressable {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.margin-landing-editorial .landing-pressable:hover,
+.margin-landing-editorial .landing-pressable:active {
+  transform: none;
+}
+
+.margin-landing-editorial .agentic-scan::after,
+.margin-landing-editorial .agentic-scan-subtle::after {
+  content: none;
+  animation: none;
+}
+
+.margin-landing-editorial :focus-visible {
+  outline: 2px solid #2369D8;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .margin-landing-editorial *,
+  .margin-landing-editorial *::before,
+  .margin-landing-editorial *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
