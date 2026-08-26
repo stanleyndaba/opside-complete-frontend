@@ -206,6 +206,22 @@ const isOpaqueLoginError = (message: string) => {
     normalized.endsWith(': {}');
 };
 
+/**
+ * A browser can retain a truncated legacy Supabase session payload even though
+ * Clerk is the active session authority. Supabase then throws while parsing the
+ * old value. Treat it as no local Supabase session and clear it, rather than
+ * surfacing a raw JSON parser exception on the login route.
+ */
+const getReadableSupabaseSession = async () => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session;
+  } catch {
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    return null;
+  }
+};
+
 const formatLoginError = (error: unknown, step: LoginStep) => {
   const rawMessage = extractLoginErrorMessage(error);
   const normalized = rawMessage.toLowerCase();
@@ -381,7 +397,7 @@ const Login = () => {
     let isMounted = true;
 
     const loadActiveSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const session = await getReadableSupabaseSession();
       if (!isMounted) {
         return;
       }
@@ -1008,7 +1024,7 @@ const Login = () => {
     setWorkspaceRetryAvailable(false);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const session = await getReadableSupabaseSession();
       const storedToken = localStorage.getItem('session_token');
       if (!session?.access_token && !storedToken) {
         throw new Error('No active session is available for workspace routing.');
