@@ -9,6 +9,7 @@ const dataUpload = fs.readFileSync(path.join(root, 'src/pages/DataUpload.tsx'), 
 const notificationHub = fs.readFileSync(path.join(root, 'src/pages/NotificationHub.tsx'), 'utf8');
 const backendAudit = fs.readFileSync('/home/ubuntu/Clario-Complete-Backend/Integrations-backend/src/services/auditRunService.ts', 'utf8');
 const auditTopbar = frontendAudit.slice(frontendAudit.indexOf('{/* Persistent audit context */}'), frontendAudit.indexOf('{/* Content area */}'));
+const auditPdfExport = frontendAudit.slice(frontendAudit.indexOf('const exportExecutiveSummary'), frontendAudit.indexOf('const loadAuditHistory'));
 
 let assertions = 0;
 function expect(condition, message) {
@@ -28,7 +29,9 @@ expect(frontendAudit.includes('scheduleOperating') && frontendAudit.includes('La
 expect(frontendAudit.includes('Amazon connection:') && frontendAudit.includes('Connect Amazon') && frontendAudit.includes('Notifications'), 'schedule identifies connection dependency, repair path, and in-app notification destination');
 expect(frontendAudit.includes("['All', 'Audit', 'Coverage', 'Analysis', 'Result']"), 'activity uses seller lifecycle filters');
 expect(frontendAudit.includes('browser-generated record for') && frontendAudit.includes('Margin does not retain a copy or send it by email'), 'export preserves browser-only delivery and record purpose');
-expect(frontendAudit.includes("new jsPDF({ unit: 'mm', format: 'a4' })") && frontendAudit.includes('AUDIT REVIEW BRIEF') && frontendAudit.includes('drawDocumentHeader'), 'export uses a controlled A4 audit-review document hierarchy');
+expect(frontendAudit.includes("new jsPDF({ unit: 'mm', format: 'a4' })") && auditPdfExport.includes('AUDIT RESULTS') && auditPdfExport.includes('drawDocumentHeader'), 'export uses a controlled A4 audit-results document hierarchy');
+expect(auditPdfExport.includes("loadPdfAsset('/logoimagetwo.png')") && auditPdfExport.includes("loadPdfAsset('/fonts/Merriweather-Regular.ttf')") && auditPdfExport.includes("doc.text('Margin'"), 'export embeds the Margin logo and Merriweather wordmark');
+expect(!auditPdfExport.includes('11, 116, 222') && !auditPdfExport.includes('255, 251, 235') && !auditPdfExport.includes('184, 134, 11'), 'export uses no blue or amber accents');
 expect(frontendAudit.includes('Potential opportunity scope') && frontendAudit.includes('Potential opportunity summaries') && frontendAudit.includes('REVIEW BOUNDARY'), 'export distinguishes potential scope, recorded findings, and the non-conclusive review boundary');
 expect(frontendAudit.includes('pageCount = doc.getNumberOfPages()') && frontendAudit.includes('AUDIT ${audit.id.slice(0, 8).toUpperCase()}'), 'export includes auditable page footer and pagination context');
 expect(frontendAudit.includes('Potential recovery scope') && frontendAudit.includes('Potential opportunities'), 'result labels do not overstate recovery certainty');

@@ -428,6 +428,33 @@ export default function Audit() {
 
       const exportData = response.data;
       const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const binaryToBase64 = (buffer: ArrayBuffer) => {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+          binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
+        }
+        return btoa(binary);
+      };
+      const loadPdfAsset = async (path: string) => {
+        try {
+          const asset = await fetch(path);
+          if (!asset.ok) return null;
+          return binaryToBase64(await asset.arrayBuffer());
+        } catch {
+          return null;
+        }
+      };
+      const [merriweatherFont, marginLogo] = await Promise.all([
+        loadPdfAsset('/fonts/Merriweather-Regular.ttf'),
+        loadPdfAsset('/logoimagetwo.png'),
+      ]);
+      let usesMerriweather = false;
+      if (merriweatherFont) {
+        doc.addFileToVFS('Merriweather-Regular.ttf', merriweatherFont);
+        doc.addFont('Merriweather-Regular.ttf', 'Merriweather', 'normal');
+        usesMerriweather = true;
+      }
       const recordedMonth = exportData.audit?.selected_period || selectedAuditPeriodLabel;
       const filenameDate = String(audit.completed_at || audit.started_at || audit.created_at || new Date().toISOString()).slice(0, 10);
       const filename = `margin-audit-${audit.id.slice(0, 8)}-${filenameDate}.pdf`;
@@ -453,30 +480,44 @@ export default function Audit() {
       const evidenceReady = String(summary.evidence_ready || 0);
       const evidenceRequired = String(summary.evidence_required || 0);
 
+      const setMarginWordmarkFont = () => {
+        doc.setFont(usesMerriweather ? 'Merriweather' : 'times', 'normal');
+      };
+
       const drawDocumentHeader = () => {
-        doc.setFillColor(24, 32, 38);
+        doc.setFillColor(255, 255, 255);
         doc.rect(0, 0, pageWidth, 18, 'F');
+        doc.setDrawColor(24, 24, 24);
+        doc.setLineWidth(0.35);
+        doc.line(margin, 15, pageWidth - margin, 15);
+        if (marginLogo) {
+          doc.addImage(`data:image/png;base64,${marginLogo}`, 'PNG', margin, 6.2, 8.5, 4.7);
+        }
+        setMarginWordmarkFont();
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Margin', margin + 11, 10.8);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8);
-        doc.setTextColor(255, 255, 255);
-        doc.text('MARGIN', margin, 10.6);
+        doc.setFontSize(7.2);
+        doc.text('AUDIT RESULTS', pageWidth - margin, 10.3, { align: 'right' });
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7.5);
-        doc.text('AUDIT REVIEW BRIEF', pageWidth - margin, 10.6, { align: 'right' });
-        doc.setTextColor(24, 32, 38);
+        doc.setFontSize(6.7);
+        doc.setTextColor(102, 102, 102);
+        doc.text('SELLER OPERATING REVIEW', pageWidth - margin, 13.1, { align: 'right' });
+        doc.setTextColor(24, 24, 24);
       };
 
       const drawSectionTitle = (title: string, kicker?: string) => {
         if (kicker) {
           doc.setFont('helvetica', 'bold');
-          doc.setFontSize(7.5);
-          doc.setTextColor(11, 116, 222);
+          doc.setFontSize(7.2);
+          doc.setTextColor(102, 102, 102);
           doc.text(kicker.toUpperCase(), margin, y);
           y += 5;
         }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(12);
-        doc.setTextColor(24, 32, 38);
+        doc.setTextColor(0, 0, 0);
         doc.text(title, margin, y);
         y += 6;
       };
@@ -495,13 +536,18 @@ export default function Audit() {
 
       drawDocumentHeader();
       doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.2);
+      doc.setTextColor(102, 102, 102);
+      doc.text('RECORDED AUDIT SUMMARY', margin, y);
+      y += 6;
+      setMarginWordmarkFont();
       doc.setFontSize(20);
-      doc.setTextColor(24, 32, 38);
-      doc.text('Audit review brief', margin, y);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Audit results', margin, y);
       y += 6;
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(77, 91, 102);
+      doc.setFontSize(9.3);
+      doc.setTextColor(77, 77, 77);
       doc.text('Browser-generated record for seller operating review.', margin, y);
       y += 9;
       doc.setFontSize(8);
@@ -509,7 +555,7 @@ export default function Audit() {
       doc.text(`Generated ${generatedAt}`, pageWidth - margin, y, { align: 'right' });
       y += 8;
 
-      doc.setFillColor(245, 248, 250);
+      doc.setFillColor(245, 245, 245);
       doc.roundedRect(margin, y, contentWidth, 25, 2.5, 2.5, 'F');
       const identityColumns = [
         ['AUDIT RECORD', audit.id.slice(0, 8)],
@@ -521,16 +567,16 @@ export default function Audit() {
       identityColumns.forEach(([label, value], index) => {
         const x = margin + index * identityWidth;
         if (index > 0) {
-          doc.setDrawColor(216, 227, 234);
+          doc.setDrawColor(215, 215, 215);
           doc.line(x, y + 4, x, y + 21);
         }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(6.8);
-        doc.setTextColor(140, 155, 166);
+        doc.setTextColor(128, 128, 128);
         doc.text(label, x + 4, y + 8);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8.4);
-        doc.setTextColor(24, 32, 38);
+        doc.setTextColor(24, 24, 24);
         const valueLines = doc.splitTextToSize(String(value), identityWidth - 8).slice(0, 2);
         doc.text(valueLines, x + 4, y + 14);
       });
@@ -549,15 +595,15 @@ export default function Audit() {
       auditDetails.forEach(([label, value], index) => {
         ensurePageSpace(detailRowHeight);
         if (index % 2 === 0) {
-          doc.setFillColor(249, 250, 251);
+          doc.setFillColor(249, 249, 249);
           doc.roundedRect(margin, y - 4.3, contentWidth, detailRowHeight, 1.5, 1.5, 'F');
         }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
-        doc.setTextColor(77, 91, 102);
+        doc.setTextColor(77, 77, 77);
         doc.text(label, margin + 4, y + 1.8);
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(24, 32, 38);
+        doc.setTextColor(24, 24, 24);
         doc.text(doc.splitTextToSize(String(value), 82).slice(0, 2), margin + 62, y + 1.8);
         y += detailRowHeight;
       });
@@ -577,15 +623,15 @@ export default function Audit() {
         const row = Math.floor(index / 2);
         const x = margin + column * (metricWidth + 4);
         const metricY = y + row * 22;
-        doc.setFillColor(250, 251, 252);
-        doc.setDrawColor(216, 227, 234);
+        doc.setFillColor(250, 250, 250);
+        doc.setDrawColor(215, 215, 215);
         doc.roundedRect(x, metricY, metricWidth, 18, 2.5, 2.5, 'FD');
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(7.3);
-        doc.setTextColor(77, 91, 102);
+        doc.setTextColor(77, 77, 77);
         doc.text(label.toUpperCase(), x + 4, metricY + 6);
         doc.setFontSize(13);
-        doc.setTextColor(24, 32, 38);
+        doc.setTextColor(24, 24, 24);
         doc.text(value, x + 4, metricY + 13.2);
       });
       y += 51;
@@ -599,23 +645,23 @@ export default function Audit() {
           const descriptionLines = doc.splitTextToSize('Potential scope identified for review. Evidence and seller approval may still be required before any filing action.', contentWidth - 48);
           const cardHeight = Math.max(19, 11 + descriptionLines.length * 3.8);
           ensurePageSpace(cardHeight + 3);
-          doc.setFillColor(250, 251, 252);
-          doc.setDrawColor(216, 227, 234);
+          doc.setFillColor(250, 250, 250);
+          doc.setDrawColor(215, 215, 215);
           doc.roundedRect(margin, y, contentWidth, cardHeight, 2.5, 2.5, 'FD');
-          doc.setFillColor(11, 116, 222);
+          doc.setFillColor(24, 24, 24);
           doc.roundedRect(margin + 4, y + 4, 7, 7, 1.5, 1.5, 'F');
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(7.5);
           doc.setTextColor(255, 255, 255);
           doc.text(String(index + 1), margin + 7.5, y + 8.7, { align: 'center' });
-          doc.setTextColor(24, 32, 38);
+          doc.setTextColor(24, 24, 24);
           doc.setFontSize(9.4);
           doc.text(findingTitle, margin + 15, y + 8);
           doc.setFontSize(10.5);
           doc.text(findingValue, pageWidth - margin - 4, y + 8, { align: 'right' });
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(7.8);
-          doc.setTextColor(77, 91, 102);
+          doc.setTextColor(77, 77, 77);
           doc.text(descriptionLines, margin + 15, y + 14);
           y += cardHeight + 4;
         });
@@ -631,14 +677,14 @@ export default function Audit() {
         const actionLines = doc.splitTextToSize(String(action), contentWidth - 18);
         const actionHeight = Math.max(11, 6 + actionLines.length * 3.8);
         ensurePageSpace(actionHeight + 2);
-        doc.setFillColor(245, 248, 250);
+        doc.setFillColor(245, 245, 245);
         doc.roundedRect(margin, y, contentWidth, actionHeight, 2, 2, 'F');
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
-        doc.setTextColor(11, 116, 222);
+        doc.setTextColor(24, 24, 24);
         doc.text(String(index + 1).padStart(2, '0'), margin + 4, y + 7.2);
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(24, 32, 38);
+        doc.setTextColor(24, 24, 24);
         doc.text(actionLines, margin + 14, y + 7.2);
         y += actionHeight + 3;
       });
@@ -648,14 +694,14 @@ export default function Audit() {
       const boundaryHeight = Math.max(24, 10 + boundaryLines.length * 3.8);
       ensurePageSpace(boundaryHeight + 4);
       y += 3;
-      doc.setFillColor(255, 251, 235);
-      doc.setDrawColor(229, 198, 130);
+      doc.setFillColor(246, 246, 246);
+      doc.setDrawColor(168, 168, 168);
       doc.roundedRect(margin, y, contentWidth, boundaryHeight, 2.5, 2.5, 'FD');
-      doc.setFillColor(184, 134, 11);
+      doc.setFillColor(24, 24, 24);
       doc.roundedRect(margin, y, 2.5, boundaryHeight, 1, 1, 'F');
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
-      doc.setTextColor(113, 82, 15);
+      doc.setTextColor(24, 24, 24);
       doc.text('REVIEW BOUNDARY', margin + 7, y + 7);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.8);
@@ -664,13 +710,16 @@ export default function Audit() {
       const pageCount = doc.getNumberOfPages();
       for (let page = 1; page <= pageCount; page += 1) {
         doc.setPage(page);
-        doc.setDrawColor(216, 227, 234);
+        doc.setDrawColor(215, 215, 215);
         doc.line(margin, footerY - 4, pageWidth - margin, footerY - 4);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7);
-        doc.setTextColor(77, 91, 102);
-        doc.text('MARGIN  •  AUDIT REVIEW BRIEF', margin, footerY);
+        setMarginWordmarkFont();
+        doc.setFontSize(7.5);
+        doc.setTextColor(24, 24, 24);
+        doc.text('Margin', margin, footerY);
         doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7);
+        doc.setTextColor(102, 102, 102);
+        doc.text('•  AUDIT RESULTS', margin + 15, footerY);
         doc.text(`AUDIT ${audit.id.slice(0, 8).toUpperCase()}  •  ${page} OF ${pageCount}`, pageWidth - margin, footerY, { align: 'right' });
       }
 
