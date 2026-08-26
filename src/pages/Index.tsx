@@ -182,33 +182,28 @@ function SectionTwo() {
 
 function ExistingOperationFitSection() {
   return (
-    <section className="border-b border-[#CCD2D0] bg-[#EEF0EC] py-24 sm:py-32 lg:py-40">
+    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
       <div className={containerClass}>
-        <div className="grid gap-14 lg:grid-cols-[0.84fr_1.16fr] lg:gap-20">
-          <div className="lg:pt-5">
-            <h2 className="max-w-[560px] font-lora text-[40px] leading-[1.02] tracking-[-0.045em] text-[#1B252A] sm:text-[52px] lg:text-[64px]" style={{ fontWeight: 400 }}>Approved does not always mean paid.</h2>
-            <p className="mt-7 max-w-[520px] text-[17px] leading-8 text-[#536068] sm:text-[18px]">A case status can say approved while the amount is delayed, partial, reversed, or still missing from the settlement. Margin separates the case status from the final money outcome.</p>
-            <p className="mt-6 text-[16px] font-semibold leading-7 text-[#1B252A] md:text-[18px]">A case status is not the money outcome.</p>
-            <p className="mt-3 max-w-[520px] text-[15px] leading-7 text-[#536068] md:text-[16px]">Margin gives operations and finance the same recovery record: what happened, what proof exists, what was approved, what was paid, and what still needs attention.</p>
-          </div>
-          <div className="border-y border-[#AEB8B5]">
-            <div className="border-b border-[#AEB8B5] py-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#66716C]">Money state</div>
-            <div className="divide-y divide-[#C6CECB]">
+        <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+          <motion.div {...revealProps}>
+            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-border-strong)]" /><span className={sectionLabelClass}>The money outcome</span></div>
+            <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>Approved does not always mean paid.</h2>
+            <p className={sectionBodyClass}>A case status can say approved while the amount is delayed, partial, reversed, or still missing from the settlement. Margin separates the case status from the final money outcome.</p>
+            <p className="mt-6 text-[16px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[18px]">A case status is not the money outcome.</p>
+            <p className="mt-3 max-w-[680px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">Margin gives operations and finance the same recovery record: what happened, what proof exists, what was approved, what was paid, and what still needs attention.</p>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="border-y border-[var(--margin-border)] bg-[var(--margin-surface)]">
+            <div className="border-b border-[var(--margin-border)] px-5 py-4 md:px-7"><p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">Money state</p></div>
+            <div className="divide-y divide-[var(--margin-border-subtle)] px-5 md:px-7">
               {[
                 ["Expected", "What the supported recovery should be worth."],
                 ["Approved", "What Amazon said it would reimburse or resolve."],
                 ["Paid", "What appeared in the relevant settlement or payment record."],
                 ["Reversed", "What was later adjusted or taken back."],
                 ["Still unresolved", "What remains open, short, missing, or waiting for a next action."],
-              ].map(([state, detail]) => (
-                <div key={state} className="grid gap-3 py-5 sm:grid-cols-[14px_170px_1fr] sm:gap-5 sm:py-6">
-                  <span aria-hidden="true" className="mt-1 hidden h-8 w-px bg-[#52625C] sm:block" />
-                  <h3 className="text-[15px] font-semibold tracking-[-0.02em] text-[#1B252A]">{state}</h3>
-                  <p className="max-w-[430px] text-[14px] leading-6 text-[#536068]">{detail}</p>
-                </div>
-              ))}
+              ].map(([state, detail]) => <div key={state} className="grid gap-2 py-5 sm:grid-cols-[180px_1fr] sm:items-start"><h3 className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">{state}</h3><p className="text-[14px] leading-6 text-[var(--margin-text-secondary)]">{detail}</p></div>)}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -224,37 +219,38 @@ function KineticHeroSection({
   isFull: boolean;
   nextBatchHours?: number;
 }) {
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.98]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0.82]);
+
   return (
-    <section data-navbar-theme="dark" className="relative overflow-hidden bg-[#141B22] px-5 pb-16 pt-28 text-white sm:px-8 sm:pb-24 sm:pt-36 lg:px-12 lg:pb-32" aria-labelledby="margin-hero-title">
-      <div className="absolute inset-x-0 top-0 h-px bg-white/20" aria-hidden="true" />
-      <div className="relative mx-auto max-w-[1320px]">
-        <div className="grid gap-14 border-b border-white/15 pb-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(440px,0.78fr)] lg:items-end lg:gap-20 lg:pb-20">
-          <div className="max-w-[760px]">
-            <p className="text-[13px] font-medium leading-6 text-[#C4CDD5] sm:text-[15px]">For Amazon FBA sellers with an unresolved recovery—or recovery work they are tired of carrying themselves.</p>
-            <h1 id="margin-hero-title" className="mt-6 max-w-[720px] font-lora text-[46px] leading-[0.98] tracking-[-0.045em] text-[#F7F5EF] min-[390px]:text-[54px] sm:mt-8 sm:text-[72px] lg:text-[88px]" style={{ fontWeight: 400 }}>
-              Find what Amazon missed. Get it handled.<br />
-              Know it was paid.
-            </h1>
-            <p className="mt-7 max-w-[610px] text-[17px] leading-8 text-[#C4CDD5] sm:text-[19px] sm:leading-9">When an Amazon inventory, reimbursement, return, inbound, fee, or settlement record does not add up, Margin shows what is supported, handles the recovery work you approve, and checks the final money outcome.</p>
-            <div className="mt-9">
-              <Button onClick={onAuditCta} aria-label="Run a free Recovery Audit" className="landing-pressable h-[54px] w-full rounded-none bg-[#E5EBF0] px-7 text-[15px] font-semibold text-[#17202B] hover:bg-white sm:w-auto sm:px-9 sm:text-[16px]">Run a free Recovery Audit</Button>
-            </div>
-            <div className="mt-10 grid border-y border-white/15 text-left sm:grid-cols-3">
-              <p className="border-b border-white/15 py-4 text-[14px] leading-6 text-[#E7EBEF] sm:border-b-0 sm:border-r sm:pr-5">Read-only access</p>
-              <p className="border-b border-white/15 py-4 text-[14px] leading-6 text-[#E7EBEF] sm:border-b-0 sm:border-r sm:px-5">No payment to run the Audit</p>
-              <p className="py-4 text-[14px] leading-6 text-[#E7EBEF] sm:pl-5">Nothing is submitted without your approval</p>
-            </div>
-            {isFull ? <div className="mt-6 max-w-[520px] border-l border-[#8FA8BF] pl-4 text-[14px] leading-6 text-[#C4CDD5]"><div>We are onboarding a small batch of sellers right now.</div><div>Next batch opens in {nextBatchHours ?? 24} hours.</div></div> : null}
+    <motion.section
+      style={{ scale: reduceMotion ? 1 : heroScale, opacity: reduceMotion ? 1 : heroOpacity }}
+      data-navbar-theme="dark"
+      className="relative isolate flex min-h-svh overflow-hidden agentic-scan-subtle bg-[radial-gradient(circle_at_20%_18%,rgba(11,116,222,0.18),transparent_30%),radial-gradient(circle_at_76%_28%,rgba(46,125,91,0.12),transparent_32%),linear-gradient(135deg,#101827_0%,#06080C_54%,#000000_100%)] px-4 pb-16 pt-28 text-white sm:px-6 sm:pb-24 sm:pt-40 md:min-h-screen md:px-8 md:pb-44 md:pt-40"
+      aria-labelledby="margin-hero-title"
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E\")" }} />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden"><motion.div className="absolute left-[-16%] top-[42%] h-px w-[62%] origin-left bg-gradient-to-r from-transparent via-[rgba(11,116,222,0.52)] to-transparent opacity-60" animate={reduceMotion ? undefined : { x: ["0%", "118%"], opacity: [0, 0.62, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} style={{ rotate: "-8deg" }} /></div>
+      <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center">
+        <div className="max-w-[1040px]">
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="max-w-[760px] text-[13px] font-medium leading-6 text-blue-100 sm:text-[15px]">For Amazon FBA sellers with an unresolved recovery—or recovery work they are tired of carrying themselves.</motion.p>
+          <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
+            <motion.span className="block text-white" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Find what Amazon missed. Get it handled.</motion.span>
+            <motion.span className="block text-slate-400" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}>Know it was paid.</motion.span>
           </div>
-          <div aria-hidden="true" className="border border-white/20 bg-[#EDEDE7] p-4 sm:p-6 lg:p-7">
-            <div className="border-b border-[#C8CFD0] pb-5"><div className="h-2 w-24 bg-[#17202B]" /><div className="mt-4 h-px w-full bg-[#C8CFD0]" /></div>
-            <div className="mt-7 grid grid-cols-[1.15fr_0.85fr] gap-4 border-b border-[#C8CFD0] pb-7"><div className="space-y-3"><div className="h-3 w-4/5 bg-[#17202B]/85" /><div className="h-3 w-3/5 bg-[#82908D]" /><div className="h-3 w-2/5 bg-[#C8CFD0]" /></div><div className="border-l border-[#C8CFD0] pl-4"><div className="h-16 border border-[#82908D]" /><div className="mt-3 h-2 w-full bg-[#C8CFD0]" /></div></div>
-            <div className="space-y-4 py-7"><div className="grid grid-cols-[88px_1fr] gap-4"><div className="h-2 bg-[#82908D]" /><div className="h-2 bg-[#C8CFD0]" /></div><div className="grid grid-cols-[88px_1fr] gap-4"><div className="h-2 bg-[#82908D]" /><div className="h-2 w-4/5 bg-[#C8CFD0]" /></div><div className="grid grid-cols-[88px_1fr] gap-4"><div className="h-2 bg-[#82908D]" /><div className="h-2 w-3/5 bg-[#C8CFD0]" /></div></div>
-            <div className="border-t border-[#C8CFD0] pt-5"><div className="h-2 w-2/5 bg-[#17202B]/85" /></div>
-          </div>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[760px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]">When an Amazon inventory, reimbursement, return, inbound, fee, or settlement record does not add up, Margin shows what is supported, handles the recovery work you approve, and checks the final money outcome.</motion.p>
+          <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 sm:mt-10">
+            <Button onClick={onAuditCta} aria-label="Run a free Recovery Audit" className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-6 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Run a free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" /></Button>
+          </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-5 flex w-full max-w-[780px] flex-wrap items-center gap-x-3 gap-y-1 border-y border-white/10 py-3 text-[11px] font-medium text-slate-300 sm:mt-8 sm:gap-x-5 sm:border-0 sm:py-0 sm:text-[12px]">
+            <span>Read-only access</span><span className="text-slate-600">·</span><span>No payment to run the Audit</span><span className="text-slate-600">·</span><span>Nothing is submitted without your approval</span>
+          </motion.div>
+          {isFull ? <div className="mt-5 max-w-[430px] rounded-[8px] bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"><div>We are onboarding a small batch of sellers right now.</div><div>Next batch opens in {nextBatchHours ?? 24} hours.</div></div> : null}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -272,7 +268,7 @@ export default function Index() {
   };
 
   return (
-    <div className="margin-landing-editorial min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
+    <div className="min-h-screen bg-[var(--margin-canvas)] selection:bg-[var(--margin-blue)]/16 selection:text-[var(--margin-text-primary)]">
       <PublicNavbar variant="light" />
       
       <main>
