@@ -297,6 +297,13 @@ export interface AuditScheduleRecord {
   next_run_at: string | null;
 }
 
+export interface AuditScheduleExecutionStatus {
+  available: boolean;
+  cadence_minutes: number | null;
+  completion_notification: 'in_app';
+  completion_email_enabled: boolean;
+}
+
 export interface AuditExportSummary {
   success: boolean;
   audit: {
@@ -1165,6 +1172,7 @@ export const api = {
     success: boolean;
     schedule: AuditScheduleRecord | null;
     entitlement: { entitled: boolean; state: string; access_until?: string | null };
+    execution: AuditScheduleExecutionStatus;
   }>('/api/audits/schedule', authToken ? {
     headers: { Authorization: `Bearer ${authToken}` },
   } : undefined),
@@ -1180,6 +1188,7 @@ export const api = {
     success: boolean;
     schedule: AuditScheduleRecord;
     entitlement: { entitled: boolean; state: string; access_until?: string | null };
+    execution: AuditScheduleExecutionStatus;
   }>('/api/audits/schedule', {
     method: 'PUT',
     headers: authToken ? {

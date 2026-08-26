@@ -9,7 +9,7 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
 import { useTenant } from '@/contexts/TenantContext';
-import { api, AuditActivityEvent, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
+import { api, AuditActivityEvent, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleExecutionStatus, AuditScheduleRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 import { tenantRoute } from '@/lib/routes';
@@ -270,6 +270,7 @@ export default function Audit() {
   const [isAuditLogLoading, setIsAuditLogLoading] = useState(false);
   const [auditSchedule, setAuditSchedule] = useState<AuditScheduleRecord | null>(null);
   const [scheduleEntitled, setScheduleEntitled] = useState(false);
+  const [scheduleExecution, setScheduleExecution] = useState<AuditScheduleExecutionStatus | null>(null);
   const [scheduleForm, setScheduleForm] = useState({
     cadence: 'off' as 'off' | 'weekly' | 'biweekly' | 'monthly',
     preferred_day_of_week: 1,
@@ -325,7 +326,11 @@ export default function Audit() {
     teaser.commercialRoute === 'WORKSPACE' || teaser.commercialRoute === 'RECOVERY_CONTROL'
   );
   const needsAdditionalAmazonData = step === 'completed' && (isZeroRecordLimitedAudit || Boolean(teaser.sourcesUnavailable?.length));
-  const selectedAuditPeriodLabel = auditHistory.find((item) => item.id === audit?.id)?.label || 'Current audit';
+  const selectedAuditPeriodLabel = auditHistory.find((item) => item.id === audit?.id)?.label || 'Current audit in this workspace';
+  const canManageSavedSchedule = Boolean(auditSchedule);
+  const canSaveScheduleForm = scheduleForm.cadence === 'off'
+    ? canManageSavedSchedule
+    : Boolean(scheduleEntitled && scheduleExecution?.available);
   const expiringSoonValue = hasScopeValue ? formatMoney(Math.round(teaser.scopeValue * 0.28)) : '$0';
   const newShipmentSyncCopy = isAuthenticated
     ? audit?.status === 'completed'
@@ -469,18 +474,26 @@ export default function Audit() {
     });
   };
 
-  const openAuditLog = async () => {
-    setIsAuditLogOpen(true);
-    trackEvent('audit_log_opened', { source_page: '/audit', audit_id: audit?.id || null });
+  const loadAuditActivity = async () => {
     if (!audit?.id) return;
     setIsAuditLogLoading(true);
     try {
       const freshToken = await ensureFreshAuditAuth();
       const response = await api.getAuditActivity(audit.id, freshToken);
-      if (response.ok && response.data?.events) setAuditLogEvents(response.data.events);
+      if (response.ok && response.data?.events) {
+        setAuditLogEvents(response.data.events);
+      } else {
+        setError('Audit activity is not available for this workspace.');
+      }
     } finally {
       setIsAuditLogLoading(false);
     }
+  };
+
+  const openAuditLog = async () => {
+    setIsAuditLogOpen(true);
+    trackEvent('audit_log_opened', { source_page: '/audit', audit_id: audit?.id || null });
+    await loadAuditActivity();
   };
 
   const openScheduleDialog = async () => {
@@ -490,7 +503,9 @@ export default function Audit() {
       const freshToken = await ensureFreshAuditAuth();
       const response = await api.getAuditSchedule(freshToken);
       if (response.ok && response.data) {
+        const execution = response.data.execution || null;
         setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
+        setScheduleExecution(execution);
         setAuditSchedule(response.data.schedule);
         if (response.data.schedule) {
           setScheduleForm({
@@ -501,11 +516,12 @@ export default function Audit() {
             timezone: response.data.schedule.timezone || scheduleForm.timezone,
             is_paused: Boolean(response.data.schedule.is_paused),
           });
-          setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused);
+          setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused && Boolean(execution?.available));
         }
       }
     } catch {
       setScheduleEntitled(false);
+      setScheduleExecution(null);
     }
   };
 
@@ -515,17 +531,18 @@ export default function Audit() {
     try {
       const freshToken = await ensureFreshAuditAuth();
       const response = await api.saveAuditSchedule(nextForm, freshToken);
-      if (!response.ok || !response.data?.success) throw new Error('Schedule unavailable');
+      if (!response.ok || !response.data?.success) throw new Error(response.error || 'Schedule unavailable');
       setAuditSchedule(response.data.schedule);
       setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
-      setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused);
+      setScheduleExecution(response.data.execution || null);
+      setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused && Boolean(response.data.execution?.available));
       trackEvent(nextForm.cadence === 'off' ? 'audit_schedule_disabled' : nextForm.is_paused ? 'audit_schedule_paused' : 'audit_schedule_saved', {
         source_page: '/audit',
         cadence: nextForm.cadence,
       });
       toast({ description: 'Audit schedule updated.' });
-    } catch {
-      setError('Automatic audits are available after Recovery Workspace is active.');
+    } catch (scheduleError: unknown) {
+      setError(getErrorMessage(scheduleError, 'Margin could not update this audit schedule.'));
     } finally {
       setIsScheduleSaving(false);
     }
@@ -1197,7 +1214,7 @@ export default function Audit() {
             <nav className="flex flex-col gap-0.5 px-2 pt-4">
               <button type="button" onClick={openAuditLog} className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 text-[#4D5B66] transition-colors hover:bg-white/60 hover:text-zinc-900">
                 <TerminalSquare className="h-4 w-4 text-zinc-400" />
-                Live audit log
+                Audit activity
               </button>
               <button type="button" onClick={openScheduleDialog} className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[14px] leading-6 transition-colors ${weeklyAuditEnabled ? 'border-l border-[#007AFF] bg-white/50 font-medium text-zinc-900' : 'text-[#4D5B66] hover:bg-white/60 hover:text-zinc-900'}`}>
                 <CalendarClock className={`h-4 w-4 ${weeklyAuditEnabled ? 'text-[#007AFF]' : 'text-zinc-400'}`} />
@@ -1241,7 +1258,7 @@ export default function Audit() {
               <button type="button" onClick={() => setSidebarOpen(true)} aria-label="Expand sidebar" title="Expand sidebar" className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900">
                 <PanelLeft className="h-4 w-4" />
               </button>
-              <button type="button" onClick={openAuditLog} aria-label="Live audit log" title="Live audit log" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
+              <button type="button" onClick={openAuditLog} aria-label="Audit activity" title="Audit activity" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
                 <TerminalSquare className="h-4 w-4" />
               </button>
               <button type="button" onClick={openScheduleDialog} aria-label="Schedules" title="Schedules" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
@@ -1296,7 +1313,7 @@ export default function Audit() {
               <div className="flex items-center gap-2 text-[13px] sm:text-[14px]">
               <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3">
                 <TerminalSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">Audit log</span>
+                <span className="hidden sm:inline">Activity</span>
               </button>
               <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
                 <Download className="h-4 w-4" />
@@ -1728,8 +1745,9 @@ export default function Audit() {
               Complete the selected audit before exporting a summary.
             </div>
           ) : null}
+          <p className="-mt-2 text-[12px] leading-5 text-[#66737F]">The PDF downloads in this browser. Margin does not retain a copy or send the export by email.</p>
           {exportError ? <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-[13px] text-red-700">{exportError}</div> : null}
-          {summaryExported ? <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-[13px] text-emerald-700">Last export completed successfully.</div> : null}
+          {summaryExported ? <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-[13px] text-emerald-700">This download completed in this browser.</div> : null}
           <Button onClick={exportExecutiveSummary} disabled={isExporting || step !== 'completed'} className="h-10 rounded-[6px] bg-[#182026] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35]">
             {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
             Download PDF
@@ -1740,14 +1758,24 @@ export default function Audit() {
       <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
         <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[560px]">
           <DialogHeader>
-            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Auto-run audit schedule</DialogTitle>
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Automatic audit schedule</DialogTitle>
             <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
-              Automatic audits are available with Recovery Workspace. The schedule is tenant-owned and only one audit runs at a time.
+              This is a workspace-owned run preference. It does not create proof, filing authority, reimbursement eligibility, payment, or case closure.
             </DialogDescription>
           </DialogHeader>
           {!scheduleEntitled ? (
             <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] text-[#4D5B66]">
-              Activate Recovery Workspace before saving an automatic audit schedule.
+              Recovery Workspace is required to create or resume an automatic audit schedule. Existing schedule preferences can still be paused or turned off.
+            </div>
+          ) : null}
+          {scheduleExecution && !scheduleExecution.available ? (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-[13px] leading-5 text-amber-900">
+              Automatic execution is not active in this environment. Margin will not save a new active schedule because it could not run it. Use <span className="font-medium">Run Audit</span> for a manual audit; any existing preference can be paused or turned off.
+            </div>
+          ) : null}
+          {scheduleExecution?.available ? (
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] leading-5 text-[#4D5B66]">
+              Margin checks due schedules approximately every {scheduleExecution.cadence_minutes || 15} minutes. A completed supported audit appears in Margin notifications; completion email is not enabled from this schedule.
             </div>
           ) : null}
           <div className="grid gap-3 sm:grid-cols-2">
@@ -1783,12 +1811,12 @@ export default function Audit() {
             Next scheduled run: {auditSchedule?.next_run_at && !scheduleForm.is_paused ? new Date(auditSchedule.next_run_at).toLocaleString() : 'Not scheduled'}
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={() => void saveSchedule()} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-[6px] bg-[#182026] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">
+            <Button onClick={() => void saveSchedule()} disabled={!canSaveScheduleForm || isScheduleSaving} className="h-10 rounded-[6px] bg-[#182026] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">
               {isScheduleSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Save schedule
             </Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Pause</Button>
-            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!scheduleEntitled || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Turn off</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ is_paused: true })} disabled={!canManageSavedSchedule || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Pause</Button>
+            <Button variant="outline" onClick={() => void saveSchedule({ cadence: 'off', is_paused: false })} disabled={!canManageSavedSchedule || isScheduleSaving} className="h-10 rounded-md border-[#D8E3EA] bg-[#FAFAF7] px-4 text-[13px] text-[#4D5B66] disabled:border-[#D8E3EA] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">Turn off</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -1855,12 +1883,12 @@ export default function Audit() {
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="mb-2 text-[11px] font-medium text-[#0B74DE]">Operational record</p>
-                <DialogTitle className="text-[21px] font-semibold tracking-[-0.03em] text-[#182026]">Live Audit Log</DialogTitle>
+                <DialogTitle className="text-[21px] font-semibold tracking-[-0.03em] text-[#182026]">Audit activity</DialogTitle>
                 <DialogDescription className="mt-2 max-w-lg text-[13px] leading-5 text-[#66737F]">
-                  A chronological record of what Margin has checked, found, and is waiting for in this audit.
+                  A recorded summary of the selected audit. It refreshes when you open or refresh this panel; it is not a live event stream.
                 </DialogDescription>
               </div>
-              <span className="inline-flex shrink-0 items-center gap-2 text-[12px] font-medium text-[#66737F]"><span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />Live state</span>
+              <Button variant="outline" size="sm" onClick={() => void loadAuditActivity()} disabled={isAuditLogLoading || !audit?.id} className="h-8 border-[#D8E3EA] bg-white px-2.5 text-[12px] text-[#4D5B66] hover:bg-[#F5F5F5] hover:text-[#182026]">Refresh</Button>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#E6EEF2] pt-4 text-[12px]">
               <span><span className="text-[#66737F]">Period</span><span className="ml-2 font-medium text-[#182026]">{selectedAuditPeriodLabel}</span></span>
