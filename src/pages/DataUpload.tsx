@@ -233,29 +233,39 @@ export default function DataUpload() {
 
     return (
         <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] overflow-x-hidden">
-            {/* Sticky Header */}
-            <header className="sticky top-0 z-50 border-b border-[#D8E3EA] bg-white px-6 py-2">
-                <div className="mx-auto flex max-w-5xl items-center justify-between">
-                    {/* Back Button */}
-                    <Link to="/audit" className="group flex items-center gap-2.5 text-[#182026] transition-colors">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F1F5F9] group-hover:bg-[#E2E8F0] transition-colors">
+            {/* Sticky workflow header */}
+            <header className="sticky top-0 z-50 border-b border-[#D8E3EA] bg-[#FAFAF7]/95 backdrop-blur">
+                <div className="mx-auto grid min-h-[57px] max-w-6xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 py-2 sm:px-6">
+                    <Link
+                        to="/audit"
+                        title="Back to Audit"
+                        className="group inline-flex min-w-0 justify-self-start items-center gap-2 rounded-md px-1 py-1 text-[#4D5B66] transition-colors hover:bg-white hover:text-[#182026]"
+                    >
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-[#D8E3EA] transition-colors group-hover:bg-[#F1F5F9]">
                             <ArrowLeft className="h-3.5 w-3.5" />
-                        </div>
-                        <span className="text-[13px] font-medium">Back</span>
+                        </span>
+                        <span className="hidden text-[13px] font-medium sm:inline">Back to Audit</span>
                     </Link>
 
-                    {/* Brand Logo */}
-                    <div className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
-                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
-                        <span className="font-merriweather text-[16px] font-bold tracking-tight text-[#182026]">Margin</span>
+                    <div className="flex items-center justify-center gap-2.5 text-center" aria-label="Manual report audit">
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#EAF4FC] text-[#0B74DE]">
+                            <FileSpreadsheet className="h-3.5 w-3.5" />
+                        </span>
+                        <span className="hidden leading-tight sm:block">
+                            <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-[#4D5B66]">Manual report audit</span>
+                            <span className="mt-0.5 block text-[11px] text-[#8C9BA6]">Operational reports</span>
+                        </span>
+                        <span className="text-[13px] font-medium text-[#182026] sm:hidden">Reports</span>
                     </div>
 
-                    {/* Connect Amazon */}
-                    <Link 
-                        to="/audit" 
-                        className="text-[12px] font-medium text-[#0B74DE] hover:underline"
+                    <Link
+                        to="/audit"
+                        title="Connect Amazon from Audit"
+                        className="inline-flex min-w-0 justify-self-end items-center gap-1.5 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1.5 text-[12px] font-medium text-[#0B74DE] transition-colors hover:border-[#0B74DE] hover:bg-[#F5FAFE] sm:px-3"
                     >
-                        Connect Amazon
+                        <span className="hidden sm:inline">Connect Amazon</span>
+                        <span className="sm:hidden">Connect</span>
+                        <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                     </Link>
                 </div>
             </header>

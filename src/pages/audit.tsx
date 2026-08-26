@@ -1390,11 +1390,6 @@ export default function Audit() {
         <div className="sticky top-0 z-10 flex min-h-[57px] shrink-0 items-center border-b border-[#D8E3EA] bg-[#FAFAF7] px-4 py-2 sm:px-6 md:h-[57px] md:py-0">
           <div className="flex w-full items-center justify-between gap-3 lg:flex-row lg:justify-between">
             <div className="flex items-center gap-3 overflow-hidden">
-              {!sidebarOpen && (
-                <button type="button" onClick={() => setSidebarOpen(true)} className="hidden rounded-md p-1 text-zinc-400 transition-colors hover:bg-[#FAFAF7] hover:text-zinc-900 md:inline-flex">
-                  <PanelLeft className="h-3.5 w-3.5" />
-                </button>
-              )}
               <div className="flex items-center gap-2 md:hidden">
                 <Link to="/" className="flex items-center">
                   <img src="/logoimagetwo.png" alt="Margin" width="16" height="16" className="h-4 w-auto object-contain" />
@@ -1418,10 +1413,6 @@ export default function Audit() {
               </Link>
             </div>
               <div className="flex items-center gap-2 text-[13px] sm:text-[14px]">
-              <button type="button" onClick={openAuditLog} className="inline-flex items-center gap-2 rounded-md border border-transparent px-2.5 py-1.5 font-medium text-zinc-700 transition-colors hover:bg-[#FAFAF7] hover:text-[#0B74DE] sm:px-3">
-                <TerminalSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">Activity</span>
-              </button>
               <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
                 <Download className="h-4 w-4" />
               </button>

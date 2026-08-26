@@ -8,6 +8,7 @@ const frontendApi = fs.readFileSync(path.join(root, 'src/lib/api.ts'), 'utf8');
 const dataUpload = fs.readFileSync(path.join(root, 'src/pages/DataUpload.tsx'), 'utf8');
 const notificationHub = fs.readFileSync(path.join(root, 'src/pages/NotificationHub.tsx'), 'utf8');
 const backendAudit = fs.readFileSync('/home/ubuntu/Clario-Complete-Backend/Integrations-backend/src/services/auditRunService.ts', 'utf8');
+const auditTopbar = frontendAudit.slice(frontendAudit.indexOf('{/* Persistent audit context */}'), frontendAudit.indexOf('{/* Content area */}'));
 
 let assertions = 0;
 function expect(condition, message) {
@@ -16,6 +17,9 @@ function expect(condition, message) {
 }
 
 expect(frontendAudit.includes('selectedAuditIsLatest ? \'Latest audit\' : \'Selected audit from history\''), 'selected and latest audit identity is explicit');
+expect(!auditTopbar.includes('setSidebarOpen(true)') && !auditTopbar.includes('openAuditLog'), 'Audit top bar does not duplicate the sidebar control or Activity action');
+expect(dataUpload.includes('Back to Audit') && dataUpload.includes('Manual report audit') && dataUpload.includes('Operational reports') && dataUpload.includes('Connect Amazon from Audit'), 'Data Upload uses a balanced workflow header with return, context, and connection action');
+expect(!dataUpload.includes('absolute left-1/2 -translate-x-1/2'), 'Data Upload header avoids the isolated absolute-centered brand layout');
 expect(frontendAudit.includes('title={selectedAuditSelectorLabel}') && frontendAudit.includes('overflow-hidden whitespace-nowrap') && frontendAudit.includes('<span className="min-w-0 flex-1 truncate">{selectedAuditSelectorLabel}</span>'), 'sidebar audit selector keeps long labels contained on one line while retaining the full label on hover');
 expect(frontendAudit.includes('setIsScopeDialogOpen(true)'), 'View Audit scope opens the dedicated Scope panel');
 expect(frontendAudit.includes('What Margin examined'), 'scope panel explains what the selected audit examined');
