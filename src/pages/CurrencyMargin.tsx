@@ -26,9 +26,9 @@ const comparisonRows = [
 
 const faqItems = [
   {
-    question: 'Why does checkout show R1,799?',
+    question: 'Why does checkout show $109?',
     answer:
-      'Margin uses Paystack to securely process payments. $99 USD is approximately R1,799 ZAR. Depending on your card and region, your bank may display the local currency equivalent during checkout.',
+      'Margin uses Paystack to securely process payments. Checkout is $109 USD. Depending on your card and region, your bank may display the local currency equivalent during checkout.',
   },
   {
     question: 'What happens after payment?',

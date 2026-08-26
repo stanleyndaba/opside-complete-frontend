@@ -50,7 +50,7 @@ const getPricingTiers = (): PricingTier[] => [
   {
     name: 'Recovery Workspace',
     auditRequired: true,
-    price: 'R1,799/month',
+    price: '$109/month',
     priceContext: '0% recovery commission',
     purpose: 'For one Seller Central business. Cancel anytime. Nothing is filed without your approval.',
     features: [
