@@ -10,6 +10,7 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), 'u
 const apiSource = read('src/lib/api.ts');
 const lockerSource = read('src/pages/EvidenceLocker.tsx');
 const caseDetailSource = read('src/pages/CaseDetail.tsx');
+const inspectionSource = read('src/components/evidence/ParsingStatus.tsx');
 
 const assertions = [];
 const check = (condition, description) => {
@@ -36,6 +37,17 @@ check(!lockerSource.includes('Verified for Amazon Support'), 'unsupported verifi
 check(!lockerSource.includes('Ready for reimbursement support'), 'unsupported reimbursement-readiness language is absent');
 check(!lockerSource.includes('Directly supports this recovery'), 'unqualified direct-support language is absent');
 check(!lockerSource.includes('api.deleteDocument('), 'the page cannot invoke a destructive document delete client');
+check(inspectionSource.includes('Artifact processing'), 'full inspection presents a seller-facing artifact-processing surface');
+check(inspectionSource.includes('confidence in recorded artifact details only.'), 'inspection bounds extraction confidence away from proof and recovery conclusions');
+check(inspectionSource.includes('It does not establish proof, relationship strength, reimbursement eligibility, payment, a financial conclusion, or closure.'), 'inspection explicitly retains the Evidence Locker truth boundary');
+check(inspectionSource.includes('The original artifact and its recorded provenance remain available.'), 'inspection preserves provenance language when details are unavailable');
+check(!inspectionSource.includes('>FULL_PARSE_COMPLETE<'), 'inspection does not render internal full-parse status codes');
+check(!inspectionSource.includes('>PARTIAL_PARSE_READY<'), 'inspection does not render internal partial-parse status codes');
+check(!inspectionSource.includes('>EXTRACTION_ACTIVE<'), 'inspection does not render internal extraction status codes');
+check(!inspectionSource.includes('>FAILED_DURABLE<'), 'inspection does not render internal durable-failure status codes');
+check(!inspectionSource.includes('>QUEUE_LOCKED<'), 'inspection does not render internal queue status codes');
+check(!inspectionSource.includes('>NODE_OVERVIEW<'), 'inspection does not render internal node-console terminology');
+check(!inspectionSource.includes('neural intelligence engine'), 'inspection does not expose internal intelligence-engine terminology');
 check(!caseDetailSource.includes('Evidence Locker rework'), 'Case Detail remains outside the Evidence Locker implementation scope');
 
 console.log(`Evidence Locker rework contract passed: ${assertions.length} assertions.`);

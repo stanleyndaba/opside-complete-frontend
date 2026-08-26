@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { api } from '@/lib/api';
-import { getParsingTruth, formatAutonomyLabel, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
+import { getParsingTruth, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import { RefreshCw, CheckCircle2, XCircle, Clock, AlertTriangle, Activity } from 'lucide-react';
 
 interface ParsingStatusProps {
@@ -29,11 +29,18 @@ function toParsingViewState(record: any): ParsingViewState {
 function getExplanationLines(explanation: ParsingViewState['explanation']) {
   if (!explanation) return [];
   const lines: Array<{ label: string; value: string }> = [];
-  if (explanation.reason) lines.push({ label: 'Reason', value: explanation.reason });
-  if (explanation.completed_steps?.length) lines.push({ label: 'Completed', value: explanation.completed_steps.join(', ') });
-  if (explanation.failed_steps?.length) lines.push({ label: 'Failed', value: explanation.failed_steps.join(', ') });
-  if (explanation.preserved_outputs?.length) lines.push({ label: 'Preserved', value: explanation.preserved_outputs.join(', ') });
+  if (explanation.reason) lines.push({ label: 'Recorded reason', value: explanation.reason });
+  if (explanation.completed_steps?.length) lines.push({ label: 'Details recorded', value: explanation.completed_steps.join(', ') });
+  if (explanation.failed_steps?.length) lines.push({ label: 'Details unavailable', value: explanation.failed_steps.join(', ') });
+  if (explanation.preserved_outputs?.length) lines.push({ label: 'Available details', value: explanation.preserved_outputs.join(', ') });
   return lines;
+}
+
+function getProcessingMethodLabel(strategy: ParsingViewState['strategy']) {
+  if (strategy === 'FULL') return 'Full artifact review recorded';
+  if (strategy === 'PARTIAL') return 'Partial artifact review recorded';
+  if (strategy === 'FAILED_DURABLE') return 'Artifact review could not be completed';
+  return 'Processing method not recorded';
 }
 
 export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, documentData, onRefresh }: ParsingStatusProps) {
@@ -91,19 +98,19 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
         setJobStatus({ ...toParsingViewState({ parser_status: 'pending' }), error: res.error || null });
       }
     } catch (error) {
-      console.error('Failed to fetch parsing status:', error);
+      console.error('Failed to fetch artifact processing status:', error);
       setJobStatus({
         ...toParsingViewState({
           parser_status: 'failed',
           parsing_strategy: 'FAILED_DURABLE',
           parsing_explanation: {
-            reason: 'Failed to fetch parser state from the backend.',
+            reason: 'Margin could not retrieve the current artifact-processing status.',
             completed_steps: [],
-            failed_steps: ['status_lookup'],
+            failed_steps: ['status lookup'],
             preserved_outputs: []
           }
         }),
-        error: 'Failed to fetch status'
+        error: 'Margin could not retrieve the current artifact-processing status.'
       });
     } finally {
       setLoading(false);
@@ -129,7 +136,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
   const effectiveStatus = usingExternalData ? toParsingViewState(documentData) : jobStatus;
   const effectiveParsedData = usingExternalData ? documentData?.parsed_metadata : parsedData;
   const explanationLines = getExplanationLines(effectiveStatus?.explanation);
-  const runtimeSummary = summarizeOperationalExplanation(effectiveStatus?.operationalExplanation);
+  const processingUpdate = summarizeOperationalExplanation(effectiveStatus?.operationalExplanation);
 
   const getStatusIndicator = () => {
     if (!effectiveStatus) return null;
@@ -137,38 +144,38 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
     switch (effectiveStatus.status) {
       case 'completed':
         return (
-          <div className="flex items-center gap-2 text-white/80">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">FULL_PARSE_COMPLETE</span>
+          <div className="flex items-center gap-2 text-[#237749]">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            <span className="text-[11px] font-semibold">Artifact details available</span>
           </div>
         );
       case 'partial':
         return (
-          <div className="flex items-center gap-2 text-amber-400">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">PARTIAL_PARSE_READY</span>
+          <div className="flex items-center gap-2 text-[#A5670A]">
+            <AlertTriangle className="h-3.5 w-3.5" />
+            <span className="text-[11px] font-semibold">Some artifact details available</span>
           </div>
         );
       case 'processing':
         return (
-          <div className="flex items-center gap-2 text-amber-500">
-            <Activity className="w-3.5 h-3.5 animate-pulse" />
-            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">EXTRACTION_ACTIVE</span>
+          <div className="flex items-center gap-2 text-[#A5670A]">
+            <Activity className="h-3.5 w-3.5 animate-pulse" />
+            <span className="text-[11px] font-semibold">Reviewing artifact</span>
           </div>
         );
       case 'failed':
         return (
-          <div className="flex items-center gap-2 text-rose-500">
-            <XCircle className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">FAILED_DURABLE</span>
+          <div className="flex items-center gap-2 text-[#B42318]">
+            <XCircle className="h-3.5 w-3.5" />
+            <span className="text-[11px] font-semibold">Artifact details unavailable</span>
           </div>
         );
       case 'pending':
       default:
         return (
-          <div className="flex items-center gap-2 text-white/20">
-            <Clock className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">QUEUE_LOCKED</span>
+          <div className="flex items-center gap-2 text-[#66737F]">
+            <Clock className="h-3.5 w-3.5" />
+            <span className="text-[11px] font-semibold">Awaiting artifact review</span>
           </div>
         );
     }
@@ -176,10 +183,10 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
 
   if (loading && !effectiveStatus) {
     return (
-      <div className="flex items-center justify-center p-12">
+      <div className="flex items-center justify-center rounded-xl border border-[#E7EEF2] bg-white p-12">
         <div className="text-center">
-          <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-4 text-white/30" />
-          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">SYNCHRONIZING_STATUS...</span>
+          <RefreshCw className="mx-auto mb-4 h-6 w-6 animate-spin text-[#8A99A5]" />
+          <span className="text-[11px] font-medium text-[#66737F]">Loading artifact processing status</span>
         </div>
       </div>
     );
@@ -190,25 +197,15 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
   }
 
   return (
-    <div className="space-y-0 rounded-xl overflow-hidden border border-white/5 shadow-2xl">
-      <div className="bg-white/[0.03] border-b border-white/10 py-5 px-6 flex items-center justify-between backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <h4 className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">NODE_OVERVIEW</h4>
-          <div className="h-4 w-[1px] bg-white/10" />
-          <div className="flex items-center gap-6">
-            {getStatusIndicator()}
-            <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
-              {effectiveStatus.strategy ? formatAutonomyLabel(effectiveStatus.strategy) : formatAutonomyLabel(effectiveStatus.status)}
-            </Badge>
-            {effectiveStatus.confidence != null && (
-              <div className="flex items-center gap-4">
-                <div className="h-4 w-[1px] bg-white/10" />
-                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                  CONFIDENCE: <span className="text-white font-bold">{(effectiveStatus.confidence * 100).toFixed(1)}%</span>
-                </span>
-              </div>
-            )}
-          </div>
+    <section className="overflow-hidden rounded-xl border border-[#E7EEF2] bg-white shadow-sm" aria-label="Artifact processing details">
+      <header className="flex flex-col gap-3 border-b border-[#E7EEF2] bg-[#F8FAFB] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <h4 className="text-[12px] font-semibold text-[#182026]">Artifact processing</h4>
+          <div className="hidden h-4 w-px bg-[#D7E1E8] sm:block" />
+          {getStatusIndicator()}
+          <Badge variant="outline" className="border-[#D7E1E8] bg-white text-[10px] font-medium text-[#4D5B66]">
+            {getProcessingMethodLabel(effectiveStatus.strategy)}
+          </Badge>
         </div>
 
         <button
@@ -220,88 +217,93 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
             void fetchParsingStatus();
           }}
           disabled={loading}
-          className="flex items-center gap-2 text-[10px] font-sans font-bold text-white/30 hover:text-blue-400 transition-all uppercase tracking-tight group"
+          className="inline-flex items-center gap-2 text-[11px] font-medium text-[#4D5B66] transition-colors hover:text-[#0B74DE] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
-          FORCE_REFRESH
+          <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+          Refresh status
         </button>
-      </div>
+      </header>
 
-      <div className="bg-[#0a0a0a] p-8 space-y-10">
+      <div className="space-y-6 p-5 sm:p-6">
         {effectiveStatus.status === 'processing' && (
-          <div className="space-y-4 max-w-xl">
-            <div className="flex justify-between items-end mb-1">
-              <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">EXTRACTION_PROGRESS</span>
-              <span className="text-sm font-sans font-bold text-amber-500">{effectiveStatus.progress}%</span>
+          <div className="max-w-xl space-y-3 rounded-lg border border-[#F0D8A8] bg-[#FFF9EE] p-4">
+            <div className="flex items-end justify-between">
+              <span className="text-[11px] font-medium text-[#80530B]">Artifact review progress</span>
+              <span className="text-sm font-semibold text-[#A5670A]">{effectiveStatus.progress}%</span>
             </div>
-            <Progress value={effectiveStatus.progress} className="h-1.5 bg-white/5" />
-            <p className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight leading-relaxed">
-              Synchronizing document nodes with neural intelligence engine...
+            <Progress value={effectiveStatus.progress} className="h-1.5 bg-[#F7E9CB]" />
+            <p className="text-[12px] leading-5 text-[#80530B]">
+              Margin is recording available details from this artifact. You can continue to inspect the artifact while this review is in progress.
             </p>
           </div>
         )}
 
-        {effectiveStatus.status === 'failed' && effectiveStatus.error && (
-          <div className="flex items-start gap-4 p-5 bg-rose-500/5 border border-rose-500/20 rounded-lg">
-            <AlertTriangle className="w-5 h-5 text-rose-500/50 mt-0.5" />
-            <div className="space-y-2">
-              <span className="text-[10px] font-sans font-bold text-rose-500 uppercase tracking-tight leading-none block">EXTRACTION_FAULT_DETECTED</span>
-              <p className="text-xs text-rose-500/40 leading-relaxed font-sans font-bold tracking-tight">{effectiveStatus.error}</p>
+        {effectiveStatus.status === 'failed' && (
+          <div className="flex items-start gap-3 rounded-lg border border-[#F4C7C3] bg-[#FFF6F5] p-4">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#B42318]" />
+            <div className="space-y-1">
+              <p className="text-[12px] font-semibold text-[#8C1D18]">Artifact details could not be recorded yet</p>
+              <p className="text-[12px] leading-5 text-[#9B3A33]">
+                The original artifact and its recorded provenance remain available. Refresh the status later or review the available artifact details.
+              </p>
             </div>
           </div>
         )}
 
         {explanationLines.length > 0 && effectiveStatus.status !== 'processing' && (
-          <div className="rounded-lg border border-white/10 bg-white/[0.02] p-5 space-y-3">
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Parse Decision</span>
-              <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[9px] font-sans font-bold uppercase tracking-tight text-white/60">
-                {effectiveStatus.strategy ? formatAutonomyLabel(effectiveStatus.strategy) : formatAutonomyLabel(effectiveStatus.status)}
-              </Badge>
+          <div className="rounded-lg border border-[#E7EEF2] bg-[#FCFDFD] p-4">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold text-[#4D5B66]">Recorded processing details</span>
               {effectiveStatus.operationalState ? (
-                <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[9px] font-sans font-bold uppercase tracking-tight text-amber-100/80">
-                  Runtime {formatAutonomyLabel(effectiveStatus.operationalState)}
+                <Badge variant="outline" className="border-[#D7E1E8] bg-white text-[10px] font-medium text-[#66737F]">
+                  Current state recorded
                 </Badge>
               ) : null}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {explanationLines.map((line) => (
-                <div key={line.label} className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-2 last:border-0 last:pb-0">
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{line.label}</span>
-                  <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-white/76">{line.value}</span>
+                <div key={line.label} className="flex flex-col gap-1 border-b border-[#EDF2F5] pb-2.5 last:border-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
+                  <span className="text-[11px] font-medium text-[#66737F]">{line.label}</span>
+                  <span className="text-[12px] font-medium text-[#182026] sm:max-w-[65%] sm:text-right">{line.value}</span>
                 </div>
               ))}
-              {runtimeSummary ? (
-                <div className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-2 last:border-0 last:pb-0">
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Runtime</span>
-                  <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-amber-100/70">{runtimeSummary}</span>
+              {processingUpdate ? (
+                <div className="flex flex-col gap-1 border-b border-[#EDF2F5] pb-2.5 last:border-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
+                  <span className="text-[11px] font-medium text-[#66737F]">Processing update</span>
+                  <span className="text-[12px] font-medium text-[#4D5B66] sm:max-w-[65%] sm:text-right">{processingUpdate}</span>
                 </div>
               ) : null}
             </div>
           </div>
         )}
 
+        {effectiveStatus.confidence != null && (
+          <p className="rounded-lg border border-[#E7EEF2] bg-[#F8FAFB] px-4 py-3 text-[12px] leading-5 text-[#4D5B66]">
+            <span className="font-semibold text-[#182026]">Recorded detail confidence: {(effectiveStatus.confidence * 100).toFixed(1)}%.</span>{' '}
+            This describes the system&apos;s confidence in recorded artifact details only. It does not establish proof, relationship strength, reimbursement eligibility, payment, a financial conclusion, or closure.
+          </p>
+        )}
+
         {effectiveParsedData && (effectiveStatus.status === 'completed' || effectiveStatus.status === 'partial') && (
-          <div className="space-y-10">
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="h-1.5 w-1.5 rounded-full bg-white/40" />
-                <h4 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                  {effectiveStatus.status === 'partial' ? 'PARTIAL_INTELLIGENCE' : 'SUMMARY_INTELLIGENCE'}
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <h4 className="text-[12px] font-semibold text-[#182026]">
+                  {effectiveStatus.status === 'partial' ? 'Available artifact details' : 'Recorded artifact details'}
                 </h4>
-                <div className="h-px flex-1 bg-white/5" />
+                <div className="h-px flex-1 bg-[#E7EEF2]" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {[
-                  { label: 'Supplier Entity', value: effectiveParsedData.supplier_name },
-                  { label: 'Reference Code', value: effectiveParsedData.invoice_number, mono: true },
-                  { label: 'Temporal Date', value: effectiveParsedData.invoice_date ? new Date(effectiveParsedData.invoice_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : null },
-                  { label: 'Validated Total', value: effectiveParsedData.total_amount !== undefined ? `${effectiveParsedData.currency || '$'}${effectiveParsedData.total_amount.toFixed(2)}` : null, highlight: true }
+                  { label: 'Supplier', value: effectiveParsedData.supplier_name },
+                  { label: 'Reference number', value: effectiveParsedData.invoice_number, mono: true },
+                  { label: 'Document date', value: effectiveParsedData.invoice_date ? new Date(effectiveParsedData.invoice_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : null },
+                  { label: 'Recorded total', value: effectiveParsedData.total_amount !== undefined ? `${effectiveParsedData.currency || '$'}${effectiveParsedData.total_amount.toFixed(2)}` : null, highlight: true }
                 ].map((item, i) => item.value && (
-                  <div key={i} className="space-y-2">
-                    <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">{item.label}</span>
-                    <span className={`text-sm tracking-tight font-sans font-bold ${item.highlight ? 'text-white' : 'text-white/80'}`}>
+                  <div key={i} className="rounded-lg border border-[#E7EEF2] bg-[#FCFDFD] p-3">
+                    <span className="block text-[10px] font-medium uppercase tracking-wide text-[#8A99A5]">{item.label}</span>
+                    <span className={`mt-1 block text-[13px] font-semibold ${item.highlight ? 'text-[#182026]' : 'text-[#4D5B66]'} ${item.mono ? 'font-mono text-[12px]' : ''}`}>
                       {item.value}
                     </span>
                   </div>
@@ -310,32 +312,31 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
             </div>
 
             {effectiveParsedData.line_items && effectiveParsedData.line_items.length > 0 && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                  <h4 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">DETAILED_EXTRACTIONS</h4>
-                  <div className="h-px flex-1 bg-white/5" />
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <h4 className="text-[12px] font-semibold text-[#182026]">Recorded line items</h4>
+                  <div className="h-px flex-1 bg-[#E7EEF2]" />
                 </div>
 
-                <div className="border border-white/10 rounded-xl overflow-hidden bg-white/[0.01]">
-                  <table className="w-full text-left border-collapse">
+                <div className="overflow-x-auto rounded-xl border border-[#E7EEF2]">
+                  <table className="w-full min-w-[620px] border-collapse text-left">
                     <thead>
-                      <tr className="bg-white/5 border-b border-white/10">
-                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">ENTRY_ITEM</th>
-                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">QTY</th>
-                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight text-right">UNIT_PRICE</th>
-                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight text-right">PURITY</th>
+                      <tr className="border-b border-[#E7EEF2] bg-[#F8FAFB]">
+                        <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Item</th>
+                        <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Quantity</th>
+                        <th className="px-4 py-3 text-right text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Unit amount</th>
+                        <th className="px-4 py-3 text-right text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Line amount</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-[#EDF2F5]">
                       {effectiveParsedData.line_items.map((item: any, idx: number) => (
-                        <tr key={idx} className="hover:bg-white/[0.02] transition-colors group">
-                          <td className="px-6 py-4 text-xs font-bold text-white/70 tracking-tight">{item.description}</td>
-                          <td className="px-6 py-4 text-xs font-sans font-bold text-white/40 tracking-tight">{item.quantity}</td>
-                          <td className="px-6 py-4 text-xs font-sans font-bold text-white/40 text-right tracking-tight">
+                        <tr key={idx} className="hover:bg-[#FAFCFD]">
+                          <td className="px-4 py-3 text-[12px] font-medium text-[#182026]">{item.description}</td>
+                          <td className="px-4 py-3 text-[12px] text-[#4D5B66]">{item.quantity}</td>
+                          <td className="px-4 py-3 text-right text-[12px] text-[#4D5B66]">
                             {effectiveParsedData.currency || '$'}{item.unit_price?.toFixed(2)}
                           </td>
-                          <td className="px-6 py-4 text-xs font-sans font-bold text-white group-hover:text-blue-400 transition-colors text-right tracking-tight">
+                          <td className="px-4 py-3 text-right text-[12px] font-medium text-[#182026]">
                             {effectiveParsedData.currency || '$'}{item.total?.toFixed(2)}
                           </td>
                         </tr>
@@ -348,6 +349,6 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
