@@ -8,7 +8,7 @@ const frontendApi = fs.readFileSync(path.join(root, 'src/lib/api.ts'), 'utf8');
 const dataUpload = fs.readFileSync(path.join(root, 'src/pages/DataUpload.tsx'), 'utf8');
 const notificationHub = fs.readFileSync(path.join(root, 'src/pages/NotificationHub.tsx'), 'utf8');
 const backendAudit = fs.readFileSync('/home/ubuntu/Clario-Complete-Backend/Integrations-backend/src/services/auditRunService.ts', 'utf8');
-const auditTopbar = frontendAudit.slice(frontendAudit.indexOf('<div className="sticky top-0'), frontendAudit.indexOf('<section className="flex-1'));
+const auditHeader = frontendAudit.slice(frontendAudit.indexOf('<header className="sticky top-0'), frontendAudit.indexOf('<main className="mx-auto max-w-[1280px]'));
 const auditPdfExport = frontendAudit.slice(frontendAudit.indexOf('const exportExecutiveSummary'), frontendAudit.indexOf('const loadAuditHistory'));
 
 let assertions = 0;
@@ -18,13 +18,13 @@ function expect(condition, message) {
 }
 
 expect(frontendAudit.includes('selectedAuditIsLatest ? \'Latest audit\' : \'Selected audit from history\''), 'selected and latest audit identity is explicit');
-expect(frontendAudit.includes('max-w-6xl') && frontendAudit.includes('font-lora text-[38px]') && frontendAudit.includes('font-lora text-[26px]'), 'Audit uses a contextual operational workspace with Lora reserved for principal review headings');
-expect(!auditTopbar.includes('setSidebarOpen(true)') && !auditTopbar.includes('openAuditLog') && !auditTopbar.includes('openScheduleDialog') && auditTopbar.includes('Use Amazon reports') && auditTopbar.includes('Export summary'), 'Audit context row contains only orientation, report intake, and export; the rail owns navigation actions');
+expect(frontendAudit.includes('max-w-[1280px]') && frontendAudit.includes('xl:grid-cols-[minmax(0,1fr)_300px]') && frontendAudit.includes('font-lora text-[30px]') && frontendAudit.includes('font-lora text-[26px]'), 'Audit shares the Data Upload operational workspace frame and reserves Lora for principal review headings');
+expect(!auditHeader.includes('openAuditLog') && !auditHeader.includes('openScheduleDialog') && auditHeader.includes('title="Margin home"') && auditHeader.includes('Use Amazon reports') && auditHeader.includes('Export summary'), 'Audit shares the Data Upload contextual header with only brand, orientation, report intake, and export');
 expect(dataUpload.includes('title="Margin home"') && dataUpload.includes('/logoimagetwo.png') && dataUpload.includes('font-merriweather') && dataUpload.includes('Back to Audit'), 'Data Upload header uses the Margin logo and Merriweather wordmark with the return action on the opposite side');
 expect(!dataUpload.includes('Manual report intake') && !dataUpload.includes('Operational reports') && !dataUpload.includes('>Evidence Records</span>'), 'Data Upload header removes the centered intake label and header-level Evidence Records control');
 expect(dataUpload.includes('xl:grid-cols-[minmax(0,1fr)_300px]') && dataUpload.includes('Report intake') && dataUpload.includes('Intake context'), 'Data Upload separates the bounded intake surface from its responsive operational context panel');
 expect(dataUpload.includes('font-lora text-[30px]') && !dataUpload.includes('absolute left-1/2 -translate-x-1/2'), 'Data Upload restores the Margin Lora display title without returning to the isolated centered-header treatment');
-expect(frontendAudit.includes('title={selectedAuditSelectorLabel}') && frontendAudit.includes('overflow-hidden whitespace-nowrap') && frontendAudit.includes('<span className="min-w-0 flex-1 truncate">{selectedAuditSelectorLabel}</span>'), 'sidebar audit selector keeps long labels contained on one line while retaining the full label on hover');
+expect(!frontendAudit.includes('sidebarOpen') && !frontendAudit.includes('PanelLeft') && frontendAudit.includes('Audit context') && frontendAudit.includes('Audit controls') && frontendAudit.includes('xl:sticky xl:top-20'), 'Audit replaces the competing rail with the Data Upload-style sticky context column and compact controls');
 expect(frontendAudit.includes('setIsScopeDialogOpen(true)'), 'View Audit scope opens the dedicated Scope panel');
 expect(frontendAudit.includes('What Margin examined'), 'scope panel explains what the selected audit examined');
 expect(frontendAudit.includes('It does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter.'), 'scope panel preserves the truth boundary');
@@ -59,7 +59,7 @@ expect(notificationHub.includes('Audit completed — opportunities available for
 expect(notificationHub.includes(".replace(/[._]+/g, ' ')") && !notificationHub.includes("eventType.replace(/\\./g, ' ')"), 'notification metadata does not expose internal dot or underscore separators');
 
 expect(frontendAudit.includes('Audit history') && frontendAudit.includes('Audit activity') && frontendAudit.includes('Automatic audit schedule') && frontendAudit.includes('Export summary'), 'Audit provides complete, named history, activity, schedule, and export surfaces');
-expect(frontendAudit.includes('Recorded audit review') && frontendAudit.includes('Recovery choices') && !frontendAudit.includes('Continuous Intelligence') && !frontendAudit.includes('Choose how Margin should help.'), 'Audit result review replaces the rejected inline commercial block with a bounded recorded-result decision surface');
+expect(frontendAudit.includes('RECORDED AUDIT REVIEW') && frontendAudit.includes('Recovery choices') && !frontendAudit.includes('Continuous Intelligence') && !frontendAudit.includes('Choose how Margin should help.'), 'Audit result review replaces the rejected inline commercial block with a bounded recorded-result decision surface');
 expect(frontendAudit.includes('Continue from the audit record—not from an assumption.') && frontendAudit.includes('Seller authority') && frontendAudit.includes('Nothing is filed with Amazon without seller approval.'), 'Recovery Workspace drawer starts from recorded audit context and states seller authority explicitly');
 expect(frontendAudit.includes('not a live event stream') && frontendAudit.includes('This preference does not guarantee a completed audit') && frontendAudit.includes('Margin does not retain a copy or send it by email'), 'activity, schedule, and export retain their operating boundaries after the redesign');
 
