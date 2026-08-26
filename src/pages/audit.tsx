@@ -427,83 +427,253 @@ export default function Audit() {
       }
 
       const exportData = response.data;
-      const doc = new jsPDF();
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
       const recordedMonth = exportData.audit?.selected_period || selectedAuditPeriodLabel;
       const filenameDate = String(audit.completed_at || audit.started_at || audit.created_at || new Date().toISOString()).slice(0, 10);
       const filename = `margin-audit-${audit.id.slice(0, 8)}-${filenameDate}.pdf`;
       const summary = exportData.summary || {};
       const findings: AuditExportSummary['findings'] = Array.isArray(exportData.findings) ? exportData.findings : [];
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 18;
+      const contentWidth = pageWidth - margin * 2;
+      const footerY = pageHeight - 12;
+      const generatedAt = new Date().toLocaleString();
+      const recordedList = (value: unknown, fallback: string) => Array.isArray(value) && value.length
+        ? value.map((item) => String(item)).join(', ')
+        : fallback;
+      const readableCategory = (value: unknown) => String(value || 'Potential opportunity')
+        .replace(/[._-]+/g, ' ')
+        .replace(/\b\w/g, (character) => character.toUpperCase());
+      const recordsReviewed = summary.records_reviewed != null
+        ? Number(summary.records_reviewed).toLocaleString()
+        : 'Not recorded';
+      const potentialScope = formatMoney(Number(summary.estimated_recoverable_value || 0));
+      const potentialOpportunities = String(summary.actionable_findings || 0);
+      const evidenceReady = String(summary.evidence_ready || 0);
+      const evidenceRequired = String(summary.evidence_required || 0);
 
+      const drawDocumentHeader = () => {
+        doc.setFillColor(24, 32, 38);
+        doc.rect(0, 0, pageWidth, 18, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(255, 255, 255);
+        doc.text('MARGIN', margin, 10.6);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.text('AUDIT REVIEW BRIEF', pageWidth - margin, 10.6, { align: 'right' });
+        doc.setTextColor(24, 32, 38);
+      };
+
+      const drawSectionTitle = (title: string, kicker?: string) => {
+        if (kicker) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(11, 116, 222);
+          doc.text(kicker.toUpperCase(), margin, y);
+          y += 5;
+        }
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(24, 32, 38);
+        doc.text(title, margin, y);
+        y += 6;
+      };
+
+      const startNewPage = () => {
+        doc.addPage();
+        drawDocumentHeader();
+        y = 28;
+      };
+
+      let y = 29;
+      const ensurePageSpace = (needed = 10) => {
+        if (y + needed <= footerY - 6) return;
+        startNewPage();
+      };
+
+      drawDocumentHeader();
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(18);
-      doc.text('Margin Audit Summary', 18, 22);
+      doc.setFontSize(20);
+      doc.setTextColor(24, 32, 38);
+      doc.text('Audit review brief', margin, y);
+      y += 6;
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.text('A browser-generated record for management and operational review.', 18, 31, { maxWidth: 170 });
+      doc.setFontSize(9.5);
+      doc.setTextColor(77, 91, 102);
+      doc.text('Browser-generated record for seller operating review.', margin, y);
+      y += 9;
+      doc.setFontSize(8);
+      doc.text(`Workspace  •  ${activeWorkspaceLabel}`, margin, y);
+      doc.text(`Generated ${generatedAt}`, pageWidth - margin, y, { align: 'right' });
+      y += 8;
 
-      const rows = [
-        ['Workspace', activeWorkspaceLabel],
-        ['Audit record', audit.id],
-        ['Source', selectedAuditSource],
+      doc.setFillColor(245, 248, 250);
+      doc.roundedRect(margin, y, contentWidth, 25, 2.5, 2.5, 'F');
+      const identityColumns = [
+        ['AUDIT RECORD', audit.id.slice(0, 8)],
+        ['SOURCE', selectedAuditSource],
+        ['RECORDED MONTH', recordedMonth],
+        ['RESULT', selectedAuditOutcome],
+      ];
+      const identityWidth = contentWidth / identityColumns.length;
+      identityColumns.forEach(([label, value], index) => {
+        const x = margin + index * identityWidth;
+        if (index > 0) {
+          doc.setDrawColor(216, 227, 234);
+          doc.line(x, y + 4, x, y + 21);
+        }
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(6.8);
+        doc.setTextColor(140, 155, 166);
+        doc.text(label, x + 4, y + 8);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.4);
+        doc.setTextColor(24, 32, 38);
+        const valueLines = doc.splitTextToSize(String(value), identityWidth - 8).slice(0, 2);
+        doc.text(valueLines, x + 4, y + 14);
+      });
+      y += 34;
+
+      drawSectionTitle('Recorded audit facts', 'Audit record');
+      const auditDetails = [
         ['Run started', formatAuditDate(audit.started_at || audit.created_at)],
         ['Run completed', formatAuditDate(audit.completed_at, 'Not completed')],
-        ['Recorded audit month', recordedMonth],
-        ['Result', selectedAuditOutcome],
         ['Coverage', selectedAuditCoverage],
-        ['Records reviewed', summary.records_reviewed != null ? Number(summary.records_reviewed).toLocaleString() : 'Not recorded'],
-        ['Potential recovery scope', formatMoney(Number(summary.estimated_recoverable_value || 0))],
-        ['Potential opportunities', String(summary.actionable_findings || 0)],
-        ['Evidence ready', String(summary.evidence_ready || 0)],
-        ['Evidence required', String(summary.evidence_required || 0)],
-        ['Sources reviewed', (summary.sources_reviewed || []).join(', ') || 'Not recorded'],
-        ['Unavailable sources', (summary.sources_unavailable || []).join(', ') || 'None recorded'],
+        ['Records reviewed', recordsReviewed],
+        ['Sources reviewed', recordedList(summary.sources_reviewed, 'Not recorded')],
+        ['Unavailable sources', recordedList(summary.sources_unavailable, 'None recorded')],
       ];
-
-      let y = 42;
-      const ensurePageSpace = (needed = 10) => {
-        if (y + needed <= 275) return;
-        doc.addPage();
-        y = 20;
-      };
-      rows.forEach(([label, value]) => {
-        ensurePageSpace(12);
+      const detailRowHeight = 10;
+      auditDetails.forEach(([label, value], index) => {
+        ensurePageSpace(detailRowHeight);
+        if (index % 2 === 0) {
+          doc.setFillColor(249, 250, 251);
+          doc.roundedRect(margin, y - 4.3, contentWidth, detailRowHeight, 1.5, 1.5, 'F');
+        }
         doc.setFont('helvetica', 'bold');
-        doc.text(`${label}:`, 18, y);
+        doc.setFontSize(8);
+        doc.setTextColor(77, 91, 102);
+        doc.text(label, margin + 4, y + 1.8);
         doc.setFont('helvetica', 'normal');
-        doc.text(String(value), 70, y, { maxWidth: 120 });
-        y += 8;
+        doc.setTextColor(24, 32, 38);
+        doc.text(doc.splitTextToSize(String(value), 82).slice(0, 2), margin + 62, y + 1.8);
+        y += detailRowHeight;
       });
+      y += 7;
+
+      ensurePageSpace(42);
+      drawSectionTitle('Potential opportunity scope', 'Recorded analysis');
+      const metrics = [
+        ['Potential recovery scope', potentialScope],
+        ['Potential opportunities', potentialOpportunities],
+        ['Evidence ready', evidenceReady],
+        ['Evidence required', evidenceRequired],
+      ];
+      const metricWidth = (contentWidth - 4) / 2;
+      metrics.forEach(([label, value], index) => {
+        const column = index % 2;
+        const row = Math.floor(index / 2);
+        const x = margin + column * (metricWidth + 4);
+        const metricY = y + row * 22;
+        doc.setFillColor(250, 251, 252);
+        doc.setDrawColor(216, 227, 234);
+        doc.roundedRect(x, metricY, metricWidth, 18, 2.5, 2.5, 'FD');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7.3);
+        doc.setTextColor(77, 91, 102);
+        doc.text(label.toUpperCase(), x + 4, metricY + 6);
+        doc.setFontSize(13);
+        doc.setTextColor(24, 32, 38);
+        doc.text(value, x + 4, metricY + 13.2);
+      });
+      y += 51;
 
       if (findings.length) {
-        ensurePageSpace(16);
-        y += 5;
-        doc.setFont('helvetica', 'bold');
-        doc.text('Potential opportunity summaries', 18, y);
-        y += 8;
+        ensurePageSpace(22);
+        drawSectionTitle('Potential opportunity summaries', 'Recorded findings');
         findings.slice(0, 10).forEach((finding, index) => {
-          ensurePageSpace(10);
+          const findingTitle = readableCategory(finding.category);
+          const findingValue = formatMoney(Number(finding.estimated_value || 0));
+          const descriptionLines = doc.splitTextToSize('Potential scope identified for review. Evidence and seller approval may still be required before any filing action.', contentWidth - 48);
+          const cardHeight = Math.max(19, 11 + descriptionLines.length * 3.8);
+          ensurePageSpace(cardHeight + 3);
+          doc.setFillColor(250, 251, 252);
+          doc.setDrawColor(216, 227, 234);
+          doc.roundedRect(margin, y, contentWidth, cardHeight, 2.5, 2.5, 'FD');
+          doc.setFillColor(11, 116, 222);
+          doc.roundedRect(margin + 4, y + 4, 7, 7, 1.5, 1.5, 'F');
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(255, 255, 255);
+          doc.text(String(index + 1), margin + 7.5, y + 8.7, { align: 'center' });
+          doc.setTextColor(24, 32, 38);
+          doc.setFontSize(9.4);
+          doc.text(findingTitle, margin + 15, y + 8);
+          doc.setFontSize(10.5);
+          doc.text(findingValue, pageWidth - margin - 4, y + 8, { align: 'right' });
           doc.setFont('helvetica', 'normal');
-          doc.text(`${index + 1}. ${finding.category || 'Recovery finding'} — ${formatMoney(Number(finding.estimated_value || 0))} potential scope`, 18, y, { maxWidth: 170 });
-          y += 7;
+          doc.setFontSize(7.8);
+          doc.setTextColor(77, 91, 102);
+          doc.text(descriptionLines, margin + 15, y + 14);
+          y += cardHeight + 4;
         });
+        y += 3;
       }
 
-      ensurePageSpace(18);
-      y += 7;
-      doc.setFont('helvetica', 'bold');
-      doc.text('Recorded next actions', 18, y);
-      y += 8;
-      (summary.recommended_next_actions || []).forEach((action: string) => {
-        ensurePageSpace(10);
+      const recordedActions = Array.isArray(summary.recommended_next_actions) && summary.recommended_next_actions.length
+        ? summary.recommended_next_actions
+        : ['Review the recorded audit scope before deciding what happens next.'];
+      ensurePageSpace(26);
+      drawSectionTitle('Recorded next actions', 'Seller review');
+      recordedActions.forEach((action: string, index: number) => {
+        const actionLines = doc.splitTextToSize(String(action), contentWidth - 18);
+        const actionHeight = Math.max(11, 6 + actionLines.length * 3.8);
+        ensurePageSpace(actionHeight + 2);
+        doc.setFillColor(245, 248, 250);
+        doc.roundedRect(margin, y, contentWidth, actionHeight, 2, 2, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(11, 116, 222);
+        doc.text(String(index + 1).padStart(2, '0'), margin + 4, y + 7.2);
         doc.setFont('helvetica', 'normal');
-        doc.text(`- ${action}`, 18, y, { maxWidth: 170 });
-        y += 7;
+        doc.setTextColor(24, 32, 38);
+        doc.text(actionLines, margin + 14, y + 7.2);
+        y += actionHeight + 3;
       });
 
-      ensurePageSpace(22);
-      y += 7;
-      doc.setFontSize(9);
-      doc.text(`${exportData.disclaimer || 'Estimated values are not guaranteed recoveries.'} This summary is not proof, filing authorization, reimbursement eligibility, payment confirmation, or closure.`, 18, y, { maxWidth: 170 });
+      const boundaryCopy = `${exportData.disclaimer || 'Estimated values are not guaranteed recoveries.'} This browser-generated record is for management and operational review only. It is not proof, filing authorization, reimbursement eligibility, payment confirmation, or closure.`;
+      const boundaryLines = doc.splitTextToSize(boundaryCopy, contentWidth - 12);
+      const boundaryHeight = Math.max(24, 10 + boundaryLines.length * 3.8);
+      ensurePageSpace(boundaryHeight + 4);
+      y += 3;
+      doc.setFillColor(255, 251, 235);
+      doc.setDrawColor(229, 198, 130);
+      doc.roundedRect(margin, y, contentWidth, boundaryHeight, 2.5, 2.5, 'FD');
+      doc.setFillColor(184, 134, 11);
+      doc.roundedRect(margin, y, 2.5, boundaryHeight, 1, 1, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(113, 82, 15);
+      doc.text('REVIEW BOUNDARY', margin + 7, y + 7);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.8);
+      doc.text(boundaryLines, margin + 7, y + 13);
+
+      const pageCount = doc.getNumberOfPages();
+      for (let page = 1; page <= pageCount; page += 1) {
+        doc.setPage(page);
+        doc.setDrawColor(216, 227, 234);
+        doc.line(margin, footerY - 4, pageWidth - margin, footerY - 4);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7);
+        doc.setTextColor(77, 91, 102);
+        doc.text('MARGIN  •  AUDIT REVIEW BRIEF', margin, footerY);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`AUDIT ${audit.id.slice(0, 8).toUpperCase()}  •  ${page} OF ${pageCount}`, pageWidth - margin, footerY, { align: 'right' });
+      }
+
       doc.save(filename);
       setSummaryExported(true);
       trackEvent('audit_summary_export_completed', {

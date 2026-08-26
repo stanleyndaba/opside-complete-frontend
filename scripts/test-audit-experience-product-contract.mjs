@@ -28,6 +28,9 @@ expect(frontendAudit.includes('scheduleOperating') && frontendAudit.includes('La
 expect(frontendAudit.includes('Amazon connection:') && frontendAudit.includes('Connect Amazon') && frontendAudit.includes('Notifications'), 'schedule identifies connection dependency, repair path, and in-app notification destination');
 expect(frontendAudit.includes("['All', 'Audit', 'Coverage', 'Analysis', 'Result']"), 'activity uses seller lifecycle filters');
 expect(frontendAudit.includes('browser-generated record for') && frontendAudit.includes('Margin does not retain a copy or send it by email'), 'export preserves browser-only delivery and record purpose');
+expect(frontendAudit.includes("new jsPDF({ unit: 'mm', format: 'a4' })") && frontendAudit.includes('AUDIT REVIEW BRIEF') && frontendAudit.includes('drawDocumentHeader'), 'export uses a controlled A4 audit-review document hierarchy');
+expect(frontendAudit.includes('Potential opportunity scope') && frontendAudit.includes('Potential opportunity summaries') && frontendAudit.includes('REVIEW BOUNDARY'), 'export distinguishes potential scope, recorded findings, and the non-conclusive review boundary');
+expect(frontendAudit.includes('pageCount = doc.getNumberOfPages()') && frontendAudit.includes('AUDIT ${audit.id.slice(0, 8).toUpperCase()}'), 'export includes auditable page footer and pagination context');
 expect(frontendAudit.includes('Potential recovery scope') && frontendAudit.includes('Potential opportunities'), 'result labels do not overstate recovery certainty');
 expect(frontendApi.includes('export interface AuditScheduleOperatingState'), 'frontend API has operating-state type');
 expect(frontendApi.includes('operating: AuditScheduleOperatingState') && frontendApi.includes('amazon: { connected: boolean }'), 'schedule API contract includes operating state and connection readiness');
