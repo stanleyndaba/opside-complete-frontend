@@ -21,6 +21,7 @@ import {
   Shield,
   Database,
   ArrowRight,
+  Search,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
@@ -60,7 +61,8 @@ export default function DocumentDetail() {
   const [error, setError] = useState<string | null>(null);
   const [documentData, setDocumentData] = useState<any>(null);
   const [parsedData, setParsedData] = useState<any>(null);
-  const [matchedClaims, setMatchedClaims] = useState<any[]>([]);
+  const [recordedClaims, setRecordedClaims] = useState<any[]>([]);
+  const [candidateMatches, setCandidateMatches] = useState<any[]>([]);
   const [documentHistory, setDocumentHistory] = useState<any[]>([]);
   const [triggeringParse, setTriggeringParse] = useState(false);
 
@@ -83,7 +85,8 @@ export default function DocumentDetail() {
         setError(docRes.error || 'Failed to load document');
       }
 
-      setMatchedClaims(linkedClaimsRes.ok && linkedClaimsRes.data?.linkedClaims ? linkedClaimsRes.data.linkedClaims : []);
+      setRecordedClaims(linkedClaimsRes.ok && linkedClaimsRes.data?.linkedClaims ? linkedClaimsRes.data.linkedClaims : []);
+      setCandidateMatches(linkedClaimsRes.ok && linkedClaimsRes.data?.candidateMatches ? linkedClaimsRes.data.candidateMatches : []);
       setDocumentHistory(
         auditRes.ok && auditRes.data?.events
           ? [...auditRes.data.events].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
@@ -174,7 +177,7 @@ export default function DocumentDetail() {
     if (extractedDataPointCount === 0 && !(parsedData?.line_items?.length > 0)) {
       return { usable: false, label: 'Needs review', reason: 'No structured details were recorded.', nextStep: 'Review the source document manually or refresh artifact processing.' };
     }
-    if (matchedClaims.length === 0) {
+    if (recordedClaims.length === 0) {
       return { usable: false, label: 'Unlinked', reason: 'Not linked to a recovery record yet.', nextStep: 'Wait for matching or link this document to the correct recovery record manually.' };
     }
     if (status === 'partial') {
@@ -327,7 +330,8 @@ export default function DocumentDetail() {
               <TabsList className="-mb-px flex h-auto w-full justify-start gap-6 overflow-x-auto rounded-none bg-transparent p-0">
                 {[
                   { value: 'extracted', label: 'Extracted fields' },
-                  { value: 'matches', label: 'Linked cases', count: matchedClaims.length },
+                  { value: 'matches', label: 'Recorded links', count: recordedClaims.length },
+                  { value: 'candidates', label: 'Candidate matches', count: candidateMatches.length },
                   { value: 'raw', label: 'Text preview' },
                   { value: 'parsing', label: 'Processing & history' },
                 ].map((tab) => (
@@ -385,16 +389,16 @@ export default function DocumentDetail() {
 
             <TabsContent value="matches" className="m-0 outline-none">
               <div className="min-h-[360px]">
-                {matchedClaims.length > 0 ? (
+                {recordedClaims.length > 0 ? (
                   <div className="divide-y divide-[#E7EEF2]">
-                    {matchedClaims.map((match, index) => (
+                    {recordedClaims.map((match, index) => (
                       <div key={`${match.claimId || 'claim'}-${index}`} className="flex flex-col gap-4 px-5 py-5 transition-colors hover:bg-[#F8FBFD] sm:flex-row sm:items-center sm:justify-between sm:px-6">
                         <div className="flex min-w-0 items-start gap-3">
                           <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] bg-[#F1F5F7] text-[#4D5B66]">
                             <Shield className="h-4 w-4" strokeWidth={1.6} />
                           </div>
                           <div className="min-w-0">
-                            <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Linked recovery record</p>
+                            <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Recorded recovery link</p>
                             <p className="mt-1 truncate text-[13px] font-medium tracking-tight text-[#182026]">{match.claimNumber || `Claim ${match.claimId?.slice(0, 8) || 'not available'}`}</p>
                             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-[#66737F]">
                               <span>Match: {String(match.matchType || 'Linked').replace(/_/g, ' ')}</span>
@@ -417,9 +421,37 @@ export default function DocumentDetail() {
                 ) : (
                   <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F1F5F7] text-[#66737F]"><Link2 className="h-4 w-4" strokeWidth={1.6} /></div>
-                    <h2 className="mt-4 font-lora text-[20px] font-normal tracking-tight text-[#182026]">No linked recovery records</h2>
-                    <p className="mt-2 max-w-sm text-[11px] leading-5 text-[#66737F]">This document is not linked to a recovery record yet. Margin will keep its document and matching truth separate until a link is recorded.</p>
+                    <h2 className="mt-4 font-lora text-[20px] font-normal tracking-tight text-[#182026]">No recorded recovery links</h2>
+                    <p className="mt-2 max-w-sm text-[11px] leading-5 text-[#66737F]">This document has no recorded recovery link yet. Candidate matches, if any, remain separate until a relationship is recorded.</p>
                   </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="candidates" className="m-0 outline-none">
+              <div className="min-h-[360px]">
+                {candidateMatches.length > 0 ? (
+                  <div className="divide-y divide-[#E7EEF2]">
+                    <div className="bg-[#F7FAFC] px-5 py-4 text-[11px] leading-5 text-[#66737F] sm:px-6">These are detection-based recovery candidates. They are not recorded evidence links and do not establish proof, filing authorization, reimbursement eligibility, payment, financial closure, or a recovery outcome.</div>
+                    {candidateMatches.map((match, index) => (
+                      <div key={`${match.claimId || 'candidate'}-${index}`} className="flex flex-col gap-4 px-5 py-5 transition-colors hover:bg-[#F8FBFD] sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                        <div className="flex min-w-0 items-start gap-3">
+                          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] bg-[#F1F5F7] text-[#4D5B66]"><Search className="h-4 w-4" strokeWidth={1.6} /></div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Candidate recovery match</p>
+                            <p className="mt-1 truncate text-[13px] font-medium tracking-tight text-[#182026]">{match.claimNumber || `Recovery ${match.claimId?.slice(0, 8) || 'not available'}`}</p>
+                            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-[#66737F]"><span>Signal: {String(match.matchType || 'detection').replace(/_/g, ' ')}</span><span>Recorded: {match.linkDate ? format(new Date(match.linkDate), 'yyyy-MM-dd HH:mm') : 'Not available'}</span><span>Type: {match.claimType || 'Not available'}</span></div>
+                          </div>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-3">
+                          <span className={cn('rounded-full px-2 py-1 text-[10px] font-normal tracking-tight', chipTone('neutral'))}>{match.confidence != null ? `${(match.confidence * 100).toFixed(0)}% matching signal` : 'Matching signal unavailable'}</span>
+                          <Button asChild variant="outline" size="sm" className="h-8 border-[#DCE8EE] bg-white px-3 text-[10px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#0B74DE]"><Link to={tenantRoute(activeTenantSlug, `/recoveries/${match.claimId}`)}>Open candidate <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link></Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F1F5F7] text-[#66737F]"><Search className="h-4 w-4" strokeWidth={1.6} /></div><h2 className="mt-4 font-lora text-[20px] font-normal tracking-tight text-[#182026]">No candidate recovery matches</h2><p className="mt-2 max-w-sm text-[11px] leading-5 text-[#66737F]">Margin has not recorded a candidate match for this document. This does not change its stored artifact state or recorded links.</p></div>
                 )}
               </div>
             </TabsContent>

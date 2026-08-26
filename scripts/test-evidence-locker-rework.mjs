@@ -23,6 +23,7 @@ check(apiSource.includes('uploadDocuments: (files: File[], tenantSlug?: string)'
 check(apiSource.includes('/api/documents/upload?tenantSlug=${encodeURIComponent(tenantSlug)}'), 'upload is tenant-scoped and uses the verified document route');
 check(apiSource.includes('archiveDocument: (documentId: string, reason: string, tenantSlug?: string)'), 'archive is exposed through the frontend API client');
 check(apiSource.includes('supersedeDocument: (documentId: string, replacementDocumentId: string, tenantSlug?: string)'), 'replacement lineage is exposed through the frontend API client');
+check(apiSource.includes('candidateMatches?: Array<'), 'the typed client exposes detection candidates separately from recorded evidence links');
 
 check(lockerSource.includes('api.uploadDocuments(files, activeSlug)'), 'Evidence Records uses the restored upload contract');
 check(lockerSource.includes('<PageLayout title="Evidence Records" noPadding>'), 'the principal evidence surface uses the Evidence Records page title');
@@ -36,6 +37,10 @@ check(lockerSource.includes('Full inspection'), 'Evidence Locker connects to the
 check(lockerSource.includes('Reconstructed from recorded events'), 'audit history is bounded as reconstructed recorded history');
 check(lockerSource.includes('What this does not establish'), 'artifact inspection explicitly declares the truth boundary');
 check(lockerSource.includes('Recorded document details, a recovery relationship, and case-level proof are different states.'), 'recorded details, relationships, and proof states remain distinct');
+check(lockerSource.includes('>Recorded links</h3>'), 'artifact inspection labels persisted recovery links explicitly');
+check(lockerSource.includes('>Candidate recovery matches</p>'), 'artifact inspection exposes candidates in a separate panel');
+check(lockerSource.includes('These detection-based candidates are not recorded evidence relationships'), 'candidate matches are explicitly bounded away from recorded relationships');
+check(lockerSource.includes('Candidate match:'), 'candidate rows are not rendered with recorded-relationship labels');
 check(lockerSource.includes('total: documents.length'), 'displayed document metric is calculated from the rendered document dataset');
 check(lockerSource.includes('linked: documents.filter((doc) => doc.linked_case_count > 0).length'), 'displayed linked metric is calculated from the rendered document dataset');
 check(!lockerSource.includes('DEMO_DOCUMENT_ROWS'), 'fixture rows are not merged into the authenticated Evidence Locker dataset');
@@ -57,6 +62,9 @@ check(!inspectionSource.includes('neural intelligence engine'), 'inspection does
 check(documentDetailSource.includes('Artifact processing'), 'connected document detail uses a seller-facing artifact-processing label');
 check(documentDetailSource.includes('Recorded detail confidence'), 'connected document detail keeps confidence scoped to recorded artifact details');
 check(documentDetailSource.includes('This does not establish proof or a recovery outcome.'), 'connected document detail retains a non-conclusive confidence boundary');
+check(documentDetailSource.includes("label: 'Recorded links'"), 'Full inspection labels persisted recovery links explicitly');
+check(documentDetailSource.includes("label: 'Candidate matches'"), 'Full inspection exposes detection candidates in a separate tab');
+check(documentDetailSource.includes('These are detection-based recovery candidates. They are not recorded evidence links'), 'Full inspection bounds candidates away from recorded links');
 check(!documentDetailSource.includes("'Refresh parsing'"), 'connected document detail does not render legacy parser-refresh terminology');
 check(!documentDetailSource.includes("'Parsing strategy'"), 'connected document detail does not render legacy parser-strategy terminology');
 check(!documentDetailSource.includes('No parser explanation recorded.'), 'connected document detail does not render parser-console fallback copy');

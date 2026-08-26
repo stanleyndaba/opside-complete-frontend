@@ -2300,6 +2300,18 @@ export const api = {
         confidence: number;
       }>;
       reuseMessage?: string | null;
+      candidateMatchCount?: number;
+      candidateMatches?: Array<{
+        claimId: string;
+        claimNumber?: string;
+        claimType: string;
+        amount: number;
+        currency: string;
+        linkDate: string;
+        matchType: string;
+        confidence: number;
+      }>;
+      candidateMatchMessage?: string | null;
     }>(`/api/evidence/documents/${encodeURIComponent(documentId)}/linked-claims?tenantSlug=${tenantSlug}`);
   },
   getDocumentAuditTrail: (documentId: string, tenantSlug?: string) => {
