@@ -30,8 +30,8 @@ type PricingTier = {
 
 const getPricingTiers = (): PricingTier[] => [
   {
-    name: 'Free Recovery Audit',
-    price: 'R0',
+    name: 'Recovery Audit',
+    price: 'Free',
     priceContext: 'A one-time snapshot',
     purpose: 'Find out exactly what is missing and what can be recovered.',
     features: [

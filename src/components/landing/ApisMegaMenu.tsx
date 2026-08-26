@@ -25,9 +25,9 @@ export const apiMenuGroups = [
     {
         label: 'Find & Verify',
         items: [
-            { title: 'Recovery Audit', description: 'Find shipment, inventory, fee, reimbursement and settlement exceptions worth investigating.', icon: ShieldCheck },
-            { title: 'Value Verification', description: 'Compare expected, approved and paid values to identify underpayments and valuation gaps.', icon: CreditCard },
-            { title: 'Deadline Monitoring', description: 'Prioritize recoveries by value, evidence readiness and remaining claim window.', icon: Timer }
+            { title: 'Variance Detection', description: 'Find shipment, inventory, fee, reimbursement and settlement differences that may warrant review.', icon: ShieldCheck },
+            { title: 'Settlement Reconciliation', description: 'Compare expected, approved and paid values to surface underpayments and valuation differences for review.', icon: CreditCard },
+            { title: 'Claim-Window Monitoring', description: 'Prioritize potential recoveries by value, evidence readiness and remaining claim window.', icon: Timer }
         ]
     },
     {
