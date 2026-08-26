@@ -403,25 +403,19 @@ export default function DataUpload() {
                       isDragging ? 'border-[#3F51A8] bg-[#E9ECFF]' : 'border-[#B8B9B4] bg-white'
                     }`}
                   >
+                    <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[10px] border border-[#D7D7D1] bg-[#FBFAF7] text-[#191B20]">
+                      <Upload className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <h3 className="mt-3 text-[16px] font-semibold text-[#191B20]">Drop reports here</h3>
+                    <p className="mt-1 text-[13px] leading-5 text-[#595E68]">Drag CSV or TXT operational reports into this area, or choose files from your device.</p>
                     <input
                       id="manual-report-files"
                       type="file"
                       multiple
                       accept=".csv,.txt"
                       onChange={(event) => event.target.files && handleFiles(event.target.files)}
-                      className="sr-only"
+                      className="mt-4 block w-full max-w-sm cursor-pointer rounded-[10px] border border-[#D7D7D1] bg-white px-3 py-2 text-[13px] text-[#191B20] file:mr-3 file:rounded-md file:border-0 file:bg-[#F4F3ED] file:px-3 file:py-1.5 file:text-[12px] file:font-medium file:text-[#191B20] hover:file:bg-[#E8E7E1]"
                     />
-                    <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[10px] border border-[#D7D7D1] bg-[#FBFAF7] text-[#191B20]">
-                      <Upload className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <h3 className="mt-3 text-[16px] font-semibold text-[#191B20]">Drop reports here</h3>
-                    <p className="mt-1 text-[13px] leading-5 text-[#595E68]">Drag CSV or TXT operational reports into this area, or choose files from your device.</p>
-                    <label
-                      htmlFor="manual-report-files"
-                      className="mt-4 inline-flex min-h-10 items-center justify-center rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[13px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-within:ring-2 focus-within:ring-[#5165C7] focus-within:ring-offset-2"
-                    >
-                      Browse files
-                    </label>
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#D7D7D1] pt-3 text-[12px] leading-5 text-[#595E68]">
