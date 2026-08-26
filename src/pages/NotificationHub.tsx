@@ -603,12 +603,31 @@ export default function NotificationHub() {
   );
 }
 
+const SELLER_EVENT_LABELS: Record<string, string> = {
+  'audit.completed_findings': 'Audit completed — opportunities available for review',
+  'audit.completed_no_findings': 'Audit completed — no supported opportunities',
+  'audit.data_incomplete': 'Audit needs additional data',
+  'audit.failed_action_required': 'Audit needs attention',
+  'integration.amazon.authentication_invalid': 'Amazon connection needs attention',
+  'integration.amazon.sync_paused': 'Amazon sync is paused',
+  'integration.amazon.restored': 'Amazon connection restored',
+};
+
+function formatSellerEventLabel(notification: Notification) {
+  const rawEvent = String(notification.systemSignal?.eventType || notification.type || '').trim();
+  if (SELLER_EVENT_LABELS[rawEvent]) return SELLER_EVENT_LABELS[rawEvent];
+
+  return rawEvent
+    .replace(/[._]+/g, ' ')
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
 function ActivityRow({ notification, onRead, onNavigate }: {
   notification: Notification,
   onRead: () => void,
   onNavigate: () => void
 }) {
-  const eventLabel = notification.systemSignal?.eventType.replace(/\./g, ' ') || notification.type.replace(/_/g, ' ');
+  const eventLabel = formatSellerEventLabel(notification);
 
   return (
     <div

@@ -6,6 +6,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const frontendAudit = fs.readFileSync(path.join(root, 'src/pages/audit.tsx'), 'utf8');
 const frontendApi = fs.readFileSync(path.join(root, 'src/lib/api.ts'), 'utf8');
 const dataUpload = fs.readFileSync(path.join(root, 'src/pages/DataUpload.tsx'), 'utf8');
+const notificationHub = fs.readFileSync(path.join(root, 'src/pages/NotificationHub.tsx'), 'utf8');
 const backendAudit = fs.readFileSync('/home/ubuntu/Clario-Complete-Backend/Integrations-backend/src/services/auditRunService.ts', 'utf8');
 
 let assertions = 0;
@@ -36,5 +37,7 @@ expect(frontendAudit.includes('auditLogError') && frontendAudit.includes('Retry 
 expect(frontendAudit.includes('scheduleLoadError') && frontendAudit.includes('Retry schedule status') && frontendAudit.includes('No schedule change can be made until it is available.'), 'schedule failures prevent ambiguous or stale editing until workspace state is loaded');
 expect(frontendAudit.includes('Understanding your audit') && frontendAudit.includes('Amazon account data') && frontendAudit.includes('Evidence records') && frontendAudit.includes('Reconciliation checks'), 'pre-result audit explanation uses seller-understandable terminology');
 expect(!frontendAudit.includes('SP-API Node') && !frontendAudit.includes('Proof Synthesis') && !frontendAudit.includes('Financial Integrity') && !frontendAudit.includes('seven recovery detectors'), 'pre-result Audit UI does not expose internal or overreaching terms');
+expect(notificationHub.includes('Audit completed — opportunities available for review') && notificationHub.includes('Audit needs additional data') && notificationHub.includes('formatSellerEventLabel'), 'audit notifications use seller-readable outcome and action labels');
+expect(notificationHub.includes(".replace(/[._]+/g, ' ')") && !notificationHub.includes("eventType.replace(/\\./g, ' ')"), 'notification metadata does not expose internal dot or underscore separators');
 
 console.log(`PASS ${assertions} assertions — Audit experience product contract`);
