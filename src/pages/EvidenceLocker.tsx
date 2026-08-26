@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -182,6 +183,8 @@ export default function EvidenceLocker() {
   const [candidateRecoveries, setCandidateRecoveries] = useState<LinkedRecovery[]>([]);
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([]);
   const [replacementFor, setReplacementFor] = useState<LockerDocumentRow | null>(null);
+  const [archiveConfirmOpen, setArchiveConfirmOpen] = useState(false);
+  const [archiving, setArchiving] = useState(false);
 
   const query = (searchParams.get('q') || '').trim();
 
@@ -326,22 +329,19 @@ export default function EvidenceLocker() {
   };
 
   const archiveSelectedDocument = async () => {
-    if (!activeSlug || !selectedDoc) return;
-    const linkedCount = selectedDoc.linked_case_count || selectedDoc.linked_case_refs.length;
-    const confirmation = linkedCount > 0
-      ? `Archive “${selectedDoc.name}”? It is linked to ${linkedCount} recovery ${linkedCount === 1 ? 'record' : 'records'}. The original artifact and recorded relationships will remain historically inspectable, but it will not be used for new evidence work.`
-      : `Archive “${selectedDoc.name}”? The source artifact and provenance will be preserved, but it will not be used for new evidence work.`;
-
-    if (!window.confirm(confirmation)) return;
-
+    if (!activeSlug || !selectedDoc || archiving) return;
+    setArchiving(true);
     try {
       const response = await api.archiveDocument(selectedDoc.id, 'Archived from Evidence Records by seller', activeSlug);
       if (!response.ok) throw new Error(response.error || 'The artifact could not be archived.');
       toast({ title: 'Artifact archived safely', description: response.data?.message || 'The source artifact and its provenance remain preserved.' });
+      setArchiveConfirmOpen(false);
       setDetailOpen(false);
       await refreshInventory();
     } catch (requestError: any) {
       toast({ title: 'Archive failed', description: requestError?.message || 'The artifact remains unchanged.', variant: 'destructive' });
+    } finally {
+      setArchiving(false);
     }
   };
 
@@ -478,6 +478,32 @@ export default function EvidenceLocker() {
 
       <input ref={uploadInputRef} type="file" multiple={!replacementFor} className="hidden" onChange={(event) => { void handleFileUpload(Array.from(event.target.files || [])); event.currentTarget.value = ''; }} />
 
+      <AlertDialog open={archiveConfirmOpen} onOpenChange={(open) => { if (!archiving) setArchiveConfirmOpen(open); }}>
+        <AlertDialogContent className="max-w-md border-[#DCE8EE] bg-white text-[#182026] sm:rounded-[10px]">
+          <AlertDialogHeader>
+            <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Artifact lifecycle</p>
+            <AlertDialogTitle className="font-lora text-[22px] font-normal tracking-tight text-[#182026]">Archive this artifact?</AlertDialogTitle>
+            <AlertDialogDescription className="text-[12px] leading-5 text-[#66737F]">
+              {selectedDoc ? `Archive “${selectedDoc.name}”? ` : 'Archive this artifact? '}
+              {(selectedDoc?.linked_case_count || selectedDoc?.linked_case_refs.length || 0) > 0
+                ? 'Its source artifact, provenance, and recorded recovery relationships remain historically inspectable, but it will not be used for new evidence work.'
+                : 'Its source artifact and provenance remain historically inspectable, but it will not be used for new evidence work.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={archiving} className="border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]">Keep active</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={archiving || !selectedDoc}
+              onClick={(event) => { event.preventDefault(); void archiveSelectedDocument(); }}
+              className="bg-[#8A5A00] text-[11px] text-white hover:bg-[#6E4800]"
+            >
+              <Archive className="mr-2 h-3.5 w-3.5" />
+              {archiving ? 'Archiving artifact…' : 'Archive safely'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Sheet open={detailOpen} onOpenChange={setDetailOpen}>
         <SheetContent side="right" className="w-full overflow-y-auto border-l border-[#DCE8EE] bg-white p-0 text-[#182026] sm:max-w-[620px]">
           {selectedDoc ? (() => {
@@ -504,7 +530,7 @@ export default function EvidenceLocker() {
                   <section><div className="flex items-center justify-between"><div><p className="text-[12px] font-medium tracking-tight text-[#66737F]">History</p><h3 className="mt-1 text-[16px] font-semibold tracking-tight text-[#182026]">Reconstructed from recorded events</h3></div><Info className="h-4 w-4 text-[#66737F]" /></div>{detailLoading ? <p className="mt-4 text-[12px] text-[#66737F]">Loading recorded history…</p> : auditEvents.length > 0 ? <div className="mt-4 space-y-3 border-l border-[#DCE8EE] pl-4">{auditEvents.map((event) => <div key={event.id} className="relative"><span className="absolute -left-[19px] top-1.5 h-2 w-2 rounded-full border-2 border-white bg-[#0B74DE]" /><p className="text-[11px] font-semibold text-[#182026]">{String(event.eventType || 'recorded event').replace(/_/g, ' ')}</p><p className="mt-1 text-[11px] leading-5 text-[#66737F]">{event.narrative}</p><p className="mt-1 text-[10px] text-[#8A99A5]">{event.timestamp ? new Date(event.timestamp).toLocaleString() : 'Time unavailable'}</p></div>)}</div> : <p className="mt-4 rounded-[8px] border border-[#DCE8EE] p-4 text-[11px] leading-5 text-[#66737F]">No recorded history is available yet. This does not change the stored artifact or its visible relationships.</p>}</section>
                 </div>
 
-                <div className="border-t border-[#DCE8EE] bg-white px-5 py-4 sm:px-6"><div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => void api.getDocumentDownload(selectedDoc.id, activeSlug).then((response) => { if (response.ok && response.data?.url) window.open(response.data.url, '_blank'); else toast({ title: 'Download unavailable', description: response.error || 'A secure download link could not be created.', variant: 'destructive' }); })} className="h-9 border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]"><Download className="mr-2 h-3.5 w-3.5" />Download</Button><Button asChild variant="outline" className="h-9 border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]"><Link to={tenantRoute(activeSlug, `/documents/${selectedDoc.id}`)}>Full inspection<ExternalLink className="ml-2 h-3.5 w-3.5" /></Link></Button>{canChangeLifecycle ? <><Button variant="outline" onClick={() => openUploader(selectedDoc)} disabled={uploading} className="h-9 border-[#BFD8F6] bg-[#F3F7FF] text-[11px] text-[#0B74DE]"><FilePlus2 className="mr-2 h-3.5 w-3.5" />Record replacement</Button><Button variant="outline" onClick={() => void archiveSelectedDocument()} className="h-9 border-[#F2D69C] bg-[#FFFBEA] text-[11px] text-[#8A5A00]"><Archive className="mr-2 h-3.5 w-3.5" />Archive safely</Button></> : null}</div></div>
+                <div className="border-t border-[#DCE8EE] bg-white px-5 py-4 sm:px-6"><div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => void api.getDocumentDownload(selectedDoc.id, activeSlug).then((response) => { if (response.ok && response.data?.url) window.open(response.data.url, '_blank'); else toast({ title: 'Download unavailable', description: response.error || 'A secure download link could not be created.', variant: 'destructive' }); })} className="h-9 border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]"><Download className="mr-2 h-3.5 w-3.5" />Download</Button><Button asChild variant="outline" className="h-9 border-[#DCE8EE] bg-white text-[11px] text-[#4D5B66]"><Link to={tenantRoute(activeSlug, `/documents/${selectedDoc.id}`)}>Full inspection<ExternalLink className="ml-2 h-3.5 w-3.5" /></Link></Button>{canChangeLifecycle ? <><Button variant="outline" onClick={() => openUploader(selectedDoc)} disabled={uploading} className="h-9 border-[#BFD8F6] bg-[#F3F7FF] text-[11px] text-[#0B74DE]"><FilePlus2 className="mr-2 h-3.5 w-3.5" />Record replacement</Button><Button variant="outline" onClick={() => setArchiveConfirmOpen(true)} className="h-9 border-[#F2D69C] bg-[#FFFBEA] text-[11px] text-[#8A5A00]"><Archive className="mr-2 h-3.5 w-3.5" />Archive safely</Button></> : null}</div></div>
               </div>
             );
           })() : null}

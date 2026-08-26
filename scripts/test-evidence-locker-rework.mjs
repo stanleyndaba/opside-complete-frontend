@@ -31,7 +31,11 @@ check(lockerSource.includes('>Evidence Records</h1>'), 'the principal evidence h
 check(lockerSource.includes('>Recovery documentation</p>'), 'the principal evidence heading is framed as recovery documentation');
 check(lockerSource.includes('recorded document details, recovery relationships, and case-level conclusions.'), 'the principal evidence subtitle retains the recorded-details and case-conclusion boundary');
 check(!lockerSource.includes('>Evidence Locker</h1>'), 'the former consumer-storage page heading is absent from the principal evidence surface');
-check(lockerSource.includes('api.archiveDocument(selectedDoc.id'), 'Evidence Locker archives rather than hard-deletes artifacts');
+check(lockerSource.includes('api.archiveDocument(selectedDoc.id'), 'Evidence Records archives rather than hard-deletes artifacts');
+check(lockerSource.includes('AlertDialogContent'), 'archive uses a visible accessible in-app confirmation dialog');
+check(lockerSource.includes('Archive this artifact?'), 'archive confirmation explains the lifecycle action before submission');
+check(lockerSource.includes('Keep active'), 'archive confirmation provides a clear non-destructive cancellation path');
+check(!lockerSource.includes('window.confirm('), 'archive no longer depends on an opaque browser-native confirmation');
 check(lockerSource.includes('api.supersedeDocument(replacementFor.id'), 'Evidence Locker records replacement lineage after storing a replacement artifact');
 check(lockerSource.includes('Full inspection'), 'Evidence Locker connects to the existing richer document inspection path');
 check(lockerSource.includes('Reconstructed from recorded events'), 'audit history is bounded as reconstructed recorded history');
