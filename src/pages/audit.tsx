@@ -1337,9 +1337,9 @@ export default function Audit() {
                       trackEvent('audit_period_selector_opened', { source_page: '/audit' });
                     }}
                     title={selectedAuditSelectorLabel}
-                    className="flex h-8 w-full items-center overflow-hidden rounded-md border border-[#D8E3EA] bg-white/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:border-zinc-300 hover:bg-white focus:outline-none"
+                    className="flex h-8 w-full items-center overflow-hidden whitespace-nowrap rounded-md border border-[#D8E3EA] bg-white/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:border-zinc-300 hover:bg-white focus:outline-none"
                   >
-                    <span className="truncate whitespace-nowrap">{selectedAuditSelectorLabel}</span>
+                    <span className="min-w-0 flex-1 truncate">{selectedAuditSelectorLabel}</span>
                   </button>
                 </div>
               </div>
