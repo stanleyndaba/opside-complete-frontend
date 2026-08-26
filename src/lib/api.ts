@@ -272,7 +272,9 @@ export interface AuditHistoryItem {
   status: string;
   finalStatus: string | null;
   created_at: string;
+  started_at: string | null;
   completed_at: string | null;
+  sourceType: string;
   recordsReviewed: number | null;
   findingsCount: number;
   scopeValue: number;
@@ -302,6 +304,24 @@ export interface AuditScheduleExecutionStatus {
   cadence_minutes: number | null;
   completion_notification: 'in_app';
   completion_email_enabled: boolean;
+}
+
+export interface AuditScheduleOperatingState {
+  state: 'off' | 'awaiting_first_run' | 'running' | 'completed' | 'skipped' | 'blocked' | 'paused' | 'failed';
+  reason_code: 'seller_paused' | 'recovery_workspace_entitlement_inactive' | 'skipped_existing_audit_in_progress' | 'amazon_connection_required' | 'audit_failed' | string | null;
+  last_attempt_at: string | null;
+  next_run_at: string | null;
+  last_audit: {
+    id: string;
+    status: AuditRunRecord['status'];
+    source_type: string;
+    started_at: string | null;
+    completed_at: string | null;
+    final_status: AuditTeaserSummary['finalStatus'] | null;
+    findings_count: number;
+    records_reviewed: number | null;
+    sources_unavailable: string[];
+  } | null;
 }
 
 export interface AuditExportSummary {
@@ -1173,6 +1193,8 @@ export const api = {
     schedule: AuditScheduleRecord | null;
     entitlement: { entitled: boolean; state: string; access_until?: string | null };
     execution: AuditScheduleExecutionStatus;
+    operating: AuditScheduleOperatingState;
+    amazon: { connected: boolean };
   }>('/api/audits/schedule', authToken ? {
     headers: { Authorization: `Bearer ${authToken}` },
   } : undefined),
@@ -1189,6 +1211,8 @@ export const api = {
     schedule: AuditScheduleRecord;
     entitlement: { entitled: boolean; state: string; access_until?: string | null };
     execution: AuditScheduleExecutionStatus;
+    operating: AuditScheduleOperatingState;
+    amazon: { connected: boolean };
   }>('/api/audits/schedule', {
     method: 'PUT',
     headers: authToken ? {

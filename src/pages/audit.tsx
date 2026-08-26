@@ -9,7 +9,7 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
 import { useTenant } from '@/contexts/TenantContext';
-import { api, AuditActivityEvent, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleExecutionStatus, AuditScheduleRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
+import { api, AuditActivityEvent, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleExecutionStatus, AuditScheduleOperatingState, AuditScheduleRecord, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 import { tenantRoute } from '@/lib/routes';
@@ -85,6 +85,48 @@ function formatDuration(completedAt?: string | null, startedAt?: string | null) 
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
   return minutes ? `${hours}h ${minutes}m` : `${hours}h`;
+}
+
+function formatAuditDate(value?: string | null, fallback = 'Not recorded') {
+  const parsed = Date.parse(value || '');
+  if (!Number.isFinite(parsed)) return fallback;
+  return new Date(parsed).toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function auditSourceLabel(source?: string | null) {
+  return source === 'csv_upload' ? 'Uploaded Amazon reports' : 'Connected Amazon';
+}
+
+function sellerAuditOutcome(status?: string | null, finalStatus?: string | null) {
+  if (finalStatus === 'complete_with_findings') return 'Complete — opportunities found';
+  if (finalStatus === 'complete_no_findings') return 'Complete — no opportunities found';
+  if (finalStatus === 'partial_with_findings') return 'Limited coverage — opportunities found';
+  if (finalStatus === 'partial_no_findings') return 'Limited coverage — no opportunities found';
+  if (status === 'amazon_connection_required') return 'Action required — Amazon connection';
+  if (status === 'syncing') return 'Running — syncing Amazon data';
+  if (status === 'detecting') return 'Running — reviewing available activity';
+  if (status === 'failed') return 'Needs attention';
+  if (status === 'created') return 'Prepared';
+  return 'Status not recorded';
+}
+
+function scheduleOperatingCopy(operating: AuditScheduleOperatingState | null) {
+  switch (operating?.state) {
+    case 'completed': return { label: 'Last automatic audit completed', tone: 'text-emerald-700', detail: 'The latest scheduled audit is available to review.' };
+    case 'running': return { label: 'Automatic audit in progress', tone: 'text-[#0B74DE]', detail: 'Margin is working through the current scheduled audit.' };
+    case 'skipped': return { label: 'Automatic audit skipped', tone: 'text-amber-800', detail: 'Another audit was already in progress for this workspace.' };
+    case 'blocked': return { label: 'Automatic audit needs Amazon access', tone: 'text-amber-800', detail: 'Reconnect Amazon before the next scheduled attempt.' };
+    case 'paused': return { label: 'Automatic audits paused', tone: 'text-[#4D5B66]', detail: operating.reason_code === 'recovery_workspace_entitlement_inactive' ? 'Recovery Workspace is not active for this schedule.' : 'This schedule is paused and will not run automatically.' };
+    case 'failed': return { label: 'Automatic audit could not complete', tone: 'text-red-700', detail: 'Review the linked audit for the safe next step.' };
+    case 'awaiting_first_run': return { label: 'Automatic audit is scheduled', tone: 'text-[#0B74DE]', detail: 'No automatic audit has been recorded yet.' };
+    default: return { label: 'Automatic audits are off', tone: 'text-[#4D5B66]', detail: 'Turn on a schedule when this workspace is ready for recurring audits.' };
+  }
 }
 
 function getErrorMessage(error: unknown, fallback: string) {
@@ -258,6 +300,7 @@ export default function Audit() {
   const [isAuditLogOpen, setIsAuditLogOpen] = useState(false);
   const [isPeriodSelectorOpen, setIsPeriodSelectorOpen] = useState(false);
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
+  const [isScopeDialogOpen, setIsScopeDialogOpen] = useState(false);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [weeklyAuditEnabled, setWeeklyAuditEnabled] = useState(false);
@@ -271,6 +314,8 @@ export default function Audit() {
   const [auditSchedule, setAuditSchedule] = useState<AuditScheduleRecord | null>(null);
   const [scheduleEntitled, setScheduleEntitled] = useState(false);
   const [scheduleExecution, setScheduleExecution] = useState<AuditScheduleExecutionStatus | null>(null);
+  const [scheduleOperating, setScheduleOperating] = useState<AuditScheduleOperatingState | null>(null);
+  const [amazonConnected, setAmazonConnected] = useState<boolean | null>(null);
   const [scheduleForm, setScheduleForm] = useState({
     cadence: 'off' as 'off' | 'weekly' | 'biweekly' | 'monthly',
     preferred_day_of_week: 1,
@@ -326,7 +371,23 @@ export default function Audit() {
     teaser.commercialRoute === 'WORKSPACE' || teaser.commercialRoute === 'RECOVERY_CONTROL'
   );
   const needsAdditionalAmazonData = step === 'completed' && (isZeroRecordLimitedAudit || Boolean(teaser.sourcesUnavailable?.length));
-  const selectedAuditPeriodLabel = auditHistory.find((item) => item.id === audit?.id)?.label || 'Current audit in this workspace';
+  const selectedAuditHistoryItem = auditHistory.find((item) => item.id === audit?.id) || null;
+  const selectedAuditIsLatest = Boolean(selectedAuditHistoryItem?.isLatest);
+  const selectedAuditSelectorLabel = audit
+    ? `${selectedAuditIsLatest ? 'Latest audit' : 'Selected audit'} · ${formatAuditDate(audit.completed_at || audit.started_at || selectedAuditHistoryItem?.created_at)}`
+    : 'No audit selected';
+  const selectedAuditPeriodLabel = selectedAuditHistoryItem?.monthLabel || 'Audit period not recorded';
+  const selectedAuditSource = auditSourceLabel(audit?.source_type || selectedAuditHistoryItem?.sourceType);
+  const selectedAuditRunDate = formatAuditDate(audit?.completed_at || audit?.started_at || selectedAuditHistoryItem?.created_at);
+  const selectedAuditOutcome = sellerAuditOutcome(audit?.status, teaser.finalStatus || selectedAuditHistoryItem?.finalStatus);
+  const selectedAuditCoverage = teaser.finalStatus?.startsWith('partial') || Boolean(teaser.sourcesUnavailable?.length)
+    ? 'Limited coverage'
+    : step === 'completed'
+      ? 'Coverage recorded'
+      : 'Coverage pending';
+  const scheduleState = scheduleOperatingCopy(scheduleOperating);
+  const activeWorkspaceLabel = activeTenantSlug || 'Current workspace';
+  const notificationsHref = activeTenantSlug ? tenantRoute(activeTenantSlug, '/notifications') : '/notifications';
   const canManageSavedSchedule = Boolean(auditSchedule);
   const canSaveScheduleForm = scheduleForm.cadence === 'off'
     ? canManageSavedSchedule
@@ -363,33 +424,45 @@ export default function Audit() {
 
       const exportData = response.data;
       const doc = new jsPDF();
-      const period = exportData.audit?.selected_period || selectedAuditPeriodLabel;
-      const filenamePeriod = String(period).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      const filename = `margin-recovery-audit-${filenamePeriod || 'summary'}.pdf`;
+      const recordedMonth = exportData.audit?.selected_period || selectedAuditPeriodLabel;
+      const filenameDate = String(audit.completed_at || audit.started_at || audit.created_at || new Date().toISOString()).slice(0, 10);
+      const filename = `margin-audit-${audit.id.slice(0, 8)}-${filenameDate}.pdf`;
       const summary = exportData.summary || {};
       const findings: AuditExportSummary['findings'] = Array.isArray(exportData.findings) ? exportData.findings : [];
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(18);
-      doc.text('Margin Recovery Audit', 18, 22);
+      doc.text('Margin Audit Summary', 18, 22);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
-      doc.text(`Audit period: ${period}`, 18, 32);
-      doc.text(`Generated: ${new Date(exportData.generated_at || Date.now()).toLocaleString()}`, 18, 39);
+      doc.text('A browser-generated record for management and operational review.', 18, 31, { maxWidth: 170 });
 
       const rows = [
-        ['Completion state', String(summary.completion_state || 'Not available')],
-        ['Records reviewed', Number(summary.records_reviewed || 0).toLocaleString()],
-        ['Estimated recoverable value', formatMoney(Number(summary.estimated_recoverable_value || 0))],
-        ['Actionable findings', String(summary.actionable_findings || 0)],
+        ['Workspace', activeWorkspaceLabel],
+        ['Audit record', audit.id],
+        ['Source', selectedAuditSource],
+        ['Run started', formatAuditDate(audit.started_at || audit.created_at)],
+        ['Run completed', formatAuditDate(audit.completed_at, 'Not completed')],
+        ['Recorded audit month', recordedMonth],
+        ['Result', selectedAuditOutcome],
+        ['Coverage', selectedAuditCoverage],
+        ['Records reviewed', summary.records_reviewed != null ? Number(summary.records_reviewed).toLocaleString() : 'Not recorded'],
+        ['Potential recovery scope', formatMoney(Number(summary.estimated_recoverable_value || 0))],
+        ['Potential opportunities', String(summary.actionable_findings || 0)],
         ['Evidence ready', String(summary.evidence_ready || 0)],
         ['Evidence required', String(summary.evidence_required || 0)],
-        ['Sources reviewed', (summary.sources_reviewed || []).join(', ') || 'Not available'],
+        ['Sources reviewed', (summary.sources_reviewed || []).join(', ') || 'Not recorded'],
         ['Unavailable sources', (summary.sources_unavailable || []).join(', ') || 'None recorded'],
       ];
 
-      let y = 54;
+      let y = 42;
+      const ensurePageSpace = (needed = 10) => {
+        if (y + needed <= 275) return;
+        doc.addPage();
+        y = 20;
+      };
       rows.forEach(([label, value]) => {
+        ensurePageSpace(12);
         doc.setFont('helvetica', 'bold');
         doc.text(`${label}:`, 18, y);
         doc.setFont('helvetica', 'normal');
@@ -398,30 +471,35 @@ export default function Audit() {
       });
 
       if (findings.length) {
+        ensurePageSpace(16);
         y += 5;
         doc.setFont('helvetica', 'bold');
-        doc.text('Finding summaries', 18, y);
+        doc.text('Potential opportunity summaries', 18, y);
         y += 8;
         findings.slice(0, 10).forEach((finding, index) => {
+          ensurePageSpace(10);
           doc.setFont('helvetica', 'normal');
-          doc.text(`${index + 1}. ${finding.category || 'Recovery finding'} - ${formatMoney(Number(finding.estimated_value || 0))}`, 18, y, { maxWidth: 170 });
+          doc.text(`${index + 1}. ${finding.category || 'Recovery finding'} — ${formatMoney(Number(finding.estimated_value || 0))} potential scope`, 18, y, { maxWidth: 170 });
           y += 7;
         });
       }
 
+      ensurePageSpace(18);
       y += 7;
       doc.setFont('helvetica', 'bold');
-      doc.text('Recommended next actions', 18, y);
+      doc.text('Recorded next actions', 18, y);
       y += 8;
       (summary.recommended_next_actions || []).forEach((action: string) => {
+        ensurePageSpace(10);
         doc.setFont('helvetica', 'normal');
         doc.text(`- ${action}`, 18, y, { maxWidth: 170 });
         y += 7;
       });
 
+      ensurePageSpace(22);
       y += 7;
       doc.setFontSize(9);
-      doc.text(exportData.disclaimer || 'Estimated values are not guaranteed recoveries.', 18, y, { maxWidth: 170 });
+      doc.text(`${exportData.disclaimer || 'Estimated values are not guaranteed recoveries.'} This summary is not proof, filing authorization, reimbursement eligibility, payment confirmation, or closure.`, 18, y, { maxWidth: 170 });
       doc.save(filename);
       setSummaryExported(true);
       trackEvent('audit_summary_export_completed', {
@@ -506,6 +584,8 @@ export default function Audit() {
         const execution = response.data.execution || null;
         setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
         setScheduleExecution(execution);
+        setScheduleOperating(response.data.operating || null);
+        setAmazonConnected(Boolean(response.data.amazon?.connected));
         setAuditSchedule(response.data.schedule);
         if (response.data.schedule) {
           setScheduleForm({
@@ -522,6 +602,8 @@ export default function Audit() {
     } catch {
       setScheduleEntitled(false);
       setScheduleExecution(null);
+      setScheduleOperating(null);
+      setAmazonConnected(null);
     }
   };
 
@@ -535,6 +617,8 @@ export default function Audit() {
       setAuditSchedule(response.data.schedule);
       setScheduleEntitled(Boolean(response.data.entitlement?.entitled));
       setScheduleExecution(response.data.execution || null);
+      setScheduleOperating(response.data.operating || null);
+      setAmazonConnected(Boolean(response.data.amazon?.connected));
       setWeeklyAuditEnabled(response.data.schedule.cadence !== 'off' && !response.data.schedule.is_paused && Boolean(response.data.execution?.available));
       trackEvent(nextForm.cadence === 'off' ? 'audit_schedule_disabled' : nextForm.is_paused ? 'audit_schedule_paused' : 'audit_schedule_saved', {
         source_page: '/audit',
@@ -1232,7 +1316,7 @@ export default function Audit() {
                     }}
                     className="h-8 w-full rounded-md border border-[#D8E3EA] bg-white/50 pl-8 pr-2 text-left text-[14px] text-[#4D5B66] transition-colors hover:border-zinc-300 hover:bg-white focus:outline-none"
                   >
-                    {selectedAuditPeriodLabel}
+                    {selectedAuditSelectorLabel}
                   </button>
                 </div>
               </div>
@@ -1264,7 +1348,7 @@ export default function Audit() {
               <button type="button" onClick={openScheduleDialog} aria-label="Schedules" title="Schedules" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
                 <CalendarClock className="h-4 w-4" />
               </button>
-              <button type="button" onClick={() => setIsPeriodSelectorOpen(true)} aria-label="Audit period" title="Audit period" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
+              <button type="button" onClick={() => setIsPeriodSelectorOpen(true)} aria-label="Audit history" title="Audit history" className="rounded-md p-2 text-[#4D5B66] transition-colors hover:bg-white hover:text-zinc-900">
                 <Calendar className="h-4 w-4" />
               </button>
             </nav>
@@ -1304,10 +1388,10 @@ export default function Audit() {
               <Link 
                 to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                 className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
-                title="Upload reports"
+                title="Use Amazon reports"
               >
                 <FilePlus2 className="h-4 w-4 shrink-0 text-zinc-400" />
-                <span className="truncate">Upload reports</span>
+                <span className="truncate">Use Amazon reports</span>
               </Link>
             </div>
               <div className="flex items-center gap-2 text-[13px] sm:text-[14px]">
@@ -1329,16 +1413,26 @@ export default function Audit() {
               <div className="flex flex-col items-center gap-4">
                 <div className="w-full max-w-4xl">
                   <p className="mb-2 text-[13px] font-medium text-[#0B74DE] uppercase tracking-wider">
-                    {isAuthenticated ? 'Recovery Audit' : 'Current audit workspace'}
+                    {audit ? (selectedAuditIsLatest ? 'Latest audit' : 'Selected audit from history') : 'Audit workspace'}
                   </p>
                   <h1 className="mx-auto max-w-4xl break-words font-lora text-[34px] leading-[1.03] tracking-tight text-[#182026] sm:text-[52px] sm:leading-[1.03]" style={{ fontWeight: 400 }}>
-                    {isAuthenticated && step === 'public' ? "Your Recovery Audit is ready" : "Recovery Audit"}
+                    {audit ? (selectedAuditIsLatest ? 'Your latest audit' : 'Your selected audit') : 'Your audit workspace'}
                   </h1>
                   <p className="mx-auto mt-3 max-w-3xl text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-6">
-                    {isAuthenticated && step === 'public' 
-                      ? "Your account is set up. Continue to Amazon to grant read-only access and begin the examination."
-                      : "Find out what Amazon reimbursed, reversed, or left unresolved."}
+                    {audit
+                      ? `${selectedAuditOutcome}. ${selectedAuditCoverage}. Review what Margin examined before deciding what happens next.`
+                      : isAuthenticated
+                        ? 'Start an audit when this workspace is ready. Margin will explain the connection, coverage, result, and next step here.'
+                        : 'Connect Amazon or use supported Amazon reports to begin a recovery audit.'}
                   </p>
+                  {isAuthenticated ? (
+                    <div className="mx-auto mt-4 grid max-w-3xl gap-px border border-[#D8E3EA] bg-[#D8E3EA] text-left sm:grid-cols-4">
+                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Workspace</p><p className="mt-1 truncate text-[12px] font-medium text-[#182026]">{activeWorkspaceLabel}</p></div>
+                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Audit</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? (selectedAuditIsLatest ? 'Latest audit' : 'Selected history') : 'No audit yet'}</p></div>
+                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Source</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? selectedAuditSource : 'Not recorded'}</p></div>
+                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Run date</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? selectedAuditRunDate : 'Not recorded'}</p></div>
+                    </div>
+                  ) : null}
                   {!isAuthenticated && (
                     <p className="mx-auto mt-4 max-w-2xl text-[13px] font-medium text-[#4D5B66]">
                       Read-only access. Margin examines the Amazon records needed for your Audit.
@@ -1360,7 +1454,7 @@ export default function Audit() {
                             to={`/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
                             className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#0B74DE] transition-colors hover:text-[#075EA8]"
                           >
-                            Upload report <ArrowRight className="h-3.5 w-3.5" />
+                            Use Amazon reports <ArrowRight className="h-3.5 w-3.5" />
                           </Link>
                         </div>
                       </div>
@@ -1374,14 +1468,15 @@ export default function Audit() {
 		                      to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
 		                      className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-5 text-[13px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:h-10 sm:w-auto sm:text-[13px]"
 		                    >
-		                      Use Amazon Reports
+                      Use Amazon reports
+
 		                    </Link>
 	                  </div>
 	                  <button
 	                    type="button"
 	                    onClick={() => {
-	                      setIsPeriodSelectorOpen(true);
-	                      trackEvent('audit_period_selector_opened', { source_page: '/audit' });
+	                      setIsScopeDialogOpen(true);
+	                      trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null });
 	                    }}
 	                    className="text-[13px] text-[#4D5B66] underline-offset-4 hover:text-[#0B74DE] hover:underline transition-colors"
 	                  >
@@ -1478,11 +1573,11 @@ export default function Audit() {
                   </div>
                   <div className="grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] sm:grid-cols-3">
                     <div className="bg-white p-4">
-                      <div className="text-[12px] font-medium text-[#66737F]">Recovery exposure</div>
+                      <div className="text-[12px] font-medium text-[#66737F]">Potential recovery scope</div>
                       <div className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#182026] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</div>
                     </div>
                     <div className="bg-white p-4">
-                      <div className="text-[12px] font-medium text-[#66737F]">Material findings</div>
+                      <div className="text-[12px] font-medium text-[#66737F]">Potential opportunities</div>
                       <div className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#182026] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</div>
                     </div>
                     <div className="bg-white p-4">
@@ -1533,7 +1628,7 @@ export default function Audit() {
                       </span>
                     </div>
                     <div className="flex flex-col pl-8">
-                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Verified Value</span>
+                      <span className="text-[12px] font-semibold uppercase tracking-tight text-[#66737F] mb-2">Potential recovery scope</span>
                       <span className="text-[18px] font-bold tracking-tight text-zinc-900 tabular-nums">{formatMoney(teaser.scopeValue)}</span>
                     </div>
                   </div>
@@ -1680,12 +1775,49 @@ export default function Audit() {
         </SheetContent>
       </Sheet>
 
+      <Dialog open={isScopeDialogOpen} onOpenChange={setIsScopeDialogOpen}>
+        <DialogContent className="max-h-[min(720px,calc(100vh-48px))] overflow-y-auto rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[620px]">
+          <DialogHeader>
+            <p className="text-[11px] font-medium uppercase tracking-wide text-[#0B74DE]">Selected audit scope</p>
+            <DialogTitle className="text-[20px] font-semibold tracking-[-0.03em] text-[#182026]">What Margin examined</DialogTitle>
+            <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
+              This records the known scope and limits of the selected audit. It does not turn a finding, estimate, or available data into proof, filing authority, reimbursement eligibility, payment, or closure.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-3 text-[13px] leading-5 text-[#4D5B66]">
+            <div className="grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] sm:grid-cols-2">
+              <div className="bg-white p-3"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Workspace</p><p className="mt-1 font-medium text-[#182026]">{activeWorkspaceLabel}</p></div>
+              <div className="bg-white p-3"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Audit selected</p><p className="mt-1 font-medium text-[#182026]">{audit ? (selectedAuditIsLatest ? 'Latest audit' : 'Selected audit from history') : 'No audit selected'}</p></div>
+              <div className="bg-white p-3"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Source</p><p className="mt-1 font-medium text-[#182026]">{audit ? selectedAuditSource : 'Not recorded'}</p></div>
+              <div className="bg-white p-3"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Run date</p><p className="mt-1 font-medium text-[#182026]">{audit ? selectedAuditRunDate : 'Not recorded'}</p></div>
+            </div>
+            <section className="rounded-lg border border-[#D8E3EA] bg-white p-4">
+              <h3 className="font-medium text-[#182026]">Coverage recorded for this audit</h3>
+              <p className="mt-1">{teaser.recordsReviewed != null ? `${Number(teaser.recordsReviewed).toLocaleString()} Amazon record${Number(teaser.recordsReviewed) === 1 ? '' : 's'} were available for review.` : 'Record count was not recorded for this audit.'}</p>
+              <p className="mt-2"><span className="font-medium text-[#182026]">Data reviewed:</span> {teaser.sourcesReviewed?.length ? teaser.sourcesReviewed.join(', ') : 'Not recorded.'}</p>
+              <p className="mt-2"><span className="font-medium text-[#182026]">Coverage limits:</span> {teaser.sourcesUnavailable?.length ? `${teaser.sourcesUnavailable.join(', ')} ${teaser.sourcesUnavailable.length === 1 ? 'was' : 'were'} unavailable.` : 'No unavailable source was recorded.'}</p>
+              <p className="mt-2"><span className="font-medium text-[#182026]">Recorded audit month:</span> {selectedAuditPeriodLabel}. A detailed source date range is not recorded for this audit.</p>
+            </section>
+            <section className="rounded-lg border border-[#D8E3EA] bg-white p-4">
+              <h3 className="font-medium text-[#182026]">What Margin can review from available data</h3>
+              <p className="mt-1">Margin can examine available Amazon activity for potential reimbursement and reconciliation patterns, including shipments, returns, reimbursements, fees, and settlements when those data sources are present.</p>
+              <h3 className="mt-4 font-medium text-[#182026]">What this audit cannot establish on its own</h3>
+              <p className="mt-1">It does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter. Any next step remains seller-controlled and evidence-dependent.</p>
+            </section>
+            <section className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-4">
+              <h3 className="font-medium text-[#182026]">What happens next</h3>
+              <p className="mt-1">{needsAdditionalAmazonData ? 'Add supported Amazon reports or restore Amazon access to improve coverage, then review the resulting audit.' : audit?.status === 'completed' ? 'Review the selected audit result and any potential recovery opportunities before deciding whether to take a seller-controlled next step.' : 'Use the recorded audit state above to connect Amazon, run the audit, or return after Margin finishes the current work.'}</p>
+            </section>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={isPeriodSelectorOpen} onOpenChange={setIsPeriodSelectorOpen}>
         <DialogContent className="rounded-xl border-[#D8E3EA] bg-[#FAFAF7] text-[#182026] shadow-[0_20px_70px_rgba(24,32,38,0.12)] sm:max-w-[560px]">
           <DialogHeader>
-            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Audit period</DialogTitle>
+            <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Audit history</DialogTitle>
             <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
-              Select from actual audit history. Empty months are not shown.
+              Select an actual audit record from this workspace. Run date, source, and coverage are shown only when recorded; a detailed audit period may not be available for older audits.
             </DialogDescription>
           </DialogHeader>
           <div className="relative">
@@ -1693,7 +1825,7 @@ export default function Audit() {
             <input
               value={auditHistoryQuery}
               onChange={(event) => setAuditHistoryQuery(event.target.value)}
-              placeholder="Search month, year, or status"
+              placeholder="Search audit date, source, or status"
               className="h-10 w-full rounded-[6px] border border-[#D8E3EA] bg-[#F5F5F5] pl-9 pr-3 text-[13px] outline-none transition-colors focus:border-[#0B74DE] focus:bg-white focus:ring-1 focus:ring-[#0B74DE]"
             />
           </div>
@@ -1717,9 +1849,10 @@ export default function Audit() {
                       onClick={() => void selectAuditPeriod(item)}
                       className="flex items-center justify-between rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] px-3 py-3 text-left transition-colors hover:border-[#B8C8D4] hover:bg-[#F5F9FF] focus:outline-none focus:ring-2 focus:ring-[#0B74DE]/20"
                     >
-                      <span>
-                        <span className="block text-[13px] font-medium text-[#182026]">{item.label}{item.isLatest ? ' — Latest' : ''}</span>
-                        <span className="mt-1 block text-[11px] text-[#66737F]">{item.finalStatus || item.status} · {item.findingsCount} findings · {formatMoney(item.scopeValue)}</span>
+                      <span className="min-w-0">
+                        <span className="block text-[13px] font-medium text-[#182026]">{item.isLatest ? 'Latest audit' : 'Audit record'} · {formatAuditDate(item.completed_at || item.started_at || item.created_at)}</span>
+                        <span className="mt-1 block text-[11px] leading-5 text-[#66737F]">{sellerAuditOutcome(item.status, item.finalStatus)} · {auditSourceLabel(item.sourceType)} · {item.recordsReviewed != null ? `${Number(item.recordsReviewed).toLocaleString()} records reviewed` : 'Record count not recorded'}</span>
+                        <span className="block text-[11px] leading-5 text-[#66737F]">{item.findingsCount} potential {item.findingsCount === 1 ? 'opportunity' : 'opportunities'} · {formatMoney(item.scopeValue)} potential recovery scope</span>
                       </span>
                       {audit?.id === item.id ? <Check className="h-4 w-4 text-[#0B74DE]" /> : null}
                     </button>
@@ -1737,7 +1870,7 @@ export default function Audit() {
           <DialogHeader>
             <DialogTitle className="text-[18px] font-semibold tracking-[-0.03em] text-[#182026]">Export summary</DialogTitle>
             <DialogDescription className="text-[13px] leading-relaxed text-[#66737F]">
-              Download a PDF summary for {selectedAuditPeriodLabel}. Sensitive identifiers, tokens, raw payloads, and payment references are excluded.
+              Download a browser-generated record for {selectedAuditSelectorLabel}. It is intended for management or operational review; sensitive identifiers, tokens, raw payloads, and payment references are excluded.
             </DialogDescription>
           </DialogHeader>
           {step !== 'completed' ? (
@@ -1745,7 +1878,7 @@ export default function Audit() {
               Complete the selected audit before exporting a summary.
             </div>
           ) : null}
-          <p className="-mt-2 text-[12px] leading-5 text-[#66737F]">The PDF downloads in this browser. Margin does not retain a copy or send the export by email.</p>
+          <p className="-mt-2 text-[12px] leading-5 text-[#66737F]">The PDF identifies the workspace, source, run, recorded coverage, and selected result. It downloads in this browser only; Margin does not retain a copy or send it by email. It is not proof of reimbursement, filing authority, payment, or closure.</p>
           {exportError ? <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-[13px] text-red-700">{exportError}</div> : null}
           {summaryExported ? <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-[13px] text-emerald-700">This download completed in this browser.</div> : null}
           <Button onClick={exportExecutiveSummary} disabled={isExporting || step !== 'completed'} className="h-10 rounded-[6px] bg-[#182026] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35]">
@@ -1763,6 +1896,38 @@ export default function Audit() {
               This is a workspace-owned run preference. It does not create proof, filing authority, reimbursement eligibility, payment, or case closure.
             </DialogDescription>
           </DialogHeader>
+          {scheduleOperating ? (
+            <div className="rounded-lg border border-[#D8E3EA] bg-white p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className={`text-[13px] font-semibold ${scheduleState.tone}`}>{scheduleState.label}</p>
+                  <p className="mt-1 max-w-md text-[12px] leading-5 text-[#4D5B66]">{scheduleState.detail}</p>
+                </div>
+                <span className="border border-[#D8E3EA] bg-[#FAFAF7] px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-[#66737F]">{activeWorkspaceLabel}</span>
+              </div>
+              <div className="mt-4 grid gap-px border border-[#E6EEF2] bg-[#E6EEF2] text-[12px] sm:grid-cols-2">
+                <div className="bg-white p-3"><span className="text-[#66737F]">Last attempt</span><p className="mt-1 font-medium text-[#182026]">{formatAuditDate(scheduleOperating.last_attempt_at, 'No automatic attempt recorded')}</p></div>
+                <div className="bg-white p-3"><span className="text-[#66737F]">Next planned attempt</span><p className="mt-1 font-medium text-[#182026]">{formatAuditDate(scheduleOperating.next_run_at, 'Not scheduled')}</p></div>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] leading-5 text-[#4D5B66]">
+                <span className={`inline-flex items-center rounded-md border px-2 py-1 ${amazonConnected === true ? 'border-emerald-100 bg-emerald-50 text-emerald-800' : amazonConnected === false ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-[#D8E3EA] bg-[#FAFAF7] text-[#66737F]'}`}>
+                  Amazon connection: {amazonConnected === true ? 'Connected' : amazonConnected === false ? 'Action required' : 'Checking'}
+                </span>
+                {amazonConnected === false ? (
+                  <button type="button" onClick={() => { setIsScheduleDialogOpen(false); void connectAmazon(); }} className="font-medium text-[#0B74DE] hover:text-[#075EA8]">
+                    Connect Amazon
+                  </button>
+                ) : null}
+                {scheduleOperating.last_audit ? (
+                  <button type="button" onClick={() => { setIsScheduleDialogOpen(false); navigate(`/audit?auditId=${encodeURIComponent(scheduleOperating.last_audit!.id)}`); }} className="font-medium text-[#0B74DE] hover:text-[#075EA8]">
+                    View resulting audit
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] text-[#66737F]">Loading schedule status for this workspace.</div>
+          )}
           {!scheduleEntitled ? (
             <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] text-[#4D5B66]">
               Recovery Workspace is required to create or resume an automatic audit schedule. Existing schedule preferences can still be paused or turned off.
@@ -1775,7 +1940,7 @@ export default function Audit() {
           ) : null}
           {scheduleExecution?.available ? (
             <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[13px] leading-5 text-[#4D5B66]">
-              Margin checks due schedules approximately every {scheduleExecution.cadence_minutes || 15} minutes. A completed supported audit appears in Margin notifications; completion email is not enabled from this schedule.
+              Margin checks due schedules approximately every {scheduleExecution.cadence_minutes || 15} minutes. Completed supported audits appear in <Link to={notificationsHref} className="font-medium text-[#0B74DE] hover:text-[#075EA8]">Notifications</Link>; completion email is not enabled from this schedule.
             </div>
           ) : null}
           <div className="grid gap-3 sm:grid-cols-2">
@@ -1807,8 +1972,8 @@ export default function Audit() {
               <input value={scheduleForm.timezone} onChange={(event) => setScheduleForm((current) => ({ ...current, timezone: event.target.value }))} className="h-10 rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] text-[#182026]" />
             </label>
           </div>
-          <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[12px] text-[#66737F]">
-            Next scheduled run: {auditSchedule?.next_run_at && !scheduleForm.is_paused ? new Date(auditSchedule.next_run_at).toLocaleString() : 'Not scheduled'}
+          <div className="rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-3 text-[12px] leading-5 text-[#66737F]">
+            <span className="font-medium text-[#182026]">Schedule instruction:</span> {scheduleForm.cadence === 'off' ? 'Automatic audits are off.' : `${scheduleForm.cadence === 'biweekly' ? 'Every two weeks' : scheduleForm.cadence.charAt(0).toUpperCase() + scheduleForm.cadence.slice(1)} at ${scheduleForm.preferred_time} (${scheduleForm.timezone}).`} This preference does not guarantee a completed audit; the recorded operating state above is the source of truth.
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             <Button onClick={() => void saveSchedule()} disabled={!canSaveScheduleForm || isScheduleSaving} className="h-10 rounded-[6px] bg-[#182026] px-4 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#2C2E35] disabled:bg-[#F5F5F5] disabled:text-[#94A3B8] disabled:opacity-100">
@@ -1882,22 +2047,22 @@ export default function Audit() {
           <DialogHeader className="border-b border-[#D8E3EA] px-6 pb-5 pt-6 pr-14">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <p className="mb-2 text-[11px] font-medium text-[#0B74DE]">Operational record</p>
-                <DialogTitle className="text-[21px] font-semibold tracking-[-0.03em] text-[#182026]">Audit activity</DialogTitle>
+                <p className="mb-2 text-[11px] font-medium text-[#0B74DE]">Audit record</p>
+                <DialogTitle className="text-[21px] font-semibold tracking-[-0.03em] text-[#182026]">Audit lifecycle</DialogTitle>
                 <DialogDescription className="mt-2 max-w-lg text-[13px] leading-5 text-[#66737F]">
-                  A recorded summary of the selected audit. It refreshes when you open or refresh this panel; it is not a live event stream.
+                  A seller-readable record of preparation, coverage, analysis, and result for the selected audit. It refreshes when you open or refresh this panel; it is not a live event stream.
                 </DialogDescription>
               </div>
               <Button variant="outline" size="sm" onClick={() => void loadAuditActivity()} disabled={isAuditLogLoading || !audit?.id} className="h-8 border-[#D8E3EA] bg-white px-2.5 text-[12px] text-[#4D5B66] hover:bg-[#F5F5F5] hover:text-[#182026]">Refresh</Button>
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#E6EEF2] pt-4 text-[12px]">
-              <span><span className="text-[#66737F]">Period</span><span className="ml-2 font-medium text-[#182026]">{selectedAuditPeriodLabel}</span></span>
+              <span><span className="text-[#66737F]">Selected audit</span><span className="ml-2 font-medium text-[#182026]">{selectedAuditSelectorLabel}</span></span>
               <span><span className="text-[#66737F]">Phase</span><span className="ml-2 font-medium text-[#182026]">{auditPhaseMarker}</span></span>
             </div>
           </DialogHeader>
 
           <div className="flex items-center gap-1 overflow-x-auto border-b border-[#D8E3EA] px-6 py-3">
-            {['All', 'Amazon', 'Evidence', 'Findings', 'Payment'].map((filter) => (
+            {['All', 'Audit', 'Coverage', 'Analysis', 'Result'].map((filter) => (
               <button
                 key={filter}
                 type="button"

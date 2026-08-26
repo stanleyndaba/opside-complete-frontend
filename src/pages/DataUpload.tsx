@@ -8,7 +8,7 @@ import { api, type AuditRunRecord, type CsvIngestionResponse } from '@/lib/api';
 import { Loader2 } from 'lucide-react';
 import {
     Upload, FileSpreadsheet, X,
-    Calendar, ArrowRight, FileText, Ban, ArrowLeft
+    ArrowRight, FileText, Ban, ArrowLeft
 } from 'lucide-react';
 
 interface UploadFile {
@@ -29,7 +29,6 @@ export default function DataUpload() {
     const { isSignedIn, isLoaded } = useAuth();
     const [files, setFiles] = useState<UploadFile[]>([]);
     const [isDragging, setIsDragging] = useState(false);
-    const [dateRange, setDateRange] = useState('Last 90 days');
     const [isBusy, setIsBusy] = useState(false);
     const [showGate, setShowGate] = useState(false);
     const [submissionError, setSubmissionError] = useState<string | null>(null);
@@ -262,12 +261,12 @@ export default function DataUpload() {
                     {/* Header Section: Visible to all */}
                     <div className="text-center">
                         <h1 className="font-lora text-3xl sm:text-4xl font-medium tracking-tight mb-4" style={{ fontWeight: 400 }}>
-                            {isSignedIn ? 'Upload Reports' : 'Use the Seller Central reports you already have'}
+                            {isSignedIn ? 'Use Amazon reports' : 'Use the Seller Central reports you already have'}
                         </h1>
                         <p className="text-[16px] text-[#4D5B66] max-w-lg mx-auto leading-relaxed">
                             {isSignedIn 
-                                ? 'Select your audit period and drop your Amazon reports below.' 
-                                : 'Margin recognizes supported reports automatically. No manual mapping required.'}
+                                ? 'Add supported operational Seller Central reports to begin a manual report audit. Margin recognizes report families automatically.'
+                                : 'Margin recognizes supported operational reports automatically. No manual mapping required.'}
                         </p>
                     </div>
 
@@ -323,33 +322,26 @@ export default function DataUpload() {
                                 </div>
                             )}
 
-                            {/* Operational Settings */}
+                            {/* Manual-report audit contract */}
                             <div className="grid sm:grid-cols-2 gap-6 p-5 rounded-lg border border-[#D8E3EA] bg-white">
                                 <div>
-                                    <label className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
-                                        <Calendar className="h-3 w-3 text-[#0B74DE]" />
-                                        Audit Period
-                                    </label>
-                                    <select 
-                                        value={dateRange}
-                                        onChange={(e) => setDateRange(e.target.value)}
-                                        className="h-9 w-full rounded-md border border-[#D8E3EA] bg-white px-3 text-[13px] font-medium focus:outline-none focus:ring-1 focus:ring-[#0B74DE] cursor-pointer"
-                                    >
-                                        <option>Last 90 days</option>
-                                        <option>Last 180 days</option>
-                                        <option>Year to date</option>
-                                        <option>Custom range</option>
-                                    </select>
+                                    <div className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
+                                        <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
+                                        Manual report audit
+                                    </div>
+                                    <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium">
+                                        Add reports from the same seller and a consistent reporting range where possible. The recorded audit coverage comes from accepted report content; there is no separate period selector here.
+                                    </p>
                                 </div>
                                 <div>
-                                    <label className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
+                                    <div className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
                                         <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
-                                        Report Families
-                                    </label>
+                                        Report families
+                                    </div>
                                     <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium">
                                         {ACCEPTED_TYPES.slice(0, 4).join(', ')}...
                                     </p>
-                                    <p className="mt-1 text-[11px] text-[#8C9BA6]">Recognized automatically.</p>
+                                    <p className="mt-1 text-[11px] text-[#8C9BA6]">CSV or TXT only. Report family is recognized automatically.</p>
                                 </div>
                             </div>
 
@@ -433,7 +425,7 @@ export default function DataUpload() {
                                         className="h-12 w-full max-w-[320px] rounded-md bg-[#182026] text-[14px] font-semibold text-white hover:bg-black disabled:opacity-20 transition-all shadow-md"
                                     >
                                         {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                        {isBusy ? 'Submitting Reports' : 'Start Recovery Audit'}
+                                        {isBusy ? 'Submitting reports' : 'Start manual report audit'}
                                     </Button>
 
                                     {submissionError ? (
@@ -444,7 +436,7 @@ export default function DataUpload() {
 
                                     <div className="flex items-center gap-2 text-[11px] text-[#8C9BA6]">
                                         <Ban className="h-3 w-3" />
-                                        <span>Do not upload PDFs, Excel, or Screenshots.</span>
+                                        <span>PDFs, screenshots, invoices, and evidence documents belong in Evidence Records—not this operational report flow.</span>
                                     </div>
                                 </div>
                             )}
