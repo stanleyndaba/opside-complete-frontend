@@ -500,6 +500,10 @@ async function requestJsonWithRetry<T>(
 
   const method = (options?.method || 'GET').toUpperCase();
   const callerHeaders = (options?.headers || {}) as Record<string, string>;
+  // Separate caller headers before spreading request options. Otherwise an
+  // endpoint-specific header object can overwrite verified Authorization and
+  // tenant context entirely (the synthetic provenance request carries one).
+  const { headers: _callerHeaders, ...requestOptions } = options || {};
   const baseHeaders: Record<string, string> = {
     ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {}),
     ...(userId ? { 'x-user-id': userId } : {}),
@@ -531,6 +535,7 @@ async function requestJsonWithRetry<T>(
     }, timeout);
 
     const res = await fetch(url, {
+      ...requestOptions,
       credentials: 'include',
       signal: controller.signal,
       cache: 'no-store',
@@ -538,7 +543,6 @@ async function requestJsonWithRetry<T>(
         ...baseHeaders,
         ...callerHeaders,
       },
-      ...options,
     });
 
     clearTimeout(timeoutId);
@@ -598,7 +602,14 @@ async function requestJsonWithRetry<T>(
           });
         }
       } else if (res.status === 403) {
-        userFriendlyError = `Forbidden (403): You don't have permission to access this resource.`;
+        const isSyntheticTrainingUpload = path === '/api/csv-upload/synthetic-training/ingest';
+        const safeAuthorizationCode = typeof data?.code === 'string' ? data.code.trim() : '';
+        // This dedicated, training-only endpoint returns only safe fail-closed
+        // authorization codes. Preserve them so a runtime rejection is diagnosable
+        // without exposing a tenant ID or replacing the detail with a generic 403.
+        userFriendlyError = isSyntheticTrainingUpload && errorMsg
+          ? `${safeAuthorizationCode ? `${safeAuthorizationCode}: ` : ''}${errorMsg}`
+          : `Forbidden (403): You don't have permission to access this resource.`;
       } else if (res.status >= 500) {
         userFriendlyError = getGentleRequestErrorMessage('server', options?.method);
       }
