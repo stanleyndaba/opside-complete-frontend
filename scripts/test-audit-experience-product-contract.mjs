@@ -18,10 +18,11 @@ function expect(condition, message) {
 }
 
 expect(frontendAudit.includes('selectedAuditIsLatest ? \'Latest audit\' : \'Selected audit from history\''), 'selected and latest audit identity is explicit');
+expect(frontendAudit.includes('max-w-6xl') && frontendAudit.includes('font-lora text-[38px]') && frontendAudit.includes('font-lora text-[26px]'), 'Audit uses a contextual operational workspace with Lora reserved for principal review headings');
 expect(!auditTopbar.includes('setSidebarOpen(true)') && !auditTopbar.includes('openAuditLog'), 'Audit top bar does not duplicate the sidebar control or Activity action');
 expect(dataUpload.includes('Back to Audit') && dataUpload.includes('Manual report intake') && dataUpload.includes('Evidence Records'), 'Data Upload uses a contextual operational header with return, page identity, and the correct document destination');
 expect(dataUpload.includes('xl:grid-cols-[minmax(0,1fr)_300px]') && dataUpload.includes('Report intake') && dataUpload.includes('Intake context'), 'Data Upload separates the bounded intake surface from its responsive operational context panel');
-expect(!dataUpload.includes('font-lora') && !dataUpload.includes('absolute left-1/2 -translate-x-1/2'), 'Data Upload avoids the prior marketing-display and isolated centered-header treatment');
+expect(dataUpload.includes('font-lora text-[30px]') && !dataUpload.includes('absolute left-1/2 -translate-x-1/2'), 'Data Upload restores the Margin Lora display title without returning to the isolated centered-header treatment');
 expect(frontendAudit.includes('title={selectedAuditSelectorLabel}') && frontendAudit.includes('overflow-hidden whitespace-nowrap') && frontendAudit.includes('<span className="min-w-0 flex-1 truncate">{selectedAuditSelectorLabel}</span>'), 'sidebar audit selector keeps long labels contained on one line while retaining the full label on hover');
 expect(frontendAudit.includes('setIsScopeDialogOpen(true)'), 'View Audit scope opens the dedicated Scope panel');
 expect(frontendAudit.includes('What Margin examined'), 'scope panel explains what the selected audit examined');
@@ -39,8 +40,8 @@ expect(frontendAudit.includes('Potential recovery scope') && frontendAudit.inclu
 expect(frontendApi.includes('export interface AuditScheduleOperatingState'), 'frontend API has operating-state type');
 expect(frontendApi.includes('operating: AuditScheduleOperatingState') && frontendApi.includes('amazon: { connected: boolean }'), 'schedule API contract includes operating state and connection readiness');
 expect(!dataUpload.includes('const [dateRange, setDateRange]'), 'manual report flow no longer presents an unpersisted audit-period selector');
-expect(dataUpload.includes('not operational reports. Keep them in Evidence Records.') && dataUpload.includes('Evidence belongs elsewhere'), 'manual report flow distinguishes operational reports from evidence documents');
-expect(dataUpload.includes('getEvidenceRecordsHref') && dataUpload.includes('/evidence-locker') && dataUpload.includes('Open Evidence Records'), 'manual report flow offers a tenant-scoped route to the correct Evidence Records destination');
+expect(!dataUpload.includes('Evidence belongs elsewhere') && dataUpload.includes('Evidence documents stay in'), 'manual report flow removes the redundant Evidence card while retaining the evidence boundary');
+expect(dataUpload.includes('getEvidenceRecordsHref') && dataUpload.includes('/evidence-locker') && dataUpload.includes('Evidence documents stay in') && dataUpload.includes('Evidence Records'), 'manual report flow offers a tenant-scoped route to the correct Evidence Records destination without an oversized side card');
 expect(dataUpload.includes('CSV or TXT only') && dataUpload.includes('Up to 10 reports') && !dataUpload.includes('50MB each'), 'manual report intake states only the current file-format and report-count constraints');
 expect(dataUpload.includes('Derived from accepted report content. There is no separate date-range selector.') && dataUpload.includes('Report family recognized automatically'), 'manual report intake preserves the audit-coverage and report-recognition truth boundary');
 expect(dataUpload.includes('aria-live="polite"') && dataUpload.includes('aria-label={`Remove ${file.file.name}`}') && dataUpload.includes('Needs review'), 'manual report file review exposes accessible status and named removal controls');

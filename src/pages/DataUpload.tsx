@@ -8,10 +8,8 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  ChevronRight,
   CircleAlert,
   FileSpreadsheet,
-  FileText,
   Files,
   Info,
   Loader2,
@@ -281,7 +279,7 @@ export default function DataUpload() {
                 </span>
                 <span>REPORT-BASED AUDIT</span>
               </div>
-              <h1 id="manual-report-title" className="text-[28px] font-semibold tracking-[-0.02em] text-[#191B20] sm:text-[32px]">
+              <h1 id="manual-report-title" className="font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[36px]">
                 Add operational reports
               </h1>
               <p className="mt-3 max-w-xl text-[15px] leading-6 text-[#595E68]">
@@ -369,6 +367,7 @@ export default function DataUpload() {
                     <span>Up to 10 reports</span>
                     <span className="hidden h-1 w-1 self-center rounded-full bg-[#B8B9B4] sm:block" />
                     <span>Report family recognized automatically</span>
+                    <span className="basis-full text-[#777A82]">Evidence documents stay in <Link to={getEvidenceRecordsHref()} className="font-medium text-[#3F51A8] underline-offset-4 hover:underline">Evidence Records</Link>.</span>
                   </div>
                 </section>
 
@@ -464,23 +463,6 @@ export default function DataUpload() {
                   <dd className="mt-1 leading-5 text-[#191B20]">Recognized automatically after submission.</dd>
                 </div>
               </dl>
-            </section>
-
-            <section className="rounded-[14px] border border-[#D7D7D1] bg-[#F4F3ED] p-5">
-              <div className="flex items-start gap-2.5">
-                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-[#191B20]" aria-hidden="true" />
-                <div>
-                  <h2 className="text-[14px] font-semibold text-[#191B20]">Evidence belongs elsewhere</h2>
-                  <p className="mt-1 text-[12px] leading-5 text-[#595E68]">PDFs, screenshots, invoices, and other evidence documents are not operational reports. Keep them in Evidence Records.</p>
-                </div>
-              </div>
-              <Link
-                to={getEvidenceRecordsHref()}
-                className="mt-4 inline-flex min-h-10 items-center gap-1.5 rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#FBFAF7] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
-              >
-                Open Evidence Records
-                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </Link>
             </section>
 
             <section className="rounded-[14px] border border-[#E8E7E1] bg-white p-5">

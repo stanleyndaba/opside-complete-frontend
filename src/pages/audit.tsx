@@ -1521,12 +1521,12 @@ export default function Audit() {
   ];
 
   return (
-    <main className="platform-audit-workspace flex h-screen max-h-screen overflow-hidden bg-[#FAFAF7] font-sans text-zinc-950 selection:bg-[#007AFF]/20 selection:text-[#007AFF] tracking-tight">
+    <main className="platform-audit-workspace flex h-screen max-h-screen overflow-hidden bg-[#FBFAF7] font-sans text-[#191B20] selection:bg-[#E9ECFF] selection:text-[#191B20] tracking-tight">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-[260px]' : 'w-[54px]'} sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[#D8E3EA] bg-[#F5F5F5] transition-[width] duration-300 ease-in-out md:flex`}>
+      <aside className={`${sidebarOpen ? 'w-[248px]' : 'w-[64px]'} sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[#E8E7E1] bg-white transition-[width] duration-200 ease-out md:flex`}>
         {sidebarOpen ? (
           <div className="flex h-full flex-col">
-            <div className="flex h-[57px] min-h-[57px] items-center justify-between border-b border-[#D8E3EA] bg-[#F5F5F5] px-4">
+            <div className="flex h-14 min-h-14 items-center justify-between border-b border-[#E8E7E1] bg-white px-4">
               <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
                 <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto object-contain" />
                 <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-zinc-900">Margin</span>
@@ -1606,7 +1606,7 @@ export default function Audit() {
       {/* Main content */}
       <div className="flex h-full flex-1 flex-col overflow-y-auto overflow-x-hidden scroll-smooth">
         {/* Persistent audit context */}
-        <div className="sticky top-0 z-10 flex min-h-[57px] shrink-0 items-center border-b border-[#D8E3EA] bg-[#FAFAF7] px-4 py-2 sm:px-6 md:h-[57px] md:py-0">
+        <div className="sticky top-0 z-10 flex min-h-14 shrink-0 items-center border-b border-[#E8E7E1] bg-[#FBFAF7]/95 px-4 py-2 backdrop-blur sm:px-6 md:h-14 md:py-0">
           <div className="flex w-full items-center justify-between gap-3 lg:flex-row lg:justify-between">
             <div className="flex items-center gap-3 overflow-hidden">
               <div className="flex items-center gap-2 md:hidden">
@@ -1617,14 +1617,14 @@ export default function Audit() {
               <button
                 type="button"
                 onClick={openScheduleDialog}
-                className="inline-flex items-center gap-1.5 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-md px-2 text-[13px] font-medium text-[#595E68] outline-none transition-colors hover:bg-white hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:text-[14px]"
               >
                 <CalendarClock className="h-4 w-4 shrink-0 text-zinc-400" />
                 <span className="truncate">Schedules</span>
               </button>
               <Link 
                 to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
-                className="inline-flex items-center gap-1.5 border-l border-[#D8E3EA] pl-3 text-[13px] font-medium text-zinc-700 transition-colors hover:text-[#0B74DE] sm:text-[14px]"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-md border-l border-[#E8E7E1] pl-3 text-[13px] font-medium text-[#595E68] outline-none transition-colors hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:text-[14px]"
                 title="Use Amazon reports"
               >
                 <FilePlus2 className="h-4 w-4 shrink-0 text-zinc-400" />
@@ -1632,7 +1632,7 @@ export default function Audit() {
               </Link>
             </div>
               <div className="flex items-center gap-2 text-[13px] sm:text-[14px]">
-              <button type="button" onClick={() => setIsExportDialogOpen(true)} className="rounded-md border border-transparent p-1.5 text-zinc-400 transition-colors hover:border-[#D8E3EA] hover:bg-[#FAFAF7] hover:text-zinc-900" title="Export summary">
+              <button type="button" onClick={() => setIsExportDialogOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-md border border-transparent text-[#595E68] outline-none transition-colors hover:border-[#D7D7D1] hover:bg-white hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2" title="Export summary">
                 <Download className="h-4 w-4" />
               </button>
             </div>
@@ -1640,18 +1640,18 @@ export default function Audit() {
         </div>
 
         {/* Content area */}
-        <section className="flex-1 px-4 py-4 sm:px-8 sm:py-5">
-          <div className="mx-auto w-full max-w-5xl">
-            <header className="mb-5 pt-2 text-center sm:mb-7 sm:pt-4">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-full max-w-4xl">
-                  <p className="mb-2 text-[13px] font-medium text-[#0B74DE] uppercase tracking-wider">
+        <section className="flex-1 px-4 py-7 sm:px-8 sm:py-9 lg:px-10">
+          <div className="mx-auto w-full max-w-6xl">
+            <header className="mb-9 border-b border-[#E8E7E1] pb-8 pt-1 sm:mb-10 sm:pt-2">
+              <div className="flex flex-col items-start gap-6">
+                <div className="w-full max-w-3xl">
+                  <p className="mb-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#595E68]">
                     {audit ? (selectedAuditIsLatest ? 'Latest audit' : 'Selected audit from history') : 'Audit workspace'}
                   </p>
-                  <h1 className="mx-auto max-w-4xl break-words font-lora text-[34px] leading-[1.03] tracking-tight text-[#182026] sm:text-[52px] sm:leading-[1.03]" style={{ fontWeight: 400 }}>
+                  <h1 className="max-w-3xl break-words font-lora text-[38px] leading-[1.05] tracking-[-0.025em] text-[#191B20] sm:text-[52px] sm:leading-[1.05]" style={{ fontWeight: 400 }}>
                     {audit ? (selectedAuditIsLatest ? 'Your latest audit' : 'Your selected audit') : 'Your audit workspace'}
                   </h1>
-                  <p className="mx-auto mt-3 max-w-3xl text-[14px] leading-6 text-[#4D5B66] sm:text-[15px] sm:leading-6">
+                  <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[#595E68] sm:text-[15px] sm:leading-6">
                     {audit
                       ? `${selectedAuditOutcome}. ${selectedAuditCoverage}. Review what Margin examined before deciding what happens next.`
                       : isAuthenticated
@@ -1659,23 +1659,23 @@ export default function Audit() {
                         : 'Connect Amazon or use supported Amazon reports to begin a recovery audit.'}
                   </p>
                   {isAuthenticated ? (
-                    <div className="mx-auto mt-4 grid max-w-3xl gap-px border border-[#D8E3EA] bg-[#D8E3EA] text-left sm:grid-cols-4">
-                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Workspace</p><p className="mt-1 truncate text-[12px] font-medium text-[#182026]">{activeWorkspaceLabel}</p></div>
-                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Audit</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? (selectedAuditIsLatest ? 'Latest audit' : 'Selected history') : 'No audit yet'}</p></div>
-                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Source</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? selectedAuditSource : 'Not recorded'}</p></div>
-                      <div className="bg-white px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-wide text-[#66737F]">Run date</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? selectedAuditRunDate : 'Not recorded'}</p></div>
+                    <div className="mt-5 grid w-full max-w-5xl gap-px border border-[#D7D7D1] bg-[#D7D7D1] text-left sm:grid-cols-4">
+                      <div className="bg-white px-3 py-3"><p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#777A82]">Workspace</p><p className="mt-1 truncate text-[12px] font-medium text-[#182026]">{activeWorkspaceLabel}</p></div>
+                      <div className="bg-white px-3 py-3"><p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#777A82]">Audit</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? (selectedAuditIsLatest ? 'Latest audit' : 'Selected history') : 'No audit yet'}</p></div>
+                      <div className="bg-white px-3 py-3"><p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#777A82]">Source</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? selectedAuditSource : 'Not recorded'}</p></div>
+                      <div className="bg-white px-3 py-3"><p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#777A82]">Run date</p><p className="mt-1 text-[12px] font-medium text-[#182026]">{audit ? selectedAuditRunDate : 'Not recorded'}</p></div>
                     </div>
                   ) : null}
                   {!isAuthenticated && (
-                    <p className="mx-auto mt-4 max-w-2xl text-[13px] font-medium text-[#4D5B66]">
+                    <p className="mt-4 max-w-2xl text-[13px] font-medium text-[#595E68]">
                       Read-only access. Margin examines the Amazon records needed for your Audit.
                     </p>
                   )}
 
                   {needsAdditionalAmazonData && (
-                    <div className="mx-auto mt-4 max-w-2xl rounded-lg border border-[#D8E3EA] bg-[#F5F5F5] p-4">
+                    <div className="mt-5 max-w-2xl rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4">
                       <div className="flex items-start gap-3 text-left">
-                        <FilePlus2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0B74DE]" />
+                        <FilePlus2 className="mt-0.5 h-4 w-4 shrink-0 text-[#595E68]" />
                         <div className="min-w-0 flex-1">
                           <p className="text-[13px] font-medium text-[#182026]">Additional Amazon data required</p>
                           <p className="mt-1 text-[13px] leading-5 text-[#4D5B66]">
@@ -1685,7 +1685,7 @@ export default function Audit() {
                           </p>
                           <Link
                             to={`/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
-                            className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#0B74DE] transition-colors hover:text-[#075EA8]"
+                            className="mt-3 inline-flex min-h-10 items-center gap-1.5 rounded-md px-2 text-[13px] font-medium text-[#3F51A8] outline-none transition-colors hover:bg-white hover:text-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
                           >
                             Use Amazon reports <ArrowRight className="h-3.5 w-3.5" />
                           </Link>
@@ -1694,12 +1694,12 @@ export default function Audit() {
                     </div>
                   )}
                 </div>
-	                <div className="flex flex-col items-center gap-4">
-	                  <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:justify-center sm:gap-3">
+	                <div className="flex flex-col items-start gap-3">
+	                  <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:flex-row sm:items-center sm:justify-start sm:gap-3">
 	                    {primaryAction}
 		                    <Link 
 		                      to={tenant ? `/app/${tenant.slug}/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}` : `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`}
-		                      className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-[#D8E3EA] bg-white px-5 text-[13px] font-medium text-zinc-700 transition-colors hover:border-[#0B74DE] hover:text-[#0B74DE] sm:h-10 sm:w-auto sm:text-[13px]"
+		                      className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-2 rounded-[10px] border border-[#D7D7D1] bg-white px-5 text-[13px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:w-auto sm:text-[13px]"
 		                    >
                       Use Amazon reports
 
@@ -1711,7 +1711,7 @@ export default function Audit() {
 	                      setIsScopeDialogOpen(true);
 	                      trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null });
 	                    }}
-	                    className="text-[13px] text-[#4D5B66] underline-offset-4 hover:text-[#0B74DE] hover:underline transition-colors"
+	                    className="text-[13px] font-medium text-[#595E68] underline-offset-4 outline-none transition-colors hover:text-[#191B20] hover:underline focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
 	                  >
 	                    View Audit scope
 	                  </button>
@@ -1739,17 +1739,17 @@ export default function Audit() {
             </header>
 
             {step !== 'completed' && (
-              <section className="mb-6 mt-7 sm:mb-10 sm:mt-9">
-                <div className="mb-4 text-center sm:mb-6">
-                  <h2 className="text-[12px] font-medium text-[#0B74DE] sm:text-[13px]">Understanding your audit</h2>
-                  <p className="mt-1 text-[16px] font-medium leading-6 tracking-[-0.02em] text-[#182026] sm:text-[19px]">
+              <section className="mb-8 mt-8 sm:mb-10 sm:mt-10">
+                <div className="mb-5 max-w-2xl sm:mb-6">
+                  <h2 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#595E68] sm:text-[13px]">Understanding your audit</h2>
+                  <p className="mt-2 text-[17px] font-medium leading-6 tracking-[-0.02em] text-[#191B20] sm:text-[20px]">
                     Margin reviews the Amazon records available to this workspace and explains what happens next.
                   </p>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3 sm:gap-6">
+                <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
                   {/* Available Amazon account data */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
+                  <div className="relative rounded-[14px] border border-[#E8E7E1] bg-white p-4 sm:p-5">
                     <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" />
                     </div>
@@ -1759,7 +1759,7 @@ export default function Audit() {
                   </div>
 
                   {/* Recorded evidence documentation */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
+                  <div className="relative rounded-[14px] border border-[#E8E7E1] bg-white p-4 sm:p-5">
                     <div className="mb-3 flex h-8 items-center gap-2 sm:mb-5 sm:h-9">
                       <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 object-contain" />
                       <img src="/slack-icon-2019.png" alt="Slack" className="h-4 w-4 object-contain" />
@@ -1771,10 +1771,10 @@ export default function Audit() {
                   </div>
 
                   {/* Reconciliation checks */}
-                  <div className="group relative rounded-xl bg-[#FAFAF7] p-3.5 transition-all hover:bg-[#F5F5F5] sm:p-5">
+                  <div className="relative rounded-[14px] border border-[#E8E7E1] bg-white p-4 sm:p-5">
                     <div className="mb-3 flex h-8 items-center sm:mb-5 sm:h-9">
                       <div className="flex h-7 w-7 items-center justify-center bg-white rounded-full">
-                        <ArrowRightLeft className="h-3.5 w-3.5 text-[#66737F] group-hover:text-[#0B74DE]" />
+                        <ArrowRightLeft className="h-3.5 w-3.5 text-[#595E68]" />
                       </div>
                     </div>
                     <h3 className="text-[13px] font-bold text-[#182026] sm:text-[14px]">Reconciliation checks</h3>
@@ -1783,7 +1783,7 @@ export default function Audit() {
                   </div>
                 </div>
 
-                <div className="mt-8 border-t border-[#D8E3EA] pt-4">
+                <div className="mt-6 border-t border-[#E8E7E1] pt-4">
                   <p className="text-[11px] leading-5 font-medium text-[#66737F] sm:text-[12px]">
                     Read-only data review · potential opportunities · seller approval before any filing
                   </p>
@@ -1792,16 +1792,16 @@ export default function Audit() {
             )}
 
             {step === 'completed' ? (
-              <section className="mb-8 border border-[#D8E3EA] bg-white p-5 sm:p-7">
+              <section className="mb-8 rounded-[14px] border border-[#E8E7E1] bg-white p-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-7">
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-[13px] font-medium text-[#0B74DE]">Recovery findings</p>
-                      <h2 className="mt-1 text-[20px] font-semibold tracking-[-0.03em] text-[#182026]">Your review scope</h2>
+                      <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#595E68]">Recovery findings</p>
+                      <h2 className="mt-2 font-lora text-[26px] font-normal leading-tight tracking-[-0.02em] text-[#191B20]">Your review scope</h2>
                     </div>
-                    <span className="border border-[#D8E3EA] bg-[#FAFAF7] px-3 py-1.5 text-[12px] font-medium text-[#4D5B66]">{isZeroRecordLimitedAudit ? 'Limited coverage' : 'Ready for review'}</span>
+                    <span className="rounded-full border border-[#D7D7D1] bg-[#F4F3ED] px-3 py-1.5 text-[12px] font-medium text-[#595E68]">{isZeroRecordLimitedAudit ? 'Limited coverage' : 'Ready for review'}</span>
                   </div>
-                  <div className="grid gap-px border border-[#D8E3EA] bg-[#D8E3EA] sm:grid-cols-3">
+                  <div className="grid gap-px border border-[#D7D7D1] bg-[#D7D7D1] sm:grid-cols-3">
                     <div className="bg-white p-4">
                       <div className="text-[12px] font-medium text-[#66737F]">Potential recovery scope</div>
                       <div className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#182026] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</div>
