@@ -1865,6 +1865,11 @@ export const api = {
         usable_as_evidence: boolean;
         usability_reason: string;
         needs_review: boolean;
+        lifecycle_state?: 'active' | 'archived' | 'superseded' | string;
+        archived_at?: string | null;
+        archived_reason?: string | null;
+        superseded_by_document_id?: string | null;
+        supersedes_document_id?: string | null;
       }>;
       metrics: {
         totalDocuments: number;
@@ -1897,6 +1902,25 @@ export const api = {
     return requestJson<any>(`/api/documents/${encodeURIComponent(id)}?tenantSlug=${slug}`);
   },
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
+  uploadDocuments: (files: File[], tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for uploadDocuments");
+    const formData = new FormData();
+    files.forEach((file) => formData.append('files', file, file.name));
+    return requestJson<{
+      success: boolean;
+      partial?: boolean;
+      message?: string;
+      documents?: Array<{ id: string; filename: string; size: number; type: string; status: string; parser_status: string }>;
+      document_ids?: string[];
+      file_count?: number;
+      requested_file_count?: number;
+      failed_files?: Array<{ filename: string; reason: string }>;
+      error?: string;
+    }>(`/api/documents/upload?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST',
+      body: formData,
+    });
+  },
   getDocumentDownload: (id: string, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getDocumentDownload");
     const slug = tenantSlug;
@@ -2304,14 +2328,31 @@ export const api = {
     }>(`/api/evidence/documents/${encodeURIComponent(documentId)}/audit?tenantSlug=${tenantSlug}`);
   },
 
-  // Delete a single document
-  deleteDocument: (documentId: string, tenantSlug?: string) => {
-    if (!tenantSlug) throw new Error("tenantSlug required for deleteDocument");
+  archiveDocument: (documentId: string, reason: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for archiveDocument");
     return requestJson<{
       success: boolean;
       message: string;
       documentId: string;
-    }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}?tenantSlug=${tenantSlug}`, { method: 'DELETE' });
+      linkedCaseCount: number;
+      lifecycle_state: 'archived';
+    }>(`/api/documents/${encodeURIComponent(documentId)}/archive?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  },
+  supersedeDocument: (documentId: string, replacementDocumentId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for supersedeDocument");
+    return requestJson<{
+      success: boolean;
+      message: string;
+      documentId: string;
+      replacementDocumentId: string;
+      lifecycle_state: 'superseded';
+    }>(`/api/documents/${encodeURIComponent(documentId)}/supersede?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST',
+      body: JSON.stringify({ replacementDocumentId }),
+    });
   },
 
   // Delete all documents for the current user
