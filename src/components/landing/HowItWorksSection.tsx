@@ -24,7 +24,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
           <motion.div {...revealProps} className="mb-6 flex items-center gap-3">
             <div className="h-[1px] w-8 bg-[var(--margin-border-strong)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-secondary)]">
-              See what happened to your inventory and money
+              See what your Audit actually shows
             </span>
           </motion.div>
 
@@ -34,7 +34,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             className="font-lora text-[44px] leading-[0.96] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[66px] lg:text-[86px]"
             style={{ fontWeight: 400 }}
           >
-            See what happened to your inventory and money.
+            See what your Audit actually shows.
           </motion.h2>
 
           <motion.p
@@ -42,7 +42,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             transition={{ ...revealProps.transition, delay: 0.2 }}
             className="mt-8 max-w-[740px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9"
           >
-            Amazon’s records do not always agree. Margin compares the records and shows you what changed, what is missing, and what still needs a decision.
+            Amazon’s records do not always tell one clear story. Margin compares the relevant records and shows what changed, what is missing, what is already settled, and what still needs a decision.
           </motion.p>
         </div>
 
@@ -55,7 +55,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             transition={{ ...revealProps.transition, delay: 0.3 }}
             className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">DISCOVERY</span>
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">What was found</span>
             <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
               14 units missing
             </h3>
@@ -70,12 +70,12 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             transition={{ ...revealProps.transition, delay: 0.4 }}
             className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">EVIDENCE</span>
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">What supports it</span>
             <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
               Proof connected
             </h3>
             <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
-              The invoice, shipment record, SKU, quantity, cost basis, and relevant deadline are attached to the finding.
+              The shipment record, invoice, SKU, quantity, cost basis, and relevant deadline are attached to the recovery.
             </p>
           </motion.div>
 
@@ -85,7 +85,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             transition={{ ...revealProps.transition, delay: 0.5 }}
             className="group grid gap-5 border-b border-[var(--margin-border-subtle)] py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">CONTROL</span>
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">What needs your decision</span>
             <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
               Your approval is required
             </h3>
@@ -100,12 +100,12 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             transition={{ ...revealProps.transition, delay: 0.6 }}
             className="group grid gap-5 py-9 md:grid-cols-[160px_minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:py-12"
           >
-            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">RECONCILIATION</span>
+            <span className="font-mono text-[12px] font-medium uppercase tracking-tight text-[var(--margin-text-muted)]">What happened to the money</span>
             <h3 className="text-[30px] font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--margin-text-primary)] md:text-[42px]">
               Payout verified
             </h3>
             <p className="max-w-[560px] font-mono text-[13px] leading-7 text-[var(--margin-text-secondary)] md:text-[14px]">
-              Amazon reimbursed US$1,247. The settlement matches the recovery, and the payout trail is saved with the case.
+              Amazon reimbursed US$1,247. Margin matched the settlement to the recovery and saved the payout trail with the case.
             </p>
           </motion.div>
 
@@ -122,10 +122,10 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
             onClick={onCtaClick}
             className="h-14 rounded-[8px] bg-[var(--margin-blue)] px-8 text-[15px] font-semibold tracking-[-0.01em] text-white transition-transform hover:scale-[1.02] hover:bg-[var(--margin-blue-hover)] active:scale-[0.98] shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_4px_12px_rgba(0,0,0,0.2)]"
           >
-            Run a Free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" />
+            Run a free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <p className="text-[13px] text-[var(--margin-text-muted)]">
-            No payment required. Read-only access. You decide what happens next.
+            Read-only access. No payment to run the Audit. Nothing is submitted without your approval.
           </p>
         </motion.div>
 
