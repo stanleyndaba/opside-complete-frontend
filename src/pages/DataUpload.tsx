@@ -1,495 +1,504 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@clerk/react';
 import { api, type AuditRunRecord, type CsvIngestionResponse } from '@/lib/api';
-import { Loader2 } from 'lucide-react';
 import {
-    Upload, FileSpreadsheet, X,
-    ArrowRight, FileText, Ban, ArrowLeft
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  CircleAlert,
+  FileSpreadsheet,
+  FileText,
+  Files,
+  Info,
+  Loader2,
+  ShieldCheck,
+  Upload,
+  X,
 } from 'lucide-react';
 
 interface UploadFile {
-    file: File;
-    id: string;
-    status: 'pending' | 'uploading' | 'success' | 'error';
-    error?: string;
+  file: File;
+  id: string;
+  status: 'pending' | 'uploading' | 'success' | 'error';
+  error?: string;
 }
 
 const ACCEPTED_TYPES = [
-    'Orders', 'Shipments', 'Returns', 'Settlements',
-    'Inventory', 'Financial events', 'Fees', 'Transfers'
+  'Orders', 'Shipments', 'Returns', 'Settlements',
+  'Inventory', 'Financial events', 'Fees', 'Transfers',
 ];
 
 export default function DataUpload() {
-    const { toast } = useToast();
-    const navigate = useNavigate();
-    const { isSignedIn, isLoaded } = useAuth();
-    const [files, setFiles] = useState<UploadFile[]>([]);
-    const [isDragging, setIsDragging] = useState(false);
-    const [isBusy, setIsBusy] = useState(false);
-    const [showGate, setShowGate] = useState(false);
-    const [submissionError, setSubmissionError] = useState<string | null>(null);
-    const submissionInFlightRef = useRef(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const { isSignedIn, isLoaded } = useAuth();
+  const [files, setFiles] = useState<UploadFile[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const [showGate, setShowGate] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const submissionInFlightRef = useRef(false);
 
-    const getActiveTenantSlug = () => localStorage.getItem('active_tenant_slug') || '';
-    const getEvidenceRecordsHref = () => {
-        const activeTenantSlug = getActiveTenantSlug();
-        return activeTenantSlug ? `/app/${encodeURIComponent(activeTenantSlug)}/evidence-locker` : '/audit';
+  const getActiveTenantSlug = () => localStorage.getItem('active_tenant_slug') || '';
+  const getEvidenceRecordsHref = () => {
+    const activeTenantSlug = getActiveTenantSlug();
+    return activeTenantSlug ? `/app/${encodeURIComponent(activeTenantSlug)}/evidence-locker` : '/audit';
+  };
+
+  const continueManualAudit = useCallback((manualAudit: AuditRunRecord, tenantSlug: string) => {
+    if (!manualAudit.id || !tenantSlug) return false;
+
+    localStorage.setItem('margin_pending_audit', JSON.stringify({
+      auditId: manualAudit.id,
+      tenantSlug,
+      phase: manualAudit.status === 'completed' ? 'completed' : 'syncing',
+      updatedAt: new Date().toISOString(),
+    }));
+    navigate('/audit', { replace: true });
+    return true;
+  }, [navigate]);
+
+  const getBackendError = (response?: CsvIngestionResponse | null) => {
+    const fileErrors = response?.results
+      ?.flatMap((result) => result.errors || [])
+      .map((message) => String(message).trim())
+      .filter(Boolean) || [];
+    return fileErrors[0] || null;
+  };
+
+  const getReentryMessage = async () => {
+    const activeTenantId = localStorage.getItem('active_tenant_id');
+    const latestAudit = await api.getLatestAudit();
+    const audit = latestAudit.data?.audit;
+    if (!audit || (activeTenantId && audit.tenant_id !== activeTenantId)) return null;
+
+    const nextEligibleAt = audit.next_eligible_at;
+    if (!nextEligibleAt || new Date(nextEligibleAt).getTime() <= Date.now()) return null;
+    return `Your next complimentary manual report audit is available on ${new Date(nextEligibleAt).toLocaleDateString()}.`;
+  };
+
+  const restoreLatestManualAudit = useCallback(async () => {
+    const tenantSlug = getActiveTenantSlug();
+    if (!tenantSlug) return false;
+
+    const response = await api.getLatestCsvUploadRun(tenantSlug);
+    const manualAudit = response.ok ? response.data?.manualAudit : null;
+    return manualAudit ? continueManualAudit(manualAudit, tenantSlug) : false;
+  }, [continueManualAudit]);
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+    let cancelled = false;
+
+    void restoreLatestManualAudit().catch(() => undefined).then((continued) => {
+      if (!cancelled && continued) return;
+    });
+
+    return () => {
+      cancelled = true;
     };
+  }, [isSignedIn, restoreLatestManualAudit]);
 
-    const continueManualAudit = useCallback((manualAudit: AuditRunRecord, tenantSlug: string) => {
-        if (!manualAudit.id || !tenantSlug) return false;
+  const startAuth = async () => {
+    if (isBusy) return;
+    setIsBusy(true);
+    try {
+      const res = await api.createAuditIntent('csv_upload');
+      if (res.ok && res.data?.success && res.data?.intent?.id) {
+        localStorage.setItem('pending_audit_intent_id', res.data.intent.id);
+        navigate(`/login?auditIntentId=${res.data.intent.id}&mode=signup`);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to create audit intent:', error);
+    }
+    navigate('/login?mode=signup&intent=upload-csv&next=%2Fdata-upload');
+  };
 
-        localStorage.setItem('margin_pending_audit', JSON.stringify({
-            auditId: manualAudit.id,
-            tenantSlug,
-            phase: manualAudit.status === 'completed' ? 'completed' : 'syncing',
-            updatedAt: new Date().toISOString(),
-        }));
-        navigate('/audit', { replace: true });
-        return true;
-    }, [navigate]);
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(true);
+  }, []);
 
-    const getBackendError = (response?: CsvIngestionResponse | null) => {
-        const fileErrors = response?.results
-            ?.flatMap((result) => result.errors || [])
-            .map((message) => String(message).trim())
-            .filter(Boolean) || [];
-        return fileErrors[0] || null;
-    };
+  const onDragLeave = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+  }, []);
 
-    const getReentryMessage = async () => {
-        const activeTenantId = localStorage.getItem('active_tenant_id');
-        const latestAudit = await api.getLatestAudit();
-        const audit = latestAudit.data?.audit;
-        if (!audit || (activeTenantId && audit.tenant_id !== activeTenantId)) return null;
+  const handleFiles = useCallback((incomingFiles: FileList | File[]) => {
+    if (!isSignedIn) {
+      setShowGate(true);
+      return;
+    }
 
-        const nextEligibleAt = audit.next_eligible_at;
-        if (!nextEligibleAt || new Date(nextEligibleAt).getTime() <= Date.now()) return null;
-        return `Your next complimentary manual report audit is available on ${new Date(nextEligibleAt).toLocaleDateString()}.`;
-    };
+    const newFiles: UploadFile[] = Array.from(incomingFiles).map((file) => {
+      const isSupported = file.name.endsWith('.csv') || file.name.endsWith('.txt');
+      return {
+        file,
+        id: Math.random().toString(36).substring(7),
+        status: isSupported ? 'pending' : 'error',
+        error: isSupported ? undefined : 'Only CSV and TXT files are supported here.',
+      };
+    });
 
-    const restoreLatestManualAudit = useCallback(async () => {
-        const tenantSlug = getActiveTenantSlug();
-        if (!tenantSlug) return false;
+    setFiles((previous) => [...previous, ...newFiles].slice(0, 10));
 
-        const response = await api.getLatestCsvUploadRun(tenantSlug);
-        const manualAudit = response.ok ? response.data?.manualAudit : null;
-        return manualAudit ? continueManualAudit(manualAudit, tenantSlug) : false;
-    }, [continueManualAudit]);
+    const unsupportedCount = newFiles.filter((file) => file.status === 'error').length;
+    if (unsupportedCount > 0) {
+      toast({
+        variant: 'destructive',
+        title: 'Unsupported files',
+        description: `${unsupportedCount} file(s) were rejected. Evidence documents (PDF/Images) are not accepted here.`,
+      });
+    }
+  }, [isSignedIn, toast]);
 
-    useEffect(() => {
-        if (!isSignedIn) return;
-        let cancelled = false;
+  const onDrop = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+    handleFiles(event.dataTransfer.files);
+  }, [handleFiles]);
 
-        void restoreLatestManualAudit().catch(() => undefined).then((continued) => {
-            if (!cancelled && continued) return;
-        });
+  const removeFile = (id: string) => {
+    setFiles((previous) => previous.filter((file) => file.id !== id));
+  };
 
-        return () => {
-            cancelled = true;
+  const hasValidFiles = files.some((file) => file.status === 'pending');
+  const pendingFileCount = files.filter((file) => file.status === 'pending').length;
+
+  const startManualAudit = async () => {
+    if (isBusy || submissionInFlightRef.current) return;
+
+    const selectedFiles = files.filter((item) => item.status === 'pending');
+    if (selectedFiles.length === 0) return;
+
+    const tenantSlug = getActiveTenantSlug();
+    if (!tenantSlug) {
+      setSubmissionError('Margin needs your workspace context before reports can be submitted. Refresh and try again.');
+      return;
+    }
+
+    submissionInFlightRef.current = true;
+    setIsBusy(true);
+    setSubmissionError(null);
+    setFiles((current) => current.map((item) => selectedFiles.some((selected) => selected.id === item.id)
+      ? { ...item, status: 'uploading', error: undefined }
+      : item));
+
+    try {
+      const response = await api.ingestCsvReports(selectedFiles.map((item) => item.file));
+      const ingestion = response.data;
+      const byFileName = new Map((ingestion?.results || []).map((result) => [result.fileName, result]));
+
+      setFiles((current) => current.map((item) => {
+        const result = byFileName.get(item.file.name);
+        if (!result) return item;
+        const error = result.errors?.[0];
+        return {
+          ...item,
+          status: result.success ? 'success' : 'error',
+          error: error || undefined,
         };
-    }, [isSignedIn, restoreLatestManualAudit]);
+      }));
 
-    const startAuth = async () => {
-        if (isBusy) return;
-        setIsBusy(true);
-        try {
-            const res = await api.createAuditIntent('csv_upload');
-            if (res.ok && res.data?.success && res.data?.intent?.id) {
-                localStorage.setItem('pending_audit_intent_id', res.data.intent.id);
-                navigate(`/login?auditIntentId=${res.data.intent.id}&mode=signup`);
-                return;
-            }
-        } catch (e) {
-            console.error('Failed to create audit intent:', e);
-        }
-        navigate('/login?mode=signup&intent=upload-csv&next=%2Fdata-upload');
-    };
+      if (response.ok && ingestion?.manualAudit && continueManualAudit(ingestion.manualAudit, tenantSlug)) {
+        return;
+      }
 
-    const onDragOver = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-    }, []);
+      if (response.ok && ingestion?.syncId) {
+        const resumed = await restoreLatestManualAudit();
+        if (resumed) return;
+      }
 
-    const onDragLeave = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-    }, []);
+      const reentryMessage = await getReentryMessage().catch(() => null);
+      const backendError = getBackendError(ingestion);
+      const error = reentryMessage
+        || backendError
+        || response.error
+        || 'Margin could not confirm a Manual Report Audit from these reports. Review the file requirements and try again.';
+      setSubmissionError(error);
+      toast({
+        variant: 'destructive',
+        title: 'Reports were not accepted for an audit',
+        description: error,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Margin could not submit these reports. Please try again.';
+      setSubmissionError(message);
+      toast({
+        variant: 'destructive',
+        title: 'Reports were not submitted',
+        description: message,
+      });
+    } finally {
+      submissionInFlightRef.current = false;
+      setIsBusy(false);
+    }
+  };
 
-    const handleFiles = useCallback((incomingFiles: FileList | File[]) => {
-        if (!isSignedIn) {
-            setShowGate(true);
-            return;
-        }
-        const newFiles: UploadFile[] = Array.from(incomingFiles).map(file => {
-            const isSupported = file.name.endsWith('.csv') || file.name.endsWith('.txt');
-            return {
-                file,
-                id: Math.random().toString(36).substring(7),
-                status: isSupported ? 'pending' : 'error',
-                error: isSupported ? undefined : 'Only CSV and TXT files are supported here.'
-            };
-        });
+  if (!isLoaded) return null;
 
-        setFiles(prev => [...prev, ...newFiles].slice(0, 10));
-        
-        const unsupportedCount = newFiles.filter(f => f.status === 'error').length;
-        if (unsupportedCount > 0) {
-            toast({
-                variant: "destructive",
-                title: "Unsupported files",
-                description: `${unsupportedCount} file(s) were rejected. Evidence documents (PDF/Images) are not accepted here.`
-            });
-        }
-    }, [isSignedIn, toast]);
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
+      <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
+        <div className="mx-auto grid min-h-14 max-w-[1280px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 sm:px-6 lg:px-8">
+          <Link
+            to="/audit"
+            className="inline-flex min-w-0 justify-self-start items-center gap-2 rounded-md px-1.5 py-2 text-[13px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
+          >
+            <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">Back to Audit</span>
+            <span className="sm:hidden">Audit</span>
+          </Link>
 
-    const onDrop = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-        handleFiles(e.dataTransfer.files);
-    }, [handleFiles]);
+          <div className="min-w-0 text-center" aria-label="Manual report intake">
+            <p className="truncate text-[13px] font-semibold text-[#191B20]">Manual report intake</p>
+            <p className="hidden text-[11px] text-[#777A82] sm:block">Operational reports</p>
+          </div>
 
-    const removeFile = (id: string) => {
-        setFiles(prev => prev.filter(f => f.id !== id));
-    };
-
-    const hasValidFiles = files.some(f => f.status === 'pending');
-
-    const startManualAudit = async () => {
-        if (isBusy || submissionInFlightRef.current) return;
-
-        const selectedFiles = files.filter((item) => item.status === 'pending');
-        if (selectedFiles.length === 0) return;
-
-        const tenantSlug = getActiveTenantSlug();
-        if (!tenantSlug) {
-            setSubmissionError('Margin needs your workspace context before reports can be submitted. Refresh and try again.');
-            return;
-        }
-
-        submissionInFlightRef.current = true;
-        setIsBusy(true);
-        setSubmissionError(null);
-        setFiles((current) => current.map((item) => selectedFiles.some((selected) => selected.id === item.id)
-            ? { ...item, status: 'uploading', error: undefined }
-            : item));
-
-        try {
-            const response = await api.ingestCsvReports(selectedFiles.map((item) => item.file));
-            const ingestion = response.data;
-            const byFileName = new Map((ingestion?.results || []).map((result) => [result.fileName, result]));
-
-            setFiles((current) => current.map((item) => {
-                const result = byFileName.get(item.file.name);
-                if (!result) return item;
-                const error = result.errors?.[0];
-                return {
-                    ...item,
-                    status: result.success ? 'success' : 'error',
-                    error: error || undefined,
-                };
-            }));
-
-            if (response.ok && ingestion?.manualAudit && continueManualAudit(ingestion.manualAudit, tenantSlug)) {
-                return;
-            }
-
-            if (response.ok && ingestion?.syncId) {
-                const resumed = await restoreLatestManualAudit();
-                if (resumed) return;
-            }
-
-            const reentryMessage = await getReentryMessage().catch(() => null);
-            const backendError = getBackendError(ingestion);
-            const error = reentryMessage
-                || backendError
-                || response.error
-                || 'Margin could not confirm a Manual Report Audit from these reports. Review the file requirements and try again.';
-            setSubmissionError(error);
-            toast({
-                variant: 'destructive',
-                title: 'Reports were not accepted for an audit',
-                description: error,
-            });
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Margin could not submit these reports. Please try again.';
-            setSubmissionError(message);
-            toast({
-                variant: 'destructive',
-                title: 'Reports were not submitted',
-                description: message,
-            });
-        } finally {
-            submissionInFlightRef.current = false;
-            setIsBusy(false);
-        }
-    };
-
-    if (!isLoaded) return null;
-
-    return (
-        <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026] overflow-x-hidden">
-            {/* Sticky workflow header */}
-            <header className="sticky top-0 z-50 border-b border-[#D8E3EA] bg-[#FAFAF7]/95 backdrop-blur">
-                <div className="mx-auto grid min-h-[57px] max-w-6xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 py-2 sm:px-6">
-                    <Link
-                        to="/audit"
-                        title="Back to Audit"
-                        className="group inline-flex min-w-0 justify-self-start items-center gap-2 rounded-md px-1 py-1 text-[#4D5B66] transition-colors hover:bg-white hover:text-[#182026]"
-                    >
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-[#D8E3EA] transition-colors group-hover:bg-[#F1F5F9]">
-                            <ArrowLeft className="h-3.5 w-3.5" />
-                        </span>
-                        <span className="hidden text-[13px] font-medium sm:inline">Back to Audit</span>
-                    </Link>
-
-                    <div className="flex items-center justify-center gap-2.5 text-center" aria-label="Manual report audit">
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#EAF4FC] text-[#0B74DE]">
-                            <FileSpreadsheet className="h-3.5 w-3.5" />
-                        </span>
-                        <span className="hidden leading-tight sm:block">
-                            <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-[#4D5B66]">Manual report audit</span>
-                            <span className="mt-0.5 block text-[11px] text-[#8C9BA6]">Operational reports</span>
-                        </span>
-                        <span className="text-[13px] font-medium text-[#182026] sm:hidden">Reports</span>
-                    </div>
-
-                    <Link
-                        to="/audit"
-                        title="Connect Amazon from Audit"
-                        className="inline-flex min-w-0 justify-self-end items-center gap-1.5 rounded-md border border-[#D8E3EA] bg-white px-2.5 py-1.5 text-[12px] font-medium text-[#0B74DE] transition-colors hover:border-[#0B74DE] hover:bg-[#F5FAFE] sm:px-3"
-                    >
-                        <span className="hidden sm:inline">Connect Amazon</span>
-                        <span className="sm:hidden">Connect</span>
-                        <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-                    </Link>
-                </div>
-            </header>
-
-            <main className="mx-auto max-w-2xl px-6 py-8 sm:py-12">
-                <div className="space-y-12">
-                    {/* Header Section: Visible to all */}
-                    <div className="text-center">
-                        <h1 className="font-lora text-3xl sm:text-4xl font-medium tracking-tight mb-4" style={{ fontWeight: 400 }}>
-                            {isSignedIn ? 'Use Amazon reports' : 'Use the Seller Central reports you already have'}
-                        </h1>
-                        <p className="text-[16px] text-[#4D5B66] max-w-lg mx-auto leading-relaxed">
-                            {isSignedIn 
-                                ? 'Add supported operational Seller Central reports to begin a manual report audit. Margin recognizes report families automatically.'
-                                : 'Margin recognizes supported operational reports automatically. No manual mapping required.'}
-                        </p>
-                    </div>
-
-                    {!isSignedIn && showGate ? (
-                        /* CONTEXTUAL ACCOUNT GATE: B4 */
-                        <motion.div 
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="rounded-lg border border-[#0B74DE]/20 bg-[#0B74DE]/5 p-8 text-center"
-                        >
-                            <h2 className="mb-2 text-[18px] font-semibold text-[#182026]">Ready to add your reports?</h2>
-                            <p className="mb-6 text-[14px] text-[#4D5B66]">
-                                Create your free Margin account to securely add your reports and keep your Audit connected to you.
-                            </p>
-                            <Button
-                                onClick={startAuth}
-                                disabled={isBusy}
-                                className="h-12 w-full max-w-[280px] rounded-md bg-[#0B74DE] text-[14px] font-semibold text-white shadow-md transition-all hover:bg-[#075EBA]"
-                            >
-                                {isBusy ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Securing your Audit
-                                    </>
-                                ) : (
-                                    'Continue with free account'
-                                )}
-                            </Button>
-                            <div className="mt-4 flex items-center justify-center gap-4 text-[12px] font-medium text-[#8C9BA6]">
-                                <span>Free account</span>
-                                <span className="h-1 w-1 rounded-full bg-[#D8E3EA]" />
-                                <span>No payment required</span>
-                                <span className="h-1 w-1 rounded-full bg-[#D8E3EA]" />
-                                <span>Read-only Audit</span>
-                            </div>
-                            <button 
-                                onClick={() => setShowGate(false)}
-                                className="mt-6 text-[12px] font-medium text-[#0B74DE] hover:underline"
-                            >
-                                Back to report list
-                            </button>
-                        </motion.div>
-                    ) : (
-                        /* OPERATIONAL SURFACE: Visible to all (gated if anonymous) */
-                        <div className="space-y-8">
-                            {/* A Simple Rule (Anonymous Only) */}
-                            {!isSignedIn && (
-                                <div className="px-4 text-center">
-                                    <h3 className="mb-2 text-[11px] font-bold uppercase tracking-tight text-[#182026]">A Simple Rule</h3>
-                                    <p className="text-[14px] leading-relaxed text-[#4D5B66]">
-                                        Use reports covering the same seller and the same date range where possible.
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Manual-report audit contract */}
-                            <div className="grid sm:grid-cols-2 gap-6 p-5 rounded-lg border border-[#D8E3EA] bg-white">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
-                                        <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
-                                        Manual report audit
-                                    </div>
-                                    <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium">
-                                        Add reports from the same seller and a consistent reporting range where possible. The recorded audit coverage comes from accepted report content; there is no separate period selector here.
-                                    </p>
-                                </div>
-                                <div>
-                                    <div className="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase text-[#182026]">
-                                        <FileText className="h-3.5 w-3.5 text-[#0B74DE]" />
-                                        Report families
-                                    </div>
-                                    <p className="text-[12px] leading-relaxed text-[#4D5B66] font-medium">
-                                        {ACCEPTED_TYPES.slice(0, 4).join(', ')}...
-                                    </p>
-                                    <p className="mt-1 text-[11px] text-[#8C9BA6]">CSV or TXT only. Report family is recognized automatically.</p>
-                                </div>
-                            </div>
-
-                            {/* Dropzone */}
-                            <div 
-                                onDragOver={onDragOver}
-                                onDragLeave={onDragLeave}
-                                onDrop={onDrop}
-                                className={`relative rounded-lg border-2 border-dashed transition-all duration-200 min-h-[200px] flex items-center justify-center ${
-                                    isDragging 
-                                    ? 'border-[#0B74DE] bg-[#0B74DE]/5' 
-                                    : 'border-[#D8E3EA] bg-white hover:border-[#4D5B66]'
-                                }`}
-                            >
-                                <input 
-                                    type="file" 
-                                    multiple 
-                                    accept=".csv,.txt"
-                                    onChange={(e) => e.target.files && handleFiles(e.target.files)}
-                                    className="absolute inset-0 z-10 cursor-pointer opacity-0"
-                                />
-                                <div className="flex flex-col items-center justify-center text-center px-6">
-                                    <div className="h-12 w-12 rounded-full bg-[#F1F5F9] flex items-center justify-center mb-4">
-                                        <Upload className="h-6 w-6 text-[#4D5B66]" />
-                                    </div>
-                                    <h3 className="mb-1 text-[16px] font-medium text-[#182026]">
-                                        Drop Amazon reports here
-                                    </h3>
-                                    <p className="text-[13px] text-[#4D5B66]">
-                                        or browse to select files
-                                    </p>
-                                    <p className="mt-4 text-[11px] text-[#8C9BA6]">
-                                        CSV or TXT · Up to 10 files · 50MB each
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* File List */}
-                            <AnimatePresence>
-                                {files.length > 0 && (
-                                    <motion.div 
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        className="space-y-2"
-                                    >
-                                        {files.map(file => (
-                                            <div 
-                                                key={file.id} 
-                                                className={`flex items-center justify-between rounded-md border px-4 py-3 ${
-                                                    file.status === 'error' ? 'border-red-100 bg-red-50/30' : 'border-[#D8E3EA] bg-white shadow-sm'
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-3 overflow-hidden">
-                                                    <FileSpreadsheet className={`h-4 w-4 flex-shrink-0 ${
-                                                        file.status === 'error' ? 'text-red-400' : 'text-[#0B74DE]'
-                                                    }`} />
-                                                    <div className="flex flex-col overflow-hidden">
-                                                        <span className="truncate text-[13px] font-medium text-[#182026]">{file.file.name}</span>
-                                                        {file.error && <span className="text-[10px] text-red-500">{file.error}</span>}
-                                                    </div>
-                                                </div>
-                                                <button 
-                                                    onClick={() => removeFile(file.id)}
-                                                    className="text-[#4D5B66] hover:text-red-500 transition-colors"
-                                                >
-                                                    <X className="h-4 w-4" />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
-                            {/* Action Bar (Authenticated Only) */}
-                            {isSignedIn && (
-                                <div className="pt-4 flex flex-col items-center gap-4">
-                                    <Button
-                                        onClick={startManualAudit}
-                                        disabled={!hasValidFiles || isBusy}
-                                        className="h-12 w-full max-w-[320px] rounded-md bg-[#182026] text-[14px] font-semibold text-white hover:bg-black disabled:opacity-20 transition-all shadow-md"
-                                    >
-                                        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                        {isBusy ? 'Submitting reports' : 'Start manual report audit'}
-                                    </Button>
-
-                                    {submissionError ? (
-                                        <p role="alert" className="max-w-[420px] text-center text-[12px] leading-relaxed text-red-600">
-                                            {submissionError}
-                                        </p>
-                                    ) : null}
-
-                                    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] text-[#8C9BA6]">
-                                        <Ban className="h-3 w-3" />
-                                        <span>PDFs, screenshots, invoices, and evidence documents belong in Evidence Records—not this operational report flow.</span>
-                                        <Link to={getEvidenceRecordsHref()} className="inline-flex items-center gap-1 font-medium text-[#0B74DE] hover:text-[#075EA8] hover:underline">
-                                            Go to Evidence Records <ArrowRight className="h-3 w-3" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Supporting information: intentionally unboxed (Anonymous Only) */}
-                            {!isSignedIn && (
-                                <div className="px-1 pt-4">
-                                    <h3 className="mb-4 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Supported Report Families</h3>
-                                    <div className="flex flex-wrap gap-2">
-                                        {ACCEPTED_TYPES.map(type => (
-                                            <span key={type} className="rounded-full bg-[#F1F5F9] px-3 py-1 text-[12px] font-medium text-[#4D5B66]">
-                                                {type}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <p className="mt-4 text-[13px] leading-relaxed text-[#8C9BA6]">
-                                        Export these as CSV or TXT from Seller Central. You don't need to identify the report type yourself. Margin recognizes supported reports automatically.
-                                    </p>
-                                    <div className="mt-6 border-t border-[#D8E3EA] pt-5">
-                                        <h3 className="mb-2 text-[11px] font-bold uppercase tracking-tight text-[#182026]">Do Not Upload</h3>
-                                        <p className="text-[13px] leading-relaxed text-[#8C9BA6]">
-                                            PDFs, Excel files, screenshots or invoices. Those are evidence documents, not operational reports.
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </main>
-
-            <footer className="py-12 text-center border-t border-[#D8E3EA] mt-12 bg-white">
-                <p className="text-[12px] text-[#8C9BA6]">
-                    Margin Agents can make mistakes. Check important info.
-                </p>
-            </footer>
+          <Link
+            to={getEvidenceRecordsHref()}
+            className="inline-flex min-w-0 justify-self-end items-center gap-1.5 rounded-md border border-[#D7D7D1] bg-white px-2.5 py-1.5 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3"
+          >
+            <span className="hidden sm:inline">Evidence Records</span>
+            <span className="sm:hidden">Evidence</span>
+            <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          </Link>
         </div>
-    );
+      </header>
+
+      <main className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start">
+          <section className="min-w-0 rounded-[14px] border border-[#E8E7E1] bg-white p-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-8" aria-labelledby="manual-report-title">
+            <div className="max-w-2xl border-b border-[#E8E7E1] pb-6">
+              <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#595E68]">
+                <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4F3ED] text-[#191B20]">
+                  <FileSpreadsheet className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
+                <span>REPORT-BASED AUDIT</span>
+              </div>
+              <h1 id="manual-report-title" className="text-[28px] font-semibold tracking-[-0.02em] text-[#191B20] sm:text-[32px]">
+                Add operational reports
+              </h1>
+              <p className="mt-3 max-w-xl text-[15px] leading-6 text-[#595E68]">
+                {isSignedIn
+                  ? 'Add supported Seller Central operational reports. Margin identifies report families from accepted content and creates or resumes the related manual report audit.'
+                  : 'Prepare supported Seller Central operational reports for a manual report audit. Margin identifies report families from accepted content.'}
+              </p>
+            </div>
+
+            {!isSignedIn && showGate ? (
+              <section className="mt-6 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-5 sm:p-6" aria-labelledby="account-gate-title">
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#191B20]" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <h2 id="account-gate-title" className="text-[16px] font-semibold text-[#191B20]">Account required to submit reports</h2>
+                    <p className="mt-1 text-[14px] leading-5 text-[#595E68]">
+                      Create or continue to your Margin account to submit operational reports and connect the resulting audit to your workspace.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <Button
+                    onClick={startAuth}
+                    disabled={isBusy}
+                    className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
+                  >
+                    {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+                    {isBusy ? 'Preparing account access' : 'Continue to account'}
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={() => setShowGate(false)}
+                    className="min-h-10 rounded-[10px] px-3 text-left text-[13px] font-medium text-[#595E68] outline-none transition-colors hover:bg-white hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
+                  >
+                    Return to report intake
+                  </button>
+                </div>
+              </section>
+            ) : (
+              <div className="mt-6 space-y-6">
+                <section className="rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4 sm:p-5" aria-labelledby="intake-scope-title">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#D7D7D1] pb-3">
+                    <div>
+                      <h2 id="intake-scope-title" className="text-[15px] font-semibold text-[#191B20]">Report intake</h2>
+                      <p className="mt-0.5 text-[12px] leading-5 text-[#595E68]">Add the reports available for this workspace. Keep reports from the same seller and a consistent range together where possible.</p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D7D7D1] bg-white px-2.5 py-1 text-[12px] font-medium text-[#595E68]">
+                      <Files className="h-3.5 w-3.5" aria-hidden="true" />
+                      CSV or TXT
+                    </span>
+                  </div>
+
+                  <div
+                    onDragOver={onDragOver}
+                    onDragLeave={onDragLeave}
+                    onDrop={onDrop}
+                    className={`mt-4 rounded-[10px] border border-dashed p-5 text-center transition-colors sm:p-8 ${
+                      isDragging ? 'border-[#3F51A8] bg-[#E9ECFF]' : 'border-[#B8B9B4] bg-white'
+                    }`}
+                  >
+                    <input
+                      id="manual-report-files"
+                      type="file"
+                      multiple
+                      accept=".csv,.txt"
+                      onChange={(event) => event.target.files && handleFiles(event.target.files)}
+                      className="sr-only"
+                    />
+                    <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[10px] border border-[#D7D7D1] bg-[#FBFAF7] text-[#191B20]">
+                      <Upload className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <h3 className="mt-3 text-[16px] font-semibold text-[#191B20]">Drop reports here</h3>
+                    <p className="mt-1 text-[13px] leading-5 text-[#595E68]">Drag CSV or TXT operational reports into this area, or choose files from your device.</p>
+                    <label
+                      htmlFor="manual-report-files"
+                      className="mt-4 inline-flex min-h-10 items-center justify-center rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[13px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-within:ring-2 focus-within:ring-[#5165C7] focus-within:ring-offset-2"
+                    >
+                      Browse files
+                    </label>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#D7D7D1] pt-3 text-[12px] leading-5 text-[#595E68]">
+                    <span>CSV or TXT only</span>
+                    <span className="hidden h-1 w-1 self-center rounded-full bg-[#B8B9B4] sm:block" />
+                    <span>Up to 10 reports</span>
+                    <span className="hidden h-1 w-1 self-center rounded-full bg-[#B8B9B4] sm:block" />
+                    <span>Report family recognized automatically</span>
+                  </div>
+                </section>
+
+                {files.length > 0 ? (
+                  <section aria-labelledby="selected-reports-title">
+                    <div className="mb-3 flex items-end justify-between gap-4">
+                      <div>
+                        <h2 id="selected-reports-title" className="text-[16px] font-semibold text-[#191B20]">Selected reports</h2>
+                        <p className="mt-0.5 text-[12px] text-[#777A82]">Review each file before starting the manual report audit.</p>
+                      </div>
+                      <span className="shrink-0 text-[12px] font-medium text-[#595E68]">{files.length} of 10</span>
+                    </div>
+                    <ul className="overflow-hidden rounded-[10px] border border-[#E8E7E1] bg-white" aria-live="polite">
+                      {files.map((file, index) => {
+                        const isError = file.status === 'error';
+                        const isUploading = file.status === 'uploading';
+                        const isSuccess = file.status === 'success';
+                        const statusLabel = isError ? 'Needs review' : isUploading ? 'Submitting' : isSuccess ? 'Accepted' : 'Ready';
+                        return (
+                          <li key={file.id} className={`flex min-h-[56px] items-center gap-3 px-3 py-2.5 sm:px-4 ${index > 0 ? 'border-t border-[#E8E7E1]' : ''}`}>
+                            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${isError ? 'bg-[#FFE6EA] text-[#A73549]' : isSuccess ? 'bg-[#DDF7F0] text-[#0E766C]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>
+                              {isSuccess ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : isError ? <CircleAlert className="h-4 w-4" aria-hidden="true" /> : <FileSpreadsheet className="h-4 w-4" aria-hidden="true" />}
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-[13px] font-medium text-[#191B20]">{file.file.name}</p>
+                              <p className={`mt-0.5 text-[12px] ${isError ? 'text-[#A73549]' : 'text-[#777A82]'}`}>{file.error || `${file.file.name.toLowerCase().endsWith('.csv') ? 'CSV' : 'TXT'} report · ${statusLabel}`}</p>
+                            </div>
+                            <span className={`hidden rounded-full px-2 py-1 text-[11px] font-medium sm:inline-flex ${isError ? 'bg-[#FFE6EA] text-[#A73549]' : isSuccess ? 'bg-[#DDF7F0] text-[#0E766C]' : isUploading ? 'bg-[#E9ECFF] text-[#3F51A8]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>{statusLabel}</span>
+                            {!isUploading && !isSuccess ? (
+                              <button
+                                type="button"
+                                onClick={() => removeFile(file.id)}
+                                aria-label={`Remove ${file.file.name}`}
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
+                              >
+                                <X className="h-4 w-4" aria-hidden="true" />
+                              </button>
+                            ) : null}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                ) : null}
+
+                {isSignedIn ? (
+                  <section className="border-t border-[#E8E7E1] pt-5" aria-labelledby="submission-title">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <h2 id="submission-title" className="text-[15px] font-semibold text-[#191B20]">Start the audit</h2>
+                        <p className="mt-1 text-[12px] leading-5 text-[#595E68]">
+                          {pendingFileCount > 0 ? `${pendingFileCount} report${pendingFileCount === 1 ? '' : 's'} ready for review.` : 'Add at least one supported report to continue.'}
+                        </p>
+                      </div>
+                      <Button
+                        onClick={startManualAudit}
+                        disabled={!hasValidFiles || isBusy}
+                        className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45"
+                      >
+                        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+                        {isBusy ? 'Submitting reports' : 'Start manual report audit'}
+                      </Button>
+                    </div>
+                    {submissionError ? (
+                      <div role="alert" className="mt-4 flex items-start gap-2 rounded-[10px] border border-[#A73549]/30 bg-[#FFE6EA] px-3 py-2.5 text-[12px] leading-5 text-[#A73549]">
+                        <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                        <p>{submissionError}</p>
+                      </div>
+                    ) : null}
+                  </section>
+                ) : null}
+              </div>
+            )}
+          </section>
+
+          <aside className="space-y-4 xl:sticky xl:top-20" aria-label="Report intake context">
+            <section className="rounded-[14px] border border-[#E8E7E1] bg-white p-5">
+              <div className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-[#595E68]" aria-hidden="true" />
+                <h2 className="text-[14px] font-semibold text-[#191B20]">Intake context</h2>
+              </div>
+              <dl className="mt-4 space-y-3 text-[12px]">
+                <div className="border-b border-[#E8E7E1] pb-3">
+                  <dt className="font-medium text-[#777A82]">Accepted input</dt>
+                  <dd className="mt-1 text-[#191B20]">CSV and TXT operational reports</dd>
+                </div>
+                <div className="border-b border-[#E8E7E1] pb-3">
+                  <dt className="font-medium text-[#777A82]">Audit coverage</dt>
+                  <dd className="mt-1 leading-5 text-[#191B20]">Derived from accepted report content. There is no separate date-range selector.</dd>
+                </div>
+                <div>
+                  <dt className="font-medium text-[#777A82]">Report families</dt>
+                  <dd className="mt-1 leading-5 text-[#191B20]">Recognized automatically after submission.</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section className="rounded-[14px] border border-[#D7D7D1] bg-[#F4F3ED] p-5">
+              <div className="flex items-start gap-2.5">
+                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-[#191B20]" aria-hidden="true" />
+                <div>
+                  <h2 className="text-[14px] font-semibold text-[#191B20]">Evidence belongs elsewhere</h2>
+                  <p className="mt-1 text-[12px] leading-5 text-[#595E68]">PDFs, screenshots, invoices, and other evidence documents are not operational reports. Keep them in Evidence Records.</p>
+                </div>
+              </div>
+              <Link
+                to={getEvidenceRecordsHref()}
+                className="mt-4 inline-flex min-h-10 items-center gap-1.5 rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#FBFAF7] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
+              >
+                Open Evidence Records
+                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            </section>
+
+            <section className="rounded-[14px] border border-[#E8E7E1] bg-white p-5">
+              <h2 className="text-[14px] font-semibold text-[#191B20]">Supported reports</h2>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {ACCEPTED_TYPES.map((type) => (
+                  <span key={type} className="rounded-full border border-[#E8E7E1] bg-[#FBFAF7] px-2 py-1 text-[11px] font-medium text-[#595E68]">{type}</span>
+                ))}
+              </div>
+              {!isSignedIn ? <p className="mt-4 text-[12px] leading-5 text-[#777A82]">An account is required before reports can be submitted to an audit workspace.</p> : null}
+            </section>
+          </aside>
+        </div>
+      </main>
+
+      <footer className="border-t border-[#E8E7E1] bg-white px-4 py-6 text-center sm:px-6">
+        <p className="text-[12px] text-[#777A82]">Margin Agents can make mistakes. Check important information before relying on it.</p>
+      </footer>
+    </div>
+  );
 }
