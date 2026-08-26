@@ -11,6 +11,7 @@ const apiSource = read('src/lib/api.ts');
 const lockerSource = read('src/pages/EvidenceLocker.tsx');
 const caseDetailSource = read('src/pages/CaseDetail.tsx');
 const inspectionSource = read('src/components/evidence/ParsingStatus.tsx');
+const documentDetailSource = read('src/pages/DocumentDetail.tsx');
 
 const assertions = [];
 const check = (condition, description) => {
@@ -48,6 +49,13 @@ check(!inspectionSource.includes('>FAILED_DURABLE<'), 'inspection does not rende
 check(!inspectionSource.includes('>QUEUE_LOCKED<'), 'inspection does not render internal queue status codes');
 check(!inspectionSource.includes('>NODE_OVERVIEW<'), 'inspection does not render internal node-console terminology');
 check(!inspectionSource.includes('neural intelligence engine'), 'inspection does not expose internal intelligence-engine terminology');
+check(documentDetailSource.includes('Artifact processing'), 'connected document detail uses a seller-facing artifact-processing label');
+check(documentDetailSource.includes('Recorded detail confidence'), 'connected document detail keeps confidence scoped to recorded artifact details');
+check(documentDetailSource.includes('This does not establish proof or a recovery outcome.'), 'connected document detail retains a non-conclusive confidence boundary');
+check(!documentDetailSource.includes("'Refresh parsing'"), 'connected document detail does not render legacy parser-refresh terminology');
+check(!documentDetailSource.includes("'Parsing strategy'"), 'connected document detail does not render legacy parser-strategy terminology');
+check(!documentDetailSource.includes('No parser explanation recorded.'), 'connected document detail does not render parser-console fallback copy');
+check(!documentDetailSource.includes('documentData?.parser_error'), 'connected document detail does not surface raw backend parser errors to sellers');
 check(!caseDetailSource.includes('Evidence Locker rework'), 'Case Detail remains outside the Evidence Locker implementation scope');
 
 console.log(`Evidence Locker rework contract passed: ${assertions.length} assertions.`);

@@ -121,14 +121,14 @@ export default function DocumentDetail() {
       if (response.ok) {
         await fetchDocumentDetail(false);
         toast({
-          title: 'Parsing started',
-          description: 'Margin will refresh this document from backend truth as parsing progresses.',
+          title: 'Artifact processing refreshed',
+          description: 'Margin will refresh the recorded artifact details as processing progresses.',
         });
       } else {
-        toast({ title: 'Unable to start parsing', description: response.error || 'Please try again.', variant: 'destructive' });
+        toast({ title: 'Unable to refresh artifact processing', description: 'Please try again.', variant: 'destructive' });
       }
     } catch (requestError: any) {
-      toast({ title: 'Unable to start parsing', description: requestError?.message || 'Please try again.', variant: 'destructive' });
+      toast({ title: 'Unable to refresh artifact processing', description: 'Please try again.', variant: 'destructive' });
     } finally {
       setTriggeringParse(false);
     }
@@ -155,24 +155,24 @@ export default function DocumentDetail() {
       return {
         usable: false,
         label: 'Not ready',
-        reason: parsingOperationalSummary || 'Parsing is still in progress.',
+        reason: parsingOperationalSummary || 'Artifact processing is still in progress.',
         nextStep: parsingTruth.operationalExplanation?.next_action
           ? formatAutonomyLabel(parsingTruth.operationalExplanation.next_action)
-          : 'Wait for parsing to complete before this document can support a case.',
+          : 'Wait for artifact processing to complete before this document can inform case review.',
       };
     }
     if (status === 'failed') {
       return {
         usable: false,
         label: 'Needs review',
-        reason: parsingOperationalSummary || documentData?.parser_error || 'Parsing failed.',
+        reason: parsingOperationalSummary || 'Artifact processing could not record complete details.',
         nextStep: parsingTruth.operationalExplanation?.next_action
           ? formatAutonomyLabel(parsingTruth.operationalExplanation.next_action)
-          : 'Re-run parsing or review the source document manually.',
+          : 'Refresh artifact processing or review the source document manually.',
       };
     }
     if (extractedDataPointCount === 0 && !(parsedData?.line_items?.length > 0)) {
-      return { usable: false, label: 'Needs review', reason: 'No structured fields were extracted.', nextStep: 'Review the source document manually or re-run parsing with a better file.' };
+      return { usable: false, label: 'Needs review', reason: 'No structured details were recorded.', nextStep: 'Review the source document manually or refresh artifact processing.' };
     }
     if (matchedClaims.length === 0) {
       return { usable: false, label: 'Unlinked', reason: 'Not linked to a recovery record yet.', nextStep: 'Wait for matching or link this document to the correct recovery record manually.' };
@@ -181,15 +181,15 @@ export default function DocumentDetail() {
       return {
         usable: false,
         label: 'Limited',
-        reason: parsingTruth.explanation?.reason || 'Some usable fields were preserved, but parsing is incomplete.',
+        reason: parsingTruth.explanation?.reason || 'Some usable details were preserved, but artifact processing is incomplete.',
         nextStep: 'Review the preserved fields before using this document in case review.',
       };
     }
     if (parserConfidence == null) {
-      return { usable: false, label: 'Needs review', reason: 'Extraction confidence is unknown.', nextStep: 'Review extracted fields manually before relying on this document in case review.' };
+      return { usable: false, label: 'Needs review', reason: 'Recorded detail confidence is unavailable.', nextStep: 'Review recorded fields manually before relying on this document in case review.' };
     }
     if (parserConfidence < 0.5) {
-      return { usable: false, label: 'Needs review', reason: 'Extraction confidence is low.', nextStep: 'Manual review is required before this document supports case review.' };
+      return { usable: false, label: 'Needs review', reason: 'Recorded detail confidence is low.', nextStep: 'Manual review is required before this document supports case review.' };
     }
     return {
       usable: true,
@@ -201,11 +201,11 @@ export default function DocumentDetail() {
 
   const parserStatus = String(parsingTruth.status || 'unknown').toLowerCase();
   const parserChip = (() => {
-    if (parserStatus === 'completed') return { label: 'Parsed', tone: 'success' as const, icon: CheckCircle2 };
-    if (parserStatus === 'partial') return { label: 'Partially parsed', tone: 'neutral' as const, icon: AlertCircle };
-    if (parserStatus === 'pending' || parserStatus === 'processing') return { label: 'Parsing', tone: 'info' as const, icon: Clock };
-    if (parserStatus === 'failed') return { label: 'Parsing needs attention', tone: 'danger' as const, icon: AlertCircle };
-    return { label: parserStatus || 'Unknown', tone: 'neutral' as const, icon: Activity };
+    if (parserStatus === 'completed') return { label: 'Details recorded', tone: 'success' as const, icon: CheckCircle2 };
+    if (parserStatus === 'partial') return { label: 'Some details recorded', tone: 'neutral' as const, icon: AlertCircle };
+    if (parserStatus === 'pending' || parserStatus === 'processing') return { label: 'Processing artifact', tone: 'info' as const, icon: Clock };
+    if (parserStatus === 'failed') return { label: 'Processing needs attention', tone: 'danger' as const, icon: AlertCircle };
+    return { label: 'Processing state unavailable', tone: 'neutral' as const, icon: Activity };
   })();
   const ParserIcon = parserChip.icon;
 
@@ -305,7 +305,7 @@ export default function DocumentDetail() {
               disabled={triggeringParse}
             >
               <RefreshCw className={cn('mr-2 h-3.5 w-3.5', triggeringParse && 'animate-spin')} />
-              {triggeringParse ? 'Refreshing…' : 'Refresh parsing'}
+              {triggeringParse ? 'Refreshing…' : 'Refresh processing'}
             </Button>
             <Button
               variant="outline"
@@ -433,10 +433,10 @@ export default function DocumentDetail() {
                     <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F1F5F7] text-[#66737F]"><FileText className="h-4 w-4" strokeWidth={1.6} /></div>
                       <h2 className="mt-4 font-lora text-[20px] font-normal tracking-tight text-[#182026]">No extracted text yet</h2>
-                      <p className="mt-2 max-w-sm text-[11px] leading-5 text-[#66737F]">Run parsing to request a server-backed text extraction. This action does not change the original document.</p>
+                      <p className="mt-2 max-w-sm text-[11px] leading-5 text-[#66737F]">Refresh artifact processing to request recorded text from the source. This action does not change the original artifact.</p>
                       <Button variant="outline" className="mt-5 h-9 border-[#DCE8EE] bg-white px-3 text-[11px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC] hover:text-[#0B74DE]" onClick={handleTriggerParsing} disabled={triggeringParse}>
                         <RefreshCw className={cn('mr-2 h-3.5 w-3.5', triggeringParse && 'animate-spin')} />
-                        {triggeringParse ? 'Refreshing…' : 'Refresh parsing'}
+                        {triggeringParse ? 'Refreshing…' : 'Refresh processing'}
                       </Button>
                     </div>
                   );
@@ -519,8 +519,8 @@ export default function DocumentDetail() {
           <section className="rounded-[10px] border border-[#DCE8EE] bg-white p-5 shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
             <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Extraction summary</p>
             <div className="mt-4 space-y-4">
-              <div className="flex items-end justify-between gap-4"><div><p className="text-[10px] text-[#8A99A5]">Confidence</p><p className="mt-1 text-[20px] font-medium tracking-tight text-[#182026]">{parserConfidenceLabel}</p></div><span className={cn('mb-1 h-2 w-2 rounded-full', parserConfidence != null ? 'bg-[#0B74DE]' : 'bg-[#B8C4CE]')} /></div>
-              <div className="border-t border-[#E7EEF2] pt-4"><p className="text-[10px] text-[#8A99A5]">Parsing strategy</p><p className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">{formatAutonomyLabel(parsingTruth.strategy || parsingTruth.status)}</p><p className="mt-1.5 text-[11px] leading-5 text-[#66737F]">{parsingTruth.explanation?.reason || 'No parser explanation recorded.'}</p></div>
+              <div className="flex items-end justify-between gap-4"><div><p className="text-[10px] text-[#8A99A5]">Recorded detail confidence</p><p className="mt-1 text-[20px] font-medium tracking-tight text-[#182026]">{parserConfidenceLabel}</p><p className="mt-1 text-[10px] leading-4 text-[#66737F]">This does not establish proof or a recovery outcome.</p></div><span className={cn('mb-1 h-2 w-2 rounded-full', parserConfidence != null ? 'bg-[#0B74DE]' : 'bg-[#B8C4CE]')} /></div>
+              <div className="border-t border-[#E7EEF2] pt-4"><p className="text-[10px] text-[#8A99A5]">Artifact processing</p><p className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">{parsingTruth.strategy === 'FULL' ? 'Full artifact review recorded' : parsingTruth.strategy === 'PARTIAL' ? 'Partial artifact review recorded' : parsingTruth.strategy === 'FAILED_DURABLE' ? 'Artifact review could not be completed' : parserStatus === 'pending' || parserStatus === 'processing' ? 'Artifact review in progress' : 'Processing method not recorded'}</p><p className="mt-1.5 text-[11px] leading-5 text-[#66737F]">{parsingTruth.explanation?.reason || 'No artifact-processing explanation recorded.'}</p></div>
               {parsingTruth.operationalState ? <div className="border-t border-[#E7EEF2] pt-4"><p className="text-[10px] text-[#8A99A5]">Current processing state</p><p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">{formatAutonomyLabel(parsingTruth.operationalState)}{parsingOperationalSummary ? ` · ${parsingOperationalSummary}` : ''}</p></div> : null}
               {ingestionTruth.strategy ? <div className="border-t border-[#E7EEF2] pt-4"><p className="text-[10px] text-[#8A99A5]">Intake source</p><p className="mt-1 text-[11px] text-[#4D5B66]">{formatAutonomyLabel(ingestionTruth.strategy)}</p></div> : null}
             </div>
