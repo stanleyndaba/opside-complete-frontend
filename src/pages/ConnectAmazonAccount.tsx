@@ -198,8 +198,8 @@ export default function ConnectAmazonAccount() {
             </button>
           </header>
 
-          <section className="grid flex-1 items-center gap-12 py-14 lg:grid-cols-[minmax(360px,430px)_minmax(0,1fr)] lg:gap-20 lg:py-16">
-            <div className="w-full">
+          <section className="grid flex-1 items-center gap-8 py-9 sm:gap-10 sm:py-12 lg:grid-cols-[minmax(360px,430px)_minmax(0,1fr)] lg:gap-20 lg:py-16">
+            <div className="order-2 w-full lg:order-1">
               <div className="border-y border-[#D8E3E8] bg-white/55 px-5 py-6 sm:px-7 sm:py-8">
                 <div className="mb-7">
                   <p className="text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">Step 1 of 3</p>
@@ -259,12 +259,14 @@ export default function ConnectAmazonAccount() {
               </div>
             </div>
 
-            <div className="max-w-[570px] lg:justify-self-end">
-              <h2 className="font-lora text-[38px] font-normal leading-[1.08] tracking-tight text-[#182026] sm:text-[50px] lg:text-[58px]">
+            <div className="order-1 max-w-[570px] lg:order-2 lg:justify-self-end">
+              <h2 className="font-lora text-[36px] font-normal leading-[1.08] tracking-tight text-[#182026] sm:text-[50px] lg:text-[58px]">
                 Start with the real record.
               </h2>
-              <div className="mt-6 max-w-[510px] space-y-5 text-[16px] leading-7 text-[#66737F] sm:text-[17px]">
-                <p>A useful Recovery Audit begins with the Amazon records behind the question.</p>
+              <p className="mt-4 max-w-[510px] text-[16px] leading-7 text-[#66737F] sm:mt-6 sm:text-[17px]">
+                A useful Recovery Audit begins with the Amazon records behind the question.
+              </p>
+              <div className="mt-5 hidden max-w-[510px] space-y-5 text-[16px] leading-7 text-[#66737F] lg:block lg:text-[17px]">
                 <p>Connect your seller account so Margin can examine the relevant activity and give you a clear view of what happened, what supports it, and what makes sense to do next.</p>
                 <p>You approve the connection directly through Amazon. Margin never sees your Amazon password.</p>
                 <p>Once you are back, your free Recovery Audit begins.</p>
