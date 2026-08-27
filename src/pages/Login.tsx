@@ -244,7 +244,7 @@ const formatLoginError = (error: unknown, step: LoginStep) => {
     normalized.includes('couldn\'t find your account') ||
     (normalized.includes('password') && normalized.includes('incorrect'))
   ) {
-    return 'The email or password is incorrect. Please check the account details and try again.';
+    return 'That email or password does not match. Try again or reset your password.';
   }
 
   if (normalized.includes('verification code') || normalized.includes('client trust')) {
@@ -446,10 +446,10 @@ const Login = () => {
   }, []);
 
   const heading = mode === 'signup'
-    ? 'Your Amazon recovery, finally under control.'
+    ? 'Start with a clear view of your Amazon recovery.'
     : mode === 'recovery'
       ? 'Reset your password'
-    : 'Sign in to Margin';
+    : 'Welcome back to Margin.';
 
   const resetLocalAuthError = () => {
     setError('');
@@ -1336,7 +1336,7 @@ const Login = () => {
                 {mode === 'signup' && (
                   <div className="mt-4">
                     <p className="text-[15px] leading-relaxed text-[#4D5B66]">
-                      Create your free Margin account to keep your Audits, results, and recovery activity connected to you — so you can return anytime without starting over.
+                      You do not need to know exactly what is wrong yet. Create your free Margin account, then start a read-only Recovery Audit. Margin will help you see what Amazon’s records say and what makes sense to do next.
                     </p>
                   </div>
                 )}
@@ -1376,7 +1376,7 @@ const Login = () => {
                 <form onSubmit={handleLogin} className="space-y-5">
                   <div className="space-y-1.5">
                     <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
-                      Email Address
+                      Email address
                     </Label>
                     <div className="relative">
                       <Input
@@ -1389,7 +1389,7 @@ const Login = () => {
                           setEmail(event.target.value);
                           resetLocalAuthError();
                         }}
-                        placeholder="name@company.com"
+                        placeholder="you@example.com"
                         className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
                       />
                     </div>
@@ -1409,7 +1409,7 @@ const Login = () => {
                           setPassword(event.target.value);
                           resetLocalAuthError();
                         }}
-                        placeholder={mode === 'recovery' ? 'Enter new password' : 'Enter password'}
+                        placeholder={mode === 'recovery' ? 'Enter new password' : mode === 'signup' ? 'Create a password' : 'Enter your password'}
                         className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 pr-12 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                       />
                       <button
@@ -1527,29 +1527,37 @@ const Login = () => {
                   disabled={loading || !clerkAuthLoaded}
                   className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
                 >
-                  {loading || !clerkAuthLoaded ? (
-                    !clerkAuthLoaded 
-                      ? 'Loading Security...' 
-                      : loadingStage === 'processing' 
-                        ? 'Processing...' 
-                        : loadingStage === 'securing'
-                          ? 'Securing connection...'
-                          : 'Opening secure signup...'
-                  ) : (
+                  {loading ? (
                     mode === 'signup'
-                      ? 'Create Account'
-                      : mode === 'recovery'
-                        ? 'Update Password'
-                        : clerkVerificationStep
-                          ? 'Verify Code'
-                          : 'Sign In'
+                      ? 'Creating your secure account…'
+                      : mode === 'login'
+                        ? 'Signing you in securely…'
+                        : loadingStage === 'processing'
+                          ? 'Processing...'
+                          : loadingStage === 'securing'
+                            ? 'Securing connection...'
+                            : 'Opening secure signup...'
+                  ) : mode === 'signup' ? (
+                    clerkVerificationStep ? 'Verify email' : 'Create my free account'
+                  ) : mode === 'recovery' ? (
+                    'Update Password'
+                  ) : clerkVerificationStep ? (
+                    'Verify Code'
+                  ) : (
+                    'Sign in to Margin'
                   )}
                 </Button>
                   </div>
 
-                  {mode === 'login' ? (
+                  {mode === 'signup' && !clerkVerificationStep ? (
+                    <p className="pt-3 text-center text-[12px] leading-5 text-[#7B8790]">
+                      Next: verify your email, then start your free Recovery Audit.
+                    </p>
+                  ) : null}
+
+                  {(mode === 'login' || mode === 'signup') ? (
                     <p className="pt-4 text-center text-[12px] leading-5 text-[#7B8790]">
-                      By signing in, you agree to our{' '}
+                      {mode === 'signup' ? 'By creating an account, you agree to Margin’s ' : 'By signing in, you agree to our '}
                       <Link to="/terms" className="text-[#4D5B66] underline decoration-[#B8C5CD] underline-offset-2 transition-colors hover:text-[#182026]">
                         Terms
                       </Link>{' '}
@@ -1561,33 +1569,48 @@ const Login = () => {
                   ) : null}
 
                   <div className="flex flex-col gap-4 pt-7 text-[13px] font-medium tracking-tight text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMode((currentMode) => {
-                          const nextMode = currentMode === 'signup' ? 'login' : 'signup';
+                    {mode === 'signup' ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode('login');
                           setPassword('');
                           setConfirmPassword('');
                           setError('');
                           setClerkVerificationStep(null);
                           setClerkVerificationCode('');
                           setClerkVerificationMessage('');
-                          return nextMode;
-                        });
-                      }}
-                      className="text-left transition-colors hover:text-[#182026]"
-                    >
-                      {mode === 'signup' ? 'Log In' : 'Create Account'}
-                    </button>
-                    {mode !== 'recovery' ? (
-                      <button
-                        type="button"
-                        onClick={handleForgotPassword}
-                        disabled={loading}
-                        className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
+                        }}
+                        className="text-left transition-colors hover:text-[#182026]"
                       >
-                        Forgot Password?
+                        Already have a Margin account? Log in
                       </button>
+                    ) : mode === 'login' ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={handleForgotPassword}
+                          disabled={loading}
+                          className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
+                        >
+                          Forgot your password?
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMode('signup');
+                            setPassword('');
+                            setConfirmPassword('');
+                            setError('');
+                            setClerkVerificationStep(null);
+                            setClerkVerificationCode('');
+                            setClerkVerificationMessage('');
+                          }}
+                          className="text-left transition-colors hover:text-[#182026]"
+                        >
+                          New to Margin? Create your free account
+                        </button>
+                      </>
                     ) : (
                       <button
                         type="button"
@@ -1638,20 +1661,29 @@ const Login = () => {
                   </div>
                   <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                    <span>No payment required</span>
+                    <span>Free Recovery Audit</span>
                   </div>
                   <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                    <span>Read-only Audit</span>
+                    <span>Nothing is submitted without your approval</span>
                   </div>
                 </div>
               </div>
             )}
 
             {mode === 'login' && (
-              <div className="mt-8">
+              <div className="mt-8 space-y-5">
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Sign in to your Margin workspace to manage your recovery operations, approve claims, and monitor your account integrity.
+                  Your recovery work is right where you left it.
+                </p>
+                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+                  Sign in to see what needs your attention, review the next decision, and know where each recovery stands.
+                </p>
+                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+                  Margin keeps the recovery record, the proof, and the money outcome clear—so you do not have to pick the thread up from scratch.
+                </p>
+                <p className="pt-2 font-merriweather text-[16px] font-semibold tracking-tight text-[#182026]">
+                  Clear recovery work. You stay in control.
                 </p>
               </div>
             )}
