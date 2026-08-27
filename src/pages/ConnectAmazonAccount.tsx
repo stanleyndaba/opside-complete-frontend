@@ -185,18 +185,17 @@ export default function ConnectAmazonAccount() {
       <div className="min-h-screen bg-[#FAFAF7] text-[#182026] selection:bg-[#0B74DE]/16 selection:text-[#182026]">
         <main className="mx-auto flex min-h-screen w-full max-w-[1120px] flex-col px-5 py-7 sm:px-8 sm:py-9 lg:px-12">
           <header className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="text-[12px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
-            >
-              ← Back to your Audit
-            </button>
             <div className="flex items-center gap-2.5">
               <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto object-contain" />
               <span className="brand-wordmark font-merriweather text-[18px] font-semibold tracking-tight text-[#182026]">Margin</span>
             </div>
-            <div className="w-[115px]" aria-hidden="true" />
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="inline-flex min-h-9 items-center rounded-md px-3 text-[13px] font-semibold tracking-tight text-[#4D5B66] transition-colors hover:bg-white hover:text-[#182026] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B74DE]/25"
+            >
+              Back to Audit
+            </button>
           </header>
 
           <section className="grid flex-1 items-center gap-12 py-14 lg:grid-cols-[minmax(360px,430px)_minmax(0,1fr)] lg:gap-20 lg:py-16">
