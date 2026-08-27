@@ -1568,7 +1568,9 @@ const Login = () => {
                     </p>
                   ) : null}
 
-                  <div className="flex flex-col gap-4 pt-7 text-[13px] font-medium tracking-tight text-[#66737F] sm:flex-row sm:items-center sm:justify-between">
+                  <div className={mode === 'signup'
+                    ? 'flex justify-center pt-5 text-[12px] font-medium tracking-tight text-[#66737F]'
+                    : 'flex flex-row items-center justify-between gap-3 pt-7 text-[12px] font-medium tracking-tight text-[#66737F]'}>
                     {mode === 'signup' ? (
                       <button
                         type="button"
@@ -1581,9 +1583,9 @@ const Login = () => {
                           setClerkVerificationCode('');
                           setClerkVerificationMessage('');
                         }}
-                        className="text-left transition-colors hover:text-[#182026]"
+                        className="whitespace-nowrap text-center transition-colors hover:text-[#182026]"
                       >
-                        Already have a Margin account? Log in
+                        Have an account? Log in
                       </button>
                     ) : mode === 'login' ? (
                       <>
@@ -1591,9 +1593,9 @@ const Login = () => {
                           type="button"
                           onClick={handleForgotPassword}
                           disabled={loading}
-                          className="text-left transition-colors hover:text-[#182026] disabled:opacity-50"
+                          className="whitespace-nowrap text-left transition-colors hover:text-[#182026] disabled:opacity-50"
                         >
-                          Forgot your password?
+                          Forgot password?
                         </button>
                         <button
                           type="button"
@@ -1606,9 +1608,9 @@ const Login = () => {
                             setClerkVerificationCode('');
                             setClerkVerificationMessage('');
                           }}
-                          className="text-left transition-colors hover:text-[#182026]"
+                          className="whitespace-nowrap text-left transition-colors hover:text-[#182026]"
                         >
-                          New to Margin? Create your free account
+                          New to Margin? Create account
                         </button>
                       </>
                     ) : (
@@ -1680,7 +1682,7 @@ const Login = () => {
                   Sign in to see what needs your attention, review the next decision, and know where each recovery stands.
                 </p>
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Margin keeps the recovery record, the proof, and the money outcome clear—so you do not have to pick the thread up from scratch.
+                  Margin keeps the recovery record, the proof, and the reconciliated outcome clear—so you do not have to pick the thread up from scratch.
                 </p>
                 <p className="pt-2 font-merriweather text-[16px] font-semibold tracking-tight text-[#182026]">
                   Clear recovery work. You stay in control.
