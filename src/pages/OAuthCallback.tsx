@@ -46,15 +46,15 @@ export default function OAuthCallback() {
     if (p) setProvider(p);
 
     if (error) {
-      setErrorMessage(decodeURIComponent(error));
-      setStatusMessage('Connection failed');
+      setErrorMessage('No connection was made. You can try again whenever you are ready.');
+      setStatusMessage('No connection was made.');
       api.trackEvent('oauth_callback_failure', { provider: p, error });
-      toast({ title: 'Connection failed', description: decodeURIComponent(error) });
+      toast({ title: 'No connection was made.', description: 'You can try again whenever you are ready.' });
       return;
     }
 
     if (success || state) {
-      setStatusMessage('Connection successful. Analyzing your account...');
+      setStatusMessage('Connection confirmed. Starting your Recovery Audit…');
       api.trackEvent('oauth_callback_success', { provider: p, state });
 
       // For real OAuth: Amazon automatically redirected here with code=... parameter
@@ -63,8 +63,8 @@ export default function OAuthCallback() {
       if (p === 'amazon') {
         // Real OAuth callback - backend should have already processed the code
         // Just show success message and wait for backend to update status
-        setStatusMessage('Connected! Scanning for recovery opportunities...');
-        toast({ title: 'Amazon Connected', description: 'Analyzing your FBA data for recoveries...' });
+        setStatusMessage('Connection confirmed. Starting your Recovery Audit…');
+        toast({ title: 'Connection confirmed.', description: 'Starting your Recovery Audit…' });
       } else {
         toast({ title: 'Connected', description: 'Updating status and redirecting…' });
       }
@@ -81,7 +81,7 @@ export default function OAuthCallback() {
         if (!res.ok) break;
         if (res.data?.amazon_connected || res.data?.docs_connected) {
           if (!cancelled) {
-            setStatusMessage('Connected. Fetching recovery data...');
+            setStatusMessage('Connection confirmed. Starting your Recovery Audit…');
 
             // If Amazon is connected, only observe the backend kickoff path.
             if (res.data?.amazon_connected && provider === 'amazon') {
