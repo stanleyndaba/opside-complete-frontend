@@ -244,6 +244,139 @@ export interface ManualCoverageAssessment {
   temporal: ManualTemporalCoverageAssessment;
 }
 
+export type CommercialRoute =
+  | 'RECOVER_ONCE'
+  | 'WORKSPACE'
+  | 'RECOVERY_CONTROL'
+  | 'EVIDENCE_REMEDIATION'
+  | 'PROVIDER_QA'
+  | 'NURTURE'
+  | 'NO_SALE';
+
+export type CommercialEligibility = 'eligible' | 'ineligible' | 'recheck_later' | 'manual_review';
+
+export interface CommercialAuditFacts {
+  scopeValue?: number;
+  findingsCount?: number;
+  categories?: string[];
+  evidenceReadyCount?: number;
+  recordsReviewed?: number;
+  sourcesReviewed?: string[];
+  sourcesUnavailable?: string[];
+  finalStatus?: string;
+  message?: string;
+  retryable?: boolean;
+}
+
+export interface CommercialComparison {
+  previous_audit_id?: string | null;
+  current_audit_id?: string;
+  comparison_available?: boolean;
+  previous_scope_value?: number;
+  current_scope_value?: number;
+  scope_value_delta?: number;
+  previous_findings_count?: number;
+  current_findings_count?: number;
+  findings_delta?: number;
+  previous_evidence_ready_count?: number;
+  current_evidence_ready_count?: number;
+  evidence_ready_delta?: number;
+  previous_records_reviewed?: number;
+  current_records_reviewed?: number;
+  records_reviewed_delta?: number;
+  new_categories?: string[];
+  resolved_categories?: string[];
+  persistent_categories?: string[];
+  sources_changed?: string[];
+  unresolved_sources?: string[];
+  recurring_burden?: boolean;
+  operational_burden_score?: number;
+}
+
+export interface CommercialEvidenceBasis {
+  current?: CommercialAuditFacts;
+  comparison?: CommercialComparison;
+  hasRecoveryWorkspace?: boolean;
+  route?: CommercialRoute | string;
+  state?: string;
+  commercial_eligibility?: CommercialEligibility | string;
+}
+
+export interface AuditCommercialDecision {
+  state: string | null;
+  route: CommercialRoute | string | null;
+  reason: string | null;
+  eligibility: CommercialEligibility | string | null;
+  evidenceBasis: CommercialEvidenceBasis | null;
+  decidedAt: string | null;
+  previousAuditId: string | null;
+  lastAuditAt: string | null;
+  nextEligibleAt: string | null;
+  comparison: CommercialComparison | Record<string, never>;
+  controlStatementId: string | null;
+  controlStatement?: Record<string, unknown> | null;
+}
+
+type PersistedCommercialDecision = {
+  commercial_state?: string | null;
+  commercial_route?: CommercialRoute | string | null;
+  commercial_reason?: string | null;
+  commercial_eligibility?: CommercialEligibility | string | null;
+  commercial_evidence_basis?: CommercialEvidenceBasis | null;
+  commercial_decided_at?: string | null;
+  previous_audit_id?: string | null;
+  last_audit_at?: string | null;
+  next_eligible_at?: string | null;
+  comparison?: CommercialComparison | Record<string, never>;
+};
+
+export type AuditCommercialResult =
+  | AuditCommercialDecision
+  | { decision: PersistedCommercialDecision; controlStatement?: Record<string, unknown> | null }
+  | { suppressed: true; reason: string }
+  | null;
+
+function asNullableString(value: unknown): string | null {
+  return typeof value === 'string' && value.trim() ? value : null;
+}
+
+function asCommercialRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+/**
+ * The completed-audit read model currently has two server-produced commercial
+ * payload shapes: a freshly persisted `{ decision }` object and a restored
+ * persisted decision with direct fields. This only normalizes names for
+ * presentation; it never classifies, scores, or authorizes a commercial path.
+ */
+export function normalizeAuditCommercialDecision(value: AuditCommercialResult | undefined): AuditCommercialDecision | null {
+  const root = asCommercialRecord(value);
+  if (!root || root.suppressed === true) return null;
+
+  const nestedDecision = asCommercialRecord(root.decision);
+  const decision = nestedDecision || root;
+  const evidenceBasis = asCommercialRecord(decision.evidenceBasis ?? decision.commercial_evidence_basis) as CommercialEvidenceBasis | null;
+  const comparison = asCommercialRecord(decision.comparison) as CommercialComparison | Record<string, never> | null;
+
+  return {
+    state: asNullableString(decision.state ?? decision.commercial_state),
+    route: asNullableString(decision.route ?? decision.commercial_route),
+    reason: asNullableString(decision.reason ?? decision.commercial_reason),
+    eligibility: asNullableString(decision.eligibility ?? decision.commercial_eligibility),
+    evidenceBasis,
+    decidedAt: asNullableString(decision.decidedAt ?? decision.commercial_decided_at),
+    previousAuditId: asNullableString(decision.previousAuditId ?? decision.previous_audit_id),
+    lastAuditAt: asNullableString(decision.lastAuditAt ?? decision.last_audit_at),
+    nextEligibleAt: asNullableString(decision.nextEligibleAt ?? decision.next_eligible_at),
+    comparison: comparison || {},
+    controlStatementId: asNullableString(decision.controlStatementId ?? decision.control_statement_id),
+    controlStatement: asCommercialRecord(root.controlStatement) || asCommercialRecord(decision.controlStatement),
+  };
+}
+
 export interface AuditTeaserSummary {
   scopeValue: number;
   findingsCount: number;
@@ -261,13 +394,27 @@ export interface AuditTeaserSummary {
   manualCoverage?: ManualCoverageAssessment;
   retryable?: boolean;
   commercialState?: string | null;
-  commercialRoute?: string | null;
+  commercialRoute?: CommercialRoute | string | null;
   commercialReason?: string | null;
-  commercialEligibility?: string | null;
+  commercialEligibility?: CommercialEligibility | string | null;
+  commercialEvidenceBasis?: CommercialEvidenceBasis | null;
+  commercialDecidedAt?: string | null;
+  previousAuditId?: string | null;
+  lastAuditAt?: string | null;
+  nextEligibleAt?: string | null;
+  commercialComparison?: CommercialComparison | Record<string, never>;
+  controlStatementId?: string | null;
   syntheticTraining?: boolean;
   executionProvenance?: 'SYNTHETIC_TRAINING_ONLY';
   trainingLabel?: 'SYNTHETIC TRAINING ONLY';
   commercialSuppressed?: boolean;
+}
+
+export interface AuditResultsResponse {
+  success: boolean;
+  audit: Pick<AuditRunRecord, 'id' | 'status' | 'activation_status' | 'sync_id' | 'started_at' | 'completed_at'>;
+  teaser: AuditTeaserSummary;
+  commercial: AuditCommercialResult;
 }
 
 export interface RecoveryWorkspaceSubscriptionStatus {
@@ -1347,11 +1494,7 @@ export const api = {
     },
   } : { method: 'POST' }),
 
-  getAuditResults: (auditId: string, authToken?: string | null) => requestJson<{
-    success: boolean;
-    audit: Pick<AuditRunRecord, 'id' | 'status' | 'activation_status' | 'sync_id' | 'started_at' | 'completed_at'>;
-    teaser: AuditTeaserSummary;
-  }>(`/api/audits/${encodeURIComponent(auditId)}/results`, authToken ? {
+  getAuditResults: (auditId: string, authToken?: string | null) => requestJson<AuditResultsResponse>(`/api/audits/${encodeURIComponent(auditId)}/results`, authToken ? {
     headers: { Authorization: `Bearer ${authToken}` },
   } : undefined),
 
