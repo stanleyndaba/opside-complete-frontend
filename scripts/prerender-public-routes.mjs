@@ -602,10 +602,10 @@ const routes = [
     ogDescription:
       'For Amazon FBA sellers with an unresolved recovery or recurring recovery work: see what is supported, approve the work that moves forward, and understand the payout outcome.',
     shell: {
-      label: 'For Amazon FBA sellers with an unresolved recovery or recovery work they are tired of carrying themselves',
+      label: 'Amazon FBA revenue recovery & reconciliation',
       h1: 'Find what Amazon missed. Get it handled. Know it was paid.',
       intro:
-        'When an Amazon inventory, reimbursement, return, inbound, fee, or settlement record does not add up, Margin shows what is supported, handles the recovery work the seller approves, and checks the final money outcome.',
+        'Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.',
       sections: [
         {
           heading: 'What the free Recovery Audit shows',

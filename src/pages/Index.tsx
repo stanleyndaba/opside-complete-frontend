@@ -301,10 +301,12 @@ function ExistingOperationFitSection() {
 
 function KineticHeroSection({
   onAuditCta,
+  onReportCta,
   isFull,
   nextBatchHours,
 }: {
   onAuditCta: () => void;
+  onReportCta: () => void;
   isFull: boolean;
   nextBatchHours?: number;
 }) {
@@ -324,22 +326,34 @@ function KineticHeroSection({
       <div className="pointer-events-none absolute inset-0 overflow-hidden"><motion.div className="absolute left-[-16%] top-[42%] h-px w-[62%] origin-left bg-gradient-to-r from-transparent via-[rgba(11,116,222,0.52)] to-transparent opacity-60" animate={reduceMotion ? undefined : { x: ["0%", "118%"], opacity: [0, 0.62, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} style={{ rotate: "-8deg" }} /></div>
       <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center">
         <div className="max-w-[1040px]">
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="max-w-[760px] text-[13px] font-medium leading-6 text-blue-100 sm:text-[15px]">For Amazon FBA sellers with an unresolved recovery—or recovery work they are tired of carrying themselves.</motion.p>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="inline-flex max-w-full items-center rounded-[5px] border border-white/[0.12] bg-[#20385B]/72 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase leading-none tracking-tight text-slate-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.035)] backdrop-blur-xl sm:text-[11px]">Amazon FBA revenue recovery & reconciliation</motion.div>
           <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-white" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Find what Amazon missed. Get it handled.</motion.span>
             <motion.span className="block text-slate-400" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}>Know it was paid.</motion.span>
           </div>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[760px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]">When an Amazon inventory, reimbursement, return, inbound, fee, or settlement record does not add up, Margin shows what is supported, handles the recovery work you approve, and checks the final money outcome.</motion.p>
-          <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 sm:mt-10">
-            <Button onClick={onAuditCta} aria-label="Run a free Recovery Audit" className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-6 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Run a free Recovery Audit <ArrowRight className="ml-2 h-5 w-5" /></Button>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[760px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]">Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.</motion.p>
+          <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex flex-col items-start gap-4 sm:mt-10 sm:flex-row sm:items-center sm:gap-6">
+            <Button onClick={onAuditCta} aria-label="Connect Amazon" className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[var(--margin-blue)] px-6 text-[15px] font-bold text-white shadow-[0_18px_48px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Connect Amazon <ArrowRight className="ml-2 h-5 w-5" /></Button>
+            <button type="button" onClick={onReportCta} className="group inline-flex h-11 items-center gap-2 rounded-[6px] px-1 text-[14px] font-semibold text-slate-200 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0D12] sm:text-[15px]" aria-label="Use Amazon Reports"><FileCheck2 className="h-4 w-4 text-slate-300 transition-colors group-hover:text-white" aria-hidden="true" />Use Amazon Reports</button>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-5 flex w-full max-w-[780px] flex-wrap items-center gap-x-3 gap-y-1 border-y border-white/10 py-3 text-[11px] font-medium text-slate-300 sm:mt-8 sm:gap-x-5 sm:border-0 sm:py-0 sm:text-[12px]">
-            <span>Read-only access</span><span className="text-slate-600">·</span><span>No payment to run the Audit</span><span className="text-slate-600">·</span><span>Nothing is submitted without your approval</span>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1 }} className="mt-5 flex w-full max-w-[780px] flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-slate-300 sm:mt-8 sm:gap-x-5 sm:text-[12px]">
+            <span>Free to run</span><span className="text-slate-600">·</span><span>Read-only access</span><span className="text-slate-600">·</span><span>You approve every submission</span>
           </motion.div>
           {isFull ? <div className="mt-5 max-w-[430px] rounded-[8px] bg-white/[0.07] p-4 text-sm leading-6 text-slate-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)] backdrop-blur-xl"><div>We are onboarding a small batch of sellers right now.</div><div>Next batch opens in {nextBatchHours ?? 24} hours.</div></div> : null}
         </div>
       </div>
     </motion.section>
+  );
+}
+
+
+function RecoveryWorkStatement() {
+  return (
+    <section className="border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]">
+      <div className="mx-auto w-full max-w-[1360px] border-t border-[var(--margin-border)] px-4 py-14 sm:px-8 md:py-20">
+        <p className="mx-auto max-w-[1080px] text-center font-lora text-[28px] leading-[1.25] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>Keep your recovery work visible, supported, and moving. Eliminate manual reconciliation on a secure platform built for high-volume operations.</p>
+      </div>
+    </section>
   );
 }
 
@@ -361,7 +375,8 @@ export default function Index() {
       <PublicNavbar variant="light" />
       
       <main>
-        <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_section")} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} onReportCta={() => handleClaimAccessClick("hero_use_amazon_reports", "csv_upload")} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <RecoveryWorkStatement />
 
         <SectionTwo />
         <HowItWorksSection onCtaClick={() => handleClaimAccessClick("audit_output_section")} />
