@@ -263,13 +263,12 @@ export default function ConnectAmazonAccount() {
               <h2 className="font-lora text-[36px] font-normal leading-[1.08] tracking-tight text-[#182026] sm:text-[50px] lg:text-[58px]">
                 Start with the real record.
               </h2>
-              <p className="mt-4 max-w-[510px] text-[16px] leading-7 text-[#66737F] sm:mt-6 sm:text-[17px]">
+              <p className="mt-4 max-w-[510px] text-[16px] leading-7 text-[#66737F] sm:mt-6 sm:text-[17px] lg:hidden">
                 A useful Recovery Audit begins with the Amazon records behind the question.
               </p>
-              <div className="mt-5 hidden max-w-[510px] space-y-5 text-[16px] leading-7 text-[#66737F] lg:block lg:text-[17px]">
-                <p>Connect your seller account so Margin can examine the relevant activity and give you a clear view of what happened, what supports it, and what makes sense to do next.</p>
-                <p>You approve the connection directly through Amazon. Margin never sees your Amazon password.</p>
-                <p>Once you are back, your free Recovery Audit begins.</p>
+              <div className="mt-6 hidden max-w-[510px] space-y-5 text-[16px] leading-7 text-[#66737F] lg:block lg:text-[17px]">
+                <p>Connect your seller account so Margin can review the relevant activity and show you what happened and what to do next.</p>
+                <p>You approve access directly through Amazon. Margin never sees your password, and your free Recovery Audit begins when you return.</p>
               </div>
             </div>
           </section>
