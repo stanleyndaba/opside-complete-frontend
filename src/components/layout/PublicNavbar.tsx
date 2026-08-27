@@ -18,9 +18,10 @@ type PublicNavbarProps = {
     variant?: 'dark' | 'light';
     ctaLabel?: string;
     ctaTo?: string;
+    wide?: boolean;
 };
 
-export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
+export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOverDarkSurface, setIsOverDarkSurface] = useState(false);
     const effectiveVariant = variant === 'light' && isOverDarkSurface ? 'dark' : variant;
@@ -98,7 +99,7 @@ export const PublicNavbar = ({ variant = 'dark' }: PublicNavbarProps) => {
                 "fixed left-0 right-0 top-0 z-50 border-transparent bg-transparent transition-colors",
             )}
         >
-            <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
+            <div className={cn(wide ? "mx-auto w-full max-w-[1600px] px-3 py-3 md:px-6 md:py-5 lg:px-10 2xl:px-12" : "container mx-auto px-3 py-3 md:px-6 md:py-5")}>
                     <div className={cn(
                         "relative flex items-center justify-between gap-3 transition-all duration-300 md:gap-5 md:px-4 md:py-3 lg:px-6",
                         isLight

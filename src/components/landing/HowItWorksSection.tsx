@@ -17,7 +17,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onCtaClick
 
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
-      <div className="mx-auto w-full max-w-[1200px] px-4 md:px-8">
+      <div className="mx-auto w-full max-w-[1600px] px-4 md:px-8 lg:px-10 2xl:px-12">
 
         {/* Header */}
         <div className="mb-20 max-w-[920px]">
