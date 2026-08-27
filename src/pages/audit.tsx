@@ -103,6 +103,63 @@ function auditSourceLabel(source?: string | null) {
   return source === 'csv_upload' ? 'Uploaded Amazon reports' : 'Connected Amazon';
 }
 
+function hasManualReportCoverage(audit: AuditRunRecord | null, teaser: AuditTeaserSummary): boolean {
+  return audit?.source_type === 'csv_upload' || teaser.manualReport?.source === 'manual_upload';
+}
+
+function manualInputIssueLabel(issue?: string): string | null {
+  switch (issue) {
+    case 'empty': return 'No usable rows';
+    case 'malformed': return 'Malformed structure';
+    case 'ambiguous': return 'Ambiguous structure';
+    case 'unsupported': return 'Unsupported structure';
+    case 'missing_required': return 'Missing required evidence';
+    case 'invalid_value': return 'Invalid critical value';
+    case 'prohibited': return 'Transfer evidence not accepted';
+    default: return null;
+  }
+}
+
+function manualReportCoverageCopy(teaser: AuditTeaserSummary): string {
+  const processing = teaser.manualReport;
+  if (!processing) {
+    return 'Uploaded-report processing details were not recorded for this audit.';
+  }
+  const sourceFamilies = processing.sourceFamilies.length
+    ? ` Source families processed: ${processing.sourceFamilies.join(', ')}.`
+    : '';
+  const rejected = processing.rowsRejected > 0
+    ? ` ${processing.rowsRejected.toLocaleString()} row${processing.rowsRejected === 1 ? '' : 's'} could not be accepted; inspect the uploaded-file details.`
+    : '';
+  const coverage = teaser.manualCoverage;
+  const coverageBoundary = coverage?.overallStatus === 'no_data'
+    ? ' No usable uploaded rows were available for evaluation; this is not a no-recovery conclusion.'
+    : coverage?.overallStatus === 'complete'
+      ? ' All supported manual report source families were supplied. Detector-specific limits are shown below; conditions outside an unavailable area remain unknown.'
+      : ' This is a valid partial report set. Only the supplied evidence can be evaluated; conditions outside coverage remain unknown.';
+  return `${processing.filesAccepted.toLocaleString()} of ${processing.filesReceived.toLocaleString()} uploaded file${processing.filesReceived === 1 ? '' : 's'} accepted; ${processing.filesProcessed.toLocaleString()} processed; ${processing.rowsAccepted.toLocaleString()} row${processing.rowsAccepted === 1 ? '' : 's'} accepted from ${processing.rowsParsed.toLocaleString()} parsed.${sourceFamilies}${rejected}${coverageBoundary}`;
+}
+
+function monetaryScopeCopy(teaser: AuditTeaserSummary): string {
+  if (teaser.syntheticTraining) {
+    return 'Training-only result. $0 is a noncommercial boundary, not a seller recovery conclusion.';
+  }
+  if (teaser.scopeValue > 0) {
+    return 'Potential—not a confirmed recovery.';
+  }
+  if ((teaser.reviewOnlyCount || 0) > 0) {
+    return `${teaser.reviewOnlyCount} review-only item${teaser.reviewOnlyCount === 1 ? '' : 's'} need additional evidence; no monetary scope is established.`;
+  }
+  if (teaser.findingsCount === 0) {
+    return teaser.manualCoverage?.overallStatus === 'no_data'
+      ? 'No usable uploaded rows were available for evaluation. $0 is not a recovery conclusion.'
+      : teaser.manualCoverage?.overallStatus === 'partial'
+        ? 'No monetary scope is established within the supplied evidence; conditions outside coverage remain unknown.'
+        : 'No qualifying monetary condition was detected in the available evidence; this does not establish that no recoveries exist.';
+  }
+  return 'No monetary scope is established from the evidence currently available.';
+}
+
 function sellerAuditOutcome(status?: string | null, finalStatus?: string | null) {
   if (finalStatus === 'complete_with_findings') return 'Complete — opportunities found';
   if (finalStatus === 'complete_no_findings') return 'Complete — no opportunities found';
@@ -352,7 +409,15 @@ export default function Audit() {
   const autoRunAfterOAuthRef = useRef(false);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
-  const isZeroRecordLimitedAudit = step === 'completed' &&
+  const isManualUploadAudit = hasManualReportCoverage(audit, teaser);
+  const manualCoverageHasGaps = Boolean(
+    teaser.manualReport && (
+      teaser.manualReport.filesFailed > 0 ||
+      teaser.manualReport.rowsRejected > 0 ||
+      teaser.manualReport.sourceFamiliesNotRepresented.length > 0
+    )
+  );
+  const isZeroRecordLimitedAudit = !isManualUploadAudit && step === 'completed' &&
     teaser.finalStatus === 'partial_no_findings' &&
     Number(teaser.recordsReviewed || 0) === 0;
   const auditState = useMemo(() => {
@@ -366,13 +431,17 @@ export default function Audit() {
   }, [step, teaser.finalStatus, teaser.recordsReviewed]);
   const hasFindings = step === 'completed' && teaser.findingsCount > 0;
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
-  const hasRecoveryOpportunity = hasFindings || hasScopeValue;
+  const hasRecoveryOpportunity = !teaser.syntheticTraining && (hasFindings || hasScopeValue);
   const canShowRecoverOnce = teaser.commercialEligibility === 'eligible' && teaser.commercialRoute === 'RECOVER_ONCE' &&
     hasFindings && hasScopeValue && !isZeroRecordLimitedAudit;
   const canShowWorkspace = teaser.commercialEligibility === 'eligible' && (
     teaser.commercialRoute === 'WORKSPACE' || teaser.commercialRoute === 'RECOVERY_CONTROL'
   );
-  const needsAdditionalAmazonData = step === 'completed' && (isZeroRecordLimitedAudit || Boolean(teaser.sourcesUnavailable?.length));
+  const needsAdditionalAmazonData = step === 'completed' && (
+    isManualUploadAudit
+      ? manualCoverageHasGaps
+      : (isZeroRecordLimitedAudit || Boolean(teaser.sourcesUnavailable?.length))
+  );
   const selectedAuditHistoryItem = auditHistory.find((item) => item.id === audit?.id) || null;
   const selectedAuditIsLatest = Boolean(selectedAuditHistoryItem?.isLatest);
   const selectedAuditSelectorLabel = audit
@@ -382,11 +451,13 @@ export default function Audit() {
   const selectedAuditSource = auditSourceLabel(audit?.source_type || selectedAuditHistoryItem?.sourceType);
   const selectedAuditRunDate = formatAuditDate(audit?.completed_at || audit?.started_at || selectedAuditHistoryItem?.created_at);
   const selectedAuditOutcome = sellerAuditOutcome(audit?.status, teaser.finalStatus || selectedAuditHistoryItem?.finalStatus);
-  const selectedAuditCoverage = teaser.finalStatus?.startsWith('partial') || Boolean(teaser.sourcesUnavailable?.length)
-    ? 'Limited coverage'
-    : step === 'completed'
-      ? 'Coverage recorded'
-      : 'Coverage pending';
+  const selectedAuditCoverage = isManualUploadAudit
+    ? (manualCoverageHasGaps ? 'Uploaded-report coverage limited' : 'Uploaded-report coverage recorded')
+    : teaser.finalStatus?.startsWith('partial') || Boolean(teaser.sourcesUnavailable?.length)
+      ? 'Limited coverage'
+      : step === 'completed'
+        ? 'Coverage recorded'
+        : 'Coverage pending';
   const scheduleState = scheduleOperatingCopy(scheduleOperating);
   const activeWorkspaceLabel = activeTenantSlug || 'Current workspace';
   const notificationsHref = activeTenantSlug ? tenantRoute(activeTenantSlug, '/notifications') : '/notifications';
@@ -766,9 +837,21 @@ export default function Audit() {
       setError('This audit period is not available.');
       return;
     }
-    setAudit(response.data.audit);
-    if (response.data.audit.status === 'completed') {
-      const results = await api.getAuditResults(response.data.audit.id, freshToken);
+    const selectedAudit = response.data.audit;
+    setAudit(selectedAudit);
+    const persistedTenantSlug = tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
+    if (persistedTenantSlug) {
+      savePendingAudit({
+        auditId: selectedAudit.id,
+        tenantSlug: persistedTenantSlug,
+        phase: selectedAudit.status === 'completed' ? 'completed' : 'syncing',
+      });
+    }
+    const selectedAuditParams = new URLSearchParams(location.search);
+    selectedAuditParams.set('auditId', selectedAudit.id);
+    navigate({ pathname: '/audit', search: `?${selectedAuditParams.toString()}` }, { replace: true });
+    if (selectedAudit.status === 'completed') {
+      const results = await api.getAuditResults(selectedAudit.id, freshToken);
       if (results.ok && results.data?.teaser) setTeaser(results.data.teaser);
     }
     setRecoverOnceQuote(null);
@@ -1603,8 +1686,8 @@ export default function Audit() {
             {step === 'completed' ? (
               <section className="mt-6 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4 sm:p-5" aria-labelledby="recorded-review-title">
                 <div className="flex flex-col gap-4 border-b border-[#D7D7D1] pb-4 sm:flex-row sm:items-start sm:justify-between"><div><h2 id="recorded-review-title" className="font-lora text-[26px] font-normal leading-tight tracking-[-0.02em] text-[#191B20]">Your review scope</h2><p className="mt-2 max-w-xl text-[13px] leading-5 text-[#595E68]">These are recorded potential findings from the selected audit. Review coverage and evidence before deciding on a seller-controlled next step.</p></div><span className="self-start rounded-full border border-[#D7D7D1] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#595E68]">{isZeroRecordLimitedAudit ? 'Limited coverage' : 'Ready for review'}</span></div>
-                <dl className="mt-4 grid overflow-hidden rounded-[10px] border border-[#E8E7E1] bg-white sm:grid-cols-3"><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential recovery scope</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</dd><p className="mt-1 text-[12px] text-[#595E68]">Potential—not a confirmed recovery.</p></div><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential opportunities</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">Items that may require review.</p></div><div className="p-4"><dt className="text-[11px] font-semibold text-[#777A82]">Evidence ready</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">Recorded evidence readiness only.</p></div></dl>
-                <div className="mt-4 grid gap-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_220px]"><div>{teaser.categories.length ? <div className="flex flex-wrap gap-1.5">{teaser.categories.map((category) => <span key={category} className="rounded-full border border-[#E8E7E1] bg-[#FBFAF7] px-2 py-1 text-[11px] font-medium text-[#595E68]">{category}</span>)}</div> : <p className="text-[13px] text-[#595E68]">No category summary was recorded for this audit.</p>}<div className="mt-5 border-t border-[#E8E7E1] pt-4"><p className="text-[12px] font-semibold text-[#191B20]">Coverage details</p><p className="mt-1 text-[13px] leading-5 text-[#595E68]">{teaser.recordsReviewed != null ? Number(teaser.recordsReviewed).toLocaleString() + ' Amazon records were synchronized and reviewed.' : 'Amazon record coverage analysis is in progress.'}{teaser.sourcesReviewed?.length ? ' Primary sources: ' + teaser.sourcesReviewed.join(', ') + '.' : ''}{teaser.sourcesUnavailable?.length ? ' Restricted access: ' + teaser.sourcesUnavailable.join(', ') + '.' : ''}</p></div></div><aside className="border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#191B20]">Review boundary</p><p className="mt-1 text-[12px] leading-5 text-[#595E68]">The selected audit does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter.</p><button type="button" onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="mt-3 text-[12px] font-semibold text-[#3F51A8] outline-none hover:text-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7]">Inspect recorded scope</button></aside></div>
+                <dl className="mt-4 grid overflow-hidden rounded-[10px] border border-[#E8E7E1] bg-white sm:grid-cols-3"><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential recovery scope</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</dd><p className="mt-1 text-[12px] text-[#595E68]">{monetaryScopeCopy(teaser)}</p></div><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential opportunities</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">Items that may require review.</p></div><div className="p-4"><dt className="text-[11px] font-semibold text-[#777A82]">Evidence ready</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">{teaser.reviewOnlyCount ? `${teaser.reviewOnlyCount} review-only item${teaser.reviewOnlyCount === 1 ? '' : 's'} require additional evidence.` : 'Recorded evidence readiness only.'}</p></div></dl>
+                <div className="mt-4 grid gap-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_220px]"><div>{teaser.categories.length ? <div className="flex flex-wrap gap-1.5">{teaser.categories.map((category) => <span key={category} className="rounded-full border border-[#E8E7E1] bg-[#FBFAF7] px-2 py-1 text-[11px] font-medium text-[#595E68]">{category}</span>)}</div> : <p className="text-[13px] text-[#595E68]">{teaser.findingsCount === 0 ? 'No qualifying condition was detected in the available evidence.' : 'No category summary was recorded for this audit.'}</p>}<div className="mt-5 border-t border-[#E8E7E1] pt-4"><p className="text-[12px] font-semibold text-[#191B20]">Coverage details</p><p className="mt-1 text-[13px] leading-5 text-[#595E68]">{isManualUploadAudit ? manualReportCoverageCopy(teaser) : <>{teaser.recordsReviewed != null ? Number(teaser.recordsReviewed).toLocaleString() + ' Amazon records were synchronized and reviewed.' : 'Amazon record coverage analysis is in progress.'}{teaser.sourcesReviewed?.length ? ' Primary sources: ' + teaser.sourcesReviewed.join(', ') + '.' : ''}{teaser.sourcesUnavailable?.length ? ' Restricted access: ' + teaser.sourcesUnavailable.join(', ') + '.' : ''}</>}</p></div></div><aside className="border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#191B20]">Review boundary</p><p className="mt-1 text-[12px] leading-5 text-[#595E68]">The selected audit does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter.</p><button type="button" onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="mt-3 text-[12px] font-semibold text-[#3F51A8] outline-none hover:text-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7]">Inspect recorded scope</button></aside></div>
               </section>
             ) : null}
 
@@ -1682,9 +1765,9 @@ export default function Audit() {
               <div className="py-3 sm:pl-4"><dt className="text-[10px] font-semibold uppercase tracking-normal text-[#777A82]">Recorded run</dt><dd className="mt-1 text-[13px] font-medium text-[#191B20]">{audit ? selectedAuditRunDate : 'Not recorded'}</dd></div>
             </dl>
             <div className="mt-6 grid gap-6 text-[13px] leading-5 text-[#595E68]">
-              <section><p className="text-[11px] font-semibold uppercase tracking-normal text-[#777A82]">Coverage recorded for this audit</p><p className="mt-2">{teaser.recordsReviewed != null ? Number(teaser.recordsReviewed).toLocaleString() + ' Amazon record' + (Number(teaser.recordsReviewed) === 1 ? '' : 's') + ' were available for review.' : 'Record count was not recorded for this audit.'}</p><dl className="mt-4 grid gap-3 border-l-2 border-[#D7D7D1] pl-4"><div><dt className="text-[11px] font-semibold text-[#191B20]">Data reviewed</dt><dd className="mt-0.5">{teaser.sourcesReviewed?.length ? teaser.sourcesReviewed.join(', ') : 'Not recorded.'}</dd></div><div><dt className="text-[11px] font-semibold text-[#191B20]">Coverage limits</dt><dd className="mt-0.5">{teaser.sourcesUnavailable?.length ? teaser.sourcesUnavailable.join(', ') + (teaser.sourcesUnavailable.length === 1 ? ' was' : ' were') + ' unavailable.' : 'No unavailable source was recorded.'}</dd></div><div><dt className="text-[11px] font-semibold text-[#191B20]">Recorded audit month</dt><dd className="mt-0.5">{selectedAuditPeriodLabel}. A detailed source date range is not recorded for this audit.</dd></div></dl></section>
+              <section><p className="text-[11px] font-semibold uppercase tracking-normal text-[#777A82]">Coverage recorded for this audit</p><p className="mt-2">{isManualUploadAudit ? manualReportCoverageCopy(teaser) : (teaser.recordsReviewed != null ? Number(teaser.recordsReviewed).toLocaleString() + ' Amazon record' + (Number(teaser.recordsReviewed) === 1 ? '' : 's') + ' were available for review.' : 'Record count was not recorded for this audit.')}</p><dl className="mt-4 grid gap-3 border-l-2 border-[#D7D7D1] pl-4"><div><dt className="text-[11px] font-semibold text-[#191B20]">Data reviewed</dt><dd className="mt-0.5">{teaser.sourcesReviewed?.length ? teaser.sourcesReviewed.join(', ') : 'Not recorded.'}</dd></div><div><dt className="text-[11px] font-semibold text-[#191B20]">Coverage limits</dt><dd className="mt-0.5">{teaser.sourcesUnavailable?.length ? teaser.sourcesUnavailable.join(', ') + (teaser.sourcesUnavailable.length === 1 ? ' was' : ' were') + ' unavailable.' : 'No unavailable source was recorded.'}</dd></div><div><dt className="text-[11px] font-semibold text-[#191B20]">Recorded audit month</dt><dd className="mt-0.5">{selectedAuditPeriodLabel}. A detailed source date range is not recorded for this audit.</dd></div></dl>{isManualUploadAudit && teaser.manualCoverage?.temporal ? <section className="mt-4 border-l-2 border-[#D7D7D1] pl-4"><p className="text-[11px] font-semibold text-[#191B20]">Temporal evidence</p>{teaser.manualCoverage.temporal.suppliedPeriod ? <p className="mt-1 text-[11px] leading-5 text-[#595E68]">Accepted source dates span {formatAuditDate(teaser.manualCoverage.temporal.suppliedPeriod.earliestAt)} through {formatAuditDate(teaser.manualCoverage.temporal.suppliedPeriod.latestAt)} across {teaser.manualCoverage.temporal.datedFiles} dated uploaded {teaser.manualCoverage.temporal.datedFiles === 1 ? 'file' : 'files'}. This records the supplied date span, not a continuous covered period.</p> : <p className="mt-1 text-[11px] leading-5 text-[#595E68]">No usable dated evidence was available to establish coverage for this period.</p>}<p className="mt-1 text-[11px] leading-5 text-[#595E68]">{teaser.manualCoverage.temporal.reason}</p>{teaser.manualCoverage.temporal.overlapDetected ? <p className="mt-1 text-[11px] leading-5 text-[#595E68]">Some supplied file date ranges overlap. Overlap is recorded; it does not itself create duplicate evidence, recovery scope, or continuous coverage.</p> : null}<p className="mt-1 text-[11px] leading-5 text-[#595E68]">A requested audit period is not recorded for this upload, so conditions outside the represented dates remain unknown.</p></section> : null}{isManualUploadAudit && teaser.manualReport ? <div className="mt-4"><p className="text-[11px] font-semibold text-[#191B20]">Uploaded file processing</p><div className="mt-2 divide-y divide-[#E8E7E1] rounded-[8px] border border-[#E8E7E1] bg-white px-3">{teaser.manualReport.files.map((file) => <div key={file.fileName} className="py-2.5"><p className="truncate text-[12px] font-medium text-[#191B20]">{file.fileName}</p><p className="mt-0.5 text-[11px] text-[#595E68]">{file.status} · {file.rowsAccepted.toLocaleString()} accepted from {file.rowsParsed.toLocaleString()} parsed · {file.rowsSkipped.toLocaleString()} skipped · {file.rowsRejected.toLocaleString()} rejected{file.sourceFamily ? ` · ${file.sourceFamily}` : ''}</p>{file.inputIssue ? <p className="mt-1 text-[11px] leading-5 text-amber-800"><span className="font-semibold">{manualInputIssueLabel(file.inputIssue) || 'Processing limitation'}:</span> {file.errorSummary || 'Margin did not use this file as evidence.'}</p> : null}{file.temporalEvidence ? <p className="mt-1 text-[11px] leading-5 text-[#595E68]">Date evidence: {file.temporalEvidence.status === 'available' ? 'accepted source dates recorded' : file.temporalEvidence.status === 'partial' ? 'only accepted source dates recorded' : 'not available for coverage'}{file.temporalEvidence.earliestAt && file.temporalEvidence.latestAt ? ` · ${formatAuditDate(file.temporalEvidence.earliestAt)} to ${formatAuditDate(file.temporalEvidence.latestAt)}` : ''}. {file.temporalEvidence.reason || 'Continuous coverage is not inferred from event dates alone.'}</p> : null}</div>)}</div></div> : null}{isManualUploadAudit && teaser.manualCoverage ? <div className="mt-4"><p className="text-[11px] font-semibold text-[#191B20]">Evaluation coverage</p><p className="mt-1 text-[11px] leading-5 text-[#595E68]">{teaser.manualCoverage.overallStatus === 'no_data' ? 'No usable uploaded rows were available. Areas below remain unknown rather than cleared.' : teaser.manualCoverage.overallStatus === 'complete' ? 'All supported manual report families were supplied. An unavailable area still requires a source this upload route does not provide.' : 'This valid partial report set supports only the areas shown below; unavailable or partial areas do not mean no finding exists.'}</p><div className="mt-2 divide-y divide-[#E8E7E1] rounded-[8px] border border-[#E8E7E1] bg-white px-3">{teaser.manualCoverage.areas.map((area) => <div key={area.key} className="py-2.5"><div className="flex items-start justify-between gap-3"><p className="text-[12px] font-medium text-[#191B20]">{area.label}</p><span className={'shrink-0 text-[10px] font-semibold uppercase tracking-normal ' + (area.status === 'supported' ? 'text-emerald-700' : area.status === 'partial' ? 'text-amber-800' : 'text-[#777A82]')}>{area.status === 'supported' ? 'Evaluated' : area.status === 'partial' ? 'Limited' : 'Unavailable'}</span></div><p className="mt-0.5 text-[11px] leading-5 text-[#595E68]">{area.reason}</p>{area.providedSources.length ? <p className="mt-0.5 text-[11px] text-[#595E68]">Provided: {area.providedSources.join(', ')}.</p> : null}{area.missingSources.length ? <p className="mt-0.5 text-[11px] text-[#595E68]">Missing: {area.missingSources.join(', ')}.</p> : null}</div>)}</div></div> : null}</section>
               <section className="border-t border-[#E8E7E1] pt-5"><p className="text-[11px] font-semibold uppercase tracking-normal text-[#777A82]">Interpretation boundary</p><h3 className="mt-2 text-[14px] font-semibold text-[#191B20]">What Margin can review from available data</h3><p className="mt-1">Margin can examine available Amazon activity for potential reimbursement and reconciliation patterns, including shipments, returns, reimbursements, fees, and settlements when those data sources are present.</p><h3 className="mt-4 text-[14px] font-semibold text-[#191B20]">What this audit cannot establish on its own</h3><p className="mt-1">It does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter. Any next step remains seller-controlled and evidence-dependent.</p></section>
-              <section className="border-l-2 border-[#3F51A8] bg-[#FBFAF7] px-4 py-3"><h3 className="text-[13px] font-semibold text-[#191B20]">What happens next</h3><p className="mt-1">{needsAdditionalAmazonData ? 'Add supported Amazon reports or restore Amazon access to improve coverage, then review the resulting audit.' : audit?.status === 'completed' ? 'Review the selected audit result and any potential recovery opportunities before deciding whether to take a seller-controlled next step.' : 'Use the recorded audit state above to connect Amazon, run the audit, or return after Margin finishes the current work.'}</p></section>
+              <section className="border-l-2 border-[#3F51A8] bg-[#FBFAF7] px-4 py-3"><h3 className="text-[13px] font-semibold text-[#191B20]">What happens next</h3><p className="mt-1">{needsAdditionalAmazonData ? (isManualUploadAudit ? 'Review the file-level processing details, correct rejected report rows or add missing report families, then run a new uploaded-report audit.' : 'Add supported Amazon reports or restore Amazon access to improve coverage, then review the resulting audit.') : audit?.status === 'completed' ? 'Review the selected audit result and any potential recovery opportunities before deciding whether to take a seller-controlled next step.' : 'Use the recorded audit state above to connect Amazon, run the audit, or return after Margin finishes the current work.'}</p></section>
             </div>
           </div>
         </DialogContent>
@@ -1700,7 +1783,7 @@ export default function Audit() {
           <div className="px-5 py-5 sm:px-7 sm:py-6">
             <label className="relative block"><span className="sr-only">Search audit history</span><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#777A82]" /><input value={auditHistoryQuery} onChange={(event) => setAuditHistoryQuery(event.target.value)} placeholder="Search audit date, source, or status" className="h-10 w-full rounded-md border border-[#D7D7D1] bg-white pl-9 pr-3 text-[13px] text-[#191B20] outline-none transition-colors placeholder:text-[#777A82] focus:border-[#5165C7] focus:ring-2 focus:ring-[#5165C7]/20" /></label>
             <div className="mt-5 max-h-[360px] overflow-y-auto border-y border-[#E8E7E1]">
-              {isHistoryLoading ? <div className="flex items-center gap-2 py-7 text-[13px] text-[#595E68]"><Loader2 className="h-4 w-4 animate-spin" /> Loading audit history</div> : auditHistoryError ? <div className="border-l-2 border-[#9A5A03] bg-[#FBFAF7] px-4 py-4 text-[13px] leading-5 text-[#595E68]" role="alert"><p>{auditHistoryError}</p><Button variant="outline" size="sm" onClick={() => void loadAuditHistory()} className="mt-3 h-8 border-[#D7D7D1] bg-white px-3 text-[12px] font-medium text-[#191B20] hover:bg-[#F4F3ED]">Retry history</Button></div> : auditHistory.length ? <div>{auditHistory.filter((item) => { const q = auditHistoryQuery.trim().toLowerCase(); return !q || [item.label, item.month, item.status, item.finalStatus].join(' ').toLowerCase().includes(q); }).map((item) => <button key={item.id} type="button" onClick={() => void selectAuditPeriod(item)} aria-current={audit?.id === item.id ? 'true' : undefined} className={'flex w-full items-start justify-between gap-4 border-b border-[#E8E7E1] px-1 py-4 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-inset ' + (audit?.id === item.id ? 'bg-[#FBFAF7]' : 'hover:bg-[#FBFAF7]')}><span className="min-w-0"><span className="block text-[13px] font-semibold text-[#191B20]">{item.isLatest ? 'Latest audit' : 'Audit record'} · {formatAuditDate(item.completed_at || item.started_at || item.created_at)}</span><span className="mt-1 block text-[12px] leading-5 text-[#595E68]">{sellerAuditOutcome(item.status, item.finalStatus)} · {auditSourceLabel(item.sourceType)} · {item.recordsReviewed != null ? Number(item.recordsReviewed).toLocaleString() + ' records reviewed' : 'Record count not recorded'}</span><span className="mt-1 block text-[12px] leading-5 text-[#595E68]">{item.findingsCount} potential {item.findingsCount === 1 ? 'opportunity' : 'opportunities'} · {formatMoney(item.scopeValue)} potential recovery scope</span></span>{audit?.id === item.id ? <span className="mt-1 inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-[#3F51A8]"><Check className="h-4 w-4" />Selected</span> : null}</button>)}</div> : <p className="py-7 text-[13px] text-[#595E68]">No previous audits are available yet.</p>}
+              {isHistoryLoading ? <div className="flex items-center gap-2 py-7 text-[13px] text-[#595E68]"><Loader2 className="h-4 w-4 animate-spin" /> Loading audit history</div> : auditHistoryError ? <div className="border-l-2 border-[#9A5A03] bg-[#FBFAF7] px-4 py-4 text-[13px] leading-5 text-[#595E68]" role="alert"><p>{auditHistoryError}</p><Button variant="outline" size="sm" onClick={() => void loadAuditHistory()} className="mt-3 h-8 border-[#D7D7D1] bg-white px-3 text-[12px] font-medium text-[#191B20] hover:bg-[#F4F3ED]">Retry history</Button></div> : auditHistory.length ? <div>{auditHistory.filter((item) => { const q = auditHistoryQuery.trim().toLowerCase(); return !q || [item.label, item.month, item.status, item.finalStatus].join(' ').toLowerCase().includes(q); }).map((item) => <button key={item.id} type="button" onClick={() => void selectAuditPeriod(item)} aria-current={audit?.id === item.id ? 'true' : undefined} className={'flex w-full items-start justify-between gap-4 border-b border-[#E8E7E1] px-1 py-4 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-inset ' + (audit?.id === item.id ? 'bg-[#FBFAF7]' : 'hover:bg-[#FBFAF7]')}><span className="min-w-0"><span className="block text-[13px] font-semibold text-[#191B20]">{item.isLatest ? 'Latest audit' : 'Audit record'} · {formatAuditDate(item.completed_at || item.started_at || item.created_at)}</span><span className="mt-1 block text-[12px] leading-5 text-[#595E68]">{sellerAuditOutcome(item.status, item.finalStatus)} · {auditSourceLabel(item.sourceType)} · {item.manualReport ? `${item.manualReport.filesProcessed.toLocaleString()} uploaded file${item.manualReport.filesProcessed === 1 ? '' : 's'} processed · ${item.manualReport.rowsAccepted.toLocaleString()} rows accepted` : (item.recordsReviewed != null ? Number(item.recordsReviewed).toLocaleString() + ' records reviewed' : 'Record count not recorded')}</span><span className="mt-1 block text-[12px] leading-5 text-[#595E68]">{item.findingsCount} potential {item.findingsCount === 1 ? 'opportunity' : 'opportunities'} · {formatMoney(item.scopeValue)} potential recovery scope</span></span>{audit?.id === item.id ? <span className="mt-1 inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-[#3F51A8]"><Check className="h-4 w-4" />Selected</span> : null}</button>)}</div> : <p className="py-7 text-[13px] text-[#595E68]">No previous audits are available yet.</p>}
             </div>
           </div>
         </DialogContent>

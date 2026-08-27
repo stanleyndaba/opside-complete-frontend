@@ -20,13 +20,13 @@ import {
 interface UploadFile {
   file: File;
   id: string;
-  status: 'pending' | 'uploading' | 'success' | 'error';
+  status: 'pending' | 'uploading' | 'success' | 'duplicate' | 'error';
   error?: string;
 }
 
 const ACCEPTED_TYPES = [
   'Orders', 'Shipments', 'Returns', 'Settlements',
-  'Inventory', 'Financial events', 'Fees', 'Transfers',
+  'Inventory', 'Financial events', 'Fees',
 ];
 
 // UX visibility only. The backend independently requires durable provenance
@@ -63,12 +63,36 @@ export default function DataUpload() {
     return true;
   }, [navigate]);
 
+  const safeInputIssueMessage = (issue?: CsvIngestionResponse['results'][number]['inputIssue']) => {
+    switch (issue) {
+      case 'empty': return 'The file was accepted, but it contained no usable data rows.';
+      case 'malformed': return 'The file structure could not be safely interpreted.';
+      case 'ambiguous': return 'The file contains conflicting or ambiguous evidence, so Margin did not choose a mapping.';
+      case 'unsupported': return 'The file structure does not match a supported report family.';
+      case 'missing_required': return 'A required header or critical field was missing.';
+      case 'invalid_value': return 'A critical value could not be safely interpreted.';
+      case 'prohibited': return 'This file contains Transfer evidence, which Margin cannot accept while Transfer is OFF. It was not used for this audit.';
+      default: return null;
+    }
+  };
+
+  const isDuplicateFileResult = (result?: CsvIngestionResponse['results'][number]) => Boolean(result
+    && result.success
+    && result.rowsInserted === 0
+    && result.rowsSkipped > 0
+    && (result.errors || []).some((message) => /duplicate file upload detected/i.test(String(message))));
+
+  const safeFileResultMessage = (result?: CsvIngestionResponse['results'][number]) => {
+    if (!result) return null;
+    if (isDuplicateFileResult(result)) return 'This file was already processed. Margin reused the existing evidence and did not create a second result.';
+    return safeInputIssueMessage(result.inputIssue)
+      || (result.success ? null : 'Margin could not safely process this uploaded file.');
+  };
+
   const getBackendError = (response?: CsvIngestionResponse | null) => {
-    const fileErrors = response?.results
-      ?.flatMap((result) => result.errors || [])
-      .map((message) => String(message).trim())
-      .filter(Boolean) || [];
-    return fileErrors[0] || null;
+    const firstRejected = response?.results?.find((result) => !result.success);
+    const firstDuplicate = response?.results?.find((result) => isDuplicateFileResult(result));
+    return safeFileResultMessage(firstRejected || firstDuplicate);
   };
 
   const getReentryMessage = async () => {
@@ -199,15 +223,22 @@ export default function DataUpload() {
       setFiles((current) => current.map((item) => {
         const result = byFileName.get(item.file.name);
         if (!result) return item;
-        const error = result.errors?.[0];
+        const error = safeFileResultMessage(result);
         return {
           ...item,
-          status: result.success ? 'success' : 'error',
+          status: isDuplicateFileResult(result) ? 'duplicate' : result.success ? 'success' : 'error',
           error: error || undefined,
         };
       }));
 
       if (response.ok && ingestion?.manualAudit && continueManualAudit(ingestion.manualAudit, tenantSlug)) {
+        return;
+      }
+
+      if (response.ok && ingestion?.submissionDisposition === 'duplicate_reused') {
+        const message = 'These reports were already processed. Margin reused the existing evidence and did not create a second audit result.';
+        setSubmissionError(message);
+        toast({ title: 'Reports already processed', description: message });
         return;
       }
 
@@ -271,12 +302,19 @@ export default function DataUpload() {
         if (!result) return item;
         return {
           ...item,
-          status: result.success ? 'success' : 'error',
-          error: result.errors?.[0] || undefined,
+          status: isDuplicateFileResult(result) ? 'duplicate' : result.success ? 'success' : 'error',
+          error: safeFileResultMessage(result) || undefined,
         };
       }));
 
       if (response.ok && ingestion?.manualAudit && continueManualAudit(ingestion.manualAudit, tenantSlug)) {
+        return;
+      }
+
+      if (response.ok && ingestion?.submissionDisposition === 'duplicate_reused') {
+        const message = 'These synthetic reports were already processed. Margin reused the existing training evidence and did not create a second result.';
+        setSubmissionError(message);
+        toast({ title: 'Synthetic reports already processed', description: message });
         return;
       }
 
@@ -442,17 +480,18 @@ export default function DataUpload() {
                         const isError = file.status === 'error';
                         const isUploading = file.status === 'uploading';
                         const isSuccess = file.status === 'success';
-                        const statusLabel = isError ? 'Needs review' : isUploading ? 'Submitting' : isSuccess ? 'Accepted' : 'Ready';
+                        const isDuplicate = file.status === 'duplicate';
+                        const statusLabel = isError ? 'Needs review' : isUploading ? 'Submitting' : isDuplicate ? 'Already processed' : isSuccess ? 'Accepted' : 'Ready';
                         return (
                           <li key={file.id} className={`flex min-h-[56px] items-center gap-3 px-3 py-2.5 sm:px-4 ${index > 0 ? 'border-t border-[#E8E7E1]' : ''}`}>
-                            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${isError ? 'bg-[#FFE6EA] text-[#A73549]' : isSuccess ? 'bg-[#DDF7F0] text-[#0E766C]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>
-                              {isSuccess ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : isError ? <CircleAlert className="h-4 w-4" aria-hidden="true" /> : <FileSpreadsheet className="h-4 w-4" aria-hidden="true" />}
+                            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${isError ? 'bg-[#FFE6EA] text-[#A73549]' : isSuccess ? 'bg-[#DDF7F0] text-[#0E766C]' : isDuplicate ? 'bg-[#F4F3ED] text-[#595E68]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>
+                              {isSuccess ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : isDuplicate ? <Info className="h-4 w-4" aria-hidden="true" /> : isError ? <CircleAlert className="h-4 w-4" aria-hidden="true" /> : <FileSpreadsheet className="h-4 w-4" aria-hidden="true" />}
                             </span>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-[13px] font-medium text-[#191B20]">{file.file.name}</p>
                               <p className={`mt-0.5 text-[12px] ${isError ? 'text-[#A73549]' : 'text-[#777A82]'}`}>{file.error || `${file.file.name.toLowerCase().endsWith('.csv') ? 'CSV' : 'TXT'} report · ${statusLabel}`}</p>
                             </div>
-                            <span className={`hidden rounded-full px-2 py-1 text-[11px] font-medium sm:inline-flex ${isError ? 'bg-[#FFE6EA] text-[#A73549]' : isSuccess ? 'bg-[#DDF7F0] text-[#0E766C]' : isUploading ? 'bg-[#E9ECFF] text-[#3F51A8]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>{statusLabel}</span>
+                            <span className={`hidden rounded-full px-2 py-1 text-[11px] font-medium sm:inline-flex ${isError ? 'bg-[#FFE6EA] text-[#A73549]' : isSuccess ? 'bg-[#DDF7F0] text-[#0E766C]' : isDuplicate ? 'bg-[#F4F3ED] text-[#595E68]' : isUploading ? 'bg-[#E9ECFF] text-[#3F51A8]' : 'bg-[#F4F3ED] text-[#595E68]'}`}>{statusLabel}</span>
                             {!isUploading && !isSuccess ? (
                               <button
                                 type="button"

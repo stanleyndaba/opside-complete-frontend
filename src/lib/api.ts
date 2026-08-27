@@ -139,6 +139,8 @@ export interface AuditRunRecord {
   activation_status?: 'not_activated' | 'pending_manual_review' | 'activated';
 }
 
+export type ManualInputIssue = 'empty' | 'malformed' | 'ambiguous' | 'unsupported' | 'missing_required' | 'invalid_value' | 'prohibited';
+
 export interface CsvIngestionFileResult {
   success: boolean;
   csvType: string;
@@ -148,9 +150,14 @@ export interface CsvIngestionFileResult {
   rowsSkipped: number;
   rowsFailed: number;
   errors: string[];
+  inputIssue?: ManualInputIssue;
+  duplicateOfSyncId?: string;
   detectionTriggered: boolean;
   detectionJobId?: string;
+  temporalEvidence?: ManualFileTemporalEvidence;
 }
+
+export type CsvSubmissionDisposition = 'new' | 'mixed' | 'duplicate_reused';
 
 export interface CsvIngestionResponse {
   success: boolean;
@@ -160,7 +167,81 @@ export interface CsvIngestionResponse {
   detectionTriggered: boolean;
   detectionJobId?: string;
   syncId: string;
+  submissionDisposition?: CsvSubmissionDisposition;
+  reusedSyncId?: string;
   manualAudit: AuditRunRecord | null;
+}
+
+export interface ManualFileTemporalEvidence {
+  status: 'available' | 'partial' | 'unavailable';
+  sourceDateField: string | null;
+  earliestAt: string | null;
+  latestAt: string | null;
+  observedDateCount: number;
+  continuity: 'unknown';
+  reason?: string;
+}
+
+export interface ManualReportFileProcessing {
+  fileName: string;
+  status: 'accepted' | 'ingested' | 'duplicate' | 'failed';
+  sourceFamily: string | null;
+  rowsParsed: number;
+  rowsAccepted: number;
+  rowsSkipped: number;
+  rowsRejected: number;
+  inputIssue?: ManualInputIssue;
+  errorSummary?: string;
+  errors?: string[];
+  temporalEvidence?: ManualFileTemporalEvidence;
+}
+
+export interface ManualReportProcessingSummary {
+  source: 'manual_upload';
+  filesReceived: number;
+  filesAccepted: number;
+  filesProcessed: number;
+  filesFailed: number;
+  rowsParsed: number;
+  rowsAccepted: number;
+  rowsSkipped: number;
+  rowsRejected: number;
+  sourceFamilies: string[];
+  sourceFamiliesNotRepresented: string[];
+  files: ManualReportFileProcessing[];
+}
+
+export type ManualCoverageStatus = 'supported' | 'partial' | 'unavailable';
+
+export interface ManualCoverageArea {
+  key: 'whale_hunter' | 'refund_trap' | 'broken_goods' | 'fee_phantom' | 'inbound_inspector' | 'sentinel';
+  label: string;
+  status: ManualCoverageStatus;
+  providedSources: string[];
+  missingSources: string[];
+  monetaryConclusion: 'within_covered_evidence' | 'unknown_outside_coverage';
+  reason: string;
+}
+
+export interface ManualTemporalCoverageAssessment {
+  overallStatus: 'partial' | 'no_usable_temporal_evidence';
+  suppliedPeriod: { earliestAt: string; latestAt: string } | null;
+  requestedPeriod: 'not_recorded';
+  continuity: 'unknown';
+  datedFiles: number;
+  unavailableFiles: number;
+  partialFiles: number;
+  overlapDetected: boolean;
+  reason: string;
+}
+
+export interface ManualCoverageAssessment {
+  source: 'manual_upload';
+  overallStatus: 'complete' | 'partial' | 'no_data';
+  evaluatedAreas: string[];
+  unavailableAreas: string[];
+  areas: ManualCoverageArea[];
+  temporal: ManualTemporalCoverageAssessment;
 }
 
 export interface AuditTeaserSummary {
@@ -168,6 +249,7 @@ export interface AuditTeaserSummary {
   findingsCount: number;
   categories: string[];
   evidenceReadyCount: number;
+  reviewOnlyCount?: number;
   locked: boolean;
   message: string;
   activationRequired?: boolean;
@@ -175,6 +257,8 @@ export interface AuditTeaserSummary {
   recordsReviewed?: number;
   sourcesReviewed?: string[];
   sourcesUnavailable?: string[];
+  manualReport?: ManualReportProcessingSummary;
+  manualCoverage?: ManualCoverageAssessment;
   retryable?: boolean;
   commercialState?: string | null;
   commercialRoute?: string | null;
@@ -280,6 +364,7 @@ export interface AuditHistoryItem {
   completed_at: string | null;
   sourceType: string;
   recordsReviewed: number | null;
+  manualReport?: ManualReportProcessingSummary;
   findingsCount: number;
   scopeValue: number;
   isLatest: boolean;

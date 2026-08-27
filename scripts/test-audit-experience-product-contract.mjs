@@ -7,7 +7,7 @@ const frontendAudit = fs.readFileSync(path.join(root, 'src/pages/audit.tsx'), 'u
 const frontendApi = fs.readFileSync(path.join(root, 'src/lib/api.ts'), 'utf8');
 const dataUpload = fs.readFileSync(path.join(root, 'src/pages/DataUpload.tsx'), 'utf8');
 const notificationHub = fs.readFileSync(path.join(root, 'src/pages/NotificationHub.tsx'), 'utf8');
-const backendAudit = fs.readFileSync('/home/ubuntu/Clario-Complete-Backend/Integrations-backend/src/services/auditRunService.ts', 'utf8');
+const backendAudit = fs.readFileSync('/home/ubuntu/internal_synthetic_certification_backend/Integrations-backend/src/services/auditRunService.ts', 'utf8');
 const auditHeader = frontendAudit.slice(frontendAudit.indexOf('<header className="sticky top-0'), frontendAudit.indexOf('<main className="mx-auto max-w-[1280px]'));
 const auditPdfExport = frontendAudit.slice(frontendAudit.indexOf('const exportExecutiveSummary'), frontendAudit.indexOf('const loadAuditHistory'));
 
@@ -46,6 +46,9 @@ expect(dataUpload.includes('getEvidenceRecordsHref') && dataUpload.includes('/ev
 expect(dataUpload.includes('CSV or TXT only') && dataUpload.includes('Up to 10 reports') && !dataUpload.includes('50MB each'), 'manual report intake states only the current file-format and report-count constraints');
 expect(dataUpload.includes('Derived from accepted report content. There is no separate date-range selector.') && dataUpload.includes('Report family recognized automatically'), 'manual report intake preserves the audit-coverage and report-recognition truth boundary');
 expect(dataUpload.includes('aria-live="polite"') && dataUpload.includes('aria-label={`Remove ${file.file.name}`}') && dataUpload.includes('Needs review'), 'manual report file review exposes accessible status and named removal controls');
+expect(frontendApi.includes("'prohibited'"), 'manual upload API contract exposes the explicit prohibited input classification');
+expect(dataUpload.includes('Transfer evidence, which Margin cannot accept while Transfer is OFF') && !dataUpload.includes("'Fees', 'Transfers'"), 'manual upload states Transfer prohibition clearly and no longer advertises Transfers as supported');
+expect(frontendAudit.includes("case 'prohibited': return 'Transfer evidence not accepted'") , 'restored audit file truth labels prohibited Transfer evidence explicitly');
 expect(backendAudit.includes('private async getScheduleOperatingState'), 'backend derives schedule operating state from persisted data');
 expect(backendAudit.includes("state: 'awaiting_first_run'") && backendAudit.includes("state: 'blocked'"), 'schedule read model distinguishes initial and blocked lifecycle states');
 expect(backendAudit.includes("category: 'Audit'") && backendAudit.includes("category: 'Coverage'") && backendAudit.includes("category: 'Analysis'") && backendAudit.includes("category: 'Result'"), 'backend activity projection uses seller lifecycle categories');
