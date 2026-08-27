@@ -44,7 +44,7 @@ export const RecoveryTimelineSection: React.FC = () => {
 
   return (
     <section data-navbar-theme="dark" className="relative overflow-hidden border-b border-white/10 bg-[#101827] py-32 text-white md:py-56">
-      <div className="mx-auto w-full max-w-[1600px] px-4 md:px-8 lg:px-10 2xl:px-12">
+      <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 lg:px-10 2xl:px-12">
         <div className="grid gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
           <motion.div {...revealProps} className="max-w-[560px]">
             <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-white/20" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-blue-300">How Margin handles a recovery</span></div>

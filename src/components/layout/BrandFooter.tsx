@@ -133,7 +133,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel, wide = false 
         className="relative w-full overflow-hidden bg-[#1A1A1A] text-[#E0E0E0]"
         style={{ width: '100%', maxWidth: '100%' }}
       >
-        <div className={wide ? "mx-auto w-full max-w-[1600px] px-4 py-16 md:px-8 lg:px-10 2xl:px-12" : "container mx-auto px-4 py-16"}>
+        <div className={wide ? "mx-auto w-full max-w-[1280px] px-4 py-16 md:px-8 lg:px-10 2xl:px-12" : "container mx-auto px-4 py-16"}>
           <div className="hidden mx-auto mb-12 max-w-3xl text-center">
             <h2 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
               Join for product updates, insights, and event invites.

@@ -61,7 +61,7 @@ const revealProps = {
 
 export const RecoveryProofSections: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
   <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
-    <div className="mx-auto w-full max-w-[1600px] px-4 md:px-8 lg:px-10 2xl:px-12">
+    <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
         <motion.div {...revealProps}>
           <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-border-strong)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">Evidence and control</span></div>
@@ -92,7 +92,7 @@ export const RecoveryProofSections: React.FC<LandingAuditCtaProps> = ({ onAuditC
 
 export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
   <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-surface)] py-32 md:py-56">
-    <div className="mx-auto w-full max-w-[1600px] px-4 md:px-8 lg:px-10 2xl:px-12">
+    <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[780px]">
         <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-border-strong)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">Your next step depends on what the Audit finds</span></div>
         <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>Handle one recovery—or stop carrying the work yourself.</h2>

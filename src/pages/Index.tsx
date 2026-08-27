@@ -88,7 +88,7 @@ const faqs = [
   },
 ];
 
-const containerClass = "mx-auto w-full max-w-[1600px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12";
+const containerClass = "mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12";
 const sectionLabelClass =
   "font-mono text-[11px] font-semibold tracking-tight text-[var(--margin-text-muted)]";
 const sectionBodyClass =
@@ -349,7 +349,7 @@ function KineticHeroSection({
 function RecoveryWorkStatement() {
   return (
     <section className="border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]">
-      <div className="mx-auto w-full max-w-[1600px] border-t border-[var(--margin-border)] px-4 py-14 sm:px-8 lg:px-10 2xl:px-12 md:py-20">
+      <div className="mx-auto w-full max-w-[1280px] border-t border-[var(--margin-border)] px-4 py-14 sm:px-8 lg:px-10 2xl:px-12 md:py-20">
         <p className="mx-auto max-w-[1080px] text-center font-lora text-[28px] leading-[1.25] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>Keep your recovery work visible, supported, and moving. Eliminate manual reconciliation on a secure platform built for high-volume operations.</p>
       </div>
     </section>
