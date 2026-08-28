@@ -254,3 +254,19 @@ html, body, #root {
     transform: none !important;
   }
 }
+
+/* Desktop has more visual distance to cover, so keep its units at the calmer
+   large-screen pace without changing the mobile timing. */
+@media (min-width: 1024px) {
+  .relative.z-10 > div:nth-child(3n + 1) .lifecycle-unit {
+    animation-duration: 13.68s !important;
+  }
+
+  .relative.z-10 > div:nth-child(3n + 2) .lifecycle-unit {
+    animation-duration: 14.544s !important;
+  }
+
+  .relative.z-10 > div:nth-child(3n) .lifecycle-unit {
+    animation-duration: 15.408s !important;
+  }
+}

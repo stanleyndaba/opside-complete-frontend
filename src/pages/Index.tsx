@@ -166,37 +166,37 @@ function AccountingEvidenceSection() {
   }, [reduceMotion, iconPool.length]);
 
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-28 md:py-44">
+    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 md:py-28">
       <div className={containerClass}>
-        <div className="grid gap-16 lg:grid-cols-[0.86fr_1fr] lg:items-start lg:gap-24">
+        <div className="grid gap-12 lg:grid-cols-[0.86fr_1fr] lg:items-start lg:gap-16">
           <motion.div {...revealProps}>
             <div className="mb-6 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
             </div>
-            <h2 className="font-lora text-[42px] leading-[0.98] tracking-[-0.05em] text-[#182026] sm:text-[54px] md:text-[72px]" style={{ fontWeight: 400 }}>
+            <h2 className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
               Recovery gets stronger when the numbers have context.
-              <span className="mt-4 block text-[#8A99A4]">Margin brings the right financial evidence into view.</span>
+              <span className="mt-3 block text-[#8A99A4]">Margin brings the right financial evidence into view.</span>
             </h2>
-            <p className="mt-8 max-w-[610px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+            <p className="mt-6 max-w-[610px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
               Amazon gives you one version of what happened. Margin helps place that version beside the records that explain the money around it.
             </p>
-            <p className="mt-8 max-w-[560px] text-[14px] font-semibold leading-7 text-[#182026] md:text-[16px]">
+            <p className="mt-6 max-w-[560px] text-[13px] font-semibold leading-6 text-[#182026] md:text-[15px]">
               The useful context is often found in purchase records, cost signals, payout history, and reconciliation data.
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative lg:pt-8">
-            <div className="relative border-y border-[#D8E3EA] py-6 sm:py-8 md:py-10">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative lg:pt-4">
+            <div className="relative border-y border-[#D8E3EA] py-5 sm:py-6 md:py-7">
               <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
               <div className="relative flex items-center justify-between border-b border-[#E4EDF1] pb-4">
                 <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Financial evidence</span>
                 <span className="font-mono text-[9px] uppercase tracking-tight text-[#94A3B8]">Read-only / purpose-limited</span>
               </div>
-              <div className="relative mt-8 grid gap-8 sm:grid-cols-[1fr_0.9fr] sm:items-center md:gap-10">
+              <div className="relative mt-6 grid gap-6 sm:grid-cols-[1fr_0.9fr] sm:items-center md:gap-8">
                 <div>
                   <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#94A3B8]">Relevant context</p>
-                  <div className="mt-4 grid grid-cols-3 gap-x-5 gap-y-4">
+                  <div className="mt-3 grid grid-cols-3 gap-x-4 gap-y-3">
                     {iconPool.map((icon, index) => (
                       <motion.div
                         key={icon.id}
@@ -221,25 +221,25 @@ function AccountingEvidenceSection() {
                   </div>
                 </div>
               </div>
-              <div className="relative mt-7 border-t border-[#E4EDF1] pt-4 text-[11px] leading-5 text-[#66737F]">
+              <div className="relative mt-5 border-t border-[#E4EDF1] pt-3 text-[11px] leading-5 text-[#66737F]">
                 Financial context appears when it can change the recovery decision.
               </div>
             </div>
-            <div className="mt-7 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
+            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
               <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
             </div>
           </motion.div>
         </div>
 
-        <motion.div {...revealProps} className="mt-24 border-t border-[#D8E3EA] pt-10 md:mt-36 md:pt-14">
-          <p className="max-w-[760px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
+        <motion.div {...revealProps} className="mt-16 border-t border-[#D8E3EA] pt-8 md:mt-24 md:pt-10">
+          <p className="max-w-[760px] text-[16px] leading-7 text-[#4D5B66] md:text-[18px] md:leading-8">
             Margin does not replace your books. It brings in only the pieces that help explain a recovery.
           </p>
-          <p className="mt-8 max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[68px]" style={{ fontWeight: 400 }}>
+          <p className="mt-6 max-w-[980px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[50px]" style={{ fontWeight: 400 }}>
             Not another accounting system.
             <span className="mt-3 block text-[#0B74DE]">Just the context a recovery needs.</span>
           </p>
-          <div className="mt-8 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
+          <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
             <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
           </div>
         </motion.div>
@@ -319,7 +319,7 @@ function RealityCheckSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-28 md:py-48">
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[860px]">
           <div className="mb-6 flex items-center gap-3">
@@ -328,23 +328,23 @@ function RealityCheckSection() {
               The reality check
             </span>
           </div>
-          <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[58px] md:text-[84px]" style={{ fontWeight: 400 }}>
+          <h2 className="font-lora text-[36px] leading-[0.99] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
             Finding the issue is only the first step.
           </h2>
-          <p className="mt-8 max-w-[720px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[20px] md:leading-9">
+          <p className="mt-6 max-w-[720px] text-[16px] leading-7 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-8">
             Most recovery systems stop after identifying a discrepancy.
           </p>
-          <p className="mt-8 max-w-[620px] font-lora text-[28px] leading-tight tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[48px]" style={{ fontWeight: 400 }}>
+          <p className="mt-6 max-w-[620px] font-lora text-[25px] leading-tight tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[40px]" style={{ fontWeight: 400 }}>
             But an opportunity is not a recovery.
           </p>
         </motion.div>
 
-        <div className="mt-24 max-w-[1080px] md:mt-36">
+        <div className="mt-16 max-w-[1080px] md:mt-24">
           <motion.p {...revealProps} className="max-w-[520px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px]">
             A recovery still has to survive the rest of the process:
           </motion.p>
 
-          <div className="mt-10 flex flex-wrap items-baseline gap-x-8 gap-y-3 border-y border-[var(--margin-border)] py-8 sm:gap-x-10 md:mt-12 md:py-10">
+          <div className="mt-8 flex flex-wrap items-baseline gap-x-7 gap-y-2 border-y border-[var(--margin-border)] py-6 sm:gap-x-8 md:mt-10 md:py-7">
             {realityCheckStages.map((stage, index) => (
               <React.Fragment key={stage.title}>
                 <motion.p
@@ -352,7 +352,7 @@ function RealityCheckSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.65 }}
                   transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                  className="font-lora text-[44px] leading-none tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[58px] md:text-[82px]"
+                  className="font-lora text-[36px] leading-none tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]"
                   style={{ fontWeight: 400 }}
                 >
                   {stage.title}
@@ -362,7 +362,7 @@ function RealityCheckSection() {
             ))}
           </div>
 
-          <motion.div {...revealProps} className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 md:mt-10 md:gap-x-4">
+          <motion.div {...revealProps} className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 md:mt-8 md:gap-x-4">
             {realityCheckWords.map((word, index) => (
               <React.Fragment key={word}>
                 <motion.span
@@ -381,11 +381,11 @@ function RealityCheckSection() {
           </motion.div>
         </div>
 
-        <motion.div {...revealProps} className="mt-24 border-t border-[var(--margin-border)] pt-8 md:mt-36 md:pt-10">
+        <motion.div {...revealProps} className="mt-16 border-t border-[var(--margin-border)] pt-7 md:mt-24 md:pt-8">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
             And this is where Margin should say:
           </p>
-          <p className="mt-5 max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[68px]" style={{ fontWeight: 400 }}>
+          <p className="mt-4 max-w-[980px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[50px]" style={{ fontWeight: 400 }}>
             Most of the work happens after the opportunity is found.
           </p>
         </motion.div>
@@ -570,9 +570,9 @@ function MarginOperationSection() {
   });
 
   return (
-    <section ref={operationScrollRef} className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-28 md:py-44">
+    <section ref={operationScrollRef} className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 md:py-28">
       <div className={containerClass}>
-        <div className="grid gap-16 lg:grid-cols-[0.72fr_1fr] lg:gap-24">
+        <div className="grid gap-12 lg:grid-cols-[0.72fr_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-32 lg:h-fit">
             <motion.div {...revealProps}>
               <div className="mb-6 flex items-center gap-3">
@@ -581,15 +581,15 @@ function MarginOperationSection() {
                   What Margin actually does
                 </span>
               </div>
-              <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.05em] text-[#182026] sm:text-[58px] md:text-[76px]" style={{ fontWeight: 400 }}>
+              <h2 className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
                 One recovery operation.
-                <span className="mt-4 block text-[#8A99A4]">Multiple specialised jobs running inside it.</span>
+                <span className="mt-3 block text-[#8A99A4]">Multiple specialised jobs running inside it.</span>
               </h2>
             </motion.div>
           </div>
 
-          <div className="relative min-h-[640px] md:min-h-[700px]">
-            <div className="sticky top-24 h-[min(570px,calc(100vh-8rem))] md:top-28 md:h-[min(620px,calc(100vh-10rem))]">
+          <div className="relative min-h-[560px] md:min-h-[620px]">
+            <div className="sticky top-24 h-[min(500px,calc(100vh-8rem))] md:top-28 md:h-[min(540px,calc(100vh-10rem))]">
               <div className="relative h-full">
                 {marginOperationAgents.map((agent, index) => {
                   const distance = index - activeAgent;
@@ -607,7 +607,7 @@ function MarginOperationSection() {
                         scale: isBehind ? 0.94 : 1 - Math.min(distance, 7) * 0.018,
                       }}
                       transition={{ duration: reduceMotion ? 0 : 0.58, ease: [0.22, 1, 0.36, 1] }}
-                      className={`absolute inset-0 overflow-hidden rounded-[26px] border p-5 shadow-[0_22px_70px_rgba(37,49,58,0.1)] backdrop-blur-xl sm:p-7 md:p-8 ${
+                      className={`absolute inset-0 overflow-hidden rounded-[22px] border p-4 shadow-[0_18px_54px_rgba(37,49,58,0.1)] backdrop-blur-xl sm:p-6 md:p-7 ${
                         isFeatured
                           ? "border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)]"
                           : index % 2 === 0
@@ -626,14 +626,14 @@ function MarginOperationSection() {
                             {String(index + 1).padStart(2, "0")} / {String(marginOperationAgents.length).padStart(2, "0")}
                           </span>
                         </div>
-                        <h3 className="mt-5 max-w-[700px] font-lora text-[30px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[46px]" style={{ fontWeight: 400 }}>
+                        <h3 className="mt-4 max-w-[700px] font-lora text-[26px] leading-[1.03] tracking-[-0.045em] text-[#182026] sm:text-[32px] md:text-[38px]" style={{ fontWeight: 400 }}>
                           {agent.title}
                         </h3>
-                        <p className="mt-5 max-w-[620px] text-[14px] leading-6 text-[#4D5B66] md:text-[16px] md:leading-7">
+                        <p className="mt-4 max-w-[620px] text-[13px] leading-[1.45] text-[#4D5B66] md:text-[14px] md:leading-6">
                           {agent.body}
                         </p>
                         {agent.details ? (
-                          <div className="mt-6 flex flex-wrap gap-x-2.5 gap-y-1.5 border-t border-[#E4EDF1] pt-4">
+                          <div className="mt-5 flex flex-wrap gap-x-2.5 gap-y-1.5 border-t border-[#E4EDF1] pt-3">
                             {agent.details.map((detail) => (
                               <span key={detail} className="rounded-full border border-[#D8E3EA] bg-white/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
                                 {detail}
@@ -641,7 +641,7 @@ function MarginOperationSection() {
                             ))}
                           </div>
                         ) : null}
-                        <p className={`mt-auto max-w-[620px] border-t border-[#E4EDF1] pt-4 font-lora text-[20px] leading-tight tracking-[-0.025em] sm:text-[24px] ${isFeatured ? "text-[#0B74DE]" : "text-[#66737F]"}`} style={{ fontWeight: 400 }}>
+                        <p className={`mt-auto max-w-[620px] border-t border-[#E4EDF1] pt-3 font-lora text-[18px] leading-tight tracking-[-0.025em] sm:text-[21px] ${isFeatured ? "text-[#0B74DE]" : "text-[#66737F]"}`} style={{ fontWeight: 400 }}>
                           {agent.outcome}
                         </p>
                       </div>
@@ -650,7 +650,7 @@ function MarginOperationSection() {
                 })}
               </div>
 
-              <div className="absolute -bottom-12 left-0 right-0 flex items-center justify-between gap-5">
+              <div className="absolute -bottom-9 left-0 right-0 flex items-center justify-between gap-5">
                 <div className="h-px flex-1 bg-[#D8E3EA]">
                   <motion.div
                     className="h-px origin-left bg-[#0B74DE]"
