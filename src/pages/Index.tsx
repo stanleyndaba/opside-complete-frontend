@@ -5,6 +5,7 @@ import {
   AnimatePresence,
   useInView,
   useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -505,9 +506,23 @@ const marginOperationAgents = [
 
 function MarginOperationSection() {
   const reduceMotion = useReducedMotion();
+  const operationScrollRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: operationScrollRef,
+    offset: ["start start", "end end"],
+  });
+  const [activeAgent, setActiveAgent] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const nextAgent = Math.min(
+      marginOperationAgents.length - 1,
+      Math.floor(latest * marginOperationAgents.length),
+    );
+    setActiveAgent((current) => (current === nextAgent ? current : nextAgent));
+  });
 
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-28 md:py-44">
+    <section ref={operationScrollRef} className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-28 md:py-44">
       <div className={containerClass}>
         <div className="grid gap-16 lg:grid-cols-[0.72fr_1fr] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:h-fit">
@@ -525,49 +540,81 @@ function MarginOperationSection() {
             </motion.div>
           </div>
 
-          <div className="relative pb-16">
-            {marginOperationAgents.map((agent, index) => (
-              <div key={agent.number} className="relative min-h-[72vh] md:min-h-[78vh]">
-                <motion.article
-                  initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.18 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  className="sticky overflow-hidden rounded-[28px] border border-[#D8E3EA] bg-white/85 p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] backdrop-blur-xl sm:p-10 md:p-12"
-                  style={{ top: `calc(96px + ${Math.min(index, 7) * 14}px)`, zIndex: index + 1 }}
-                >
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.13),_transparent_62%)]" />
-                  <div className="relative">
-                    <div className="flex items-center justify-between gap-4 border-b border-[#E4EDF1] pb-5">
-                      <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
-                        Operation {agent.number}
-                      </span>
-                      <span className="font-mono text-[10px] uppercase tracking-tight text-[#94A3B8]">
-                        Margin / Recovery control
-                      </span>
-                    </div>
-                    <h3 className="mt-8 max-w-[700px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[54px]" style={{ fontWeight: 400 }}>
-                      {agent.title}
-                    </h3>
-                    <p className="mt-7 max-w-[650px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
-                      {agent.body}
-                    </p>
-                    {agent.details ? (
-                      <div className="mt-8 flex flex-wrap gap-x-3 gap-y-2 border-t border-[#E4EDF1] pt-6">
-                        {agent.details.map((detail) => (
-                          <span key={detail} className="rounded-full border border-[#D8E3EA] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
-                            {detail}
+          <div className="relative min-h-[760px] md:min-h-[840px]">
+            <div className="sticky top-24 h-[min(690px,calc(100vh-7rem))] md:top-28 md:h-[min(730px,calc(100vh-9rem))]">
+              <div className="relative h-full">
+                {marginOperationAgents.map((agent, index) => {
+                  const distance = index - activeAgent;
+                  const isAhead = distance > 0;
+                  const isBehind = distance < 0;
+                  const isFeatured = agent.emphasis;
+
+                  return (
+                    <motion.article
+                      key={agent.number}
+                      initial={false}
+                      animate={reduceMotion ? { opacity: index === activeAgent ? 1 : 0, y: 0, scale: 1 } : {
+                        opacity: isBehind ? 0 : 1,
+                        y: isBehind ? -48 : isAhead ? distance * 18 : 0,
+                        scale: isBehind ? 0.94 : 1 - Math.min(distance, 7) * 0.018,
+                      }}
+                      transition={{ duration: reduceMotion ? 0 : 0.58, ease: [0.22, 1, 0.36, 1] }}
+                      className={`absolute inset-0 overflow-hidden rounded-[30px] border p-7 shadow-[0_28px_90px_rgba(37,49,58,0.12)] backdrop-blur-xl sm:p-10 md:p-12 ${
+                        isFeatured
+                          ? "border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)]"
+                          : index % 2 === 0
+                            ? "border-[#D8E3EA] bg-white/90"
+                            : "border-[#CFE0EA] bg-[#F8FAFC]/90"
+                      }`}
+                      style={{ zIndex: marginOperationAgents.length - index, pointerEvents: index === activeAgent ? "auto" : "none" }}
+                    >
+                      <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.13),_transparent_62%)]" />
+                      <div className="relative flex h-full flex-col">
+                        <div className="flex items-center justify-between gap-4 border-b border-[#E4EDF1] pb-5">
+                          <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
+                            Operation {agent.number}
                           </span>
-                        ))}
+                          <span className="font-mono text-[10px] uppercase tracking-tight text-[#94A3B8]">
+                            {String(index + 1).padStart(2, "0")} / {String(marginOperationAgents.length).padStart(2, "0")}
+                          </span>
+                        </div>
+                        <h3 className="mt-8 max-w-[700px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[54px]" style={{ fontWeight: 400 }}>
+                          {agent.title}
+                        </h3>
+                        <p className="mt-7 max-w-[650px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+                          {agent.body}
+                        </p>
+                        {agent.details ? (
+                          <div className="mt-8 flex flex-wrap gap-x-3 gap-y-2 border-t border-[#E4EDF1] pt-6">
+                            {agent.details.map((detail) => (
+                              <span key={detail} className="rounded-full border border-[#D8E3EA] bg-white/75 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
+                                {detail}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                        <p className={`mt-auto max-w-[640px] border-t border-[#E4EDF1] pt-6 font-lora text-[23px] leading-tight tracking-[-0.025em] sm:text-[28px] ${isFeatured ? "text-[#0B74DE]" : "text-[#66737F]"}`} style={{ fontWeight: 400 }}>
+                          {agent.outcome}
+                        </p>
                       </div>
-                    ) : null}
-                    <p className={`mt-10 max-w-[640px] border-t border-[#E4EDF1] pt-6 font-lora text-[23px] leading-tight tracking-[-0.025em] sm:text-[28px] ${agent.emphasis ? "text-[#0B74DE]" : "text-[#66737F]"}`} style={{ fontWeight: 400 }}>
-                      {agent.outcome}
-                    </p>
-                  </div>
-                </motion.article>
+                    </motion.article>
+                  );
+                })}
               </div>
-            ))}
+
+              <div className="absolute -bottom-12 left-0 right-0 flex items-center justify-between gap-5">
+                <div className="h-px flex-1 bg-[#D8E3EA]">
+                  <motion.div
+                    className="h-px origin-left bg-[#0B74DE]"
+                    animate={{ scaleX: (activeAgent + 1) / marginOperationAgents.length }}
+                    transition={{ duration: reduceMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </div>
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
+                  {String(activeAgent + 1).padStart(2, "0")} / {String(marginOperationAgents.length).padStart(2, "0")}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
