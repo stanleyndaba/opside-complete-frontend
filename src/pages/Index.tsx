@@ -540,8 +540,8 @@ function MarginOperationSection() {
             </motion.div>
           </div>
 
-          <div className="relative min-h-[760px] md:min-h-[840px]">
-            <div className="sticky top-24 h-[min(690px,calc(100vh-7rem))] md:top-28 md:h-[min(730px,calc(100vh-9rem))]">
+          <div className="relative min-h-[640px] md:min-h-[700px]">
+            <div className="sticky top-24 h-[min(570px,calc(100vh-8rem))] md:top-28 md:h-[min(620px,calc(100vh-10rem))]">
               <div className="relative h-full">
                 {marginOperationAgents.map((agent, index) => {
                   const distance = index - activeAgent;
@@ -559,7 +559,7 @@ function MarginOperationSection() {
                         scale: isBehind ? 0.94 : 1 - Math.min(distance, 7) * 0.018,
                       }}
                       transition={{ duration: reduceMotion ? 0 : 0.58, ease: [0.22, 1, 0.36, 1] }}
-                      className={`absolute inset-0 overflow-hidden rounded-[30px] border p-7 shadow-[0_28px_90px_rgba(37,49,58,0.12)] backdrop-blur-xl sm:p-10 md:p-12 ${
+                      className={`absolute inset-0 overflow-hidden rounded-[26px] border p-5 shadow-[0_22px_70px_rgba(37,49,58,0.1)] backdrop-blur-xl sm:p-7 md:p-8 ${
                         isFeatured
                           ? "border-[#BFD8EA] bg-[linear-gradient(135deg,#FFFFFF_0%,#F8FAFC_52%,#EAF4FF_100%)]"
                           : index % 2 === 0
@@ -568,9 +568,9 @@ function MarginOperationSection() {
                       }`}
                       style={{ zIndex: marginOperationAgents.length - index, pointerEvents: index === activeAgent ? "auto" : "none" }}
                     >
-                      <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.13),_transparent_62%)]" />
+                      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.13),_transparent_62%)]" />
                       <div className="relative flex h-full flex-col">
-                        <div className="flex items-center justify-between gap-4 border-b border-[#E4EDF1] pb-5">
+                        <div className="flex items-center justify-between gap-3 border-b border-[#E4EDF1] pb-3">
                           <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
                             Operation {agent.number}
                           </span>
@@ -578,22 +578,22 @@ function MarginOperationSection() {
                             {String(index + 1).padStart(2, "0")} / {String(marginOperationAgents.length).padStart(2, "0")}
                           </span>
                         </div>
-                        <h3 className="mt-8 max-w-[700px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[54px]" style={{ fontWeight: 400 }}>
+                        <h3 className="mt-5 max-w-[700px] font-lora text-[30px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[38px] md:text-[46px]" style={{ fontWeight: 400 }}>
                           {agent.title}
                         </h3>
-                        <p className="mt-7 max-w-[650px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+                        <p className="mt-5 max-w-[620px] text-[14px] leading-6 text-[#4D5B66] md:text-[16px] md:leading-7">
                           {agent.body}
                         </p>
                         {agent.details ? (
-                          <div className="mt-8 flex flex-wrap gap-x-3 gap-y-2 border-t border-[#E4EDF1] pt-6">
+                          <div className="mt-6 flex flex-wrap gap-x-2.5 gap-y-1.5 border-t border-[#E4EDF1] pt-4">
                             {agent.details.map((detail) => (
-                              <span key={detail} className="rounded-full border border-[#D8E3EA] bg-white/75 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
+                              <span key={detail} className="rounded-full border border-[#D8E3EA] bg-white/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
                                 {detail}
                               </span>
                             ))}
                           </div>
                         ) : null}
-                        <p className={`mt-auto max-w-[640px] border-t border-[#E4EDF1] pt-6 font-lora text-[23px] leading-tight tracking-[-0.025em] sm:text-[28px] ${isFeatured ? "text-[#0B74DE]" : "text-[#66737F]"}`} style={{ fontWeight: 400 }}>
+                        <p className={`mt-auto max-w-[620px] border-t border-[#E4EDF1] pt-4 font-lora text-[20px] leading-tight tracking-[-0.025em] sm:text-[24px] ${isFeatured ? "text-[#0B74DE]" : "text-[#66737F]"}`} style={{ fontWeight: 400 }}>
                           {agent.outcome}
                         </p>
                       </div>
