@@ -286,7 +286,7 @@ const App = () => (
                         <Route path="/research" element={<Research />} />
                         <Route path="/fba-reimbursement-research" element={<Research />} />
                         <Route path="/pricing" element={<PricingAdjust />} />
-                        <Route path="/currency-margin" element={<CurrencyMargin />} />
+                        <Route path="/currency-margin" element={<Navigate to="/pricing" replace />} />
                         <Route path="/standalone" element={<Standalone />} />
                         <Route path="/payment/success" element={<PaymentSuccess />} />
                         <Route path="/founding-500/status" element={<FoundingActivationStatus />} />
@@ -351,7 +351,7 @@ const App = () => (
                         <Route path="/appealsimulate" element={<ReAppealSimulate />} />
                         <Route path="/discrepancy-stack" element={<DiscrepancyStack />} />
                         <Route path="/waitlist" element={<Waitlist />} />
-                        <Route path="/early-access" element={<EarlyAccess />} />
+                        <Route path="/early-access" element={<Navigate to="/pricing" replace />} />
                         <Route path="/document-uploads" element={<DocumentUploads />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/branding" element={<Branding />} />

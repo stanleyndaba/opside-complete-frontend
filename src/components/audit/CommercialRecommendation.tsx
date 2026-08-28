@@ -1,10 +1,10 @@
-import { ArrowRight, CheckCircle2, CircleAlert, FilePlus2, RefreshCw, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CheckCircle2, CircleAlert, FilePlus2, MessagesSquare, RefreshCw, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import type { AuditCommercialDecision, AuditTeaserSummary, RecoverOnceQuote } from '@/lib/api';
 
-type RecommendationKind = 'no_sale' | 'evidence_remediation' | 'nurture' | 'recover_once' | 'workspace' | 'fallback';
+type RecommendationKind = 'no_sale' | 'evidence_remediation' | 'nurture' | 'recover_once' | 'workspace' | 'talk_to_sales' | 'fallback';
 
 type CommercialRecommendationProps = {
   decision: AuditCommercialDecision | null;
@@ -31,7 +31,8 @@ function formatAuditDate(value: string | null): string | null {
 function getRecommendationKind(decision: AuditCommercialDecision | null): RecommendationKind {
   if (!decision) return 'fallback';
   if (decision.route === 'RECOVER_ONCE' && decision.eligibility === 'eligible') return 'recover_once';
-  if ((decision.route === 'WORKSPACE' || decision.route === 'RECOVERY_CONTROL') && decision.eligibility === 'eligible') return 'workspace';
+  if (decision.route === 'WORKSPACE' && decision.eligibility === 'eligible') return 'workspace';
+  if (decision.route === 'RECOVERY_CONTROL' && decision.eligibility === 'eligible') return 'talk_to_sales';
   if (decision.route === 'EVIDENCE_REMEDIATION') return 'evidence_remediation';
   if (decision.route === 'NURTURE') return 'nurture';
   if (decision.route === 'NO_SALE' || decision.eligibility === 'ineligible') return 'no_sale';
@@ -177,6 +178,33 @@ export function CommercialRecommendation({
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-xl text-[12px] leading-5 text-[#595E68]">Review what the Workspace coordinates, the seller-approval boundary, and the monthly billing disclosure before continuing to checkout.</p>
           <Button onClick={onReviewWorkspace} className="h-10 shrink-0 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">Review Recovery Workspace <ArrowRight className="ml-2 h-4 w-4" /></Button>
+        </div>
+      </section>
+    );
+  }
+
+  if (kind === 'talk_to_sales') {
+    return (
+      <section className={frame} aria-labelledby="commercial-recommendation-title">
+        <div className="flex items-start gap-3">
+          <MessagesSquare className="mt-0.5 h-5 w-5 shrink-0 text-[#3F51A8]" aria-hidden="true" />
+          <div>
+            <p className="text-[12px] font-semibold text-[#595E68]">Recommended next step</p>
+            <h2 id="commercial-recommendation-title" className={headingClass}>Talk to Sales about a recovery-control engagement.</h2>
+            <p className={bodyClass}>Margin recorded an ongoing or more complex recovery workload. A specialist can understand the operating context and confirm the right scope before any commercial commitment.</p>
+          </div>
+        </div>
+        <EvidenceFacts teaser={teaser} decision={decision} />
+        <div className="mt-4 rounded-[10px] border border-[#E8E7E1] bg-white p-4">
+          <p className="text-[12px] font-semibold text-[#191B20]">Why this is recommended</p>
+          <p className="mt-1 text-[13px] leading-5 text-[#595E68]">{reason || 'The recorded audit indicates ongoing recovery-control work that needs a scoped conversation.'}</p>
+          <p className="mt-2 text-[12px] leading-5 text-[#595E68]">This is a sales conversation, not an automatic purchase or a promise of recovery.</p>
+        </div>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-xl text-[12px] leading-5 text-[#595E68]">Talk to Sales about larger, complex, or multi-account requirements. No payment is collected from this route.</p>
+          <Button asChild className="h-10 shrink-0 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">
+            <Link to="/sales">Talk to Sales <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          </Button>
         </div>
       </section>
     );
