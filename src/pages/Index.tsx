@@ -425,37 +425,36 @@ export default function Index() {
             <div className="relative border-y border-[var(--margin-border)] py-16 md:py-24">
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
-                  <div className="mb-5 flex items-center gap-3">
-                    <div className="h-px w-8 bg-[var(--margin-border-strong)]" />
-                    <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">
-                      Final step
-                    </span>
-                  </div>
-                  <h2 className="font-lora mt-2 max-w-[760px] text-[36px] leading-[1.02] tracking-tight sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-                    <span className="text-[var(--margin-text-primary)] font-lora">See what Amazon still owes—and what is already settled.</span>
+                  <h2 className="font-lora max-w-[760px] text-[38px] leading-[1.02] tracking-tight sm:text-[48px] md:text-[64px]" style={{ fontWeight: 400 }}>
+                    <span className="block text-[var(--margin-text-primary)]">You already have enough operations to run.</span>
+                    <span className="mt-2 block text-[var(--margin-text-muted)]">Recovery shouldn&apos;t be another one.</span>
                   </h2>
-                  <p className="mt-8 max-w-[740px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px]">
-                    Run a free Recovery Audit to see what Margin can establish, what may be recoverable, what proof is missing, and whether there is work worth managing.
+                  <p className="mt-8 max-w-[760px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px]">
+                    Margin exists to make sure potential losses don&apos;t simply become another spreadsheet, another reminder, another unfinished task, or another case nobody followed through.
                   </p>
-                  <div className="mt-12 flex flex-col gap-3 sm:flex-row">
+                  <p className="mt-6 max-w-[700px] text-[13px] leading-6 text-[var(--margin-text-muted)] md:text-[14px]">
+                    Margin finds the recovery. Builds the case. Manages what happens next. And keeps the outcome visible until the recovery is actually resolved.
+                  </p>
+                  <p className="mt-10 font-lora text-[28px] leading-tight tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[42px]" style={{ fontWeight: 400 }}>
+                    You sell. Margin runs the recovery operation.
+                  </p>
+                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                     <Button
                       onClick={() => handleClaimAccessClick("homepage_early_access_section")}
                       className="landing-pressable group relative h-16 w-full rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_40px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow,transform] duration-150 max-md:shadow-none sm:w-auto"
                     >
-                      <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      Run a free Recovery Audit
+                      <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300" />
+                      Let Margin Handle It
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </div>
-                  <p className="mt-6 text-[14px] text-[var(--margin-text-muted)]">
-                    Read-only access. No payment to run the Audit. Nothing is submitted without your approval.
-                  </p>
                 </motion.div>
                 <motion.div {...revealProps} className="border-y border-[var(--margin-border)] bg-white/50 p-8 md:p-12">
                   {[
-                    "Run the free Audit.",
-                    "Review what is supported.",
-                    "Decide whether there is work worth managing."
+                    "Finds the recovery.",
+                    "Builds the case.",
+                    "Manages what happens next.",
+                    "Keeps the outcome visible."
                   ].map((item) => (
                     <div
                       key={item}
