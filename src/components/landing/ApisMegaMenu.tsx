@@ -10,13 +10,13 @@ import {
     Activity,
     ArrowRight,
     BookOpen,
+    Box,
     BriefcaseBusiness,
+    CalendarClock,
     CreditCard,
     Database,
     FileText,
     Gavel,
-    Timer,
-    ShieldCheck,
     type LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -25,9 +25,9 @@ export const apiMenuGroups = [
     {
         label: 'Find & Verify',
         items: [
-            { title: 'Variance Detection', description: 'Find shipment, inventory, fee, reimbursement and settlement differences that may warrant review.', icon: ShieldCheck },
+            { title: 'Variance Detection', description: 'Find shipment, inventory, fee, reimbursement and settlement differences that may warrant review.', icon: Box },
             { title: 'Settlement Reconciliation', description: 'Compare expected, approved and paid values to surface underpayments and valuation differences for review.', icon: CreditCard },
-            { title: 'Claim-Window Monitoring', description: 'Prioritize potential recoveries by value, evidence readiness and remaining claim window.', icon: Timer }
+            { title: 'Claim-Window Monitoring', description: 'Prioritize potential recoveries by value, evidence readiness and remaining claim window.', icon: CalendarClock }
         ]
     },
     {
