@@ -1352,7 +1352,7 @@ const Login = () => {
                 {mode === 'signup' && (
                   <div className="mt-4">
                     <p className="text-[15px] leading-relaxed text-[#4D5B66]">
-                      You do not need to know exactly what is wrong yet. Create your free Margin account, then start a read-only Recovery Audit. Margin will help you see what Amazon’s records say and what makes sense to do next.
+                      You do not need to know exactly what is wrong yet. Create your free Margin account, then start a read-only Recovery Audit. Margin will help you see what Amazon’s records say and plans what to do next.
                     </p>
                   </div>
                 )}
