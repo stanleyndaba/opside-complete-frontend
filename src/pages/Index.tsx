@@ -457,7 +457,7 @@ function MarginLifecycleSection() {
             <div className="relative z-10 space-y-2 md:space-y-2.5">
               {marginLifecycleUnits.map((item, index) => {
                 const direction = item.side === "left" ? "left" : "right";
-                const travel = direction === "left" ? ["-120vw", "120vw"] : ["120vw", "-120vw"];
+                const travel = direction === "left" ? ["-18vw", "118vw"] : ["118vw", "-118vw"];
 
                 return (
                   <div key={item.label} className="relative h-8 overflow-visible sm:h-9">
@@ -466,14 +466,14 @@ function MarginLifecycleSection() {
                       animate={
                         reduceMotion
                           ? { opacity: 1, x: 0 }
-                          : { opacity: [0, 0.95, 1, 0.9, 0], x: travel }
+                          : { opacity: [0.12, 1, 1, 0.82, 0], x: travel }
                       }
                       transition={
                         reduceMotion
                           ? undefined
                           : {
-                              duration: 10 + (index % 3) * 0.7,
-                              delay: index * 0.38,
+                              duration: 8.4 + (index % 3) * 0.6,
+                              delay: index * 0.52,
                               repeat: Infinity,
                               ease: "linear",
                               times: [0, 0.1, 0.68, 0.88, 1],
