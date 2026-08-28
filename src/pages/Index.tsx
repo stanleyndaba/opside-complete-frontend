@@ -180,9 +180,9 @@ function SectionTwo() {
   );
 }
 
-function ExistingOperationFitSection() {
+function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
-  const [activeIcons, setActiveIcons] = useState(["amazon", "gmail", "gd", "quickbooks"]);
+  const [activeEvidence, setActiveEvidence] = useState(0);
 
   const iconPool = [
     { id: "amazon", src: "/amazon-logo-transparent-circle.png" },
@@ -194,106 +194,97 @@ function ExistingOperationFitSection() {
     { id: "dropbox", src: "/Dropbox_Icon.svg.png" },
     { id: "outlook", src: "/outlookicon.webp" },
     { id: "onedrive", src: "/onedriive.png" },
-    { id: "adobe", src: "/dobe.png" },
   ];
 
   useEffect(() => {
     if (reduceMotion) return;
     const interval = setInterval(() => {
-      const slotToChange = Math.floor(Math.random() * 4);
-      const currentIds = activeIcons;
-      let nextIcon;
-      do {
-        nextIcon = iconPool[Math.floor(Math.random() * iconPool.length)];
-      } while (currentIds.includes(nextIcon.id));
-
-      const nextIcons = [...currentIds];
-      nextIcons[slotToChange] = nextIcon.id;
-      setActiveIcons(nextIcons);
-    }, 2400);
+      setActiveEvidence((current) => (current + 1) % (iconPool.length + 1));
+    }, 1800);
     return () => clearInterval(interval);
-  }, [activeIcons, reduceMotion]);
+  }, [reduceMotion, iconPool.length]);
 
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
+    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-28 md:py-44">
       <div className={containerClass}>
-        <motion.div {...revealProps} className="mx-auto max-w-[860px] text-center">
-          <div className={sectionLabelClass}>One recovery record. One version of the truth.</div>
-          <h2 className="mt-3 font-lora text-[34px] leading-[1.03] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
-            Operations sees the case. Finance sees the money.
-          </h2>
-          <p className="mx-auto mt-8 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">
-            Operations can see what is missing and what happens next. Finance can compare what was expected, what Amazon approved, and what Amazon actually paid. No more rebuilding the story from Seller Central, spreadsheets, files, and one person’s memory.
+        <div className="grid gap-16 lg:grid-cols-[0.86fr_1fr] lg:items-start lg:gap-24">
+          <motion.div {...revealProps}>
+            <div className="mb-6 flex items-center gap-3">
+              <div className="h-px w-8 bg-[#0B74DE]" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
+            </div>
+            <h2 className="font-lora text-[42px] leading-[0.98] tracking-[-0.05em] text-[#182026] sm:text-[54px] md:text-[72px]" style={{ fontWeight: 400 }}>
+              When Amazon&apos;s number isn&apos;t enough, Margin can use more of the financial picture.
+            </h2>
+            <p className="mt-8 max-w-[610px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+              Nobody wakes up wanting to connect accounting software. The benefit is bringing relevant financial evidence into the recovery decision when it matters.
+            </p>
+            <p className="mt-8 max-w-[540px] text-[14px] font-semibold leading-7 text-[#182026] md:text-[16px]">
+              Accounting evidence can strengthen the understanding of:
+            </p>
+            <div className="mt-4 max-w-[520px] border-y border-[#D8E3EA]">
+              {["Supplier purchases", "Cost context", "Financial records", "Reimbursement outcomes", "Recovery reconciliation"].map((item) => (
+                <div key={item} className="border-b border-[#E4EDF1] py-3 text-[14px] font-medium text-[#66737F] last:border-b-0 md:text-[15px]">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative lg:pt-8">
+            <div className="relative overflow-hidden rounded-[30px] border border-[#D8E3EA] bg-white/85 p-5 shadow-[0_28px_90px_rgba(37,49,58,0.1)] backdrop-blur-xl sm:p-7 md:p-8">
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.13),_transparent_62%)]" />
+              <div className="relative flex items-center justify-between border-b border-[#E4EDF1] pb-4">
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Financial evidence</span>
+                <span className="font-mono text-[9px] uppercase tracking-tight text-[#94A3B8]">Read-only / purpose-limited</span>
+              </div>
+              <div className="relative mt-6 grid gap-5 sm:grid-cols-[1fr_0.9fr] sm:items-center">
+                <div>
+                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#94A3B8]">Relevant sources</p>
+                  <div className="mt-3 grid grid-cols-3 gap-2.5">
+                    {iconPool.map((icon, index) => (
+                      <motion.div
+                        key={icon.id}
+                        animate={reduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: activeEvidence % iconPool.length === index ? 1 : 0.68, y: activeEvidence % iconPool.length === index ? -3 : 0, scale: activeEvidence % iconPool.length === index ? 1.04 : 1 }}
+                        transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className="flex h-14 items-center justify-center rounded-[9px] border border-[#D8E3EA] bg-white shadow-[0_8px_20px_rgba(37,49,58,0.04)] sm:h-16"
+                      >
+                        <img src={icon.src} alt="" className="max-h-7 max-w-8 object-contain" />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+                <div className="relative rounded-[16px] border border-[#E4EDF1] bg-[#F8FAFC] p-5">
+                  <div className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-[#66737F]">Recovery truth</div>
+                  <div className="mt-4 space-y-3">
+                    {["Expected reimbursement", "Approved amount", "Paid amount", "Reconciled outcome"].map((item, index) => (
+                      <motion.div key={item} animate={{ opacity: reduceMotion || index <= activeEvidence % 5 ? 1 : 0.42 }} transition={{ duration: reduceMotion ? 0 : 0.3 }} className="flex items-center gap-2 text-[11px] font-medium leading-5 text-[#25313A]">
+                        <span className="h-1 w-1 shrink-0 rounded-full bg-[#0B74DE]" />
+                        {item}
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="relative mt-6 border-t border-[#E4EDF1] pt-4 text-[11px] leading-5 text-[#66737F]">
+                Relevant financial context enters the recovery decision without copying your books into Margin.
+              </div>
+            </div>
+            <div className="mt-7 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
+              <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div {...revealProps} className="mt-24 border-t border-[#D8E3EA] pt-10 md:mt-36 md:pt-14">
+          <p className="max-w-[760px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
+            The goal isn&apos;t to copy your accounting system into Margin. The goal is to bring relevant financial evidence into the recovery decision when it matters.
+          </p>
+          <p className="mt-8 max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[68px]" style={{ fontWeight: 400 }}>
+            Margin is not trying to become an accounting platform.
+            <span className="mt-3 block text-[#0B74DE]">It is using accounting evidence to strengthen recovery truth.</span>
           </p>
         </motion.div>
-
-        <div className="mt-16 grid gap-7 lg:grid-cols-3">
-          <motion.article {...revealProps} className="border-t border-[var(--margin-border)] pt-5">
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
-              <div className="absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(201,214,222,0.3)_1px,transparent_1px),linear-gradient(90deg,rgba(201,214,222,0.3)_1px,transparent_1px)] [background-size:24px_24px]" />
-              {!reduceMotion && <motion.div className="absolute left-0 right-0 z-10 h-px bg-gradient-to-r from-transparent via-[var(--margin-blue)] to-transparent opacity-40" animate={{ top: ["0%", "100%"] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} />}
-              <div className="relative space-y-4">
-                {["Amazon synced", "Variance detected", "Settlement checked", "Recovery surfaced"].map((item, index) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="relative flex h-2 w-2 items-center justify-center">
-                      <motion.span className="absolute h-full w-full rounded-full bg-[var(--margin-blue)]" animate={reduceMotion ? undefined : { scale: [1, 1.8, 1], opacity: [0.4, 0.2, 0.4] }} transition={{ duration: 2, delay: index * 0.4, repeat: Infinity }} />
-                      <span className="h-1.5 w-1.5 rounded-full bg-[var(--margin-blue)]" />
-                    </div>
-                    <div className="flex-1 border-b border-[var(--margin-border-subtle)] pb-2 text-[13px] font-medium tracking-tight text-[var(--margin-text-secondary)]">{item}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">The latest supported records are available.</h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">See missing proof, deadlines, response status, seller approvals, and the next required action without relying on another spreadsheet or one person’s memory.</p>
-          </motion.article>
-
-          <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.06 }} className="border-t border-[var(--margin-border)] pt-5">
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
-              <div className="grid h-full grid-cols-[1fr_auto_1fr] items-center gap-4">
-                <div className="grid grid-cols-2 gap-3">
-                  {activeIcons.slice(0, 4).map((iconId, index) => {
-                    const icon = iconPool.find((item) => item.id === iconId);
-                    return (
-                      <div key={index} className="relative flex h-14 items-center justify-center overflow-hidden rounded-[8px] border border-[var(--margin-border)] bg-white">
-                        <AnimatePresence mode="wait">
-                          <motion.img key={iconId} src={icon?.src} alt="" initial={{ rotateY: 90, opacity: 0 }} animate={{ rotateY: 0, opacity: 1 }} exit={{ rotateY: -90, opacity: 0 }} transition={{ duration: 0.4, ease: "easeInOut" }} className="max-h-7 max-w-8 object-contain" />
-                        </AnimatePresence>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="font-mono text-[18px] text-[var(--margin-text-muted)] opacity-40">→</div>
-                <div className="rounded-[8px] border border-[var(--margin-border-subtle)] bg-[#F8FAFB] p-4">
-                  <div className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-[var(--margin-text-muted)]">Finance Loop</div>
-                  <div className="mt-3 space-y-2 text-[12px] font-medium tracking-tight text-[var(--margin-text-primary)]">
-                    {["Expected", "Approved", "Paid", "Settled"].map((item) => <div key={item} className="flex items-center gap-2"><div className="h-1 w-1 rounded-full bg-[var(--margin-blue)]" />{item}</div>)}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">Approved does not always mean paid.</h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">Compare the amount you expected, the amount Amazon approved, and the amount that actually reached your account. See underpayments, reversals, and unresolved amounts before they disappear into a settlement report.</p>
-          </motion.article>
-
-          <motion.article {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[var(--margin-border)] pt-5">
-            <div className="relative h-[210px] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-[var(--margin-surface)] p-5 shadow-[0_18px_48px_rgba(27,28,32,0.045)]">
-              <div className="space-y-3">
-                {[["Case prepared", "Complete", "success"], ["Evidence ready", "Ready", "success"], ["Seller review required", "Approval", "warning"], ["Approve filing", "Decision", "warning"]].map(([item, label, status]) => (
-                  <div key={item} className="flex items-center justify-between border-b border-[var(--margin-border-subtle)] pb-3 last:border-0">
-                    <div className="flex items-center gap-3">
-                      <div className={cn("flex h-6 w-6 items-center justify-center rounded-full transition-colors", status === "success" ? "bg-emerald-500/10 text-emerald-600" : "bg-orange-500/10 text-orange-600")}><Check className="h-3.5 w-3.5" strokeWidth={3} /></div>
-                      <span className="text-[13px] font-semibold tracking-tight text-[var(--margin-text-primary)]">{item}</span>
-                    </div>
-                    <span className={cn("font-mono text-[9px] font-bold uppercase tracking-tight", status === "success" ? "text-emerald-600/70" : "text-orange-600/70")}>{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[var(--margin-text-primary)]">Know what needs you—and what no longer does.</h3>
-            <p className="mt-4 text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px]">Margin prepares and monitors the recovery work in the background. You see what was found, what needs your approval, and whether the money arrived.</p>
-          </motion.article>
-        </div>
       </div>
     </section>
   );
@@ -659,7 +650,7 @@ export default function Index() {
         <HowItWorksSection onCtaClick={() => handleClaimAccessClick("audit_output_section")} />
         <RecoveryTimelineSection />
         <RecoveryProofSections onAuditCta={handleClaimAccessClick} />
-        <ExistingOperationFitSection />
+        <AccountingEvidenceSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Section 10 — FAQ */}
