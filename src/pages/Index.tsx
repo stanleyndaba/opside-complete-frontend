@@ -347,18 +347,22 @@ function KineticHeroSection({
 }
 
 
-const realityCheckSteps = [
-  "Found",
-  "Verified",
-  "Proven",
-  "Prepared",
-  "Filed",
-  "Followed up",
-  "Defended",
-  "Resolved",
-  "Reconciled",
-  "Actually recovered",
+const realityCheckStages = [
+  {
+    title: "Prove.",
+    words: ["Found", "Verified", "Proven"],
+  },
+  {
+    title: "Move.",
+    words: ["Prepared", "Filed", "Followed up", "Defended"],
+  },
+  {
+    title: "Resolve.",
+    words: ["Resolved", "Reconciled", "Actually recovered"],
+  },
 ];
+
+const realityCheckWords = realityCheckStages.flatMap((stage) => stage.words);
 
 function RealityCheckSection() {
   const reduceMotion = useReducedMotion();
@@ -384,36 +388,46 @@ function RealityCheckSection() {
           </p>
         </motion.div>
 
-        <div className="mt-24 max-w-[700px] md:mt-36">
+        <div className="mt-24 max-w-[1080px] md:mt-36">
           <motion.p {...revealProps} className="max-w-[520px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px]">
             A recovery still has to survive the rest of the process:
           </motion.p>
-          <div className="relative mt-8 border-l border-[var(--margin-border-strong)] pl-6 md:mt-10 md:pl-10">
-            <motion.div
-              aria-hidden="true"
-              className="absolute left-[-1px] top-0 w-px origin-top bg-[var(--margin-blue)]"
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: reduceMotion ? 0 : 1.4, ease: [0.22, 1, 0.36, 1] }}
-              style={{ height: "100%" }}
-            />
-            <div className="space-y-0">
-              {realityCheckSteps.map((step, index) => (
+
+          <div className="mt-10 flex flex-wrap items-baseline gap-x-8 gap-y-3 border-y border-[var(--margin-border)] py-8 sm:gap-x-10 md:mt-12 md:py-10">
+            {realityCheckStages.map((stage, index) => (
+              <React.Fragment key={stage.title}>
                 <motion.p
-                  key={step}
-                  initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0.18, x: 18 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.75 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.42, delay: reduceMotion ? 0 : index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                  className={`font-lora text-[30px] leading-[1.05] tracking-[-0.035em] md:text-[48px] ${index === realityCheckSteps.length - 1 ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
-                  style={{ fontWeight: 400, paddingTop: index === 0 ? 0 : "0.72em", paddingBottom: index === realityCheckSteps.length - 1 ? 0 : "0.72em" }}
+                  initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.65 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                  className="font-lora text-[44px] leading-none tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[58px] md:text-[82px]"
+                  style={{ fontWeight: 400 }}
                 >
-                  {step}
+                  {stage.title}
                 </motion.p>
-              ))}
-            </div>
+                {index < realityCheckStages.length - 1 ? <span aria-hidden="true" className="font-mono text-[18px] text-[var(--margin-border-strong)]">·</span> : null}
+              </React.Fragment>
+            ))}
           </div>
+
+          <motion.div {...revealProps} className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 md:mt-10 md:gap-x-4">
+            {realityCheckWords.map((word, index) => (
+              <React.Fragment key={word}>
+                <motion.span
+                  initial={reduceMotion ? { opacity: 1 } : { opacity: 0.3 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, amount: 0.9 }}
+                  animate={reduceMotion ? undefined : { opacity: [0.4, 1, 0.4] }}
+                  transition={reduceMotion ? undefined : { duration: 3.6, delay: index * 0.22, repeat: Infinity, ease: "easeInOut" }}
+                  className={`font-mono text-[11px] font-semibold uppercase tracking-tight md:text-[12px] ${index === realityCheckWords.length - 1 ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
+                >
+                  {word}
+                </motion.span>
+                {index < realityCheckWords.length - 1 ? <span aria-hidden="true" className="font-mono text-[11px] text-[var(--margin-border-strong)]">·</span> : null}
+              </React.Fragment>
+            ))}
+          </motion.div>
         </div>
 
         <motion.div {...revealProps} className="mt-24 border-t border-[var(--margin-border)] pt-8 md:mt-36 md:pt-10">
