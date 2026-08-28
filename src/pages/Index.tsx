@@ -410,19 +410,11 @@ const marginLifecycleUnits = [
 
 function MarginLifecycleSection() {
   const reduceMotion = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const leftConvergence = useTransform(scrollYProgress, [0, 0.35, 0.72, 1], [-52, -8, 0, -12]);
-  const rightConvergence = useTransform(scrollYProgress, [0, 0.35, 0.72, 1], [52, 8, 0, 12]);
 
   return (
     <section
-      ref={sectionRef}
       aria-labelledby="margin-lifecycle-title"
-      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-28 md:py-48"
+      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-20 md:py-28"
     >
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[980px]">
@@ -434,74 +426,75 @@ function MarginLifecycleSection() {
           </div>
           <h2
             id="margin-lifecycle-title"
-            className="font-lora text-[42px] leading-[0.98] tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[58px] md:text-[82px]"
+            className="font-lora text-[30px] leading-[0.98] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[56px]"
             style={{ fontWeight: 400 }}
           >
             <span className="block">Margin doesn&apos;t hand you a list of problems.</span>
-            <span className="mt-5 block text-[var(--margin-text-muted)]">
+            <span className="mt-3 block text-[var(--margin-text-muted)]">
               It takes the recovery from discovery to resolution.
             </span>
           </h2>
         </motion.div>
 
-        <div className="mt-20 md:mt-32">
+        <div className="mt-14 md:mt-20">
           <motion.p
             {...revealProps}
-            className="max-w-[680px] text-[20px] font-medium leading-8 tracking-[-0.025em] text-[var(--margin-text-primary)] md:text-[28px] md:leading-9"
+            className="max-w-[680px] text-[17px] font-medium leading-7 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[23px] md:leading-8"
           >
             Margin operates across the full recovery lifecycle:
           </motion.p>
 
-          <div className="relative mt-10 overflow-hidden py-6 md:mt-16 md:py-12">
+          <div className="relative mt-10 overflow-hidden py-4 md:mt-12 md:py-8">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 flex items-center justify-center"
             >
-              <span className="brand-wordmark font-merriweather text-[clamp(6rem,20vw,18rem)] leading-none tracking-[-0.085em] text-[rgba(24,32,38,0.065)]">
+              <span className="brand-wordmark font-merriweather text-[clamp(4.5rem,12vw,10rem)] leading-none tracking-[-0.085em] text-[rgba(24,32,38,0.055)]">
                 Margin
               </span>
             </div>
 
-            <div className="relative z-10 space-y-3 md:space-y-4">
-              {marginLifecycleUnits.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, amount: 0.55 }}
-                  transition={{
-                    duration: reduceMotion ? 0 : 0.55,
-                    delay: reduceMotion ? 0 : index * 0.045,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  style={{
-                    x: reduceMotion
-                      ? 0
-                      : item.side === "left"
-                        ? leftConvergence
-                        : rightConvergence,
-                  }}
-                  className={cn(
-                    "flex w-full",
-                    item.side === "left" ? "justify-start" : "justify-end",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "inline-flex max-w-[88%] rounded-[5px] bg-[#EEF1F2] px-3.5 py-2.5 text-[12px] font-semibold leading-5 tracking-[-0.01em] text-[#182026] sm:px-4 sm:py-3 sm:text-[13px] md:max-w-[68%] md:px-5 md:py-3.5 md:text-[15px]",
-                      item.side === "left" ? "md:ml-[8%]" : "md:mr-[8%]",
-                    )}
-                  >
-                    {item.label}
-                  </span>
-                </motion.div>
-              ))}
+            <div className="relative z-10 space-y-2 md:space-y-2.5">
+              {marginLifecycleUnits.map((item, index) => {
+                const direction = item.side === "left" ? "left" : "right";
+                const travel = direction === "left" ? ["-120vw", "120vw"] : ["120vw", "-120vw"];
+
+                return (
+                  <div key={item.label} className="relative h-8 overflow-visible sm:h-9">
+                    <motion.span
+                      initial={false}
+                      animate={
+                        reduceMotion
+                          ? { opacity: 1, x: 0 }
+                          : { opacity: [0, 0.95, 1, 0.9, 0], x: travel }
+                      }
+                      transition={
+                        reduceMotion
+                          ? undefined
+                          : {
+                              duration: 10 + (index % 3) * 0.7,
+                              delay: index * 0.38,
+                              repeat: Infinity,
+                              ease: "linear",
+                              times: [0, 0.1, 0.68, 0.88, 1],
+                            }
+                      }
+                      className={cn(
+                        "absolute top-0 inline-flex whitespace-nowrap rounded-[10px] bg-[#EEF1F2] px-3 py-1.5 text-[11px] font-semibold leading-5 tracking-[-0.01em] text-[#182026] sm:px-3.5 sm:py-2 sm:text-[12px]",
+                        direction === "left" ? "left-0" : "right-0",
+                      )}
+                    >
+                      {item.label}
+                    </motion.span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           <motion.p
             {...revealProps}
-            className="mt-20 max-w-[900px] font-lora text-[30px] leading-[1.08] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:mt-28 md:text-[60px]"
+            className="mt-14 max-w-[820px] font-lora text-[26px] leading-[1.08] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:mt-20 md:text-[48px]"
           >
             You don&apos;t need to remember which case needs attention.
             <span className="mt-4 block text-[var(--margin-text-muted)]">
