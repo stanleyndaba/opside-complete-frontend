@@ -419,17 +419,25 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Section 11 — Final CTA */}
+        {/* Section 11 — Recovery statement */}
+        <section className="relative border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-32">
+          <div className={containerClass}>
+            <motion.div {...revealProps} className="mx-auto max-w-[980px] text-center">
+              <h2 className="font-lora text-[42px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[56px] md:text-[76px]" style={{ fontWeight: 400 }}>
+                <span className="block">You already have enough operations to run.</span>
+                <span className="mt-3 block text-[var(--margin-text-muted)]">Recovery shouldn&apos;t be another one.</span>
+              </h2>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Section 12 — Final CTA */}
         <section className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-18">
           <div className={containerClass}>
             <div className="relative border-y border-[var(--margin-border)] py-16 md:py-24">
               <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <motion.div {...revealProps}>
-                  <h2 className="font-lora max-w-[760px] text-[38px] leading-[1.02] tracking-tight sm:text-[48px] md:text-[64px]" style={{ fontWeight: 400 }}>
-                    <span className="block text-[var(--margin-text-primary)]">You already have enough operations to run.</span>
-                    <span className="mt-2 block text-[var(--margin-text-muted)]">Recovery shouldn&apos;t be another one.</span>
-                  </h2>
-                  <p className="mt-8 max-w-[760px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px]">
+                  <p className="max-w-[760px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px]">
                     Margin exists to make sure potential losses don&apos;t simply become another spreadsheet, another reminder, another unfinished task, or another case nobody followed through.
                   </p>
                   <p className="mt-6 max-w-[700px] text-[13px] leading-6 text-[var(--margin-text-muted)] md:text-[14px]">
@@ -444,7 +452,7 @@ export default function Index() {
                       className="landing-pressable group relative h-16 w-full rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_40px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow,transform] duration-150 max-md:shadow-none sm:w-auto"
                     >
                       <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300" />
-                      Let Margin Handle It
+                      Sign Up Today
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </div>
