@@ -443,6 +443,138 @@ function RealityCheckSection() {
   );
 }
 
+const marginOperationAgents = [
+  {
+    number: "01",
+    title: "Margin watches for losses",
+    body: "It examines Amazon activity for discrepancies and recovery opportunities that deserve investigation.",
+    outcome: "So you don't have to manually hunt through reports.",
+  },
+  {
+    number: "02",
+    title: "Margin investigates what actually happened",
+    body: "It connects the relevant events, records, transactions, and history to determine whether there is a real recovery case.",
+    outcome: "So you're not chasing noise.",
+  },
+  {
+    number: "03",
+    title: "Margin determines whether the recovery is worth pursuing",
+    body: "Not every discrepancy becomes a case. Margin evaluates the evidence and recovery economics before moving forward.",
+    outcome: "So effort is focused on opportunities that actually justify action.",
+  },
+  {
+    number: "04",
+    title: "Margin builds the evidence",
+    body: "Relevant records and supporting documentation are gathered into an inspectable evidence chain.",
+    outcome: "So the reason for the recovery is visible—not buried in spreadsheets.",
+  },
+  {
+    number: "05",
+    title: "Margin prepares the case",
+    body: "The recovery is structured around what happened, what Amazon records show, and what evidence supports the claim.",
+    outcome: "So you aren't manually assembling every case from scratch.",
+  },
+  {
+    number: "06",
+    title: "Margin moves the recovery forward",
+    body: "Cases don't simply disappear into a spreadsheet after being identified. Margin tracks their progression through the recovery lifecycle.",
+    outcome: "So recovery work doesn't depend on someone remembering to follow up.",
+  },
+  {
+    number: "07",
+    title: "Margin handles friction",
+    body: "If Amazon requires more information, rejects a claim, or produces an outcome that needs further examination, the recovery enters the appropriate next stage.",
+    details: ["Additional evidence", "Review", "Appeal", "Escalation", "Outcome reassessment"],
+    outcome: "Because a rejection isn't automatically the end of the recovery.",
+  },
+  {
+    number: "08",
+    title: "Margin checks the result",
+    body: "An approved case is not automatically treated as finished. Margin can track the outcome against what was expected.",
+    outcome: "Because \"case closed\" and \"money correctly recovered\" are not always the same thing.",
+    emphasis: true,
+  },
+  {
+    number: "09",
+    title: "Margin watches for reversals and incomplete outcomes",
+    body: "Recovery truth doesn't stop at the first decision. Margin's recovery lifecycle can continue to inspect:",
+    details: ["Expected vs actual reimbursement", "Partial outcomes", "Underpayments", "Reversals", "Unresolved discrepancies"],
+    outcome: "So the seller has visibility into what actually happened, not just what Amazon said happened.",
+  },
+];
+
+function MarginOperationSection() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-28 md:py-44">
+      <div className={containerClass}>
+        <div className="grid gap-16 lg:grid-cols-[0.72fr_1fr] lg:gap-24">
+          <div className="lg:sticky lg:top-32 lg:h-fit">
+            <motion.div {...revealProps}>
+              <div className="mb-6 flex items-center gap-3">
+                <div className="h-px w-8 bg-[#0B74DE]" />
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
+                  What Margin actually does
+                </span>
+              </div>
+              <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.05em] text-[#182026] sm:text-[58px] md:text-[76px]" style={{ fontWeight: 400 }}>
+                One recovery operation.
+                <span className="mt-4 block text-[#8A99A4]">Multiple specialised jobs running inside it.</span>
+              </h2>
+            </motion.div>
+          </div>
+
+          <div className="relative pb-16">
+            {marginOperationAgents.map((agent, index) => (
+              <div key={agent.number} className="relative min-h-[72vh] md:min-h-[78vh]">
+                <motion.article
+                  initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.18 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  className="sticky overflow-hidden rounded-[28px] border border-[#D8E3EA] bg-white/85 p-7 shadow-[0_28px_90px_rgba(37,49,58,0.1)] backdrop-blur-xl sm:p-10 md:p-12"
+                  style={{ top: `calc(96px + ${Math.min(index, 7) * 14}px)`, zIndex: index + 1 }}
+                >
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.13),_transparent_62%)]" />
+                  <div className="relative">
+                    <div className="flex items-center justify-between gap-4 border-b border-[#E4EDF1] pb-5">
+                      <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">
+                        Operation {agent.number}
+                      </span>
+                      <span className="font-mono text-[10px] uppercase tracking-tight text-[#94A3B8]">
+                        Margin / Recovery control
+                      </span>
+                    </div>
+                    <h3 className="mt-8 max-w-[700px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[44px] md:text-[54px]" style={{ fontWeight: 400 }}>
+                      {agent.title}
+                    </h3>
+                    <p className="mt-7 max-w-[650px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
+                      {agent.body}
+                    </p>
+                    {agent.details ? (
+                      <div className="mt-8 flex flex-wrap gap-x-3 gap-y-2 border-t border-[#E4EDF1] pt-6">
+                        {agent.details.map((detail) => (
+                          <span key={detail} className="rounded-full border border-[#D8E3EA] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-[#66737F]">
+                            {detail}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                    <p className={`mt-10 max-w-[640px] border-t border-[#E4EDF1] pt-6 font-lora text-[23px] leading-tight tracking-[-0.025em] sm:text-[28px] ${agent.emphasis ? "text-[#0B74DE]" : "text-[#66737F]"}`} style={{ fontWeight: 400 }}>
+                      {agent.outcome}
+                    </p>
+                  </div>
+                </motion.article>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function RecoveryWorkStatement() {
   return (
     <section className="border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]">
@@ -473,6 +605,7 @@ export default function Index() {
       <main>
         <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} onReportCta={() => handleClaimAccessClick("hero_use_amazon_reports", "csv_upload")} isFull={isFull} nextBatchHours={nextBatchHours} />
         <RealityCheckSection />
+        <MarginOperationSection />
         <RecoveryWorkStatement />
 
         <SectionTwo />
