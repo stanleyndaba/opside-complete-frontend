@@ -1,5 +1,10 @@
 import { ANALYTICS_EVENTS, type AnalyticsEventName } from './analyticsEvents';
 import { DEMO_SESSION_TOKEN } from './demoSession';
+import {
+  hasAnalyticsConsent,
+  subscribeToCookieConsent,
+  type CookiePreferences,
+} from './cookieConsent';
 
 type GtagCommand = 'config' | 'event' | 'js' | string;
 
@@ -350,7 +355,7 @@ function sendGa4Event(eventName: string, params: AnalyticsParams, attempt = 0) {
 }
 
 export function trackPageView(path: string) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !hasAnalyticsConsent()) return;
   if (!path || lastTrackedPageView === path) return;
 
   syncInternalTestFlagFromLocation();
@@ -367,7 +372,7 @@ export function trackPageView(path: string) {
 }
 
 export function trackEvent(eventName: AnalyticsEventName | string, params: AnalyticsParams = {}) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !hasAnalyticsConsent()) return;
 
   const eventParams = buildAnalyticsContext(params);
   sendGa4Event(eventName, eventParams);
@@ -399,6 +404,41 @@ export function trackCheckoutStarted(params: AnalyticsParams = {}) {
     payment_provider: PAYSTACK_PAYMENT_PROVIDER,
     checkout_url_type: PAYSTACK_CHECKOUT_URL_TYPE,
     ...params,
+  });
+}
+
+function clearFirstPartyAnalyticsQueue() {
+  if (typeof window === 'undefined') return;
+
+  try {
+    window.localStorage.removeItem(FIRST_PARTY_QUEUE_STORAGE_KEY);
+  } catch {
+    // Consent must never interrupt the page.
+  }
+}
+
+function updateGoogleConsent(preferences: CookiePreferences) {
+  const gtag = getGtag();
+  if (!gtag) return;
+
+  gtag('consent', 'update', {
+    analytics_storage: preferences.analytics ? 'granted' : 'denied',
+    ad_storage: preferences.marketing ? 'granted' : 'denied',
+    ad_user_data: preferences.marketing ? 'granted' : 'denied',
+    ad_personalization: preferences.marketing ? 'granted' : 'denied',
+  });
+}
+
+if (typeof window !== 'undefined') {
+  subscribeToCookieConsent((preferences) => {
+    updateGoogleConsent(preferences);
+
+    if (!preferences.analytics) {
+      clearFirstPartyAnalyticsQueue();
+      return;
+    }
+
+    trackPageView(`${window.location.pathname}${window.location.search}`);
   });
 }
 

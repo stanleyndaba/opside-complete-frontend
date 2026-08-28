@@ -10,6 +10,25 @@
     window.gtag = gtag;
     gtag('js', new Date());
 
+    var storedCookieConsent = null;
+    try {
+      var rawCookieConsent = window.localStorage.getItem('Margin.cookieConsent');
+      storedCookieConsent = rawCookieConsent ? JSON.parse(rawCookieConsent) : null;
+    } catch (error) {
+      storedCookieConsent = null;
+    }
+
+    var hasAnalyticsConsent = storedCookieConsent && storedCookieConsent.analytics === true;
+    var hasMarketingConsent = storedCookieConsent && storedCookieConsent.marketing === true;
+
+    gtag('consent', 'default', {
+      analytics_storage: hasAnalyticsConsent ? 'granted' : 'denied',
+      ad_storage: hasMarketingConsent ? 'granted' : 'denied',
+      ad_user_data: hasMarketingConsent ? 'granted' : 'denied',
+      ad_personalization: hasMarketingConsent ? 'granted' : 'denied',
+      wait_for_update: 500
+    });
+
     gtag('config', 'G-KKCKWRFS3H', {
       send_page_view: false
     });
