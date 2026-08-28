@@ -37,9 +37,8 @@ import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
 import { SystemPerformanceTicker } from "@/components/landing/SystemPerformanceTicker";
-import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { RecoveryTimelineSection } from "@/components/landing/RecoveryTimelineSection";
-import { RecoveryOfferSection, RecoveryProofSections } from "@/components/landing/RecoveryDecisionSections";
+import { RecoveryOfferSection } from "@/components/landing/RecoveryDecisionSections";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -140,43 +139,6 @@ function TypewriterPrompt({ text }: { text: string }) {
         transition={{ duration: 0.86, repeat: Infinity, ease: "linear" }}
       />{" "}
     </span>
-  );
-}
-
-function SectionTwo() {
-  return (
-    <section data-navbar-theme="light" className="relative -mt-px border-none bg-white py-32 md:py-56">
-      <div className={containerClass}>
-        <div className="grid gap-16 lg:grid-cols-[1fr_0.8fr] lg:items-start">
-          <motion.div {...revealProps}>
-            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]/60" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The difference</span></div>
-            <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>Finding the issue is only the first step.</h2>
-            <p className="mt-8 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">Most recovery tools find or file a claim. The hard part comes after: proving the issue, keeping the case moving, responding to Amazon, and knowing whether the money actually arrived.</p>
-            <p className="mt-6 text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">Margin keeps the proof, your approval, the case, the response, and the payout outcome in one recovery record.</p>
-            <p className="mt-6 text-[17px] font-semibold leading-8 tracking-[-0.015em] text-[var(--margin-text-primary)] md:text-[19px]">You see the proof and the next decision. Margin keeps the recovery work moving.</p>
-          </motion.div>
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">
-            <div className="relative overflow-hidden border border-[var(--margin-border)] bg-[var(--margin-canvas)] p-7 md:p-8">
-              <div className="h-0.5 w-12 bg-[var(--margin-blue)]" />
-              <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">Most tools find a claim. Margin follows it through.</p>
-              <div className="mt-7 divide-y divide-[var(--margin-border-subtle)] border-y border-[var(--margin-border)]">
-                {[
-                  ["Find or flag an issue", "Show what supports the issue"],
-                  ["File a claim", "Prepare the proof and wait for your approval"],
-                  ["Show a case status", "Keep the response, next action, and deadline visible"],
-                  ["Mark it complete", "Verify what Amazon paid, what reversed, and what is still unresolved"],
-                ].map(([other, margin]) => (
-                  <div key={other} className="grid gap-2 py-4 sm:grid-cols-2 sm:gap-5">
-                    <p className="text-[13px] leading-6 text-[var(--margin-text-secondary)]">{other}</p>
-                    <p className="text-[13px] font-medium leading-6 text-[var(--margin-text-primary)]">{margin}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -643,10 +605,7 @@ export default function Index() {
         <MarginOperationSection />
         <RecoveryWorkStatement />
 
-        <SectionTwo />
-        <HowItWorksSection onCtaClick={() => handleClaimAccessClick("audit_output_section")} />
         <RecoveryTimelineSection />
-        <RecoveryProofSections onAuditCta={handleClaimAccessClick} />
         <AccountingEvidenceSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
