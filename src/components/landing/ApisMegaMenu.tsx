@@ -13,10 +13,11 @@ import {
     Box,
     BriefcaseBusiness,
     CalendarClock,
+    ClipboardCheck,
     CreditCard,
     Database,
     FileText,
-    Gavel,
+    Undo2,
     type LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -34,7 +35,7 @@ export const apiMenuGroups = [
         label: 'Build & Control',
         items: [
             { title: 'Evidence Matching', description: 'Connect invoices, BOLs, PODs, shipment records, quantities and cost basis to the recovery they support.', icon: FileText },
-            { title: 'Case Preparation', description: 'Assemble the evidence, timeline, policy basis and financial value into one review-ready recovery.', icon: Gavel },
+            { title: 'Case Preparation', description: 'Assemble the evidence, timeline, policy basis and financial value into one review-ready recovery.', icon: ClipboardCheck },
             { title: 'Seller Approval & Filing', description: 'Review every recovery before it enters the filing workflow. Nothing moves without approval.', icon: BriefcaseBusiness }
         ]
     },
@@ -43,7 +44,7 @@ export const apiMenuGroups = [
         items: [
             { title: 'Response & Appeal Management', description: 'Keep Amazon requests, rejections, replies and supporting evidence on one recovery timeline.', icon: BookOpen },
             { title: 'Payout Verification', description: "Compare Amazon's approved value with the reimbursement that actually reached settlement.", icon: Database },
-            { title: 'Reversal & Accounting Reconciliation', description: 'Track later reversals, unresolved differences and accounting-ready recovery records.', icon: Activity }
+            { title: 'Reversal & Accounting Reconciliation', description: 'Track later reversals, unresolved differences and accounting-ready recovery records.', icon: Undo2 }
         ]
     }
 ];
