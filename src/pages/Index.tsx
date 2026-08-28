@@ -714,6 +714,7 @@ export default function Index() {
         analyticsLocation="homepage_demo_section"
         videoName="margin_demo"
       />
+      <SystemPerformanceTicker />
       <BrandFooter wide />
       <CookieConsent />
     </div>
