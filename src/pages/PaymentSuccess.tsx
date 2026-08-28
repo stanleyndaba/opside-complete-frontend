@@ -45,6 +45,7 @@ export default function PaymentSuccess() {
   const [state, setState] = useState<VerifyState>('verifying');
   const [message, setMessage] = useState('Margin is verifying your Recovery Workspace subscription.');
   const [subscriptionStatus, setSubscriptionStatus] = useState<RecoveryWorkspaceSubscriptionStatus | null>(null);
+  const [recoverOnceEngagementId, setRecoverOnceEngagementId] = useState<string | null>(null);
   const isRecoverOnceReference = Boolean(reference?.startsWith('MGN-RO-'));
 
   useEffect(() => {
@@ -116,8 +117,10 @@ export default function PaymentSuccess() {
           return;
         }
 
+        const engagementId = String(recoverOnceResponse.data?.engagement?.id || '').trim();
+        setRecoverOnceEngagementId(engagementId || null);
         setState('recover_once_active');
-        setMessage('Your Recover Once engagement is active.');
+        setMessage('Your Recover Once engagement is active and Margin is preparing the recovery work.');
         trackEvent('recover_once_payment_verified', {
           payment_provider: 'paystack_one_time',
           reference_present: true,
@@ -236,13 +239,14 @@ export default function PaymentSuccess() {
                 onClick={() => {
                   const workspaceSlug = returnTenantSlug || tenant?.slug || readLocalStorage('active_tenant_slug');
                   if (state === 'active' && workspaceSlug) navigate(`/app/${workspaceSlug}/dashboard`);
+                  else if (state === 'recover_once_active' && recoverOnceEngagementId && workspaceSlug) navigate(`/app/${workspaceSlug}/recover-once/${recoverOnceEngagementId}`);
                   else if (state === 'recover_once_active') navigate('/audit');
                   else if (workspaceSlug) navigate(`/app/${workspaceSlug}/billing`);
                   else navigate('/audit');
                 }}
                 className="h-12 rounded-full bg-[#0B74DE] px-6 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(11,116,222,0.22)] hover:bg-[#0869C9]"
               >
-                {state === 'active' ? 'Open Recovery Workspace' : state === 'recover_once_active' ? 'Return to Audit' : 'Open Billing'}
+                {state === 'active' ? 'Open Recovery Workspace' : state === 'recover_once_active' ? 'Open Recover Once Workspace' : 'Open Billing'}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

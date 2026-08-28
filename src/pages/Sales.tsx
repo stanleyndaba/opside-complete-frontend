@@ -11,6 +11,7 @@ import { SITE_META } from '@/config/site';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { cn } from '@/lib/utils';
+import { api } from '@/lib/api';
 
 export default function Sales() {
     usePageMeta({
@@ -49,34 +50,38 @@ export default function Sales() {
         }
 
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        try {
+            const response = await api.createSalesLead({
+                name: form.name,
+                email: form.email,
+                company: form.company,
+                role: form.role,
+                gmv: form.gmv,
+                accounts: form.accounts,
+                complexity: form.complexity,
+                process: form.process,
+                objective: form.objective,
+                notes: form.notes,
+            });
 
-        const subject = encodeURIComponent(`[Enterprise Assessment] ${form.company} - ${form.gmv}`);
-        const body = encodeURIComponent(
-            `ENTERPRISE ASSESSMENT REQUEST\n${'='.repeat(40)}\n\n` +
-            `Name: ${form.name}\n` +
-            `Email: ${form.email}\n` +
-            `Role: ${form.role}\n` +
-            `Company: ${form.company}\n` +
-            `Annual GMV: ${form.gmv}\n` +
-            `Accounts/Marketplaces: ${form.accounts || 'Not specified'}\n` +
-            `Catalogue Complexity: ${form.complexity || 'Not specified'}\n` +
-            `Current Process: ${form.process || 'Not specified'}\n` +
-            `Objective: ${form.objective || 'Not specified'}\n\n` +
-            `Additional Notes:\n${form.notes || 'None'}\n\n` +
-            `${'='.repeat(40)}\n` +
-            `Sent via Margin Enterprise Assessment Form`
-        );
-        
-        window.open(`mailto:support@margin-finance.com?subject=${subject}&body=${body}`, '_blank');
+            if (!response.ok || !response.data?.success) {
+                throw new Error(response.error || 'We could not save your assessment request.');
+            }
 
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-        toast({
-            title: 'Assessment request prepared',
-            description: 'Your inquiry has been formatted. Please send the email to proceed.',
-        });
+            setIsSubmitted(true);
+            toast({
+                title: 'Assessment request saved',
+                description: 'Your information is now with the Margin sales team for review.',
+            });
+        } catch (error: any) {
+            toast({
+                title: 'Assessment request not saved',
+                description: error?.message || 'Please try again in a moment.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (

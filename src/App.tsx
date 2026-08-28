@@ -66,6 +66,7 @@ const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
 
 const Sales = lazy(() => import("./pages/Sales"));
+const SalesLeads = lazy(() => import("./pages/SalesLeads"));
 const AmazonFbaReimbursement = lazy(() => import("./pages/AmazonFbaReimbursement"));
 const ReimbursementAcquisitionPage = lazy(() => import("./pages/ReimbursementAcquisitionPage"));
 const GetidaAlternative = lazy(() => import("./pages/GetidaAlternative"));
@@ -79,6 +80,7 @@ const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
 const AboutMargin = lazy(() => import("./pages/AboutMargin"));
 const Research = lazy(() => import("./pages/Research"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const RecoverOnceEngagement = lazy(() => import("./pages/RecoverOnceEngagement"));
 const FoundingActivationStatus = lazy(() => import("./pages/FoundingActivationStatus"));
 const DesignSimulate = lazy(() => import("./pages/designsimulate"));
 const PlatformSimulate = lazy(() => import("./pages/platformsimulate"));
@@ -391,6 +393,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/connect-amazon" element={appRoute(<Navigate to="/audit" replace />)} />
                         <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={appRoute(<Navigate to="/audit" replace />)} />
                         <Route path="/app/:tenantSlug/billing" element={appRoute(<FoundingActivationGate><Billing /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/recover-once/:engagementId" element={appRoute(<RecoverOnceEngagement />)} />
                         <Route path="/app/:tenantSlug/api-access" element={appRoute(<ApiAccess />)} />
                         <Route path="/app/:tenantSlug/help" element={appRoute(<Help />)} />
                         <Route path="/app/:tenantSlug/whats-new" element={appRoute(<WhatsNew />)} />
@@ -406,6 +409,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/revenue-model" element={appRoute(<AdminOnly><RevenueModel /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/revenue-model" element={appRoute(<AdminOnly><RevenueModel /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/revenue" element={appRoute(<AdminOnly><AdminRevenue /></AdminOnly>)} />
+                        <Route path="/app/:tenantSlug/admin/sales-leads" element={appRoute(<AdminOnly><SalesLeads /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/queue" element={appRoute(<AdminOnly><QueueDashboard /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/team" element={appRoute(<AdminOnly><TeamManagement /></AdminOnly>)} />
                         {/* LEGACY REDIRECTS */}

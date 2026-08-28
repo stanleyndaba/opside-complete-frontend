@@ -526,6 +526,24 @@ export interface RecoverOnceInitializeResponse {
   authorization_url?: string;
 }
 
+export type RecoverOnceEngagementStatus = 'active' | 'preparing' | 'ready_for_review' | 'awaiting_seller_approval' | 'in_progress' | 'completed' | 'cancelled' | 'exception';
+
+export interface RecoverOnceEngagement {
+  id: string;
+  status: RecoverOnceEngagementStatus;
+  audit_run_id: string;
+  quote_id: string;
+  scope_snapshot: { opportunities?: Array<{ id?: string; category?: string; estimated_value?: number; evidence_ready?: boolean }>; categories?: string[] };
+  started_at: string;
+  preparation_started_at: string | null;
+  ready_for_review_at: string | null;
+  seller_approved_at: string | null;
+  completed_at: string | null;
+  exception_reason: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AuditHistoryItem {
   id: string;
   month: string;
@@ -1200,6 +1218,34 @@ export const api = {
     method: 'POST',
     body: JSON.stringify(body)
   }),
+  createSalesLead: (lead: {
+    name: string;
+    email: string;
+    company: string;
+    role: string;
+    gmv: string;
+    accounts?: string;
+    complexity?: string;
+    process?: string;
+    objective?: string;
+    notes?: string;
+  }) => requestJson<{
+    success: boolean;
+    lead_id: string;
+    status: string;
+    created_at: string;
+    message: string;
+  }>('/api/sales-leads', {
+    method: 'POST',
+    body: JSON.stringify(lead),
+  }),
+  getSalesLeads: (limit = 50, offset = 0) => requestJson<{
+    success: boolean;
+    leads: Array<Record<string, unknown>>;
+    total: number;
+    limit: number;
+    offset: number;
+  }>(`/api/sales-leads?limit=${limit}&offset=${offset}`),
   getSupportRequests: (limit = 10) => requestJson<{
     success: boolean;
     requests: Array<{
@@ -3671,6 +3717,11 @@ export const api = {
   verifyRecoverOncePayment: (reference: string, tenantSlug?: string) => {
     const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
     return requestJson<any>(`/api/paystack/recover-once/verify/${encodeURIComponent(reference)}${query}`);
+  },
+
+  getRecoverOnceEngagement: (engagementId: string, tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<{ success: boolean; engagement: RecoverOnceEngagement }>(`/api/paystack/recover-once/engagements/${encodeURIComponent(engagementId)}${query}`);
   },
 
   verifyPaystackPayment: (reference: string, tenantSlug?: string) => {
