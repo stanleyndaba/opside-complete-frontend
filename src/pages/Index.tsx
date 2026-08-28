@@ -462,7 +462,7 @@ function MarginLifecycleSection() {
                     <span
                       style={{
                         animationDelay: `-${index * 0.52}s`,
-                        animationDuration: `${9.5 + (index % 3) * 0.6}s`,
+                        animationDuration: `${11.4 + (index % 3) * 0.72}s`,
                       }}
                       className={cn(
                         "lifecycle-unit absolute top-0 inline-flex whitespace-nowrap rounded-[10px] bg-[#EEF1F2] px-3 py-1.5 text-[11px] font-semibold leading-5 tracking-[-0.01em] text-[#182026] sm:px-3.5 sm:py-2 sm:text-[12px]",
