@@ -5,6 +5,7 @@ import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
+import { api } from '@/lib/api';
 
 const PROVIDER_CONFIG: Record<string, { label: string; icon: string; redirect: string }> = {
   amazon: {
@@ -138,15 +139,17 @@ export default function OAuthSuccess() {
   const [amazonConnectionState] = useState<AmazonConnectionState | null>(() => {
     if (typeof window === 'undefined') return null;
     const initialParams = new URLSearchParams(window.location.search);
-    const isAmazonError = (initialParams.get('provider') || 'amazon') === 'amazon'
+    const isAmazonError = initialParams.get('provider') === 'amazon'
       && initialParams.get('status') === 'error';
     return isAmazonError ? mapAmazonConnectionState(initialParams) : null;
   });
+  const [amazonConfirmation, setAmazonConfirmation] = useState<'checking' | 'confirmed' | 'not_confirmed' | 'unavailable' | 'error' | null>(null);
 
   const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
-  const provider = params.get('provider') || 'amazon';
-  const status = params.get('status') || 'ok';
-  const isError = status === 'error';
+  const provider = (params.get('provider') || 'unknown').toLowerCase();
+  const status = params.get('status') || 'unknown';
+  const isUnsupportedProvider = !Object.prototype.hasOwnProperty.call(PROVIDER_CONFIG, provider);
+  const isError = status === 'error' || isUnsupportedProvider;
   const rawError = params.get('error') || '';
   const storedSlug = typeof window !== 'undefined'
     ? normalizeTenantSlug(localStorage.getItem('active_tenant_slug'))
@@ -163,9 +166,22 @@ export default function OAuthSuccess() {
     redirect: '/integrations-hub',
   };
 
+  const amazonAuditParams = new URLSearchParams(params);
+  amazonAuditParams.delete('amazon_connected');
+  if (provider === 'amazon' && amazonConfirmation === 'confirmed') {
+    amazonAuditParams.set('amazon_connected', '1');
+  }
   const targetPath = provider === 'amazon'
-    ? '/audit?amazon_connected=1'
-    : tenantRoute(resolvedSlug, `${config.redirect}?connected=${provider}`);
+    ? `/audit?${amazonAuditParams.toString()}`
+    : tenantRoute(
+      resolvedSlug,
+      isError ? config.redirect : `${config.redirect}?connected=${provider}`,
+    );
+  const hasAmazonAuditContinuation = provider === 'amazon' && (
+    hasPendingAmazonAudit() ||
+    Boolean(params.get('auditId')) ||
+    Boolean(params.get('auditIntentId'))
+  );
 
   useEffect(() => {
     if (!amazonConnectionState || !location.search) return;
@@ -173,9 +189,34 @@ export default function OAuthSuccess() {
   }, [amazonConnectionState, location.pathname, location.search, navigate]);
 
   useEffect(() => {
-    if (isError) return;
+    if (provider !== 'amazon') return;
+    if (isError) {
+      setAmazonConfirmation('error');
+      return;
+    }
 
-    const delay = provider === 'amazon' && hasPendingAmazonAudit() ? 900 : 1000;
+    let cancelled = false;
+    setAmazonConfirmation('checking');
+    void api.getIntegrationsStatus(resolvedSlug).then((response) => {
+      if (cancelled) return;
+      if (!response.ok || !response.data) {
+        setAmazonConfirmation('unavailable');
+        return;
+      }
+      setAmazonConfirmation(response.data.amazon_connected ? 'confirmed' : 'not_confirmed');
+    }).catch(() => {
+      if (!cancelled) setAmazonConfirmation('unavailable');
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isError, provider, resolvedSlug]);
+
+  useEffect(() => {
+    if (isError || provider === 'amazon') return;
+
+    const delay = 1000;
     const timer = window.setInterval(() => {
       setCountdown((current) => {
         if (current <= 1) {
@@ -277,15 +318,35 @@ export default function OAuthSuccess() {
     );
   }
 
-  const heading = isError
-    ? `${config.label} connection needs attention`
-    : `${config.label} connection received`;
-  const description = isError
-    ? getSafeFailureCopy(rawError, provider)
+  const amazonIsConfirmed = provider === 'amazon' && amazonConfirmation === 'confirmed';
+  const amazonIsChecking = provider === 'amazon' && amazonConfirmation === 'checking';
+  const heading = isUnsupportedProvider
+    ? 'Connection handoff needs attention'
+    : isError
+      ? `${config.label} connection needs attention`
     : provider === 'amazon'
-      ? 'Amazon authorized the handoff. Margin can now return to the audit workspace and continue the recovery check.'
+      ? amazonIsConfirmed
+        ? 'Amazon account connected'
+        : amazonIsChecking
+          ? 'Confirming Amazon connection'
+          : 'Amazon connection was not confirmed'
+      : `${config.label} connection received`;
+  const description = isUnsupportedProvider
+    ? 'Margin could not identify the provider from this connection return. No connection was marked complete. Return to your workspace and start the needed connection again.'
+    : isError
+      ? getSafeFailureCopy(rawError, provider)
+    : provider === 'amazon'
+      ? amazonIsConfirmed
+        ? 'Margin confirmed the stored Amazon connection for this workspace. Continue to your Audit to review the available route and next step.'
+        : amazonIsChecking
+          ? 'Margin is checking the stored Amazon connection for this workspace. It will not mark this connection as complete until that check succeeds.'
+          : amazonConfirmation === 'unavailable'
+            ? 'Margin could not verify Amazon access right now. Return to your Audit to try again or use supported Amazon reports.'
+            : 'Margin could not confirm a valid Amazon connection for this workspace. Return to your Audit to reconnect Amazon or use supported Amazon reports.'
       : `${config.label} authorized the handoff. Margin can now return to the workspace.`;
-  const eyebrow = isError ? 'Authorization handoff' : 'Authorization complete';
+  const eyebrow = isError ? 'Authorization handoff' : provider === 'amazon'
+    ? amazonIsConfirmed ? 'Amazon connection confirmed' : 'Amazon connection check'
+    : 'Authorization complete';
 
   return (
     <PageLayout title={heading} noPadding hideNavbar hideSidebar hideLogo>
@@ -322,7 +383,7 @@ export default function OAuthSuccess() {
                   {description}
                 </p>
 
-                {!isError && (
+                {!isError && provider !== 'amazon' && (
                   <p className="mt-4 text-sm text-slate-500">
                     Returning automatically in {countdown}s.
                   </p>
@@ -331,9 +392,10 @@ export default function OAuthSuccess() {
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
                     onClick={() => navigate(targetPath, { replace: true })}
-                    className="h-12 justify-between rounded-md bg-blue-600 px-5 text-white shadow-lg shadow-blue-600/15 hover:bg-blue-700 sm:min-w-56"
+                    disabled={amazonIsChecking}
+                    className="h-12 justify-between rounded-md bg-blue-600 px-5 text-white shadow-lg shadow-blue-600/15 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-56"
                   >
-                    <span>{provider === 'amazon' ? 'Return to Audit' : 'Return to Workspace'}</span>
+                    <span>{provider === 'amazon' ? (amazonIsConfirmed ? (hasAmazonAuditContinuation ? 'Back to Audit' : 'Audit Seller Account') : 'Return to Audit') : 'Return to Workspace'}</span>
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                   {isError && (

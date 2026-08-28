@@ -1505,22 +1505,6 @@ export function Dashboard() {
     { id: 'security_setup', label: 'Security', subtitle: 'Lock access' },
   ];
 
-  // Handle OAuth redirect from backend (e.g., /dashboard?amazon_connected=true)
-  useEffect(() => {
-    if (!activeSlug) return;
-    const amazonConnected = searchParams.get('amazon_connected');
-    if (amazonConnected === 'true') {
-      toast({
-        title: 'Amazon Connected Successfully',
-        description: 'Your Amazon account has been connected. We\'re analyzing your FBA data for recovery opportunities...',
-      });
-      // Redirect to integrations hub after a short delay to show the success message
-      setTimeout(() => {
-        navigate(tenantRoute(activeSlug, '/integrations-hub?amazon_connected=true'), { replace: true });
-      }, 2000);
-    }
-  }, [searchParams, navigate, toast, activeSlug]);
-
   // Reset metrics when activeSlug changes to prevent "old data flash"
   useEffect(() => {
     setDashboardSummary(null);

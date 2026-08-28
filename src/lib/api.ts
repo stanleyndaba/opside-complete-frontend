@@ -139,6 +139,33 @@ export interface AuditRunRecord {
   activation_status?: 'not_activated' | 'pending_manual_review' | 'activated';
 }
 
+export interface SellerLifecycleResponse {
+  success: true;
+  tenant: {
+    id: string;
+    slug: string;
+  };
+  continuation: {
+    kind: 'audit_intent' | 'audit' | 'workspace' | 'audit_default';
+    destination: string;
+    audit_id: string | null;
+    audit_status: AuditRunRecord['status'] | null;
+    intent_id: string | null;
+  };
+  amazon: {
+    connected: boolean;
+    needs_reconnect: boolean;
+    status: 'connected' | 'connection_required' | 'reconnect_required' | 'unavailable' | 'error';
+    error_code: string | null;
+    error_message: string | null;
+  };
+  entitlement: {
+    entitled: boolean;
+    state: string;
+    access_until: string | null;
+  };
+}
+
 export type ManualInputIssue = 'empty' | 'malformed' | 'ambiguous' | 'unsupported' | 'missing_required' | 'invalid_value' | 'prohibited';
 
 export interface CsvIngestionFileResult {
@@ -1428,6 +1455,13 @@ export const api = {
     headers: { Authorization: `Bearer ${authToken}` },
   } : undefined),
 
+  getSellerLifecycle: (auditIntentId?: string | null) => {
+    const params = new URLSearchParams();
+    if (auditIntentId) params.set('auditIntentId', auditIntentId);
+    const query = params.toString();
+    return requestJson<SellerLifecycleResponse>(`/api/seller-lifecycle${query ? `?${query}` : ''}`);
+  },
+
   getAuditHistory: (authToken?: string | null) => requestJson<{
     success: boolean;
     audits: AuditHistoryItem[];
@@ -1499,7 +1533,12 @@ export const api = {
   } : undefined),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
-  connectAmazon(marketplaceId?: string, bypassOAuth = false, tenantSlug?: string) {
+  connectAmazon(
+    marketplaceId?: string,
+    bypassOAuth = false,
+    tenantSlug?: string,
+    continuation?: { auditId?: string | null; auditIntentId?: string | null },
+  ) {
     if (!tenantSlug) throw new Error("tenantSlug required for connectAmazon");
     const frontendUrl = getFrontendUrl();
     const slug = tenantSlug;
@@ -1510,6 +1549,8 @@ export const api = {
       frontend_url: frontendUrl,
       ...(bypassOAuth ? { bypass: 'true' } : {}),
       ...(marketplaceId ? { marketplaceId } : {}),
+      ...(continuation?.auditId ? { auditRunId: continuation.auditId } : {}),
+      ...(continuation?.auditIntentId ? { auditIntentId: continuation.auditIntentId } : {}),
       tenantSlug: slug
     });
 
@@ -2705,6 +2746,8 @@ export const api = {
         connected: boolean;
         auth_valid: boolean;
         needs_reconnect: boolean;
+        token_present?: boolean;
+        token_not_expired?: boolean;
         store_bound?: boolean;
         tenant_bound?: boolean;
         seller_resolved?: boolean;

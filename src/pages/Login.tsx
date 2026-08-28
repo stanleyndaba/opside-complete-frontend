@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/supabaseClient';
 import { normalizeTenantSlug } from '@/lib/routes';
+import { getSafeInternalNavigationPath } from '@/lib/safeInternalRedirect';
 import { api } from '@/lib/api';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -30,8 +31,9 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
     return '/audit';
   }
 
-  if (value && value.startsWith('/') && !value.startsWith('/login')) {
-    return value;
+  const safePath = getSafeInternalNavigationPath(value);
+  if (safePath && !safePath.startsWith('/login')) {
+    return safePath;
   }
 
   if (intent === 'upload-csv' && storedTenantSlug) {
@@ -621,7 +623,7 @@ const Login = () => {
 
           const bootstrapResult = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
           const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
-          const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
+          const targetPath = await buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
           await routeWithCapacityGate(targetPath);
 
           return {
@@ -774,7 +776,7 @@ const Login = () => {
 
         const bootstrapResult = await bootstrapWorkspaceWithClerkToken(emailAddress, sessionToken);
         const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
-        const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
+        const targetPath = await buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
         
         toast({
           title: 'Account created',
@@ -874,7 +876,7 @@ const Login = () => {
       : 'This signup needs an additional authentication step Margin does not support yet.');
   };
 
-  const buildPostAuthTargetPath = (
+  const buildPostAuthTargetPath = async (
     intentRecord: AuditIntentRoute | null | undefined,
     resolvedTenantSlug: string,
   ) => {
@@ -882,9 +884,28 @@ const Login = () => {
       return sanitizeNextPath(intentRecord.return_path, null);
     }
 
-    return nextPath !== '/app'
-      ? bindPathToTenant(nextPath, resolvedTenantSlug)
-      : getDefaultWorkspaceLanding(resolvedTenantSlug);
+    if (nextPath !== '/app' || next === '/app') {
+      return bindPathToTenant(nextPath, resolvedTenantSlug);
+    }
+
+    if (resolvedTenantSlug === DEMO_TENANT_SLUG) {
+      return `/app/${DEMO_TENANT_SLUG}/dashboard`;
+    }
+
+    try {
+      const lifecycle = await api.getSellerLifecycle();
+      const destination = lifecycle.ok && lifecycle.data?.success
+        ? lifecycle.data.continuation.destination
+        : null;
+
+      if (destination && destination.startsWith('/') && !destination.startsWith('//') && !destination.startsWith('/login')) {
+        return bindPathToTenant(destination, resolvedTenantSlug);
+      }
+    } catch {
+      // The Audit remains the safe immediate-use destination if lifecycle lookup is temporarily unavailable.
+    }
+
+    return '/audit';
   };
 
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
@@ -914,12 +935,6 @@ const Login = () => {
     }
 
     return path.replace(/^\/app\/[^/]+/, `/app/${tenantSlug}`);
-  };
-
-  const getDefaultWorkspaceLanding = (tenantSlug: string) => {
-    return tenantSlug === DEMO_TENANT_SLUG
-      ? `/app/${DEMO_TENANT_SLUG}/dashboard`
-      : `/app/${tenantSlug}/connect-amazon`;
   };
 
   const deriveWorkspaceNameFromEmail = (value: string) => {
@@ -989,7 +1004,7 @@ const Login = () => {
       const bootstrapResult = await bootstrapWorkspaceWithClerkToken(clerkEmail, sessionToken);
       const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
       
-      const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
+      const targetPath = await buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
       await routeWithCapacityGate(targetPath);
       return;
     }
@@ -997,7 +1012,7 @@ const Login = () => {
     const bootstrapResult = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
     const resolvedTenantSlug = bootstrapResult.resolvedTenantSlug;
     
-    const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
+    const targetPath = await buildPostAuthTargetPath(bootstrapResult.intent, resolvedTenantSlug);
     await routeWithCapacityGate(targetPath);
   };
 
@@ -1035,7 +1050,7 @@ const Login = () => {
       setActiveSessionEmail(sessionEmail || null);
 
       const bootstrapResult = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
-      const targetPath = buildPostAuthTargetPath(bootstrapResult.intent, bootstrapResult.resolvedTenantSlug);
+      const targetPath = await buildPostAuthTargetPath(bootstrapResult.intent, bootstrapResult.resolvedTenantSlug);
       await routeWithCapacityGate(targetPath);
     } catch (retryError) {
       setWorkspaceRetryAvailable(true);
@@ -1201,8 +1216,9 @@ const Login = () => {
         setConfirmPassword('');
         failureStep = 'workspace';
         setLoginStep('workspace');
-        const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim() || localStorage.getItem('user_email') || '');
-        await routeWithCapacityGate(`/app/${resolvedTenantSlug}/connect-amazon`);
+        const bootstrapResult = await resolveTenantSlugForAuthenticatedUser(email.trim() || localStorage.getItem('user_email') || '');
+        const targetPath = await buildPostAuthTargetPath(bootstrapResult.intent, bootstrapResult.resolvedTenantSlug);
+        await routeWithCapacityGate(targetPath);
         setLoading(false);
         return;
       }

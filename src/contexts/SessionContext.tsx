@@ -51,8 +51,6 @@ const PUBLIC_ROUTE_SEGMENTS = [
     '/audit',
     '/branding',
     '/system-error-preview',
-    '/amazon-sandbox',
-    '/analyzing',
     '/stripe',
 ] as const;
 

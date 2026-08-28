@@ -11,10 +11,11 @@ import RecoverOnceReviewSheet from '@/components/audit/RecoverOnceReviewSheet';
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
 import { useTenant } from '@/contexts/TenantContext';
-import { api, AuditActivityEvent, AuditCommercialDecision, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleExecutionStatus, AuditScheduleOperatingState, AuditScheduleRecord, AuditTeaserSummary, normalizeAuditCommercialDecision, RecoverOnceQuote } from '@/lib/api';
+import { api, AuditActivityEvent, AuditCommercialDecision, AuditExportSummary, AuditHistoryItem, AuditRunRecord, AuditScheduleExecutionStatus, AuditScheduleOperatingState, AuditScheduleRecord, AuditTeaserSummary, normalizeAuditCommercialDecision, RecoverOnceQuote, SellerLifecycleResponse } from '@/lib/api';
 import { ANALYTICS_EVENTS } from '@/lib/analyticsEvents';
 import { trackEvent } from '@/lib/analytics';
 import { tenantRoute } from '@/lib/routes';
+import { getAuditExperienceDecision, getAuditScheduleDecision } from '@/lib/auditExperienceDecision';
 
 type AuditStep = 'public' | 'ready' | 'connect' | 'syncing' | 'detecting' | 'completed' | 'failed';
 type PendingAuditContext = {
@@ -43,6 +44,28 @@ const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
     completed: 'Review the recovery scope from this audit before deciding what should happen next.',
     failed: 'Retry when Amazon access is available.',
   };
+
+function mapAuthoritativeAmazonStatus(response: Awaited<ReturnType<typeof api.getIntegrationsStatus>>): SellerLifecycleResponse['amazon'] | null {
+  if (!response.ok || !response.data?.providers?.amazon) return null;
+
+  const amazon = response.data.providers.amazon;
+  const connected = Boolean(response.data.amazon_connected);
+  return {
+    connected,
+    needs_reconnect: Boolean(amazon.needs_reconnect),
+    status: connected
+      ? 'connected'
+      : amazon.needs_reconnect
+        ? 'reconnect_required'
+        : amazon.error_state === 'provider_error'
+          ? 'error'
+          : amazon.token_present === false
+            ? 'connection_required'
+            : 'unavailable',
+    error_code: amazon.error_state || null,
+    error_message: amazon.error_message || null,
+  };
+}
 
 const defaultTeaser: AuditTeaserSummary = {
   scopeValue: 0,
@@ -348,6 +371,7 @@ export default function Audit() {
     getToken: getClerkToken,
   } = useAuth();
   const hasDemoSession = isAuthReady && isSessionValid && authToken === 'demo-session-local';
+  const isAuthenticationResolving = !isClerkLoaded && !hasDemoSession;
   const isAuthenticated = Boolean((isClerkLoaded && isClerkSignedIn) || hasDemoSession);
   const [audit, setAudit] = useState<AuditRunRecord | null>(null);
   const [tenantSlug, setTenantSlug] = useState<string | null>(null);
@@ -356,6 +380,8 @@ export default function Audit() {
   const [commercialDecision, setCommercialDecision] = useState<AuditCommercialDecision | null>(null);
   const [resultsReadError, setResultsReadError] = useState<string | null>(null);
   const [restoreRevision, setRestoreRevision] = useState(0);
+  const [connectionRevision, setConnectionRevision] = useState(0);
+  const [isConnectionChecking, setIsConnectionChecking] = useState(true);
   const [isBusy, setIsBusy] = useState(false);
   const [isActivationSheetOpen, setIsActivationSheetOpen] = useState(false);
   const [isRecoverOnceReviewOpen, setIsRecoverOnceReviewOpen] = useState(false);
@@ -381,6 +407,7 @@ export default function Audit() {
   const [scheduleExecution, setScheduleExecution] = useState<AuditScheduleExecutionStatus | null>(null);
   const [scheduleOperating, setScheduleOperating] = useState<AuditScheduleOperatingState | null>(null);
   const [amazonConnected, setAmazonConnected] = useState<boolean | null>(null);
+  const [authoritativeAmazon, setAuthoritativeAmazon] = useState<SellerLifecycleResponse['amazon'] | null>(null);
   const [scheduleLoadError, setScheduleLoadError] = useState<string | null>(null);
   const [scheduleForm, setScheduleForm] = useState({
     cadence: 'off' as 'off' | 'weekly' | 'biweekly' | 'monthly',
@@ -412,7 +439,6 @@ export default function Audit() {
   const trackedOfferViewRef = useRef(false);
   const requestedRecoverOnceQuoteRef = useRef<string | null>(null);
   const restoredAuditRef = useRef(false);
-  const autoRunAfterOAuthRef = useRef(false);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
   const isManualUploadAudit = hasManualReportCoverage(audit, teaser);
@@ -426,15 +452,16 @@ export default function Audit() {
   const isZeroRecordLimitedAudit = !isManualUploadAudit && step === 'completed' &&
     teaser.finalStatus === 'partial_no_findings' &&
     Number(teaser.recordsReviewed || 0) === 0;
-  const auditState = useMemo(() => {
-    const baseState = getAuditState(step);
-    if (step !== 'completed') return baseState;
-    const completedState = getCompletedAuditState(teaser);
-    return {
-      ...baseState,
-      ...completedState
-    };
-  }, [step, teaser.finalStatus, teaser.recordsReviewed]);
+  const auditExperienceDecision = useMemo(() => getAuditExperienceDecision({
+    isAuthenticationResolving,
+    isAuthenticated,
+    step,
+    hasAudit: Boolean(audit?.id),
+    isManualAudit: isManualUploadAudit,
+    amazon: authoritativeAmazon,
+    isConnectionChecking,
+    resultsUnavailable: Boolean(resultsReadError),
+  }), [authoritativeAmazon, audit?.id, isAuthenticated, isAuthenticationResolving, isConnectionChecking, isManualUploadAudit, resultsReadError, step]);
   const hasFindings = step === 'completed' && teaser.findingsCount > 0;
   const hasScopeValue = step === 'completed' && teaser.scopeValue > 0;
   const hasRecoveryOpportunity = !teaser.syntheticTraining && (hasFindings || hasScopeValue);
@@ -473,6 +500,11 @@ export default function Audit() {
         ? 'Coverage recorded'
         : 'Coverage pending';
   const scheduleState = scheduleOperatingCopy(scheduleOperating);
+  const scheduleDecision = getAuditScheduleDecision({
+    isManualAudit: isManualUploadAudit,
+    step,
+    amazonConnected,
+  });
   const activeWorkspaceLabel = activeTenantSlug || 'Current workspace';
   const auditReportUploadHref = tenantRoute(activeTenantSlug, `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`);
   const evidenceRecordsHref = tenantRoute(activeTenantSlug, '/evidence-locker');
@@ -1031,6 +1063,36 @@ export default function Audit() {
   };
 
   useEffect(() => {
+    let cancelled = false;
+
+    const loadAuthoritativeAmazonStatus = async () => {
+      if (!isAuthenticated || !activeTenantSlug) {
+        if (!cancelled) {
+          setAuthoritativeAmazon(null);
+          setIsConnectionChecking(false);
+        }
+        return;
+      }
+
+      setIsConnectionChecking(true);
+      try {
+        await ensureFreshAuditAuth();
+        const status = mapAuthoritativeAmazonStatus(await api.getIntegrationsStatus(activeTenantSlug));
+        if (!cancelled) setAuthoritativeAmazon(status);
+      } catch {
+        if (!cancelled) setAuthoritativeAmazon(null);
+      } finally {
+        if (!cancelled) setIsConnectionChecking(false);
+      }
+    };
+
+    void loadAuthoritativeAmazonStatus();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTenantSlug, connectionRevision, isAuthenticated]);
+
+  useEffect(() => {
     if (trackedViewRef.current) return;
     trackedViewRef.current = true;
     trackEvent(ANALYTICS_EVENTS.auditPageViewed, {
@@ -1207,17 +1269,6 @@ export default function Audit() {
     void restoreAudit();
   }, [isAuthenticated, isClerkLoaded, isClerkSignedIn, clerkUserId, location.search, restoreRevision]);
 
-  useEffect(() => {
-    if (!isAuthenticated || autoRunAfterOAuthRef.current) return;
-    const query = new URLSearchParams(location.search);
-    if (query.get('amazon_connected') !== '1') return;
-    if (!audit?.id || !tenantSlug) return;
-    if (audit.status === 'syncing' || audit.status === 'detecting' || audit.status === 'completed' || audit.status === 'activated') return;
-
-    autoRunAfterOAuthRef.current = true;
-    void runAuditForAudit(audit);
-  }, [audit, isAuthenticated, location.search, tenantSlug]);
-
   const startAccountStep = async (sourceType: 'sp_api' | 'csv_upload' = 'sp_api') => {
     if (isBusy) return;
     setIsBusy(true);
@@ -1251,7 +1302,7 @@ export default function Audit() {
     setError(null);
     trackEvent(ANALYTICS_EVENTS.auditStarted, {
       cta_location: 'audit_app_step',
-      cta_text: 'Connect Amazon',
+      cta_text: 'Run Audit',
     });
 
     let freshToken: string | null;
@@ -1259,6 +1310,15 @@ export default function Audit() {
       freshToken = await ensureFreshAuditAuth();
       if (!freshToken) {
         throw new Error('Margin could not prepare your secure session yet. Please refresh and try again.');
+      }
+
+      const connection = mapAuthoritativeAmazonStatus(await api.getIntegrationsStatus(activeTenantSlug));
+      setAuthoritativeAmazon(connection);
+
+      if (!connection) {
+        setError('Margin could not verify Amazon access for the SP-API audit route. Check the connection again or use supported Amazon reports instead.');
+        setIsBusy(false);
+        return;
       }
     } catch (authError: unknown) {
       setIsBusy(false);
@@ -1283,12 +1343,11 @@ export default function Audit() {
     });
 
     if (!response.data.amazonConnected || response.data.audit.status === 'amazon_connection_required') {
+      await connectAmazonForAudit(response.data.audit, response.data.tenant.slug);
       return;
     }
 
-    if (response.data.amazonConnected) {
-      await runAuditForAudit(response.data.audit);
-    }
+    await runAuditForAudit(response.data.audit);
   };
 
   const connectAmazonForAudit = async (targetAudit = audit, targetTenantSlug = tenantSlug) => {
@@ -1309,7 +1368,11 @@ export default function Audit() {
       phase: 'amazon_oauth_started',
     });
 
-    const response = await api.connectAmazon(undefined, false, targetTenantSlug);
+    const auditIntentId = new URLSearchParams(location.search).get('auditIntentId');
+    const response = await api.connectAmazon(undefined, false, targetTenantSlug, {
+      auditId: targetAudit.id,
+      auditIntentId,
+    });
     setIsBusy(false);
 
     const authUrl = response.data?.auth_url || response.data?.authUrl;
@@ -1321,7 +1384,16 @@ export default function Audit() {
     window.location.assign(authUrl);
   };
 
-  const connectAmazon = () => connectAmazonForAudit();
+  const connectAmazon = () => {
+    if (audit?.id) {
+      void connectAmazonForAudit();
+      return;
+    }
+
+    // An Audit-owned record is required before requesting Amazon OAuth, including
+    // when the connection prompt originated from an existing schedule control.
+    void startAudit();
+  };
 
   const runAuditForAudit = async (targetAudit = audit) => {
     if (!targetAudit?.id) {
@@ -1557,53 +1629,107 @@ export default function Audit() {
         metric: `${Number(teaser.recordsReviewed || 0).toLocaleString()} records reviewed`,
       };
 
-  const statusCopy = {
-    public: 'Secure your data residency. Authorize read-only synchronization when you are ready.',
-    ready: 'Your account is ready. Start the audit and Margin will check whether Amazon data is connected.',
-    connect: 'Connect Amazon securely so Margin can scan FBA data and prepare the recovery scope.',
-    syncing: 'Margin is syncing Amazon data. If Amazon is still blocked, this step will fail gracefully.',
-    detecting: 'Margin is reviewing the synced Amazon activity for potential recovery opportunities.',
-    completed: teaser.message,
-    failed: getSafeAuditStatusMessage(
-      audit?.summary?.message,
-      'The audit could not finish automatically. Retry after the Amazon connection settles.'
-    ),
-  } satisfies Record<AuditStep, string>;
+  const refreshAuditConnection = () => {
+    setConnectionRevision((value) => value + 1);
+  };
 
-  const primaryAction =
-    step === 'public' ? (
-		      <Button onClick={startAccountStep} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
-		        {isAuthenticated ? 'Continue to Amazon' : 'Connect Amazon'}
-		      </Button>
-	    ) : step === 'connect' ? (
-	      <Button onClick={connectAmazon} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
-		        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-		        {isAuthenticated ? 'Continue to Amazon' : 'Connect Amazon'}
-		      </Button>
-	    ) : step === 'completed' ? (
-	      null
-	    ) : (
-	      <Button onClick={runAudit} disabled={isBusy} className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto">
-		        {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-		        {step === 'syncing' || step === 'detecting' ? 'Check Status' : audit?.sync_id ? 'Retry Audit' : 'Run Audit'}
-		      </Button>
-	    );
+  const revealAuditResults = () => {
+    document.getElementById('audit-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
-  const auditPhaseMarker = {
-    public: '01 / INITIALIZE WORKSPACE',
-    ready: '02 / READY TO AUDIT',
-    connect: '02 / AWAITING AUTHORIZATION',
-    syncing: '03 / SYNCING',
-    detecting: '04 / RECONCILING',
-    completed: '05 / FINDINGS READY',
-    failed: '!! / BLOCKED',
-  }[step];
+  const handleAuditDecision = async () => {
+    switch (auditExperienceDecision.primaryAction) {
+      case 'wait_for_auth':
+        return;
+      case 'start_account':
+        await startAccountStep();
+        return;
+      case 'start_audit':
+        await startAudit();
+        return;
+      case 'connect_amazon':
+        if (audit?.id) {
+          await connectAmazonForAudit();
+        } else {
+          await startAudit();
+        }
+        return;
+      case 'continue_audit':
+      case 'retry_audit':
+        if (audit?.id) {
+          await runAuditForAudit();
+        } else {
+          await startAudit();
+        }
+        return;
+      case 'check_connection':
+        refreshAuditConnection();
+        return;
+      case 'check_progress':
+      case 'reload_result':
+        reloadRecordedResult();
+        return;
+      case 'review_results':
+        revealAuditResults();
+        return;
+      case 'upload_reports':
+        navigate(auditReportUploadHref);
+        return;
+    }
+  };
+
+  const handleScheduleDecision = () => {
+    setIsScheduleDialogOpen(false);
+    switch (scheduleDecision.action) {
+      case 'connect_amazon':
+        void connectAmazon();
+        return;
+      case 'check_progress':
+        reloadRecordedResult();
+        return;
+      case 'review_results':
+        revealAuditResults();
+        return;
+      case 'upload_reports':
+        navigate(auditReportUploadHref);
+        return;
+      default:
+        return;
+    }
+  };
+
+  const primaryAction = (
+    <Button
+      onClick={() => void handleAuditDecision()}
+      disabled={isBusy || auditExperienceDecision.primaryAction === 'wait_for_auth' || (auditExperienceDecision.primaryAction === 'check_connection' && isConnectionChecking)}
+      className="h-10 w-full rounded-[6px] bg-[#0B74DE] px-6 text-[13px] font-medium text-white shadow-none transition-colors hover:bg-[#075EA8] sm:w-auto"
+    >
+      {isBusy || auditExperienceDecision.primaryAction === 'wait_for_auth' || (auditExperienceDecision.primaryAction === 'check_connection' && isConnectionChecking)
+        ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        : null}
+      {auditExperienceDecision.primaryLabel}
+    </Button>
+  );
+
+  const auditPhaseMarker = isAuthenticationResolving
+    ? '— / CONFIRMING SECURE SESSION'
+    : {
+      public: '01 / INITIALIZE WORKSPACE',
+      ready: '02 / READY TO AUDIT',
+      connect: '02 / AWAITING AUTHORIZATION',
+      syncing: '03 / SYNCING',
+      detecting: '04 / RECONCILING',
+      completed: '05 / FINDINGS READY',
+      failed: '!! / BLOCKED',
+    }[step];
 
   const readinessItems = [
     {
       label: 'Terminal Link',
-      value: step === 'public' || step === 'ready'
-        ? 'Not connected'
+      value: isAuthenticationResolving
+        ? 'Checking session'
+        : step === 'public' || step === 'ready'
+          ? 'Not connected'
         : step === 'connect'
           ? 'Awaiting authorization'
           : step === 'syncing' || step === 'detecting'
@@ -1611,26 +1737,30 @@ export default function Audit() {
             : step === 'completed'
               ? 'Operational'
               : 'Blocked',
-      status: step === 'completed' ? 'success' : step === 'failed' ? 'error' : step === 'public' || step === 'ready' ? 'neutral' : 'working',
+      status: isAuthenticationResolving ? 'working' : step === 'completed' ? 'success' : step === 'failed' ? 'error' : step === 'public' || step === 'ready' ? 'neutral' : 'working',
     },
     {
       label: 'Evidence Depth',
-      value: step === 'completed'
-        ? teaser.evidenceReadyCount > 0 ? `${teaser.evidenceReadyCount} nodes` : 'Incomplete'
-        : step === 'syncing' || step === 'detecting' ? 'Processing' : 'Awaiting sync',
-      status: step === 'completed' && teaser.evidenceReadyCount > 0 ? 'success' : step === 'syncing' || step === 'detecting' ? 'working' : 'neutral',
+      value: isAuthenticationResolving
+        ? 'Waiting for session'
+        : step === 'completed'
+          ? teaser.evidenceReadyCount > 0 ? `${teaser.evidenceReadyCount} nodes` : 'Incomplete'
+          : step === 'syncing' || step === 'detecting' ? 'Processing' : 'Awaiting sync',
+      status: isAuthenticationResolving ? 'working' : step === 'completed' && teaser.evidenceReadyCount > 0 ? 'success' : step === 'syncing' || step === 'detecting' ? 'working' : 'neutral',
     },
     {
       label: 'Detected Exposure',
-      value: step === 'completed'
-        ? teaser.findingsCount > 0 ? `${teaser.findingsCount} discrepancies` : 'Zero'
-        : step === 'syncing' || step === 'detecting' ? 'Reconciling' : 'Not evaluated',
-      status: step === 'completed' ? (teaser.findingsCount > 0 ? 'success' : 'neutral') : step === 'syncing' || step === 'detecting' ? 'working' : 'neutral',
+      value: isAuthenticationResolving
+        ? 'Waiting for session'
+        : step === 'completed'
+          ? teaser.findingsCount > 0 ? `${teaser.findingsCount} discrepancies` : 'Zero'
+          : step === 'syncing' || step === 'detecting' ? 'Reconciling' : 'Not evaluated',
+      status: isAuthenticationResolving ? 'working' : step === 'completed' ? (teaser.findingsCount > 0 ? 'success' : 'neutral') : step === 'syncing' || step === 'detecting' ? 'working' : 'neutral',
     },
     {
       label: 'Filing Authority',
-      value: step === 'completed' && !hasRecoveryOpportunity ? 'None required' : 'Seller controlled',
-      status: step === 'completed' ? 'success' : 'neutral',
+      value: isAuthenticationResolving ? 'Waiting for session' : step === 'completed' && !hasRecoveryOpportunity ? 'None required' : 'Seller controlled',
+      status: isAuthenticationResolving ? 'working' : step === 'completed' ? 'success' : 'neutral',
     },
   ];
 
@@ -1649,15 +1779,17 @@ export default function Audit() {
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <Link
-              to={tenant ? '/app/' + tenant.slug + '/data-upload?returnTo=audit' + (audit?.id ? '&auditId=' + encodeURIComponent(audit.id) : '') : '/data-upload?returnTo=audit' + (audit?.id ? '&auditId=' + encodeURIComponent(audit.id) : '')}
-              className="inline-flex min-h-10 items-center gap-1.5 rounded-md px-2.5 text-[12px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3 sm:text-[13px]"
-              title="Use Amazon reports"
-            >
-              <FilePlus2 className="h-4 w-4 shrink-0" />
-              <span className="hidden sm:inline">Use Amazon reports</span>
-              <span className="sm:hidden">Reports</span>
-            </Link>
+            {auditExperienceDecision.secondaryAction === 'upload_reports' ? (
+              <Link
+                to={auditReportUploadHref}
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-md px-2.5 text-[12px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3 sm:text-[13px]"
+                title="Use Amazon reports"
+              >
+                <FilePlus2 className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">Use Amazon reports</span>
+                <span className="sm:hidden">Reports</span>
+              </Link>
+            ) : null}
             <button type="button" onClick={() => setIsExportDialogOpen(true)} className="inline-flex h-10 items-center gap-1.5 rounded-md border border-[#D7D7D1] bg-white px-2.5 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3 sm:text-[13px]" title="Export summary">
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">Export summary</span>
@@ -1672,14 +1804,15 @@ export default function Audit() {
             <div className="border-b border-[#E8E7E1] pb-6">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
                 <div className="max-w-2xl">
-                  <h1 id="audit-workspace-title" className="font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[36px]">
-                    {audit ? (selectedAuditIsLatest ? 'Your latest audit' : 'Your selected audit') : 'Your audit workspace'}
+                  <p className="text-[11px] font-semibold uppercase tracking-normal text-[#777A82]">{auditExperienceDecision.statusLabel}</p>
+                  <h1 id="audit-workspace-title" className="mt-2 font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[36px]">
+                    {auditExperienceDecision.title}
                   </h1>
                   <p className="mt-3 max-w-xl text-[15px] leading-6 text-[#595E68]">
-                    {audit ? (resultsReadError ? 'Margin could not load the recorded result details. No commercial recommendation is available until those recorded results can be loaded.' : selectedAuditOutcome + '. ' + selectedAuditCoverage + '. Review what Margin examined before deciding what happens next.') : isAuthenticated ? 'Start an audit when this workspace is ready. Margin will keep the connection, coverage, result, and safe next step together here.' : 'Connect Amazon or use supported Amazon reports to begin a recovery audit.'}
+                    {auditExperienceDecision.description}
                   </p>
                 </div>
-                <div className="flex shrink-0 flex-wrap items-center gap-2">{primaryAction}<button type="button" onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="inline-flex h-10 items-center rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[13px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">View audit scope</button></div>
+                <div className="flex max-w-sm shrink-0 flex-col items-stretch gap-2 sm:items-end">{primaryAction}<p className="max-w-sm text-[12px] leading-5 text-[#777A82]">{auditExperienceDecision.primaryWhy}</p><div className="flex flex-wrap items-center gap-2"><button type="button" onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="inline-flex h-10 items-center rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[13px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">View audit scope</button>{auditExperienceDecision.secondaryAction === 'upload_reports' ? <Link to={auditReportUploadHref} className="inline-flex h-10 items-center rounded-[10px] px-3 text-[13px] font-medium text-[#3F51A8] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">{auditExperienceDecision.secondaryLabel}</Link> : null}</div></div>
               </div>
             </div>
 
@@ -1725,7 +1858,7 @@ export default function Audit() {
             ) : null}
 
             {step === 'completed' && !resultsReadError ? (
-              <section className="mt-6 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4 sm:p-5" aria-labelledby="recorded-review-title">
+              <section id="audit-results" className="mt-6 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4 sm:p-5" aria-labelledby="recorded-review-title">
                 <div className="flex flex-col gap-4 border-b border-[#D7D7D1] pb-4 sm:flex-row sm:items-start sm:justify-between"><div><h2 id="recorded-review-title" className="font-lora text-[26px] font-normal leading-tight tracking-[-0.02em] text-[#191B20]">Your review scope</h2><p className="mt-2 max-w-xl text-[13px] leading-5 text-[#595E68]">These are recorded potential findings from the selected audit. Review coverage and evidence before deciding on a seller-controlled next step.</p></div><span className="self-start rounded-full border border-[#D7D7D1] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#595E68]">{isZeroRecordLimitedAudit ? 'Limited coverage' : 'Ready for review'}</span></div>
                 <dl className="mt-4 grid overflow-hidden rounded-[10px] border border-[#E8E7E1] bg-white sm:grid-cols-3"><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential recovery scope</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</dd><p className="mt-1 text-[12px] text-[#595E68]">{monetaryScopeCopy(teaser)}</p></div><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential opportunities</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">Items that may require review.</p></div><div className="p-4"><dt className="text-[11px] font-semibold text-[#777A82]">Evidence ready</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">{teaser.reviewOnlyCount ? `${teaser.reviewOnlyCount} review-only item${teaser.reviewOnlyCount === 1 ? '' : 's'} require additional evidence.` : 'Recorded evidence readiness only.'}</p></div></dl>
                 <div className="mt-4 grid gap-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_220px]"><div>{teaser.categories.length ? <div className="flex flex-wrap gap-1.5">{teaser.categories.map((category) => <span key={category} className="rounded-full border border-[#E8E7E1] bg-[#FBFAF7] px-2 py-1 text-[11px] font-medium text-[#595E68]">{category}</span>)}</div> : <p className="text-[13px] text-[#595E68]">{teaser.findingsCount === 0 ? 'No qualifying condition was detected in the available evidence.' : 'No category summary was recorded for this audit.'}</p>}<div className="mt-5 border-t border-[#E8E7E1] pt-4"><p className="text-[12px] font-semibold text-[#191B20]">Coverage details</p><p className="mt-1 text-[13px] leading-5 text-[#595E68]">{isManualUploadAudit ? manualReportCoverageCopy(teaser) : <>{teaser.recordsReviewed != null ? Number(teaser.recordsReviewed).toLocaleString() + ' Amazon records were synchronized and reviewed.' : 'Amazon record coverage analysis is in progress.'}{teaser.sourcesReviewed?.length ? ' Primary sources: ' + teaser.sourcesReviewed.join(', ') + '.' : ''}{teaser.sourcesUnavailable?.length ? ' Restricted access: ' + teaser.sourcesUnavailable.join(', ') + '.' : ''}</>}</p></div></div><aside className="border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#191B20]">Review boundary</p><p className="mt-1 text-[12px] leading-5 text-[#595E68]">The selected audit does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter.</p><button type="button" onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="mt-3 text-[12px] font-semibold text-[#3F51A8] outline-none hover:text-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7]">Inspect recorded scope</button></aside></div>
@@ -1870,7 +2003,7 @@ export default function Audit() {
         <DialogContent className="max-h-[min(780px,calc(100vh-32px))] overflow-y-auto rounded-[14px] border-[#D7D7D1] bg-white p-0 text-[#191B20] shadow-[0_16px_48px_rgba(25,27,32,0.18)] sm:max-w-[680px]">
           <DialogHeader className="border-b border-[#E8E7E1] px-5 pb-5 pt-6 sm:px-7"><p className="text-[11px] font-semibold uppercase tracking-normal text-[#777A82]">Workspace run preference</p><DialogTitle className="mt-2 text-[22px] font-semibold tracking-[-0.025em] text-[#191B20]">Automatic audit schedule</DialogTitle><DialogDescription className="mt-2 max-w-xl text-[13px] leading-5 text-[#595E68]">This is a workspace-owned run preference. It does not create proof, filing authority, reimbursement eligibility, payment, or case closure.</DialogDescription></DialogHeader>
           <div className="px-5 py-5 sm:px-7 sm:py-6">
-            {scheduleLoadError ? <div className="border-l-2 border-[#9A5A03] bg-[#FBFAF7] px-4 py-4 text-[13px] leading-5 text-[#595E68]" role="alert"><p>{scheduleLoadError}</p><Button variant="outline" size="sm" onClick={() => void openScheduleDialog()} className="mt-3 h-8 border-[#D7D7D1] bg-white px-3 text-[12px] font-medium text-[#191B20] hover:bg-[#F4F3ED]">Retry schedule status</Button></div> : scheduleOperating ? <section className="border-b border-[#E8E7E1] pb-5"><div className="flex flex-wrap items-start justify-between gap-3"><div className="border-l-2 border-[#3F51A8] pl-4"><p className={'text-[13px] font-semibold ' + scheduleState.tone}>{scheduleState.label}</p><p className="mt-1 max-w-md text-[13px] leading-5 text-[#595E68]">{scheduleState.detail}</p></div><span className="border border-[#D7D7D1] bg-[#FBFAF7] px-2 py-1 text-[10px] font-semibold uppercase tracking-normal text-[#777A82]">{activeWorkspaceLabel}</span></div><dl className="mt-5 grid border-y border-[#E8E7E1] text-[12px] sm:grid-cols-2"><div className="border-b border-[#E8E7E1] py-3 sm:border-b-0 sm:border-r sm:pr-4"><dt className="font-semibold text-[#595E68]">Last attempt</dt><dd className="mt-1 font-medium text-[#191B20]">{formatAuditDate(scheduleOperating.last_attempt_at, 'No automatic attempt recorded')}</dd></div><div className="py-3 sm:pl-4"><dt className="font-semibold text-[#595E68]">Next planned attempt</dt><dd className="mt-1 font-medium text-[#191B20]">{formatAuditDate(scheduleOperating.next_run_at, 'Not scheduled')}</dd></div></dl><div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] leading-5 text-[#595E68]"><span className="font-medium text-[#191B20]">Amazon connection: {amazonConnected === true ? 'Connected' : amazonConnected === false ? 'Action required' : 'Checking'}</span>{amazonConnected === false ? <button type="button" onClick={() => { setIsScheduleDialogOpen(false); void connectAmazon(); }} className="font-semibold text-[#3F51A8] hover:text-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7]">Connect Amazon</button> : null}{scheduleOperating.last_audit ? <button type="button" onClick={() => { setIsScheduleDialogOpen(false); navigate('/audit?auditId=' + encodeURIComponent(scheduleOperating.last_audit!.id)); }} className="font-semibold text-[#3F51A8] hover:text-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7]">View resulting audit</button> : null}</div></section> : <div className="border-l-2 border-[#D7D7D1] bg-[#FBFAF7] px-4 py-3 text-[13px] text-[#595E68]">Loading schedule status for this workspace.</div>}
+            {scheduleLoadError ? <div className="border-l-2 border-[#9A5A03] bg-[#FBFAF7] px-4 py-4 text-[13px] leading-5 text-[#595E68]" role="alert"><p>{scheduleLoadError}</p><Button variant="outline" size="sm" onClick={() => void openScheduleDialog()} className="mt-3 h-8 border-[#D7D7D1] bg-white px-3 text-[12px] font-medium text-[#191B20] hover:bg-[#F4F3ED]">Retry schedule status</Button></div> : scheduleOperating ? <section className="border-b border-[#E8E7E1] pb-5"><div className="flex flex-wrap items-start justify-between gap-3"><div className="border-l-2 border-[#3F51A8] pl-4"><p className={'text-[13px] font-semibold ' + scheduleState.tone}>{scheduleState.label}</p><p className="mt-1 max-w-md text-[13px] leading-5 text-[#595E68]">{scheduleState.detail}</p></div><span className="border border-[#D7D7D1] bg-[#FBFAF7] px-2 py-1 text-[10px] font-semibold uppercase tracking-normal text-[#777A82]">{activeWorkspaceLabel}</span></div><dl className="mt-5 grid border-y border-[#E8E7E1] text-[12px] sm:grid-cols-2"><div className="border-b border-[#E8E7E1] py-3 sm:border-b-0 sm:border-r sm:pr-4"><dt className="font-semibold text-[#595E68]">Last attempt</dt><dd className="mt-1 font-medium text-[#191B20]">{formatAuditDate(scheduleOperating.last_attempt_at, 'No automatic attempt recorded')}</dd></div><div className="py-3 sm:pl-4"><dt className="font-semibold text-[#595E68]">Next planned attempt</dt><dd className="mt-1 font-medium text-[#191B20]">{formatAuditDate(scheduleOperating.next_run_at, 'Not scheduled')}</dd></div></dl><div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] leading-5 text-[#595E68]"><span className="font-medium text-[#191B20]">{scheduleDecision.connectionLabel}</span>{scheduleDecision.action ? <button type="button" onClick={handleScheduleDecision} className="font-semibold text-[#3F51A8] hover:text-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7]">{scheduleDecision.actionLabel}</button> : null}{scheduleDecision.actionWhy ? <span>{scheduleDecision.actionWhy}</span> : null}{scheduleOperating.last_audit ? <button type="button" onClick={() => { setIsScheduleDialogOpen(false); navigate('/audit?auditId=' + encodeURIComponent(scheduleOperating.last_audit!.id)); }} className="font-semibold text-[#3F51A8] hover:text-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7]">View resulting audit</button> : null}</div></section> : <div className="border-l-2 border-[#D7D7D1] bg-[#FBFAF7] px-4 py-3 text-[13px] text-[#595E68]">Loading schedule status for this workspace.</div>}
             {scheduleStatusAvailable && !scheduleEntitled ? <div className="mt-5 border-l-2 border-[#D7D7D1] bg-[#FBFAF7] px-4 py-3 text-[13px] leading-5 text-[#595E68]">Recovery Workspace is required to create or resume an automatic audit schedule. Existing schedule preferences can still be paused or turned off.</div> : null}
             {scheduleStatusAvailable && scheduleExecution && !scheduleExecution.available ? <div className="mt-5 border-l-2 border-[#9A5A03] bg-[#FBFAF7] px-4 py-3 text-[13px] leading-5 text-[#595E68]">Automatic execution is not active in this environment. Margin will not save a new active schedule because it could not run it. Use <span className="font-medium text-[#191B20]">Run Audit</span> for a manual audit; any existing preference can be paused or turned off.</div> : null}
             {scheduleStatusAvailable && scheduleExecution?.available ? <div className="mt-5 border-l-2 border-[#3F51A8] bg-[#FBFAF7] px-4 py-3 text-[13px] leading-5 text-[#595E68]">Margin checks due schedules approximately every {scheduleExecution.cadence_minutes || 15} minutes. Completed supported audits appear in <Link to={notificationsHref} className="font-semibold text-[#3F51A8] hover:text-[#31418D]">Notifications</Link>; completion email is not enabled from this schedule.</div> : null}

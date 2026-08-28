@@ -24,7 +24,6 @@ const Index = lazy(() => import("./pages/Index"));
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
-const ConnectAmazonAccount = lazy(() => import("./pages/ConnectAmazonAccount"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/Recoveries"));
@@ -45,14 +44,11 @@ const NotificationHub = lazy(() => import("./pages/NotificationHub"));
 const ApiAccess = lazy(() => import("./pages/ApiAccess"));
 const Help = lazy(() => import("./pages/Help"));
 const WhatsNew = lazy(() => import("./pages/WhatsNew"));
-const ReconnectProvider = lazy(() => import('./pages/ReconnectProvider'));
 const TenantRedirect = lazy(() => import('./components/navigation/TenantRedirect').then(module => ({ default: module.TenantRedirect })));
 
 // Analytics injection
-const OAuthProviderSandbox = lazy(() => import("./pages/OAuthProviderSandbox"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthCallbackRedirect = lazy(() => import("./pages/OAuthCallbackRedirect"));
-const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const SystemErrorPreview = lazy(() => import("./pages/SystemErrorPreview"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
 const Careers = lazy(() => import("./pages/Careers"));
@@ -62,7 +58,6 @@ const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
 const AmazonAuthTest = lazy(() => import("./pages/AmazonAuthTest"));
-const Agent1Test = lazy(() => import("./pages/Agent1Test"));
 const Terms = lazy(() => import("./pages/Terms"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const LearningInsights = lazy(() => import("./pages/LearningInsights"));
@@ -152,10 +147,6 @@ const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
 const EvidenceSearch = lazy(() => import("./pages/EvidenceSearch"));
 const MarginBoard = lazy(() => import("./pages/MarginBoard"));
 const Branding = lazy(() => import("./pages/Branding"));
-
-// Shock & Awe Flow Pages
-const AmazonSandbox = lazy(() => import("./pages/AmazonSandbox"));
-const AnalyzingScreen = lazy(() => import("./pages/AnalyzingScreen"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -275,7 +266,7 @@ const App = () => (
                         {/* PUBLIC ROUTES - No tenant required */}
                         <Route path="/" element={<Index />} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/connect-amazon" element={<TenantRedirect targetPath="/connect-amazon" />} />
+                        <Route path="/connect-amazon" element={<Navigate to="/audit" replace />} />
                         <Route path="/careers" element={<Careers />} />
                         <Route path="/docs" element={<Docs />} />
                         <Route path="/privacy" element={<Privacy />} />
@@ -368,13 +359,10 @@ const App = () => (
                         <Route path="/auth/callback" element={<OAuthCallback />} />
                         <Route path="/auth/callback/redirect" element={<OAuthCallbackRedirect />} />
                         <Route path="/auth/redirect/callback" element={<OAuthCallbackRedirect />} />
-                        <Route path="/auth/success" element={<OAuthSuccess />} />
-                        <Route path="/auth/amazon-sandbox" element={<OAuthProviderSandbox />} />
+                        <Route path="/auth/success" element={<OAuthCallback />} />
                         <Route path="/auth/sandbox-callback" element={<OAuthCallback />} />
                         <Route path="/system-error-preview" element={<SystemErrorPreview />} />
                         <Route path="/stripe/callback" element={<StripeCallback />} />
-                        <Route path="/amazon-sandbox" element={<AmazonSandbox />} />
-                        <Route path="/analyzing" element={<AnalyzingScreen />} />
                         <Route path="/data-upload" element={<DataUpload />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
                         <Route path="/app" element={appRoute(<TenantRedirect />)} />
@@ -385,7 +373,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/export" element={appRoute(<ExportCenter />)} />
                         <Route path="/app/:tenantSlug/learning-insights" element={appRoute(<LearningInsights />)} />
                         <Route path="/app/:tenantSlug/auth/callback" element={appRoute(<FoundingActivationGate><OAuthCallback /></FoundingActivationGate>)} />
-                        <Route path="/app/:tenantSlug/auth/success" element={appRoute(<FoundingActivationGate><OAuthSuccess /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/auth/success" element={appRoute(<FoundingActivationGate><OAuthCallback /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/integrations-hub" element={appRoute(<FoundingActivationGate><IntegrationsHub /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/recoveries" element={appRoute(<Recoveries />)} />
                         <Route path="/app/:tenantSlug/filing-pipeline" element={appRoute(<FilingPipeline />)} />
@@ -402,9 +390,9 @@ const App = () => (
                         <Route path="/app/:tenantSlug/notifications" element={appRoute(<NotificationHub />)} />
                         <Route path="/app/:tenantSlug/settings" element={appRoute(<Settings />)} />
                         <Route path="/app/:tenantSlug/upcoming-payments" element={appRoute(<Navigate to="../billing" replace />)} />
-                        <Route path="/app/:tenantSlug/reconnect-amazon" element={appRoute(<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>)} />
-                        <Route path="/app/:tenantSlug/connect-amazon" element={appRoute(<FoundingActivationGate><ConnectAmazonAccount /></FoundingActivationGate>)} />
-                        <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={appRoute(<FoundingActivationGate><ReconnectProvider /></FoundingActivationGate>)} />
+                        <Route path="/app/:tenantSlug/reconnect-amazon" element={appRoute(<Navigate to="/audit" replace />)} />
+                        <Route path="/app/:tenantSlug/connect-amazon" element={appRoute(<Navigate to="/audit" replace />)} />
+                        <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={appRoute(<Navigate to="/audit" replace />)} />
                         <Route path="/app/:tenantSlug/billing" element={appRoute(<FoundingActivationGate><Billing /></FoundingActivationGate>)} />
                         <Route path="/app/:tenantSlug/api-access" element={appRoute(<ApiAccess />)} />
                         <Route path="/app/:tenantSlug/help" element={appRoute(<Help />)} />
@@ -418,7 +406,6 @@ const App = () => (
                         <Route path="/app/:tenantSlug/admin" element={appRoute(<AdminOnly><Admin /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/users-integrations" element={appRoute(<AdminOnly><AdminUsersAndIntegrations /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/amazon-auth-test" element={appRoute(<AdminOnly><AmazonAuthTest /></AdminOnly>)} />
-                        <Route path="/app/:tenantSlug/test/agent1" element={appRoute(<Agent1Test />)} />
                         <Route path="/app/:tenantSlug/revenue-model" element={appRoute(<AdminOnly><RevenueModel /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/revenue-model" element={appRoute(<AdminOnly><RevenueModel /></AdminOnly>)} />
                         <Route path="/app/:tenantSlug/admin/revenue" element={appRoute(<AdminOnly><AdminRevenue /></AdminOnly>)} />
@@ -434,8 +421,8 @@ const App = () => (
                         <Route path="/dispute-cases" element={<TenantRedirect />} />
                         <Route path="/appeals" element={<TenantRedirect />} />
                         <Route path="/settings" element={<TenantRedirect />} />
-                        <Route path="/reconnect-amazon" element={<TenantRedirect />} />
-                        <Route path="/connect-amazon-account" element={<TenantRedirect targetPath="/connect-amazon" />} />
+                        <Route path="/reconnect-amazon" element={<Navigate to="/audit" replace />} />
+                        <Route path="/connect-amazon-account" element={<Navigate to="/audit" replace />} />
                         <Route path="/billing" element={<TenantRedirect />} />
                         <Route path="/history" element={<TenantRedirect targetPath="/billing" />} />
                         <Route path="/upcoming-payments" element={<TenantRedirect targetPath="/billing" />} />

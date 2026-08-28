@@ -17,7 +17,7 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 
-import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
@@ -25,6 +25,10 @@ import { tenantRoute } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { useTenant } from '@/contexts/TenantContext';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+import {
+  getProviderConnectionContext,
+  resolveProviderConnectionContext,
+} from '@/lib/oauthCallbackConfirmation';
 
 // ... (existing constants)
 
@@ -144,6 +148,18 @@ const DEMO_PROVIDER_ACCOUNTS: Record<SecondaryProviderKey, string> = {
   xero: 'ledger@acme-operations.test',
 };
 const DEMO_PROVIDER_LAST_INGEST = '2026-04-21T08:54:21.000Z';
+const PROVIDER_LABELS: Record<string, string> = {
+  amazon: 'Amazon',
+  gmail: 'Gmail',
+  outlook: 'Outlook',
+  gdrive: 'Google Drive',
+  dropbox: 'Dropbox',
+  slack: 'Slack',
+  adobe_sign: 'Adobe Sign',
+  onedrive: 'OneDrive',
+  quickbooks: 'QuickBooks',
+  xero: 'Xero',
+};
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
@@ -161,13 +177,6 @@ export default function IntegrationsHub() {
   const [newStoreData, setNewStoreData] = useState({ name: '', marketplace: 'ATVPDKIKX0DER', seller_id: '' });
   const [addingStore, setAddingStore] = useState(false);
   const [deletingStore, setDeletingStore] = useState<string | null>(null);
-  const [searchParams] = useSearchParams();
-
-  // Connection-result modal state
-  const [showRecoveryReveal, setShowRecoveryReveal] = useState(false);
-  const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
-  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
-
   // Check if we're in sandbox mode
   const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
   const isSandbox = String(env.VITE_SANDBOX || '') === 'true' || String(env.MODE || env.NODE_ENV || '') !== 'production';
@@ -288,54 +297,6 @@ export default function IntegrationsHub() {
   } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Check if we just connected Amazon and should show the reveal
-  useEffect(() => {
-    if (!isReady || !activeSlug) return;
-    const amazonConnected = searchParams.get('amazon_connected');
-
-    if (amazonConnected === 'true' && !showRecoveryReveal) {
-      // Fetch the actual recovery data
-      api.getAmazonRecoveries(activeSlug).then(response => {
-        if (response.ok && response.data) {
-          setRecoveryData(response.data);
-          setShowRecoveryReveal(true);
-
-          // Auto-show evidence modal after 3 seconds
-          setTimeout(() => {
-            setShowEvidenceModal(true);
-          }, 3000);
-        }
-      });
-    }
-  }, [searchParams, showRecoveryReveal, activeSlug, isReady]);
-
-  // Show toast when redirected from OAuthSuccess page with ?connected=provider
-  useEffect(() => {
-    const connectedProvider = searchParams.get('connected');
-    if (connectedProvider) {
-      const labels: Record<string, string> = {
-        amazon: 'Amazon Store',
-        gmail: 'Gmail',
-        outlook: 'Outlook',
-        gdrive: 'Google Drive',
-        dropbox: 'Dropbox',
-        stripe: 'Stripe'
-      };
-      const label = labels[connectedProvider] || connectedProvider;
-      toast({
-        title: `${label} Connected`,
-        description: `Your ${label} account has been securely linked and is ready to use.`,
-      });
-      // Clean up the URL param to prevent re-triggering
-      const newParams = new URLSearchParams(searchParams.toString());
-      newParams.delete('connected');
-      const cleanUrl = newParams.toString()
-        ? `${location.pathname}?${newParams.toString()}`
-        : location.pathname;
-      window.history.replaceState({}, '', cleanUrl);
-    }
-  }, [searchParams, toast, location.pathname]);
-
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -392,6 +353,43 @@ export default function IntegrationsHub() {
       setAccountingCoverage(accountingCoverageRes.data);
     }
   };
+
+  useEffect(() => {
+    if (!isReady || !activeSlug) return;
+
+    const callbackContext = getProviderConnectionContext(location.search);
+    if (!callbackContext.provider) return;
+
+    let cancelled = false;
+    const confirmCallbackContext = async () => {
+      try {
+        const statusResponse = await api.getIntegrationsStatus(activeSlug);
+        if (cancelled) return;
+
+        const resolution = resolveProviderConnectionContext(
+          location.search,
+          statusResponse.ok ? statusResponse.data : null,
+        );
+        if (!resolution.confirmed || !resolution.provider) {
+          return;
+        }
+
+        const label = PROVIDER_LABELS[resolution.provider] || resolution.provider;
+        toast({
+          title: `${label} connection confirmed`,
+          description: `Margin confirmed the ${label} connection for this workspace.`,
+        });
+      } catch {
+        // Context-only callback markers must remain silent when authoritative
+        // status is unavailable; they may never create a success claim.
+      }
+    };
+
+    void confirmCallbackContext();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeSlug, isReady, location.search, toast]);
 
   const handleConnectDocSource = async (provider: SecondaryProviderKey) => {
     const providerName = provider === 'gdrive' ? 'Google Drive'
@@ -780,114 +778,6 @@ export default function IntegrationsHub() {
     return () => { if (es) es.close(); };
   }, [toast, isReady, activeSlug]);
 
-
-  // Handle OAuth callback query parameters
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const amazonConnected = searchParams.get('amazon_connected');
-    const gmailConnected = searchParams.get('gmail_connected');
-    const outlookConnected = searchParams.get('outlook_connected');
-    const gdriveConnected = searchParams.get('gdrive_connected');
-    const dropboxConnected = searchParams.get('dropbox_connected');
-    const quickbooksConnected = searchParams.get('quickbooks_connected');
-    const xeroConnected = searchParams.get('xero_connected');
-    const email = searchParams.get('email');
-    const error = searchParams.get('error');
-    const message = searchParams.get('message');
-    const amazonError = searchParams.get('amazon_error');
-    const success = searchParams.get('success');
-
-    // Handle Amazon OAuth callback (per FRONTEND_AMAZON_OAUTH_SYNC_STATUS.md)
-    if (amazonConnected === 'true') {
-      toast({
-        title: 'Amazon Account Connected Successfully',
-        description: message || 'Amazon account connected successfully! Redirecting to sync status...',
-      });
-
-      // Refresh integration status and evidence sources in parallel to update UI
-      refreshIntegrationTruth().catch(() => undefined);
-
-      // Clean up URL by removing query parameters after processing
-      const cleanUrl = location.pathname;
-      navigate(cleanUrl, { replace: true });
-
-      // Auto-redirect to sync page after 2-3 seconds to show the live dialogue logs
-      setTimeout(() => {
-        navigate(tenantRoute(activeSlug || 'default', '/sync'));
-      }, 2500);
-      return; // Exit early to avoid processing other providers
-    }
-
-    // Handle Amazon OAuth error
-    if (amazonError === 'true' || (error && amazonConnected === null && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected)) {
-      toast({
-        title: 'Amazon Connection Failed',
-        description: error ? decodeURIComponent(error) : (message || 'Failed to connect Amazon account. Please try again.'),
-        variant: 'destructive',
-      });
-
-      // Clean up URL
-      const cleanUrl = location.pathname;
-      navigate(cleanUrl, { replace: true });
-      return; // Exit early
-    }
-
-    // Show success notification if provider was just connected
-    if (gmailConnected === 'true' || outlookConnected === 'true' || gdriveConnected === 'true' || dropboxConnected === 'true' || quickbooksConnected === 'true' || xeroConnected === 'true') {
-      const providerName = gmailConnected === 'true' ? 'Gmail'
-        : outlookConnected === 'true' ? 'Outlook'
-          : gdriveConnected === 'true' ? 'Google Drive'
-            : dropboxConnected === 'true' ? 'Dropbox'
-            : quickbooksConnected === 'true' ? 'QuickBooks'
-            : xeroConnected === 'true' ? 'Xero'
-              : 'provider';
-
-      const accountingProvider = providerName === 'QuickBooks' || providerName === 'Xero';
-      toast({
-        title: `${providerName} Connected Successfully`,
-        description: accountingProvider
-          ? `${providerName} OAuth is connected. Margin is now verifying read-only financial evidence access.`
-          : email ? `${providerName} connected for ${email}. Evidence ingestion will begin automatically.` : `${providerName} has been connected successfully.`,
-      });
-
-      // Refresh integration status to update UI
-      // Refresh integration status and evidence sources in parallel to update UI
-      refreshIntegrationTruth().catch(() => undefined);
-
-      // Clean up URL by removing query parameters after processing (optional)
-      const cleanUrl = location.pathname;
-      navigate(cleanUrl, { replace: true });
-    }
-
-    // Show error notification if OAuth failed (for non-Amazon providers)
-    if (error && !amazonError && amazonConnected !== 'true') {
-      toast({
-        title: 'Connection Failed',
-        description: decodeURIComponent(error),
-        variant: 'destructive',
-      });
-
-      // Clean up URL
-      const cleanUrl = location.pathname;
-      navigate(cleanUrl, { replace: true });
-    }
-
-    // Show generic success message if success parameter is present
-    if (success && !amazonConnected && !gmailConnected && !outlookConnected && !gdriveConnected && !dropboxConnected && !quickbooksConnected && !xeroConnected) {
-      toast({
-        title: 'Connection Successful',
-        description: 'Your account has been connected successfully.',
-      });
-
-      // Refresh integration status and evidence sources in parallel to update UI
-      refreshIntegrationTruth().catch(() => undefined);
-
-      // Clean up URL
-      const cleanUrl = location.pathname;
-      navigate(cleanUrl, { replace: true });
-    }
-  }, [location.search, navigate, toast, activeSlug]);
-
   useEffect(() => {
     if (!isReady || !activeSlug) return;
     (async () => {
@@ -1220,128 +1110,6 @@ export default function IntegrationsHub() {
         
         
 
-        {/* Recovery result modal */}
-        <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
-          <DialogContent className="max-w-2xl rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(24,32,38,0.12)]">
-            <DialogHeader className="border-b border-[#DCE8EE] px-6 py-5 text-left">
-              <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Recovery review</p>
-              <DialogTitle className="mt-1.5 font-lora text-[26px] font-normal tracking-tight text-[#182026]">
-                Estimated recovery opportunities detected
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-5 px-6 py-5 text-left">
-              {recoveryData && (
-                <>
-                  <div className="space-y-2">
-                    <div className="text-6xl font-sans font-bold text-[#182026] tracking-tighter">
-                      {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
-                    </div>
-                    <div className="text-sm font-sans font-bold text-[#182026]/35 tracking-tight">
-                      estimated value from detected opportunities
-                    </div>
-                    <div className="mt-4">
-                      <Badge variant="outline" className="bg-[#F3F5F4] border-[#E5E7EB] text-[#182026]/70 font-sans font-bold text-[12px] tracking-tight px-3 py-1">
-                        {recoveryData.claimCount} Detected opportunities
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                    <div className="rounded-md border border-[#E7EEF2] bg-[#FAFAF7] p-3.5">
-                      <div className="text-[12px] font-medium tracking-tight text-[#66737F]">Lost inventory</div>
-                      <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
-                    </div>
-                    <div className="rounded-md border border-[#E7EEF2] bg-[#FAFAF7] p-3.5">
-                      <div className="text-[12px] font-medium tracking-tight text-[#66737F]">Fee errors</div>
-                      <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
-                    </div>
-                    <div className="rounded-md border border-[#E7EEF2] bg-[#FAFAF7] p-3.5">
-                      <div className="text-[12px] font-medium tracking-tight text-[#66737F]">Shipments</div>
-                      <div className="text-sm font-bold text-[#182026] tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
-                    </div>
-                  </div>
-
-                  <p className="text-[13px] leading-5 text-[#66737F]">
-                    Margin compared the connected marketplace records to identify opportunities that still need evidence review.
-                  </p>
-                </>
-              )}
-            </div>
-            <DialogFooter className="border-t border-[#DCE8EE] px-6 py-4">
-              <Button onClick={() => setShowRecoveryReveal(false)} className="h-9 w-full rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white hover:bg-[#005FBA]">
-                Continue to Dashboard
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {/* Evidence source modal */}
-        <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
-          <DialogContent className="max-w-2xl rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#111827] shadow-[0_18px_45px_rgba(24,32,38,0.12)]">
-            <DialogHeader className="border-b border-[#DCE8EE] px-6 py-5 text-left">
-              <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence sources</p>
-              <DialogTitle className="mt-1.5 font-lora text-[26px] font-normal tracking-tight text-[#182026]">
-                Connect a source
-              </DialogTitle>
-              <DialogDescription className="mt-2 text-[13px] leading-5 text-[#66737F]">
-                Connect an eligible source to collect documents for evidence review.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-5 px-6 py-5">
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="rounded-md border border-[#E7EEF2] p-4">
-                  <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Connect Gmail</h3>
-                  <p className="mt-1.5 text-[12px] leading-5 text-[#66737F]">
-                    Review Gmail for invoices, purchase orders, and shipment confirmations.
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[12px] tracking-tight"
-                    onClick={() => {
-                      setShowEvidenceModal(false);
-                      handleConnectDocSource('gmail');
-                    }}
-                  >
-                    Link Account
-                  </Button>
-                </div>
-
-                <div className="rounded-md border border-[#E7EEF2] p-4">
-                  <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Connect Google Drive</h3>
-                  <p className="mt-1.5 text-[12px] leading-5 text-[#66737F]">
-                    Review Google Drive for the business documents that may support a case.
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="w-full h-10 border-[#D8E7FF] text-[#0B74DE] bg-[#F3F7FF] hover:bg-[#EAF2FF] font-sans font-bold text-[12px] tracking-tight"
-                    onClick={() => {
-                      setShowEvidenceModal(false);
-                      handleConnectDocSource('gdrive');
-                    }}
-                  >
-                    Link Storage
-                  </Button>
-                </div>
-              </div>
-
-              <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-2 text-[12px] font-sans font-bold text-[#182026]/35 tracking-tight">
-                  <Info className="h-3 w-3" />
-                  <span>Evidence is reviewed in the case workflow before it can support filing.</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  onClick={() => setShowEvidenceModal(false)}
-                  className="text-[12px] font-sans font-bold tracking-tight text-[#66737F] hover:text-[#182026]"
-                >
-                  I'll upload manual artifacts later
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-
         <div className="mx-auto max-w-[1180px] px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
           {/* Header section */}
           <motion.div
@@ -1495,25 +1263,7 @@ export default function IntegrationsHub() {
                       </div>
                     ) : (
                       <Button
-                        onClick={async () => {
-                          toast({ title: 'Connect Amazon', description: 'Redirecting to Amazon Seller Central authorization...' });
-                          try {
-                            if (!activeSlug) {
-                              toast({ title: 'Workspace Required', description: 'Select a workspace before connecting Amazon.', variant: 'destructive' });
-                              return;
-                            }
-                            const res = await api.connectAmazon(undefined, false, activeSlug);
-                            const url = res.data?.auth_url || res.data?.authUrl;
-                            if (res.ok && url) {
-                              window.location.assign(url);
-                            } else {
-                              toast({ title: 'Connection Error', description: 'Could not retrieve Amazon authorization URL. Please try again.', variant: 'destructive' });
-                            }
-                          } catch (err) {
-                            console.error('connectAmazon error:', err);
-                            toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
-                          }
-                        }}
+                        onClick={() => navigate('/audit')}
                         className="h-9 rounded-md bg-[#0B74DE] px-5 text-[#FFFFFF] font-sans font-semibold tracking-tight text-[11px] transition-colors hover:bg-[#005FBA]"
                       >
                         Connect Amazon

@@ -9,8 +9,6 @@ const NOINDEX_PREFIXES = [
   '/connect-amazon',
   '/connect-amazon-account',
   '/stripe',
-  '/amazon-sandbox',
-  '/analyzing',
   '/integrations-hub',
   '/cases',
   '/recoveries',

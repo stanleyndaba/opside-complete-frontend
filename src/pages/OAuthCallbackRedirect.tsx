@@ -14,8 +14,9 @@ export default function OAuthCallbackRedirect() {
     // Extract query parameters from current URL
     const searchParams = new URLSearchParams(location.search);
 
-    // Build redirect URL to auth success page instead of integrations-hub
-    const redirectPath = '/auth/success';
+    // Every provider query value is context only. Route every callback return
+    // through the common confirmation-aware handler rather than a success page.
+    const redirectPath = '/auth/callback';
 
     // Preserve all query parameters
     const queryString = searchParams.toString();
@@ -23,7 +24,7 @@ export default function OAuthCallbackRedirect() {
       ? `${redirectPath}?${queryString}`
       : redirectPath;
 
-    // Redirect to integrations-hub with all query parameters
+    // Redirect to the confirmation-aware callback with all context parameters.
     navigate(redirectUrl, { replace: true });
   }, [navigate, location.search]);
 

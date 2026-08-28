@@ -239,7 +239,7 @@ export function Navbar({
 
   const activeWorkspaceName = tenant?.name || tenant?.slug || activeTenantSlug || 'Workspace';
   const amazonMarketplaces = userProfile?.amazon_marketplaces || [];
-  const amazonActionPath = userProfile?.amazon_connected ? '/integrations-hub' : '/connect-amazon';
+  const amazonActionPath = userProfile?.amazon_connected ? '/integrations-hub' : '/audit';
   const [signOutOpen, setSignOutOpen] = useState(false);
 
   const [approvedReimbursements, setApprovedReimbursements] = useState<ApprovedReimbursementViewRow[]>([]);
@@ -710,7 +710,7 @@ export function Navbar({
                       )}
                       <button
                         type="button"
-                        onClick={() => navigate(tenantRoute(activeTenantSlug, amazonActionPath))}
+                        onClick={() => navigate(userProfile?.amazon_connected ? tenantRoute(activeTenantSlug, amazonActionPath) : amazonActionPath)}
                         className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:text-[#075EA8]"
                       >
                         {userProfile?.amazon_connected ? 'Manage Amazon' : 'Connect Amazon'}
