@@ -71,10 +71,8 @@ const ReimbursementAcquisitionPage = lazy(() => import("./pages/ReimbursementAcq
 const GetidaAlternative = lazy(() => import("./pages/GetidaAlternative"));
 const SellerboardAlternative = lazy(() => import("./pages/SellerboardAlternative"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
-const EarlyAccess = lazy(() => import("./pages/EarlyAccess"));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
-const CurrencyMargin = lazy(() => import("./pages/CurrencyMargin"));
 const Standalone = lazy(() => import("./pages/standalone"));
 const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
 const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
@@ -168,7 +166,6 @@ const queryClient = new QueryClient({
 const PRELOAD_ROUTES = [
   () => import("./pages/Index"),
   () => import("./pages/PricingAdjust"),
-  () => import("./pages/EarlyAccess"),
   () => import("./pages/AboutMargin"),
   () => import("./pages/Sales"),
   () => import("./pages/Research"),

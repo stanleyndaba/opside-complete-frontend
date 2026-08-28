@@ -127,7 +127,7 @@ const acquisitionRoutes = [
     ],
     links: [
       { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
-      { href: '/early-access', label: 'Secure early access' },
+      { href: '/pricing', label: 'View pricing' },
       { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
     ],
     faqs: [
@@ -295,7 +295,7 @@ const acquisitionRoutes = [
     ],
     links: [
       { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
-      { href: '/early-access', label: 'Secure early access' },
+      { href: '/pricing', label: 'View pricing' },
       { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
     ],
     faqs: [
@@ -467,7 +467,7 @@ const getidaAlternativeRoute = createAcquisitionRoute({
     { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
     { href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
     { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
-    { href: '/early-access', label: 'Secure early access' },
+    { href: '/pricing', label: 'View pricing' },
   ],
   faqs: [
     {
@@ -554,7 +554,7 @@ const sellerboardAlternativeRoute = createAcquisitionRoute({
     { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
     { href: '/amazon-reimbursement-audit', label: 'Amazon reimbursement audit' },
     { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
-    { href: '/early-access', label: 'Secure early access' },
+    { href: '/pricing', label: 'View pricing' },
     { href: '/getida-alternative', label: 'GETIDA alternative' },
   ],
   faqs: [
@@ -694,7 +694,7 @@ const routes = [
         },
       ],
       links: [
-        { href: '/early-access', label: 'Secure Early Access' },
+        { href: '/pricing', label: 'View pricing' },
         { href: '/pricing', label: 'View pricing' },
         { href: '/fba-reimbursement-research', label: 'FBA reimbursement research' },
       ],
@@ -866,7 +866,7 @@ const routes = [
         { href: '/getida-alternative', label: 'GETIDA alternative' },
         { href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
         { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
-        { href: '/early-access', label: 'Secure early access' },
+        { href: '/pricing', label: 'View pricing' },
       ],
     },
   },
@@ -951,7 +951,7 @@ const routes = [
         { href: '/getida-alternative', label: 'GETIDA alternative' },
         { href: '/sellerboard-alternative', label: 'Sellerboard alternative' },
         { href: '/amazon-fba-reimbursement', label: 'Amazon FBA reimbursement' },
-        { href: '/early-access', label: 'Secure early access' },
+        { href: '/pricing', label: 'View pricing' },
       ],
     },
   },
@@ -973,28 +973,6 @@ const routes = [
           heading: 'System model',
           body:
             'Recovery work becomes useful when event detection, evidence, filing control, and payout truth stay connected. Margin frames that work as an operating system instead of a disconnected set of audits and spreadsheets.',
-        },
-      ],
-    },
-  },
-  {
-    path: '/early-access',
-    title: 'Free Amazon FBA Evidence Scan | Margin',
-    description:
-      'Margin is the only FBA recovery agent that retrieves the Bill of Lading and Invoices to prove your case. Start a free evidence scan - no payment required.',
-    ogTitle: 'Free Amazon FBA Evidence Scan | Margin',
-    ogDescription:
-      'Start a Margin evidence scan for Amazon FBA recovery cases, with read-only setup and seller approval before filing.',
-    shell: {
-      label: 'Founding 500',
-      h1: 'Join the Founding 500.',
-      intro:
-        'The early-access page invites Amazon sellers to start a free evidence scan with Margin. It explains the read-only setup, the supporting document retrieval process, and the review-first workflow before any filing action happens.',
-      sections: [
-        {
-          heading: 'What sellers get',
-          body:
-            'The route focuses on evidence retrieval, especially bills of lading and invoices, and positions the free scan as a way to validate recovery opportunities before committing to the broader workflow.',
         },
       ],
     },
@@ -1136,12 +1114,12 @@ const renderLinks = (route) => {
   const links = route.shell?.links || (
     route.path === '/'
       ? [
-          { href: '/early-access', label: 'Start Founding Recovery Audit' },
+          { href: '/pricing', label: 'View pricing' },
           { href: '/pricing', label: 'View pricing' },
         ]
       : [
           { href: '/', label: 'Return to Margin homepage' },
-          { href: '/early-access', label: 'Start Founding Recovery Audit' },
+          { href: '/pricing', label: 'View pricing' },
         ]
   );
 
