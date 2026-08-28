@@ -185,3 +185,72 @@ html, body, #root {
   transform: translate3d(-115%, 0, 0);
   animation: agentic-scan 8s linear infinite;
 }
+
+/* Independent lifecycle marquees: each unit starts visible, crosses the lane,
+   then fades out at the opposite edge before looping again. */
+@keyframes margin-lifecycle-unit-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.18;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  87% {
+    opacity: 0.78;
+  }
+  100% {
+    transform: translate3d(136vw, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes margin-lifecycle-unit-right {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.18;
+  }
+  10% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  87% {
+    opacity: 0.78;
+  }
+  100% {
+    transform: translate3d(-136vw, 0, 0);
+    opacity: 0;
+  }
+}
+
+.lifecycle-unit {
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+.lifecycle-unit--left {
+  left: -18vw;
+  animation-name: margin-lifecycle-unit-left;
+}
+
+.lifecycle-unit--right {
+  right: -18vw;
+  animation-name: margin-lifecycle-unit-right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lifecycle-unit,
+  .lifecycle-unit--left,
+  .lifecycle-unit--right {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

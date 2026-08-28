@@ -409,7 +409,6 @@ const marginLifecycleUnits = [
 ];
 
 function MarginLifecycleSection() {
-  const reduceMotion = useReducedMotion();
 
   return (
     <section
@@ -457,35 +456,21 @@ function MarginLifecycleSection() {
             <div className="relative z-10 space-y-2 md:space-y-2.5">
               {marginLifecycleUnits.map((item, index) => {
                 const direction = item.side === "left" ? "left" : "right";
-                const travel = direction === "left" ? ["-18vw", "118vw"] : ["118vw", "-118vw"];
 
                 return (
                   <div key={item.label} className="relative h-8 overflow-visible sm:h-9">
-                    <motion.span
-                      initial={false}
-                      animate={
-                        reduceMotion
-                          ? { opacity: 1, x: 0 }
-                          : { opacity: [0.12, 1, 1, 0.82, 0], x: travel }
-                      }
-                      transition={
-                        reduceMotion
-                          ? undefined
-                          : {
-                              duration: 8.4 + (index % 3) * 0.6,
-                              delay: index * 0.52,
-                              repeat: Infinity,
-                              ease: "linear",
-                              times: [0, 0.1, 0.68, 0.88, 1],
-                            }
-                      }
+                    <span
+                      style={{
+                        animationDelay: `-${index * 0.52}s`,
+                        animationDuration: `${9.5 + (index % 3) * 0.6}s`,
+                      }}
                       className={cn(
-                        "absolute top-0 inline-flex whitespace-nowrap rounded-[10px] bg-[#EEF1F2] px-3 py-1.5 text-[11px] font-semibold leading-5 tracking-[-0.01em] text-[#182026] sm:px-3.5 sm:py-2 sm:text-[12px]",
-                        direction === "left" ? "left-0" : "right-0",
+                        "lifecycle-unit absolute top-0 inline-flex whitespace-nowrap rounded-[10px] bg-[#EEF1F2] px-3 py-1.5 text-[11px] font-semibold leading-5 tracking-[-0.01em] text-[#182026] sm:px-3.5 sm:py-2 sm:text-[12px]",
+                        direction === "left" ? "lifecycle-unit--left" : "lifecycle-unit--right",
                       )}
                     >
                       {item.label}
-                    </motion.span>
+                    </span>
                   </div>
                 );
               })}
