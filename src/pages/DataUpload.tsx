@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -114,19 +114,6 @@ export default function DataUpload() {
     const manualAudit = response.ok ? response.data?.manualAudit : null;
     return manualAudit ? continueManualAudit(manualAudit, tenantSlug) : false;
   }, [continueManualAudit]);
-
-  useEffect(() => {
-    if (!isSignedIn) return;
-    let cancelled = false;
-
-    void restoreLatestManualAudit().catch(() => undefined).then((continued) => {
-      if (!cancelled && continued) return;
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isSignedIn, restoreLatestManualAudit]);
 
   const startAuth = async () => {
     if (isBusy) return;

@@ -43,6 +43,16 @@ assert.match(upload, /type="file"/);
 assert.match(upload, /Synthetic training only/);
 assert.match(upload, /Run S1 synthetic audit/);
 
+const manualSubmission = upload.match(/const startManualAudit[\s\S]*?const startSyntheticS1/);
+assert.ok(manualSubmission, 'The normal manual-audit submission flow must remain independently identifiable.');
+assert.match(manualSubmission[0], /ingestion\?\.manualAudit && continueManualAudit\(ingestion\.manualAudit, tenantSlug\)/);
+assert.match(manualSubmission[0], /ingestion\?\.syncId[\s\S]*?restoreLatestManualAudit\(\)/);
+assert.doesNotMatch(
+  upload,
+  /useEffect\([\s\S]*?restoreLatestManualAudit/,
+  'Opening Data Upload must not automatically resume a historical CSV audit and redirect away from report selection.'
+);
+
 assert.match(audit, /teaser\.syntheticTraining \? \(/);
 assert.match(audit, /aria-label="Synthetic training boundary"/);
 assert.match(audit, /teaser\.trainingLabel \|\| 'SYNTHETIC TRAINING ONLY'/);
