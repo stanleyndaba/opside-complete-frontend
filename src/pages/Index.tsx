@@ -347,6 +347,88 @@ function KineticHeroSection({
 }
 
 
+const realityCheckSteps = [
+  "Found",
+  "Verified",
+  "Proven",
+  "Prepared",
+  "Filed",
+  "Followed up",
+  "Defended",
+  "Resolved",
+  "Reconciled",
+  "Actually recovered",
+];
+
+function RealityCheckSection() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-28 md:py-48">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[860px]">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+              The reality check
+            </span>
+          </div>
+          <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[58px] md:text-[84px]" style={{ fontWeight: 400 }}>
+            Finding the issue is only the first step.
+          </h2>
+          <p className="mt-8 max-w-[720px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[20px] md:leading-9">
+            Most recovery systems stop after identifying a discrepancy.
+          </p>
+          <p className="mt-8 max-w-[620px] font-lora text-[28px] leading-tight tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[48px]" style={{ fontWeight: 400 }}>
+            But an opportunity is not a recovery.
+          </p>
+        </motion.div>
+
+        <div className="mt-24 max-w-[700px] md:mt-36">
+          <motion.p {...revealProps} className="max-w-[520px] text-[15px] font-semibold leading-7 text-[var(--margin-text-primary)] md:text-[17px]">
+            A recovery still has to survive the rest of the process:
+          </motion.p>
+          <div className="relative mt-8 border-l border-[var(--margin-border-strong)] pl-6 md:mt-10 md:pl-10">
+            <motion.div
+              aria-hidden="true"
+              className="absolute left-[-1px] top-0 w-px origin-top bg-[var(--margin-blue)]"
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: reduceMotion ? 0 : 1.4, ease: [0.22, 1, 0.36, 1] }}
+              style={{ height: "100%" }}
+            />
+            <div className="space-y-0">
+              {realityCheckSteps.map((step, index) => (
+                <motion.p
+                  key={step}
+                  initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0.18, x: 18 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.75 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.42, delay: reduceMotion ? 0 : index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  className={`font-lora text-[30px] leading-[1.05] tracking-[-0.035em] md:text-[48px] ${index === realityCheckSteps.length - 1 ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-muted)]"}`}
+                  style={{ fontWeight: 400, paddingTop: index === 0 ? 0 : "0.72em", paddingBottom: index === realityCheckSteps.length - 1 ? 0 : "0.72em" }}
+                >
+                  {step}
+                </motion.p>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <motion.div {...revealProps} className="mt-24 border-t border-[var(--margin-border)] pt-8 md:mt-36 md:pt-10">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">
+            And this is where Margin should say:
+          </p>
+          <p className="mt-5 max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[68px]" style={{ fontWeight: 400 }}>
+            Most of the work happens after the opportunity is found.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function RecoveryWorkStatement() {
   return (
     <section className="border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]">
@@ -376,6 +458,7 @@ export default function Index() {
       
       <main>
         <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} onReportCta={() => handleClaimAccessClick("hero_use_amazon_reports", "csv_upload")} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <RealityCheckSection />
         <RecoveryWorkStatement />
 
         <SectionTwo />
