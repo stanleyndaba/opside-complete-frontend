@@ -36,7 +36,6 @@ import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
-import { SystemPerformanceTicker } from "@/components/landing/SystemPerformanceTicker";
 import { RecoveryTimelineSection } from "@/components/landing/RecoveryTimelineSection";
 import { RecoveryOfferSection } from "@/components/landing/RecoveryDecisionSections";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
@@ -714,7 +713,6 @@ export default function Index() {
         analyticsLocation="homepage_demo_section"
         videoName="margin_demo"
       />
-      <SystemPerformanceTicker />
       <BrandFooter wide />
       <CookieConsent />
     </div>
