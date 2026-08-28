@@ -394,6 +394,126 @@ function RealityCheckSection() {
   );
 }
 
+const marginLifecycleUnits = [
+  { label: "Audit Amazon activity", side: "left" as const },
+  { label: "Find potential losses", side: "right" as const },
+  { label: "Verify the recovery", side: "left" as const },
+  { label: "Build the evidence", side: "right" as const },
+  { label: "Prepare the case", side: "left" as const },
+  { label: "Manage filing", side: "right" as const },
+  { label: "Track Amazon's response", side: "left" as const },
+  { label: "Handle follow-up", side: "right" as const },
+  { label: "Challenge weak outcomes", side: "left" as const },
+  { label: "Track the result", side: "right" as const },
+  { label: "Reconcile what happened", side: "left" as const },
+];
+
+function MarginLifecycleSection() {
+  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const leftConvergence = useTransform(scrollYProgress, [0, 0.35, 0.72, 1], [-52, -8, 0, -12]);
+  const rightConvergence = useTransform(scrollYProgress, [0, 0.35, 0.72, 1], [52, 8, 0, 12]);
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-labelledby="margin-lifecycle-title"
+      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-28 md:py-48"
+    >
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[980px]">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+              03 / Introduce Margin's job
+            </span>
+          </div>
+          <h2
+            id="margin-lifecycle-title"
+            className="font-lora text-[42px] leading-[0.98] tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[58px] md:text-[82px]"
+            style={{ fontWeight: 400 }}
+          >
+            <span className="block">Margin doesn&apos;t hand you a list of problems.</span>
+            <span className="mt-5 block text-[var(--margin-text-muted)]">
+              It takes the recovery from discovery to resolution.
+            </span>
+          </h2>
+        </motion.div>
+
+        <div className="mt-20 md:mt-32">
+          <motion.p
+            {...revealProps}
+            className="max-w-[680px] text-[20px] font-medium leading-8 tracking-[-0.025em] text-[var(--margin-text-primary)] md:text-[28px] md:leading-9"
+          >
+            Margin operates across the full recovery lifecycle:
+          </motion.p>
+
+          <div className="relative mt-10 overflow-hidden py-6 md:mt-16 md:py-12">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+            >
+              <span className="brand-wordmark font-merriweather text-[clamp(6rem,20vw,18rem)] leading-none tracking-[-0.085em] text-[rgba(24,32,38,0.065)]">
+                Margin
+              </span>
+            </div>
+
+            <div className="relative z-10 space-y-3 md:space-y-4">
+              {marginLifecycleUnits.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, amount: 0.55 }}
+                  transition={{
+                    duration: reduceMotion ? 0 : 0.55,
+                    delay: reduceMotion ? 0 : index * 0.045,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  style={{
+                    x: reduceMotion
+                      ? 0
+                      : item.side === "left"
+                        ? leftConvergence
+                        : rightConvergence,
+                  }}
+                  className={cn(
+                    "flex w-full",
+                    item.side === "left" ? "justify-start" : "justify-end",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "inline-flex max-w-[88%] rounded-[5px] bg-[#EEF1F2] px-3.5 py-2.5 text-[12px] font-semibold leading-5 tracking-[-0.01em] text-[#182026] sm:px-4 sm:py-3 sm:text-[13px] md:max-w-[68%] md:px-5 md:py-3.5 md:text-[15px]",
+                      item.side === "left" ? "md:ml-[8%]" : "md:mr-[8%]",
+                    )}
+                  >
+                    {item.label}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <motion.p
+            {...revealProps}
+            className="mt-20 max-w-[900px] font-lora text-[30px] leading-[1.08] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:mt-28 md:text-[60px]"
+          >
+            You don&apos;t need to remember which case needs attention.
+            <span className="mt-4 block text-[var(--margin-text-muted)]">
+              Margin keeps the recovery operation moving.
+            </span>
+          </motion.p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const marginOperationAgents = [
   {
     number: "01",
@@ -602,6 +722,7 @@ export default function Index() {
       <main>
         <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} onReportCta={() => handleClaimAccessClick("hero_use_amazon_reports", "csv_upload")} isFull={isFull} nextBatchHours={nextBatchHours} />
         <RealityCheckSection />
+        <MarginLifecycleSection />
         <MarginOperationSection />
         <RecoveryWorkStatement />
 
