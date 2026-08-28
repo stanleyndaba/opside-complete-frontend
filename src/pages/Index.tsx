@@ -214,47 +214,41 @@ function AccountingEvidenceSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
             </div>
             <h2 className="font-lora text-[42px] leading-[0.98] tracking-[-0.05em] text-[#182026] sm:text-[54px] md:text-[72px]" style={{ fontWeight: 400 }}>
-              When Amazon&apos;s number isn&apos;t enough, Margin can use more of the financial picture.
+              Recovery gets stronger when the numbers have context.
+              <span className="mt-4 block text-[#8A99A4]">Margin brings the right financial evidence into view.</span>
             </h2>
             <p className="mt-8 max-w-[610px] text-[16px] leading-8 text-[#4D5B66] md:text-[18px] md:leading-9">
-              Nobody wakes up wanting to connect accounting software. The benefit is bringing relevant financial evidence into the recovery decision when it matters.
+              Amazon gives you one version of what happened. Margin helps place that version beside the records that explain the money around it.
             </p>
-            <p className="mt-8 max-w-[540px] text-[14px] font-semibold leading-7 text-[#182026] md:text-[16px]">
-              Accounting evidence can strengthen the understanding of:
+            <p className="mt-8 max-w-[560px] text-[14px] font-semibold leading-7 text-[#182026] md:text-[16px]">
+              The useful context is often found in purchase records, cost signals, payout history, and reconciliation data.
             </p>
-            <div className="mt-4 max-w-[520px] border-y border-[#D8E3EA]">
-              {["Supplier purchases", "Cost context", "Financial records", "Reimbursement outcomes", "Recovery reconciliation"].map((item) => (
-                <div key={item} className="border-b border-[#E4EDF1] py-3 text-[14px] font-medium text-[#66737F] last:border-b-0 md:text-[15px]">
-                  {item}
-                </div>
-              ))}
-            </div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative lg:pt-8">
-            <div className="relative overflow-hidden rounded-[30px] border border-[#D8E3EA] bg-white/85 p-5 shadow-[0_28px_90px_rgba(37,49,58,0.1)] backdrop-blur-xl sm:p-7 md:p-8">
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.13),_transparent_62%)]" />
+            <div className="relative border-y border-[#D8E3EA] py-6 sm:py-8 md:py-10">
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
               <div className="relative flex items-center justify-between border-b border-[#E4EDF1] pb-4">
                 <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Financial evidence</span>
                 <span className="font-mono text-[9px] uppercase tracking-tight text-[#94A3B8]">Read-only / purpose-limited</span>
               </div>
-              <div className="relative mt-6 grid gap-5 sm:grid-cols-[1fr_0.9fr] sm:items-center">
+              <div className="relative mt-8 grid gap-8 sm:grid-cols-[1fr_0.9fr] sm:items-center md:gap-10">
                 <div>
-                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#94A3B8]">Relevant sources</p>
-                  <div className="mt-3 grid grid-cols-3 gap-2.5">
+                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#94A3B8]">Relevant context</p>
+                  <div className="mt-4 grid grid-cols-3 gap-x-5 gap-y-4">
                     {iconPool.map((icon, index) => (
                       <motion.div
                         key={icon.id}
                         animate={reduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: activeEvidence % iconPool.length === index ? 1 : 0.68, y: activeEvidence % iconPool.length === index ? -3 : 0, scale: activeEvidence % iconPool.length === index ? 1.04 : 1 }}
                         transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
-                        className="flex h-14 items-center justify-center rounded-[9px] border border-[#D8E3EA] bg-white shadow-[0_8px_20px_rgba(37,49,58,0.04)] sm:h-16"
+                        className="flex h-14 items-center justify-center border-b border-[#E4EDF1] sm:h-16"
                       >
                         <img src={icon.src} alt="" className="max-h-7 max-w-8 object-contain" />
                       </motion.div>
                     ))}
                   </div>
                 </div>
-                <div className="relative rounded-[16px] border border-[#E4EDF1] bg-[#F8FAFC] p-5">
+                <div className="relative border-l border-[#D8E3EA] pl-5 sm:pl-7">
                   <div className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-[#66737F]">Recovery truth</div>
                   <div className="mt-4 space-y-3">
                     {["Expected reimbursement", "Approved amount", "Paid amount", "Reconciled outcome"].map((item, index) => (
@@ -266,8 +260,8 @@ function AccountingEvidenceSection() {
                   </div>
                 </div>
               </div>
-              <div className="relative mt-6 border-t border-[#E4EDF1] pt-4 text-[11px] leading-5 text-[#66737F]">
-                Relevant financial context enters the recovery decision without copying your books into Margin.
+              <div className="relative mt-7 border-t border-[#E4EDF1] pt-4 text-[11px] leading-5 text-[#66737F]">
+                Financial context appears when it can change the recovery decision.
               </div>
             </div>
             <div className="mt-7 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
@@ -278,12 +272,15 @@ function AccountingEvidenceSection() {
 
         <motion.div {...revealProps} className="mt-24 border-t border-[#D8E3EA] pt-10 md:mt-36 md:pt-14">
           <p className="max-w-[760px] text-[17px] leading-8 text-[#4D5B66] md:text-[20px] md:leading-9">
-            The goal isn&apos;t to copy your accounting system into Margin. The goal is to bring relevant financial evidence into the recovery decision when it matters.
+            Margin does not replace your books. It brings in only the pieces that help explain a recovery.
           </p>
           <p className="mt-8 max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[68px]" style={{ fontWeight: 400 }}>
-            Margin is not trying to become an accounting platform.
-            <span className="mt-3 block text-[#0B74DE]">It is using accounting evidence to strengthen recovery truth.</span>
+            Not another accounting system.
+            <span className="mt-3 block text-[#0B74DE]">Just the context a recovery needs.</span>
           </p>
+          <div className="mt-8 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
+            <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
+          </div>
         </motion.div>
       </div>
     </section>
