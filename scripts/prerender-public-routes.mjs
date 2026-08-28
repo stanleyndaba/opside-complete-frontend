@@ -605,7 +605,7 @@ const routes = [
       label: 'Amazon FBA revenue recovery & reconciliation',
       h1: 'Find what Amazon missed. Get it handled. Know it was paid.',
       intro:
-        'Amazon can lose inventory, reverse a reimbursement, underpay a recovery, or leave a case unresolved. Margin checks your Amazon records, shows you what is supported, and helps move the recovery forward.',
+        'Margin keeps your FBA recovery work together—from understanding what happened and proving it, to handling what you approve and showing what Amazon actually paid.',
       sections: [
         {
           heading: 'What the free Recovery Audit shows',
