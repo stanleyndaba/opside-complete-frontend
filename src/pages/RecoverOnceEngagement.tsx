@@ -32,6 +32,7 @@ export default function RecoverOnceEngagement() {
   const [engagement, setEngagement] = useState<RecoverOnceEngagement | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [approving, setApproving] = useState(false);
 
   usePageMeta({ title: 'Recover Once | Margin', description: 'Review the persistent state of your one-time Margin recovery engagement.' });
 
@@ -54,6 +55,17 @@ export default function RecoverOnceEngagement() {
   }, [engagementId, tenantSlug]);
 
   const state = engagement ? statusCopy[engagement.status] : null;
+  const opportunities = engagement?.scope_snapshot?.opportunities || [];
+  const categories = engagement?.scope_snapshot?.categories || [];
+
+  async function approve() {
+    if (!engagement || approving) return;
+    setApproving(true);
+    const response = await api.approveRecoverOnceEngagement(engagement.id, tenantSlug);
+    if (response.ok && response.data?.success) setEngagement(response.data.engagement);
+    else setError(response.error || 'Margin could not record your approval.');
+    setApproving(false);
+  }
 
   return (
     <PageLayout title="Recover Once" noPadding hideNavbar hideSidebar hideLogo plainBackground>
@@ -68,8 +80,8 @@ export default function RecoverOnceEngagement() {
             <>
               <div className="mb-10 max-w-3xl"><p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0B74DE]">Recover Once · One-time engagement</p><h1 className="mt-4 font-lora text-4xl leading-tight tracking-[-0.04em] md:text-6xl">{state.title}</h1><p className="mt-5 max-w-2xl text-base leading-7 text-[#66737F]">{state.body}</p></div>
               <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-                <section className="rounded-[18px] border border-[#DCE8EE] bg-white p-6 shadow-[0_20px_60px_rgba(37,49,58,0.06)]"><div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#2E7D5B]" /><span className="rounded-full border border-[#BFD8EA] bg-[#F3F8FC] px-3 py-1 text-xs font-semibold text-[#0B74DE]">{state.label}</span></div><div className="mt-8 grid gap-5 border-t border-[#E4EDF1] pt-6 sm:grid-cols-2"><div><p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#66737F]">Preparation started</p><p className="mt-2 text-sm font-semibold">{formatDate(engagement.preparation_started_at)}</p></div><div><p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#66737F]">Last updated</p><p className="mt-2 text-sm font-semibold">{formatDate(engagement.updated_at)}</p></div></div><div className="mt-7 rounded-[12px] border border-[#E4EDF1] bg-[#F8FAFC] p-4"><div className="flex gap-3"><Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[#0B74DE]" /><p className="text-sm leading-6 text-[#4D5B66]">{state.next}</p></div></div></section>
-                <aside className="rounded-[18px] border border-[#DCE8EE] bg-[#FBFAF7] p-6"><p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#66737F]">What this purchase means</p><h2 className="mt-3 font-lora text-2xl">A recovery operation for this audit.</h2><p className="mt-3 text-sm leading-6 text-[#66737F]">Recover Once is separate from the recurring Recovery Workspace subscription. This page reflects the paid engagement linked to the recorded audit scope.</p><div className="mt-6 space-y-3 text-sm text-[#4D5B66]"><div className="flex gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 text-[#2E7D5B]" />Evidence remains tied to this engagement.</div><div className="flex gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 text-[#2E7D5B]" />Seller approval is required before filing.</div><div className="flex gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 text-[#2E7D5B]" />Reimbursement is never guaranteed.</div></div><Button asChild className="mt-7 w-full rounded-[10px] bg-[#0B74DE]"><Link to="/audit">Review audit record<ArrowRight className="ml-2 h-4 w-4" /></Link></Button></aside>
+                <section className="rounded-[18px] border border-[#DCE8EE] bg-white p-6 shadow-[0_20px_60px_rgba(37,49,58,0.06)]"><div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#2E7D5B]" /><span className="rounded-full border border-[#BFD8EA] bg-[#F3F8FC] px-3 py-1 text-xs font-semibold text-[#0B74DE]">{state.label}</span></div><div className="mt-8 grid gap-5 border-t border-[#E4EDF1] pt-6 sm:grid-cols-2"><div><p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#66737F]">Preparation started</p><p className="mt-2 text-sm font-semibold">{formatDate(engagement.preparation_started_at)}</p></div><div><p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#66737F]">Last updated</p><p className="mt-2 text-sm font-semibold">{formatDate(engagement.updated_at)}</p></div></div><div className="mt-7 rounded-[12px] border border-[#E4EDF1] bg-[#F8FAFC] p-4"><div className="flex gap-3"><Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[#0B74DE]" /><p className="text-sm leading-6 text-[#4D5B66]">{state.next}</p></div></div>{engagement.status === 'awaiting_seller_approval' ? <Button onClick={() => void approve()} disabled={approving} className="mt-6 w-full rounded-[10px] bg-[#0B74DE]">{approving ? 'Recording approval...' : 'Approve the prepared next step'}<ArrowRight className="ml-2 h-4 w-4" /></Button> : null}</section>
+                <aside className="rounded-[18px] border border-[#DCE8EE] bg-[#FBFAF7] p-6"><p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#66737F]">What this purchase means</p><h2 className="mt-3 font-lora text-2xl">A recovery operation for this audit.</h2><p className="mt-3 text-sm leading-6 text-[#66737F]">Recover Once is separate from the recurring Recovery Workspace subscription. This page reflects the paid engagement linked to the recorded audit scope.</p><div className="mt-6 space-y-3 text-sm text-[#4D5B66]"><div className="flex gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 text-[#2E7D5B]" />Evidence remains tied to this engagement.</div><div className="flex gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 text-[#2E7D5B]" />Seller approval is required before filing.</div><div className="flex gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 text-[#2E7D5B]" />Reimbursement is never guaranteed.</div></div><div className="mt-7 border-t border-[#E4EDF1] pt-6"><p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#66737F]">Recorded scope</p><p className="mt-2 text-sm font-semibold">{opportunities.length} evidence-backed finding{opportunities.length === 1 ? '' : 's'}</p><p className="mt-2 text-xs leading-5 text-[#66737F]">{categories.length ? categories.join(', ') : 'Scope categories will appear as preparation progresses.'}</p></div><Button asChild className="mt-7 w-full rounded-[10px] bg-[#0B74DE]"><Link to="/audit">Review audit record<ArrowRight className="ml-2 h-4 w-4" /></Link></Button></aside>
               </div>
             </>
           ) : null}

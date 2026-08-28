@@ -3719,6 +3719,14 @@ export const api = {
     return requestJson<any>(`/api/paystack/recover-once/verify/${encodeURIComponent(reference)}${query}`);
   },
 
+  approveRecoverOnceEngagement: (engagementId: string, tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<{ success: boolean; engagement: RecoverOnceEngagement }>(`/api/paystack/recover-once/engagements/${encodeURIComponent(engagementId)}/approve${query}`, {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  },
+
   getRecoverOnceEngagement: (engagementId: string, tenantSlug?: string) => {
     const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
     return requestJson<{ success: boolean; engagement: RecoverOnceEngagement }>(`/api/paystack/recover-once/engagements/${encodeURIComponent(engagementId)}${query}`);
