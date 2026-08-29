@@ -680,6 +680,181 @@ function RecoveryWorkStatement() {
   );
 }
 
+function FullRecoveryLoopSection() {
+  const reduceMotion = useReducedMotion();
+  const detectStages = ["Amazon activity", "Audit", "Opportunity detected", "Investigation"];
+  const buildStages = ["Filing", "Case preparation", "Recovery judgment", "Evidence assembled"];
+  const resolveStages = [
+    "Amazon response",
+    "Follow-up / appeal / reassessment",
+    "Outcome",
+    "Payout reconciliation",
+    "Recovery closed",
+  ];
+  const responseBranches = ["Evidence request", "Rejection", "Approval"];
+  const mobileStages = [
+    "Amazon activity",
+    "Audit",
+    "Opportunity detected",
+    "Investigation",
+    "Evidence assembled",
+    "Recovery judgment",
+    "Case preparation",
+    "Filing",
+    "Amazon response",
+    "Follow-up / appeal / reassessment",
+    "Outcome",
+    "Payout reconciliation",
+    "Recovery closed",
+  ];
+
+  const renderDesktopStage = (label: string, index: number, total: number) => (
+    <div key={label} className="relative z-10 flex min-w-0 flex-col items-center gap-2 text-center">
+      <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <span className="relative flex h-3 w-3 items-center justify-center rounded-full bg-[var(--margin-text-primary)] ring-[5px] ring-white">
+        <span className="h-1 w-1 rounded-full bg-white" />
+      </span>
+      <span className="max-w-[130px] text-[11px] font-semibold leading-[1.25] tracking-[-0.01em] text-[var(--margin-text-primary)]">
+        {label}
+      </span>
+      {index === total - 1 ? <span className="sr-only">End of lane</span> : null}
+    </div>
+  );
+
+  return (
+    <section
+      aria-labelledby="full-recovery-loop-title"
+      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-20 md:py-28"
+    >
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[900px]">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+              12 / The full recovery loop
+            </span>
+          </div>
+          <h2
+            id="full-recovery-loop-title"
+            className="font-lora text-[36px] leading-[0.99] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]"
+            style={{ fontWeight: 400 }}
+          >
+            From Amazon event to financial outcome.
+          </h2>
+        </motion.div>
+
+        <motion.div {...revealProps} className="mt-12 md:mt-16">
+          <div
+            aria-label="The full recovery loop from Amazon activity through payout reconciliation"
+            className="relative hidden overflow-hidden border-y border-[var(--margin-border)] px-4 py-12 lg:block xl:px-8"
+          >
+            <div className="mb-8 grid grid-cols-[78px_1fr] items-center gap-5">
+              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">Detect</span>
+              <div className="relative grid grid-cols-4 gap-x-5">
+                <div className="pointer-events-none absolute inset-x-0 top-[48px] h-px overflow-hidden bg-[var(--margin-border)]">
+                  <span className="recovery-loop-signal" />
+                </div>
+                {detectStages.map((label, index) => renderDesktopStage(label, index, detectStages.length))}
+              </div>
+            </div>
+
+            <div className="relative mb-8 grid grid-cols-[78px_1fr] items-center gap-5">
+              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">Build</span>
+              <div className="relative grid grid-cols-4 gap-x-5">
+                <div className="pointer-events-none absolute inset-x-0 top-[48px] h-px overflow-hidden bg-[var(--margin-border)]">
+                  <span className="recovery-loop-signal recovery-loop-signal--reverse" />
+                </div>
+                {buildStages.map((label, index) => renderDesktopStage(label, index, buildStages.length))}
+              </div>
+            </div>
+
+            <div className="relative grid grid-cols-[78px_1fr] items-center gap-5">
+              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">Resolve</span>
+              <div className="relative grid grid-cols-5 gap-x-5">
+                <div className="pointer-events-none absolute inset-x-0 top-[48px] h-px overflow-hidden bg-[var(--margin-border)]">
+                  <span className="recovery-loop-signal" />
+                </div>
+                {resolveStages.map((label, index) => (
+                  <div key={label} className="relative z-10 flex min-w-0 flex-col items-center gap-2 text-center">
+                    <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
+                      {String(index + detectStages.length + buildStages.length + 1).padStart(2, "0")}
+                    </span>
+                    {index === 1 ? (
+                      <div className="relative flex min-h-[82px] flex-col items-center justify-center gap-1.5">
+                        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72px] w-px -translate-x-1/2 bg-[var(--margin-border)]" />
+                        {responseBranches.map((branch, branchIndex) => (
+                          <span key={branch} className="relative z-10 inline-flex items-center gap-1.5 bg-white px-1 text-[10px] font-semibold leading-tight text-[var(--margin-text-primary)]">
+                            <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${branchIndex === 1 ? "bg-[var(--margin-blue)]" : "bg-[var(--margin-text-primary)]"}`} />
+                            {branch}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="relative flex h-3 w-3 items-center justify-center rounded-full bg-[var(--margin-text-primary)] ring-[5px] ring-white">
+                        <span className="h-1 w-1 rounded-full bg-white" />
+                      </span>
+                    )}
+                    <span className="max-w-[150px] text-[11px] font-semibold leading-[1.25] tracking-[-0.01em] text-[var(--margin-text-primary)]">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pointer-events-none absolute right-[14%] top-[97px] h-8 w-px bg-[var(--margin-border)]" />
+            <div className="pointer-events-none absolute left-[14%] top-[194px] h-8 w-px bg-[var(--margin-border)]" />
+          </div>
+
+          <div
+            aria-label="The full recovery loop in a vertical sequence"
+            className="relative ml-2 border-l border-[var(--margin-border)] pl-7 lg:hidden"
+          >
+            <span className={`recovery-loop-signal-vertical ${reduceMotion ? "recovery-loop-signal-vertical--static" : ""}`} />
+            {mobileStages.map((label, index) => (
+              <div key={label} className="relative pb-5 last:pb-0">
+                <span className="absolute -left-[32px] top-1.5 flex h-3 w-3 items-center justify-center rounded-full bg-[var(--margin-text-primary)] ring-[5px] ring-white">
+                  <span className="h-1 w-1 rounded-full bg-white" />
+                </span>
+                <div className="flex items-baseline gap-3">
+                  <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-[13px] font-semibold leading-5 tracking-[-0.01em] text-[var(--margin-text-primary)]">
+                    {label}
+                  </span>
+                </div>
+                {label === "Amazon response" ? (
+                  <div className="mt-3 ml-9 border-l border-[var(--margin-border)] pl-4">
+                    {responseBranches.map((branch, branchIndex) => (
+                      <div key={branch} className="flex items-center gap-2 py-1 text-[11px] font-medium leading-5 text-[var(--margin-text-secondary)]">
+                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${branchIndex === 1 ? "bg-[var(--margin-blue)]" : "bg-[var(--margin-text-primary)]"}`} />
+                        {branch}
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div {...revealProps} className="mt-12 border-t border-[var(--margin-border)] pt-7 md:mt-16 md:pt-9">
+          <p className="max-w-[700px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[50px]" style={{ fontWeight: 400 }}>
+            One continuous recovery lifecycle.
+            <span className="mt-2 block text-[var(--margin-text-muted)]">Not disconnected tools.</span>
+          </p>
+          <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-blue)]">
+            That is the architecture.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 export default function Index() {
   usePageMeta(PUBLIC_ROUTE_META['/']);
   const navigate = useNavigate();
@@ -706,6 +881,7 @@ export default function Index() {
 
         <RecoveryTimelineSection />
         <AccountingEvidenceSection />
+        <FullRecoveryLoopSection />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Section 10 — FAQ */}

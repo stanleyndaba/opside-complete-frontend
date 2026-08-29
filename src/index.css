@@ -270,3 +270,79 @@ html, body, #root {
     animation-duration: 15.408s !important;
   }
 }
+
+/* Full Recovery Loop — quiet orchestration signals moving through the system. */
+@keyframes recovery-loop-signal-travel {
+  0% {
+    transform: translate3d(-120%, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.72;
+  }
+  72% {
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(620%, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes recovery-loop-signal-vertical-travel {
+  0% {
+    transform: translate3d(0, -120%, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.72;
+  }
+  72% {
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(0, 620%, 0);
+    opacity: 0;
+  }
+}
+
+.recovery-loop-signal {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 18%;
+  background: linear-gradient(90deg, transparent, rgba(11, 116, 222, 0.85), transparent);
+  animation: recovery-loop-signal-travel 11s linear infinite;
+  will-change: transform, opacity;
+}
+
+.recovery-loop-signal--reverse {
+  animation-direction: reverse;
+  animation-delay: -3.5s;
+}
+
+.recovery-loop-signal-vertical {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(11, 116, 222, 0.85), transparent);
+  animation: recovery-loop-signal-vertical-travel 12s linear infinite;
+  will-change: transform, opacity;
+}
+
+.recovery-loop-signal-vertical--static {
+  animation: none;
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recovery-loop-signal,
+  .recovery-loop-signal--reverse,
+  .recovery-loop-signal-vertical {
+    animation: none !important;
+    opacity: 0.35 !important;
+    transform: none !important;
+  }
+}
