@@ -682,46 +682,41 @@ function RecoveryWorkStatement() {
 
 function FullRecoveryLoopSection() {
   const reduceMotion = useReducedMotion();
-  const detectStages = ["Amazon activity", "Audit", "Opportunity detected", "Investigation"];
-  const buildStages = ["Filing", "Case preparation", "Recovery judgment", "Evidence assembled"];
-  const resolveStages = [
-    "Amazon response",
-    "Follow-up / appeal / reassessment",
-    "Outcome",
-    "Payout reconciliation",
-    "Recovery closed",
-  ];
-  const responseBranches = ["Evidence request", "Rejection", "Approval"];
-  const mobileStages = [
-    "Amazon activity",
-    "Audit",
-    "Opportunity detected",
-    "Investigation",
-    "Evidence assembled",
-    "Recovery judgment",
-    "Case preparation",
-    "Filing",
-    "Amazon response",
-    "Follow-up / appeal / reassessment",
-    "Outcome",
-    "Payout reconciliation",
-    "Recovery closed",
-  ];
+  const [activeEvent, setActiveEvent] = useState(0);
 
-  const renderDesktopStage = (label: string, index: number, total: number) => (
-    <div key={label} className="relative z-10 flex min-w-0 flex-col items-center gap-2 text-center">
-      <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <span className="relative flex h-3 w-3 items-center justify-center rounded-full bg-[var(--margin-text-primary)] ring-[5px] ring-white">
-        <span className="h-1 w-1 rounded-full bg-white" />
-      </span>
-      <span className="max-w-[130px] text-[11px] font-semibold leading-[1.25] tracking-[-0.01em] text-[var(--margin-text-primary)]">
-        {label}
-      </span>
-      {index === total - 1 ? <span className="sr-only">End of lane</span> : null}
-    </div>
-  );
+  const desktopEvents = [
+    { number: "01", label: "Amazon activity", x: "5%", y: "17%" },
+    { number: "02", label: "Audit", x: "27%", y: "17%" },
+    { number: "03", label: "Opportunity detected", x: "49%", y: "17%" },
+    { number: "04", label: "Investigation", x: "71%", y: "17%" },
+    { number: "05", label: "Evidence assembled", x: "14%", y: "46%" },
+    { number: "06", label: "Recovery judgment", x: "34%", y: "46%" },
+    { number: "07", label: "Case preparation", x: "54%", y: "46%" },
+    { number: "08", label: "Filing", x: "74%", y: "46%" },
+    { number: "09", label: "Amazon response", x: "92%", y: "46%" },
+    { number: "10", label: "Evidence request", x: "73%", y: "69%", variant: "branch" },
+    { number: "11", label: "Rejection", x: "84%", y: "69%", variant: "branch" },
+    { number: "12", label: "Approval", x: "95%", y: "69%", variant: "branch" },
+    { number: "13", label: "Follow-up / appeal / reassessment", x: "52%", y: "82%", variant: "branch" },
+    { number: "14", label: "Outcome", x: "65%", y: "92%" },
+    { number: "15", label: "Payout reconciliation", x: "81%", y: "92%" },
+    { number: "16", label: "Recovery closed", x: "96%", y: "92%" },
+  ] as const;
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setActiveEvent(0);
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveEvent((current) => (current + 1) % desktopEvents.length);
+    }, 1600);
+
+    return () => window.clearInterval(interval);
+  }, [reduceMotion, desktopEvents.length]);
+
+  const eventIsActive = (index: number) => (reduceMotion ? index === 0 : activeEvent === index);
 
   return (
     <section
@@ -747,95 +742,75 @@ function FullRecoveryLoopSection() {
 
         <motion.div {...revealProps} className="mt-12 md:mt-16">
           <div
-            aria-label="The full recovery loop from Amazon activity through payout reconciliation"
-            className="relative hidden overflow-hidden border-y border-[var(--margin-border)] px-4 py-12 lg:block xl:px-8"
+            aria-label="A living orchestration of the full recovery loop"
+            className="recovery-orchestra-canvas relative hidden overflow-hidden border-y border-[var(--margin-border)] lg:block"
           >
-            <div className="mb-8 grid grid-cols-[78px_1fr] items-center gap-5">
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">Detect</span>
-              <div className="relative grid grid-cols-4 gap-x-5">
-                <div className="pointer-events-none absolute inset-x-0 top-[48px] h-px overflow-hidden bg-[var(--margin-border)]">
-                  <span className="recovery-loop-signal" />
-                </div>
-                {detectStages.map((label, index) => renderDesktopStage(label, index, detectStages.length))}
-              </div>
-            </div>
+            <svg
+              aria-hidden="true"
+              className="recovery-orchestra-lines pointer-events-none absolute inset-0 h-full w-full"
+              viewBox="0 0 1200 560"
+              preserveAspectRatio="none"
+            >
+              <path d="M45 96 C260 96 520 96 852 96" />
+              <path d="M852 96 C1080 120 1065 220 1010 244 C850 300 470 205 168 244" />
+              <path d="M168 244 C390 244 650 244 1104 244" />
+              <path className="is-broken" d="M1104 244 C1060 300 935 318 876 360" />
+              <path className="is-broken" d="M1104 244 C1110 300 1010 330 1008 360" />
+              <path className="is-branch" d="M1104 244 C1160 300 1145 338 1140 360" />
+              <path className="is-broken" d="M876 360 C790 420 690 432 624 454" />
+              <path className="is-broken" d="M1008 360 C900 430 720 438 624 454" />
+              <path className="is-branch" d="M1140 360 C1080 430 860 470 780 514" />
+              <path d="M624 454 C640 486 710 505 780 514" />
+              <path d="M780 514 C850 514 930 514 972 514" />
+              <path d="M972 514 C1040 514 1100 514 1152 514" />
+            </svg>
 
-            <div className="relative mb-8 grid grid-cols-[78px_1fr] items-center gap-5">
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">Build</span>
-              <div className="relative grid grid-cols-4 gap-x-5">
-                <div className="pointer-events-none absolute inset-x-0 top-[48px] h-px overflow-hidden bg-[var(--margin-border)]">
-                  <span className="recovery-loop-signal recovery-loop-signal--reverse" />
-                </div>
-                {buildStages.map((label, index) => renderDesktopStage(label, index, buildStages.length))}
-              </div>
-            </div>
+            <motion.span
+              aria-hidden="true"
+              className="recovery-orchestra-signal"
+              animate={
+                reduceMotion
+                  ? { left: "5%", top: "17%", opacity: 0.35 }
+                  : {
+                      left: ["5%", "27%", "49%", "71%", "14%", "34%", "54%", "74%", "92%", "73%", "84%", "95%", "52%", "65%", "81%", "96%"],
+                      top: ["17%", "17%", "17%", "17%", "46%", "46%", "46%", "46%", "46%", "69%", "69%", "69%", "82%", "92%", "92%", "92%"],
+                      opacity: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                    }
+              }
+              transition={
+                reduceMotion
+                  ? { duration: 0 }
+                  : { duration: 25.6, repeat: Infinity, ease: "linear", times: desktopEvents.map((_, index) => index / (desktopEvents.length - 1)) }
+              }
+            />
 
-            <div className="relative grid grid-cols-[78px_1fr] items-center gap-5">
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">Resolve</span>
-              <div className="relative grid grid-cols-5 gap-x-5">
-                <div className="pointer-events-none absolute inset-x-0 top-[48px] h-px overflow-hidden bg-[var(--margin-border)]">
-                  <span className="recovery-loop-signal" />
-                </div>
-                {resolveStages.map((label, index) => (
-                  <div key={label} className="relative z-10 flex min-w-0 flex-col items-center gap-2 text-center">
-                    <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
-                      {String(index + detectStages.length + buildStages.length + 1).padStart(2, "0")}
-                    </span>
-                    {index === 1 ? (
-                      <div className="relative flex min-h-[82px] flex-col items-center justify-center gap-1.5">
-                        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72px] w-px -translate-x-1/2 bg-[var(--margin-border)]" />
-                        {responseBranches.map((branch, branchIndex) => (
-                          <span key={branch} className="relative z-10 inline-flex items-center gap-1.5 bg-white px-1 text-[10px] font-semibold leading-tight text-[var(--margin-text-primary)]">
-                            <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${branchIndex === 1 ? "bg-[var(--margin-blue)]" : "bg-[var(--margin-text-primary)]"}`} />
-                            {branch}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="relative flex h-3 w-3 items-center justify-center rounded-full bg-[var(--margin-text-primary)] ring-[5px] ring-white">
-                        <span className="h-1 w-1 rounded-full bg-white" />
-                      </span>
-                    )}
-                    <span className="max-w-[150px] text-[11px] font-semibold leading-[1.25] tracking-[-0.01em] text-[var(--margin-text-primary)]">
-                      {label}
-                    </span>
-                  </div>
-                ))}
+            {desktopEvents.map((event, index) => (
+              <div
+                key={event.number}
+                className={`recovery-event-unit ${event.variant === "branch" ? "recovery-event-unit--branch" : ""}`}
+                data-active={eventIsActive(index)}
+                style={{ left: event.x, top: event.y }}
+              >
+                <span className="recovery-event-number">{event.number}</span>
+                <span className="recovery-event-label">{event.label}</span>
+                <span className="recovery-event-check" aria-hidden="true">✓</span>
               </div>
-            </div>
-
-            <div className="pointer-events-none absolute right-[14%] top-[97px] h-8 w-px bg-[var(--margin-border)]" />
-            <div className="pointer-events-none absolute left-[14%] top-[194px] h-8 w-px bg-[var(--margin-border)]" />
+            ))}
           </div>
 
           <div
-            aria-label="The full recovery loop in a vertical sequence"
-            className="relative ml-2 border-l border-[var(--margin-border)] pl-7 lg:hidden"
+            aria-label="The full recovery loop in a vertical orchestration"
+            className="recovery-mobile-orchestra relative ml-2 border-l border-[var(--margin-border)] pl-7 lg:hidden"
           >
-            <span className={`recovery-loop-signal-vertical ${reduceMotion ? "recovery-loop-signal-vertical--static" : ""}`} />
-            {mobileStages.map((label, index) => (
-              <div key={label} className="relative pb-5 last:pb-0">
-                <span className="absolute -left-[32px] top-1.5 flex h-3 w-3 items-center justify-center rounded-full bg-[var(--margin-text-primary)] ring-[5px] ring-white">
-                  <span className="h-1 w-1 rounded-full bg-white" />
-                </span>
-                <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-[13px] font-semibold leading-5 tracking-[-0.01em] text-[var(--margin-text-primary)]">
-                    {label}
-                  </span>
+            <span className={`recovery-mobile-signal ${reduceMotion ? "recovery-mobile-signal--static" : ""}`} aria-hidden="true" />
+            {desktopEvents.map((event, index) => (
+              <div key={event.number} className={`recovery-mobile-event ${event.variant === "branch" ? "recovery-mobile-event--branch" : ""}`} data-active={eventIsActive(index)}>
+                <span className="recovery-mobile-event-line" aria-hidden="true" />
+                <div className="recovery-mobile-event-unit">
+                  <span className="recovery-event-number">{event.number}</span>
+                  <span className="recovery-event-label">{event.label}</span>
+                  <span className="recovery-event-check" aria-hidden="true">✓</span>
                 </div>
-                {label === "Amazon response" ? (
-                  <div className="mt-3 ml-9 border-l border-[var(--margin-border)] pl-4">
-                    {responseBranches.map((branch, branchIndex) => (
-                      <div key={branch} className="flex items-center gap-2 py-1 text-[11px] font-medium leading-5 text-[var(--margin-text-secondary)]">
-                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${branchIndex === 1 ? "bg-[var(--margin-blue)]" : "bg-[var(--margin-text-primary)]"}`} />
-                        {branch}
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
               </div>
             ))}
           </div>

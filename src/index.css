@@ -346,3 +346,203 @@ html, body, #root {
     transform: none !important;
   }
 }
+
+/* Full Recovery Loop v2 — a living, text-led workflow orchestra. */
+.recovery-orchestra-canvas {
+  min-height: 560px;
+  background: #ffffff;
+}
+
+.recovery-orchestra-lines path {
+  fill: none;
+  stroke: #cbd5dc;
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.recovery-orchestra-lines path.is-broken {
+  stroke-dasharray: 6 9;
+  stroke-linecap: round;
+}
+
+.recovery-orchestra-lines path.is-branch {
+  stroke: #b9c8d2;
+  stroke-dasharray: 2 8;
+  stroke-linecap: round;
+}
+
+.recovery-orchestra-signal {
+  position: absolute;
+  z-index: 30;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 999px;
+  background: var(--margin-blue);
+  box-shadow: 0 0 0 5px rgba(11, 116, 222, 0.1), 0 0 20px rgba(11, 116, 222, 0.42);
+  pointer-events: none;
+  will-change: left, top, opacity;
+}
+
+.recovery-event-unit {
+  position: absolute;
+  z-index: 20;
+  display: inline-flex;
+  min-width: 116px;
+  max-width: 168px;
+  transform: translate(-50%, -50%);
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 5px;
+  background: #f0f2f3;
+  padding: 9px 12px;
+  text-align: center;
+  transition: background-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
+}
+
+.recovery-event-unit--branch {
+  min-width: 108px;
+  max-width: 146px;
+  background: #f5f6f6;
+}
+
+.recovery-event-number {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding-top: 1px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  color: var(--margin-text-muted);
+}
+
+.recovery-event-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--margin-text-primary);
+}
+
+.recovery-event-check {
+  display: inline-flex;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.65);
+  color: var(--margin-blue);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  transition: width 350ms ease, opacity 350ms ease, transform 350ms ease;
+}
+
+.recovery-event-unit[data-active="true"] {
+  background: #e6eef5;
+  box-shadow: 0 8px 24px rgba(37, 49, 58, 0.08);
+  transform: translate(-50%, -50%) translateY(-2px);
+}
+
+.recovery-event-unit[data-active="true"] .recovery-event-check {
+  width: 13px;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.recovery-mobile-orchestra {
+  padding-top: 4px;
+}
+
+.recovery-mobile-signal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  z-index: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(11, 116, 222, 0.78), transparent);
+  animation: recovery-mobile-orchestra-pulse 12s linear infinite;
+  pointer-events: none;
+}
+
+.recovery-mobile-signal--static {
+  animation: none;
+  opacity: 0.36;
+}
+
+@keyframes recovery-mobile-orchestra-pulse {
+  0% {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.78;
+  }
+  78% {
+    clip-path: inset(0 0 0 0);
+    opacity: 0.78;
+  }
+  100% {
+    clip-path: inset(100% 0 0 0);
+    opacity: 0;
+  }
+}
+
+.recovery-mobile-event {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 14px;
+}
+
+.recovery-mobile-event:last-child {
+  padding-bottom: 0;
+}
+
+.recovery-mobile-event-unit {
+  display: inline-flex;
+  max-width: min(100%, 340px);
+  align-items: center;
+  gap: 8px;
+  border-radius: 5px;
+  background: #f0f2f3;
+  padding: 8px 11px;
+  transition: background-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
+}
+
+.recovery-mobile-event[data-active="true"] .recovery-mobile-event-unit {
+  background: #e6eef5;
+  box-shadow: 0 7px 20px rgba(37, 49, 58, 0.07);
+  transform: translateX(3px);
+}
+
+.recovery-mobile-event--branch {
+  margin-left: 18px;
+}
+
+@media (min-width: 1024px) {
+  .recovery-event-unit[data-active="true"] {
+    box-shadow: 0 10px 30px rgba(37, 49, 58, 0.1), 0 0 0 1px rgba(11, 116, 222, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recovery-orchestra-signal {
+    box-shadow: none;
+  }
+
+  .recovery-event-unit,
+  .recovery-event-unit[data-active="true"],
+  .recovery-mobile-event-unit,
+  .recovery-mobile-event[data-active="true"] .recovery-mobile-event-unit {
+    transform: none;
+    transition: none;
+  }
+
+  .recovery-mobile-signal {
+    animation: none;
+    opacity: 0.36;
+  }
+}
