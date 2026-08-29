@@ -349,7 +349,7 @@ html, body, #root {
 
 /* Full Recovery Loop v2 — a living, text-led workflow orchestra. */
 .recovery-orchestra-canvas {
-  min-height: 560px;
+  min-height: 470px;
   background: #ffffff;
 }
 
@@ -374,9 +374,9 @@ html, body, #root {
 .recovery-orchestra-signal {
   position: absolute;
   z-index: 30;
-  width: 9px;
-  height: 9px;
-  margin: -4.5px 0 0 -4.5px;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
   border-radius: 999px;
   background: var(--margin-blue);
   box-shadow: 0 0 0 5px rgba(11, 116, 222, 0.1), 0 0 20px rgba(11, 116, 222, 0.42);
@@ -388,22 +388,22 @@ html, body, #root {
   position: absolute;
   z-index: 20;
   display: inline-flex;
-  min-width: 116px;
-  max-width: 168px;
+  min-width: 104px;
+  max-width: 148px;
   transform: translate(-50%, -50%);
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   border-radius: 5px;
   background: #f0f2f3;
-  padding: 9px 12px;
+  padding: 7px 10px;
   text-align: center;
   transition: background-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
 }
 
 .recovery-event-unit--branch {
-  min-width: 108px;
-  max-width: 146px;
+  min-width: 96px;
+  max-width: 130px;
   background: #f5f6f6;
 }
 
@@ -420,7 +420,7 @@ html, body, #root {
 }
 
 .recovery-event-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -430,14 +430,19 @@ html, body, #root {
 .recovery-event-check {
   display: inline-flex;
   width: 0;
+  height: 0;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  border-radius: 999px;
+  background: var(--margin-success);
   opacity: 0;
   transform: scale(0.65);
-  color: var(--margin-blue);
-  font-size: 13px;
+  color: #ffffff;
+  font-size: 9px;
   font-weight: 700;
   line-height: 1;
-  transition: width 350ms ease, opacity 350ms ease, transform 350ms ease;
+  transition: width 350ms ease, height 350ms ease, opacity 350ms ease, transform 350ms ease;
 }
 
 .recovery-event-unit[data-active="true"] {
@@ -447,7 +452,8 @@ html, body, #root {
 }
 
 .recovery-event-unit[data-active="true"] .recovery-event-check {
-  width: 13px;
+  width: 14px;
+  height: 14px;
   opacity: 1;
   transform: scale(1);
 }
@@ -494,7 +500,7 @@ html, body, #root {
 .recovery-mobile-event {
   position: relative;
   z-index: 1;
-  padding-bottom: 14px;
+  padding-bottom: 10px;
 }
 
 .recovery-mobile-event:last-child {
@@ -505,10 +511,10 @@ html, body, #root {
   display: inline-flex;
   max-width: min(100%, 340px);
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   border-radius: 5px;
   background: #f0f2f3;
-  padding: 8px 11px;
+  padding: 7px 9px;
   transition: background-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
 }
 
@@ -516,6 +522,13 @@ html, body, #root {
   background: #e6eef5;
   box-shadow: 0 7px 20px rgba(37, 49, 58, 0.07);
   transform: translateX(3px);
+}
+
+.recovery-mobile-event[data-active="true"] .recovery-event-check {
+  width: 14px;
+  height: 14px;
+  opacity: 1;
+  transform: scale(1);
 }
 
 .recovery-mobile-event--branch {

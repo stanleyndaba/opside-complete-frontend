@@ -721,7 +721,7 @@ function FullRecoveryLoopSection() {
   return (
     <section
       aria-labelledby="full-recovery-loop-title"
-      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-20 md:py-28"
+      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 md:py-20"
     >
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[900px]">
@@ -733,14 +733,14 @@ function FullRecoveryLoopSection() {
           </div>
           <h2
             id="full-recovery-loop-title"
-            className="font-lora text-[36px] leading-[0.99] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]"
+            className="font-lora text-[30px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
             From Amazon event to financial outcome.
           </h2>
         </motion.div>
 
-        <motion.div {...revealProps} className="mt-12 md:mt-16">
+        <motion.div {...revealProps} className="mt-8 md:mt-10">
           <div
             aria-label="A living orchestration of the full recovery loop"
             className="recovery-orchestra-canvas relative hidden overflow-hidden border-y border-[var(--margin-border)] lg:block"
@@ -816,12 +816,12 @@ function FullRecoveryLoopSection() {
           </div>
         </motion.div>
 
-        <motion.div {...revealProps} className="mt-12 border-t border-[var(--margin-border)] pt-7 md:mt-16 md:pt-9">
-          <p className="max-w-[700px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[50px]" style={{ fontWeight: 400 }}>
+        <motion.div {...revealProps} className="mt-8 border-t border-[var(--margin-border)] pt-6 md:mt-10 md:pt-7">
+          <p className="max-w-[700px] font-lora text-[26px] leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[42px]" style={{ fontWeight: 400 }}>
             One continuous recovery lifecycle.
             <span className="mt-2 block text-[var(--margin-text-muted)]">Not disconnected tools.</span>
           </p>
-          <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-blue)]">
+          <p className="mt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-blue)]">
             That is the architecture.
           </p>
         </motion.div>
