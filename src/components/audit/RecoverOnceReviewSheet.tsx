@@ -40,7 +40,11 @@ export function RecoverOnceReviewSheet({
   isCheckoutStarting,
   onContinueToCheckout,
 }: RecoverOnceReviewSheetProps) {
-  const quoteIsCheckoutReady = quote?.status === 'available' || quote?.status === 'accepted';
+  const zarAmountAvailable = quote?.currency === 'ZAR' && typeof quote.amount_subunits === 'number' && quote.amount_subunits > 0;
+  const quoteIsCheckoutReady = zarAmountAvailable && (quote?.status === 'available' || quote?.status === 'accepted');
+  const formattedZarAmount = zarAmountAvailable
+    ? new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format((quote?.amount_subunits || 0) / 100)
+    : null;
   const expiry = formatExpiry(quote?.expires_at);
 
   return (
@@ -77,14 +81,14 @@ export function RecoverOnceReviewSheet({
           </div>
 
           <aside className="flex min-w-0 flex-col rounded-[10px] border border-[#E8E7E1] bg-[#FBFAF7] p-4 sm:p-5">
-            <div className="border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#191B20]">Fixed quote</p><p className="mt-1 text-[28px] font-semibold tracking-[-0.035em] text-[#191B20]">{quote?.display_amount || 'Not available'}</p><p className="mt-1 text-[12px] leading-5 text-[#595E68]">USD tier · one-time payment</p><p className="mt-2 text-[11px] leading-5 text-[#777A82]">Secure checkout uses the provider currency configured for this merchant.</p></div>
+            <div className="border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#191B20]">Fixed quote</p><p className="mt-1 text-[28px] font-semibold tracking-[-0.035em] text-[#191B20]">{quote?.display_amount || 'Not available'}</p><p className="mt-1 text-[12px] leading-5 text-[#595E68]">USD display tier · one-time payment</p><div className="mt-4 rounded-[8px] border border-[#D7D7D1] bg-white px-3 py-3"><p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#777A82]">Actual amount charged</p><p className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#191B20]">{formattedZarAmount || 'Amount unavailable'}</p><p className="mt-1 text-[11px] leading-5 text-[#595E68]">Paystack checkout is settled in ZAR. The USD figure above is a display tier, not the charge currency.</p></div></div>
             {expiry ? <div className="mt-5 flex items-start gap-2 rounded-[10px] border border-[#E8E7E1] bg-white p-3 text-[12px] leading-5 text-[#595E68]"><Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[#595E68]" aria-hidden="true" /><p><span className="font-semibold text-[#191B20]">Quote expiry:</span> {expiry}</p></div> : null}
             {quote?.status === 'manual_review_required' ? <div className="mt-5 flex items-start gap-2 rounded-[10px] border border-amber-300 bg-amber-50 p-3 text-[12px] leading-5 text-amber-900"><FileText className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><p>{quote.manual_review_reason || 'This recorded scope needs manual assessment before a fixed quote can be issued.'}</p></div> : null}
             <div className="mt-auto border-t border-[#E8E7E1] pt-5">
-              <div className="flex items-start gap-2 text-[12px] leading-5 text-[#595E68]"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#3F51A8]" aria-hidden="true" /><p>Continuing opens the existing secure checkout for this generated quote. It does not authorize filing with Amazon.</p></div>
+              <div className="flex items-start gap-2 text-[12px] leading-5 text-[#595E68]"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#3F51A8]" aria-hidden="true" /><p>{zarAmountAvailable ? `You will be charged ${formattedZarAmount} in ZAR through Paystack. Continuing does not authorize filing with Amazon.` : 'The ZAR charge amount is unavailable, so secure checkout cannot be opened yet.'}</p></div>
               <Button onClick={onContinueToCheckout} disabled={!quoteIsCheckoutReady || isCheckoutStarting} className="mt-5 h-10 w-full rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] disabled:bg-[#A5A7A3]">
                 {isCheckoutStarting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                {isCheckoutStarting ? 'Opening secure checkout' : 'Continue to secure checkout'}
+                {isCheckoutStarting ? 'Opening secure checkout' : quoteIsCheckoutReady ? 'Continue to secure checkout' : 'Amount unavailable'}
               </Button>
               <SheetClose asChild><Button variant="ghost" className="mt-2 h-10 w-full rounded-[10px] text-[13px] font-medium text-[#595E68] hover:bg-white hover:text-[#191B20]">Back to audit</Button></SheetClose>
             </div>
