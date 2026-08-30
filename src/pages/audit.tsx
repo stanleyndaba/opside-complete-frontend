@@ -1786,7 +1786,7 @@ export default function Audit() {
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <button type="button" onClick={() => setIsExportDialogOpen(true)} className="inline-flex h-10 items-center gap-1.5 rounded-md border border-[#D7D7D1] bg-white px-2.5 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3 sm:text-[13px]" title="Export summary">
+            <button type="button" onClick={() => setIsExportDialogOpen(true)} className="inline-flex h-10 items-center gap-1.5 rounded-[10px] border-0 bg-[#F0F0EC] px-3 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#E7E7E1] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-4 sm:text-[13px]" title="Export summary">
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">Export summary</span>
             </button>
