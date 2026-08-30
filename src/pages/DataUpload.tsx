@@ -5,7 +5,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@clerk/react';
 import { api, type AuditRunRecord, type CsvIngestionResponse } from '@/lib/api';
 import {
-  ArrowLeft,
   CheckCircle2,
   CircleAlert,
   FileSpreadsheet,
@@ -347,16 +346,14 @@ export default function DataUpload() {
             title="Margin home"
             className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
           >
-            <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto shrink-0 object-contain" />
             <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
           </Link>
 
           <Link
             to="/audit"
-            className="inline-flex min-h-10 items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
+            className="inline-flex min-h-10 items-center rounded-[10px] border-0 bg-[#F0F0EC] px-4 text-[13px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#E7E7E1] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2"
           >
-            <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span>Back to Audit</span>
+            <span>Use Selling Partner</span>
           </Link>
         </div>
       </header>
