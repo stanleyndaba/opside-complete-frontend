@@ -1778,7 +1778,6 @@ export default function Audit() {
         <div className="mx-auto flex min-h-14 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
             <Link to="/" title="Margin home" className="inline-flex shrink-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
-              <img src="/logoimagetwo.png" alt="Margin" width="18" height="18" className="h-[18px] w-auto shrink-0 object-contain" />
               <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
             </Link>
             <div className="hidden min-w-0 border-l border-[#E8E7E1] pl-3 sm:block">
@@ -1787,17 +1786,6 @@ export default function Audit() {
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            {auditExperienceDecision.secondaryAction === 'upload_reports' ? (
-              <Link
-                to={auditReportUploadHref}
-                className="inline-flex min-h-10 items-center gap-1.5 rounded-md px-2.5 text-[12px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3 sm:text-[13px]"
-                title="Use Amazon reports"
-              >
-                <FilePlus2 className="h-4 w-4 shrink-0" />
-                <span className="hidden sm:inline">Use Amazon reports</span>
-                <span className="sm:hidden">Reports</span>
-              </Link>
-            ) : null}
             <button type="button" onClick={() => setIsExportDialogOpen(true)} className="inline-flex h-10 items-center gap-1.5 rounded-md border border-[#D7D7D1] bg-white px-2.5 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3 sm:text-[13px]" title="Export summary">
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">Export summary</span>
@@ -1820,8 +1808,9 @@ export default function Audit() {
                     {auditExperienceDecision.description}
                   </p>
                 </div>
-                <div className="flex max-w-sm shrink-0 flex-col items-stretch gap-2 sm:items-end">{primaryAction}<p className="max-w-sm text-[12px] leading-5 text-[#777A82]">{auditExperienceDecision.primaryWhy}</p><div className="flex flex-wrap items-center gap-2"><button type="button" onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="inline-flex h-10 items-center rounded-[10px] border border-[#D7D7D1] bg-white px-3 text-[13px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#F4F3ED] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">View audit scope</button>{auditExperienceDecision.secondaryAction === 'upload_reports' ? <Link to={auditReportUploadHref} className="inline-flex h-10 items-center rounded-[10px] px-3 text-[13px] font-medium text-[#3F51A8] outline-none transition-colors hover:bg-[#F4F3ED] hover:text-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">{auditExperienceDecision.secondaryLabel}</Link> : null}</div></div>
+                <div className="flex max-w-sm shrink-0 flex-col items-stretch gap-2 sm:items-end">{primaryAction}<p className="max-w-sm text-[12px] leading-5 text-[#777A82]">{auditExperienceDecision.primaryWhy}</p><div className="flex flex-wrap items-center gap-2"></div>
               </div>
+            </div>
             </div>
 
             {teaser.syntheticTraining ? (
@@ -1906,6 +1895,16 @@ export default function Audit() {
                     <SheetDescription className="mt-1 text-[12px] leading-5 text-[#777A82]">Review the audit record and workspace controls.</SheetDescription>
                   </SheetHeader>
                   <div className="flex-1 overflow-y-auto px-5 py-2">
+                    <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="flex min-h-14 w-full items-center gap-3 border-b border-[#E8E7E1] py-3 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
+                      <Database className="h-4 w-4 shrink-0 text-[#595E68]" aria-hidden="true" />
+                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-medium text-[#191B20]">View audit scope</span><span className="mt-0.5 block text-[11px] text-[#777A82]">See what Margin examined</span></span>
+                      <ArrowRight className="h-3.5 w-3.5 text-[#777A82]" aria-hidden="true" />
+                    </button>
+                    <Link to={auditReportUploadHref} onClick={() => setIsAuditControlsOpen(false)} className="flex min-h-14 w-full items-center gap-3 border-b border-[#E8E7E1] py-3 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
+                      <FilePlus2 className="h-4 w-4 shrink-0 text-[#595E68]" aria-hidden="true" />
+                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-medium text-[#191B20]">Use Amazon reports</span><span className="mt-0.5 block text-[11px] text-[#777A82]">Upload reports instead</span></span>
+                      <ArrowRight className="h-3.5 w-3.5 text-[#777A82]" aria-hidden="true" />
+                    </Link>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsPeriodSelectorOpen(true); trackEvent('audit_period_selector_opened', { source_page: '/audit' }); }} className="flex min-h-14 w-full items-center gap-3 border-b border-[#E8E7E1] py-3 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
                       <Calendar className="h-4 w-4 shrink-0 text-[#595E68]" aria-hidden="true" />
                       <span className="min-w-0 flex-1"><span className="block text-[13px] font-medium text-[#191B20]">Audit history</span><span className="mt-0.5 block text-[11px] text-[#777A82]">Select a recorded audit</span></span>
@@ -1931,7 +1930,6 @@ export default function Audit() {
                 </div>
               </SheetContent>
             </Sheet>
-            <section className="rounded-[14px] border border-[#E8E7E1] bg-white p-5"><h2 className="text-[14px] font-semibold text-[#191B20]">Audit boundary</h2><p className="mt-2 text-[12px] leading-5 text-[#595E68]">Audit records identify potential scope from available data. Filing, evidence use, and recovery action remain seller-controlled and evidence-dependent.</p></section>
           </aside>
         </div>
       </main>
