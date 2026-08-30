@@ -1877,7 +1877,6 @@ export default function Audit() {
           </section>
 
           <aside className="space-y-4 xl:sticky xl:top-20" aria-label="Audit context">
-            <section className="rounded-[14px] border border-[#E8E7E1] bg-white p-5"><div className="flex items-center gap-2"><Database className="h-4 w-4 text-[#595E68]" aria-hidden="true" /><h2 className="text-[14px] font-semibold text-[#191B20]">Audit context</h2></div><dl className="mt-4 space-y-3 text-[12px]"><div className="border-b border-[#E8E7E1] pb-3"><dt className="font-medium text-[#777A82]">Workspace</dt><dd className="mt-1 text-[#191B20]">{activeWorkspaceLabel}</dd></div><div className="border-b border-[#E8E7E1] pb-3"><dt className="font-medium text-[#777A82]">Selected audit</dt><dd className="mt-1 leading-5 text-[#191B20]">{selectedAuditSelectorLabel}</dd></div><div className="border-b border-[#E8E7E1] pb-3"><dt className="font-medium text-[#777A82]">Source</dt><dd className="mt-1 text-[#191B20]">{audit ? selectedAuditSource : 'Not recorded'}</dd></div><div><dt className="font-medium text-[#777A82]">Coverage</dt><dd className="mt-1 text-[#191B20]">{selectedAuditCoverage}</dd></div></dl></section>
             <button
               type="button"
               onClick={() => setIsAuditControlsOpen(true)}
