@@ -14,7 +14,6 @@ type CommercialRecommendationProps = {
   onReviewRecoverOnce: () => void;
   onReviewWorkspace: () => void;
   reportUploadHref: string;
-  evidenceRecordsHref: string;
 };
 
 function formatAuditDate(value: string | null): string | null {
@@ -80,14 +79,11 @@ function EvidenceFacts({ teaser, decision }: Pick<CommercialRecommendationProps,
   );
 }
 
-function EvidenceActions({ reportUploadHref, evidenceRecordsHref }: Pick<CommercialRecommendationProps, 'reportUploadHref' | 'evidenceRecordsHref'>) {
+function EvidenceActions({ reportUploadHref }: Pick<CommercialRecommendationProps, 'reportUploadHref'>) {
   return (
     <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
       <Button asChild className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">
         <Link to={reportUploadHref}>Use Amazon reports <ArrowRight className="ml-2 h-4 w-4" /></Link>
-      </Button>
-      <Button asChild variant="outline" className="h-10 rounded-[10px] border-[#D7D7D1] bg-white px-4 text-[13px] font-medium text-[#191B20] hover:bg-[#F4F3ED]">
-        <Link to={evidenceRecordsHref}>Review evidence records</Link>
       </Button>
     </div>
   );
@@ -105,7 +101,6 @@ export function CommercialRecommendation({
   onReviewRecoverOnce,
   onReviewWorkspace,
   reportUploadHref,
-  evidenceRecordsHref,
 }: CommercialRecommendationProps) {
   if (teaser.syntheticTraining) return null;
 
@@ -142,7 +137,7 @@ export function CommercialRecommendation({
             <p className="font-semibold">A fixed quote cannot be issued automatically yet.</p>
             <p className="mt-1">{recoverOnceQuote.manual_review_reason || 'The recorded scope needs additional evidence or manual assessment before a fixed quote can be finalized.'}</p>
             <p className="mt-2">Review the recorded evidence or add supported Amazon reports. Margin has not opened a recovery engagement.</p>
-            <EvidenceActions reportUploadHref={reportUploadHref} evidenceRecordsHref={evidenceRecordsHref} />
+            <EvidenceActions reportUploadHref={reportUploadHref} />
           </div>
         ) : (
           <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -228,7 +223,7 @@ export function CommercialRecommendation({
           <p className="mt-1 text-[13px] leading-5 text-[#595E68]">{reason || 'The audit does not contain enough usable evidence to establish a paid recovery recommendation.'}</p>
           {missingSources ? <p className="mt-2 text-[12px] leading-5 text-[#595E68]">Relevant evidence currently unavailable: {missingSources}.</p> : null}
         </div>
-        <EvidenceActions reportUploadHref={reportUploadHref} evidenceRecordsHref={evidenceRecordsHref} />
+        <EvidenceActions reportUploadHref={reportUploadHref} />
         {recheckDate ? <p className="mt-4 text-[12px] leading-5 text-[#595E68]">The recorded audit indicates that a recheck may be appropriate on or after {recheckDate}; Margin is not promising an automatic review.</p> : null}
       </section>
     );
@@ -251,7 +246,7 @@ export function CommercialRecommendation({
           <p className="mt-1 text-[13px] leading-5 text-[#595E68]">{reason || 'The recorded evidence is not yet strong enough to support automatic commercial routing.'}</p>
           <p className="mt-2 text-[12px] leading-5 text-[#595E68]">This does not create a recovery engagement, open a case, or promise human review.</p>
         </div>
-        <EvidenceActions reportUploadHref={reportUploadHref} evidenceRecordsHref={evidenceRecordsHref} />
+        <EvidenceActions reportUploadHref={reportUploadHref} />
         {recheckDate ? <p className="mt-4 text-[12px] leading-5 text-[#595E68]">The recorded audit indicates that a recheck may be appropriate on or after {recheckDate}; Margin is not promising an automatic review.</p> : null}
       </section>
     );
@@ -274,7 +269,7 @@ export function CommercialRecommendation({
           <p className="text-[12px] font-semibold text-[#191B20]">Why this is the recommendation</p>
           <p className="mt-1 text-[13px] leading-5 text-[#595E68]">{reason || 'Margin did not identify a paid recovery route from the audit truth available today.'}</p>
         </div>
-        {limitedCoverage ? <EvidenceActions reportUploadHref={reportUploadHref} evidenceRecordsHref={evidenceRecordsHref} /> : null}
+        {limitedCoverage ? <EvidenceActions reportUploadHref={reportUploadHref} /> : null}
         {recheckDate ? <p className="mt-4 text-[12px] leading-5 text-[#595E68]">The recorded audit indicates that a new audit may be appropriate on or after {recheckDate}. Margin is not promising an automatic review.</p> : null}
       </section>
     );
@@ -291,7 +286,7 @@ export function CommercialRecommendation({
         </div>
       </div>
       <EvidenceFacts teaser={teaser} decision={decision} />
-      <EvidenceActions reportUploadHref={reportUploadHref} evidenceRecordsHref={evidenceRecordsHref} />
+      <EvidenceActions reportUploadHref={reportUploadHref} />
     </section>
   );
 }

@@ -516,7 +516,6 @@ export default function Audit() {
   });
   const activeWorkspaceLabel = activeTenantSlug || 'Current workspace';
   const auditReportUploadHref = tenantRoute(activeTenantSlug, `/data-upload?returnTo=audit${audit?.id ? `&auditId=${encodeURIComponent(audit.id)}` : ''}`);
-  const evidenceRecordsHref = tenantRoute(activeTenantSlug, '/evidence-locker');
   const notificationsHref = activeTenantSlug ? tenantRoute(activeTenantSlug, '/notifications') : '/notifications';
   const canManageSavedSchedule = Boolean(auditSchedule);
   const scheduleStatusAvailable = !scheduleLoadError && Boolean(scheduleOperating);
@@ -1844,7 +1843,7 @@ export default function Audit() {
                   <div className="border-b border-[#D7D7D1] pb-4"><p className="text-[12px] font-semibold text-[#595E68]">Understanding your audit</p><h2 id="audit-understanding-title" className="mt-2 text-[20px] font-semibold leading-7 tracking-[-0.02em] text-[#191B20]">Margin reviews available Amazon records and makes the recorded scope legible before any recovery decision.</h2></div>
                   <div className="grid gap-4 pt-4 sm:grid-cols-3 sm:gap-0">
                     <div className="border-b border-[#D7D7D1] pb-4 sm:border-b-0 sm:border-r sm:pr-4"><div className="mb-3 flex h-8 items-center"><img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-7 w-7 object-contain" /></div><h3 className="text-[14px] font-semibold text-[#191B20]">Amazon account data</h3><p className="mt-1 text-[13px] leading-5 text-[#595E68]">Read-only Amazon records available to this audit.</p></div>
-                    <div className="border-b border-[#D7D7D1] py-4 sm:border-b-0 sm:border-r sm:px-4 sm:py-0"><div className="mb-3 flex h-8 items-center gap-2"><img src="/gmailicon.png" alt="Gmail" className="h-[22px] w-[22px] object-contain" /><img src="/slack-icon-2019.png" alt="Slack" className="h-[22px] w-[22px] object-contain" /><img src="/gd.png" alt="Google Drive" className="h-[22px] w-[22px] object-contain" /></div><h3 className="text-[14px] font-semibold text-[#191B20]">Evidence records</h3><p className="mt-1 text-[13px] leading-5 text-[#595E68]">Documentation remains separate from audit results and is reviewed in its own record.</p></div>
+                    <div className="border-b border-[#D7D7D1] py-4 sm:border-b-0 sm:border-r sm:px-4 sm:py-0"><div className="mb-3 flex h-8 items-center gap-2"><img src="/gmailicon.png" alt="Gmail" className="h-[22px] w-[22px] object-contain" /><img src="/slack-icon-2019.png" alt="Slack" className="h-[22px] w-[22px] object-contain" /><img src="/gd.png" alt="Google Drive" className="h-[22px] w-[22px] object-contain" /></div><h3 className="text-[14px] font-semibold text-[#191B20]">Supporting documentation</h3><p className="mt-1 text-[13px] leading-5 text-[#595E68]">Documentation remains separate from audit results and can be reviewed when needed.</p></div>
                     <div className="pt-4 sm:pl-4 sm:pt-0"><div className="mb-3 flex h-8 items-center"><ArrowRightLeft className="h-5 w-5 text-[#595E68]" /></div><h3 className="text-[14px] font-semibold text-[#191B20]">Reconciliation checks</h3><p className="mt-1 text-[13px] leading-5 text-[#595E68]">Potential differences need review before any seller-controlled next action.</p></div>
                   </div>
                   <p className="mt-4 border-t border-[#D7D7D1] pt-3 text-[12px] font-medium text-[#777A82]">Read-only data review · potential opportunities · seller approval before any filing</p>
@@ -1878,7 +1877,6 @@ export default function Audit() {
                 onReviewRecoverOnce={openRecoverOnceReview}
                 onReviewWorkspace={openActivationSheet}
                 reportUploadHref={auditReportUploadHref}
-                evidenceRecordsHref={evidenceRecordsHref}
               />
             ) : null}
           </section>
@@ -1984,7 +1982,7 @@ export default function Audit() {
                 <div className="mt-3 divide-y divide-[#E8E7E1] rounded-[10px] border border-[#E8E7E1] bg-white px-4">
                   {[
                     ['Scheduled audit review', 'A workspace-owned schedule can be configured when the recorded operating state and entitlement allow it. A schedule remains a preference, not a guarantee of execution.'],
-                    ['Evidence readiness', 'Margin can keep evidence records and missing documentation visible for review before deadlines. Evidence readiness does not prove a claim or authorize filing.'],
+                    ['Evidence readiness', 'Margin can keep missing documentation visible for review before deadlines. Evidence readiness does not prove a claim or authorize filing.'],
                     ['Recovery record continuity', 'Seller decisions, Amazon responses, and recovery records can remain organized in the workspace as separate operational objects.'],
                     ['Settlement review', 'Recorded payout-related states can be monitored for reconciliation. Monitoring does not confirm payment or closure.'],
                   ].map(([title, body]) => <div key={title} className="py-3.5"><h3 className="text-[14px] font-semibold text-[#191B20]">{title}</h3><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{body}</p></div>)}
