@@ -234,7 +234,11 @@ export default function DataUpload() {
         if (resumed) return;
       }
 
-      const reentryMessage = await getReentryMessage().catch(() => null);
+      // A fresh upload response owns the outcome for this submission. Do not
+      // let a historical audit's re-entry date mask its actual result.
+      const reentryMessage = response.ok && ingestion?.syncId
+        ? null
+        : await getReentryMessage().catch(() => null);
       const backendError = getBackendError(ingestion);
       const error = reentryMessage
         || backendError
