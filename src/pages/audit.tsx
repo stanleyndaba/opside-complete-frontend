@@ -439,6 +439,7 @@ export default function Audit() {
   const trackedOfferViewRef = useRef(false);
   const requestedRecoverOnceQuoteRef = useRef<string | null>(null);
   const restoredAuditRef = useRef(false);
+  const autoRevealedAuditRef = useRef<string | null>(null);
 
   const step = useMemo(() => getStep(audit, isAuthenticated), [audit, isAuthenticated]);
   const isManualUploadAudit = hasManualReportCoverage(audit, teaser);
@@ -1636,6 +1637,12 @@ export default function Audit() {
   const revealAuditResults = () => {
     document.getElementById('audit-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+  useEffect(() => {
+    if (step !== 'completed' || resultsReadError || !audit?.id || autoRevealedAuditRef.current === audit.id) return;
+    autoRevealedAuditRef.current = audit.id;
+    const frame = window.requestAnimationFrame(() => revealAuditResults());
+    return () => window.cancelAnimationFrame(frame);
+  }, [audit?.id, resultsReadError, step, teaser.finalStatus]);
 
   const handleAuditDecision = async () => {
     switch (auditExperienceDecision.primaryAction) {
