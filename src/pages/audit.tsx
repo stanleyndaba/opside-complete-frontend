@@ -1887,7 +1887,7 @@ export default function Audit() {
               <PanelLeftOpen className="h-[18px] w-[18px]" aria-hidden="true" />
             </button>
             <Sheet open={isAuditControlsOpen} onOpenChange={setIsAuditControlsOpen}>
-              <SheetContent side="left" className="w-[min(360px,calc(100vw-24px))] border-r border-[#E8E7E1] bg-[#F8F8F5] p-3 text-[#191B20] shadow-[12px_0_40px_rgba(25,27,32,0.14)] sm:w-[360px]">
+              <SheetContent side="left" className="w-[min(360px,calc(100vw-24px))] border-transparent bg-transparent p-3 text-[#191B20] shadow-none backdrop-blur-0 sm:w-[360px]">
                 <div className="flex h-full flex-col rounded-[14px] border border-[#D7D7D1] bg-white shadow-[0_8px_24px_rgba(25,27,32,0.08)]">
                   <SheetHeader className="border-b border-[#E8E7E1] px-5 pb-4 pt-5 pr-14 text-left">
                     <div className="flex items-center gap-2"><FileText className="h-4 w-4 text-[#595E68]" aria-hidden="true" /><SheetTitle className="text-[14px] font-semibold text-[#191B20]">Audit controls</SheetTitle></div>
