@@ -246,6 +246,9 @@ export interface ManualCoverageArea {
   status: ManualCoverageStatus;
   providedSources: string[];
   missingSources: string[];
+  optionalSources: string[];
+  evidenceRequired: string[];
+  operationalConclusion: 'supported' | 'unknown_outside_coverage';
   monetaryConclusion: 'within_covered_evidence' | 'unknown_outside_coverage';
   reason: string;
 }
