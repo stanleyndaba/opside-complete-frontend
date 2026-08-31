@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
+    ChevronRight,
     Menu,
 } from 'lucide-react';
 import {
@@ -268,14 +269,14 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] bg-[var(--margin-blue)] px-3 py-3 text-center text-[11px] font-sans font-bold uppercase tracking-tight text-white shadow-[0_12px_30px_rgba(23,92,211,0.28)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] hover:shadow-[0_16px_36px_rgba(23,92,211,0.34)]">
+                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] bg-[#E8EBEF] px-3 py-3 text-center text-[11px] font-sans font-bold uppercase tracking-tight text-[#475467] shadow-[0_8px_20px_rgba(25,27,32,0.08)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[#DDE2E8] hover:text-[#25313A] hover:shadow-[0_12px_26px_rgba(25,27,32,0.12)]">
                                         Contact the Team
                                     </Link>
                                     <Link
                                         to="/about"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] border border-[#DCE8EE] bg-white px-3 py-3 text-center text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]">
-                                        Company
+                                        className="flex min-h-[48px] items-center justify-center gap-1 rounded-[8px] bg-white px-3 py-3 text-center text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] shadow-[0_8px_20px_rgba(25,27,32,0.06)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)] hover:shadow-[0_12px_26px_rgba(25,27,32,0.10)]">
+                                        Company <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 -rotate-45" />
                                     </Link>
                                 </div>
                             </div>

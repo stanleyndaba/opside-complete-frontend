@@ -27,8 +27,8 @@ export const apiMenuGroups = [
         label: 'Find & Verify',
         items: [
             { title: 'Variance Detection', description: 'Find shipment, inventory, fee, reimbursement and settlement differences that may warrant review.', icon: Box },
-            { title: 'Settlement Reconciliation', description: 'Compare expected, approved and paid values to surface underpayments and valuation differences for review.', icon: CreditCard },
-            { title: 'Claim-Window Monitoring', description: 'Prioritize potential recoveries by value, evidence readiness and remaining claim window.', icon: CalendarClock }
+            { title: 'Transaction Reconciliation', description: 'Compare expected, approved and paid values to surface underpayments and valuation differences for review.', icon: CreditCard },
+            { title: 'Recovery Eligibility Timing', description: 'Prioritize potential recoveries by value, evidence readiness and remaining recovery eligibility window.', icon: CalendarClock }
         ]
     },
     {
