@@ -1892,7 +1892,7 @@ export default function Audit() {
               <PanelLeftOpen className="h-[18px] w-[18px]" aria-hidden="true" />
             </button>
             <Sheet open={isAuditControlsOpen} onOpenChange={setIsAuditControlsOpen}>
-              <SheetContent side="left" className="w-[min(360px,calc(100vw-24px))] border-transparent bg-transparent p-3 text-[#191B20] shadow-none backdrop-blur-0 sm:w-[360px] [&>button]:right-5 [&>button]:top-5 [&>button]:z-10 [&>button]:rounded-full [&>button]:p-1 [&>button]:opacity-60">
+              <SheetContent side="left" className="w-[min(288px,calc(100vw-24px))] border-transparent bg-transparent p-2.5 text-[#191B20] shadow-none backdrop-blur-0 sm:w-[288px] [&>button]:right-4 [&>button]:top-4 [&>button]:z-10 [&>button]:rounded-full [&>button]:p-1 [&>button]:opacity-60">
                 <div className="flex h-full flex-col rounded-[12px] border border-[#D7D7D1] bg-white font-sans shadow-[0_8px_24px_rgba(25,27,32,0.08)]">
                   <SheetHeader className="border-b border-[#E8E7E1] px-4 pb-3 pt-4 pr-12 text-left">
                     <div className="flex items-center gap-2"><FileText className="h-3.5 w-3.5 text-[#595E68]" aria-hidden="true" /><SheetTitle className="font-lora text-[18px] font-normal leading-5 tracking-[-0.02em] text-[#191B20]">Audit controls</SheetTitle></div>
