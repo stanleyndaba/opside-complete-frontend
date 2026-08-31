@@ -12,6 +12,7 @@ import {
     AccordionTrigger
 } from '@/components/ui/accordion';
 import { ProductsMegaMenu, productMenuGroups, ProductServiceItem } from '@/components/landing/ProductsMegaMenu';
+import { GoogleMark } from '@/components/GoogleMark';
 import { ApisMegaMenu, apiMenuGroups, ApiServiceItem } from '@/components/landing/ApisMegaMenu';
 
 type PublicNavbarProps = {
@@ -156,12 +157,13 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         <Link
                             to="/login?mode=signup"
                             className={cn(
-                                "flex h-[32px] items-center justify-center rounded-full px-3.5 text-[13px] font-medium transition-colors",
+                                "flex h-[32px] items-center justify-center gap-1.5 rounded-full px-3.5 text-[13px] font-medium transition-colors",
                                 isLight
                                     ? "bg-[var(--margin-surface-alt)] text-[var(--margin-text-primary)] hover:bg-[var(--margin-border)]"
                                     : "bg-white text-black hover:bg-white/90"
                             )}
                         >
+                            <GoogleMark className="h-3.5 w-3.5" />
                             Sign up
                         </Link>
                         <button

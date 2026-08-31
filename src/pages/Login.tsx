@@ -3,6 +3,8 @@ import { useAuth, useClerk, useSignIn, useSignUp, useUser } from '@clerk/react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { GoogleMark } from '@/components/GoogleMark';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
@@ -347,6 +349,7 @@ const Login = () => {
   const [workspaceRetryAvailable, setWorkspaceRetryAvailable] = useState(false);
   const [sessionChecked, setSessionChecked] = useState(false);
   const [activeSessionEmail, setActiveSessionEmail] = useState<string | null>(null);
+  const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [clerkVerificationStep, setClerkVerificationStep] = useState<ClerkVerificationStep | null>(null);
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
   const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
@@ -427,6 +430,12 @@ const Login = () => {
       isMounted = false;
     };
   }, [clerkAuthLoaded, clerkSignedIn, clerkUser, clerkUserId, searchParams]);
+
+  useEffect(() => {
+    if (sessionChecked && activeSessionEmail && mode === 'login') {
+      setSessionModalOpen(true);
+    }
+  }, [activeSessionEmail, mode, sessionChecked]);
 
   useEffect(() => {
     const urlType = searchParams.get('type');
@@ -1408,36 +1417,6 @@ const Login = () => {
               </div>
 
               <div className="mt-6 sm:mt-0">
-                {sessionChecked && activeSessionEmail && mode === 'login' ? (
-                  <div className="mb-8 border border-[#D8E3EA] bg-[#FAFAF7] p-5 sm:p-6">
-                    <p className="text-[12px] font-semibold tracking-tight text-[#66737F]">
-                      Active Session Detected
-                    </p>
-                    <p className="mt-3 text-[15px] leading-6 text-[#66737F]">
-                      You are signed in as <span className="font-semibold text-[#182026]">{activeSessionEmail}</span>.
-                    </p>
-                    <div className="mt-6 flex flex-col gap-2">
-                      <Button
-                        type="button"
-                        onClick={() => void handleContinueExistingSession()}
-                        disabled={loading}
-                        className="h-12 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
-                      >
-                        Continue
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => void handleUseDifferentAccount()}
-                        disabled={loading}
-                        className="h-12 w-full rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
-                      >
-                        Switch Account
-                      </Button>
-                    </div>
-                  </div>
-                ) : null}
-
                 {(mode === 'login' || mode === 'signup') && !clerkVerificationStep ? (
                   <div className="mb-6 space-y-4">
                     <Button
@@ -1447,6 +1426,7 @@ const Login = () => {
                       disabled={loading || !clerkAuthLoaded}
                       className="h-12 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
                     >
+                      <GoogleMark className="mr-2 h-4 w-4" />
                       Continue with Google
                     </Button>
                     <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
@@ -1779,6 +1759,44 @@ const Login = () => {
           </div>
         </div>
       </main>
+
+      <Dialog open={sessionModalOpen} onOpenChange={setSessionModalOpen}>
+        <DialogContent className="max-w-[420px] rounded-[14px] border-[#D8E3EA] bg-white p-6 text-[#182026] shadow-[0_24px_80px_rgba(37,49,58,0.14)] sm:p-7">
+          <DialogHeader className="space-y-2 pr-8 text-left">
+            <DialogTitle className="font-lora text-[24px] font-semibold leading-tight tracking-[-0.025em] text-[#182026]">
+              You’re already signed in
+            </DialogTitle>
+            <DialogDescription className="text-[14px] leading-6 text-[#66737F]">
+              Margin found an active session for <span className="font-semibold text-[#182026]">{activeSessionEmail || 'your account'}</span>. Continue with this account or use a different one.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-2 flex-col gap-2 sm:flex-col sm:space-x-0">
+            <Button
+              type="button"
+              onClick={() => {
+                setSessionModalOpen(false);
+                void handleContinueExistingSession();
+              }}
+              disabled={loading}
+              className="h-11 w-full rounded-md bg-[#0B74DE] px-4 text-[14px] font-semibold text-white hover:bg-[#075EBA]"
+            >
+              Continue to Margin
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setSessionModalOpen(false);
+                void handleUseDifferentAccount();
+              }}
+              disabled={loading}
+              className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#4B5A64] hover:bg-[#F3F6F8]"
+            >
+              Use a different account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
