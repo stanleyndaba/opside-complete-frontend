@@ -265,6 +265,16 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     className="flex items-center rounded-[6px] px-3 py-3 text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]">
                                     Enterprise
                                 </Link>
+                                <div className="mt-3 rounded-[8px] bg-[#F7F8FA] px-3.5 py-3">
+                                    <p className="text-[13px] font-semibold leading-5 text-[#25313A]">Not sure where to start?</p>
+                                    <p className="mt-1 text-[12px] leading-5 text-[#777A82]">Tell us about your Amazon business and we’ll point you to the right Margin path.</p>
+                                    <Link
+                                        to="/contact"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="mt-2 inline-flex items-center gap-1 text-[12px] font-semibold leading-5 text-[var(--margin-blue)] transition-colors hover:text-[var(--margin-blue-hover)]">
+                                        Find your starting point <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 -rotate-45" />
+                                    </Link>
+                                </div>
                                 <div className="mt-2 grid w-full grid-cols-2 gap-2">
                                     <Link
                                         to="/contact"
