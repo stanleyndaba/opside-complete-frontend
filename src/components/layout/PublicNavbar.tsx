@@ -264,12 +264,20 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     className="flex items-center rounded-[6px] px-3 py-3 text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]">
                                     Enterprise
                                 </Link>
-                                <Link
-                                    to="/contact"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 flex min-h-[48px] items-center justify-center rounded-[8px] bg-[var(--margin-blue)] px-4 py-3 text-[11px] font-sans font-bold uppercase tracking-tight text-white shadow-[0_12px_30px_rgba(23,92,211,0.28)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] hover:shadow-[0_16px_36px_rgba(23,92,211,0.34)]">
-                                    Contact the Team
-                                </Link>
+                                <div className="mt-2 grid w-full grid-cols-2 gap-2">
+                                    <Link
+                                        to="/contact"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] bg-[var(--margin-blue)] px-3 py-3 text-center text-[11px] font-sans font-bold uppercase tracking-tight text-white shadow-[0_12px_30px_rgba(23,92,211,0.28)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] hover:shadow-[0_16px_36px_rgba(23,92,211,0.34)]">
+                                        Contact the Team
+                                    </Link>
+                                    <Link
+                                        to="/about"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] border border-[#DCE8EE] bg-white px-3 py-3 text-center text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]">
+                                        Company
+                                    </Link>
+                                </div>
                             </div>
                         </motion.div>
                     )}
