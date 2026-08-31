@@ -195,8 +195,8 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-[6px] px-3 py-3 text-[14px] font-sans font-normal uppercase tracking-tight transition-colors",
-                                            "justify-between border-none text-[#182026] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8]"
+                                            "flex items-center rounded-[6px] px-3 py-3 text-[11px] font-sans font-bold uppercase tracking-tight transition-colors",
+                                            "justify-between border-none text-[var(--margin-text-secondary)] outline-none hover:no-underline hover:text-[var(--margin-text-primary)] data-[state=open]:bg-[var(--margin-surface-alt)]"
                                         )}>
                                             Workflows
                                         </AccordionTrigger>
@@ -225,8 +225,8 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     </AccordionItem>
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-[6px] px-3 py-3 text-[14px] font-sans font-normal uppercase tracking-tight transition-colors",
-                                            "justify-between border-none text-[#182026] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8]"
+                                            "flex items-center rounded-[6px] px-3 py-3 text-[11px] font-sans font-bold uppercase tracking-tight transition-colors",
+                                            "justify-between border-none text-[var(--margin-text-secondary)] outline-none hover:no-underline hover:text-[var(--margin-text-primary)] data-[state=open]:bg-[var(--margin-surface-alt)]"
                                         )}>
                                             For Teams
                                         </AccordionTrigger>
@@ -255,14 +255,20 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-[6px] px-3 py-3 text-[14px] font-sans font-normal uppercase tracking-tight text-[#182026] transition-colors hover:bg-[#F3F6F8]">
+                                    className="flex items-center rounded-[6px] px-3 py-3 text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]">
                                     Pricing
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 flex items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-3.5 py-3 text-[14px] font-sans font-normal uppercase tracking-tight text-[#182026] shadow-sm transition-colors hover:bg-[#F3F6F8]">
+                                    className="flex items-center rounded-[6px] px-3 py-3 text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]">
                                     Enterprise
+                                </Link>
+                                <Link
+                                    to="/contact"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="mt-2 flex min-h-[48px] items-center justify-center rounded-[8px] bg-[var(--margin-blue)] px-4 py-3 text-[11px] font-sans font-bold uppercase tracking-tight text-white shadow-[0_12px_30px_rgba(23,92,211,0.28)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] hover:shadow-[0_16px_36px_rgba(23,92,211,0.34)]">
+                                    Contact the Team
                                 </Link>
                             </div>
                         </motion.div>
