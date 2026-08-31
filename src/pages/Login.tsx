@@ -1767,7 +1767,7 @@ const Login = () => {
               You’re already signed in
             </DialogTitle>
             <DialogDescription className="text-[14px] leading-6 text-[#66737F]">
-              Margin found an active session for <span className="font-semibold text-[#182026]">{activeSessionEmail || 'your account'}</span>. Continue with this account or use a different one.
+              Continue with this account or use a different one.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-2 flex-col gap-2 sm:flex-col sm:space-x-0">
