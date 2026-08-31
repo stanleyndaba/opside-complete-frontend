@@ -48,6 +48,7 @@ const TenantRedirect = lazy(() => import('./components/navigation/TenantRedirect
 
 // Analytics injection
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
+const ClerkOAuthCallback = lazy(() => import("./pages/ClerkOAuthCallback"));
 const OAuthCallbackRedirect = lazy(() => import("./pages/OAuthCallbackRedirect"));
 const SystemErrorPreview = lazy(() => import("./pages/SystemErrorPreview"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
@@ -355,6 +356,7 @@ const App = () => (
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
                         <Route path="/branding" element={<Branding />} />
                         {/* AUTH & OAUTH ROUTES - No tenant required */}
+                        <Route path="/auth/clerk/callback" element={<ClerkOAuthCallback />} />
                         <Route path="/auth/callback" element={<OAuthCallback />} />
                         <Route path="/auth/callback/redirect" element={<OAuthCallbackRedirect />} />
                         <Route path="/auth/redirect/callback" element={<OAuthCallbackRedirect />} />

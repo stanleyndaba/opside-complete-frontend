@@ -13,6 +13,7 @@
     "test:account-signout": "node scripts/test-account-signout-contract.mjs",
     "test:login-session-parse": "node scripts/test-login-session-parse-contract.mjs",
     "test:login-redirect-validation": "node scripts/test-login-redirect-validation.mjs",
+    "test:google-auth-contract": "node scripts/test-google-auth-contract.mjs",
     "test:oauth-callback-confirmation": "node scripts/test-oauth-callback-confirmation.mjs",
     "test:audit-experience-decision": "node scripts/test-audit-experience-decision.mjs",
     "test:seller-lifecycle": "node scripts/test-seller-lifecycle-contract.mjs",

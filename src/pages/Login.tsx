@@ -316,6 +316,7 @@ const Login = () => {
   const intent = searchParams.get('intent');
   const next = searchParams.get('next');
   const nextPath = useMemo(() => sanitizeNextPath(next, intent), [intent, next]);
+  const isGoogleOAuthReturn = searchParams.get('oauth') === 'google';
   const isAuditIntent = intent === 'audit' || intent === 'upload-csv' || nextPath === '/audit' || nextPath.startsWith('/audit?') || nextPath === '/data-upload' || nextPath.startsWith('/data-upload?');
   const demoBypassAvailable = isDemoBypassAvailable();
 
@@ -327,7 +328,7 @@ const Login = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingStage, setLoadingStage] = useState<'processing' | 'securing' | 'opening'>('processing');
-  const [internalError, setInternalError] = useState('');
+  const [internalError, setInternalError] = useState(() => searchParams.get('oauth_error') || '');
   const setError = (message: string) => {
     if (message === '__SERVICE_PREPARING__') {
       setInternalError(message);
@@ -350,6 +351,7 @@ const Login = () => {
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
   const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
   const clerkFinalizeBootstrapRef = useRef<Promise<ClerkLoginResult> | null>(null);
+  const googleOAuthHandledRef = useRef(false);
 
   // B5 Fix: Track latest Clerk state in a ref to handle initialization races silently
   const clerkStateRef = useRef({ loaded: clerkAuthLoaded, signIn, signUp });
@@ -1016,6 +1018,53 @@ const Login = () => {
     await routeWithCapacityGate(targetPath);
   };
 
+  const startGoogleOAuth = async () => {
+    if (!clerkAuthLoaded || !signIn || !signUp) {
+      setError('The security service is still initializing. Please try again in a moment.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    googleOAuthHandledRef.current = false;
+
+    try {
+      const callbackUrl = `${window.location.origin}/auth/clerk/callback?next=${encodeURIComponent(nextPath)}`;
+      const oauthParams = {
+        strategy: 'oauth_google' as const,
+        redirectCallbackUrl: callbackUrl,
+        redirectUrl: callbackUrl,
+      };
+      const result = mode === 'signup'
+        ? await signUp.sso(oauthParams)
+        : await signIn.sso(oauthParams);
+
+      if (result.error) {
+        throw new Error(getClerkErrorMessage(result.error));
+      }
+    } catch (oauthError) {
+      setError(oauthError instanceof Error ? oauthError.message : 'Google authentication could not be started. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isGoogleOAuthReturn || googleOAuthHandledRef.current || !clerkAuthLoaded || !clerkSignedIn || !clerkUserId || !sessionChecked || !activeSessionEmail) {
+      return;
+    }
+
+    googleOAuthHandledRef.current = true;
+    setLoading(true);
+    setError('');
+    setLoginStep('workspace');
+    void routeExistingSession().catch((sessionRouteError) => {
+      setWorkspaceRetryAvailable(true);
+      setError(formatLoginError(sessionRouteError, 'workspace'));
+    }).finally(() => {
+      setLoading(false);
+    });
+  }, [activeSessionEmail, clerkAuthLoaded, clerkSignedIn, clerkUserId, isGoogleOAuthReturn, sessionChecked]);
+
   const handleContinueExistingSession = async () => {
     setLoading(true);
     setError('');
@@ -1138,9 +1187,9 @@ const Login = () => {
       await new Promise(r => setTimeout(r, 1500)); 
       
       setLoadingStage('opening');
-    } catch (clerkLoadError: any) {
+    } catch (clerkLoadError: unknown) {
       setLoading(false);
-      setError(clerkLoadError.message);
+      setError(clerkLoadError instanceof Error ? clerkLoadError.message : 'The security service is taking longer than expected. Please try again.');
       return;
     }
 
@@ -1386,6 +1435,28 @@ const Login = () => {
                         Switch Account
                       </Button>
                     </div>
+                  </div>
+                ) : null}
+
+                {(mode === 'login' || mode === 'signup') && !clerkVerificationStep ? (
+                  <div className="mb-6 space-y-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => void startGoogleOAuth()}
+                      disabled={loading || !clerkAuthLoaded}
+                      className="h-12 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                    >
+                      Continue with Google
+                    </Button>
+                    <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
+                      <span className="h-px flex-1 bg-[#D8E3EA]" />
+                      <span>or</span>
+                      <span className="h-px flex-1 bg-[#D8E3EA]" />
+                    </div>
+                    <p className="text-center text-[12px] leading-5 text-[#7B8790]">
+                      Google Login only creates your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
+                    </p>
                   </div>
                 ) : null}
 
