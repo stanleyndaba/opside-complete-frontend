@@ -33,8 +33,8 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
         ? "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-colors hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
         : "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
     const desktopNavLinkClass = isLight
-        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-[background-color,color,border-color] duration-150 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
-        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80 transition-[background-color,color,border-color] duration-150 hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
+        ? "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[11px] font-sans font-bold uppercase tracking-tight text-[var(--margin-text-secondary)] transition-[background-color,color,border-color] duration-150 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)]"
+        : "hidden md:inline-flex h-9 items-center rounded-[6px] border border-transparent px-3 text-[11px] font-sans font-bold uppercase tracking-tight text-white/80 transition-[background-color,color,border-color] duration-150 hover:border-white/8 hover:bg-white/[0.04] hover:text-white";
 
     // Close mobile menu on resize
     useEffect(() => {
@@ -195,7 +195,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-[6px] px-3 py-3 text-[14px] font-lora font-normal tracking-tight transition-colors",
+                                            "flex items-center rounded-[6px] px-3 py-3 text-[14px] font-sans font-bold uppercase tracking-tight transition-colors",
                                             "justify-between border-none text-[#182026] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8]"
                                         )}>
                                             Workflows
@@ -225,7 +225,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     </AccordionItem>
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-[6px] px-3 py-3 text-[14px] font-lora font-normal tracking-tight transition-colors",
+                                            "flex items-center rounded-[6px] px-3 py-3 text-[14px] font-sans font-bold uppercase tracking-tight transition-colors",
                                             "justify-between border-none text-[#182026] outline-none hover:no-underline data-[state=open]:bg-[#F3F6F8]"
                                         )}>
                                             For Teams
@@ -255,13 +255,13 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-[6px] px-3 py-3 text-[14px] font-lora font-normal tracking-tight text-[#182026] transition-colors hover:bg-[#F3F6F8]">
+                                    className="flex items-center rounded-[6px] px-3 py-3 text-[14px] font-sans font-bold uppercase tracking-tight text-[#182026] transition-colors hover:bg-[#F3F6F8]">
                                     Pricing
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 flex items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-3.5 py-3 text-[14px] font-lora font-normal tracking-tight text-[#182026] shadow-sm transition-colors hover:bg-[#F3F6F8]">
+                                    className="mt-2 flex items-center justify-center rounded-[6px] border border-[#DCE8EE] bg-white px-3.5 py-3 text-[14px] font-sans font-bold uppercase tracking-tight text-[#182026] shadow-sm transition-colors hover:bg-[#F3F6F8]">
                                     Enterprise
                                 </Link>
                             </div>
