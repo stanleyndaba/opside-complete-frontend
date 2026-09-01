@@ -1027,6 +1027,14 @@ const Login = () => {
     await routeWithCapacityGate(targetPath);
   };
 
+  const formatGoogleOAuthError = (oauthError: unknown) => {
+    const message = oauthError instanceof Error ? oauthError.message : '';
+    if (/does not match one of the allowed values|strategy_not_enabled|not enabled/i.test(message)) {
+      return 'Google sign-in is not enabled for this Margin environment yet. Please enable Google in Clerk, then try again.';
+    }
+    return message || 'Google authentication could not be started. Please try again.';
+  };
+
   const startGoogleOAuth = async () => {
     if (!clerkAuthLoaded || !signIn || !signUp) {
       setError('The security service is still initializing. Please try again in a moment.');
@@ -1052,7 +1060,7 @@ const Login = () => {
         throw new Error(getClerkErrorMessage(result.error));
       }
     } catch (oauthError) {
-      setError(oauthError instanceof Error ? oauthError.message : 'Google authentication could not be started. Please try again.');
+      setError(formatGoogleOAuthError(oauthError));
       setLoading(false);
     }
   };

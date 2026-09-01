@@ -18,6 +18,7 @@ assert.match(loginSource, /\/auth\/clerk\/callback/);
 assert.match(loginSource, /isGoogleOAuthReturn/);
 assert.match(loginSource, /routeExistingSession\(\)/);
 assert.match(loginSource, /Google Login only creates your Margin account/);
+assert.match(loginSource, /Google sign-in is not enabled for this Margin environment yet/);
 assert.match(loginSource, /<GoogleMark className="mr-2 h-4 w-4" \/>/);
 assert.match(publicNavbarSource, /<GoogleMark className="h-3\.5 w-3\.5" \/>/);
 assert.match(publicNavbarSource, /Sign up/);
