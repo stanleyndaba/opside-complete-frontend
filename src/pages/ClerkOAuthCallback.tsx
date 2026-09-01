@@ -5,7 +5,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 
 const DEFAULT_ERROR = 'Social sign-in could not be completed. Please try again.';
 
-function buildLoginPath(next: string | null, error?: string, provider: 'google' | 'apple' = 'google') {
+function buildLoginPath(next: string | null, error?: string, provider: 'google' | 'apple' | 'linkedin' = 'google') {
   const params = new URLSearchParams({ oauth: provider });
   if (next && next.startsWith('/') && !next.startsWith('//')) {
     params.set('next', next);
@@ -24,8 +24,12 @@ export default function ClerkOAuthCallback() {
   const { signUp } = useSignUp();
   const hasRun = useRef(false);
   const next = useMemo(() => searchParams.get('next'), [searchParams]);
-  const provider = searchParams.get('provider') === 'apple' ? 'apple' : 'google';
-  const providerName = provider === 'apple' ? 'Apple' : 'Google';
+  const provider = searchParams.get('provider') === 'apple'
+    ? 'apple'
+    : searchParams.get('provider') === 'linkedin'
+      ? 'linkedin'
+      : 'google';
+  const providerName = provider === 'apple' ? 'Apple' : provider === 'linkedin' ? 'LinkedIn' : 'Google';
   const loginPath = useMemo(() => buildLoginPath(next, undefined, provider), [next, provider]);
 
   useEffect(() => {

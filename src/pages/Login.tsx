@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { GoogleMark } from '@/components/GoogleMark';
 import { AppleMark } from '@/components/AppleMark';
+import { LinkedInMark } from '@/components/LinkedInMark';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
@@ -320,7 +321,7 @@ const Login = () => {
   const next = searchParams.get('next');
   const nextPath = useMemo(() => sanitizeNextPath(next, intent), [intent, next]);
   const socialOAuthProvider = searchParams.get('oauth');
-  const isSocialOAuthReturn = socialOAuthProvider === 'google' || socialOAuthProvider === 'apple';
+  const isSocialOAuthReturn = socialOAuthProvider === 'google' || socialOAuthProvider === 'apple' || socialOAuthProvider === 'linkedin';
   const isAuditIntent = intent === 'audit' || intent === 'upload-csv' || nextPath === '/audit' || nextPath.startsWith('/audit?') || nextPath === '/data-upload' || nextPath.startsWith('/data-upload?');
   const demoBypassAvailable = isDemoBypassAvailable();
 
@@ -1029,16 +1030,16 @@ const Login = () => {
     await routeWithCapacityGate(targetPath);
   };
 
-  const formatSocialOAuthError = (provider: 'google' | 'apple', oauthError: unknown) => {
+  const formatSocialOAuthError = (provider: 'google' | 'apple' | 'linkedin', oauthError: unknown) => {
     const message = oauthError instanceof Error ? oauthError.message : '';
-    const providerName = provider === 'apple' ? 'Apple' : 'Google';
+    const providerName = provider === 'apple' ? 'Apple' : provider === 'linkedin' ? 'LinkedIn' : 'Google';
     if (/does not match one of the allowed values|strategy_not_enabled|not enabled/i.test(message)) {
       return `${providerName} sign-in is not enabled for this Margin environment yet. Please enable ${providerName} in Clerk, then try again.`;
     }
     return message || `${providerName} authentication could not be started. Please try again.`;
   };
 
-  const startSocialOAuth = async (provider: 'google' | 'apple') => {
+  const startSocialOAuth = async (provider: 'google' | 'apple' | 'linkedin') => {
     if (!clerkAuthLoaded || !signIn || !signUp) {
       setError('The security service is still initializing. Please try again in a moment.');
       return;
@@ -1051,7 +1052,11 @@ const Login = () => {
     try {
       const callbackUrl = `${window.location.origin}/auth/clerk/callback?next=${encodeURIComponent(nextPath)}&provider=${provider}`;
       const oauthParams = {
-        strategy: provider === 'apple' ? 'oauth_apple' as const : 'oauth_google' as const,
+        strategy: provider === 'apple'
+          ? 'oauth_apple' as const
+          : provider === 'linkedin'
+            ? 'oauth_linkedin_oidc' as const
+            : 'oauth_google' as const,
         redirectCallbackUrl: callbackUrl,
         redirectUrl: callbackUrl,
       };
@@ -1450,13 +1455,23 @@ const Login = () => {
                       <AppleMark className="mr-2 h-4 w-4" />
                       Continue with Apple
                     </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => void startSocialOAuth('linkedin')}
+                      disabled={loading || !clerkAuthLoaded}
+                      className="h-12 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                    >
+                      <LinkedInMark className="mr-2 h-4 w-4 text-[#0A66C2]" />
+                      Continue with LinkedIn
+                    </Button>
                     <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
                       <span className="h-px flex-1 bg-[#D8E3EA]" />
                       <span>or</span>
                       <span className="h-px flex-1 bg-[#D8E3EA]" />
                     </div>
                     <p className="text-center text-[12px] leading-5 text-[#7B8790]">
-                      Google and Apple Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
+                      Google, Apple, and LinkedIn Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
                     </p>
                   </div>
                 ) : null}
