@@ -1495,7 +1495,7 @@ export default function Audit() {
       audit_id: audit?.id || null,
       scope_value: teaser.scopeValue,
       findings_count: teaser.findingsCount,
-      destination: 'wise_subscription_checkout',
+      destination: 'paystack_subscription_checkout',
       value: 1799,
       currency: 'ZAR',
     });
@@ -1503,7 +1503,7 @@ export default function Audit() {
       offer: 'recovery_workspace',
       value: 1799,
       currency: 'ZAR',
-      payment_provider: 'wise_subscription',
+      payment_provider: 'paystack_subscription',
     });
     trackEvent(ANALYTICS_EVENTS.subscriptionCheckoutStarted, {
       offer: 'recovery_workspace',
@@ -1814,7 +1814,7 @@ export default function Audit() {
                     {auditExperienceDecision.description}
                   </p>
                 </div>
-                <div className="flex max-w-sm shrink-0 flex-col items-stretch gap-2 sm:items-end">{primaryAction}<p className="max-w-sm text-[12px] leading-5 text-[#777A82]">{auditExperienceDecision.primaryWhy}</p><div className="flex flex-wrap items-center gap-2"></div>
+                <div className="flex max-w-sm shrink-0 flex-col items-stretch gap-2 sm:items-end">{primaryAction}<p className="max-w-sm text-[12px] leading-5 text-[#777A82]">{auditExperienceDecision.primaryWhy}</p>{auditExperienceDecision.secondaryAction === 'upload_reports' ? <Link to={auditReportUploadHref} className="text-[12px] font-semibold text-[#3F51A8] hover:text-[#31418D]">{auditExperienceDecision.secondaryLabel || 'Use Amazon reports'} <ArrowRight className="ml-1 inline h-3.5 w-3.5" /></Link> : null}<div className="flex flex-wrap items-center gap-2"></div>
               </div>
             </div>
             </div>
@@ -1863,7 +1863,7 @@ export default function Audit() {
             {step === 'completed' && !resultsReadError ? (
               <section id="audit-results" className="mt-6 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4 sm:p-5" aria-labelledby="recorded-review-title">
                 <div className="flex flex-col gap-4 border-b border-[#D7D7D1] pb-4 sm:flex-row sm:items-start sm:justify-between"><div><h2 id="recorded-review-title" className="font-lora text-[26px] font-normal leading-tight tracking-[-0.02em] text-[#191B20]">Your review scope</h2><p className="mt-2 max-w-xl text-[13px] leading-5 text-[#595E68]">These are recorded potential findings from the selected audit. Review coverage and evidence before deciding on a seller-controlled next step.</p></div><span className="self-start rounded-full border border-[#D7D7D1] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#595E68]">{isZeroRecordLimitedAudit ? 'Limited coverage' : 'Ready for review'}</span></div>
-                <dl className="mt-4 grid overflow-hidden rounded-[10px] border border-[#E8E7E1] bg-white sm:grid-cols-3"><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential recovery scope</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</dd><p className="mt-1 text-[12px] text-[#595E68]">{monetaryScopeCopy(teaser)}</p></div><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential opportunities</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">Items that may require review.</p></div><div className="p-4"><dt className="text-[11px] font-semibold text-[#777A82]">Evidence ready</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">{teaser.reviewOnlyCount ? `${teaser.reviewOnlyCount} review-only item${teaser.reviewOnlyCount === 1 ? '' : 's'} require additional evidence.` : 'Recorded evidence readiness only.'}</p></div></dl>
+                <dl className="mt-4 grid overflow-hidden rounded-[10px] border border-[#E8E7E1] bg-white sm:grid-cols-3"><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential recovery scope</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '$0' : formatMoney(teaser.scopeValue)}</dd><p className="mt-1 text-[12px] text-[#595E68]">{monetaryScopeCopy(teaser)}</p></div><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Audit duration</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{formatDuration(audit?.completed_at, audit?.started_at)}</dd><p className="mt-1 text-[12px] text-[#595E68]">Recorded run duration only.</p></div><div className="border-b border-[#E8E7E1] p-4 sm:border-b-0 sm:border-r"><dt className="text-[11px] font-semibold text-[#777A82]">Potential opportunities</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.findingsCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">Items that may require review.</p></div><div className="p-4"><dt className="text-[11px] font-semibold text-[#777A82]">Evidence ready</dt><dd className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20] tabular-nums">{isZeroRecordLimitedAudit ? '0' : teaser.evidenceReadyCount}</dd><p className="mt-1 text-[12px] text-[#595E68]">{teaser.reviewOnlyCount ? `${teaser.reviewOnlyCount} review-only item${teaser.reviewOnlyCount === 1 ? '' : 's'} require additional evidence.` : 'Recorded evidence readiness only.'}</p></div></dl>
                 <div className="mt-4 grid gap-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_220px]"><div>{teaser.categories.length ? <div className="flex flex-wrap gap-1.5">{teaser.categories.map((category) => <span key={category} className="rounded-full border border-[#E8E7E1] bg-[#FBFAF7] px-2 py-1 text-[11px] font-medium text-[#595E68]">{category}</span>)}</div> : <p className="text-[13px] text-[#595E68]">{teaser.findingsCount === 0 ? 'No qualifying condition was detected in the available evidence.' : 'No category summary was recorded for this audit.'}</p>}<div className="mt-5 border-t border-[#E8E7E1] pt-4"><p className="text-[12px] font-semibold text-[#191B20]">Coverage details</p><p className="mt-1 text-[13px] leading-5 text-[#595E68]">{isManualUploadAudit ? manualReportCoverageCopy(teaser) : <>{teaser.recordsReviewed != null ? Number(teaser.recordsReviewed).toLocaleString() + ' Amazon records were synchronized and reviewed.' : 'Amazon record coverage analysis is in progress.'}{teaser.sourcesReviewed?.length ? ' Primary sources: ' + teaser.sourcesReviewed.join(', ') + '.' : ''}{teaser.sourcesUnavailable?.length ? ' Restricted access: ' + teaser.sourcesUnavailable.join(', ') + '.' : ''}</>}</p></div></div><aside className="border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#191B20]">Review boundary</p><p className="mt-1 text-[12px] leading-5 text-[#595E68]">The selected audit does not prove a claim, authorize filing, establish reimbursement eligibility, confirm payment, or close a recovery matter.</p><button type="button" onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="mt-3 text-[12px] font-semibold text-[#3F51A8] outline-none hover:text-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7]">Inspect recorded scope</button></aside></div>
               </section>
             ) : null}
@@ -1955,26 +1955,52 @@ export default function Audit() {
           <SheetHeader className="border-b border-[#E8E7E1] px-5 pb-5 pt-3 pr-14 text-left sm:px-7">
             <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-[#D7D7D1]" aria-hidden="true" />
             <p className="text-[12px] font-semibold text-[#595E68]">Recovery workspace</p>
-            <SheetTitle className="mt-2 max-w-2xl font-lora text-[28px] leading-[1.08] tracking-[-0.025em] text-[#191B20] sm:text-[31px]" style={{ fontWeight: 400 }}>Continue from the audit record—not from an assumption.</SheetTitle>
-            <SheetDescription className="mt-3 max-w-2xl text-[13px] leading-5 text-[#595E68]">Review what the ongoing workspace can coordinate after this audit, what requires seller approval, and what the audit still cannot establish.</SheetDescription>
+            <SheetTitle className="mt-2 max-w-2xl font-lora text-[28px] leading-[1.08] tracking-[-0.025em] text-[#191B20] sm:text-[31px]" style={{ fontWeight: 400 }}>Recovery Workspace</SheetTitle>
+            <SheetDescription className="mt-3 max-w-2xl text-[13px] leading-5 text-[#595E68]">Your Audit identified a recurring recovery pattern. Review what Workspace covers, what remains evidence-dependent, and the exact amount that will be charged before continuing.</SheetDescription>
           </SheetHeader>
 
           <div className="grid flex-1 gap-5 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_minmax(260px,0.72fr)] sm:px-7 sm:py-6">
             <div className="min-w-0">
-              <section aria-label="Selected audit context" className="rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4">
-                <p className="text-[12px] font-semibold text-[#191B20]">Selected audit</p>
-                <div className="mt-3 grid gap-3 text-[12px] sm:grid-cols-2">
-                  <div><p className="text-[#777A82]">Recorded result</p><p className="mt-1 font-semibold text-[#191B20]">{auditSheetSummary.label}</p></div>
-                  <div><p className="text-[#777A82]">Potential scope</p><p className="mt-1 font-semibold text-[#191B20] tabular-nums">{auditSheetSummary.metric}</p></div>
-                  <div><p className="text-[#777A82]">Audit record</p><p className="mt-1 font-semibold text-[#191B20]">{selectedAuditIsLatest ? 'Latest audit' : 'Selected history'}</p></div>
-                  <div><p className="text-[#777A82]">Monitoring</p><p className="mt-1 font-semibold text-[#191B20]">Not active</p></div>
-                </div>
+              <section aria-label="Workspace audit result" className="rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4">
+                <p className="text-[12px] font-semibold text-[#191B20]">Your Audit Result</p>
+                <p className="mt-3 text-[13px] leading-5 text-[#595E68]">We reviewed <strong className="font-semibold text-[#191B20]">{typeof teaser.recordsReviewed === 'number' ? teaser.recordsReviewed.toLocaleString() : 'Not established from the evidence reviewed'} records</strong> across the available evidence for <strong className="font-semibold text-[#191B20]">{selectedAuditPeriodLabel || 'Not established from the evidence reviewed'}</strong>.</p>
+                <p className="mt-3 text-[13px] leading-5 text-[#595E68]">The Audit recorded a recurring recovery route. The exact incident count and issue description are <strong className="font-semibold text-[#191B20]">Not established from the evidence reviewed</strong> in the current commercial record.</p>
+                <p className="mt-3 text-[13px] font-semibold leading-5 text-[#191B20]">This is not one bounded event. The evidence indicates a recurring recovery pattern.</p>
               </section>
 
               <section className="mt-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4">
-                <p className="text-[12px] font-semibold text-[#191B20]">Why Recovery Workspace is recommended</p>
-                <p className="mt-1 text-[12px] leading-5 text-[#595E68]">{commercialDecision?.reason || 'Margin recorded ongoing recovery work that is better handled through continuous monitoring.'}</p>
-                {commercialDecision?.comparison?.recurring_burden === true ? <p className="mt-2 text-[12px] leading-5 text-[#595E68]">The recorded comparison indicates continuing recovery work across the available audit record.</p> : null}
+                <p className="text-[12px] font-semibold text-[#191B20]">What this means</p>
+                <p className="mt-2 text-[12px] leading-5 text-[#595E68]">A single recovery operation can address what has already happened. It does not address the fact that the same type of issue is continuing to appear.</p>
+                <p className="mt-3 text-[12px] font-semibold leading-5 text-[#191B20]">Recover Once closes a defined incident. Workspace keeps Margin responsible for the recurring recovery problem.</p>
+              </section>
+
+              <section className="mt-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4">
+                <p className="text-[12px] font-semibold text-[#191B20]">What we can support</p>
+                <p className="mt-2 text-[12px] leading-5 text-[#595E68]">{commercialDecision?.reason || 'The recorded Audit supports ongoing recovery work through the available evidence.'}</p>
+                <p className="mt-3 text-[12px] font-semibold text-[#191B20]">What remains unverified</p>
+                <p className="mt-1 text-[12px] leading-5 text-[#595E68]">Incident-level details and any condition outside the evidence available to Margin are <strong className="font-semibold text-[#191B20]">Not established from the evidence reviewed</strong>.</p>
+                <p className="mt-3 text-[12px] leading-5 text-[#595E68]">We will not treat an unverified condition as a confirmed recovery opportunity.</p>
+              </section>
+
+              <section className="mt-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4">
+                <p className="text-[12px] font-semibold text-[#191B20]">What $109/month covers</p>
+                <div className="mt-3 divide-y divide-[#E8E7E1]">{[
+                  'Recurring examination of the connected account data available to Margin',
+                  'Identification of new qualifying recovery incidents',
+                  'Evidence organization and preparation for qualifying, evidence-supported issues',
+                  'Recovery documentation and response preparation',
+                  'Follow-through on submitted recovery matters',
+                  'Deadline and status tracking',
+                  'Payout and settlement checking where the required data is available',
+                  'A recorded history of findings, submissions, Amazon decisions, and outcomes',
+                ].map((item) => <p key={item} className="py-2.5 text-[12px] leading-5 text-[#595E68]">{item}</p>)}</div>
+                <p className="mt-3 text-[12px] leading-5 text-[#595E68]"><strong className="font-semibold text-[#191B20]">If nothing new is found, Margin reports that honestly.</strong></p>
+              </section>
+
+              <section className="mt-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4">
+                <p className="text-[12px] font-semibold text-[#191B20]">What “ongoing” means</p>
+                <p className="mt-2 text-[12px] leading-5 text-[#595E68]">Workspace examines the connected account data available to Margin as new data becomes available. It is not a promise that a human or system checks every transaction every second.</p>
+                <p className="mt-2 text-[12px] leading-5 text-[#595E68]">There is no promise that every detected condition will qualify for submission. If a matter falls outside the included operating scope, Margin will show you the difference before proceeding.</p>
               </section>
 
               <section className="mt-5">
@@ -1992,7 +2018,7 @@ export default function Audit() {
 
             <aside className="flex min-w-0 flex-col rounded-[10px] border border-[#E8E7E1] bg-[#FBFAF7] p-4 sm:p-5">
               <div className="border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#191B20]">Seller authority</p><p className="mt-2 text-[12px] leading-5 text-[#595E68]">Nothing is filed with Amazon without seller approval. Recovery Workspace coordination does not establish reimbursement eligibility, confirm payment, or close a recovery matter.</p></div>
-              <div className="mt-auto border-t border-[#E8E7E1] pt-5"><p className="text-[12px] font-semibold text-[#777A82]">Monthly workspace</p><p className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#191B20]">Approximately $109 <span className="text-[12px] font-medium tracking-normal text-[#595E68]">/ month</span></p><p className="mt-2 text-[13px] font-semibold leading-5 text-[#191B20]">Billed as R1,799 monthly (ZAR).</p><p className="mt-2 text-[12px] leading-5 text-[#595E68]">0% recovery commission · cancel anytime · checkout is separate from Amazon authorization.</p><Button onClick={activateAudit} disabled={isBusy} className="mt-5 h-10 w-full rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">{isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}Continue to secure checkout {!isBusy ? <ArrowRight className="ml-2 h-4 w-4" /> : null}</Button><SheetClose asChild><Button variant="ghost" className="mt-2 h-10 w-full rounded-[10px] text-[13px] font-medium text-[#595E68] hover:bg-white hover:text-[#191B20]">Not now</Button></SheetClose></div>
+              <div className="mt-auto border-t border-[#E8E7E1] pt-5"><p className="text-[12px] font-semibold text-[#777A82]">What this costs</p><p className="mt-1 text-[22px] font-semibold tracking-[-0.03em] text-[#191B20]">$109 <span className="text-[12px] font-medium tracking-normal text-[#595E68]">/ month reference price</span></p><p className="mt-2 text-[13px] font-semibold leading-5 text-[#191B20]">Actual charge: R1,799/month ZAR.</p><p className="mt-2 text-[12px] leading-5 text-[#595E68]">The USD amount is reference pricing. Paystack will settle the active South African subscription in ZAR at the exact amount shown above.</p><p className="mt-2 text-[12px] leading-5 text-[#595E68]">0% recovery commission · you keep 100% of Amazon reimbursements · cancel anytime · checkout is separate from Amazon authorization.</p><p className="mt-4 text-[12px] font-semibold text-[#191B20]">Before you continue</p><p className="mt-1 text-[11px] leading-5 text-[#595E68]">I approve Margin to begin Recovery Workspace at the disclosed price and understand that nothing is submitted to Amazon without my approval.</p><Button aria-label="Activate Workspace — $109/month; Continue to Secure Checkout — R1,799/month ZAR" onClick={activateAudit} disabled={isBusy} className="mt-5 h-10 w-full rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">{isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}Start Recovery Workspace — $109/month {!isBusy ? <ArrowRight className="ml-2 h-4 w-4" /> : null}</Button><SheetClose asChild><Button variant="ghost" className="mt-2 h-10 w-full rounded-[10px] text-[13px] font-medium text-[#595E68] hover:bg-white hover:text-[#191B20]">Not ready? Tell us what’s unclear</Button></SheetClose></div>
             </aside>
           </div>
         </SheetContent>
