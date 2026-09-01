@@ -190,12 +190,12 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
                             className="relative z-50 mt-2 md:hidden">
                             <div className={cn(
-                                "flex max-h-[calc(100vh-92px)] flex-col overflow-y-auto rounded-[8px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.22)]"
+                                "flex max-h-[calc(100vh-92px)] flex-col overflow-y-auto rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.22)]"
                             )}>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none px-3.5 py-4 text-[13px] font-sans font-bold tracking-normal transition-colors",
+                                            "flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal transition-colors",
                                             "justify-between border-none text-[#17212B] outline-none hover:no-underline hover:text-[#17212B] data-[state=open]:bg-transparent"
                                         )}>
                                             Workflows
@@ -204,7 +204,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                             <div className="space-y-6">
                                                 {apiMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-3">
-                                                        <h5 className="pl-2 text-[11px] font-sans font-medium tracking-normal text-[#7B8794]">
+                                                        <h5 className="pl-2 text-[13px] font-sans font-medium tracking-normal text-[#7B8794]">
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
@@ -225,7 +225,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     </AccordionItem>
                                     <AccordionItem value="teams" className="border-none">
                                         <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none px-3.5 py-4 text-[13px] font-sans font-bold tracking-normal transition-colors",
+                                            "flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal transition-colors",
                                             "justify-between border-none text-[#17212B] outline-none hover:no-underline hover:text-[#17212B] data-[state=open]:bg-transparent"
                                         )}>
                                             For Teams
@@ -233,7 +233,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                         <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
                                             {productMenuGroups.map((group) => (
                                                     <div key={group.label} className="space-y-3">
-                                                        <h5 className="pl-2 text-[11px] font-sans font-medium tracking-normal text-[#7B8794]">
+                                                        <h5 className="pl-2 text-[13px] font-sans font-medium tracking-normal text-[#7B8794]">
                                                             {group.label}
                                                         </h5>
                                                         <div className="grid gap-1">
@@ -255,23 +255,23 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 <Link
                                     to="/pricing"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none px-3.5 py-4 text-[13px] font-sans font-bold tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
                                     Pricing
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-none px-3.5 py-4 text-[13px] font-sans font-bold tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
                                     Enterprise
                                 </Link>
                                 <div className="px-3.5 pb-3 pt-3">
-                                    <p className="font-sans text-[13px] font-bold leading-5 text-[#17212B]">Not sure where to start?</p>
-                                    <div className="mt-1 font-sans text-[12px] leading-5 text-[#687684]">
+                                    <p className="font-sans text-[15px] font-medium leading-5 text-[#17212B]">Not sure where to start?</p>
+                                    <div className="mt-1 font-sans text-[14px] leading-5 text-[#687684]">
                                         <span>Tell us about your Amazon business and we’ll point you to the right Margin path. </span>
                                         <Link
                                             to="/contact"
                                             onClick={() => setMobileMenuOpen(false)}
-                                            className="inline-flex items-center gap-1 font-sans text-[12px] font-bold leading-5 text-[var(--margin-blue)] transition-colors hover:text-[var(--margin-blue-hover)]">
+                                            className="inline-flex items-center gap-1 font-sans text-[14px] font-medium leading-5 text-[var(--margin-blue)] transition-colors hover:text-[var(--margin-blue-hover)]">
                                             Find your starting point <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                         </Link>
                                     </div>
@@ -280,13 +280,13 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] bg-[#E8EBEF] px-3 py-3 text-center font-sans text-[11px] font-bold tracking-normal text-[#475467] shadow-[0_8px_20px_rgba(25,27,32,0.08)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[#DDE2E8] hover:text-[#25313A] hover:shadow-[0_12px_26px_rgba(25,27,32,0.12)]">
+                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] bg-[#E8EBEF] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[#475467] shadow-[0_8px_20px_rgba(25,27,32,0.08)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[#DDE2E8] hover:text-[#25313A] hover:shadow-[0_12px_26px_rgba(25,27,32,0.12)]">
                                         Talk to Us
                                     </Link>
                                     <Link
                                         to="/about"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] items-center justify-center gap-1 rounded-[8px] bg-white px-3 py-3 text-center font-sans text-[11px] font-bold tracking-normal text-[var(--margin-text-secondary)] shadow-[0_8px_20px_rgba(25,27,32,0.06)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)] hover:shadow-[0_12px_26px_rgba(25,27,32,0.10)]">
+                                        className="flex min-h-[48px] items-center justify-center gap-1 rounded-[8px] bg-white px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[var(--margin-text-secondary)] shadow-[0_8px_20px_rgba(25,27,32,0.06)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)] hover:shadow-[0_12px_26px_rgba(25,27,32,0.10)]">
                                         Company <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                 </div>
