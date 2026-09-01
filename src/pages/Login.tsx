@@ -353,10 +353,12 @@ const Login = () => {
   const [sessionChecked, setSessionChecked] = useState(false);
   const [activeSessionEmail, setActiveSessionEmail] = useState<string | null>(null);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
+  const [emailStepComplete, setEmailStepComplete] = useState(false);
   const [clerkVerificationStep, setClerkVerificationStep] = useState<ClerkVerificationStep | null>(null);
   const [clerkVerificationCode, setClerkVerificationCode] = useState('');
   const [clerkVerificationMessage, setClerkVerificationMessage] = useState('');
   const clerkFinalizeBootstrapRef = useRef<Promise<ClerkLoginResult> | null>(null);
+  const showPasswordStep = mode === 'recovery' || emailStepComplete || Boolean(clerkVerificationStep);
   const socialOAuthHandledRef = useRef(false);
 
   // B5 Fix: Track latest Clerk state in a ref to handle initialization races silently
@@ -1139,6 +1141,7 @@ const Login = () => {
     setError('');
     setLoginStep(null);
     setWorkspaceRetryAvailable(false);
+    setEmailStepComplete(false);
 
     try {
       if (clerkAuthLoaded && clerkSignedIn) {
@@ -1180,6 +1183,7 @@ const Login = () => {
     setError('');
     setLoginStep('account');
     setWorkspaceRetryAvailable(false);
+    setEmailStepComplete(true);
 
     try {
       await resetBrowserAuthForFreshLogin();
@@ -1195,8 +1199,23 @@ const Login = () => {
     }
   };
 
+  const handleEmailContinue = () => {
+    if (!email.trim()) {
+      setError('Enter your email address to continue.');
+      return;
+    }
+
+    setError('');
+    setEmailStepComplete(true);
+  };
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!showPasswordStep && (mode === 'login' || mode === 'signup')) {
+      handleEmailContinue();
+      return;
+    }
+
     let failureStep: LoginStep = 'account';
 
     setLoading(true);
@@ -1399,9 +1418,9 @@ const Login = () => {
     <div className="relative min-h-screen overflow-y-auto bg-[#FAFAF7] text-[#182026] selection:bg-[#DCEEFF] scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       <main className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Left Side: Form */}
-        <div className="flex flex-1 items-center justify-center px-6 py-10 sm:px-8 lg:py-16">
+        <div className="flex flex-1 items-center justify-center px-6 py-8 sm:px-8 lg:py-12">
           <div className="w-full max-w-[380px]">
-            <div className="mb-10 flex flex-col items-start sm:mb-12">
+            <div className="mb-8 flex flex-col items-start sm:mb-10">
               <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
                 <img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" />
                 <span className="brand-wordmark font-merriweather text-[22px] font-semibold tracking-tight text-[#182026]">Margin</span>
@@ -1409,7 +1428,7 @@ const Login = () => {
             </div>
 
             <section>
-              <div className="mb-6 flex justify-start sm:mb-7">
+              <div className="mb-5 flex justify-start sm:mb-6">
                 <Link 
                   to={isAuditIntent ? "/audit" : "/"} 
                   className="group flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#66737F] transition-colors hover:text-[#182026]"
@@ -1419,12 +1438,12 @@ const Login = () => {
                 </Link>
               </div>
 
-              <div className="lg:hidden mb-8">
+              <div className="lg:hidden mb-6">
                 <h1 className="text-left text-[26px] font-bold leading-[1.15] tracking-[-0.035em] text-[#182026] sm:text-[30px] font-lora">
                   {heading}
                 </h1>
                 {mode === 'signup' && (
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <p className="text-[15px] leading-relaxed text-[#4D5B66]">
                       You do not need to know exactly what is wrong yet. Create your free Margin account, then start a read-only Recovery Audit. Margin will help you see what Amazon’s records say and plans what to do next.
                     </p>
@@ -1432,15 +1451,15 @@ const Login = () => {
                 )}
               </div>
 
-              <div className="mt-6 sm:mt-0">
-                {(mode === 'login' || mode === 'signup') && !clerkVerificationStep ? (
-                  <div className="mb-6 space-y-4">
+              <div className="mt-4 sm:mt-0">
+                {(mode === 'login' || mode === 'signup') && !showPasswordStep ? (
+                  <div className="mb-5 space-y-3">
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => void startSocialOAuth('google')}
                       disabled={loading || !clerkAuthLoaded}
-                      className="h-12 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                      className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
                     >
                       <GoogleMark className="mr-2 h-4 w-4" />
                       Continue with Google
@@ -1450,7 +1469,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void startSocialOAuth('apple')}
                       disabled={loading || !clerkAuthLoaded}
-                      className="h-12 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                      className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
                     >
                       <AppleMark className="mr-2 h-4 w-4" />
                       Continue with Apple
@@ -1460,7 +1479,7 @@ const Login = () => {
                       variant="outline"
                       onClick={() => void startSocialOAuth('linkedin')}
                       disabled={loading || !clerkAuthLoaded}
-                      className="h-12 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                      className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
                     >
                       <LinkedInMark className="mr-2 h-4 w-4 text-[#0A66C2]" />
                       Continue with LinkedIn
@@ -1476,8 +1495,8 @@ const Login = () => {
                   </div>
                 ) : null}
 
-                <form onSubmit={handleLogin} className="space-y-5">
-                  <div className="space-y-1.5">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-1">
                     <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                       Email address
                     </Label>
@@ -1493,13 +1512,14 @@ const Login = () => {
                           resetLocalAuthError();
                         }}
                         placeholder="you@example.com"
-                        className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
+                        className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] transition-colors focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15 disabled:opacity-50"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <Label htmlFor="password" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
+                  {showPasswordStep ? (
+                    <div className="space-y-1">
+                      <Label htmlFor="password" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
                       {mode === 'recovery' ? 'New Password' : 'Password'}
                     </Label>
                     <div className="relative">
@@ -1524,7 +1544,8 @@ const Login = () => {
                         {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                       </button>
                     </div>
-                  </div>
+                    </div>
+                  ) : null}
 
                   {(mode === 'login' || mode === 'signup') && clerkVerificationStep ? (
                     <div className="space-y-2">
@@ -1543,7 +1564,7 @@ const Login = () => {
                             setError('');
                           }}
                           placeholder="Enter verification code"
-                          className="h-13 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
+                          className="h-12 rounded-md border-[#C8D6DF] bg-[#FAFAF7] px-4 text-[16px] text-[#182026] placeholder:text-[#8A99A4] shadow-[0_1px_2px_rgba(37,49,58,0.04)] focus-visible:border-[#0B74DE] focus-visible:ring-2 focus-visible:ring-[#0B74DE]/15"
                         />
                       </div>
                       {clerkVerificationMessage ? (
@@ -1624,33 +1645,44 @@ const Login = () => {
                     </Button>
                   ) : null}
 
-                  <div className="pt-2">
-                <Button
-                  type="submit"
-                  disabled={loading || !clerkAuthLoaded}
-                  className="h-12 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
-                >
-                  {loading ? (
-                    mode === 'signup'
-                      ? 'Creating your secure account…'
-                      : mode === 'login'
-                        ? 'Signing you in securely…'
-                        : loadingStage === 'processing'
-                          ? 'Processing...'
-                          : loadingStage === 'securing'
-                            ? 'Securing connection...'
-                            : 'Opening secure signup...'
-                  ) : mode === 'signup' ? (
-                    clerkVerificationStep ? 'Verify email' : 'Create my free account'
-                  ) : mode === 'recovery' ? (
-                    'Update Password'
-                  ) : clerkVerificationStep ? (
-                    'Verify Code'
+                  {showPasswordStep ? (
+                    <div className="pt-1">
+                      <Button
+                        type="submit"
+                        disabled={loading || !clerkAuthLoaded}
+                        className="h-11 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
+                      >
+                        {loading ? (
+                          mode === 'signup'
+                            ? 'Creating your secure account…'
+                            : mode === 'login'
+                              ? 'Signing you in securely…'
+                              : loadingStage === 'processing'
+                                ? 'Processing...'
+                                : loadingStage === 'securing'
+                                  ? 'Securing connection...'
+                                  : 'Opening secure signup...'
+                        ) : mode === 'signup' ? (
+                          clerkVerificationStep ? 'Verify email' : 'Create my free account'
+                        ) : mode === 'recovery' ? (
+                          'Update Password'
+                        ) : clerkVerificationStep ? (
+                          'Verify Code'
+                        ) : (
+                          'Sign in to Margin'
+                        )}
+                      </Button>
+                    </div>
                   ) : (
-                    'Sign in to Margin'
+                    <Button
+                      type="button"
+                      onClick={handleEmailContinue}
+                      disabled={loading || !clerkAuthLoaded}
+                      className="h-11 w-full rounded-md bg-[#0B74DE] px-8 text-[14px] font-semibold text-white shadow-[0_1px_2px_rgba(11,116,222,0.18)] transition-all hover:bg-[#075EBA] disabled:opacity-50"
+                    >
+                      Continue
+                    </Button>
                   )}
-                </Button>
-                  </div>
 
                   {mode === 'signup' && !clerkVerificationStep ? (
                     <p className="pt-3 text-center text-[12px] leading-5 text-[#7B8790]">
@@ -1659,7 +1691,7 @@ const Login = () => {
                   ) : null}
 
                   {(mode === 'login' || mode === 'signup') ? (
-                    <p className="pt-4 text-center text-[12px] leading-5 text-[#7B8790]">
+                    <p className="pt-3 text-center text-[12px] leading-5 text-[#7B8790]">
                       {mode === 'signup' ? 'By creating an account, you agree to Margin’s ' : 'By signing in, you agree to our '}
                       <Link to="/terms" className="text-[#4D5B66] underline decoration-[#B8C5CD] underline-offset-2 transition-colors hover:text-[#182026]">
                         Terms
@@ -1672,13 +1704,14 @@ const Login = () => {
                   ) : null}
 
                   <div className={mode === 'signup'
-                    ? 'flex justify-center pt-5 text-[12px] font-medium tracking-tight text-[#66737F]'
-                    : 'flex flex-row items-center justify-between gap-3 pt-7 text-[12px] font-medium tracking-tight text-[#66737F]'}>
+                    ? 'flex justify-center pt-4 text-[12px] font-medium tracking-tight text-[#66737F]'
+                    : 'flex flex-row items-center justify-between gap-3 pt-5 text-[12px] font-medium tracking-tight text-[#66737F]'}>
                     {mode === 'signup' ? (
                       <button
                         type="button"
                         onClick={() => {
                           setMode('login');
+                          setEmailStepComplete(false);
                           setPassword('');
                           setConfirmPassword('');
                           setError('');
@@ -1704,6 +1737,7 @@ const Login = () => {
                           type="button"
                           onClick={() => {
                             setMode('signup');
+                            setEmailStepComplete(false);
                             setPassword('');
                             setConfirmPassword('');
                             setError('');
@@ -1721,6 +1755,7 @@ const Login = () => {
                         type="button"
                         onClick={() => {
                           setMode('login');
+                          setEmailStepComplete(false);
                           setPassword('');
                           setConfirmPassword('');
                           setError('');
