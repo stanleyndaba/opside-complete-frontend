@@ -9,24 +9,31 @@ const callbackSource = fs.readFileSync(path.join(root, 'src/pages/ClerkOAuthCall
 const appSource = fs.readFileSync(path.join(root, 'src/App.tsx'), 'utf8');
 const publicNavbarSource = fs.readFileSync(path.join(root, 'src/components/layout/PublicNavbar.tsx'), 'utf8');
 const googleMarkSource = fs.readFileSync(path.join(root, 'src/components/GoogleMark.tsx'), 'utf8');
+const appleMarkSource = fs.readFileSync(path.join(root, 'src/components/AppleMark.tsx'), 'utf8');
 
 assert.match(loginSource, /Continue with Google/);
-assert.match(loginSource, /strategy:\s*'oauth_google'/);
+assert.match(loginSource, /oauth_google/);
 assert.match(loginSource, /signIn\.sso\(oauthParams\)/);
 assert.match(loginSource, /signUp\.sso\(oauthParams\)/);
+assert.match(loginSource, /oauth_apple/);
+assert.match(loginSource, /startSocialOAuth\('apple'\)/);
+assert.match(loginSource, /<AppleMark className="mr-2 h-4 w-4" \/>/);
 assert.match(loginSource, /\/auth\/clerk\/callback/);
-assert.match(loginSource, /isGoogleOAuthReturn/);
+assert.match(loginSource, /isSocialOAuthReturn/);
 assert.match(loginSource, /routeExistingSession\(\)/);
-assert.match(loginSource, /Google Login only creates your Margin account/);
-assert.match(loginSource, /Google sign-in is not enabled for this Margin environment yet/);
+assert.match(loginSource, /Google and Apple Login only create your Margin account/);
+assert.match(loginSource, /sign-in is not enabled for this Margin environment yet/);
 assert.match(loginSource, /<GoogleMark className="mr-2 h-4 w-4" \/>/);
 assert.match(publicNavbarSource, /<GoogleMark className="h-3\.5 w-3\.5" \/>/);
 assert.match(publicNavbarSource, /Sign up/);
 assert.match(googleMarkSource, /viewBox="0 0 24 24"/);
+assert.match(appleMarkSource, /viewBox="0 0 24 24"/);
 
 assert.match(callbackSource, /signIn\.finalize/);
 assert.match(callbackSource, /signUp\.finalize/);
 assert.match(callbackSource, /signUp\.isTransferable/);
+assert.match(callbackSource, /provider === 'apple'/);
+assert.match(callbackSource, /buildLoginPath\(next, message, provider\)/);
 assert.match(callbackSource, /signIn\.isTransferable/);
 assert.match(callbackSource, /buildLoginPath/);
 
