@@ -1452,49 +1452,6 @@ const Login = () => {
               </div>
 
               <div className="mt-4 sm:mt-0">
-                {(mode === 'login' || mode === 'signup') && !showPasswordStep ? (
-                  <div className="mb-5 space-y-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => void startSocialOAuth('google')}
-                      disabled={loading || !clerkAuthLoaded}
-                      className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
-                    >
-                      <GoogleMark className="mr-2 h-4 w-4" />
-                      Continue with Google
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => void startSocialOAuth('apple')}
-                      disabled={loading || !clerkAuthLoaded}
-                      className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
-                    >
-                      <AppleMark className="mr-2 h-4 w-4" />
-                      Continue with Apple
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => void startSocialOAuth('linkedin')}
-                      disabled={loading || !clerkAuthLoaded}
-                      className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
-                    >
-                      <LinkedInMark className="mr-2 h-4 w-4 text-[#0A66C2]" />
-                      Continue with LinkedIn
-                    </Button>
-                    <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
-                      <span className="h-px flex-1 bg-[#D8E3EA]" />
-                      <span>or</span>
-                      <span className="h-px flex-1 bg-[#D8E3EA]" />
-                    </div>
-                    <p className="text-center text-[12px] leading-5 text-[#7B8790]">
-                      Google, Apple, and LinkedIn Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
-                    </p>
-                  </div>
-                ) : null}
-
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-1">
                     <Label htmlFor="email" className="text-[12px] font-semibold tracking-tight text-[#66737F]">
@@ -1683,6 +1640,49 @@ const Login = () => {
                       Continue
                     </Button>
                   )}
+
+                  {(mode === 'login' || mode === 'signup') && !showPasswordStep ? (
+                    <div className="mb-5 space-y-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => void startSocialOAuth('google')}
+                        disabled={loading || !clerkAuthLoaded}
+                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                      >
+                        <GoogleMark className="mr-2 h-4 w-4" />
+                        Continue with Google
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => void startSocialOAuth('apple')}
+                        disabled={loading || !clerkAuthLoaded}
+                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                      >
+                        <AppleMark className="mr-2 h-4 w-4" />
+                        Continue with Apple
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => void startSocialOAuth('linkedin')}
+                        disabled={loading || !clerkAuthLoaded}
+                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
+                      >
+                        <LinkedInMark className="mr-2 h-4 w-4 text-[#0A66C2]" />
+                        Continue with LinkedIn
+                      </Button>
+                      <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
+                        <span className="h-px flex-1 bg-[#D8E3EA]" />
+                        <span>or</span>
+                        <span className="h-px flex-1 bg-[#D8E3EA]" />
+                      </div>
+                      <p className="text-center text-[12px] leading-5 text-[#7B8790]">
+                        Google, Apple, and LinkedIn Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
+                      </p>
+                    </div>
+                  ) : null}
 
                   {mode === 'signup' && !clerkVerificationStep ? (
                     <p className="pt-3 text-center text-[12px] leading-5 text-[#7B8790]">
