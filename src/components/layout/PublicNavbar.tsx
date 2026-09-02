@@ -193,6 +193,34 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                 "flex max-h-[calc(100vh-92px)] flex-col overflow-y-auto rounded-[3px] border border-[#DCE8EE] bg-white shadow-[0_18px_48px_rgba(37,49,58,0.22)]"
                             )}>
                                 <Accordion type="single" collapsible className="w-full">
+                                    <AccordionItem value="teams" className="border-none">
+                                        <AccordionTrigger className={cn(
+                                            "flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal transition-colors",
+                                            "justify-between border-none text-[#17212B] outline-none hover:no-underline hover:text-[#17212B] data-[state=open]:bg-transparent"
+                                        )}>
+                                            For Teams
+                                        </AccordionTrigger>
+                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
+                                            {productMenuGroups.map((group) => (
+                                                    <div key={group.label} className="space-y-3">
+                                                        <h5 className="pl-2 text-[13px] font-sans font-medium tracking-normal text-[#7B8794]">
+                                                            {group.label}
+                                                        </h5>
+                                                        <div className="grid gap-1">
+                                                            {group.items.map((item) => (
+                                                                <ProductServiceItem
+                                                                    key={item.title}
+                                                                    variant="light"
+                                                                    icon={item.icon}
+                                                                    title={item.title}
+                                                                    description={item.description}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                        </AccordionContent>
+                                    </AccordionItem>
                                     <AccordionItem value="api" className="border-none">
                                         <AccordionTrigger className={cn(
                                             "flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal transition-colors",
@@ -221,34 +249,6 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                                     </div>
                                                 ))}
                                             </div>
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                    <AccordionItem value="teams" className="border-none">
-                                        <AccordionTrigger className={cn(
-                                            "flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal transition-colors",
-                                            "justify-between border-none text-[#17212B] outline-none hover:no-underline hover:text-[#17212B] data-[state=open]:bg-transparent"
-                                        )}>
-                                            For Teams
-                                        </AccordionTrigger>
-                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
-                                            {productMenuGroups.map((group) => (
-                                                    <div key={group.label} className="space-y-3">
-                                                        <h5 className="pl-2 text-[13px] font-sans font-medium tracking-normal text-[#7B8794]">
-                                                            {group.label}
-                                                        </h5>
-                                                        <div className="grid gap-1">
-                                                            {group.items.map((item) => (
-                                                                <ProductServiceItem
-                                                                    key={item.title}
-                                                                    variant="light"
-                                                                    icon={item.icon}
-                                                                    title={item.title}
-                                                                    description={item.description}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                ))}
                                         </AccordionContent>
                                     </AccordionItem>
                                 </Accordion>

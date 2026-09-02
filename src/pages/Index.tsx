@@ -680,6 +680,128 @@ function RecoveryWorkStatement() {
   );
 }
 
+const riskLeakPoints = [
+  { label: "Not found", detail: "the signal never surfaces" },
+  { label: "Not investigated", detail: "the question stays open" },
+  { label: "Unsupported", detail: "the evidence is not ready" },
+  { label: "Not filed", detail: "the case never moves" },
+  { label: "Unanswered", detail: "the next request is missed" },
+  { label: "Rejected", detail: "the first answer becomes final" },
+  { label: "Partly paid", detail: "the balance goes unchecked" },
+  { label: "Assumed complete", detail: "the payout is never reconciled" },
+];
+
+function RiskSection() {
+  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const sectionInView = useInView(sectionRef, { once: true, amount: 0.28 });
+  const [activeLeak, setActiveLeak] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion || !sectionInView) {
+      setActiveLeak(0);
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveLeak((current) => (current + 1) % riskLeakPoints.length);
+    }, 1150);
+
+    return () => window.clearInterval(interval);
+  }, [reduceMotion, sectionInView]);
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-labelledby="risk-section-title"
+      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_84%_20%,rgba(201,120,93,0.18),transparent_34%),radial-gradient(circle_at_12%_86%,rgba(201,120,93,0.08),transparent_30%)]" />
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="relative max-w-[980px]">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[#C9785D]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#A95F49]">
+              10 / Where recovery leaks
+            </span>
+          </div>
+          <h2
+            id="risk-section-title"
+            className="font-lora text-[35px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[48px] md:text-[64px]"
+            style={{ fontWeight: 400 }}
+          >
+            A recovery can lose value at any point in the chain.
+            <span className="mt-3 block text-[var(--margin-text-muted)]">
+              The gap is usually between one step and the next.
+            </span>
+          </h2>
+          <p className="mt-7 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
+            An opportunity can disappear during investigation, evidence gathering, filing, follow-up, or payout review. The exposure is not only what goes unnoticed—it is what remains unattended after someone notices it.
+          </p>
+        </motion.div>
+
+        <motion.div
+          {...revealProps}
+          transition={{ ...revealProps.transition, delay: 0.12 }}
+          className="relative mt-14 border border-[#D9B8AA] bg-[rgba(255,251,247,0.72)] p-5 shadow-[0_24px_80px_rgba(127,78,62,0.08)] sm:p-8 md:mt-18 md:p-10"
+        >
+          <div className="pointer-events-none absolute inset-2 border border-[#EBD8D1] sm:inset-3" />
+          <div className="relative flex items-center justify-between gap-4 border-b border-[#E7D3CC] pb-4">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#A95F49]">
+              The leakage chain
+            </span>
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#9A8178]">
+              {String(activeLeak + 1).padStart(2, "0")} / {String(riskLeakPoints.length).padStart(2, "0")}
+            </span>
+          </div>
+
+          <div className="relative mt-8">
+            <div className="pointer-events-none absolute left-0 right-0 top-[14px] hidden h-px bg-[#D9B8AA] md:block" />
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute top-[11px] hidden h-[7px] w-16 rounded-full bg-[#C9785D] shadow-[0_0_20px_rgba(201,120,93,0.34)] md:block"
+              animate={reduceMotion ? { left: "0%", opacity: 0.8 } : { left: `${(activeLeak / (riskLeakPoints.length - 1)) * 100}%`, opacity: [0.35, 1, 0.35] }}
+              transition={reduceMotion ? { duration: 0 } : { left: { duration: 0.52, ease: [0.22, 1, 0.36, 1] }, opacity: { duration: 1.15, repeat: Infinity, ease: "easeInOut" } }}
+            />
+            <div className="grid gap-0 sm:grid-cols-2 md:grid-cols-4">
+              {riskLeakPoints.map((point, index) => {
+                const isActive = reduceMotion ? index === 0 : index === activeLeak;
+                const isPast = !reduceMotion && index < activeLeak;
+                return (
+                  <motion.div
+                    key={point.label}
+                    initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0.38, y: 8 }}
+                    animate={{ opacity: isActive ? 1 : isPast ? 0.7 : 0.4, y: isActive ? 0 : 2 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative border-b border-r border-[#E7D3CC] px-3 py-5 last:border-r-0 sm:px-4 md:min-h-[128px] md:border-b-0 md:px-5 md:py-8 md:[&:nth-child(4n)]:border-r-0"
+                  >
+                    <span className="mb-5 block h-2.5 w-2.5 rounded-full border border-[#C9785D] bg-[#FFF5EF] md:relative md:z-10" />
+                    <span className={`block font-lora text-[21px] leading-[1.04] tracking-[-0.03em] ${isActive ? "text-[#A95F49]" : "text-[var(--margin-text-primary)]"}`} style={{ fontWeight: 400 }}>
+                      {point.label}
+                    </span>
+                    <span className="mt-2 block max-w-[150px] text-[11px] leading-5 text-[#8A756D]">
+                      {point.detail}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="relative mt-7 border-t border-[#E7D3CC] pt-6 md:mt-8 md:pt-7">
+            <p className="max-w-[920px] font-lora text-[25px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[43px]" style={{ fontWeight: 400 }}>
+              The real exposure is what remains unattended after someone notices it.
+            </p>
+            <p className="mt-5 max-w-[690px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">
+              Margin keeps the recovery moving across those handoffs until there is a recorded outcome, not just an open question.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 const operationalBuildSteps = [
   "Audit activity",
   "Gather evidence",
@@ -1335,6 +1457,7 @@ export default function Index() {
 
         <RecoveryTimelineSection />
         <AccountingEvidenceSection />
+        <RiskSection />
         <OperationalEconomicsSection />
         <FullRecoveryLoopSection />
         <RecoveryOutcomeExplorer />
