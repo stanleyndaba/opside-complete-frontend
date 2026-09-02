@@ -34,7 +34,7 @@ export const apiMenuGroups = [
     {
         label: 'Build & Control',
         items: [
-            { title: 'Evidence Traceability', description: 'Connect invoices, BOLs, PODs, shipment records, quantities and cost basis to the recovery they support.', icon: FileText },
+            { title: 'Recovery Evidence', description: 'Connect invoices, BOLs, PODs, shipment records, quantities and cost basis to the recovery they support.', icon: FileText },
             { title: 'Case Preparation', description: 'Assemble the evidence, timeline, policy basis and financial value into one review-ready recovery.', icon: ClipboardCheck },
             { title: 'Seller Approval & Filing', description: 'Review every recovery before it enters the filing workflow. Nothing moves without approval.', icon: BriefcaseBusiness }
         ]
