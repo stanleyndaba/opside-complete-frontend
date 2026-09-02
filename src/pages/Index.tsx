@@ -680,6 +680,155 @@ function RecoveryWorkStatement() {
   );
 }
 
+const operationalBuildSteps = [
+  "Audit activity",
+  "Gather evidence",
+  "Manage cases",
+  "Watch deadlines",
+  "Review payouts",
+  "Check outcomes",
+];
+
+const recoveryOperationStages = [
+  "Activity",
+  "Signal",
+  "Evidence",
+  "Judgment",
+  "Casework",
+  "Outcome",
+  "Verified result",
+];
+
+function OperationalEconomicsSection() {
+  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const sectionInView = useInView(sectionRef, { once: true, amount: 0.28 });
+  const [visibleSteps, setVisibleSteps] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setVisibleSteps(operationalBuildSteps.length);
+      return;
+    }
+    if (!sectionInView) return;
+
+    setVisibleSteps(0);
+    const interval = window.setInterval(() => {
+      setVisibleSteps((current) => {
+        if (current >= operationalBuildSteps.length) {
+          window.clearInterval(interval);
+          return current;
+        }
+        return current + 1;
+      });
+    }, 220);
+
+    return () => window.clearInterval(interval);
+  }, [reduceMotion, sectionInView]);
+
+  const progress = reduceMotion
+    ? 1
+    : visibleSteps / operationalBuildSteps.length;
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-labelledby="operational-economics-title"
+      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28"
+    >
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[980px]">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+              11 / The operating economics
+            </span>
+          </div>
+          <h2
+            id="operational-economics-title"
+            className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[62px]"
+            style={{ fontWeight: 400 }}
+          >
+            The question is not whether recovery can be done in-house.
+            <span className="mt-3 block text-[var(--margin-text-muted)]">
+              It is what it takes to keep doing it properly.
+            </span>
+          </h2>
+          <p className="mt-7 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
+            An internal recovery program needs a person, a process, and the discipline to keep every possible issue moving from first signal to final financial check.
+          </p>
+        </motion.div>
+
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="mt-14 md:mt-18">
+          <div className="mb-5 flex items-end justify-between gap-5 border-b border-[var(--margin-border)] pb-3">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
+              If you build the function yourself
+            </span>
+            <span className="hidden font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)] sm:block">
+              Recurring operating load
+            </span>
+          </div>
+
+          <div className="relative border-y border-[var(--margin-border)] py-7 md:py-9">
+            <motion.div
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-px origin-left bg-[var(--margin-blue)]"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: progress }}
+              transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+              {operationalBuildSteps.map((step, index) => {
+                const isVisible = reduceMotion || visibleSteps > index;
+                return (
+                  <motion.div
+                    key={step}
+                    initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0.24, x: 10 }}
+                    animate={{ opacity: isVisible ? 1 : 0.24, x: isVisible ? 0 : 10 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.34, ease: [0.22, 1, 0.36, 1] }}
+                    className="min-h-[74px] border-b border-r border-[var(--margin-border)] px-3 py-4 last:border-r-0 sm:min-h-[92px] sm:px-4 sm:py-5 lg:border-b-0 lg:first:border-l-0"
+                  >
+                    <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-text-muted)]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="mt-3 block max-w-[130px] font-lora text-[18px] leading-[1.05] tracking-[-0.025em] text-[var(--margin-text-primary)] sm:text-[20px]">
+                      {step}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="mt-12 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <motion.div {...revealProps}>
+            <p className="max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              The work is possible. The cost is that someone inside the business now owns the whole function—and has to keep owning it when the next issue arrives.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-l border-[var(--margin-blue)] pl-6 md:pl-8">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">
+              The Margin alternative
+            </p>
+            <h3 className="mt-4 max-w-[640px] font-lora text-[30px] leading-[1.02] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]" style={{ fontWeight: 400 }}>
+              Margin gives recovery its own operating layer.
+            </h3>
+            <p className="mt-5 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              The signals, evidence, decisions, cases, and outcomes stay connected, while your team stays focused on the business that generated the activity.
+            </p>
+            <p className="mt-7 max-w-[640px] font-lora text-[22px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>
+              You are not adding another screen to manage.
+              <span className="mt-2 block text-[var(--margin-text-muted)]">You are avoiding another function to build.</span>
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FullRecoveryLoopSection() {
   const reduceMotion = useReducedMotion();
   const [activeEvent, setActiveEvent] = useState(0);
@@ -934,6 +1083,117 @@ function OutcomeWorkspace({ state, index, reduceMotion }: { state: (typeof recov
   );
 }
 
+function ProductReframeSection() {
+  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const sectionInView = useInView(sectionRef, { once: true, amount: 0.26 });
+  const [activeStage, setActiveStage] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion || !sectionInView) {
+      setActiveStage(0);
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveStage((current) => (current + 1) % recoveryOperationStages.length);
+    }, 1250);
+
+    return () => window.clearInterval(interval);
+  }, [reduceMotion, sectionInView]);
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-labelledby="product-reframe-title"
+      className="relative overflow-hidden border-t border-[var(--margin-border)] bg-white py-20 md:py-28"
+    >
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="max-w-[1040px]">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+              14 / The product reframe
+            </span>
+          </div>
+          <h2
+            id="product-reframe-title"
+            className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[48px] md:text-[66px]"
+            style={{ fontWeight: 400 }}
+          >
+            Margin is not another place to look for problems.
+            <span className="mt-3 block text-[var(--margin-text-muted)]">It is where the recovery operation stays in view.</span>
+          </h2>
+        </motion.div>
+
+        <div className="mt-12 grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-start lg:gap-20">
+          <motion.div {...revealProps}>
+            <p className="max-w-[560px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
+              Amazon activity does not become useful simply because it has been collected. It becomes useful when the right signal can be understood, supported, acted on, and checked against the money that followed.
+            </p>
+            <p className="mt-6 max-w-[520px] text-[14px] leading-7 text-[var(--margin-text-muted)] md:text-[15px] md:leading-8">
+              Margin keeps that movement connected so recovery is treated as an operating function—not a pile of disconnected findings.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }}>
+            <div className="border-y border-[var(--margin-border)]">
+              <div className="flex items-center justify-between gap-4 border-b border-[var(--margin-border)] py-4">
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">
+                  From activity to financial truth
+                </span>
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
+                  {String(activeStage + 1).padStart(2, "0")} / {String(recoveryOperationStages.length).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="relative py-6 sm:py-8">
+                <motion.div
+                  aria-hidden="true"
+                  className="absolute left-0 right-0 top-0 h-px origin-left bg-[var(--margin-blue)]"
+                  animate={{ scaleX: reduceMotion ? 1 : (activeStage + 1) / recoveryOperationStages.length }}
+                  transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+                />
+                <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-4">
+                  {recoveryOperationStages.map((stage, index) => {
+                    const isActive = reduceMotion ? index === 0 : index === activeStage;
+                    const isPast = !reduceMotion && index < activeStage;
+                    return (
+                      <motion.div
+                        key={stage}
+                        initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0.36, y: 8 }}
+                        animate={{ opacity: isActive ? 1 : isPast ? 0.68 : 0.38, y: isActive ? 0 : 2 }}
+                        transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        className="border-b border-r border-[var(--margin-border)] px-3 py-4 last:border-r-0 sm:px-4 sm:py-5 lg:[&:nth-child(4n)]:border-r-0"
+                      >
+                        <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-text-muted)]">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className={`mt-3 block font-lora text-[21px] leading-[1.04] tracking-[-0.03em] ${isActive ? "text-[var(--margin-blue)]" : "text-[var(--margin-text-primary)]"}`} style={{ fontWeight: 400 }}>
+                          {stage}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div {...revealProps} className="mt-16 border-t border-[var(--margin-border)] pt-8 md:mt-24 md:pt-10">
+          <p className="max-w-[1060px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] sm:text-[40px] md:text-[54px]" style={{ fontWeight: 400 }}>
+            <span className="text-[var(--margin-text-primary)]">You run the business.</span>{" "}
+            <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span>
+          </p>
+          <p className="mt-5 max-w-[700px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">
+            Open Margin when you want to see what has surfaced, what is being handled, and what has genuinely been settled.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function RecoveryOutcomeExplorer() {
   const reduceMotion = useReducedMotion();
   const outcomeSceneRef = useRef<HTMLDivElement>(null);
@@ -1075,6 +1335,7 @@ export default function Index() {
 
         <RecoveryTimelineSection />
         <AccountingEvidenceSection />
+        <OperationalEconomicsSection />
         <FullRecoveryLoopSection />
         <RecoveryOutcomeExplorer />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
@@ -1112,6 +1373,8 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        <ProductReframeSection />
 
         {/* Section 11 — Recovery statement */}
         <section className="relative border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-32">
