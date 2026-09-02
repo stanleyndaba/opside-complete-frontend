@@ -1643,6 +1643,11 @@ const Login = () => {
 
                   {(mode === 'login' || mode === 'signup') && !showPasswordStep ? (
                     <div className="mb-5 space-y-3">
+                      <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
+                        <span className="h-px flex-1 bg-[#D8E3EA]" />
+                        <span>or</span>
+                        <span className="h-px flex-1 bg-[#D8E3EA]" />
+                      </div>
                       <Button
                         type="button"
                         variant="outline"
@@ -1673,11 +1678,6 @@ const Login = () => {
                         <LinkedInMark className="mr-2 h-4 w-4 text-[#0A66C2]" />
                         Continue with LinkedIn
                       </Button>
-                      <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#A1AEB7]">
-                        <span className="h-px flex-1 bg-[#D8E3EA]" />
-                        <span>or</span>
-                        <span className="h-px flex-1 bg-[#D8E3EA]" />
-                      </div>
                       <p className="text-center text-[12px] leading-5 text-[#7B8790]">
                         Google, Apple, and LinkedIn Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
                       </p>
