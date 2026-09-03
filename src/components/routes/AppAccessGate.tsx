@@ -223,7 +223,8 @@ export function AppAccessGate({ children }: AppAccessGateProps) {
   }
 
   if (isDemoWorkspaceRoute && !hasDemoSession) {
-    return <AppAccessGateway />;
+    const next = `${location.pathname}${location.search}${location.hash}`;
+    return <Navigate to={`/login?next=${encodeURIComponent(next)}`} replace />;
   }
 
   if (hasDemoSession || hasAuthenticatedSession) {
