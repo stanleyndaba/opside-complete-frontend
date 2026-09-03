@@ -264,6 +264,12 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
                                     Enterprise
                                 </Link>
+                                <Link
+                                    to="/about"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    Company
+                                </Link>
                                 <div className="px-3.5 pb-3 pt-3">
                                     <p className="font-sans text-[15px] font-medium leading-5 text-[#17212B]">Not sure where to start?</p>
                                     <div className="mt-1 font-sans text-[14px] leading-5 text-[#687684]">
@@ -276,18 +282,12 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                         </Link>
                                     </div>
                                 </div>
-                                <div className="grid w-full grid-cols-2 gap-2 px-3.5 pb-3.5 pt-3">
+                                <div className="w-full px-3.5 pb-3.5 pt-3">
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] items-center justify-center rounded-[8px] bg-[#E8EBEF] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[#475467] shadow-[0_8px_20px_rgba(25,27,32,0.08)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[#DDE2E8] hover:text-[#25313A] hover:shadow-[0_12px_26px_rgba(25,27,32,0.12)]">
-                                        Talk to Us
-                                    </Link>
-                                    <Link
-                                        to="/about"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] items-center justify-center gap-1 rounded-[8px] bg-white px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[var(--margin-text-secondary)] shadow-[0_8px_20px_rgba(25,27,32,0.06)] transition-[background-color,box-shadow,color] duration-200 hover:bg-[var(--margin-surface-alt)] hover:text-[var(--margin-text-primary)] hover:shadow-[0_12px_26px_rgba(25,27,32,0.10)]">
-                                        Company <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
+                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[#17212B] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(25,27,32,0.12)] transition-[background-color,box-shadow] duration-200 hover:bg-[#25313A] hover:shadow-[0_12px_26px_rgba(25,27,32,0.18)]">
+                                        Get Help Now <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                 </div>
                             </div>
@@ -298,4 +298,3 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
         </header>
     );
 };
-
