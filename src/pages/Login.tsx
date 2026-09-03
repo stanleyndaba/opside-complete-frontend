@@ -5,7 +5,6 @@ import { ArrowRight, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { GoogleMark } from '@/components/GoogleMark';
-import { LinkedInMark } from '@/components/LinkedInMark';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
@@ -463,7 +462,7 @@ const Login = () => {
   }, []);
 
   const heading = mode === 'signup'
-    ? 'Start with a clear view of your Amazon recovery.'
+    ? 'Start with a clear view of your Amazon records.'
     : mode === 'recovery'
       ? 'Reset your password'
     : 'Welcome back to Margin.';
@@ -1444,7 +1443,7 @@ const Login = () => {
                 {mode === 'signup' && (
                   <div className="mt-3">
                     <p className="text-[15px] leading-relaxed text-[#4D5B66]">
-                      You do not need to know exactly what is wrong yet. Create your free Margin account, then start a read-only Recovery Audit. Margin will help you see what Amazon’s records say and plans what to do next.
+                      Create your free Margin account, run a read-only Recovery Audit, and see what your Amazon records support. Margin will show you what it finds and help you understand what—if anything—makes sense to do next.
                     </p>
                   </div>
                 )}
@@ -1657,31 +1656,21 @@ const Login = () => {
                         <GoogleMark className="mr-2 h-4 w-4" />
                         Continue with Google
                       </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => void startSocialOAuth('linkedin')}
-                        disabled={loading || !clerkAuthLoaded}
-                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
-                      >
-                        <LinkedInMark className="mr-2 h-4 w-4 text-[#0A66C2]" />
-                        Continue with LinkedIn
-                      </Button>
                       <p className="text-center text-[12px] leading-5 text-[#7B8790]">
-                        Google and LinkedIn Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
+                        Your sign-in creates your Margin account. You will connect Seller Central separately when you are ready. Margin never receives your Amazon password.
                       </p>
                     </div>
                   ) : null}
 
                   {mode === 'signup' && !clerkVerificationStep ? (
                     <p className="pt-3 text-center text-[12px] leading-5 text-[#7B8790]">
-                      Next: verify your email, then start your free Recovery Audit.
+                      Next, verify your email. Then Margin will guide you through your first free Recovery Audit.
                     </p>
                   ) : null}
 
                   {(mode === 'login' || mode === 'signup') ? (
                     <p className="pt-3 text-center text-[12px] leading-5 text-[#7B8790]">
-                      {mode === 'signup' ? 'By creating an account, you agree to Margin’s ' : 'By signing in, you agree to our '}
+                      {mode === 'signup' ? 'By creating an account, you agree to Margin’s ' : 'By continuing, you agree to Margin’s '}
                       <Link to="/terms" className="text-[#4D5B66] underline decoration-[#B8C5CD] underline-offset-2 transition-colors hover:text-[#182026]">
                         Terms
                       </Link>{' '}
@@ -1780,17 +1769,21 @@ const Login = () => {
             {mode === 'signup' && (
               <div className="mt-8 space-y-8">
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Create your free Margin account to keep your Audits, results, and recovery activity connected to you — so you can return anytime without starting over.
+                  Create your free Margin account, run a read-only Recovery Audit, and see what your Amazon records support. Margin will show you what it finds and help you understand what—if anything—makes sense to do next.
                 </p>
                 
                 <div className="flex flex-col gap-4 border-t border-[#D8E3EA] pt-8">
                   <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                    <span>Free account</span>
+                    <span>Free Margin account</span>
                   </div>
                   <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                    <span>Free Recovery Audit</span>
+                    <span>Read-only Recovery Audit</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
+                    <span>See your result before deciding</span>
                   </div>
                   <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
@@ -1803,13 +1796,13 @@ const Login = () => {
             {mode === 'login' && (
               <div className="mt-8 space-y-5">
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Your recovery work is right where you left it.
+                  Your Audit results and recovery work are right where you left them.
                 </p>
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Sign in to see what needs your attention, review the next decision, and know where each recovery stands.
+                  Sign in to review your Audit results, see what needs attention, and pick up where you left off.
                 </p>
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Margin keeps the recovery record, the proof, and the reconciliated outcome clear—so you do not have to pick the thread up from scratch.
+                  Margin keeps your records, evidence, decisions, and recovery progress together—so you do not have to start from scratch each time.
                 </p>
                 <p className="pt-2 font-merriweather text-[16px] font-semibold tracking-tight text-[#182026]">
                   Clear recovery work. You stay in control.
