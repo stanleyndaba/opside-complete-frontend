@@ -912,7 +912,7 @@ const Login = () => {
         ? lifecycle.data.continuation.destination
         : null;
 
-      if (destination && destination.startsWith('/') && !destination.startsWith('//') && !destination.startsWith('/login')) {
+      if (destination && destination !== '/' && destination.startsWith('/') && !destination.startsWith('//') && !destination.startsWith('/login')) {
         return bindPathToTenant(destination, resolvedTenantSlug);
       }
     } catch {
