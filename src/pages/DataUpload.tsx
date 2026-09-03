@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
+import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@clerk/react';
@@ -41,6 +42,8 @@ export default function DataUpload() {
   const [isBusy, setIsBusy] = useState(false);
   const [showGate, setShowGate] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [manualAuditResult, setManualAuditResult] = useState<AuditRunRecord | null>(null);
+  const [isResultsDrawerOpen, setIsResultsDrawerOpen] = useState(false);
   const submissionInFlightRef = useRef(false);
 
   const getActiveTenantSlug = () => localStorage.getItem('active_tenant_slug') || '';
@@ -58,7 +61,8 @@ export default function DataUpload() {
       phase: manualAudit.status === 'completed' ? 'completed' : 'syncing',
       updatedAt: new Date().toISOString(),
     }));
-    navigate('/audit', { replace: true });
+    setManualAuditResult(manualAudit);
+    setIsResultsDrawerOpen(true);
     return true;
   }, [navigate]);
 
@@ -567,6 +571,25 @@ export default function DataUpload() {
           </aside>
         </div>
       </main>
+
+      <Drawer open={isResultsDrawerOpen} onOpenChange={setIsResultsDrawerOpen}>
+        <DrawerContent className="border-[#E8E7E1] bg-[#FBFAF7] text-[#191B20]">
+          <DrawerHeader className="mx-auto w-full max-w-[760px] px-5 pb-4 pt-6 sm:px-8">
+            <div className="mb-2 inline-flex w-fit items-center rounded-full bg-[#DDF7F0] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0E766C]">
+              {manualAuditResult?.status === 'completed' ? 'Manual audit complete' : 'Manual audit in progress'}
+            </div>
+            <DrawerTitle className="font-lora text-left text-[26px] font-normal tracking-[-0.02em] text-[#191B20]">Your uploaded-report result</DrawerTitle>
+            <DrawerDescription className="text-left text-[13px] leading-5 text-[#595E68]">This result belongs to the reports submitted on this page. Connected Amazon audits remain in the separate /audit flow.</DrawerDescription>
+          </DrawerHeader>
+          <div className="mx-auto grid w-full max-w-[760px] gap-3 px-5 pb-5 sm:grid-cols-3 sm:px-8">
+            <div className="rounded-[10px] border border-[#E8E7E1] bg-white p-4"><p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[#777A82]">Findings</p><p className="mt-2 text-[26px] font-semibold tracking-tight text-[#191B20]">{manualAuditResult?.summary?.findingsCount ?? 0}</p></div>
+            <div className="rounded-[10px] border border-[#E8E7E1] bg-white p-4"><p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[#777A82]">Evidence ready</p><p className="mt-2 text-[26px] font-semibold tracking-tight text-[#191B20]">{manualAuditResult?.summary?.evidenceReadyCount ?? 0}</p></div>
+            <div className="rounded-[10px] border border-[#E8E7E1] bg-white p-4"><p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[#777A82]">Estimated scope</p><p className="mt-2 text-[26px] font-semibold tracking-tight text-[#191B20]">${Math.round(manualAuditResult?.summary?.scopeValue ?? 0).toLocaleString()}</p></div>
+          </div>
+          <div className="mx-auto w-full max-w-[760px] px-5 pb-2 sm:px-8"><div className="rounded-[10px] border border-[#D7D7D1] bg-white px-4 py-3 text-[13px] leading-5 text-[#595E68]">{manualAuditResult?.summary?.message || (manualAuditResult?.status === 'completed' ? 'The uploaded reports were reviewed and no recovery findings were returned.' : 'The uploaded reports were accepted and are still being evaluated.')}</div></div>
+          <DrawerFooter className="mx-auto w-full max-w-[760px] px-5 pb-8 sm:flex-row sm:justify-end sm:px-8"><Button type="button" onClick={() => setIsResultsDrawerOpen(false)} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D]">Back to uploaded reports</Button></DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
       <footer className="border-t border-[#E8E7E1] bg-white px-4 py-6 text-center sm:px-6">
         <p className="text-[12px] text-[#777A82]">Margin Agents can make mistakes. Check important information before relying on it.</p>
