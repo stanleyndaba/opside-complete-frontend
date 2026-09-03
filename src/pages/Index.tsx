@@ -141,15 +141,15 @@ function TypewriterPrompt({ text }: { text: string }) {
 }
 
 const accountingSources = [
-  { id: "amazon", name: "Amazon", context: "orders + settlement", src: "/amazon-logo-transparent-circle.png", position: "md:left-[3%] md:top-[6%]", route: "M 8 14 H 50 V 78" },
-  { id: "gmail", name: "Gmail", context: "invoices + threads", src: "/gmailicon.png", position: "md:left-[36%] md:top-[2%]", route: "M 41 10 H 50 V 78" },
-  { id: "drive", name: "Google Drive", context: "documents + records", src: "/gd.png", position: "md:left-[70%] md:top-[8%]", route: "M 75 16 H 50 V 78" },
-  { id: "quickbooks", name: "QuickBooks", context: "cost basis", src: "/quickbooks.png", position: "md:left-[12%] md:top-[39%]", route: "M 17 49 H 50 V 78" },
-  { id: "slack", name: "Slack", context: "internal context", src: "/slack-icon-2019.png", position: "md:left-[46%] md:top-[34%]", route: "M 51 44 V 78" },
-  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", position: "md:left-[80%] md:top-[42%]", route: "M 85 52 H 50 V 78" },
-  { id: "dropbox", name: "Dropbox", context: "supporting files", src: "/Dropbox_Icon.svg.png", position: "md:left-[3%] md:top-[72%]", route: "M 8 82 H 50 V 78" },
-  { id: "outlook", name: "Outlook", context: "supplier correspondence", src: "/outlookicon.webp", position: "md:left-[36%] md:top-[76%]", route: "M 41 86 H 50 V 78" },
-  { id: "onedrive", name: "OneDrive", context: "working documents", src: "/onedriive.png", position: "md:left-[70%] md:top-[72%]", route: "M 75 82 H 50 V 78" },
+  { id: "amazon", name: "Amazon", context: "orders + settlement", src: "/amazon-logo-transparent-circle.png", route: "M 12 14 H 28 V 94 H 50" },
+  { id: "gmail", name: "Gmail", context: "invoices + threads", src: "/gmailicon.png", route: "M 50 14 V 94" },
+  { id: "drive", name: "Google Drive", context: "documents + records", src: "/gd.png", route: "M 88 14 H 72 V 94 H 50" },
+  { id: "quickbooks", name: "QuickBooks", context: "cost basis", src: "/quickbooks.png", route: "M 12 50 H 30 V 94 H 50" },
+  { id: "slack", name: "Slack", context: "internal context", src: "/slack-icon-2019.png", route: "M 50 50 V 94" },
+  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", route: "M 88 50 H 70 V 94 H 50" },
+  { id: "dropbox", name: "Dropbox", context: "supporting files", src: "/Dropbox_Icon.svg.png", route: "M 12 86 H 30 V 94 H 50" },
+  { id: "outlook", name: "Outlook", context: "supplier correspondence", src: "/outlookicon.webp", route: "M 50 86 V 94" },
+  { id: "onedrive", name: "OneDrive", context: "working documents", src: "/onedriive.png", route: "M 88 86 H 70 V 94 H 50" },
 ];
 
 function AccountingEvidenceSection() {
@@ -200,66 +200,99 @@ function AccountingEvidenceSection() {
                   <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">Active signal / {activeSource.context}</span>
                 </div>
 
-                <div className="relative mt-4 min-h-[410px] overflow-hidden border-y border-[#E4EDF1] px-2 py-4 sm:min-h-[450px] sm:px-4 md:min-h-[470px] md:border-y-0 md:px-0 md:py-0">
-                  <svg aria-hidden="true" className="pointer-events-none absolute inset-0 hidden h-full w-full md:block" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    {accountingSources.map((source) => (
-                      <path key={`${source.id}-base`} d={source.route} fill="none" stroke="#D8E3EA" strokeWidth="0.22" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
-                    ))}
-                    <motion.path
-                      key={activeSource.id}
-                      d={activeSource.route}
-                      fill="none"
-                      stroke="#0B74DE"
-                      strokeWidth="0.7"
-                      strokeLinecap="square"
-                      strokeLinejoin="miter"
-                      vectorEffect="non-scaling-stroke"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={reduceMotion ? { pathLength: 1, opacity: 0.8 } : { pathLength: [0, 1], opacity: [0, 1, 0.75] }}
-                      transition={reduceMotion ? { duration: 0 } : { duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-                    />
-                    <circle cx="50" cy="78" r="1.2" fill="#FAFAF7" stroke="#0B74DE" strokeWidth="0.45" vectorEffect="non-scaling-stroke" />
-                  </svg>
+                <div className="relative mt-4">
+                  <div className="relative hidden h-[440px] overflow-hidden md:block lg:h-[470px]">
+                    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      {accountingSources.map((source) => (
+                        <path key={`${source.id}-base`} d={source.route} fill="none" stroke="#D8E3EA" strokeWidth="0.22" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
+                      ))}
+                      <motion.path
+                        key={activeSource.id}
+                        d={activeSource.route}
+                        fill="none"
+                        stroke="#0B74DE"
+                        strokeWidth="0.7"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                        vectorEffect="non-scaling-stroke"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={reduceMotion ? { pathLength: 1, opacity: 0.8 } : { pathLength: [0, 1], opacity: [0, 1, 0.75] }}
+                        transition={reduceMotion ? { duration: 0 } : { duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+                      />
+                      <circle cx="50" cy="94" r="1.2" fill="#FAFAF7" stroke="#0B74DE" strokeWidth="0.45" vectorEffect="non-scaling-stroke" />
+                    </svg>
 
-                  <div className="relative grid grid-cols-3 gap-x-5 gap-y-1 md:block md:h-full md:w-full">
-                    {accountingSources.map((source, index) => {
-                      const isActive = index === activeEvidence % accountingSources.length;
-                      return (
-                        <motion.div
-                          key={source.id}
-                          animate={reduceMotion ? { opacity: 1, y: 0, x: 0 } : { opacity: isActive ? 1 : 0.62, y: isActive ? -5 : 0, x: isActive ? 5 : 0 }}
-                          transition={{ duration: reduceMotion ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
-                          className={`relative min-w-0 py-5 md:absolute md:w-[92px] md:py-0 ${source.position}`}
+                    <div className="relative grid h-full grid-cols-3 grid-rows-3 gap-x-8 gap-y-4 px-1 py-2 lg:gap-x-12">
+                      {accountingSources.map((source, index) => {
+                        const isActive = index === activeEvidence % accountingSources.length;
+                        return (
+                          <motion.div
+                            key={source.id}
+                            animate={reduceMotion ? { opacity: 1, y: 0, x: 0 } : { opacity: isActive ? 1 : 0.62, y: isActive ? -4 : 0, x: isActive ? 3 : 0 }}
+                            transition={{ duration: reduceMotion ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+                            className="relative z-10 flex min-w-0 flex-col items-center justify-center text-center"
+                          >
+                            <div className="flex h-12 items-center justify-center lg:h-14">
+                              <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
+                            </div>
+                            <span className={`mt-2 max-w-[112px] text-[9px] leading-4 tracking-tight ${isActive ? "font-semibold text-[#0B74DE]" : "text-[#94A3B8]"}`}>
+                              {source.context}
+                            </span>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 bg-[#FAFAF7] px-4 text-center">
+                      <span className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">Recovery context</span>
+                      <AnimatePresence mode="wait">
+                        <motion.span
+                          key={activeSource.context}
+                          initial={reduceMotion ? { opacity: 1, y: 4 } : { opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={reduceMotion ? undefined : { opacity: 0, y: -5 }}
+                          transition={{ duration: reduceMotion ? 0 : 0.25 }}
+                          className="mt-1 block whitespace-nowrap text-[10px] leading-4 text-[#66737F]"
                         >
-                          <div className={`flex h-12 items-center md:h-10 ${isActive ? "md:translate-x-1" : ""}`}>
-                            <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
-                          </div>
-                          <span className={`mt-2 block text-[9px] leading-4 tracking-tight ${isActive ? "font-semibold text-[#0B74DE]" : "text-[#94A3B8]"}`}>
-                            {source.context}
-                          </span>
-                        </motion.div>
-                      );
-                    })}
+                          {activeSource.context}
+                        </motion.span>
+                      </AnimatePresence>
+                    </div>
                   </div>
 
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#FAFAF7] px-3 text-center md:bottom-[7%]">
-                    <span className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">Recovery context</span>
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={activeSource.context}
-                        initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={reduceMotion ? undefined : { opacity: 0, y: -5 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.25 }}
-                        className="mt-1 block text-[10px] leading-4 text-[#66737F]"
+                  <div className="relative md:hidden">
+                    <div className="relative overflow-hidden border-y border-[#E4EDF1] py-5">
+                      <motion.div
+                        className="flex w-max gap-8 pr-8"
+                        animate={reduceMotion ? { x: 0 } : { x: ["0%", "-50%"] }}
+                        transition={reduceMotion ? { duration: 0 } : { duration: 34, repeat: Infinity, ease: "linear" }}
+                        style={{ willChange: "transform" }}
                       >
-                        {activeSource.context}
-                      </motion.span>
-                    </AnimatePresence>
+                        {[...accountingSources, ...accountingSources].map((source, index) => (
+                          <div key={`${source.id}-${index}`} className="w-[112px] shrink-0 border-l border-[#D8E3EA] pl-4 first:border-l-0 first:pl-0">
+                            <div className="flex h-12 items-center">
+                              <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
+                            </div>
+                            <span className="mt-3 block text-[9px] leading-4 tracking-tight text-[#66737F]">{source.context}</span>
+                          </div>
+                        ))}
+                      </motion.div>
+                      <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[#FAFAF7] to-transparent" />
+                      <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[#FAFAF7] to-transparent" />
+                    </div>
+                    <div className="mt-5 flex items-center gap-3">
+                      <motion.span
+                        aria-hidden="true"
+                        className="h-px bg-[#0B74DE]"
+                        animate={reduceMotion ? { width: 32, opacity: 1 } : { width: [20, 44, 20], opacity: [0.35, 1, 0.35] }}
+                        transition={reduceMotion ? { duration: 0 } : { duration: 1.45, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                      <p className="text-[11px] leading-5 text-[#66737F]">Relevant context moves into view when it can change the recovery decision.</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-5 flex items-center gap-3 border-t border-[#E4EDF1] pt-4">
+                <div className="mt-5 hidden items-center gap-3 border-t border-[#E4EDF1] pt-4 md:flex">
                   <motion.span
                     aria-hidden="true"
                     className="h-px bg-[#0B74DE]"
