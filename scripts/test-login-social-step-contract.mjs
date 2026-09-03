@@ -5,7 +5,6 @@ const loginSource = fs.readFileSync(new URL('../src/pages/Login.tsx', import.met
 const emailIndex = loginSource.indexOf('htmlFor="email"');
 const continueIndex = loginSource.indexOf('onClick={handleEmailContinue}');
 const googleIndex = loginSource.indexOf("startSocialOAuth('google')");
-const appleIndex = loginSource.indexOf("startSocialOAuth('apple')");
 const linkedinIndex = loginSource.indexOf("startSocialOAuth('linkedin')");
 
 assert.match(loginSource, /const \[emailStepComplete, setEmailStepComplete\] = useState\(false\);/);
@@ -19,7 +18,8 @@ assert.match(loginSource, /type="submit"/);
 assert.match(loginSource, /type="button"/);
 assert.ok(emailIndex >= 0 && emailIndex < continueIndex, 'Email must render before the first-step Continue action.');
 assert.ok(continueIndex >= 0 && continueIndex < googleIndex, 'The email Continue action must render before social buttons.');
-assert.ok(googleIndex < appleIndex && appleIndex < linkedinIndex, 'Social buttons must retain Google, Apple, LinkedIn order.');
+assert.ok(googleIndex >= 0 && googleIndex < linkedinIndex, 'Visible social buttons must retain Google before LinkedIn.');
+assert.equal(loginSource.includes("startSocialOAuth('apple')"), false, 'Apple must remain hidden from the visible social-button list.');
 
 console.log('Login social-step hierarchy contract checks passed.');
 

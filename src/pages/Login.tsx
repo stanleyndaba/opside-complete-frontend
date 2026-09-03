@@ -5,7 +5,6 @@ import { ArrowRight, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { GoogleMark } from '@/components/GoogleMark';
-import { AppleMark } from '@/components/AppleMark';
 import { LinkedInMark } from '@/components/LinkedInMark';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -1661,16 +1660,6 @@ const Login = () => {
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => void startSocialOAuth('apple')}
-                        disabled={loading || !clerkAuthLoaded}
-                        className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
-                      >
-                        <AppleMark className="mr-2 h-4 w-4" />
-                        Continue with Apple
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
                         onClick={() => void startSocialOAuth('linkedin')}
                         disabled={loading || !clerkAuthLoaded}
                         className="h-11 w-full rounded-md border-[#C8D6DF] bg-white px-4 text-[14px] font-semibold text-[#182026] shadow-[0_1px_2px_rgba(37,49,58,0.04)] hover:bg-[#F3F6F8]"
@@ -1679,7 +1668,7 @@ const Login = () => {
                         Continue with LinkedIn
                       </Button>
                       <p className="text-center text-[12px] leading-5 text-[#7B8790]">
-                        Google, Apple, and LinkedIn Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
+                        Google and LinkedIn Login only create your Margin account. Your Amazon connection is handled separately, and Margin never receives your Amazon password.
                       </p>
                     </div>
                   ) : null}
