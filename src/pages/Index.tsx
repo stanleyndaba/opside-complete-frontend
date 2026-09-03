@@ -166,38 +166,38 @@ function AccountingEvidenceSection() {
   }, [reduceMotion]);
 
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 md:py-28" aria-labelledby="accounting-section-title">
-      <div className={containerClass}>
-        <div className="grid gap-12 lg:grid-cols-[0.86fr_1fr] lg:items-start lg:gap-16">
-          <motion.div {...revealProps}>
+    <section className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 md:py-28" aria-labelledby="accounting-section-title">
+      <div className={`${containerClass} min-w-0`}>
+        <div className="grid min-w-0 gap-12 lg:grid-cols-[0.86fr_1fr] lg:items-start lg:gap-16">
+          <motion.div {...revealProps} className="min-w-0">
             <div className="mb-6 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
             </div>
-            <h2 id="accounting-section-title" className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
+            <h2 id="accounting-section-title" className="max-w-full break-words font-lora text-[31px] leading-[1.01] tracking-[-0.04em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
               A recovery is easier to act on when the money around it is visible.
               <span className="mt-3 block text-[#8A99A4]">The right context should arrive beside the event.</span>
             </h2>
-            <p className="mt-6 max-w-[610px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+            <p className="mt-6 max-w-full break-words text-[14px] leading-6 text-[#4D5B66] md:max-w-[610px] md:text-[17px] md:leading-8">
               Amazon can show what happened to the shipment or inventory. Your existing records help explain what that event was worth, whether the amount is supported, and whether the outcome was actually settled.
             </p>
-            <p className="mt-6 max-w-[560px] text-[13px] font-semibold leading-6 text-[#182026] md:text-[15px]">
+            <p className="mt-6 max-w-full break-words text-[13px] font-semibold leading-6 text-[#182026] md:max-w-[560px] md:text-[15px]">
               You should not have to reconstruct that financial context before you can decide what to do next.
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative lg:pt-4">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-4">
             <div className="relative border-y border-[#D8E3EA] py-5 sm:py-6 md:py-7">
               <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
-              <div className="relative flex items-center justify-between border-b border-[#E4EDF1] pb-4">
+              <div className="relative flex flex-col items-start gap-2 border-b border-[#E4EDF1] pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                 <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">The context bridge</span>
                 <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#94A3B8]">Your records / read-only</span>
               </div>
 
               <div className="relative mt-7">
-                <div className="flex items-baseline justify-between gap-3">
+                <div className="flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
                   <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Integrated tools</p>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">Active signal / {activeSource.context}</span>
+                  <span className="max-w-full break-words font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">Active signal / {activeSource.context}</span>
                 </div>
 
                 <div className="relative mt-4">
@@ -261,7 +261,7 @@ function AccountingEvidenceSection() {
                   </div>
 
                   <div className="relative md:hidden">
-                    <div className="relative overflow-hidden border-y border-[#E4EDF1] py-5">
+                    <div className="relative overflow-hidden py-5">
                       <motion.div
                         className="flex w-max gap-8 pr-8"
                         animate={reduceMotion ? { x: 0 } : { x: ["0%", "-50%"] }}
@@ -269,7 +269,7 @@ function AccountingEvidenceSection() {
                         style={{ willChange: "transform" }}
                       >
                         {[...accountingSources, ...accountingSources].map((source, index) => (
-                          <div key={`${source.id}-${index}`} className="w-[112px] shrink-0 border-l border-[#D8E3EA] pl-4 first:border-l-0 first:pl-0">
+                          <div key={`${source.id}-${index}`} className="w-[118px] shrink-0">
                             <div className="flex h-12 items-center">
                               <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
                             </div>
