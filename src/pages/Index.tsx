@@ -20,7 +20,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
-  Check,
   Landmark,
   MessagesSquare,
   Monitor,
@@ -1438,6 +1437,7 @@ export default function Index() {
   const { isFull, nextBatchHours } = useOnboardingCapacity();
 
   const [isBusy, setIsBusy] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const handleClaimAccessClick = (location: string, sourceType: 'sp_api' | 'csv_upload' = 'sp_api') => {
     trackEarlyAccessCtaClicked(location);
@@ -1511,49 +1511,62 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Section 12 — Final CTA */}
-        <section className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-18">
+        {/* Section 12 — Final operational handoff */}
+        <section className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-18" aria-labelledby="final-handoff-title">
           <div className={containerClass}>
             <div className="relative border-y border-[var(--margin-border)] py-16 md:py-24">
-              <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+              <div className="grid gap-14 lg:grid-cols-[1fr_0.82fr] lg:items-end lg:gap-20">
                 <motion.div {...revealProps}>
                   <p className="max-w-[760px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px]">
-                    Margin exists to make sure potential losses don&apos;t simply become another spreadsheet, another reminder, another unfinished task, or another case nobody followed through.
+                    Potential losses should not end as spreadsheets, reminders, or unresolved cases.
                   </p>
                   <p className="mt-6 max-w-[700px] text-[13px] leading-6 text-[var(--margin-text-muted)] md:text-[14px]">
-                    Margin finds the recovery. Builds the case. Manages what happens next. And keeps the outcome visible until the recovery is actually resolved.
+                    Margin keeps the recovery moving until there is an outcome you can see.
                   </p>
-                  <p className="mt-10 font-lora text-[28px] leading-tight tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[42px]" style={{ fontWeight: 400 }}>
+                  <h2 id="final-handoff-title" className="mt-10 max-w-[720px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[54px]" style={{ fontWeight: 400 }}>
                     You sell. Margin runs the recovery operation.
-                  </p>
+                  </h2>
                   <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                     <Button
                       onClick={() => handleClaimAccessClick("homepage_early_access_section")}
-                      className="landing-pressable group relative h-16 w-full rounded-[8px] bg-[var(--margin-blue)] px-10 text-[16px] font-bold text-white shadow-[0_18px_40px_rgba(23,92,211,0.34)] transition-[background-color,box-shadow,transform] duration-150 max-md:shadow-none sm:w-auto"
+                      className="landing-pressable group relative h-14 w-full rounded-[7px] bg-[var(--margin-blue)] px-8 text-[15px] font-bold text-white shadow-[0_14px_30px_rgba(23,92,211,0.22)] transition-[background-color,box-shadow,transform] duration-150 hover:bg-[var(--margin-blue-hover)] max-md:shadow-none sm:w-auto"
                     >
-                      <div className="absolute inset-0 rounded-[8px] bg-white/20 opacity-0 transition-opacity duration-300" />
-                      Sign Up Today
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      <div className="absolute inset-0 rounded-[7px] bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                      Start the recovery operation
                     </Button>
                   </div>
                 </motion.div>
-                <motion.div {...revealProps} className="border-y border-[var(--margin-border)] bg-white/50 p-8 md:p-12">
-                  {[
-                    "Finds the recovery.",
-                    "Builds the case.",
-                    "Manages what happens next.",
-                    "Keeps the outcome visible."
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="relative flex items-center gap-4 border-b border-[var(--margin-border)] py-5 last:border-b-0 md:py-6"
-                    >
-                      <Check className="h-5 w-5 shrink-0 text-[var(--margin-success)]" strokeWidth={3} />
-                      <span className="text-[16px] font-semibold leading-6 tracking-tight text-[var(--margin-text-primary)] md:text-[18px]">
-                        {item}
-                      </span>
-                    </div>
-                  ))}
+
+                <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative">
+                  <div className="mb-5 flex items-center justify-between border-b border-[var(--margin-border)] pb-4">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">The work does not disappear</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">01—04</span>
+                  </div>
+                  <div className="divide-y divide-[var(--margin-border)] border-y border-[var(--margin-border)]">
+                    {[
+                      "Finds the recovery.",
+                      "Builds the case.",
+                      "Carries it forward.",
+                      "Keeps the outcome visible."
+                    ].map((item, index) => (
+                      <motion.div
+                        key={item}
+                        initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, amount: 0.5 }}
+                        transition={{ duration: reduceMotion ? 0 : 0.42, delay: reduceMotion ? 0 : index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                        className="group flex items-center gap-4 py-5 md:py-6"
+                      >
+                        <span className="w-8 shrink-0 font-mono text-[10px] font-semibold tracking-[0.12em] text-[var(--margin-text-muted)] transition-colors duration-300 group-hover:text-[var(--margin-blue)]">
+                          0{index + 1}
+                        </span>
+                        <span className={`text-[16px] leading-6 tracking-tight md:text-[18px] ${index === 3 ? "font-semibold text-[var(--margin-text-primary)]" : "font-medium text-[var(--margin-text-secondary)]"}`}>
+                          {item}
+                        </span>
+                        {index === 3 ? <span aria-hidden="true" className="ml-auto h-px w-8 bg-[#C9785D]" /> : null}
+                      </motion.div>
+                    ))}
+                  </div>
                 </motion.div>
               </div>
             </div>
