@@ -41,8 +41,8 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
     <div className="mx-auto w-full max-w-[1280px] px-4 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[780px]">
         <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-border-strong)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-primary)]">Your next step depends on what the Audit finds</span></div>
-        <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>Handle one recovery—or stop carrying the work yourself.</h2>
-        <p className="mt-6 max-w-[720px] text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">The Audit is the wide door. The right next step depends on the work Margin can actually establish.</p>
+        <h2 className="font-lora text-[44px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] md:text-[76px]" style={{ fontWeight: 400 }}>Start with the Audit. Margin will show you what happens next.</h2>
+        <p className="mt-6 max-w-[720px] text-[17px] leading-8 tracking-[-0.015em] text-[var(--margin-text-secondary)] md:text-[19px]">You do not need to decide which recovery service you need before you know what is actually happening in your account. Run the free Recovery Audit first, then Margin shows you what it found, what can be supported, and the appropriate next step.</p>
       </motion.div>
 
       <div className="mt-16 grid gap-0 border-y border-[var(--margin-border)] lg:grid-cols-2">
