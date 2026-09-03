@@ -140,32 +140,41 @@ function TypewriterPrompt({ text }: { text: string }) {
   );
 }
 
+const accountingSources = [
+  { id: "amazon", name: "Amazon", context: "orders + settlement", src: "/amazon-logo-transparent-circle.png" },
+  { id: "gmail", name: "Gmail", context: "invoices + threads", src: "/gmailicon.png" },
+  { id: "drive", name: "Google Drive", context: "documents + records", src: "/gd.png" },
+  { id: "quickbooks", name: "QuickBooks", context: "cost basis", src: "/quickbooks.png" },
+  { id: "slack", name: "Slack", context: "internal context", src: "/slack-icon-2019.png" },
+  { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png" },
+  { id: "dropbox", name: "Dropbox", context: "supporting files", src: "/Dropbox_Icon.svg.png" },
+  { id: "outlook", name: "Outlook", context: "supplier correspondence", src: "/outlookicon.webp" },
+  { id: "onedrive", name: "OneDrive", context: "working documents", src: "/onedriive.png" },
+];
+
+const accountingContext = [
+  { label: "Cost basis", detail: "What the unit was worth" },
+  { label: "Payout history", detail: "What reached settlement" },
+  { label: "Expected vs. approved", detail: "What the event should have returned" },
+  { label: "Reconciled outcome", detail: "What remains after payment" },
+];
+
 function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
   const [activeEvidence, setActiveEvidence] = useState(0);
-
-  const iconPool = [
-    { id: "amazon", src: "/amazon-logo-transparent-circle.png" },
-    { id: "gmail", src: "/gmailicon.png" },
-    { id: "gd", src: "/gd.png" },
-    { id: "quickbooks", src: "/quickbooks.png" },
-    { id: "slack", src: "/slack-icon-2019.png" },
-    { id: "xero", src: "/xero.png" },
-    { id: "dropbox", src: "/Dropbox_Icon.svg.png" },
-    { id: "outlook", src: "/outlookicon.webp" },
-    { id: "onedrive", src: "/onedriive.png" },
-  ];
+  const activeSource = accountingSources[activeEvidence % accountingSources.length];
+  const activeContext = accountingContext[activeEvidence % accountingContext.length];
 
   useEffect(() => {
     if (reduceMotion) return;
-    const interval = setInterval(() => {
-      setActiveEvidence((current) => (current + 1) % (iconPool.length + 1));
-    }, 1800);
-    return () => clearInterval(interval);
-  }, [reduceMotion, iconPool.length]);
+    const interval = window.setInterval(() => {
+      setActiveEvidence((current) => (current + 1) % accountingSources.length);
+    }, 1900);
+    return () => window.clearInterval(interval);
+  }, [reduceMotion]);
 
   return (
-    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 md:py-28">
+    <section className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 md:py-28" aria-labelledby="accounting-section-title">
       <div className={containerClass}>
         <div className="grid gap-12 lg:grid-cols-[0.86fr_1fr] lg:items-start lg:gap-16">
           <motion.div {...revealProps}>
@@ -173,57 +182,99 @@ function AccountingEvidenceSection() {
               <div className="h-px w-8 bg-[#0B74DE]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
             </div>
-            <h2 className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
-              Recovery gets stronger when the numbers have context.
-              <span className="mt-3 block text-[#8A99A4]">Margin brings the right financial evidence into view.</span>
+            <h2 id="accounting-section-title" className="font-lora text-[36px] leading-[0.99] tracking-[-0.05em] text-[#182026] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>
+              A recovery is easier to act on when the money around it is visible.
+              <span className="mt-3 block text-[#8A99A4]">The right context should arrive beside the event.</span>
             </h2>
             <p className="mt-6 max-w-[610px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Amazon gives you one version of what happened. Margin helps place that version beside the records that explain the money around it.
+              Amazon can show what happened to the shipment or inventory. Your existing records help explain what that event was worth, whether the amount is supported, and whether the outcome was actually settled.
             </p>
             <p className="mt-6 max-w-[560px] text-[13px] font-semibold leading-6 text-[#182026] md:text-[15px]">
-              The useful context is often found in purchase records, cost signals, payout history, and reconciliation data.
+              You should not have to reconstruct that financial context before you can decide what to do next.
             </p>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative lg:pt-4">
             <div className="relative border-y border-[#D8E3EA] py-5 sm:py-6 md:py-7">
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
               <div className="relative flex items-center justify-between border-b border-[#E4EDF1] pb-4">
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Financial evidence</span>
-                <span className="font-mono text-[9px] uppercase tracking-tight text-[#94A3B8]">Read-only / purpose-limited</span>
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">The context bridge</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#94A3B8]">Your records / read-only</span>
               </div>
-              <div className="relative mt-6 grid gap-6 sm:grid-cols-[1fr_0.9fr] sm:items-center md:gap-8">
+
+              <div className="relative mt-7 grid gap-8 lg:grid-cols-[1.05fr_0.34fr_1fr] lg:items-center lg:gap-5">
                 <div>
-                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#94A3B8]">Relevant context</p>
-                  <div className="mt-3 grid grid-cols-3 gap-x-4 gap-y-3">
-                    {iconPool.map((icon, index) => (
-                      <motion.div
-                        key={icon.id}
-                        animate={reduceMotion ? { opacity: 1, y: 0, scale: 1 } : { opacity: activeEvidence % iconPool.length === index ? 1 : 0.68, y: activeEvidence % iconPool.length === index ? -3 : 0, scale: activeEvidence % iconPool.length === index ? 1.04 : 1 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
-                        className="flex h-14 items-center justify-center border-b border-[#E4EDF1] sm:h-16"
-                      >
-                        <img src={icon.src} alt="" className="max-h-7 max-w-8 object-contain" />
-                      </motion.div>
-                    ))}
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Integrated tools</p>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#94A3B8]">{activeSource.name}</span>
+                  </div>
+                  <div className="mt-4 grid grid-cols-3 gap-x-4 gap-y-1">
+                    {accountingSources.map((source, index) => {
+                      const isActive = index === activeEvidence % accountingSources.length;
+                      return (
+                        <motion.div
+                          key={source.id}
+                          animate={reduceMotion ? { opacity: 1, y: 0 } : { opacity: isActive ? 1 : 0.56, y: isActive ? -3 : 0 }}
+                          transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
+                          className="border-b border-[#E4EDF1] py-3 sm:py-4"
+                        >
+                          <div className="flex h-9 items-center">
+                            <img src={source.src} alt={source.name} className="max-h-8 max-w-10 object-contain" />
+                          </div>
+                          <span className={`mt-2 block text-[10px] font-semibold leading-4 tracking-tight ${isActive ? "text-[#0B74DE]" : "text-[#25313A]"}`}>
+                            {source.name}
+                          </span>
+                          <span className="mt-0.5 block text-[9px] leading-4 text-[#94A3B8]">{source.context}</span>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
-                <div className="relative border-l border-[#D8E3EA] pl-5 sm:pl-7">
-                  <div className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-[#66737F]">Recovery truth</div>
-                  <div className="mt-4 space-y-3">
-                    {["Expected reimbursement", "Approved amount", "Paid amount", "Reconciled outcome"].map((item, index) => (
-                      <motion.div key={item} animate={{ opacity: reduceMotion || index <= activeEvidence % 5 ? 1 : 0.42 }} transition={{ duration: reduceMotion ? 0 : 0.3 }} className="flex items-center gap-2 text-[11px] font-medium leading-5 text-[#25313A]">
-                        <span className="h-1 w-1 shrink-0 rounded-full bg-[#0B74DE]" />
-                        {item}
-                      </motion.div>
-                    ))}
+
+                <div className="relative flex items-center justify-center gap-2 py-1 lg:flex-col lg:gap-3 lg:py-0">
+                  <div className="h-px w-full bg-[#B7D2E6] lg:h-12 lg:w-px" />
+                  <motion.div
+                    aria-hidden="true"
+                    className="absolute h-1.5 w-1.5 rounded-full bg-[#0B74DE] shadow-[0_0_12px_rgba(11,116,222,0.4)]"
+                    animate={reduceMotion ? { x: 0, y: 0, opacity: 1 } : { x: [0, 0], y: [-22, 22], opacity: [0.3, 1, 0.3] }}
+                    transition={reduceMotion ? { duration: 0 } : { duration: 1.45, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <span className="absolute whitespace-nowrap bg-[#FAFAF7] px-2 font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">context</span>
+                  <div className="h-px w-full bg-[#B7D2E6] lg:h-12 lg:w-px" />
+                </div>
+
+                <div>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">What you can see</p>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">{activeContext.label}</span>
+                  </div>
+                  <div className="mt-4 border-y border-[#E4EDF1]">
+                    {accountingContext.map((item, index) => {
+                      const isActive = index === activeEvidence % accountingContext.length;
+                      return (
+                        <motion.div
+                          key={item.label}
+                          animate={{ opacity: reduceMotion || isActive ? 1 : 0.42, x: reduceMotion || isActive ? 0 : 4 }}
+                          transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+                          className="flex items-start gap-3 border-b border-[#E4EDF1] py-4 last:border-b-0"
+                        >
+                          <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${isActive ? "bg-[#0B74DE]" : "bg-[#B7D2E6]"}`} />
+                          <span>
+                            <span className={`block text-[12px] font-semibold leading-5 tracking-tight ${isActive ? "text-[#182026]" : "text-[#4D5B66]"}`}>{item.label}</span>
+                            <span className="mt-0.5 block text-[10px] leading-4 text-[#94A3B8]">{item.detail}</span>
+                          </span>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
-              <div className="relative mt-5 border-t border-[#E4EDF1] pt-3 text-[11px] leading-5 text-[#66737F]">
+
+              <div className="relative mt-7 border-t border-[#E4EDF1] pt-4 text-[11px] leading-5 text-[#66737F]">
                 Financial context appears when it can change the recovery decision.
               </div>
             </div>
+
             <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
               <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
             </div>
