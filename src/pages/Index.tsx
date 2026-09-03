@@ -152,18 +152,10 @@ const accountingSources = [
   { id: "onedrive", name: "OneDrive", context: "working documents", src: "/onedriive.png" },
 ];
 
-const accountingContext = [
-  { label: "Cost basis", detail: "What the unit was worth" },
-  { label: "Payout history", detail: "What reached settlement" },
-  { label: "Expected vs. approved", detail: "What the event should have returned" },
-  { label: "Reconciled outcome", detail: "What remains after payment" },
-];
-
 function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
   const [activeEvidence, setActiveEvidence] = useState(0);
   const activeSource = accountingSources[activeEvidence % accountingSources.length];
-  const activeContext = accountingContext[activeEvidence % accountingContext.length];
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -202,71 +194,42 @@ function AccountingEvidenceSection() {
                 <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#94A3B8]">Your records / read-only</span>
               </div>
 
-              <div className="relative mt-7 grid gap-8 lg:grid-cols-[1.05fr_0.34fr_1fr] lg:items-center lg:gap-5">
-                <div>
-                  <div className="flex items-baseline justify-between gap-3">
-                    <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Integrated tools</p>
-                    <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#94A3B8]">{activeSource.name}</span>
-                  </div>
-                  <div className="mt-4 grid grid-cols-3 gap-x-4 gap-y-1">
-                    {accountingSources.map((source, index) => {
-                      const isActive = index === activeEvidence % accountingSources.length;
-                      return (
-                        <motion.div
-                          key={source.id}
-                          animate={reduceMotion ? { opacity: 1, y: 0 } : { opacity: isActive ? 1 : 0.56, y: isActive ? -3 : 0 }}
-                          transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
-                          className="border-b border-[#E4EDF1] py-3 sm:py-4"
-                        >
-                          <div className="flex h-9 items-center">
-                            <img src={source.src} alt={source.name} className="max-h-8 max-w-10 object-contain" />
-                          </div>
-                          <span className={`mt-2 block text-[10px] font-semibold leading-4 tracking-tight ${isActive ? "text-[#0B74DE]" : "text-[#25313A]"}`}>
-                            {source.name}
-                          </span>
-                          <span className="mt-0.5 block text-[9px] leading-4 text-[#94A3B8]">{source.context}</span>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
+              <div className="relative mt-7">
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Integrated tools</p>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">{activeSource.name}</span>
                 </div>
-
-                <div className="relative flex items-center justify-center gap-2 py-1 lg:flex-col lg:gap-3 lg:py-0">
-                  <div className="h-px w-full bg-[#B7D2E6] lg:h-12 lg:w-px" />
-                  <motion.div
+                <div className="mt-4 grid grid-cols-3 gap-x-6 gap-y-2 sm:gap-x-8 md:gap-x-10">
+                  {accountingSources.map((source, index) => {
+                    const isActive = index === activeEvidence % accountingSources.length;
+                    return (
+                      <motion.div
+                        key={source.id}
+                        animate={reduceMotion ? { opacity: 1, y: 0 } : { opacity: isActive ? 1 : 0.58, y: isActive ? -3 : 0 }}
+                        transition={{ duration: reduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className="min-w-0 border-b border-[#E4EDF1] py-4 sm:py-5"
+                      >
+                        <div className="flex h-10 items-center">
+                          <img src={source.src} alt={source.name} className="max-h-9 max-w-12 object-contain" />
+                        </div>
+                        <span className={`mt-3 block truncate text-[10px] font-semibold leading-4 tracking-tight ${isActive ? "text-[#0B74DE]" : "text-[#25313A]"}`}>
+                          {source.name}
+                        </span>
+                        <span className="mt-1 block min-h-8 text-[9px] leading-4 text-[#94A3B8]">{source.context}</span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+                <div className="mt-7 flex items-center gap-3 border-t border-[#E4EDF1] pt-4">
+                  <motion.span
                     aria-hidden="true"
-                    className="absolute h-1.5 w-1.5 rounded-full bg-[#0B74DE] shadow-[0_0_12px_rgba(11,116,222,0.4)]"
-                    animate={reduceMotion ? { x: 0, y: 0, opacity: 1 } : { x: [0, 0], y: [-22, 22], opacity: [0.3, 1, 0.3] }}
+                    className="h-px bg-[#0B74DE]"
+                    animate={reduceMotion ? { width: 32, opacity: 1 } : { width: [20, 44, 20], opacity: [0.35, 1, 0.35] }}
                     transition={reduceMotion ? { duration: 0 } : { duration: 1.45, repeat: Infinity, ease: "easeInOut" }}
                   />
-                  <span className="absolute whitespace-nowrap bg-[#FAFAF7] px-2 font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">context</span>
-                  <div className="h-px w-full bg-[#B7D2E6] lg:h-12 lg:w-px" />
-                </div>
-
-                <div>
-                  <div className="flex items-baseline justify-between gap-3">
-                    <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">What you can see</p>
-                    <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">{activeContext.label}</span>
-                  </div>
-                  <div className="mt-4 border-y border-[#E4EDF1]">
-                    {accountingContext.map((item, index) => {
-                      const isActive = index === activeEvidence % accountingContext.length;
-                      return (
-                        <motion.div
-                          key={item.label}
-                          animate={{ opacity: reduceMotion || isActive ? 1 : 0.42, x: reduceMotion || isActive ? 0 : 4 }}
-                          transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
-                          className="flex items-start gap-3 border-b border-[#E4EDF1] py-4 last:border-b-0"
-                        >
-                          <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${isActive ? "bg-[#0B74DE]" : "bg-[#B7D2E6]"}`} />
-                          <span>
-                            <span className={`block text-[12px] font-semibold leading-5 tracking-tight ${isActive ? "text-[#182026]" : "text-[#4D5B66]"}`}>{item.label}</span>
-                            <span className="mt-0.5 block text-[10px] leading-4 text-[#94A3B8]">{item.detail}</span>
-                          </span>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
+                  <p className="text-[11px] leading-5 text-[#66737F]">
+                    Pulling {activeSource.context} from {activeSource.name} when it can change the recovery decision.
+                  </p>
                 </div>
               </div>
 
@@ -275,9 +238,6 @@ function AccountingEvidenceSection() {
               </div>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">
-              <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
-            </div>
           </motion.div>
         </div>
 
