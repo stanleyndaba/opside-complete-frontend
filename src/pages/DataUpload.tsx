@@ -94,16 +94,7 @@ export default function DataUpload() {
     return safeFileResultMessage(firstRejected || firstDuplicate);
   };
 
-  const getReentryMessage = async () => {
-    const activeTenantId = localStorage.getItem('active_tenant_id');
-    const latestAudit = await api.getLatestAudit();
-    const audit = latestAudit.data?.audit;
-    if (!audit || (activeTenantId && audit.tenant_id !== activeTenantId)) return null;
-
-    const nextEligibleAt = audit.next_eligible_at;
-    if (!nextEligibleAt || new Date(nextEligibleAt).getTime() <= Date.now()) return null;
-    return `Your next complimentary manual report audit is available on ${new Date(nextEligibleAt).toLocaleDateString()}.`;
-  };
+  const getReentryMessage = async () => null;
 
   const restoreLatestManualAudit = useCallback(async () => {
     const tenantSlug = getActiveTenantSlug();
