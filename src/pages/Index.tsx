@@ -35,7 +35,6 @@ import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
-import { RecoveryTimelineSection } from "@/components/landing/RecoveryTimelineSection";
 import { RecoveryOfferSection } from "@/components/landing/RecoveryDecisionSections";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
@@ -1534,7 +1533,6 @@ export default function Index() {
         <MarginOperationSection />
         <RecoveryWorkStatement />
 
-        <RecoveryTimelineSection />
         <AccountingEvidenceSection />
         <RiskSection />
         <OperationalEconomicsSection />
