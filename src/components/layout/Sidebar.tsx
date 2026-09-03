@@ -240,24 +240,24 @@ export function Sidebar({
   );
   const navGroups: Array<{ label: string; items: NavItem[] }> = [
     {
-      label: 'Recovery position',
-      items: [{ title: 'Position', icon: Gauge, href: overviewHref }]
+      label: 'Overview',
+      items: [{ title: 'Dashboard', icon: Gauge, href: overviewHref }]
     },
     {
-      label: 'Recovery in motion',
+      label: 'Recovery',
       items: [
-        { title: 'Recovery work', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
-        { title: 'With Amazon', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-        { title: 'Filing authority', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
-        { title: 'Appeals & responses', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
+        { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
+        { title: 'Disputes', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
+        { title: 'Filing', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
+        { title: 'Appeals', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
       ]
     },
     {
-      label: 'Proof & closure',
+      label: 'Proof',
       items: [
-        { title: 'Proof record', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+        { title: 'Evidence', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
         {
-          title: 'Financial closure',
+          title: 'Integrations',
           icon: Box,
           href: tenantRoute(currentTenantSlug, '/integrations-hub'),
           hoverContent: financialEvidenceHoverContent
@@ -266,7 +266,7 @@ export function Sidebar({
     },
     {
       label: 'Updates',
-      items: [{ title: 'Updates', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }]
+      items: [{ title: 'Notifications', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }]
     }
   ];
   const utilityItems: NavItem[] = [
@@ -330,8 +330,8 @@ export function Sidebar({
             "group relative flex w-full items-center justify-center transition-all duration-200",
             collapsedBaseClasses,
             isActive
-              ? "bg-white/10 text-white"
-              : "text-white/40 hover:bg-white/5 hover:text-white"
+              ? "border-l-2 border-[#1F2933] bg-[#E8E9E7] text-[#111827]"
+              : "border-l-2 border-transparent text-[#6B7280] hover:bg-[#EEF0EE] hover:text-[#1F2933]"
           )}
           style={{ willChange: 'background-color' }}>
           {isActive && (
@@ -344,7 +344,7 @@ export function Sidebar({
             className={cn(
               "transition-colors duration-200",
               variant === 'core' ? "h-[18px] w-[18px]" : "h-[17px] w-[17px]",
-              isActive ? "text-[#0B74DE]" : "text-inherit"
+              isActive ? "text-[#1F2933]" : "text-inherit"
             )}
             strokeWidth={1.5}
           />
@@ -387,8 +387,8 @@ export function Sidebar({
               ? "gap-2.5 px-2.5 py-1.5"
               : "gap-3 px-3 py-2",
           isActive
-            ? "bg-white/10 text-white shadow-sm"
-            : "text-white/40 hover:bg-white/5 hover:text-white"
+            ? "border-l-2 border-[#1F2933] bg-[#E8E9E7] text-[#111827] shadow-none"
+            : "border-l-2 border-transparent text-[#6B7280] hover:bg-[#EEF0EE] hover:text-[#1F2933]"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
@@ -401,7 +401,7 @@ export function Sidebar({
           strokeWidth={1.5}
           className={cn(
             "h-[17px] w-[17px] shrink-0 transition-all duration-200",
-            isActive ? "text-[#0B74DE]" : "text-inherit"
+            isActive ? "text-[#1F2933]" : "text-inherit"
           )}
         />
         <div className="min-w-0 flex-1">
@@ -409,7 +409,7 @@ export function Sidebar({
             <span className={cn(
               "font-sans tracking-tight transition-colors",
               "text-[13.5px] font-medium leading-5",
-              isActive ? "text-white" : "text-inherit"
+              isActive ? "text-[#111827]" : "text-inherit"
             )}>
               {item.title}
             </span>
@@ -417,8 +417,8 @@ export function Sidebar({
         </div>
         {item.count != null && !isCollapsed && (
           <span className={cn(
-            "ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-sans font-bold tabular-nums tracking-tight",
-            isActive ? "text-[#0B74DE]" : "text-white/40"
+            "ml-auto rounded-full bg-[#E5E7EB] px-2 py-0.5 text-[10px] font-sans font-bold tabular-nums tracking-tight",
+            isActive ? "text-[#111827]" : "text-[#6B7280]"
           )}>
             {item.count}
           </span>
@@ -444,7 +444,7 @@ export function Sidebar({
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col font-sans transition-all duration-500 ease-in-out gpu-accelerated",
         isCollapsed ? "w-16" : "w-[282px]",
-        "border-r border-white/5 bg-[#0F0E0D] text-white/40 shadow-none",
+        "border-r border-[#E5E7EB] bg-[#F7F7F5] text-[#6B7280] shadow-none",
         className
       )}
       style={{
@@ -462,10 +462,10 @@ export function Sidebar({
             <img
               src="/logoimagetwo.png"
               alt="Margin"
-              className="h-4 w-auto object-contain brightness-0 invert"
+              className="h-4 w-auto object-contain"
             />
             {!isCollapsed && (
-              <span className="font-lora text-[17px] font-medium tracking-tight text-white">Margin</span>
+              <span className="font-merriweather text-[17px] font-medium tracking-tight text-[#1F2933]">Margin</span>
             )}
           </Link>
           {!isCollapsed && (
@@ -474,7 +474,7 @@ export function Sidebar({
                 type="button"
                 aria-label="Search workspace"
                 onClick={() => navigate(tenantRoute(currentTenantSlug, '/recoveries'))}
-                className="flex h-7 w-7 items-center justify-center rounded-[5px] text-white/40 transition-colors hover:bg-white/5 hover:text-white"
+                className="flex h-7 w-7 items-center justify-center rounded-[5px] text-[#6B7280] transition-colors hover:bg-[#EEF0EE] hover:text-[#1F2933]"
               >
                 <Search className="h-3.5 w-3.5" strokeWidth={1.5} />
               </button>
@@ -482,7 +482,7 @@ export function Sidebar({
                 type="button"
                 aria-label="Notifications"
                 onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
-                className="relative flex h-7 w-7 items-center justify-center rounded-[5px] text-white/40 transition-colors hover:bg-white/5 hover:text-white"
+                className="relative flex h-7 w-7 items-center justify-center rounded-[5px] text-[#6B7280] transition-colors hover:bg-[#EEF0EE] hover:text-[#1F2933]"
               >
                 <Bell className="h-3.5 w-3.5" strokeWidth={1.5} />
                 {unreadCount > 0 && (
@@ -497,13 +497,13 @@ export function Sidebar({
             <Link
               to={pricingAdjustHref}
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
-              className="group flex min-w-0 flex-1 items-center justify-between rounded-[6px] bg-white/[0.04] px-3 py-2 transition-colors hover:bg-white/[0.07]"
+              className="group flex min-w-0 flex-1 items-center justify-between rounded-[6px] border border-[#E5E7EB] bg-white px-3 py-2 transition-colors hover:bg-[#EEF0EE]"
             >
-              <span className="truncate text-[12px] font-sans font-medium text-white/60 group-hover:text-white">Recovery control plan</span>
-              <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/20 group-hover:text-white" />
+              <span className="truncate text-[12px] font-sans font-medium text-[#1F2933]">Recovery control plan</span>
+              <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" />
             </Link>
             {subscriptionTierLabel && (
-              <span className="shrink-0 rounded-[4px] bg-white/[0.06] px-2 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/60">
+              <span className="shrink-0 rounded-[4px] bg-[#E5E7EB] px-2 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-[#6B7280]">
                 {subscriptionTierLabel}
               </span>
             )}
@@ -517,7 +517,7 @@ export function Sidebar({
             {navGroups.map((group) => (
               <div key={group.label} className="space-y-1">
                 {!isCollapsed && (
-                  <div className="px-3 pb-0.5 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/25">
+                  <div className="px-3 pb-0.5 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#9CA3AF]">
                     {group.label}
                   </div>
                 )}
@@ -533,19 +533,19 @@ export function Sidebar({
       </div>
 
       {/* Account utilities fold */}
-      <div className={cn("mt-auto border-t border-white/5 py-2.5", isCollapsed ? "px-2" : "px-3")}>
+      <div className={cn("mt-auto border-t border-[#E5E7EB] py-2.5", isCollapsed ? "px-2" : "px-3")}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
               aria-label="More account options"
               className={cn(
-                "group flex w-full items-center rounded-[6px] text-white/40 transition-colors hover:bg-white/5 hover:text-white",
+                "group flex w-full items-center rounded-[6px] text-[#6B7280] transition-colors hover:bg-[#EEF0EE] hover:text-[#1F2933]",
                 isCollapsed ? "h-9 w-10 justify-center" : "gap-2.5 px-2.5 py-1.5",
-                isMoreActive && "bg-white/10 text-white"
+                isMoreActive && "bg-[#E8E9E7] text-[#111827]"
               )}
             >
-              <MoreIcon className={cn("h-[16px] w-[16px] shrink-0", isMoreActive && "text-[#0B74DE]")} strokeWidth={1.5} />
+              <MoreIcon className={cn("h-[16px] w-[16px] shrink-0", isMoreActive && "text-[#1F2933]")} strokeWidth={1.5} />
               {!isCollapsed && <span className="text-[13px] font-medium tracking-tight">Settings &amp; access</span>}
             </button>
           </DropdownMenuTrigger>
@@ -553,7 +553,7 @@ export function Sidebar({
             side={isCollapsed ? 'right' : 'top'}
             align="start"
             sideOffset={8}
-            className="w-56 rounded-[6px] border border-white/10 bg-[#1A1918] p-1.5 text-white shadow-2xl"
+            className="w-56 rounded-[6px] border border-[#E5E7EB] bg-white p-1.5 text-[#1F2933] shadow-xl"
           >
             {utilityItems.map((item) => {
               const itemIsActive = location.pathname === item.href;
@@ -563,20 +563,20 @@ export function Sidebar({
                     to={item.href}
                     onMouseEnter={() => prefetchRoute(item.href)}
                     className={cn(
-                      "flex items-center gap-3 rounded-[5px] px-3 py-2 text-[13px] font-medium tracking-tight text-white/65 outline-none transition-colors hover:bg-white/10 hover:text-white",
-                      itemIsActive && "bg-white/10 text-white"
+                      "flex items-center gap-3 rounded-[5px] px-3 py-2 text-[13px] font-medium tracking-tight text-[#6B7280] outline-none transition-colors hover:bg-[#EEF0EE] hover:text-[#1F2933]",
+                      itemIsActive && "bg-[#E8E9E7] text-[#111827]"
                     )}
                   >
-                    <item.icon className={cn("h-[16px] w-[16px]", itemIsActive && "text-[#0B74DE]")} strokeWidth={1.5} />
+                    <item.icon className={cn("h-[16px] w-[16px]", itemIsActive && "text-[#1F2933]")} strokeWidth={1.5} />
                     <span>{item.title}</span>
                   </Link>
                 </DropdownMenuItem>
               );
             })}
-            <DropdownMenuSeparator className="my-1 bg-white/10" />
+            <DropdownMenuSeparator className="my-1 bg-[#E5E7EB]" />
             <DropdownMenuItem
               onSelect={() => setSignOutOpen(true)}
-              className="flex cursor-pointer items-center gap-3 rounded-[5px] px-3 py-2 text-[13px] font-medium tracking-tight text-white/65 outline-none focus:bg-white/10 focus:text-white"
+              className="flex cursor-pointer items-center gap-3 rounded-[5px] px-3 py-2 text-[13px] font-medium tracking-tight text-[#6B7280] outline-none focus:bg-[#EEF0EE] focus:text-[#1F2933]"
             >
               <LogOut className="h-[16px] w-[16px]" strokeWidth={1.5} />
               <span>Sign out</span>
