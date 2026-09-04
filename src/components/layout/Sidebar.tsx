@@ -241,7 +241,7 @@ export function Sidebar({
   const navGroups: Array<{ label: string; items: NavItem[] }> = [
     {
       label: 'Overview',
-      items: [{ title: 'Dashboard', icon: Gauge, href: overviewHref }]
+      items: [{ title: 'Home', icon: Gauge, href: overviewHref }]
     },
     {
       label: 'Recovery',
@@ -499,7 +499,7 @@ export function Sidebar({
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
               className="group flex min-w-0 flex-1 items-center justify-between rounded-[6px] border border-[#E5E7EB] bg-white px-3 py-2 transition-colors hover:bg-[#EEF0EE]"
             >
-              <span className="truncate text-[12px] font-sans font-medium text-[#1F2933]">Recovery control plan</span>
+              <span className="truncate text-[12px] font-sans font-medium text-[#1F2933]">Recovery Workspace</span>
               <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" />
             </Link>
             {subscriptionTierLabel && (
