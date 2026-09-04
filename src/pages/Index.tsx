@@ -394,7 +394,7 @@ function KineticHeroSection({
   );
 }
 
-import recoveryImg from "@/assets/recovery.png";
+import recoveryImg from "@/assets/recoveryy.png";
 
 function OneRecoverySection() {
   return (
