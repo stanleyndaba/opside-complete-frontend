@@ -437,8 +437,8 @@ function RealityCheckSection() {
             That is the work Margin takes off your plate.
           </p>
         </motion.div>
-        <motion.div {...revealProps} className="relative overflow-hidden rounded-[14px] border border-[var(--margin-border)] bg-[#F7F8F8] p-2 shadow-[0_18px_45px_rgba(24,32,38,0.08)]">
-          <video className="aspect-video w-full rounded-[10px] object-cover" src="/The_Pain.mp4" controls muted playsInline preload="metadata" aria-label="Margin recovery pain demonstration" />
+        <motion.div {...revealProps} className="relative overflow-hidden rounded-[14px]">
+          <video className="aspect-video w-full rounded-[14px] object-cover" src="/The_Pain.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin recovery pain demonstration" />
         </motion.div>
         </div>
         <motion.div {...revealProps} className="mt-12 border-y border-[var(--margin-border)] py-6 md:mt-16 md:py-8">
@@ -471,8 +471,8 @@ function MarginLifecycleSection() {
     >
       <div className={containerClass}>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[14px] border border-[var(--margin-border)] bg-[#F7F8F8] p-2 shadow-[0_18px_45px_rgba(24,32,38,0.08)] lg:order-1">
-          <video className="aspect-video w-full rounded-[10px] object-cover" src="/section_4.mp4" controls muted playsInline preload="metadata" aria-label="How Margin handles recovery work" />
+        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[14px] lg:order-1">
+          <video className="aspect-video w-full rounded-[14px] object-cover" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
         <motion.div {...revealProps} className="max-w-[980px]">
           <div className="mb-6 flex items-center gap-3">
