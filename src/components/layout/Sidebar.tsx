@@ -330,7 +330,7 @@ export function Sidebar({
             "group relative flex w-full items-center justify-center transition-all duration-200",
             collapsedBaseClasses,
             isActive
-              ? "border-l-2 border-[#1F2933] bg-[#E8E9E7] text-[#111827]"
+              ? "border-l-2 border-transparent bg-[#E8E9E7] text-[#111827]"
               : "border-l-2 border-transparent text-[#6B7280] hover:bg-[#EEF0EE] hover:text-[#1F2933]"
           )}
           style={{ willChange: 'background-color' }}>
@@ -387,7 +387,7 @@ export function Sidebar({
               ? "gap-2.5 px-2.5 py-1.5"
               : "gap-3 px-3 py-2",
           isActive
-            ? "border-l-2 border-[#1F2933] bg-[#E8E9E7] text-[#111827] shadow-none"
+            ? "border-l-2 border-transparent bg-[#E8E9E7] text-[#111827] shadow-none"
             : "border-l-2 border-transparent text-[#6B7280] hover:bg-[#EEF0EE] hover:text-[#1F2933]"
         )}
         style={{ willChange: 'background-color, transform' }}>
