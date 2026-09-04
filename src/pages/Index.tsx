@@ -420,8 +420,9 @@ function RealityCheckSection() {
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
       <div className={containerClass}>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
-        <motion.div {...revealProps} className="max-w-[900px]">
+        <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
+        <div className="flex flex-col justify-center">
+        <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center lg:min-h-[560px]">
           <div className="mb-6 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">02 / The pain · 03 / The reframe</span>
@@ -437,10 +438,6 @@ function RealityCheckSection() {
             That is the work Margin takes off your plate.
           </p>
         </motion.div>
-        <motion.div {...revealProps} className="relative overflow-hidden rounded-[14px]">
-          <video className="aspect-video w-full rounded-[14px] object-cover" src="/The_Pain.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin recovery pain demonstration" />
-        </motion.div>
-        </div>
         <motion.div {...revealProps} className="mt-12 border-y border-[var(--margin-border)] py-6 md:mt-16 md:py-8">
           <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)] sm:text-[14px] md:text-[16px]">
             Find <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prepare <span className="px-1 text-[var(--margin-border-strong)]">→</span> File <span className="px-1 text-[var(--margin-border-strong)]">→</span> Follow up <span className="px-1 text-[var(--margin-border-strong)]">→</span> Reconcile <span className="px-1 text-[var(--margin-border-strong)]">→</span> Close
@@ -449,6 +446,11 @@ function RealityCheckSection() {
         <motion.p {...revealProps} className="mt-8 max-w-[760px] font-lora text-[26px] leading-[1.08] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[34px] md:mt-12 md:text-[46px]" style={{ fontWeight: 400 }}>
           You don&apos;t need to manage every step. <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery moving.</span>
         </motion.p>
+        </div>
+        <motion.div {...revealProps} className="relative h-full overflow-hidden rounded-[14px] lg:min-h-[560px]">
+          <video className="aspect-video w-full rounded-[14px] object-cover lg:h-full lg:min-h-[560px] lg:aspect-auto" src="/The_Pain.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin recovery pain demonstration" />
+        </motion.div>
+        </div>
       </div>
     </section>
   );
