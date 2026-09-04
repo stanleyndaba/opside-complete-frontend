@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
-import { AlertCircle, Download, FileText, Loader2, MoreHorizontal, RefreshCw, Search, X } from 'lucide-react';
+import { AlertCircle, Check, Circle, Download, FileText, Loader2, MoreHorizontal, RefreshCw, Search, X } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -1340,6 +1340,37 @@ function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<
   };
 }
 
+function ActiveCaseOverview() {
+  const steps = [
+    { label: 'Investigated', complete: true },
+    { label: 'Evidence prepared', complete: true },
+    { label: 'Approved', complete: true },
+    { label: 'Submitted', complete: false },
+  ];
+
+  return (
+    <div className="border border-[#CFE0EA] bg-[#F8FBFD] px-5 py-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Active recovery case</div>
+          <h2 className="mt-1 text-[19px] font-normal tracking-tight text-[#182026]">Margin is handling the next step.</h2>
+          <p className="mt-1 max-w-2xl text-[11px] leading-5 text-[#66737F]">The case is moving through Amazon review while Margin keeps the evidence, response, and follow-up together.</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className="border-[#BFD8F6] bg-[#F3F7FF] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#0B74DE]">In progress</Badge>
+          <Badge variant="outline" className="border-[#BFE0CF] bg-[#F4FAF7] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#2F6C54]">Seller action: none required</Badge>
+        </div>
+      </div>
+      <div className="mt-4 grid gap-3 border-y border-[#DCE8EE] py-3 md:grid-cols-3 md:gap-5">
+        <div><div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Amazon response</div><div className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">Awaiting response</div><p className="mt-1 text-[10px] leading-4 text-[#66737F]">Amazon has not returned a decision yet.</p></div>
+        <div><div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Next action</div><div className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">Margin will monitor and follow up.</div><p className="mt-1 text-[10px] leading-4 text-[#66737F]">No seller follow-up is needed at this stage.</p></div>
+        <div><div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Current owner</div><div className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">Margin operations</div><p className="mt-1 text-[10px] leading-4 text-[#66737F]">Evidence and communication remain under review.</p></div>
+      </div>
+      <div className="mt-3"><div className="flex items-center justify-between gap-3"><div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Recovery progress</div><div className="text-[10px] font-medium tracking-tight text-[#4D5B66]">3 of 4 stages complete</div></div><div className="mt-2 grid gap-2 sm:grid-cols-4">{steps.map((step) => <div key={step.label} className={cn('flex items-center gap-2 border px-2.5 py-2 text-[10px] font-medium tracking-tight', step.complete ? 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]' : 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]')}>{step.complete ? <Check className="h-3.5 w-3.5 shrink-0" /> : <Circle className="h-3.5 w-3.5 shrink-0 fill-[#0B74DE]/15" />}<span>{step.label}</span></div>)}</div></div>
+    </div>
+  );
+}
+
 export default function DisputeCases() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant, isReady, isThrottled } = useTenant();
@@ -1347,6 +1378,7 @@ export default function DisputeCases() {
   const { toast } = useToast();
 
   const activeTenantSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
+  const isDemoWorkspace = activeTenantSlug === 'demo-workspace';
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -1843,6 +1875,8 @@ export default function DisputeCases() {
               </Button>
             </div>
           </div>
+
+          {isDemoWorkspace ? <ActiveCaseOverview /> : null}
 
           <Card className="overflow-hidden rounded-none border border-[#DCE8EE] bg-white text-[#182026] shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
             <CardHeader className="border-b border-[#E7EEF2] bg-white px-5 py-4">
