@@ -478,7 +478,7 @@ function MarginLifecycleSection() {
           </div>
           <h2
             id="margin-lifecycle-title"
-            className="font-lora text-[25px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[32px] sm:leading-[1] md:text-[42px]"
+            className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
             <span className="block">Margin doesn&apos;t give you another list to work through.</span>
@@ -491,7 +491,7 @@ function MarginLifecycleSection() {
         <div className="mt-7 sm:mt-9 md:mt-12">
           <motion.p
             {...revealProps}
-            className="mt-8 max-w-[820px] font-lora text-[20px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:mt-10 sm:text-[27px] md:mt-12 md:text-[34px]"
+            className="mt-6 max-w-[620px] text-[15px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] sm:mt-8 sm:text-[17px] sm:leading-7 md:mt-10 md:text-[19px]"
           >
             You don&apos;t become the recovery manager.
             <span className="mt-4 block text-[var(--margin-text-muted)]">
