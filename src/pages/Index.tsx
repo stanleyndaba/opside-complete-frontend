@@ -681,12 +681,17 @@ function MarginOperationSection() {
 
 function RecoveryWorkStatement() {
   return (
-    <section className="border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]" aria-labelledby="trust-section-title">
-      <div className="mx-auto w-full max-w-[1280px] border-t border-[var(--margin-border)] px-4 py-14 sm:px-8 lg:px-10 2xl:px-12 md:py-20">
-        <div className="mx-auto max-w-[980px] text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / Trust</p>
-          <h2 id="trust-section-title" className="mt-4 font-lora text-[30px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>You stay in control. Margin does the work.</h2>
-          <p className="mx-auto mt-6 max-w-[720px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px]">Read-only access. Evidence. Approval. Visibility. No blind submissions.</p>
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28" aria-labelledby="trust-section-title">
+      <div className={containerClass}>
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
+          <motion.div {...revealProps} className="flex flex-col justify-center">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / One connected recovery record</p>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>One connected recovery record.</h2>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">See the evidence, decisions, progress, and outcome in one place—without chasing reports, rebuilding context, or managing the follow-up yourself.</p>
+          </motion.div>
+          <motion.div {...revealProps} className="relative overflow-hidden rounded-[14px]">
+            <video className="aspect-video w-full rounded-[14px] object-cover" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
+          </motion.div>
         </div>
       </div>
     </section>
