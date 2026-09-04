@@ -472,10 +472,11 @@ function MarginLifecycleSection() {
       className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28"
     >
       <div className={containerClass}>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[14px] lg:order-1">
-          <video className="aspect-video w-full rounded-[14px] object-cover" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
+        <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
+        <motion.div {...revealProps} className="relative order-2 h-full overflow-hidden rounded-[14px] lg:order-1 lg:min-h-[560px]">
+          <video className="aspect-video w-full rounded-[14px] object-cover lg:h-full lg:min-h-[560px] lg:aspect-auto" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
+        <div className="flex flex-col justify-center">
         <motion.div {...revealProps} className="max-w-[980px]">
           <div className="mb-6 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
@@ -494,7 +495,6 @@ function MarginLifecycleSection() {
             </span>
           </h2>
         </motion.div>
-        </div>
 
         <div className="mt-10 sm:mt-14 md:mt-20">
           <motion.p
@@ -547,6 +547,8 @@ function MarginLifecycleSection() {
               Margin does the work. You stay in control.
             </span>
           </motion.p>
+        </div>
+        </div>
         </div>
       </div>
     </section>
