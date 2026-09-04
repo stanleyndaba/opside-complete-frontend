@@ -2139,7 +2139,7 @@ export default function DisputeCases() {
                                   <Badge variant="outline" className={cn(CASE_BADGE_BASE, postureBadgeClass(posture.tone))}>{posture.headline}</Badge>
                                 </div>
                                 <p className="text-[11px] leading-5 text-[#4D5B66]">{posture.detail}</p>
-                                {isDemoCase ? <p className="text-[11px] leading-5 text-[#2F6C54]">Amazon response: Awaiting response · Seller action: none required</p> : null}
+                                {isDemoCase ? <div className="flex flex-wrap items-center gap-1.5"><span className="whitespace-nowrap rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">Amazon response: Awaiting response</span><span className="whitespace-nowrap rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">Seller action: none required</span></div> : null}
                                 <p className="text-[11px] leading-5 text-[#66737F]">{filingTruthLine(row)}</p>
                                 {safeDecisionExplanation ? <p className="text-[10px] leading-4 text-[#8A99A5]">Context: {safeDecisionExplanation}</p> : null}
                                 {(posture.strengths.length || posture.risks.length) ? (
