@@ -440,6 +440,58 @@ const withDemoFindingPresentation = (result: any, index: number) => {
   };
 };
 
+const buildDemoFindingInvestigation = (result: any, index: number) => {
+  const type = String(result?.anomaly_type || '').toLowerCase();
+  const amount = Number(result?.estimated_value) || 0;
+  const formatSyntheticAmount = (value: number) => new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: result?.currency || 'USD',
+  }).format(value);
+  const expected = Number((amount * 0.92).toFixed(2));
+  const charge = Number((expected + amount).toFixed(2));
+  const source = type.includes('storage')
+    ? 'Amazon FBA Storage Fee'
+    : type.includes('fee') || type.includes('fulfillment')
+      ? 'Amazon FBA Fee Transaction'
+      : type.includes('inbound') || type.includes('lost')
+        ? 'Amazon FBA Inbound Shipment'
+        : type.includes('refund') || type.includes('return')
+          ? 'Amazon FBA Customer Returns'
+          : 'Amazon FBA Settlement Activity';
+  const policy = type.includes('storage')
+    ? 'Storage fee exceeds the supported inventory-cost basis.'
+    : type.includes('fee') || type.includes('fulfillment')
+      ? 'Fee charged does not match the supported fee basis.'
+      : type.includes('inbound') || type.includes('lost')
+        ? 'Received quantity does not reconcile with shipped quantity.'
+        : 'Settlement activity does not reconcile with the expected seller outcome.';
+  const unresolved = index % 4 === 0
+    ? 'Awaiting seller approval before the supported recovery action can be opened.'
+    : index % 4 === 1
+      ? 'Evidence is assembled; Margin is waiting for the filing gate to clear.'
+      : index % 4 === 2
+        ? 'Amazon response or payout confirmation is still outstanding.'
+        : 'The initial outcome is incomplete and needs a final payout reconciliation.';
+
+  return {
+    amazonSource: `${source} · Settlement SETTLE-ACME-${String(index + 1).padStart(4, '0')}`,
+    investigationStatus: 'Investigation complete',
+    diagnosis: 'Margin connected the Amazon activity, seller records, and expected outcome to identify the recovery gap.',
+    whyUnresolved: unresolved,
+    analysis: {
+      chargeApplied: formatSyntheticAmount(charge),
+      expectedAmount: formatSyntheticAmount(expected),
+      difference: formatSyntheticAmount(amount),
+      policyRule: policy,
+    },
+    investigationTimeline: [
+      'Amazon activity matched to the seller event',
+      'Expected outcome compared with the recorded charge',
+      'Evidence and policy checks completed',
+    ],
+  };
+};
+
 const expandDemoFindings = (results: any[]) => {
   const source = results.length ? results : [{}];
   const expanded = source.map(withDemoFindingPresentation);
@@ -3766,6 +3818,9 @@ export function Dashboard() {
                                 || result.id
                                 || '';
                               const openDiscrepancySurface = (surface: 'detail' | 'proof') => {
+                                const demoInvestigation = isDemoWorkspace
+                                  ? buildDemoFindingInvestigation(result, index)
+                                  : null;
                                 setActiveDiscrepancy({
                                   id: result.id,
                                   reason: result.anomaly_type,
@@ -3806,6 +3861,7 @@ export function Dashboard() {
                                   valueLabel: result.value_label,
                                   whyNotClaimReady: result.why_not_claim_ready,
                                   coverageFamily: result.coverage_family,
+                                  demoInvestigation,
                                 });
 
                                 if (surface === 'proof') {
@@ -4200,17 +4256,25 @@ This is saved as a support request. Margin records notification delivery separat
                         {formatFindingDateTimeLabel(activeDiscrepancy.occurrenceDate)}
                       </div>
                     </div>
-                    <div className="border-t border-[#E9E9EC] py-3 md:border-t-0 md:pl-5">
-                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">Filing movement</div>
+                      <div className="border-t border-[#E9E9EC] py-3 md:border-t-0 md:pl-5">
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">Amazon source / activity</div>
+                      <div className="mt-1 text-[11px] font-sans font-medium leading-4 tracking-tight text-[#1B1C20]">
+                        {activeDiscrepancy.demoInvestigation?.amazonSource || activeDiscrepancy.movementLabel || 'Amazon activity'}
+                      </div>
                       <span
                         className={cn(
-                          "mt-1 inline-flex items-center gap-2 border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
+                          "mt-2 inline-flex items-center gap-2 border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
                           activeDiscrepancy.stateTone || getFindingStateMeta(activeDiscrepancy.status).tone
                         )}
                       >
                         <Info className="h-3.5 w-3.5" />
                         <span>{activeDiscrepancy.stateLabel || getFindingStateMeta(activeDiscrepancy.status).label}</span>
                       </span>
+                      {activeDiscrepancy.demoInvestigation ? (
+                        <div className="mt-2 inline-flex items-center border border-[#B9D9C8] bg-[#F2FBF5] px-2 py-0.5 text-[9px] font-sans font-semibold uppercase tracking-tight text-[#26734D]">
+                          Diagnosed by Margin
+                        </div>
+                      ) : null}
                     </div>
                   </div>
 
@@ -4229,6 +4293,21 @@ This is saved as a support request. Margin records notification delivery separat
                           {activeDiscrepancyCopy?.evidenceSummary || 'Structured evidence is available on the backend detection record.'}
                         </p>
                       </div>
+                      {activeDiscrepancy.demoInvestigation ? (
+                        <div className="mt-3 border border-[#CFE0EA] bg-[#F7FBFF] p-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0B74DE]">Margin analysis</div>
+                            <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#26734D]">Investigation complete</div>
+                          </div>
+                          <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-[#50525B]">{activeDiscrepancy.demoInvestigation.diagnosis}</p>
+                          <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 border-t border-[#DCEAF4] pt-2.5">
+                            <div><div className="text-[9px] font-sans uppercase tracking-tight text-[#858792]">Charge applied</div><div className="mt-0.5 text-[12px] font-sans font-medium text-[#182026]">{activeDiscrepancy.demoInvestigation.analysis.chargeApplied}</div></div>
+                            <div><div className="text-[9px] font-sans uppercase tracking-tight text-[#858792]">What it should have been</div><div className="mt-0.5 text-[12px] font-sans font-medium text-[#182026]">{activeDiscrepancy.demoInvestigation.analysis.expectedAmount}</div></div>
+                            <div><div className="text-[9px] font-sans uppercase tracking-tight text-[#858792]">Difference</div><div className="mt-0.5 text-[12px] font-sans font-semibold text-[#0B74DE]">{activeDiscrepancy.demoInvestigation.analysis.difference}</div></div>
+                            <div className="col-span-2"><div className="text-[9px] font-sans uppercase tracking-tight text-[#858792]">Policy rule</div><div className="mt-0.5 text-[11px] font-sans leading-4 text-[#50525B]">{activeDiscrepancy.demoInvestigation.analysis.policyRule}</div></div>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
 
                     <div className="border-t border-[#E9E9EC] pt-2.5 xl:border-l xl:border-t-0 xl:pl-3 xl:pt-0">
@@ -4274,9 +4353,9 @@ This is saved as a support request. Margin records notification delivery separat
                   </div>
 
                   <div className="mt-3 border-y border-[#E9E9EC] py-2.5">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Why this may be recoverable</div>
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Why unresolved</div>
                     <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#6B7280]">
-                      {activeDiscrepancyCopy?.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.'}
+                      {activeDiscrepancy.demoInvestigation?.whyUnresolved || activeDiscrepancyCopy?.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.'}
                     </p>
                   </div>
                 </div>
