@@ -422,33 +422,33 @@ function RealityCheckSection() {
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
         <div className="flex flex-col justify-center">
-        <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center lg:min-h-[560px]">
-          <div className="mb-6 flex items-center gap-3">
+        <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
+          <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">02 / The pain · 03 / The reframe</span>
           </div>
-          <p className="mb-5 font-lora text-[26px] leading-tight tracking-[-0.035em] text-[var(--margin-text-muted)] sm:text-[34px]" style={{ fontWeight: 400 }}>You already have enough to manage.</p>
-          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
+          <p className="mb-3 font-lora text-[19px] leading-tight tracking-[-0.025em] text-[var(--margin-text-muted)] sm:text-[23px]" style={{ fontWeight: 400 }}>You already have enough to manage.</p>
+          <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
             Finding the problem is easy. Getting it resolved is the work.
           </h2>
-          <p className="mt-7 max-w-[780px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9">
-            A reimbursement can be found and still never become money you actually keep. Someone still has to investigate what happened, gather the proof, prepare the case, respond to Amazon, follow up when something gets rejected, and check that the final payment was actually received.
+          <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            A reimbursement can be found and still never become money you keep. Margin investigates what happened, gathers the proof, prepares the case, handles Amazon follow-up, and verifies the final payment.
           </p>
-          <p className="mt-7 max-w-[720px] font-lora text-[26px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[42px]" style={{ fontWeight: 400 }}>
+          <p className="mt-4 max-w-[720px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
             That is the work Margin takes off your plate.
           </p>
         </motion.div>
-        <motion.div {...revealProps} className="mt-12 border-y border-[var(--margin-border)] py-6 md:mt-16 md:py-8">
-          <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)] sm:text-[14px] md:text-[16px]">
+        <motion.div {...revealProps} className="mt-6 border-y border-[var(--margin-border)] py-3 md:mt-8 md:py-4">
+          <p className="font-mono text-[11px] font-semibold tracking-[0.02em] text-[var(--margin-blue)] sm:text-[12px] md:text-[13px]">
             Find <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prepare <span className="px-1 text-[var(--margin-border-strong)]">→</span> File <span className="px-1 text-[var(--margin-border-strong)]">→</span> Follow up <span className="px-1 text-[var(--margin-border-strong)]">→</span> Reconcile <span className="px-1 text-[var(--margin-border-strong)]">→</span> Close
           </p>
         </motion.div>
-        <motion.p {...revealProps} className="mt-8 max-w-[760px] font-lora text-[26px] leading-[1.08] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[34px] md:mt-12 md:text-[46px]" style={{ fontWeight: 400 }}>
+        <motion.p {...revealProps} className="mt-5 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:mt-7 md:text-[23px]" style={{ fontWeight: 400 }}>
           You don&apos;t need to manage every step. <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery moving.</span>
         </motion.p>
         </div>
-        <motion.div {...revealProps} className="relative h-full overflow-hidden rounded-[14px] lg:min-h-[560px]">
-          <video className="aspect-video w-full rounded-[14px] object-cover lg:h-full lg:min-h-[560px] lg:aspect-auto" src="/The_Pain.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin recovery pain demonstration" />
+        <motion.div {...revealProps} className="relative overflow-hidden rounded-[14px]">
+          <video className="aspect-video w-full rounded-[14px] object-cover" src="/The_Pain.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin recovery pain demonstration" />
         </motion.div>
         </div>
       </div>
@@ -473,12 +473,12 @@ function MarginLifecycleSection() {
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-2 h-full overflow-hidden rounded-[14px] lg:order-1 lg:min-h-[560px]">
-          <video className="aspect-video w-full rounded-[14px] object-cover lg:h-full lg:min-h-[560px] lg:aspect-auto" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
+        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[14px] lg:order-1">
+          <video className="aspect-video w-full rounded-[14px] object-cover" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
         <div className="flex flex-col justify-center">
         <motion.div {...revealProps} className="max-w-[980px]">
-          <div className="mb-6 flex items-center gap-3">
+          <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
               04 / How Margin handles it
@@ -486,7 +486,7 @@ function MarginLifecycleSection() {
           </div>
           <h2
             id="margin-lifecycle-title"
-            className="font-lora text-[28px] leading-[1.02] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] sm:leading-[0.98] md:text-[56px]"
+            className="font-lora text-[25px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[32px] sm:leading-[1] md:text-[42px]"
             style={{ fontWeight: 400 }}
           >
             <span className="block">Margin doesn&apos;t give you another list to work through.</span>
@@ -496,10 +496,10 @@ function MarginLifecycleSection() {
           </h2>
         </motion.div>
 
-        <div className="mt-10 sm:mt-14 md:mt-20">
+        <div className="mt-7 sm:mt-9 md:mt-12">
           <motion.p
             {...revealProps}
-            className="max-w-[680px] text-[17px] font-medium leading-7 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[23px] md:leading-8"
+            className="max-w-[680px] text-[15px] font-medium leading-6 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[18px] md:leading-7"
           >
             Five stages. One recovery operation.
           </motion.p>
@@ -540,7 +540,7 @@ function MarginLifecycleSection() {
 
           <motion.p
             {...revealProps}
-            className="mt-12 max-w-[820px] font-lora text-[25px] leading-[1.08] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:mt-14 sm:text-[36px] md:mt-20 md:text-[48px]"
+            className="mt-8 max-w-[820px] font-lora text-[20px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:mt-10 sm:text-[27px] md:mt-12 md:text-[34px]"
           >
             You don&apos;t become the recovery manager.
             <span className="mt-4 block text-[var(--margin-text-muted)]">
