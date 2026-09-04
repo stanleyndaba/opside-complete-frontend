@@ -4189,13 +4189,13 @@ This is saved as a support request. Margin records notification delivery separat
         <DialogContent className="platform-vitality-page max-h-[72vh] w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white p-0 text-[#182026] shadow-[0_18px_45px_rgba(24,32,38,0.10)]">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="border-b border-[#E9E9EC] px-4 pb-2.5 pt-3">
+              <DialogHeader className="border-b border-[#E9E9EC] px-4 pb-2 pt-2.5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
                     <div className="text-[10px] font-sans text-[#8A99A5]">
                       Finding detail
                     </div>
-                    <DialogTitle className="mt-1 font-lora text-[21px] font-normal leading-tight tracking-tight text-[#182026]">
+                    <DialogTitle className="mt-1 text-[21px] font-normal leading-tight tracking-tight text-[#182026]">
                       {activeDiscrepancyCopy?.title || formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
                     <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
@@ -4232,7 +4232,7 @@ This is saved as a support request. Margin records notification delivery separat
               ) : null}
 
               <div className="grid max-h-[52vh] gap-0 overflow-y-auto lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.58fr)]">
-                <div className="border-b border-[#E9E9EC] px-4 py-3 lg:border-b-0 lg:border-r">
+                <div className="border-b border-[#E9E9EC] px-4 py-2 lg:border-b-0 lg:border-r">
                   <div className="grid border-y border-[#E9E9EC] md:grid-cols-3 md:divide-x md:divide-[#F0F0F2]">
                     <div className="py-2 md:pr-4">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">
@@ -4256,7 +4256,7 @@ This is saved as a support request. Margin records notification delivery separat
                         {formatFindingDateTimeLabel(activeDiscrepancy.occurrenceDate)}
                       </div>
                     </div>
-                      <div className="border-t border-[#E9E9EC] py-3 md:border-t-0 md:pl-5">
+                      <div className="border-t border-[#E9E9EC] py-2 md:border-t-0 md:pl-5">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">Amazon source / activity</div>
                       <div className="mt-1 text-[11px] font-sans font-medium leading-4 tracking-tight text-[#1B1C20]">
                         {activeDiscrepancy.demoInvestigation?.amazonSource || activeDiscrepancy.movementLabel || 'Amazon activity'}
@@ -4278,7 +4278,7 @@ This is saved as a support request. Margin records notification delivery separat
                     </div>
                   </div>
 
-                  <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
+                  <div className="mt-2 grid gap-2 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
                     <div>
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">What Margin found</div>
                       <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
@@ -4294,13 +4294,13 @@ This is saved as a support request. Margin records notification delivery separat
                         </p>
                       </div>
                       {activeDiscrepancy.demoInvestigation ? (
-                        <div className="mt-3 border border-[#CFE0EA] bg-[#F7FBFF] p-3">
+                        <div className="mt-2 border border-[#CFE0EA] bg-[#F7FBFF] p-2.5">
                           <div className="flex items-center justify-between gap-3">
                             <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#0B74DE]">Margin analysis</div>
                             <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-[#26734D]">Investigation complete</div>
                           </div>
                           <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-[#50525B]">{activeDiscrepancy.demoInvestigation.diagnosis}</p>
-                          <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 border-t border-[#DCEAF4] pt-2.5">
+                          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-[#DCEAF4] pt-2">
                             <div><div className="text-[9px] font-sans uppercase tracking-tight text-[#858792]">Charge applied</div><div className="mt-0.5 text-[12px] font-sans font-medium text-[#182026]">{activeDiscrepancy.demoInvestigation.analysis.chargeApplied}</div></div>
                             <div><div className="text-[9px] font-sans uppercase tracking-tight text-[#858792]">What it should have been</div><div className="mt-0.5 text-[12px] font-sans font-medium text-[#182026]">{activeDiscrepancy.demoInvestigation.analysis.expectedAmount}</div></div>
                             <div><div className="text-[9px] font-sans uppercase tracking-tight text-[#858792]">Difference</div><div className="mt-0.5 text-[12px] font-sans font-semibold text-[#0B74DE]">{activeDiscrepancy.demoInvestigation.analysis.difference}</div></div>
@@ -4308,9 +4308,15 @@ This is saved as a support request. Margin records notification delivery separat
                           </div>
                         </div>
                       ) : null}
+                      <div className="mt-2 border-y border-[#E9E9EC] bg-[#FFFBF8] py-2">
+                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-[#A95F49]">Why unresolved</div>
+                        <p className="mt-1 text-[12px] font-sans leading-4 tracking-tight text-[#6B7280]">
+                          {activeDiscrepancy.demoInvestigation?.whyUnresolved || activeDiscrepancyCopy?.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.'}
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="border-t border-[#E9E9EC] pt-2.5 xl:border-l xl:border-t-0 xl:pl-3 xl:pt-0">
+                    <div className="border-t border-[#E9E9EC] pt-2 xl:border-l xl:border-t-0 xl:pl-3 xl:pt-0">
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Current filing movement</div>
                       <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#50525B]">
                         {activeDiscrepancyBlockContext
@@ -4318,7 +4324,7 @@ This is saved as a support request. Margin records notification delivery separat
                           : activeDiscrepancy.movementDetail || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
                       </p>
                       {activeDiscrepancyBlockContext ? (
-                        <div className="mt-3 border-l border-red-500/25 bg-red-500/[0.035] px-3 py-2.5">
+                        <div className="mt-2 border-l border-red-500/25 bg-red-500/[0.035] px-2.5 py-2">
                           <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-red-100/55">
                             Why it is blocked
                           </div>
@@ -4341,7 +4347,7 @@ This is saved as a support request. Margin records notification delivery separat
                         </p>
                       )}
                       {activeDiscrepancyBlockContext?.labels?.length ? (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
+                        <div className="mt-2 flex flex-wrap gap-1.5">
                           {activeDiscrepancyBlockContext.labels.slice(0, 3).map((reason: string) => (
                             <span key={reason} className="border border-red-500/15 bg-red-500/[0.06] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-red-100/75">
                               {reason}
@@ -4352,17 +4358,11 @@ This is saved as a support request. Margin records notification delivery separat
                     </div>
                   </div>
 
-                  <div className="mt-3 border-y border-[#E9E9EC] py-2.5">
-                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Why unresolved</div>
-                    <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-[#6B7280]">
-                      {activeDiscrepancy.demoInvestigation?.whyUnresolved || activeDiscrepancyCopy?.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.'}
-                    </p>
-                  </div>
                 </div>
 
-                <div className="px-4 py-3">
+                <div className="px-4 py-2">
                   <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#858792]">Backend detection record</div>
-                  <div className="mt-2 grid grid-cols-2 border-y border-[#E9E9EC]">
+                  <div className="mt-1.5 grid grid-cols-2 border-y border-[#E9E9EC]">
                     {activeDiscrepancyMetaRows.map((item) => (
                       <div key={item.label} className="border-b border-[#F0F0F2] py-1.5 pr-2.5 odd:border-r odd:border-[#F0F0F2] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
                         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#858792]">{item.label}</div>
