@@ -2065,7 +2065,7 @@ export default function DisputeCases() {
                         const nextActionLabel = sellerNextActionLabel(row, posture);
                         const displayedStatus = isDemoCase ? 'In progress' : formatLabel(row.status);
                         const displayedGate = isDemoCase ? 'Active review' : gateState?.label;
-                        const displayedFiling = isDemoCase ? 'Submitted — awaiting response' : formatSellerFilingStatus(row);
+                        const displayedFiling = isDemoCase ? 'Payment confirmed — monitoring' : formatSellerFilingStatus(row);
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top transition-colors hover:bg-[#F7FAFC]">
@@ -2088,13 +2088,14 @@ export default function DisputeCases() {
                                   <Badge variant="outline" className={cn(CASE_BADGE_BASE, 'bg-[#F1F5F7] text-[#66737F]')}>
                                     {hasRealDisputeCase ? 'Dispute case' : 'Detection record'}
                                   </Badge>
+                                  {isDemoCase ? <Badge variant="outline" className={cn(CASE_BADGE_BASE, 'whitespace-nowrap border-[#BFE0CF] bg-[#F4FAF7] font-semibold text-[#2F6C54]')}>Seller action: none required</Badge> : null}
                                   {threadBackfilled ? (
                                     <Badge variant="outline" className={cn(CASE_BADGE_BASE, 'bg-[#F1F5F7] text-[#66737F]')}>Amazon thread</Badge>
                                   ) : null}
                                 </div>
                                 <div className="border-t border-[#E7EEF2] pt-2 text-[10px] tracking-tight text-[#66737F]">
                                   <span className="text-[#8A99A5]">Progress:</span>{' '}
-                                  <span className={cn('font-medium', isDemoCase ? 'text-[#0B74DE]' : progressSnapshot.toneClass)}>{isDemoCase ? 'In progress · Investigated → Evidence prepared → Approved → Submitted' : progressSnapshot.label}</span>
+                                  {isDemoCase ? <span className="inline-flex flex-wrap items-center gap-1 font-medium text-[#2F6C54]"><span>✓ Investigated</span><span className="text-[#B7C5CC]">→</span><span>✓ Evidence</span><span className="text-[#B7C5CC]">→</span><span>✓ Approved</span><span className="text-[#B7C5CC]">→</span><span className="text-[#0B74DE]">● Submitted</span></span> : <span className={cn('font-medium', progressSnapshot.toneClass)}>{progressSnapshot.label}</span>}
                                 </div>
                               </div>
                             </td>
@@ -2139,7 +2140,7 @@ export default function DisputeCases() {
                                   <Badge variant="outline" className={cn(CASE_BADGE_BASE, postureBadgeClass(posture.tone))}>{posture.headline}</Badge>
                                 </div>
                                 <p className="text-[11px] leading-5 text-[#4D5B66]">{posture.detail}</p>
-                                {isDemoCase ? <div className="flex flex-wrap items-center gap-1.5"><span className="whitespace-nowrap rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">Amazon response: Awaiting response</span><span className="whitespace-nowrap rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">Seller action: none required</span></div> : null}
+                                {isDemoCase ? <div className="space-y-1.5"><div className="flex flex-wrap items-center gap-1.5"><span className="whitespace-nowrap rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">Amazon response: Payment confirmed</span><span className="whitespace-nowrap rounded-full bg-[#F1F5F7] px-2 py-1 text-[10px] font-normal leading-4 text-[#4D5B66]">Monitoring settlement</span></div><p className="text-[10px] leading-4 text-[#66737F]">Payment is confirmed. Margin is tracking the financial settlement and will notify you if anything changes.</p><p className="text-[10px] font-medium leading-4 text-[#4D5B66]">Next check: 6 September 2026</p></div> : null}
                                 <p className="text-[11px] leading-5 text-[#66737F]">{filingTruthLine(row)}</p>
                                 {safeDecisionExplanation ? <p className="text-[10px] leading-4 text-[#8A99A5]">Context: {safeDecisionExplanation}</p> : null}
                                 {(posture.strengths.length || posture.risks.length) ? (
@@ -2161,9 +2162,9 @@ export default function DisputeCases() {
                               <div className="min-w-[160px] space-y-1 text-[11px] text-[#66737F]">
                                 <div className="text-[10px] font-medium tracking-tight text-[#8A99A5]">Last movement</div>
                                 <div className="text-[12px] font-medium tracking-tight text-[#182026]">
-                                  {row.updated_at ? formatDistanceToNow(new Date(row.updated_at), { addSuffix: true }) : 'Not Available'}
+                                  {isDemoCase ? '2 days ago' : row.updated_at ? formatDistanceToNow(new Date(row.updated_at), { addSuffix: true }) : 'Not Available'}
                                 </div>
-                                <div>{row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available'}</div>
+                                <div>{isDemoCase ? '2026/09/02 10:00' : row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available'}</div>
                                 {isRecentTimestamp(row.updated_at) ? (
                                   <Badge variant="outline" className={cn('w-fit', CASE_BADGE_BASE, 'bg-[#F1F5F7] text-[#66737F]')}>
                                     Recently updated
