@@ -409,9 +409,9 @@ function OneRecoverySection() {
           </p>
         </motion.div>
       </div>
-      <div className="mx-auto w-full max-w-[1400px] px-5 sm:px-6 md:px-8 mt-12 md:mt-16 lg:mt-20">
-        <motion.div {...revealProps} className="relative mx-auto max-w-[1351px] overflow-hidden rounded-[14px] border border-[var(--margin-border)] shadow-[0_12px_40px_rgba(37,49,58,0.08)]">
-          <img src={recoveryImg} alt="Recovery Operation" className="w-full object-cover rounded-[14px]" style={{ imageRendering: 'high-quality' }} />
+      <div className="mx-auto mt-12 w-full max-w-[1440px] px-0 sm:mt-16 sm:px-4 md:mt-20 md:px-6">
+        <motion.div {...revealProps} className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[12px] sm:rounded-[16px]">
+          <img src={recoveryImg} alt="Recovery Operation" className="block w-full object-cover" style={{ imageRendering: 'high-quality' }} />
         </motion.div>
       </div>
     </section>
