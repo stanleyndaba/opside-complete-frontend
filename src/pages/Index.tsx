@@ -464,7 +464,7 @@ function MarginLifecycleSection() {
       className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28"
     >
       <div className={containerClass}>
-        <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
+        <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
         <motion.div {...revealProps} className="relative order-1 overflow-hidden rounded-[14px]">
           <video className="aspect-video w-full rounded-[14px] object-cover" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
@@ -488,14 +488,12 @@ function MarginLifecycleSection() {
           </h2>
         </motion.div>
 
-        <div className="mt-7 sm:mt-9 md:mt-12">
           <motion.p
             {...revealProps}
             className="mt-4 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"
           >
             You don&apos;t become the recovery manager. Margin does the work. You stay in control.
           </motion.p>
-        </div>
         </div>
         </div>
       </div>
