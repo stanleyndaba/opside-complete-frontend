@@ -286,7 +286,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[#17212B] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(25,27,32,0.12)] transition-[background-color,box-shadow] duration-200 hover:bg-[#25313A] hover:shadow-[0_12px_26px_rgba(25,27,32,0.18)]">
+                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[#F0F0EC] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[#191B20] shadow-[0_8px_20px_rgba(25,27,32,0.12)] transition-[background-color,box-shadow] duration-200 hover:bg-[#E7E7E1] hover:shadow-[0_12px_26px_rgba(25,27,32,0.18)]">
                                         Get Help Now <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                 </div>
