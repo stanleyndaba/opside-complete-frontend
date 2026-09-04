@@ -243,22 +243,22 @@ function AccountingEvidenceSection() {
                 </div>
 
                 <div className="relative mt-4">
-                  <div className="relative hidden overflow-hidden rounded-[28px] border border-[#D8E3EA] bg-[#E8EDF0] py-6 md:block lg:py-8">
+                  <div className="relative overflow-hidden rounded-[20px] border border-[#D8E3EA] bg-[#E8EDF0] py-4 sm:rounded-[24px] md:rounded-[28px] md:py-6 lg:py-8">
                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(125deg,rgba(216,227,234,0.76),rgba(246,248,248,0.82)_52%,rgba(214,225,231,0.72))]" />
                     <div className="relative space-y-4">
                       {accountingRows.map((row, rowIndex) => (
                         <motion.div
                           key={rowIndex}
-                          className="flex w-max gap-4 px-4 lg:gap-5 lg:px-6"
+                          className="flex w-max gap-3 px-3 md:gap-4 md:px-4 lg:gap-5 lg:px-6"
                           animate={reduceMotion ? { x: rowIndex === 0 ? 0 : -110 } : { x: rowIndex === 0 ? [0, -150] : [-110, 40] }}
                           transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 24 : 28, repeat: Infinity, ease: "linear" }}
                         >
                           {[...row, ...row].map((source, index) => {
                             const isActive = source.id === activeSource.id;
                             return (
-                              <div key={`${source.id}-${rowIndex}-${index}`} className="relative h-[142px] w-[142px] shrink-0 rounded-[20px] border-[7px] border-[#CBD4D9] bg-[#FFFFFF] p-5 shadow-[0_18px_28px_rgba(24,32,38,0.13)] lg:h-[156px] lg:w-[156px]">
-                                <div className={`flex h-full w-full items-center justify-center rounded-[12px] border ${isActive ? "border-[#0B74DE]/45" : "border-[#EEF2F4]"}`}>
-                                  <img src={source.src} alt={source.name} className={`max-h-16 max-w-[76px] object-contain ${isActive ? "opacity-100" : "opacity-90"}`} />
+                              <div key={`${source.id}-${rowIndex}-${index}`} className="relative h-[94px] w-[94px] shrink-0 rounded-[14px] border-[5px] border-[#CBD4D9] bg-[#FFFFFF] p-3 shadow-[0_12px_22px_rgba(24,32,38,0.10)] sm:h-[112px] sm:w-[112px] sm:rounded-[16px] sm:p-4 md:h-[142px] md:w-[142px] md:rounded-[20px] md:border-[7px] md:p-5 md:shadow-[0_18px_28px_rgba(24,32,38,0.13)] lg:h-[156px] lg:w-[156px]">
+                                <div className={`flex h-full w-full items-center justify-center rounded-[8px] border sm:rounded-[10px] md:rounded-[12px] ${isActive ? "border-[#0B74DE]/45" : "border-[#EEF2F4]"}`}>
+                                  <img src={source.src} alt={source.name} className={`max-h-9 max-w-[48px] object-contain sm:max-h-12 sm:max-w-[60px] md:max-h-16 md:max-w-[76px] ${isActive ? "opacity-100" : "opacity-90"}`} />
                                 </div>
                                 {isActive ? <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-[#BFD6E8] bg-[#FAFAF7] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">In focus</span> : null}
                               </div>
@@ -269,7 +269,7 @@ function AccountingEvidenceSection() {
                     </div>
                   </div>
 
-                  <div className="relative md:hidden">
+                  <div className="relative hidden">
                     <div className="relative overflow-hidden py-5">
                       <motion.div
                         className="flex w-max gap-8 pr-8"
@@ -301,7 +301,7 @@ function AccountingEvidenceSection() {
                   </div>
                 </div>
 
-                <div className="mt-5 hidden items-center gap-3 border-t border-[#E4EDF1] pt-4 md:flex">
+                <div className="mt-5 flex items-center gap-3 border-t border-[#E4EDF1] pt-4">
                   <motion.span
                     aria-hidden="true"
                     className="h-px bg-[#0B74DE]"
