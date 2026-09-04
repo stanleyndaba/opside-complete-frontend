@@ -225,62 +225,29 @@ function AccountingEvidenceSection() {
                 </div>
 
                 <div className="relative mt-4">
-                  <div className="relative hidden h-[420px] overflow-hidden md:block lg:h-[450px]">
-                    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      {accountingSources.map((source) => (
-                        <path key={`${source.id}-base`} d={source.route} fill="none" stroke="#E6EDF1" strokeWidth="0.2" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
-                      ))}
-                      <motion.path
-                        key={activeSource.id}
-                        d={activeSource.route}
-                        fill="none"
-                        stroke="#7D8B95"
-                        strokeWidth="0.45"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                        vectorEffect="non-scaling-stroke"
-                        initial={{ pathLength: 0, opacity: 0 }}
-                        animate={reduceMotion ? { pathLength: 1, opacity: 0.8 } : { pathLength: [0, 1], opacity: [0, 1, 0.75] }}
-                        transition={reduceMotion ? { duration: 0 } : { duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-                      />
-                      <circle cx="50" cy="94" r="1.2" fill="#FAFAF7" stroke="#0B74DE" strokeWidth="0.45" vectorEffect="non-scaling-stroke" />
-                    </svg>
-
-                    <div className="relative grid h-full grid-cols-3 grid-rows-3 gap-x-6 gap-y-3 px-1 py-2 lg:gap-x-10">
-                      {accountingSources.map((source, index) => {
-                        const isActive = index === activeEvidence % accountingSources.length;
-                        return (
-                          <motion.div
-                            key={source.id}
-                            animate={reduceMotion ? { opacity: 1, y: 0, x: 0 } : { opacity: isActive ? 1 : 0.62, y: isActive ? -4 : 0, x: isActive ? 3 : 0 }}
-                            transition={{ duration: reduceMotion ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
-                            className="relative z-10 flex min-w-0 flex-col items-center justify-center text-center"
-                          >
-                            <div className={`flex h-16 w-16 items-center justify-center rounded-[14px] border bg-white/90 shadow-[0_8px_24px_rgba(24,32,38,0.04)] transition-colors ${isActive ? "border-[#0B74DE]/45" : "border-[#E1E8ED]"}`}>
-                              <img src={source.src} alt={source.name} className={`max-h-8 max-w-9 object-contain transition-all ${isActive ? "grayscale opacity-90" : "grayscale opacity-65"}`} />
-                            </div>
-                            <span className={`mt-2 max-w-[112px] text-[9px] leading-4 tracking-tight ${isActive ? "font-semibold text-[#0B74DE]" : "text-[#94A3B8]"}`}>
-                              {source.context}
-                            </span>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 bg-[#FAFAF7] px-4 text-center">
-                      <span className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">Recovery context</span>
-                      <AnimatePresence mode="wait">
-                        <motion.span
-                          key={activeSource.context}
-                          initial={reduceMotion ? { opacity: 1, y: 4 } : { opacity: 0, y: 5 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={reduceMotion ? undefined : { opacity: 0, y: -5 }}
-                          transition={{ duration: reduceMotion ? 0 : 0.25 }}
-                          className="mt-1 block whitespace-nowrap text-[10px] leading-4 text-[#66737F]"
+                  <div className="relative hidden overflow-hidden rounded-[28px] border border-[#D8E3EA] bg-[#E8EDF0] py-6 md:block lg:py-8">
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(125deg,rgba(216,227,234,0.76),rgba(246,248,248,0.82)_52%,rgba(214,225,231,0.72))]" />
+                    <div className="relative space-y-4">
+                      {[1, -1].map((direction, rowIndex) => (
+                        <motion.div
+                          key={rowIndex}
+                          className="flex w-max gap-4 px-4 lg:gap-5 lg:px-6"
+                          animate={reduceMotion ? { x: rowIndex === 0 ? 0 : -110 } : { x: rowIndex === 0 ? [0, -150] : [-110, 40] }}
+                          transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 24 : 28, repeat: Infinity, ease: "linear" }}
                         >
-                          {activeSource.context}
-                        </motion.span>
-                      </AnimatePresence>
+                          {[...accountingSources, ...accountingSources].map((source, index) => {
+                            const isActive = source.id === activeSource.id;
+                            return (
+                              <div key={`${source.id}-${rowIndex}-${index}`} className="relative h-[142px] w-[142px] shrink-0 rounded-[20px] border-[7px] border-[#CBD4D9] bg-[#FFFFFF] p-5 shadow-[0_18px_28px_rgba(24,32,38,0.13)] lg:h-[156px] lg:w-[156px]">
+                                <div className={`flex h-full w-full items-center justify-center rounded-[12px] border ${isActive ? "border-[#0B74DE]/45" : "border-[#EEF2F4]"}`}>
+                                  <img src={source.src} alt={source.name} className={`max-h-16 max-w-[76px] object-contain ${isActive ? "opacity-100" : "opacity-90"}`} />
+                                </div>
+                                {isActive ? <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-[#BFD6E8] bg-[#FAFAF7] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">In focus</span> : null}
+                              </div>
+                            );
+                          })}
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
 
