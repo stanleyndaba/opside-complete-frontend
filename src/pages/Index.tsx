@@ -289,29 +289,9 @@ function AccountingEvidenceSection() {
                       <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[#FAFAF7] to-transparent" />
                       <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[#FAFAF7] to-transparent" />
                     </div>
-                    <div className="mt-5 flex items-center gap-3">
-                      <motion.span
-                        aria-hidden="true"
-                        className="h-px bg-[#0B74DE]"
-                        animate={reduceMotion ? { width: 32, opacity: 1 } : { width: [20, 44, 20], opacity: [0.35, 1, 0.35] }}
-                        transition={reduceMotion ? { duration: 0 } : { duration: 1.45, repeat: Infinity, ease: "easeInOut" }}
-                      />
-                      <p className="text-[11px] leading-5 text-[#66737F]">Relevant context moves into view when it can change the recovery decision.</p>
-                    </div>
                   </div>
                 </div>
 
-                <div className="mt-5 flex items-center gap-3 border-t border-[#E4EDF1] pt-4">
-                  <motion.span
-                    aria-hidden="true"
-                    className="h-px bg-[#0B74DE]"
-                    animate={reduceMotion ? { width: 32, opacity: 1 } : { width: [20, 44, 20], opacity: [0.35, 1, 0.35] }}
-                    transition={reduceMotion ? { duration: 0 } : { duration: 1.45, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <p className="text-[11px] leading-5 text-[#66737F]">
-                    Relevant context moves into view when it can change the recovery decision.
-                  </p>
-                </div>
               </div>
             </div>
 
