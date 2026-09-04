@@ -214,14 +214,14 @@ function AccountingEvidenceSection() {
     <section className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
         <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
-          <motion.div {...revealProps} className="min-w-0">
+          <motion.div {...revealProps} className="min-w-0 lg:col-span-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
             </div>
-            <h2 id="accounting-section-title" className="max-w-[760px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[46px]" style={{ fontWeight: 400 }}>
+            <h2 id="accounting-section-title" className="max-w-[980px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[42px] lg:text-[44px]" style={{ fontWeight: 400 }}>
               A recovery is easier to act on when the money around it is visible.
-              <span className="mt-3 block text-[#8A99A4]">The right context should arrive beside the event.</span>
+              <span className="mt-3 block max-w-[920px] text-[0.86em] leading-[1.04] text-[#8A99A4]">The right context should arrive beside the event.</span>
             </h2>
           </motion.div>
 
