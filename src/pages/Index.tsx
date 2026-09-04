@@ -394,6 +394,8 @@ function KineticHeroSection({
   );
 }
 
+import recoveryImg from "@/assets/recovery.png";
+
 function OneRecoverySection() {
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28 text-center">
@@ -407,7 +409,7 @@ function OneRecoverySection() {
           </p>
         </motion.div>
         <motion.div {...revealProps} className="mt-12 md:mt-16 relative mx-auto max-w-[1040px] overflow-hidden rounded-[14px] border border-[var(--margin-border)] shadow-[0_12px_40px_rgba(37,49,58,0.08)]">
-          <img src="/recovery.png" alt="Recovery Operation" className="w-full object-cover rounded-[14px]" />
+          <img src={recoveryImg} alt="Recovery Operation" className="w-full object-cover rounded-[14px]" />
         </motion.div>
       </div>
     </section>
