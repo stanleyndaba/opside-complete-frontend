@@ -405,7 +405,7 @@ function OneRecoverySection() {
             One Recovery Operation for Your Amazon Business
           </h2>
           <p className="mt-6 text-[16px] leading-7 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-8">
-            Margin finds what Amazon missed, handles the recovery work, and tracks each case through to the money actually being recovered.
+            Run your entire recovery operation with Margin—from finding what Amazon missed to getting the delta back and knowing when the recovery is actually complete.
           </p>
         </motion.div>
       </div>
