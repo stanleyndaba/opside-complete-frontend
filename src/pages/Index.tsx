@@ -169,11 +169,17 @@ const accountingSources = [
   { id: "gmail", name: "Gmail", context: "invoices + threads", src: "/gmailicon.png", route: "M 50 14 V 94" },
   { id: "drive", name: "Google Drive", context: "documents + records", src: "/gd.png", route: "M 88 14 H 72 V 94 H 50" },
   { id: "quickbooks", name: "QuickBooks", context: "cost basis", src: "/quickbooks.png", route: "M 12 50 H 30 V 94 H 50" },
-  { id: "slack", name: "Slack", context: "internal context", src: "/slack-icon-2019.png", route: "M 50 50 V 94" },
+  { id: "slack", name: "Slack", context: "internal context", src: "/slack-icon-2019.png", route: "M 50 50 V 94 H 50" },
   { id: "xero", name: "Xero", context: "accounting records", src: "/xero.png", route: "M 88 50 H 70 V 94 H 50" },
   { id: "dropbox", name: "Dropbox", context: "supporting files", src: "/Dropbox_Icon.svg.png", route: "M 12 86 H 30 V 94 H 50" },
   { id: "outlook", name: "Outlook", context: "supplier correspondence", src: "/outlookicon.webp", route: "M 50 86 V 94" },
   { id: "onedrive", name: "OneDrive", context: "working documents", src: "/onedriive.png", route: "M 88 86 H 70 V 94 H 50" },
+];
+
+const getAccountingRow = (order: string[]) => order.map((id) => accountingSources.find((source) => source.id === id)!).filter(Boolean);
+const accountingRows = [
+  getAccountingRow(["drive", "amazon", "slack", "outlook", "quickbooks", "gmail", "onedrive", "xero", "dropbox"]),
+  getAccountingRow(["xero", "gmail", "dropbox", "amazon", "onedrive", "quickbooks", "drive", "outlook", "slack"]),
 ];
 
 function AccountingEvidenceSection() {
@@ -228,14 +234,14 @@ function AccountingEvidenceSection() {
                   <div className="relative hidden overflow-hidden rounded-[28px] border border-[#D8E3EA] bg-[#E8EDF0] py-6 md:block lg:py-8">
                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(125deg,rgba(216,227,234,0.76),rgba(246,248,248,0.82)_52%,rgba(214,225,231,0.72))]" />
                     <div className="relative space-y-4">
-                      {[1, -1].map((direction, rowIndex) => (
+                      {accountingRows.map((row, rowIndex) => (
                         <motion.div
                           key={rowIndex}
                           className="flex w-max gap-4 px-4 lg:gap-5 lg:px-6"
                           animate={reduceMotion ? { x: rowIndex === 0 ? 0 : -110 } : { x: rowIndex === 0 ? [0, -150] : [-110, 40] }}
                           transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 24 : 28, repeat: Infinity, ease: "linear" }}
                         >
-                          {[...accountingSources, ...accountingSources].map((source, index) => {
+                          {[...row, ...row].map((source, index) => {
                             const isActive = source.id === activeSource.id;
                             return (
                               <div key={`${source.id}-${rowIndex}-${index}`} className="relative h-[142px] w-[142px] shrink-0 rounded-[20px] border-[7px] border-[#CBD4D9] bg-[#FFFFFF] p-5 shadow-[0_18px_28px_rgba(24,32,38,0.13)] lg:h-[156px] lg:w-[156px]">
