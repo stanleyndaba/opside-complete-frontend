@@ -4463,7 +4463,7 @@ This is saved as a support request. Margin records notification delivery separat
                     <div className="text-[10px] font-sans text-[#8A99A5]">
                       Proof required
                     </div>
-                    <DialogTitle className="mt-1 font-lora text-[21px] font-normal leading-tight tracking-tight text-[#182026]">
+                    <DialogTitle className="mt-1 text-[21px] font-sans font-normal leading-tight tracking-tight text-[#182026]">
                       Evidence required for this finding
                     </DialogTitle>
                     <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-[#6B7280]">
