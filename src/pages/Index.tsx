@@ -456,14 +456,6 @@ function RealityCheckSection() {
   );
 }
 
-const marginLifecycleUnits = [
-  { label: "Find", side: "left" as const },
-  { label: "Investigate", side: "right" as const },
-  { label: "Prove", side: "left" as const },
-  { label: "Handle", side: "right" as const },
-  { label: "Verify", side: "left" as const },
-];
-
 function MarginLifecycleSection() {
 
   return (
@@ -497,47 +489,6 @@ function MarginLifecycleSection() {
         </motion.div>
 
         <div className="mt-7 sm:mt-9 md:mt-12">
-          <motion.p
-            {...revealProps}
-            className="max-w-[680px] text-[15px] font-medium leading-6 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[18px] md:leading-7"
-          >
-            Five stages. One recovery operation.
-          </motion.p>
-
-          <div className="relative mt-8 overflow-hidden px-1 py-3 sm:mt-10 sm:py-4 md:mt-12 md:px-0 md:py-8">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 flex items-center justify-center"
-            >
-              <span className="brand-wordmark font-merriweather text-[clamp(4.5rem,12vw,10rem)] leading-none tracking-[-0.085em] text-[rgba(24,32,38,0.055)]">
-                Margin
-              </span>
-            </div>
-
-            <div className="relative z-10 space-y-2 md:space-y-2.5">
-              {marginLifecycleUnits.map((item, index) => {
-                const direction = item.side === "left" ? "left" : "right";
-
-                return (
-                    <div key={item.label} className="relative h-8 min-w-0 overflow-visible sm:h-9">
-                    <span
-                      style={{
-                        animationDelay: `-${index * 0.52}s`,
-                        animationDuration: `${11.4 + (index % 3) * 0.72}s`,
-                      }}
-                      className={cn(
-                        "lifecycle-unit absolute top-0 inline-flex max-w-[calc(100vw-3rem)] whitespace-nowrap rounded-[10px] bg-[#EEF1F2] px-2.5 py-1.5 text-[10px] font-semibold leading-5 tracking-[-0.01em] text-[#182026] sm:max-w-none sm:px-3.5 sm:py-2 sm:text-[12px]",
-                        direction === "left" ? "lifecycle-unit--left" : "lifecycle-unit--right",
-                      )}
-                    >
-                      {item.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
           <motion.p
             {...revealProps}
             className="mt-8 max-w-[820px] font-lora text-[20px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:mt-10 sm:text-[27px] md:mt-12 md:text-[34px]"
