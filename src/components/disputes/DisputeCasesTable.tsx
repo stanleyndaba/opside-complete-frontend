@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { AlertCircle, ArrowRight, Check, Circle, Loader2 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 import { Badge } from '@/components/ui/badge';
@@ -121,10 +121,69 @@ function lightPayoutProofTone(value: string | null | undefined) {
   }
 }
 
+function ActiveCaseOverview() {
+  const steps = [
+    { label: 'Investigated', complete: true },
+    { label: 'Evidence prepared', complete: true },
+    { label: 'Approved', complete: true },
+    { label: 'Submitted', complete: false },
+  ];
+
+  return (
+    <div className="border border-[#CFE0EA] bg-[#F8FBFD] px-5 py-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">Active recovery case</div>
+          <h3 className="mt-1 text-[19px] font-normal tracking-tight text-[#182026]">Margin is handling the next step.</h3>
+          <p className="mt-1 max-w-2xl text-[11px] leading-5 text-[#66737F]">The case is moving through Amazon review while Margin keeps the evidence, response, and follow-up together.</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className="border-[#BFD8F6] bg-[#F3F7FF] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#0B74DE]">In progress</Badge>
+          <Badge variant="outline" className="border-[#BFE0CF] bg-[#F4FAF7] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#2F6C54]">Seller action: none required</Badge>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-3 border-y border-[#DCE8EE] py-3 md:grid-cols-3 md:gap-5">
+        <div>
+          <div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Amazon response</div>
+          <div className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">Awaiting response</div>
+          <p className="mt-1 text-[10px] leading-4 text-[#66737F]">Amazon has not returned a decision yet.</p>
+        </div>
+        <div>
+          <div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Next action</div>
+          <div className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">Margin will monitor and follow up.</div>
+          <p className="mt-1 text-[10px] leading-4 text-[#66737F]">No seller follow-up is needed at this stage.</p>
+        </div>
+        <div>
+          <div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Current owner</div>
+          <div className="mt-1 text-[12px] font-medium tracking-tight text-[#182026]">Margin operations</div>
+          <p className="mt-1 text-[10px] leading-4 text-[#66737F]">Evidence and communication remain under review.</p>
+        </div>
+      </div>
+
+      <div className="mt-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="text-[9px] font-medium uppercase tracking-tight text-[#8A99A5]">Recovery progress</div>
+          <div className="text-[10px] font-medium tracking-tight text-[#4D5B66]">3 of 4 stages complete</div>
+        </div>
+        <div className="mt-2 grid gap-2 sm:grid-cols-4">
+          {steps.map((step) => (
+            <div key={step.label} className={cn('flex items-center gap-2 border px-2.5 py-2 text-[10px] font-medium tracking-tight', step.complete ? 'border-[#BFE0CF] bg-[#F4FAF7] text-[#2F6C54]' : 'border-[#BFD8F6] bg-[#F3F7FF] text-[#0B74DE]')}>
+              {step.complete ? <Check className="h-3.5 w-3.5 shrink-0" /> : <Circle className="h-3.5 w-3.5 shrink-0 fill-[#0B74DE]/15" />}
+              <span>{step.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function DisputeCasesTable(_props: DisputeCasesTableProps) {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant } = useTenant();
   const activeTenantSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
+  const isDemoWorkspace = activeTenantSlug === 'demo-workspace';
 
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -259,6 +318,8 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
           <p className="mx-auto mt-2 max-w-md text-[12px] leading-5 text-[#66737F]">Submitted recovery cases will appear here as Margin receives and reconciles Amazon updates.</p>
         </div>
       ) : (
+        <>
+        {isDemoWorkspace ? <ActiveCaseOverview /> : null}
         <div className="overflow-hidden border border-[#DCE8EE] bg-white">
           <div className="hidden border-b border-[#E7EEF2] bg-[#F7FAFC] px-5 py-3 lg:grid lg:grid-cols-[minmax(0,1.3fr)_minmax(220px,0.9fr)_minmax(0,0.8fr)] lg:gap-6">
             <span className="text-[10px] font-medium tracking-tight text-[#66737F]">Filed recovery</span>
@@ -266,19 +327,20 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
             <span className="text-[10px] font-medium tracking-tight text-[#66737F]">Evidence and next action</span>
           </div>
           <div className="divide-y divide-[#E7EEF2]">
-            {rows.map((row) => {
+            {rows.map((row, index) => {
               const isLegacyRow = source === 'legacy';
+              const demoActiveRow = isDemoWorkspace && index === 0;
               const proofStatus = getProofStatus(row);
               const missingRequirements = getMissingRequirements(row);
               const manualReviewReason = getManualReviewReason(row);
               const payoutProofStatus = getPayoutProofStatus(row);
               const quarantineReason = getQuarantineReason(row);
               const recordId = row.linked_dispute_case_id || row.dispute_case_id;
-              const filingStatusLabel = isLegacyRow ? 'Not available' : (row.filing_status || 'Not available');
+              const filingStatusLabel = demoActiveRow ? 'Awaiting Amazon response' : isLegacyRow ? 'Not available' : (row.filing_status || 'Not available');
               const evidenceStateLabel = isLegacyRow ? 'Not available' : (row.evidence_state || 'Not available');
               const proofStatusLabel = isLegacyRow ? 'Not available' : (proofStatus ? formatProofStatus(proofStatus) : null);
               const payoutProofLabel = isLegacyRow ? 'Not available' : (payoutProofStatus && payoutProofStatus !== 'not_applicable' ? formatPayoutProofStatus(payoutProofStatus) : null);
-              const nextActionLabel = isLegacyRow ? 'Not available' : (row.next_action || 'Not available');
+              const nextActionLabel = demoActiveRow ? 'Margin will monitor and follow up' : isLegacyRow ? 'Not available' : (row.next_action || 'Not available');
               const approvedLabel = isLegacyRow ? 'Not available' : formatMoney(row.approved_amount, row.currency);
               const recoveredLabel = isLegacyRow ? 'Not available' : formatMoney(row.actual_payout_amount, row.currency);
               const matchedDocsLabel = isLegacyRow
@@ -295,7 +357,7 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
                         <Link to={`/recoveries/${recordId}`} className="text-[13px] font-medium tracking-tight text-[#0B74DE] transition-colors hover:text-[#0968C8]">
                           {row.case_number || row.dispute_case_id}
                         </Link>
-                        <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', badgeClass(row.status))}>{row.status || 'Not available'}</Badge>
+                        <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', badgeClass(demoActiveRow ? 'pending' : row.status))}>{demoActiveRow ? 'In progress' : row.status || 'Not available'}</Badge>
                         <Badge variant="outline" className={cn('border px-2 py-0.5 text-[10px] font-medium tracking-tight', badgeClass(filingStatusLabel))}>{filingStatusLabel}</Badge>
                       </div>
                       <div className="mt-3 space-y-1 text-[11px] leading-5 text-[#66737F]">
@@ -339,6 +401,7 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
             })}
           </div>
         </div>
+        </>
       )}
     </div>
   );
