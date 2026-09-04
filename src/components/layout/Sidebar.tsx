@@ -240,24 +240,24 @@ export function Sidebar({
   );
   const navGroups: Array<{ label: string; items: NavItem[] }> = [
     {
-      label: 'Overview',
+      label: 'Workspace',
       items: [{ title: 'Home', icon: Gauge, href: overviewHref }]
     },
     {
-      label: 'Recovery',
+      label: 'Operations',
       items: [
         { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
         { title: 'Disputes', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-        { title: 'Filing', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
+        { title: 'Submissions', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
         { title: 'Appeals', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
       ]
     },
     {
-      label: 'Proof',
+      label: 'Records',
       items: [
         { title: 'Evidence', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
         {
-          title: 'Integrations',
+          title: 'Connections',
           icon: Box,
           href: tenantRoute(currentTenantSlug, '/integrations-hub'),
           hoverContent: financialEvidenceHoverContent
@@ -265,7 +265,7 @@ export function Sidebar({
       ]
     },
     {
-      label: 'Updates',
+      label: 'Activity',
       items: [{ title: 'Notifications', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }]
     }
   ];
@@ -273,7 +273,7 @@ export function Sidebar({
     { title: 'Settings', icon: Settings2, href: tenantRoute(currentTenantSlug, '/settings') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') },
     { title: 'Help', icon: LifeBuoy, href: tenantRoute(currentTenantSlug, '/help') },
-    { title: 'Latest Changes', icon: NotebookPen, href: tenantRoute(currentTenantSlug, '/whats-new') }
+    { title: "What's New", icon: NotebookPen, href: tenantRoute(currentTenantSlug, '/whats-new') }
   ];
   const isMoreActive = utilityItems.some((item) => location.pathname === item.href);
   const NavItemComponent = React.memo(({
