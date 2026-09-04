@@ -408,8 +408,10 @@ function OneRecoverySection() {
             Margin finds what Amazon missed, handles the recovery work, and tracks each case through to the money actually being recovered.
           </p>
         </motion.div>
-        <motion.div {...revealProps} className="mt-12 md:mt-16 relative mx-auto max-w-[1040px] overflow-hidden rounded-[14px] border border-[var(--margin-border)] shadow-[0_12px_40px_rgba(37,49,58,0.08)]">
-          <img src={recoveryImg} alt="Recovery Operation" className="w-full object-cover rounded-[14px]" />
+      </div>
+      <div className="mx-auto w-full max-w-[1400px] px-5 sm:px-6 md:px-8 mt-12 md:mt-16 lg:mt-20">
+        <motion.div {...revealProps} className="relative mx-auto max-w-[1351px] overflow-hidden rounded-[14px] border border-[var(--margin-border)] shadow-[0_12px_40px_rgba(37,49,58,0.08)]">
+          <img src={recoveryImg} alt="Recovery Operation" className="w-full object-cover rounded-[14px]" style={{ imageRendering: 'high-quality' }} />
         </motion.div>
       </div>
     </section>
