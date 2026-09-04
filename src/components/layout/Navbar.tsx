@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowRight, ArrowUpDown, ChevronDown, HelpCircle, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, CreditCard, Upload, Layers, LogOut, Settings2 } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, ChevronDown, HelpCircle, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, CreditCard, Upload, Layers, LogOut, Settings2, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -582,6 +582,15 @@ export function Navbar({
                   className="flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
                   iconClassName="h-5 w-5"
                 />
+                <button
+                  type="button"
+                  onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
+                  className="flex h-10 w-10 items-center justify-center rounded-none text-[#6B7280] transition-all hover:bg-[#F8FAFB] hover:text-[#0B74DE]"
+                  aria-label="Stores"
+                  title="Stores"
+                >
+                  <Store className="h-5 w-5" />
+                </button>
 
 
               </div>
