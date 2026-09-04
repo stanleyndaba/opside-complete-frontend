@@ -220,22 +220,22 @@ function AccountingEvidenceSection() {
 
               <div className="relative mt-7">
                 <div className="flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
-                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Integrated tools</p>
-                  <span className="max-w-full break-words font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">Active signal / {activeSource.context}</span>
+                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Record sources</p>
+                  <span className="max-w-full break-words font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">In focus / {activeSource.context}</span>
                 </div>
 
                 <div className="relative mt-4">
-                  <div className="relative hidden h-[440px] overflow-hidden md:block lg:h-[470px]">
+                  <div className="relative hidden h-[420px] overflow-hidden md:block lg:h-[450px]">
                     <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                       {accountingSources.map((source) => (
-                        <path key={`${source.id}-base`} d={source.route} fill="none" stroke="#D8E3EA" strokeWidth="0.22" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
+                        <path key={`${source.id}-base`} d={source.route} fill="none" stroke="#E6EDF1" strokeWidth="0.2" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
                       ))}
                       <motion.path
                         key={activeSource.id}
                         d={activeSource.route}
                         fill="none"
-                        stroke="#0B74DE"
-                        strokeWidth="0.7"
+                        stroke="#7D8B95"
+                        strokeWidth="0.45"
                         strokeLinecap="square"
                         strokeLinejoin="miter"
                         vectorEffect="non-scaling-stroke"
@@ -246,7 +246,7 @@ function AccountingEvidenceSection() {
                       <circle cx="50" cy="94" r="1.2" fill="#FAFAF7" stroke="#0B74DE" strokeWidth="0.45" vectorEffect="non-scaling-stroke" />
                     </svg>
 
-                    <div className="relative grid h-full grid-cols-3 grid-rows-3 gap-x-8 gap-y-4 px-1 py-2 lg:gap-x-12">
+                    <div className="relative grid h-full grid-cols-3 grid-rows-3 gap-x-6 gap-y-3 px-1 py-2 lg:gap-x-10">
                       {accountingSources.map((source, index) => {
                         const isActive = index === activeEvidence % accountingSources.length;
                         return (
@@ -256,8 +256,8 @@ function AccountingEvidenceSection() {
                             transition={{ duration: reduceMotion ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
                             className="relative z-10 flex min-w-0 flex-col items-center justify-center text-center"
                           >
-                            <div className="flex h-12 items-center justify-center lg:h-14">
-                              <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
+                            <div className={`flex h-16 w-16 items-center justify-center rounded-[14px] border bg-white/90 shadow-[0_8px_24px_rgba(24,32,38,0.04)] transition-colors ${isActive ? "border-[#0B74DE]/45" : "border-[#E1E8ED]"}`}>
+                              <img src={source.src} alt={source.name} className={`max-h-8 max-w-9 object-contain transition-all ${isActive ? "grayscale opacity-90" : "grayscale opacity-65"}`} />
                             </div>
                             <span className={`mt-2 max-w-[112px] text-[9px] leading-4 tracking-tight ${isActive ? "font-semibold text-[#0B74DE]" : "text-[#94A3B8]"}`}>
                               {source.context}
@@ -294,8 +294,8 @@ function AccountingEvidenceSection() {
                       >
                         {[...accountingSources, ...accountingSources].map((source, index) => (
                           <div key={`${source.id}-${index}`} className="w-[118px] shrink-0">
-                            <div className="flex h-12 items-center">
-                              <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-[14px] border border-[#E1E8ED] bg-white/90 shadow-[0_8px_24px_rgba(24,32,38,0.04)]">
+                              <img src={source.src} alt={source.name} className="max-h-8 max-w-9 object-contain grayscale opacity-75" />
                             </div>
                             <span className="mt-3 block text-[9px] leading-4 tracking-tight text-[#66737F]">{source.context}</span>
                           </div>
