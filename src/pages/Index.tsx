@@ -394,6 +394,25 @@ function KineticHeroSection({
   );
 }
 
+function OneRecoverySection() {
+  return (
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28 text-center">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="mx-auto max-w-[860px]">
+          <h2 className="font-lora text-[34px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[54px]" style={{ fontWeight: 400 }}>
+            One Recovery Operation for Your Amazon Business
+          </h2>
+          <p className="mt-6 text-[16px] leading-7 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-8">
+            Margin finds what Amazon missed, handles the recovery work, and tracks each case through to the money actually being recovered.
+          </p>
+        </motion.div>
+        <motion.div {...revealProps} className="mt-12 md:mt-16 relative mx-auto max-w-[1040px] overflow-hidden rounded-[14px] border border-[var(--margin-border)] shadow-[0_12px_40px_rgba(37,49,58,0.08)]">
+          <img src="/recovery.png" alt="Recovery Operation" className="w-full object-cover rounded-[14px]" />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 
 const realityCheckStages = [
   {
@@ -1494,6 +1513,7 @@ export default function Index() {
       
       <main>
         <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} onReportCta={() => handleClaimAccessClick("hero_use_amazon_reports", "csv_upload")} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <OneRecoverySection />
         <RealityCheckSection />
         <MarginLifecycleSection />
         <RecoveryWorkStatement />
