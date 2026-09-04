@@ -197,23 +197,23 @@ function AccountingEvidenceSection() {
 
   const accountingHighlights = [
     {
-      heading: "Make the event legible",
+      heading: "Explain what happened",
       body: "Amazon can show what happened to the shipment or inventory.",
     },
     {
-      heading: "Bring the financial context with it",
+      heading: "Support the value",
       body: "Your existing records help explain what that event was worth, whether the amount is supported, and whether the outcome was actually settled.",
     },
     {
-      heading: "Keep the recovery decision moving",
+      heading: "Keep the decision moving",
       body: "You should not have to reconstruct that financial context before you can decide what to do next.",
     },
   ];
 
   return (
     <section className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
-      <div className={`${containerClass} min-w-0`}>
-        <div className="grid min-w-0 gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
+        <div className={`${containerClass} min-w-0`}>
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
           <motion.div {...revealProps} className="min-w-0">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
@@ -225,15 +225,15 @@ function AccountingEvidenceSection() {
             </h2>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="min-w-0 lg:pt-1">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="min-w-0 lg:pt-2">
             <p className="max-w-[430px] text-[14px] leading-6 text-[#4D5B66] md:text-[16px] md:leading-7">
-              The right context should arrive beside the event.
+              Make the financial context visible before the recovery decision has to be made.
             </p>
           </motion.div>
         </div>
 
         <div className="mt-12 grid min-w-0 items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-16 xl:mt-16">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:order-1">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-4">
             <div className="relative border-y border-[#D8E3EA] py-5 sm:py-6 md:py-7">
               <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
               <div className="relative flex flex-col items-start gap-2 border-b border-[#E4EDF1] pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
@@ -248,62 +248,29 @@ function AccountingEvidenceSection() {
                 </div>
 
                 <div className="relative mt-4">
-                  <div className="relative hidden h-[360px] overflow-hidden md:block lg:h-[390px] xl:h-[410px]">
-                    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      {accountingSources.map((source) => (
-                        <path key={`${source.id}-base`} d={source.route} fill="none" stroke="#D8E3EA" strokeWidth="0.22" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
-                      ))}
-                      <motion.path
-                        key={activeSource.id}
-                        d={activeSource.route}
-                        fill="none"
-                        stroke="#0B74DE"
-                        strokeWidth="0.7"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                        vectorEffect="non-scaling-stroke"
-                        initial={{ pathLength: 0, opacity: 0 }}
-                        animate={reduceMotion ? { pathLength: 1, opacity: 0.8 } : { pathLength: [0, 1], opacity: [0, 1, 0.75] }}
-                        transition={reduceMotion ? { duration: 0 } : { duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-                      />
-                      <circle cx="50" cy="94" r="1.2" fill="#FAFAF7" stroke="#0B74DE" strokeWidth="0.45" vectorEffect="non-scaling-stroke" />
-                    </svg>
-
-                    <div className="relative grid h-full grid-cols-3 grid-rows-3 gap-x-8 gap-y-4 px-1 py-2 lg:gap-x-12">
-                      {accountingSources.map((source, index) => {
-                        const isActive = index === activeEvidence % accountingSources.length;
-                        return (
-                          <motion.div
-                            key={source.id}
-                            animate={reduceMotion ? { opacity: 1, y: 0, x: 0 } : { opacity: isActive ? 1 : 0.62, y: isActive ? -4 : 0, x: isActive ? 3 : 0 }}
-                            transition={{ duration: reduceMotion ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
-                            className="relative z-10 flex min-w-0 flex-col items-center justify-center text-center"
-                          >
-                            <div className="flex h-12 items-center justify-center lg:h-14">
-                              <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
-                            </div>
-                            <span className={`mt-2 max-w-[112px] text-[9px] leading-4 tracking-tight ${isActive ? "font-semibold text-[#0B74DE]" : "text-[#94A3B8]"}`}>
-                              {source.context}
-                            </span>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="absolute bottom-0 left-1/2 z-10 -translate-x-1/2 bg-[#FAFAF7] px-4 text-center">
-                      <span className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">Recovery context</span>
-                      <AnimatePresence mode="wait">
-                        <motion.span
-                          key={activeSource.context}
-                          initial={reduceMotion ? { opacity: 1, y: 4 } : { opacity: 0, y: 5 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={reduceMotion ? undefined : { opacity: 0, y: -5 }}
-                          transition={{ duration: reduceMotion ? 0 : 0.25 }}
-                          className="mt-1 block whitespace-nowrap text-[10px] leading-4 text-[#66737F]"
+                  <div className="relative hidden overflow-hidden rounded-[28px] border border-[#D8E3EA] bg-[#E8EDF0] py-6 md:block lg:py-8">
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(125deg,rgba(216,227,234,0.76),rgba(246,248,248,0.82)_52%,rgba(214,225,231,0.72))]" />
+                    <div className="relative space-y-4">
+                      {accountingRows.map((row, rowIndex) => (
+                        <motion.div
+                          key={rowIndex}
+                          className="flex w-max gap-4 px-4 lg:gap-5 lg:px-6"
+                          animate={reduceMotion ? { x: rowIndex === 0 ? 0 : -110 } : { x: rowIndex === 0 ? [0, -150] : [-110, 40] }}
+                          transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 24 : 28, repeat: Infinity, ease: "linear" }}
                         >
-                          {activeSource.context}
-                        </motion.span>
-                      </AnimatePresence>
+                          {[...row, ...row].map((source, index) => {
+                            const isActive = source.id === activeSource.id;
+                            return (
+                              <div key={`${source.id}-${rowIndex}-${index}`} className="relative h-[142px] w-[142px] shrink-0 rounded-[20px] border-[7px] border-[#CBD4D9] bg-[#FFFFFF] p-5 shadow-[0_18px_28px_rgba(24,32,38,0.13)] lg:h-[156px] lg:w-[156px]">
+                                <div className={`flex h-full w-full items-center justify-center rounded-[12px] border ${isActive ? "border-[#0B74DE]/45" : "border-[#EEF2F4]"}`}>
+                                  <img src={source.src} alt={source.name} className={`max-h-16 max-w-[76px] object-contain ${isActive ? "opacity-100" : "opacity-90"}`} />
+                                </div>
+                                {isActive ? <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-[#BFD6E8] bg-[#FAFAF7] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">In focus</span> : null}
+                              </div>
+                            );
+                          })}
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
 
@@ -317,8 +284,8 @@ function AccountingEvidenceSection() {
                       >
                         {[...accountingSources, ...accountingSources].map((source, index) => (
                           <div key={`${source.id}-${index}`} className="w-[118px] shrink-0">
-                            <div className="flex h-12 items-center">
-                              <img src={source.src} alt={source.name} className="max-h-10 max-w-12 object-contain" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-[14px] border border-[#E1E8ED] bg-white/90 shadow-[0_8px_24px_rgba(24,32,38,0.04)]">
+                              <img src={source.src} alt={source.name} className="max-h-8 max-w-9 object-contain grayscale opacity-75" />
                             </div>
                             <span className="mt-3 block text-[9px] leading-4 tracking-tight text-[#66737F]">{source.context}</span>
                           </div>
@@ -352,6 +319,7 @@ function AccountingEvidenceSection() {
                 </div>
               </div>
             </div>
+
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="min-w-0 lg:order-2 lg:pt-14">
