@@ -465,10 +465,10 @@ function MarginLifecycleSection() {
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-1 overflow-hidden rounded-[14px]">
+        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[14px] lg:order-1">
           <video className="aspect-video w-full rounded-[14px] object-cover" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
-        <div className="order-2 flex flex-col justify-center">
+        <div className="order-1 flex flex-col justify-center lg:order-2">
         <motion.div {...revealProps} className="max-w-[980px]">
           <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
