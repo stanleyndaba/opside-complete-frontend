@@ -219,21 +219,16 @@ function AccountingEvidenceSection() {
               <div className="h-px w-8 bg-[#0B74DE]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
             </div>
-            <h2 id="accounting-section-title" className="max-w-[760px] break-words font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#182026] sm:text-[47px] md:text-[59px]" style={{ fontWeight: 400 }}>
+            <h2 id="accounting-section-title" className="max-w-[760px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[46px]" style={{ fontWeight: 400 }}>
               A recovery is easier to act on when the money around it is visible.
               <span className="mt-3 block text-[#8A99A4]">The right context should arrive beside the event.</span>
             </h2>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.08 }} className="min-w-0 lg:pt-2">
-            <p className="max-w-[430px] text-[14px] leading-6 text-[#4D5B66] md:text-[16px] md:leading-7">
-              Make the financial context visible before the recovery decision has to be made.
-            </p>
-          </motion.div>
         </div>
 
-        <div className="mt-12 grid min-w-0 items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-16 xl:mt-16">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-4">
+        <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
             <div className="relative border-y border-[#D8E3EA] py-5 sm:py-6 md:py-7">
               <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
               <div className="relative flex flex-col items-start gap-2 border-b border-[#E4EDF1] pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
@@ -322,25 +317,25 @@ function AccountingEvidenceSection() {
 
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="min-w-0 lg:order-2 lg:pt-14">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="min-w-0 lg:order-2 lg:pt-5">
             <div className="border-t border-[#C9D1D6]">
               {accountingHighlights.map((highlight) => (
-                <div key={highlight.heading} className="border-b border-[#C9D1D6] py-5 md:py-6">
-                  <h3 className="text-[14px] font-semibold leading-5 text-[#182026] md:text-[15px]">{highlight.heading}</h3>
-                  <p className="mt-2 max-w-[420px] text-[13px] leading-5 text-[#4D5B66] md:text-[14px] md:leading-6">{highlight.body}</p>
+                <div key={highlight.heading} className="border-b border-[#C9D1D6] py-3.5 md:py-4">
+                  <h3 className="text-[13px] font-semibold leading-5 text-[#182026] md:text-[14px]">{highlight.heading}</h3>
+                  <p className="mt-1.5 max-w-[440px] text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-5">{highlight.body}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8">
-              <p className="text-[13px] leading-6 text-[#4D5B66] md:text-[14px] md:leading-7">
+            <div className="mt-6">
+              <p className="text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-6">
                 Margin does not replace your books. It brings in only the pieces that help explain a recovery.
               </p>
-              <p className="mt-5 font-lora text-[26px] leading-[1.05] tracking-[-0.04em] text-[#182026] sm:text-[32px] md:text-[38px]" style={{ fontWeight: 400 }}>
+              <p className="mt-3 font-lora text-[24px] leading-[1.05] tracking-[-0.04em] text-[#182026] sm:text-[29px] md:text-[34px]" style={{ fontWeight: 400 }}>
                 Not another accounting system.
-                <span className="mt-2 block text-[#0B74DE]">Just the context a recovery needs.</span>
+                <span className="mt-1.5 block text-[#0B74DE]">Just the context a recovery needs.</span>
               </p>
-              <div className="mt-5 flex flex-wrap gap-x-3 gap-y-2 font-mono text-[9px] font-semibold uppercase tracking-tight text-[#66737F]">
+              <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
               </div>
             </div>
