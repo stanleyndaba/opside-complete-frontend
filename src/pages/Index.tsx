@@ -1424,46 +1424,53 @@ function ProductReframeSection() {
 
 function RecoveryOutcomeExplorer() {
   const reduceMotion = useReducedMotion();
-  const [activeOutcome] = useState(1);
+  const outcomeSceneRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: outcomeSceneRef, offset: ["start start", "end end"] });
+  const [activeOutcome, setActiveOutcome] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const nextOutcome = Math.min(recoveryOutcomeStates.length - 1, Math.floor(latest * recoveryOutcomeStates.length));
+    setActiveOutcome((current) => (current === nextOutcome ? current : nextOutcome));
+  });
+
   const activeState = recoveryOutcomeStates[activeOutcome];
 
   return (
-    <section aria-labelledby="recovery-outcome-title" className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
-      <div className={containerClass}>
-        <motion.div {...revealProps}>
-          <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / What happens when things go wrong?</span>
-          </div>
-          <h2 id="recovery-outcome-title" className="max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
-        </motion.div>
+    <section aria-labelledby="recovery-outcome-title" className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]">
+      <div ref={outcomeSceneRef} className="relative lg:min-h-[520vh]">
+        <div className="lg:sticky lg:top-20 lg:flex lg:min-h-[calc(100svh-5rem)] lg:items-center">
+          <div className={`${containerClass} w-full py-16 md:py-24 lg:py-10`}>
+            <motion.div {...revealProps}>
+              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / What happens when things go wrong?</span></div>
+              <h2 id="recovery-outcome-title" className="max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
+            </motion.div>
 
-        <div className="mt-12 grid items-start gap-10 lg:mt-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-          <motion.div {...revealProps} className="border-t border-[var(--margin-text-primary)]">
-            {recoveryOutcomeStates.map((state, index) => {
-              const isActive = index === activeOutcome;
-              return (
-                <div key={state.title} className={`border-b border-[var(--margin-border)] py-3.5 transition-opacity duration-300 sm:py-4 ${isActive ? "opacity-100" : "opacity-45"}`}>
-                  <h3 className={`tracking-[-0.035em] ${isActive ? "text-[20px] font-medium text-[var(--margin-text-primary)] sm:text-[22px]" : "text-[19px] font-normal text-[var(--margin-text-secondary)] sm:text-[21px]"}`}>{state.title}</h3>
-                  {isActive ? <><p className="mt-2 max-w-[420px] text-[13px] leading-5 text-[var(--margin-text-secondary)] sm:text-[14px]">{state.description}</p><button type="button" className="mt-3 text-[13px] font-medium text-[var(--margin-text-primary)] underline decoration-[var(--margin-border-strong)] underline-offset-4 transition-colors hover:text-[var(--margin-blue)]">Learn More</button></> : null}
+            <div className="mt-10 grid items-start gap-8 lg:mt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+              <motion.div {...revealProps} className="border-t border-[var(--margin-text-primary)]">
+                {recoveryOutcomeStates.map((state, index) => {
+                  const isActive = index === activeOutcome;
+                  return (
+                    <div key={state.title} className={`border-b border-[var(--margin-border)] py-3.5 transition-opacity duration-300 sm:py-4 ${isActive ? "opacity-100" : "opacity-45"}`}>
+                      <h3 className={`tracking-[-0.035em] ${isActive ? "text-[20px] font-medium text-[var(--margin-text-primary)] sm:text-[22px]" : "text-[19px] font-normal text-[var(--margin-text-secondary)] sm:text-[21px]"}`}>{state.title}</h3>
+                      {isActive ? <><p className="mt-2 max-w-[420px] text-[13px] leading-5 text-[var(--margin-text-secondary)] sm:text-[14px]">{state.description}</p><button type="button" className="mt-3 text-[13px] font-medium text-[var(--margin-text-primary)] underline decoration-[var(--margin-border-strong)] underline-offset-4 transition-colors hover:text-[var(--margin-blue)]">Learn More</button></> : null}
+                    </div>
+                  );
+                })}
+              </motion.div>
+
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
+                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:min-h-[520px]">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
+                  {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : <AnimatePresence mode="wait"><OutcomeWorkspace key={activeState.title} state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} /></AnimatePresence>}
                 </div>
-              );
-            })}
-          </motion.div>
-
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
-            <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:min-h-[520px]">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
-              {activeState.title === "Rejected" ? <RejectedImageStack /> : (
-                <AnimatePresence mode="wait">
-                  <OutcomeWorkspace key={activeState.title} state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />
-                </AnimatePresence>
-              )}
+              </motion.div>
             </div>
-          </motion.div>
+          </div>
         </div>
+      </div>
 
-        <motion.div {...revealProps} className="mt-16 border-t border-[var(--margin-border)] pt-8 md:mt-20 md:pt-10">
+      <div className={`${containerClass} py-16 md:py-24`}>
+        <motion.div {...revealProps} className="border-t border-[var(--margin-border)] pt-8 md:pt-10">
           <p className="max-w-[1060px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] sm:text-[40px] md:text-[54px]" style={{ fontWeight: 400 }}><span className="text-[var(--margin-text-primary)]">You run the business.</span>{" "}<span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span></p>
           <p className="mt-5 max-w-[700px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Open Margin when you want to see what has surfaced, what is being handled, and what has genuinely been settled.</p>
         </motion.div>
