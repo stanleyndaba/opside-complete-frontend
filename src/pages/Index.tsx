@@ -1464,8 +1464,8 @@ function RecoveryOutcomeExplorer() {
                 })}
               </motion.div>
 
-              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
-                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:h-[clamp(420px,calc(100svh-13rem),520px)] lg:min-h-0">
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="lg:-translate-y-8">
+                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
