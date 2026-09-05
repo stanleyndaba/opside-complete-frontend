@@ -233,35 +233,35 @@ function AccountingEvidenceSection() {
 
         <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
-            <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(11,116,222,0.18),transparent_36%),linear-gradient(145deg,#111923_0%,#070A0E_58%,#020304_100%)] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-6 md:p-7">
+            <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-6 md:p-7">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#8FA9C0]">Recovery context</span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#64798A]">Live record</span>
+                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#B4B4B4]">Recovery context</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#858585]">Live record</span>
               </div>
               <div className="mt-5 grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch">
-                <div className="rounded-[7px] border border-white/10 bg-white/[0.045] p-3.5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#7E95A8]">Amazon event</span>
+                <div className="rounded-[7px] border border-white/10 bg-white/[0.06] p-3.5">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#A6A6A6]">Amazon event</span>
                   <p className="mt-3 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-white">Inventory adjustment</p>
-                  <p className="mt-2 text-[11px] leading-5 text-[#94A4B0]">Shipment · fee · reimbursement</p>
+                  <p className="mt-2 text-[11px] leading-5 text-[#9C9C9C]">Shipment · fee · reimbursement</p>
                 </div>
-                <div className="hidden items-center justify-center px-1 sm:flex"><div className="h-px w-8 bg-[#3C6F99]" /></div>
-                <div className="rounded-[7px] border border-[#2A5C83] bg-[#0B74DE]/10 p-3.5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#8BB9E0]">Financial context</span>
+                <div className="hidden items-center justify-center px-1 sm:flex"><div className="h-px w-8 bg-[#777777]" /></div>
+                <div className="rounded-[7px] border border-[#666666] bg-white/[0.07] p-3.5">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#BEBEBE]">Financial context</span>
                   <p className="mt-3 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-white">Amount supported</p>
-                  <p className="mt-2 text-[11px] leading-5 text-[#A3B7C8]">Cost · settlement · payment</p>
+                  <p className="mt-2 text-[11px] leading-5 text-[#A0A0A0]">Cost · settlement · payment</p>
                 </div>
               </div>
-              <div className="mt-3 rounded-[7px] border border-[#3A82B7] bg-[linear-gradient(135deg,rgba(11,116,222,0.24),rgba(11,116,222,0.08))] p-4">
+              <div className="mt-3 rounded-[7px] border border-[#858585] bg-[linear-gradient(135deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04))] p-4">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#B9D9F0]">Margin recovery record</span>
-                  <span className="rounded-full border border-[#6DA9D1]/60 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.08em] text-[#B9D9F0]">Understood</span>
+                  <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#E1E1E1]">Margin recovery record</span>
+                  <span className="rounded-full border border-[#969696]/60 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.08em] text-[#E1E1E1]">Understood</span>
                 </div>
                 <p className="mt-3 max-w-[420px] font-lora text-[23px] leading-[1.02] tracking-[-0.03em] text-white">The event, its value, and its outcome stay connected.</p>
               </div>
               <div className="mt-5 border-t border-white/10 pt-3">
                 <div className="mb-3 flex items-center justify-between gap-3">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#7E95A8]">Relevant context sources</span>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-[#64798A]">read-only · purpose-limited</span>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#A6A6A6]">Relevant context sources</span>
+                  <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-[#858585]">read-only · purpose-limited</span>
                 </div>
                 <div className="relative overflow-hidden">
                   <div className="space-y-2">
@@ -275,7 +275,7 @@ function AccountingEvidenceSection() {
                         {[...row, ...row].map((source, index) => {
                           const isActive = source.id === activeSource.id;
                           return (
-                            <div key={`${source.id}-${rowIndex}-${index}`} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[7px] border ${isActive ? "border-[#5C9DCA] bg-white" : "border-white/10 bg-white/[0.06]"}`}>
+                            <div key={`${source.id}-${rowIndex}-${index}`} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[7px] border ${isActive ? "border-[#D2D2D2] bg-white" : "border-white/10 bg-white/[0.06]"}`}>
                               <img src={source.src} alt={source.name} className={`max-h-6 max-w-6 object-contain ${isActive ? "opacity-100" : "opacity-70"}`} />
                             </div>
                           );
