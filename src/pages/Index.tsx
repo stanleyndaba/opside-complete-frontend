@@ -1261,13 +1261,13 @@ function RiskSection() {
         <motion.div {...revealProps} className="max-w-[900px]">
           <div className="mb-6 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">07 / Financial closure</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">07 / FINANCIAL CLOSURE</span>
           </div>
           <h2 id="risk-section-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
             A recovery isn&apos;t finished just because Amazon says it is.
           </h2>
           <p className="mt-7 max-w-[780px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9">
-            Finding a reimbursement is not the same as knowing the money was actually recovered. A case can be approved and still be underpaid. A reimbursement can later be reversed. An outcome can change after the original case is closed. Margin follows the recovery through the financial outcome.
+            A recovery can lose value after the opportunity is found. Evidence can be missing, a case can be rejected, a response can go unanswered, a payment can be incomplete, or a reimbursement can later be reversed.
           </p>
           <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {["Underpayment", "Partial recovery", "Reversal", "Incomplete outcome", "Next supported action"].map((item) => (
@@ -1275,10 +1275,7 @@ function RiskSection() {
             ))}
           </div>
           <p className="mt-10 max-w-[820px] font-lora text-[27px] leading-[1.08] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[46px]" style={{ fontWeight: 400 }}>
-            Know what was actually recovered.
-          </p>
-          <p className="mt-5 max-w-[780px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-            Margin keeps the original event, evidence, case outcome, payment, adjustments, and later changes connected—so you can see what was recovered, what changed, and what still needs attention.
+            Margin follows the money and keeps the state visible.
           </p>
         </motion.div>
       </div>
