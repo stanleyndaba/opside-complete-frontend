@@ -270,23 +270,23 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
                                     Company
                                 </Link>
-                                <div className="px-3.5 pb-3 pt-3">
+                                <div className="border-t border-[#E8EDF0] px-3.5 pb-3 pt-5">
                                     <p className="font-sans text-[15px] font-medium leading-5 text-[#17212B]">Not sure where to start?</p>
-                                    <div className="mt-1 font-sans text-[14px] leading-5 text-[#687684]">
-                                        <span>Tell us about your Amazon business and we’ll point you to the right Margin path. </span>
-                                        <Link
-                                            to="/contact"
-                                            onClick={() => setMobileMenuOpen(false)}
-                                            className="inline-flex items-center gap-1 font-sans text-[14px] font-medium leading-5 text-[var(--margin-blue)] transition-colors hover:text-[var(--margin-blue-hover)]">
-                                            Find your starting point <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
-                                        </Link>
-                                    </div>
+                                    <p className="mt-2 max-w-[30rem] font-sans text-[14px] leading-5 text-[#687684]">
+                                        Start with the free Recovery Audit. We&apos;ll show you what Margin finds and what happens next.
+                                    </p>
                                 </div>
-                                <div className="w-full px-3.5 pb-3.5 pt-3">
+                                <div className="grid gap-2 px-3.5 pb-3.5 pt-2">
+                                    <Link
+                                        to="/audit"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[var(--margin-blue)] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(11,116,222,0.18)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] hover:shadow-[0_12px_26px_rgba(11,116,222,0.24)]">
+                                        Start the Audit <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
+                                    </Link>
                                     <Link
                                         to="/contact"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[#F0F0EC] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[#191B20] shadow-[0_8px_20px_rgba(25,27,32,0.12)] transition-[background-color,box-shadow] duration-200 hover:bg-[#E7E7E1] hover:shadow-[0_12px_26px_rgba(25,27,32,0.18)]">
+                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] border border-[#DCE3E8] bg-[#F8FAFB] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[#191B20] transition-[background-color,border-color] duration-200 hover:border-[#C7D2D9] hover:bg-[#F0F3F5]">
                                         Get Help Now <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                 </div>
