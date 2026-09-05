@@ -713,6 +713,88 @@ function RecoveryWorkStatement() {
   );
 }
 
+function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) => void }) {
+  const recoveryThreadCards = [
+    {
+      title: "Delivered. Not reconciled.",
+      copy: "An inbound shipment reaches Amazon, but the units do not appear where they should. The carrier confirms delivery. Amazon’s inventory record tells a different story.",
+      visual: (
+        <div className="relative aspect-[1.55] overflow-hidden rounded-[4px] border border-[#DFE4E1] bg-[#F3F4F0] p-4 sm:p-5">
+          <div className="flex items-center justify-between border-b border-[#D8DEDA] pb-3 font-mono text-[8px] uppercase tracking-[0.1em] text-[#66737F]"><span>Inbound shipment</span><span className="text-[#B15B48]">Mismatch</span></div>
+          <div className="mt-4 space-y-3 text-[10px] text-[#33414A]">
+            <div className="flex items-center justify-between"><span>Carrier status</span><span className="rounded-full bg-[#E5EEE8] px-2 py-1 font-mono text-[8px] text-[#3F7658]">Delivered</span></div>
+            <div className="flex items-center justify-between border-t border-[#E2E6E2] pt-3"><span>Amazon inventory</span><span className="font-mono text-[9px] text-[#B15B48]">12 units missing</span></div>
+          </div>
+          <div className="absolute bottom-4 left-4 right-4 h-px bg-[#D8DEDA]" />
+        </div>
+      ),
+    },
+    {
+      title: "Charged. Not explained.",
+      copy: "A fee appears in the account, but the seller cannot confidently trace it to the shipment, adjustment, service, or event that created it. The amount is real. The explanation is missing.",
+      visual: (
+        <div className="relative aspect-[1.55] overflow-hidden rounded-[4px] border border-[#DFE4E1] bg-[#F3F4F0] p-4 sm:p-5">
+          <div className="flex items-center justify-between border-b border-[#D8DEDA] pb-3 font-mono text-[8px] uppercase tracking-[0.1em] text-[#66737F]"><span>Account activity</span><span className="text-[#B15B48]">Unresolved</span></div>
+          <div className="mt-4 rounded-[3px] border border-[#E0E5E1] bg-white/70 p-3">
+            <div className="flex items-center justify-between text-[11px] text-[#33414A]"><span>Other fee</span><span className="font-mono text-[10px]">-$84.20</span></div>
+            <div className="mt-3 flex items-center justify-between border-t border-[#E7EBE7] pt-3 font-mono text-[8px] uppercase tracking-[0.08em] text-[#87939A]"><span>Source event</span><span className="text-[#B15B48]">Not linked</span></div>
+          </div>
+          <div className="mt-4 h-2 w-2/3 rounded-full bg-[#DCE2DE]" />
+          <div className="mt-2 h-2 w-1/2 rounded-full bg-[#E3E8E4]" />
+        </div>
+      ),
+    },
+    {
+      title: "Paid. Not closed.",
+      copy: "A reimbursement or credit appears, but the seller still needs to know whether it was complete, later reversed, correctly reflected in settlement, and financially reconciled.",
+      visual: (
+        <div className="relative aspect-[1.55] overflow-hidden rounded-[4px] border border-[#DFE4E1] bg-[#F3F4F0] p-4 sm:p-5">
+          <div className="flex items-center justify-between border-b border-[#D8DEDA] pb-3 font-mono text-[8px] uppercase tracking-[0.1em] text-[#66737F]"><span>Recovery outcome</span><span className="text-[#B15B48]">Review</span></div>
+          <div className="mt-4 space-y-3 text-[10px] text-[#33414A]">
+            <div className="flex items-center justify-between"><span>Reimbursement</span><span className="font-mono text-[#3F7658]">$616.85 paid</span></div>
+            <div className="flex items-center justify-between border-t border-[#E2E6E2] pt-3"><span>Settlement match</span><span className="font-mono text-[#B15B48]">Pending</span></div>
+            <div className="flex items-center justify-between border-t border-[#E2E6E2] pt-3"><span>Final status</span><span className="font-mono text-[#B15B48]">Not closed</span></div>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 sm:py-24 md:py-32" aria-labelledby="recovery-thread-title">
+      <div className={containerClass}>
+        <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
+          <div className="mb-5 flex items-center justify-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The recovery thread</span><div className="h-px w-8 bg-[var(--margin-blue)]" /></div>
+          <h2 id="recovery-thread-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>You run the business. Margin keeps the recovery work legible.</h2>
+          <p className="mx-auto mt-6 max-w-[760px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">A shipment can be marked delivered while the units never reconcile. A fee can appear without an obvious explanation. A reimbursement can look complete and still fail to match the final settlement. The difficult part is connecting the event, the evidence, the claim, and the money.</p>
+        </motion.div>
+
+        <div className="mt-14 grid border-y border-[#D8DEDA] md:grid-cols-3">
+          {recoveryThreadCards.map((card, index) => (
+            <motion.article key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`px-0 py-8 md:px-7 md:py-10 ${index > 0 ? "border-t border-[#D8DEDA] md:border-l md:border-t-0" : ""}`}>
+              {card.visual}
+              <h3 className="mt-7 font-lora text-[25px] leading-[1.06] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]">{card.title}</h3>
+              <p className="mt-4 text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{card.copy}</p>
+            </motion.article>
+          ))}
+        </div>
+
+        <motion.div {...revealProps} className="mt-12 border-y border-[#D8DEDA] py-8 text-center md:mt-16 md:py-10">
+          <p className="font-lora text-[24px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[30px] md:text-[38px]" style={{ fontWeight: 400 }}>These are not separate problems when you are the seller. They become one unresolved recovery thread.</p>
+        </motion.div>
+
+        <motion.div {...revealProps} className="mx-auto max-w-[760px] pt-14 text-center md:pt-20">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The product bridge</p>
+          <h3 className="mt-4 font-lora text-[30px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[46px]" style={{ fontWeight: 400 }}>Margin connects the thread.</h3>
+          <p className="mx-auto mt-5 max-w-[680px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Margin examines your Amazon records, shows you what the evidence supports, and helps move the approved recovery work forward—so you can see what happened, what needs attention, and whether Amazon actually paid.</p>
+          <Button onClick={() => onAuditCta("recovery_thread_audit")} className="mt-8 h-12 rounded-[8px] bg-[var(--margin-blue)] px-6 text-[13px] font-semibold text-white shadow-none hover:bg-[var(--margin-blue-hover)]">Start a free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" /></Button>
+          <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.08em] text-[#7A878E]">Read-only. See the result before deciding. Nothing is submitted without your approval.</p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 
 
 function FullRecoveryLoopSection() {
@@ -1102,21 +1184,13 @@ function ProductReframeSection() {
           </motion.div>
         </div>
 
-        <motion.div {...revealProps} className="mt-16 border-t border-[var(--margin-border)] pt-8 md:mt-24 md:pt-10">
-          <p className="max-w-[1060px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] sm:text-[40px] md:text-[54px]" style={{ fontWeight: 400 }}>
-            <span className="text-[var(--margin-text-primary)]">You run the business.</span>{" "}
-            <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span>
-          </p>
-          <p className="mt-5 max-w-[700px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">
-            Open Margin when you want to see what has surfaced, what is being handled, and what has genuinely been settled.
-          </p>
-        </motion.div>
+        <RecoveryThreadSection onAuditCta={onAuditCta} />
       </div>
     </section>
   );
 }
 
-function RecoveryOutcomeExplorer() {
+function RecoveryOutcomeExplorer({ onAuditCta }: { onAuditCta: (location: string) => void }) {
   const reduceMotion = useReducedMotion();
   const outcomeSceneRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: outcomeSceneRef, offset: ["start start", "end end"] });
@@ -1174,12 +1248,6 @@ function RecoveryOutcomeExplorer() {
         </div>
       </div>
 
-      <div className={`${containerClass} py-16 md:py-24`}>
-        <motion.div {...revealProps} className="border-t border-[var(--margin-border)] pt-8 md:pt-10">
-          <p className="max-w-[1060px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] sm:text-[40px] md:text-[54px]" style={{ fontWeight: 400 }}><span className="text-[var(--margin-text-primary)]">You run the business.</span>{" "}<span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span></p>
-          <p className="mt-5 max-w-[700px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Open Margin when you want to see what has surfaced, what is being handled, and what has genuinely been settled.</p>
-        </motion.div>
-      </div>
     </section>
   );
 }
@@ -1209,7 +1277,7 @@ export default function Index() {
         <MarginLifecycleSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
-        <RecoveryOutcomeExplorer />
+        <RecoveryOutcomeExplorer onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Section 10 — FAQ */}
