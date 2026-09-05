@@ -719,8 +719,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       title: "Delivered. Not reconciled.",
       copy: "An inbound shipment reaches Amazon, but the units do not appear where they should. The carrier confirms delivery. Amazon’s inventory record tells a different story.",
       visual: (
-        <div className="relative aspect-[1.55] overflow-hidden rounded-[4px] border border-[#DFE4E1] bg-[#F3F4F0]">
-          <img src="/delivered.png" alt="Delivered shipment with an unresolved inventory discrepancy" className="h-full w-full object-cover" />
+        <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
+          <img src="/delivered.png" alt="Delivered shipment with an unresolved inventory discrepancy" className="h-full w-full rounded-[4px] object-cover" />
         </div>
       ),
     },
@@ -728,8 +728,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       title: "Charged. Not explained.",
       copy: "A fee appears in the account, but the seller cannot confidently trace it to the shipment, adjustment, service, or event that created it. The amount is real. The explanation is missing.",
       visual: (
-        <div className="relative aspect-[1.55] overflow-hidden rounded-[4px] border border-[#DFE4E1] bg-[#F3F4F0]">
-          <img src="/charged.png" alt="Unresolved account charge without a linked source event" className="h-full w-full object-cover" />
+        <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
+          <img src="/charged.png" alt="Unresolved account charge without a linked source event" className="h-full w-full rounded-[4px] object-cover" />
         </div>
       ),
     },
@@ -737,8 +737,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       title: "Paid. Not closed.",
       copy: "A reimbursement or credit appears, but the seller still needs to know whether it was complete, later reversed, correctly reflected in settlement, and financially reconciled.",
       visual: (
-        <div className="relative aspect-[1.55] overflow-hidden rounded-[4px] border border-[#DFE4E1] bg-[#F3F4F0]">
-          <img src="/paid.png" alt="Paid reimbursement with an unresolved settlement outcome" className="h-full w-full object-cover" />
+        <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
+          <img src="/paid.png" alt="Paid reimbursement with an unresolved settlement outcome" className="h-full w-full rounded-[4px] object-cover" />
         </div>
       ),
     },
