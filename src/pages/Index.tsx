@@ -1272,14 +1272,14 @@ function OperationalEconomicsSection() {
         <motion.div {...revealProps} className="max-w-[980px]">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 — BUSINESS CASE</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / The cost of doing it yourself</span>
           </div>
           <h2 id="operational-economics-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[62px]" style={{ fontWeight: 400 }}>
             You could manage recovery yourself.
             <span className="mt-3 block text-[var(--margin-text-muted)]">But someone has to own it.</span>
           </h2>
           <p className="mt-7 max-w-[760px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-9">
-            Audit the activity, gather the evidence, manage the cases, watch the deadlines, respond to requests, check the payouts, reconcile the outcomes—and then do it again next month.
+            Audit the activity. Gather the evidence. Manage the cases. Watch the deadlines. Respond to requests. Check the payouts. Reconcile the outcomes. Then do it again.
           </p>
         </motion.div>
 
@@ -1307,13 +1307,13 @@ function OperationalEconomicsSection() {
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <motion.div {...revealProps}>
-            <p className="max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The work is possible. The cost is that someone inside the business now owns the whole function—and has to keep owning it when the next issue arrives.</p>
+            <p className="max-w-[520px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The work is possible. The cost is that someone inside the business now owns the entire recovery function—and has to keep owning it when the next issue arrives.</p>
           </motion.div>
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-l border-[var(--margin-blue)] pl-6 md:pl-8">
             <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">The Margin alternative</p>
             <h3 className="mt-4 max-w-[640px] font-lora text-[30px] leading-[1.02] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]" style={{ fontWeight: 400 }}>Or let Margin run the recovery operation.</h3>
-            <p className="mt-5 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin gives recovery its own operating layer, so you do not have to build the people, process, spreadsheets, reminders, and case management around it yourself.</p>
-            <p className="mt-7 max-w-[640px] font-lora text-[22px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>You are not adding another tool to operate.<span className="mt-2 block text-[var(--margin-text-muted)]">You are removing another function from your workload.</span></p>
+            <p className="mt-5 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin gives recovery its own operating layer, so you don&apos;t have to build the people, process, spreadsheets, reminders, and case management around it yourself.</p>
+            <p className="mt-7 max-w-[640px] font-lora text-[22px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>You&apos;re not adding another tool to operate.<span className="mt-2 block text-[var(--margin-text-muted)]">You&apos;re removing another function from your workload.</span></p>
           </motion.div>
         </div>
       </div>
