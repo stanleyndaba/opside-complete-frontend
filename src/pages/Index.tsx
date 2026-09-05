@@ -1521,7 +1521,6 @@ export default function Index() {
         <MarginLifecycleSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
-        <RiskSection />
         <OperationalEconomicsSection />
         <RecoveryOutcomeExplorer />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
