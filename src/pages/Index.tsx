@@ -1498,15 +1498,11 @@ export default function Index() {
       <main>
         <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} onReportCta={() => handleClaimAccessClick("hero_use_amazon_reports", "csv_upload")} isFull={isFull} nextBatchHours={nextBatchHours} />
         <OneRecoverySection />
+
+        <AccountingEvidenceSection />
         <RealityCheckSection />
         <MarginLifecycleSection />
         <RecoveryWorkStatement />
-
-        <AccountingEvidenceSection />
-        <MarginOperationSection />
-        <LegacyRiskSection />
-        <FullRecoveryLoopSection />
-        <ProductReframeSection />
         <RiskSection />
         <OperationalEconomicsSection />
         <RecoveryOutcomeExplorer />
