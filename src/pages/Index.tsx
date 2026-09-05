@@ -36,6 +36,7 @@ import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
 import { RecoveryOfferSection } from "@/components/landing/RecoveryDecisionSections";
+import { AuditImageStackVisual } from "@/components/landing/AuditImageStackVisual";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -476,8 +477,8 @@ function RealityCheckSection() {
           You don&apos;t need to manage every step. <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery moving.</span>
         </motion.p>
         </div>
-        <motion.div {...revealProps} className="relative overflow-hidden rounded-[12px] sm:rounded-[16px]">
-          <video className="block aspect-video w-full object-cover" src="/The_Pain.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin recovery pain demonstration" />
+        <motion.div {...revealProps} className="relative">
+          <AuditImageStackVisual />
         </motion.div>
         </div>
       </div>
