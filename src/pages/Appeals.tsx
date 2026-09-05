@@ -784,7 +784,7 @@ export default function Appeals() {
                     {/* Financial Variance */}
                     <section className="border-t border-[#E7EEF2] pt-5">
                       <div className="flex items-baseline justify-between gap-4">
-                        <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Financial variance</h3>
+                        <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Financial variance</h3>
                         <p className="text-[11px] font-medium text-[#66737F]">Recorded Amazon decision</p>
                       </div>
                       <div className="mt-3 divide-y divide-[#E7EEF2] rounded-md border border-[#DCE8EE] bg-white sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0">
@@ -806,7 +806,7 @@ export default function Appeals() {
 
                     {/* Complete review basis and recorded case truth */}
                     <section className="border-t border-[#E7EEF2] pt-5">
-                      <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Review basis and case record</h3>
+                      <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Review basis and case record</h3>
                       <p className="mt-1 text-[12px] leading-5 text-[#66737F]">Recorded response, evidence state, and identifiers used to decide whether an appeal can move forward.</p>
 
                       <div className="mt-3 divide-y divide-[#E7EEF2] rounded-md border border-[#DCE8EE] bg-white">
@@ -853,7 +853,7 @@ export default function Appeals() {
 
                     {/* Resubmission Readiness */}
                     <section className="border-t border-[#E7EEF2] pt-5">
-                      <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Resubmission readiness</h3>
+                      <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Resubmission readiness</h3>
                       <div className="mt-3 space-y-4">
                         <div className="border-l-2 border-[#66737F] pl-3">
                           <p className="text-[13px] font-medium text-[#182026]">{selectedCase.strengthLabel}</p>
@@ -884,7 +884,7 @@ export default function Appeals() {
                     </section>
 
                     <section className="border-t border-[#E7EEF2] pt-5">
-                      <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Decision record</h3>
+                      <h3 className="text-[16px] font-semibold tracking-tight text-[#182026]">Decision record</h3>
                       <div className="mt-3 rounded-md border border-[#DCE8EE] bg-[#F7FAFC] p-3">
                         <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Next step</p>
                         <p className="mt-1.5 text-[14px] font-medium leading-5 text-[#182026]">{selectedCase.nextStep}</p>
@@ -899,7 +899,7 @@ export default function Appeals() {
 
                 <div className="shrink-0 border-t border-[#DCE8EE] bg-white px-5 py-4 sm:px-6">
                   <div className="flex flex-col gap-2.5">
-                    <Button className="h-10 w-full rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">
+                    <Button variant="outline" className="h-10 w-full rounded-md border-[#DCE8EE] bg-white text-[13px] font-medium tracking-tight text-[#4D5B66] shadow-none hover:bg-[#F7FAFC]">
                       Initiate appeal review
                     </Button>
                     <Button variant="outline" className="h-10 w-full rounded-md border-[#DCE8EE] bg-white text-[13px] font-medium tracking-tight text-[#4D5B66] hover:bg-[#F7FAFC]">
