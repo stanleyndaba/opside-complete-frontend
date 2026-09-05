@@ -1262,7 +1262,7 @@ export default function Index() {
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
         <RecoveryOutcomeExplorer />
-        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
+        {false && <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />}
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Section 10 — FAQ */}
