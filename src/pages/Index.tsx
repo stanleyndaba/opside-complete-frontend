@@ -1413,9 +1413,9 @@ function RecoveryOutcomeExplorer() {
             {recoveryOutcomeStates.map((state, index) => {
               const isActive = index === activeOutcome;
               return (
-                <div key={state.title} className={`border-b border-[var(--margin-border)] py-6 transition-opacity duration-300 sm:py-7 ${isActive ? "opacity-100" : "opacity-45"}`}>
-                  <h3 className={`tracking-[-0.035em] ${isActive ? "text-[22px] font-medium text-[var(--margin-text-primary)] sm:text-[25px]" : "text-[21px] font-normal text-[var(--margin-text-secondary)] sm:text-[24px]"}`}>{state.title}</h3>
-                  {isActive ? <><p className="mt-3 max-w-[420px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px]">{state.description}</p><button type="button" className="mt-5 text-[14px] font-medium text-[var(--margin-text-primary)] underline decoration-[var(--margin-border-strong)] underline-offset-4 transition-colors hover:text-[var(--margin-blue)]">Learn More</button></> : null}
+                <div key={state.title} className={`border-b border-[var(--margin-border)] py-3.5 transition-opacity duration-300 sm:py-4 ${isActive ? "opacity-100" : "opacity-45"}`}>
+                  <h3 className={`tracking-[-0.035em] ${isActive ? "text-[20px] font-medium text-[var(--margin-text-primary)] sm:text-[22px]" : "text-[19px] font-normal text-[var(--margin-text-secondary)] sm:text-[21px]"}`}>{state.title}</h3>
+                  {isActive ? <><p className="mt-2 max-w-[420px] text-[13px] leading-5 text-[var(--margin-text-secondary)] sm:text-[14px]">{state.description}</p><button type="button" className="mt-3 text-[13px] font-medium text-[var(--margin-text-primary)] underline decoration-[var(--margin-border-strong)] underline-offset-4 transition-colors hover:text-[var(--margin-blue)]">Learn More</button></> : null}
                 </div>
               );
             })}
