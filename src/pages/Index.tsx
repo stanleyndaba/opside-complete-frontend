@@ -1461,7 +1461,18 @@ function RecoveryOutcomeExplorer() {
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
                 <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:min-h-[520px]">
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
-                  {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : <AnimatePresence mode="wait"><OutcomeWorkspace key={activeState.title} state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} /></AnimatePresence>}
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={activeState.title}
+                      initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.48, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute inset-0"
+                    >
+                      {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : <OutcomeWorkspace state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </motion.div>
             </div>
