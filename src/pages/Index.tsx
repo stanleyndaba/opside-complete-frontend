@@ -1409,8 +1409,8 @@ export default function Index() {
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
         <RiskSection />
-        <OperationalEconomicsSection />
         <RecoveryOutcomeExplorer />
+        <OperationalEconomicsSection />
         {false && <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />}
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
