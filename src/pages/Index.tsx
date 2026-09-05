@@ -1532,7 +1532,6 @@ export default function Index() {
         <MarginLifecycleSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
-        <HistoricalVideoPreviewSections />
         <RiskSection />
         <OperationalEconomicsSection />
         <RecoveryOutcomeExplorer />
