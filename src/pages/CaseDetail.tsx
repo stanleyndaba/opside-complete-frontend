@@ -708,6 +708,16 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
     if (caseReference === 'ACME-CASE-2005') {
       return [
         {
+          id: `demo-amazon-underpaid-${caseId || 'case'}`,
+          direction: 'inbound',
+          sender: 'Margin',
+          subject: `[Case ID:19822888381] Underpaid reimbursement confirmed - follow-up required`,
+          body_text: `Hello,\n\nWe completed a payment review for the FBA reimbursement associated with shipment ${shipmentReference}. Our review found that the reimbursement credited to your seller account was lower than the amount supported by the shipment and settlement records.\n\nThe eligible reimbursement was ${formatDemoCurrency(1482.20, currency)}. We have confirmed that ${formatDemoCurrency(519.10, currency)} was credited, leaving ${formatDemoCurrency(963.10, currency)} outstanding.\n\nOutstanding amount breakdown:\n• Lost inventory reimbursement: ${formatDemoCurrency(612.40, currency)}\n• Inbound placement and processing fee correction: ${formatDemoCurrency(184.25, currency)}\n• Referral fee reimbursement: ${formatDemoCurrency(96.45, currency)}\n• Fulfillment fee correction: ${formatDemoCurrency(70.00, currency)}\nTotal outstanding: ${formatDemoCurrency(963.10, currency)}\n\nWe have opened a follow-up review for the underpaid portion. The adjustment will be posted to your seller account after the case is completed and will appear in Payments once the normal settlement cycle has processed. No additional submission is required at this time. If the adjustment does not appear after the next settlement cycle, reply to this case through Seller Central and reference the case details below.\n\nCase ID: 19822888381\nShipment ID: ${shipmentReference}\nReimbursement status: Underpaid - follow-up review open\nOutstanding amount: ${formatDemoCurrency(963.10, currency)}\n\nThank you,\nAmazon Selling Partner Support`,
+          received_at: '2026-05-09T09:16:00Z',
+          state_signal: 'underpaid',
+          attachments: [],
+        },
+        {
           id: `demo-amazon-followup-${caseId || 'case'}`,
           direction: 'inbound',
           sender: 'seller.service05@amazon.com',
@@ -740,16 +750,6 @@ const buildDemoAmazonThreadMessages = (caseData: any, caseId?: string | null) =>
           body_text: approvedBody,
           received_at: '2026-05-08T14:37:00Z',
           state_signal: isPaid ? 'paid' : 'approved',
-          attachments: [],
-        },
-        {
-          id: `demo-amazon-underpaid-${caseId || 'case'}`,
-          direction: 'inbound',
-          sender: 'seller.service05@amazon.com',
-          subject: `[Case ID:19822888381] Underpaid reimbursement confirmed - follow-up required`,
-          body_text: `Hello,\n\nWe completed a payment review for the FBA reimbursement associated with shipment ${shipmentReference}. Our review found that the reimbursement credited to your seller account was lower than the amount supported by the shipment and settlement records.\n\nThe eligible reimbursement was ${formatDemoCurrency(1482.20, currency)}. We have confirmed that ${formatDemoCurrency(519.10, currency)} was credited, leaving ${formatDemoCurrency(963.10, currency)} outstanding.\n\nOutstanding amount breakdown:\n• Lost inventory reimbursement: ${formatDemoCurrency(612.40, currency)}\n• Inbound placement and processing fee correction: ${formatDemoCurrency(184.25, currency)}\n• Referral fee reimbursement: ${formatDemoCurrency(96.45, currency)}\n• Fulfillment fee correction: ${formatDemoCurrency(70.00, currency)}\nTotal outstanding: ${formatDemoCurrency(963.10, currency)}\n\nWe have opened a follow-up review for the underpaid portion. The adjustment will be posted to your seller account after the case is completed and will appear in Payments once the normal settlement cycle has processed. No additional submission is required at this time. If the adjustment does not appear after the next settlement cycle, reply to this case through Seller Central and reference the case details below.\n\nCase ID: 19822888381\nShipment ID: ${shipmentReference}\nReimbursement status: Underpaid - follow-up review open\nOutstanding amount: ${formatDemoCurrency(963.10, currency)}\n\nThank you,\nAmazon Selling Partner Support`,
-          received_at: '2026-05-09T09:16:00Z',
-          state_signal: 'underpaid',
           attachments: [],
         },
       ];
