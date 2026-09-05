@@ -414,7 +414,7 @@ function OneRecoverySection() {
         </motion.div>
       </div>
       <div className="mx-auto mt-12 w-full max-w-[1440px] px-0 sm:mt-16 sm:px-4 md:mt-20 md:px-6">
-        <motion.div {...revealProps} className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[12px] sm:rounded-[16px]">
+        <motion.div {...revealProps} className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[12px] border border-white/10 bg-[#1B1B1B] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:rounded-[16px] sm:p-5">
           <img src={recoveryImg} alt="Recovery Operation" className="block w-full object-cover" style={{ imageRendering: 'high-quality' }} />
         </motion.div>
       </div>
@@ -488,7 +488,7 @@ function MarginLifecycleSection() {
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_76%_22%,rgba(45,70,92,0.32),transparent_48%),linear-gradient(145deg,#11151A_0%,#050608_58%,#000000_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:order-1 lg:p-7">
+        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:order-1 lg:p-7">
           <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
@@ -776,7 +776,7 @@ function RecoveryWorkStatement() {
             </div>
             <p className="mt-6 font-lora text-[22px] leading-[1.05] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>One recovery. One record. One visible outcome.</p>
           </motion.div>
-          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_76%_22%,rgba(45,70,92,0.32),transparent_48%),linear-gradient(145deg,#11151A_0%,#050608_58%,#000000_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
+          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
             <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
           </motion.div>
         </div>
@@ -1415,7 +1415,7 @@ function RecoveryOutcomeExplorer() {
               </motion.div>
 
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="lg:-translate-y-8">
-                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
+                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#1B1B1B] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
@@ -1538,7 +1538,7 @@ export default function Index() {
               </motion.div>
 
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-                <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_76%_22%,rgba(45,70,92,0.32),transparent_48%),linear-gradient(145deg,#11151A_0%,#050608_58%,#000000_100%)] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-5">
+                <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-5">
                   <AuditImageStackVisual />
                 </div>
               </motion.div>
