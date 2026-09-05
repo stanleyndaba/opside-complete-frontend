@@ -213,7 +213,7 @@ function AccountingEvidenceSection() {
   ];
 
   return (
-    <section className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
+    <section data-navbar-theme="dark" className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
         <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
           <motion.div {...revealProps} className="min-w-0 lg:col-span-2">
