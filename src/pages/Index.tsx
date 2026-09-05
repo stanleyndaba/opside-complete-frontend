@@ -1228,6 +1228,25 @@ const recoveryOutcomeStates = [
   },
 ] as const;
 
+function NeedsEvidenceImageStack() {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
+      <div className="relative h-full w-full">
+        <img
+          src="/emaillist.png"
+          alt="Evidence request list"
+          className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] -rotate-[1.5deg] rounded-[16px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]"
+        />
+        <img
+          src="/openmail.png"
+          alt="Opened evidence request"
+          className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] rotate-[0.5deg] rounded-[18px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]"
+        />
+      </div>
+    </div>
+  );
+}
+
 function OutcomeWorkspace({ state, index, reduceMotion }: { state: (typeof recoveryOutcomeStates)[number]; index: number; reduceMotion: boolean }) {
   return (
     <motion.div
@@ -1424,9 +1443,11 @@ function RecoveryOutcomeExplorer() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
             <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:min-h-[520px]">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
-              <AnimatePresence mode="wait">
-                <OutcomeWorkspace key={activeState.title} state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />
-              </AnimatePresence>
+              {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : (
+                <AnimatePresence mode="wait">
+                  <OutcomeWorkspace key={activeState.title} state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />
+                </AnimatePresence>
+              )}
             </div>
           </motion.div>
         </div>
