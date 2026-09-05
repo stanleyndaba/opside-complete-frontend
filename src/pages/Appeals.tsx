@@ -749,7 +749,7 @@ export default function Appeals() {
         <Sheet open={!!selectedCaseId} onOpenChange={(open) => !open && setSelectedCaseId(null)}>
           <SheetContent side="right" className="w-full overflow-y-auto border-l border-[#DCE8EE] bg-white p-0 text-[#182026] sm:max-w-[620px]">
             {selectedCase && (
-              <div className="flex h-full flex-col">
+              <div className="flex min-h-full flex-col">
                 <SheetHeader className="border-b border-[#DCE8EE] px-5 py-5 text-left sm:px-6">
                   <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Response record</p>
                   
@@ -767,7 +767,7 @@ export default function Appeals() {
                 </SheetHeader>
 
                 <div className="flex-1 space-y-6 px-5 py-5 sm:px-6">
-                  <div className="space-y-5 pb-3">
+                  <div className="space-y-6 pb-3">
                     {/* Amazon Response Analysis */}
                     <section>
                       <h3 className="text-[12px] font-medium tracking-tight text-[#66737F]">Amazon response analysis</h3>
