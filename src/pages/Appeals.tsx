@@ -747,39 +747,26 @@ export default function Appeals() {
 
         {/* Case Detail Side-Sheet */}
         <Sheet open={!!selectedCaseId} onOpenChange={(open) => !open && setSelectedCaseId(null)}>
-          <SheetContent className="w-full border-l border-[#DCE8EE] bg-white p-0 shadow-[0_18px_45px_rgba(24,32,38,0.16)] sm:max-w-[600px]">
+          <SheetContent side="right" className="w-full overflow-y-auto border-l border-[#DCE8EE] bg-white p-0 text-[#182026] sm:max-w-[620px]">
             {selectedCase && (
               <div className="flex h-full flex-col">
-                <SheetHeader className="border-b border-[#DCE8EE] p-4 sm:p-5">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="h-px w-4 bg-[#0B74DE]" />
-                      <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Response record</span>
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => setSelectedCaseId(null)}
-                      className="h-8 w-8 rounded-md hover:bg-[#F7FAFC]"
-                    >
-                      <X className="h-4 w-4 text-[#9CA3AF]" />
-                    </Button>
-                  </div>
+                <SheetHeader className="border-b border-[#DCE8EE] px-5 py-5 text-left sm:px-6">
+                  <p className="text-[11px] font-medium tracking-tight text-[#66737F]">Response record</p>
                   
-                  <SheetTitle className="mb-2 font-lora text-[28px] font-normal leading-tight tracking-tight text-[#182026]">
+                  <SheetTitle className="mt-1 break-words font-lora text-[25px] font-normal leading-tight tracking-tight text-[#182026]">
                     {selectedCase.case_number || selectedCase.amazon_case_id}
                   </SheetTitle>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[12px] font-medium tracking-tight text-[#4D5B66]">
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Badge variant="outline" className="rounded-md border-[#DCE8EE] bg-[#F7FAFC] px-2 py-0.5 text-[10px] font-medium tracking-tight text-[#4D5B66]">
                       {selectedCase.store_name}
                     </Badge>
-                    <Badge variant="outline" className={cn("rounded-md border px-2.5 py-0.5 text-[12px] font-medium tracking-tight", pushbackToneClass(selectedCase.appealState))}>
+                    <Badge variant="outline" className={cn("rounded-md border px-2 py-0.5 text-[10px] font-medium tracking-tight", pushbackToneClass(selectedCase.appealState))}>
                       {selectedCase.appealState === 'underpaid' ? 'Value Gap' : 'Denied'}
                     </Badge>
                   </div>
                 </SheetHeader>
 
-                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5">
+                <div className="flex-1 space-y-6 px-5 py-5 sm:px-6">
                   <div className="space-y-5 pb-3">
                     {/* Amazon Response Analysis */}
                     <section>
@@ -910,7 +897,7 @@ export default function Appeals() {
                   </div>
                 </div>
 
-                <div className="shrink-0 border-t border-[#DCE8EE] bg-[#FAFAF7] p-4 sm:p-5">
+                <div className="shrink-0 border-t border-[#DCE8EE] bg-white px-5 py-4 sm:px-6">
                   <div className="flex flex-col gap-2.5">
                     <Button className="h-10 w-full rounded-md bg-[#0B74DE] text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">
                       Initiate appeal review
