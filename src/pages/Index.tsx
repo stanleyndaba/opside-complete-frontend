@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
+  Check,
   Landmark,
   MessagesSquare,
   Monitor,
@@ -1298,79 +1299,42 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Section 11 — Recovery statement */}
-        <section className="relative border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-32">
+        {/* Final CTA — compact operational handoff */}
+        <section className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-8 sm:py-10 md:py-14" aria-labelledby="final-handoff-title">
           <div className={containerClass}>
-            <motion.div {...revealProps} className="mx-auto max-w-[980px] text-center">
-                <h2 className="font-lora text-[42px] leading-[0.98] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[56px] md:text-[76px]" style={{ fontWeight: 400 }}>
-                <span className="block">You already have enough to run.</span>
-                <span className="mt-3 block text-[var(--margin-text-muted)]">Recovery shouldn&apos;t be another job.</span>
-              </h2>
-            </motion.div>
-          </div>
-        </section>
+            <div className="grid items-center gap-8 border-y border-[var(--margin-border)] py-8 md:gap-12 md:py-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+              <motion.div {...revealProps} className="min-w-0">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">Final operational handoff</p>
+                <h2 id="final-handoff-title" className="mt-3 max-w-[650px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
+                  You sell on Amazon. Margin handles the recovery.
+                </h2>
+                <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">
+                  It finds what Amazon missed, builds the proof, carries the recovery forward, and tracks what Amazon actually paid.
+                </p>
+                <p className="mt-4 max-w-[620px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>
+                  You stay informed. You stay in control. The recovery work is no longer yours to carry.
+                </p>
+                <div className="mt-5 grid gap-x-5 gap-y-2 border-y border-[var(--margin-border-subtle)] py-3 sm:grid-cols-2">
+                  {["Finds the recovery.", "Builds the case.", "Carries it forward.", "Keeps the outcome visible."].map((item) => (
+                    <div key={item} className="flex items-center gap-2 text-[12px] leading-5 text-[var(--margin-text-secondary)] md:text-[13px]">
+                      <Check className="h-3.5 w-3.5 shrink-0 text-[var(--margin-blue)]" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-5 font-lora text-[24px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[30px]" style={{ fontWeight: 400 }}>
+                  You sell. Margin runs the recovery operation.
+                </p>
+                <Button onClick={() => handleClaimAccessClick("homepage_early_access_section")} className="landing-pressable mt-5 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]">
+                  Get It Handled <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </motion.div>
 
-        {/* Section 12 — Final operational handoff */}
-        <section className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-18" aria-labelledby="final-handoff-title">
-          <div className={containerClass}>
-            <div className="relative border-y border-[var(--margin-border)] py-16 md:py-24">
-              <div className="grid gap-14 lg:grid-cols-[1fr_0.82fr] lg:items-end lg:gap-20">
-                <motion.div {...revealProps}>
-                  <p className="max-w-[760px] text-[17px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px]">
-                    You sell on Amazon. Margin handles the recovery.
-                  </p>
-                  <p className="mt-6 max-w-[700px] text-[13px] leading-6 text-[var(--margin-text-muted)] md:text-[14px]">
-                    It finds what Amazon missed, builds the proof, carries the recovery forward, and tracks what Amazon actually paid.
-                  </p>
-                  <p className="mt-6 max-w-[700px] font-lora text-[22px] leading-tight tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>
-                    You stay informed. You stay in control. But the recovery work is no longer yours to carry.
-                  </p>
-                  <h2 id="final-handoff-title" className="mt-10 max-w-[720px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[54px]" style={{ fontWeight: 400 }}>
-                    You sell. Margin runs the recovery operation.
-                  </h2>
-                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                    <Button
-                      onClick={() => handleClaimAccessClick("homepage_early_access_section")}
-                      className="landing-pressable group relative h-14 w-full rounded-[7px] bg-[var(--margin-blue)] px-8 text-[15px] font-bold text-white shadow-[0_14px_30px_rgba(23,92,211,0.22)] transition-[background-color,box-shadow,transform] duration-150 hover:bg-[var(--margin-blue-hover)] max-md:shadow-none sm:w-auto"
-                    >
-                      <div className="absolute inset-0 rounded-[7px] bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      Get It Handled
-                    </Button>
-                  </div>
-                </motion.div>
-
-                <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative">
-                  <div className="mb-5 flex items-center justify-between border-b border-[var(--margin-border)] pb-4">
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">The work does not disappear</span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">01—04</span>
-                  </div>
-                  <div className="divide-y divide-[var(--margin-border)] border-y border-[var(--margin-border)]">
-                    {[
-                      "Finds the recovery.",
-                      "Builds the case.",
-                      "Carries it forward.",
-                      "Keeps the outcome visible."
-                    ].map((item, index) => (
-                      <motion.div
-                        key={item}
-                        initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, amount: 0.5 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.42, delay: reduceMotion ? 0 : index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                        className="group flex items-center gap-4 py-5 md:py-6"
-                      >
-                        <span className="w-8 shrink-0 font-mono text-[10px] font-semibold tracking-[0.12em] text-[var(--margin-text-muted)] transition-colors duration-300 group-hover:text-[var(--margin-blue)]">
-                          0{index + 1}
-                        </span>
-                        <span className={`text-[16px] leading-6 tracking-tight md:text-[18px] ${index === 3 ? "font-semibold text-[var(--margin-text-primary)]" : "font-medium text-[var(--margin-text-secondary)]"}`}>
-                          {item}
-                        </span>
-                        {index === 3 ? <span aria-hidden="true" className="ml-auto h-px w-8 bg-[#C9785D]" /> : null}
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              </div>
+              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
+                <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_76%_22%,rgba(45,70,92,0.32),transparent_48%),linear-gradient(145deg,#11151A_0%,#050608_58%,#000000_100%)] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-5">
+                  <AuditImageStackVisual />
+                </div>
+              </motion.div>
             </div>
           </div>
         </section>
