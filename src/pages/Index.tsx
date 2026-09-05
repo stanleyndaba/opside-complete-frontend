@@ -199,16 +199,16 @@ function AccountingEvidenceSection() {
 
   const accountingHighlights = [
     {
-      heading: "Explain what happened",
-      body: "Amazon can show what happened to the shipment or inventory.",
+      heading: "Understand what happened",
+      body: "Amazon records can show the shipment, inventory movement, fee, adjustment, or reimbursement.",
     },
     {
-      heading: "Support the value",
-      body: "Your existing records help explain what that event was worth, whether the amount is supported, and whether the outcome was actually settled.",
+      heading: "Understand what it’s worth",
+      body: "Relevant financial records help establish the amount involved, what should have happened, and whether the recovery amount is actually supported.",
     },
     {
-      heading: "Keep the decision moving",
-      body: "You should not have to reconstruct that financial context before you can decide what to do next.",
+      heading: "Know what was settled",
+      body: "Margin connects the recovery to the financial outcome, so you can see whether the money was paid, adjusted, reversed, or still outstanding.",
     },
   ];
 
@@ -222,9 +222,11 @@ function AccountingEvidenceSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[980px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[42px] lg:text-[44px]" style={{ fontWeight: 400 }}>
-              A recovery is easier to act on when the money around it is visible.
-              <span className="mt-3 block max-w-[920px] text-[0.86em] leading-[1.04] text-[#8A99A4]">The right context should arrive beside the event.</span>
+              The recovery doesn&apos;t exist in isolation.
             </h2>
+            <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              Amazon shows you the event. Your financial records show you what that event was worth. Margin brings those pieces together so a recovery can be understood in full—not just identified.
+            </p>
           </motion.div>
 
         </div>
@@ -296,11 +298,14 @@ function AccountingEvidenceSection() {
 
             <div className="mt-6">
               <p className="text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-6">
-                Margin does not replace your books. It brings in only the pieces that help explain a recovery.
+                You shouldn&apos;t have to search through your books, emails, settlements, and reports to reconstruct the story.
               </p>
               <p className="mt-3 font-lora text-[24px] leading-[1.05] tracking-[-0.04em] text-[#182026] sm:text-[29px] md:text-[34px]" style={{ fontWeight: 400 }}>
-                Not another accounting system.
-                <span className="mt-1.5 block text-[#0B74DE]">Just the context a recovery needs.</span>
+                Margin brings the financial context to the recovery.
+                <span className="mt-1.5 block text-[#0B74DE]">Not another accounting system. Not another place to manage your books.</span>
+              </p>
+              <p className="mt-3 text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-6">
+                Just the context Margin needs to handle the recovery properly.
               </p>
               <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
