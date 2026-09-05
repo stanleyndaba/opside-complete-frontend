@@ -1195,28 +1195,12 @@ const recoveryOutcomeStates = [
     visualDetail: "The original case, evidence, and Amazon response stay together for review.",
   },
   {
-    title: "Underpaid",
-    description: "The result can be compared against the expected recovery.",
+    title: "Recovery Outcome",
+    description: "Underpaid, partially resolved, and reversed outcomes are different ways a recovery can fall short of the expected result—and each remains visible for follow-up.",
     action: "Compare expected to paid",
     visualLabel: "Recovery variance",
     visualValue: "Expected  /  actual",
     visualDetail: "The gap remains visible instead of being mistaken for a complete recovery.",
-  },
-  {
-    title: "Partially resolved",
-    description: "The unresolved balance remains visible.",
-    action: "Keep the balance open",
-    visualLabel: "Open balance",
-    visualValue: "Resolved  /  unresolved",
-    visualDetail: "A partial result becomes a tracked balance with a clear next state.",
-  },
-  {
-    title: "Reversed",
-    description: "A previously positive outcome can be detected and examined.",
-    action: "Examine the reversal",
-    visualLabel: "Outcome changed",
-    visualValue: "Positive  →  reversed",
-    visualDetail: "Margin surfaces the change so the earlier result can be investigated.",
   },
   {
     title: "Appealable",
@@ -1481,7 +1465,7 @@ function RecoveryOutcomeExplorer() {
                       transition={{ duration: reduceMotion ? 0 : 0.48, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute inset-0"
                     >
-                      {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : activeState.title === "Underpaid" ? <UnderpaidImageStack /> : <OutcomeWorkspace state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />}
+                      {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : activeState.title === "Recovery Outcome" ? <UnderpaidImageStack /> : <OutcomeWorkspace state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />}
                     </motion.div>
                   </AnimatePresence>
                 </div>
