@@ -219,7 +219,7 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} className="min-w-0 lg:col-span-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Accounting</span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Financial Context</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[980px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[42px] lg:text-[44px]" style={{ fontWeight: 400 }}>
               The recovery doesn&apos;t exist in isolation.
@@ -233,57 +233,59 @@ function AccountingEvidenceSection() {
 
         <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
-            <div className="relative border-y border-[#D8E3EA] py-5 sm:py-6 md:py-7">
-              <div className="relative">
-                <div className="relative overflow-hidden rounded-[20px] border border-[#D8E3EA] bg-[#F0F1EE] py-4 sm:rounded-[24px] md:rounded-[28px] md:py-6 lg:py-8">
-                    <div className="relative space-y-4">
-                      {accountingRows.map((row, rowIndex) => (
-                        <motion.div
-                          key={rowIndex}
-                          className="flex w-max gap-3 px-3 md:gap-4 md:px-4 lg:gap-5 lg:px-6"
-                          animate={reduceMotion ? { x: rowIndex === 0 ? 0 : -110 } : { x: rowIndex === 0 ? [0, -150] : [-110, 40] }}
-                          transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 24 : 28, repeat: Infinity, ease: "linear" }}
-                        >
-                          {[...row, ...row].map((source, index) => {
-                            const isActive = source.id === activeSource.id;
-                            return (
-                              <div key={`${source.id}-${rowIndex}-${index}`} className="relative h-[94px] w-[94px] shrink-0 rounded-[14px] border-[5px] border-[#CBD4D9] bg-[#FFFFFF] p-3 shadow-[0_12px_22px_rgba(24,32,38,0.10)] sm:h-[112px] sm:w-[112px] sm:rounded-[16px] sm:p-4 md:h-[142px] md:w-[142px] md:rounded-[20px] md:border-[7px] md:p-5 md:shadow-[0_18px_28px_rgba(24,32,38,0.13)] lg:h-[156px] lg:w-[156px]">
-                                <div className="flex h-full w-full items-center justify-center rounded-[8px] border border-[#EEF2F4] sm:rounded-[10px] md:rounded-[12px]">
-                                  <img src={source.src} alt={source.name} className={`max-h-9 max-w-[48px] object-contain sm:max-h-12 sm:max-w-[60px] md:max-h-16 md:max-w-[76px] ${isActive ? "opacity-100" : "opacity-90"}`} />
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative hidden">
-                    <div className="relative overflow-hidden py-5">
+            <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(11,116,222,0.18),transparent_36%),linear-gradient(145deg,#111923_0%,#070A0E_58%,#020304_100%)] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-6 md:p-7">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#8FA9C0]">Recovery context</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#64798A]">Live record</span>
+              </div>
+              <div className="mt-5 grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch">
+                <div className="rounded-[7px] border border-white/10 bg-white/[0.045] p-3.5">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#7E95A8]">Amazon event</span>
+                  <p className="mt-3 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-white">Inventory adjustment</p>
+                  <p className="mt-2 text-[11px] leading-5 text-[#94A4B0]">Shipment · fee · reimbursement</p>
+                </div>
+                <div className="hidden items-center justify-center px-1 sm:flex"><div className="h-px w-8 bg-[#3C6F99]" /></div>
+                <div className="rounded-[7px] border border-[#2A5C83] bg-[#0B74DE]/10 p-3.5">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#8BB9E0]">Financial context</span>
+                  <p className="mt-3 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-white">Amount supported</p>
+                  <p className="mt-2 text-[11px] leading-5 text-[#A3B7C8]">Cost · settlement · payment</p>
+                </div>
+              </div>
+              <div className="mt-3 rounded-[7px] border border-[#3A82B7] bg-[linear-gradient(135deg,rgba(11,116,222,0.24),rgba(11,116,222,0.08))] p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#B9D9F0]">Margin recovery record</span>
+                  <span className="rounded-full border border-[#6DA9D1]/60 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.08em] text-[#B9D9F0]">Understood</span>
+                </div>
+                <p className="mt-3 max-w-[420px] font-lora text-[23px] leading-[1.02] tracking-[-0.03em] text-white">The event, its value, and its outcome stay connected.</p>
+              </div>
+              <div className="mt-5 border-t border-white/10 pt-3">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#7E95A8]">Relevant context sources</span>
+                  <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-[#64798A]">read-only · purpose-limited</span>
+                </div>
+                <div className="relative overflow-hidden">
+                  <div className="space-y-2">
+                    {accountingRows.map((row, rowIndex) => (
                       <motion.div
-                        className="flex w-max gap-8 pr-8"
-                        animate={reduceMotion ? { x: 0 } : { x: ["0%", "-50%"] }}
-                        transition={reduceMotion ? { duration: 0 } : { duration: 34, repeat: Infinity, ease: "linear" }}
-                        style={{ willChange: "transform" }}
+                        key={rowIndex}
+                        className="flex w-max gap-2"
+                        animate={reduceMotion ? { x: rowIndex === 0 ? 0 : -44 } : { x: rowIndex === 0 ? [0, -76] : [-44, 20] }}
+                        transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 26, repeat: Infinity, ease: "linear" }}
                       >
-                        {[...accountingSources, ...accountingSources].map((source, index) => (
-                          <div key={`${source.id}-${index}`} className="w-[118px] shrink-0">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-[14px] border border-[#E1E8ED] bg-white/90 shadow-[0_8px_24px_rgba(24,32,38,0.04)]">
-                              <img src={source.src} alt={source.name} className="max-h-8 max-w-9 object-contain grayscale opacity-75" />
+                        {[...row, ...row].map((source, index) => {
+                          const isActive = source.id === activeSource.id;
+                          return (
+                            <div key={`${source.id}-${rowIndex}-${index}`} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[7px] border ${isActive ? "border-[#5C9DCA] bg-white" : "border-white/10 bg-white/[0.06]"}`}>
+                              <img src={source.src} alt={source.name} className={`max-h-6 max-w-6 object-contain ${isActive ? "opacity-100" : "opacity-70"}`} />
                             </div>
-                            <span className="mt-3 block text-[9px] leading-4 tracking-tight text-[#66737F]">{source.context}</span>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </motion.div>
-                      <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[#FAFAF7] to-transparent" />
-                      <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[#FAFAF7] to-transparent" />
-                    </div>
+                    ))}
                   </div>
                 </div>
-
               </div>
-
+            </div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="min-w-0 lg:order-2 lg:pt-5">
