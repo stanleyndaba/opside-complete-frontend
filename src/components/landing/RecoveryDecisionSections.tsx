@@ -39,16 +39,36 @@ const revealProps = {
 export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
   <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
-      <motion.div {...revealProps} className="max-w-[780px]">
-        <div className="mb-5 flex items-center gap-3">
-          <div className="h-px w-8 bg-[var(--margin-blue)]" />
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Your next step depends on what the Audit finds</span>
-        </div>
-        <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the Audit. Margin will show you what happens next.</h2>
-        <p className="mt-5 max-w-[720px] text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">You do not need to decide which recovery service you need before you know what is actually happening in your account. Run the free Recovery Audit first, then Margin shows you what it found, what can be supported, and the appropriate next step.</p>
-      </motion.div>
+      <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-16">
+        <motion.div {...revealProps} className="max-w-[780px]">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Your next step depends on what the Audit finds</span>
+          </div>
+          <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the Audit. Margin will show you what happens next.</h2>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">You do not need to decide which recovery service you need before you know what is actually happening in your account. Run the free Recovery Audit first, then Margin shows you what it found, what can be supported, and the appropriate next step.</p>
+        </motion.div>
 
-      <div className="mt-10 grid gap-0 border-y border-[var(--margin-border)] md:mt-12 lg:grid-cols-2">
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-[430px]">
+          <div className="absolute inset-x-4 top-0 h-[78%] overflow-hidden rounded-[18px] border border-[var(--margin-border)] bg-white shadow-[0_24px_70px_rgba(27,28,32,0.10)] sm:inset-x-8 sm:rounded-[22px] lg:inset-x-12">
+            <img src="/auditResult.png" alt="Audit result showing recovery findings and filing movement" className="h-full w-full object-cover object-left-top" />
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20, rotate: 2 }}
+            whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+            viewport={{ once: true, margin: "-48px" }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute bottom-0 left-0 z-10 w-[86%] overflow-hidden rounded-[18px] border border-[var(--margin-border)] bg-white shadow-[0_30px_90px_rgba(27,28,32,0.16)] sm:left-4 sm:w-[82%] sm:rounded-[22px] lg:left-0"
+          >
+            <img src="/discrepancy.png" alt="Detailed discrepancy finding with evidence and recovery analysis" className="block h-auto w-full" />
+          </motion.div>
+          <div className="absolute bottom-3 right-0 z-20 rounded-full border border-[var(--margin-border)] bg-[var(--margin-canvas)] px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-blue)] shadow-[0_8px_24px_rgba(27,28,32,0.08)] sm:right-4">
+            Finding detail / Audit result
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="mt-12 grid gap-0 border-y border-[var(--margin-border)] md:mt-16 lg:grid-cols-2">
         {pathOptions.map((option, index) => (
           <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`relative p-5 sm:p-7 md:p-9 ${index > 0 ? "border-t border-[var(--margin-border)] lg:border-l lg:border-t-0" : ""}`}>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{option.label}</p>
