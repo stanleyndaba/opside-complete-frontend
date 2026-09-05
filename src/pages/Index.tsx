@@ -326,6 +326,36 @@ function AccountingEvidenceSection() {
   );
 }
 
+const historicalVideoSections = [
+  { id: "recovery-preview", label: "Recovery preview", title: "See the recovery taking shape.", body: "Margin turns the first signal into a record you can understand, with the underlying activity and evidence kept in view.", videos: ["/Evidentiary.mp4", "/DocumentAnalysis.mp4"] },
+  { id: "supporting-evidence-preview", label: "Supporting evidence", title: "The proof stays connected to the case.", body: "Supporting records, case preparation, and filing context remain connected instead of being rebuilt across separate tools.", videos: ["/superEvidence.mp4", "/CaseBuilding.mp4", "/CasesTable.mp4", "/Filing.mp4"] },
+  { id: "replies-preview", label: "Replies preview", title: "Amazon responses do not disappear into an inbox.", body: "Responses, rejection context, and the next supported action stay attached to the recovery record.", videos: ["/Replies.mp4", "/2026-07-27__12_58_06_a_m_-Appeals_Scene.mp4"] },
+  { id: "payout-reconciliation-preview", label: "Payout reconciliation", title: "The recovery is not complete until the money is checked.", body: "Margin keeps the case outcome connected to the payout record so approved value and actual settlement can be compared.", videos: ["/CasesTable.mp4", "/EvidenceCalibration.mp4"] },
+] as const;
+
+function HistoricalVideoPreviewSections() {
+  return (
+    <>
+      {historicalVideoSections.map((section, sectionIndex) => (
+        <section key={section.id} aria-labelledby={`${section.id}-title`} className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28">
+          <div className={containerClass}>
+            <motion.div {...revealProps} className="max-w-[900px]">
+              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{String(sectionIndex + 1).padStart(2, "0")} / {section.label}</span></div>
+              <h2 id={`${section.id}-title`} className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[54px]" style={{ fontWeight: 400 }}>{section.title}</h2>
+              <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">{section.body}</p>
+            </motion.div>
+            <div className={`mt-10 grid gap-5 ${section.videos.length > 2 ? "sm:grid-cols-2" : "lg:grid-cols-2"}`}>
+              {section.videos.map((video, videoIndex) => (
+                <motion.div key={`${video}-${videoIndex}`} {...revealProps} transition={{ ...revealProps.transition, delay: videoIndex * 0.08 }} className="relative overflow-hidden rounded-[12px] sm:rounded-[16px]"><video className="block aspect-video w-full object-cover" src={video} autoPlay loop muted playsInline preload="auto" aria-label={`${section.label} demonstration ${videoIndex + 1}`} /></motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+    </>
+  );
+}
+
 function KineticHeroSection({
   onAuditCta,
   onReportCta,
@@ -1502,6 +1532,7 @@ export default function Index() {
         <MarginLifecycleSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
+        <HistoricalVideoPreviewSections />
         <RiskSection />
         <OperationalEconomicsSection />
         <RecoveryOutcomeExplorer />
