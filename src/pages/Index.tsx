@@ -204,7 +204,7 @@ function AccountingEvidenceSection() {
     },
     {
       heading: "Understand what it’s worth",
-      body: "Relevant financial records help establish the amount involved, what should have happened, and whether the recovery amount is actually supported.",
+      body: "Relevant financial records help establish the amount involved, what should have happened, and whether the recovery is actually supported.",
     },
     {
       heading: "Know what was settled",
@@ -225,7 +225,7 @@ function AccountingEvidenceSection() {
               The recovery doesn&apos;t exist in isolation.
             </h2>
             <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Amazon shows you the event. Your financial records show you what that event was worth. Margin brings those pieces together so a recovery can be understood in full—not just identified.
+              Amazon shows you the event. Your financial records show you what that event was worth. Margin brings the relevant pieces together so the recovery can be understood, supported, and ultimately closed.
             </p>
           </motion.div>
 
