@@ -461,11 +461,11 @@ function RealityCheckSection() {
         </motion.div>
         <motion.div {...revealProps} className="mt-6 border-y border-[var(--margin-border)] py-3 md:mt-8 md:py-4">
           <p className="font-mono text-[11px] font-semibold tracking-[0.02em] text-[var(--margin-blue)] sm:text-[12px] md:text-[13px]">
-            Find <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prepare <span className="px-1 text-[var(--margin-border-strong)]">→</span> File <span className="px-1 text-[var(--margin-border-strong)]">→</span> Follow up <span className="px-1 text-[var(--margin-border-strong)]">→</span> Reconcile <span className="px-1 text-[var(--margin-border-strong)]">→</span> Close
+            Find <span className="px-1 text-[var(--margin-border-strong)]">→</span> Investigate <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Handle <span className="px-1 text-[var(--margin-border-strong)]">→</span> Verify
           </p>
         </motion.div>
         <motion.p {...revealProps} className="mt-5 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:mt-7 md:text-[23px]" style={{ fontWeight: 400 }}>
-          You don&apos;t need to manage every step. <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery moving.</span>
+          You don&apos;t manage the recovery step by step. <span className="text-[var(--margin-text-muted)]">Margin runs the operation.</span>
         </motion.p>
         </div>
         <motion.div {...revealProps} className="relative">
@@ -504,7 +504,7 @@ function MarginLifecycleSection() {
           >
             <span className="block">Margin doesn&apos;t give you another list to work through.</span>
             <span className="mt-3 block text-[var(--margin-text-muted)]">
-              It handles the recovery work.
+              It takes the recovery from finding the problem to resolving the outcome.
             </span>
           </h2>
         </motion.div>
@@ -513,7 +513,7 @@ function MarginLifecycleSection() {
             {...revealProps}
             className="mt-4 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"
           >
-            You don&apos;t become the recovery manager. Margin does the work. You stay in control.
+            Margin investigates what happened, gathers the evidence, prepares the recovery, manages the case, follows what happens next, and keeps the outcome moving.
           </motion.p>
         </div>
         </div>
