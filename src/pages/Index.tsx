@@ -1258,6 +1258,17 @@ function RejectedImageStack() {
   );
 }
 
+function UnderpaidImageStack() {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
+      <div className="relative h-full w-full">
+        <img src="/evidenceatt.png" alt="Evidence attached to an underpaid recovery" className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] -rotate-[1.5deg] rounded-[16px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]" />
+        <img src="/underpayemail.png" alt="Underpayment recovery email" className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] rotate-[0.5deg] rounded-[18px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]" />
+      </div>
+    </div>
+  );
+}
+
 function OutcomeWorkspace({ state, index, reduceMotion }: { state: (typeof recoveryOutcomeStates)[number]; index: number; reduceMotion: boolean }) {
   return (
     <motion.div
@@ -1470,7 +1481,7 @@ function RecoveryOutcomeExplorer() {
                       transition={{ duration: reduceMotion ? 0 : 0.48, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute inset-0"
                     >
-                      {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : <OutcomeWorkspace state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />}
+                      {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : activeState.title === "Underpaid" ? <UnderpaidImageStack /> : <OutcomeWorkspace state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />}
                     </motion.div>
                   </AnimatePresence>
                 </div>
