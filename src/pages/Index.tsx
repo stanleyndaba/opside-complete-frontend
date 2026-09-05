@@ -1394,113 +1394,46 @@ function ProductReframeSection() {
 
 function RecoveryOutcomeExplorer() {
   const reduceMotion = useReducedMotion();
-  const outcomeSceneRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: outcomeSceneRef,
-    offset: ["start start", "end end"],
-  });
-  const [activeOutcome, setActiveOutcome] = useState(0);
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const nextOutcome = Math.min(
-      recoveryOutcomeStates.length - 1,
-      Math.floor(latest * recoveryOutcomeStates.length),
-    );
-    setActiveOutcome((current) => (current === nextOutcome ? current : nextOutcome));
-  });
-
+  const [activeOutcome] = useState(0);
   const activeState = recoveryOutcomeStates[activeOutcome];
-  const progressPercent = ((activeOutcome + 1) / recoveryOutcomeStates.length) * 100;
 
   return (
-    <section
-      aria-labelledby="recovery-outcome-title"
-      className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]"
-    >
-      <div ref={outcomeSceneRef} className="relative lg:min-h-[520vh]">
-        <div className="lg:sticky lg:top-20 lg:flex lg:min-h-[calc(100svh-5rem)] lg:items-center">
-          <div className={`${containerClass} w-full py-16 md:py-24 lg:py-10`}>
-            <motion.div {...revealProps} className="max-w-[920px]">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="h-px w-8 bg-[var(--margin-blue)]" />
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
-                  13 / What happens when things go wrong?
-                </span>
-              </div>
-              <h2 id="recovery-outcome-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
-                A recovery doesn&apos;t disappear when Amazon says no.
-              </h2>
-            </motion.div>
-
-            <div className="relative mt-10 grid items-start gap-10 lg:mt-12 lg:grid-cols-[0.86fr_1.14fr] lg:gap-16">
-              <div className="relative">
-                <div className="mb-4 flex items-center justify-between gap-4 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-text-muted)]">
-                  <span>Outcome states</span>
-                  <span>{String(activeOutcome + 1).padStart(2, "0")} / {String(recoveryOutcomeStates.length).padStart(2, "0")}</span>
-                </div>
-                <div className="mb-5 h-px w-full bg-[var(--margin-border)]">
-                  <motion.div
-                    className="h-px origin-left bg-[var(--margin-blue)]"
-                    animate={{ width: `${progressPercent}%` }}
-                    transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeOut" }}
-                  />
-                </div>
-                <div className="border-t border-[var(--margin-border)]">
-                  {recoveryOutcomeStates.map((state, index) => {
-                    const isActive = index === activeOutcome;
-                    const isPast = index < activeOutcome;
-                    return (
-                      <motion.div
-                        key={state.title}
-                        initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, amount: 0.35 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.35, delay: reduceMotion ? 0 : index * 0.045 }}
-                        className={`relative border-b border-[var(--margin-border)] py-4 pr-2 transition-opacity duration-300 sm:py-5 ${isActive ? "opacity-100" : isPast ? "opacity-70" : "opacity-45"}`}
-                      >
-                        <div className="flex items-start gap-4">
-                          <span className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-bold transition-colors duration-300 ${isActive ? "bg-[var(--margin-blue)] text-white" : "bg-[#EEF1F2] text-[var(--margin-text-muted)]"}`}>
-                            {isPast ? "✓" : String(index + 1).padStart(2, "0")}
-                          </span>
-                          <div className="min-w-0">
-                            <h3 className={`font-lora text-[22px] leading-tight tracking-[-0.035em] transition-colors duration-300 sm:text-[25px] ${isActive ? "text-[var(--margin-text-primary)]" : "text-[var(--margin-text-secondary)]"}`} style={{ fontWeight: 400 }}>
-                              {state.title}
-                            </h3>
-                            <p className="mt-1.5 max-w-[500px] text-[13px] leading-6 text-[var(--margin-text-secondary)] sm:text-[14px]">
-                              {state.description}
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <div className="relative min-h-[350px] overflow-hidden rounded-[10px] border border-[var(--margin-border)] bg-white sm:min-h-[400px] lg:h-[min(520px,calc(100svh-14rem))] lg:min-h-0">
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(11,116,222,0.08),transparent_35%)]" />
-                  <div className="pointer-events-none absolute inset-x-5 top-5 h-px bg-[var(--margin-border)] sm:inset-x-7 sm:top-7" />
-                  <div className="pointer-events-none absolute bottom-5 left-5 right-5 h-px bg-[var(--margin-border)] sm:bottom-7 sm:left-7 sm:right-7" />
-                  <AnimatePresence mode="wait">
-                    <OutcomeWorkspace key={activeState.title} state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />
-                  </AnimatePresence>
-                </div>
-                <p className="mt-3 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-text-muted)]">
-                  Image-ready workspace / visual states can be added here later.
-                </p>
-              </div>
-            </div>
+    <section aria-labelledby="recovery-outcome-title" className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
+      <div className={containerClass}>
+        <motion.div {...revealProps}>
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / What happens when things go wrong?</span>
           </div>
-        </div>
-      </div>
+          <h2 id="recovery-outcome-title" className="max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
+        </motion.div>
 
-      <div className={`${containerClass} py-16 md:py-24`}>
-        <motion.div {...revealProps} className="border-t border-[var(--margin-border)] pt-7 md:pt-9">
-          <p className="max-w-[760px] font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[46px]" style={{ fontWeight: 400 }}>
-            Every outcome becomes information.
-            <span className="mt-2 block text-[var(--margin-text-muted)]">Every unresolved outcome has a next action.</span>
-          </p>
+        <div className="mt-12 grid items-start gap-10 lg:mt-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <motion.div {...revealProps} className="border-t border-[var(--margin-text-primary)]">
+            {recoveryOutcomeStates.map((state, index) => {
+              const isActive = index === activeOutcome;
+              return (
+                <div key={state.title} className={`border-b border-[var(--margin-border)] py-6 transition-opacity duration-300 sm:py-7 ${isActive ? "opacity-100" : "opacity-45"}`}>
+                  <h3 className={`tracking-[-0.035em] ${isActive ? "text-[22px] font-medium text-[var(--margin-text-primary)] sm:text-[25px]" : "text-[21px] font-normal text-[var(--margin-text-secondary)] sm:text-[24px]"}`}>{state.title}</h3>
+                  {isActive ? <><p className="mt-3 max-w-[420px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px]">{state.description}</p><button type="button" className="mt-5 text-[14px] font-medium text-[var(--margin-text-primary)] underline decoration-[var(--margin-border-strong)] underline-offset-4 transition-colors hover:text-[var(--margin-blue)]">Learn More</button></> : null}
+                </div>
+              );
+            })}
+          </motion.div>
+
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
+            <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:min-h-[520px]">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
+              <AnimatePresence mode="wait">
+                <OutcomeWorkspace key={activeState.title} state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div {...revealProps} className="mt-16 border-t border-[var(--margin-border)] pt-8 md:mt-20 md:pt-10">
+          <p className="max-w-[1060px] font-lora text-[30px] leading-[1.03] tracking-[-0.045em] sm:text-[40px] md:text-[54px]" style={{ fontWeight: 400 }}><span className="text-[var(--margin-text-primary)]">You run the business.</span>{" "}<span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span></p>
+          <p className="mt-5 max-w-[700px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Open Margin when you want to see what has surfaced, what is being handled, and what has genuinely been settled.</p>
         </motion.div>
       </div>
     </section>
