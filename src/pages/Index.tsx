@@ -231,21 +231,8 @@ function AccountingEvidenceSection() {
         <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
             <div className="relative border-y border-[#D8E3EA] py-5 sm:py-6 md:py-7">
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_right,_rgba(11,116,222,0.10),_transparent_62%)]" />
-              <div className="relative flex flex-col items-start gap-2 border-b border-[#E4EDF1] pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">The context bridge</span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#94A3B8]">Your records / read-only</span>
-              </div>
-
-              <div className="relative mt-7">
-                <div className="flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
-                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Record sources</p>
-                  <span className="max-w-full break-words font-mono text-[9px] uppercase tracking-[0.12em] text-[#0B74DE]">In focus / {activeSource.context}</span>
-                </div>
-
-                <div className="relative mt-4">
-                  <div className="relative overflow-hidden rounded-[20px] border border-[#D8E3EA] bg-[#E8EDF0] py-4 sm:rounded-[24px] md:rounded-[28px] md:py-6 lg:py-8">
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(125deg,rgba(216,227,234,0.76),rgba(246,248,248,0.82)_52%,rgba(214,225,231,0.72))]" />
+              <div className="relative">
+                <div className="relative overflow-hidden rounded-[20px] border border-[#D8E3EA] bg-[#F0F1EE] py-4 sm:rounded-[24px] md:rounded-[28px] md:py-6 lg:py-8">
                     <div className="relative space-y-4">
                       {accountingRows.map((row, rowIndex) => (
                         <motion.div
@@ -258,10 +245,9 @@ function AccountingEvidenceSection() {
                             const isActive = source.id === activeSource.id;
                             return (
                               <div key={`${source.id}-${rowIndex}-${index}`} className="relative h-[94px] w-[94px] shrink-0 rounded-[14px] border-[5px] border-[#CBD4D9] bg-[#FFFFFF] p-3 shadow-[0_12px_22px_rgba(24,32,38,0.10)] sm:h-[112px] sm:w-[112px] sm:rounded-[16px] sm:p-4 md:h-[142px] md:w-[142px] md:rounded-[20px] md:border-[7px] md:p-5 md:shadow-[0_18px_28px_rgba(24,32,38,0.13)] lg:h-[156px] lg:w-[156px]">
-                                <div className={`flex h-full w-full items-center justify-center rounded-[8px] border sm:rounded-[10px] md:rounded-[12px] ${isActive ? "border-[#0B74DE]/45" : "border-[#EEF2F4]"}`}>
+                                <div className="flex h-full w-full items-center justify-center rounded-[8px] border border-[#EEF2F4] sm:rounded-[10px] md:rounded-[12px]">
                                   <img src={source.src} alt={source.name} className={`max-h-9 max-w-[48px] object-contain sm:max-h-12 sm:max-w-[60px] md:max-h-16 md:max-w-[76px] ${isActive ? "opacity-100" : "opacity-90"}`} />
                                 </div>
-                                {isActive ? <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-[#BFD6E8] bg-[#FAFAF7] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#0B74DE]">In focus</span> : null}
                               </div>
                             );
                           })}
@@ -294,7 +280,6 @@ function AccountingEvidenceSection() {
                 </div>
 
               </div>
-            </div>
 
           </motion.div>
 
