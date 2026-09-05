@@ -495,8 +495,8 @@ function MarginLifecycleSection() {
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[12px] sm:rounded-[16px] lg:order-1">
-          <video className="block aspect-video w-full object-cover" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
+        <motion.div {...revealProps} className="relative order-2 overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_76%_22%,rgba(45,70,92,0.32),transparent_48%),linear-gradient(145deg,#11151A_0%,#050608_58%,#000000_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:order-1 lg:p-7">
+          <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_4.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
         <motion.div {...revealProps} className="max-w-[980px]">
@@ -719,8 +719,8 @@ function RecoveryWorkStatement() {
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>One connected recovery record.</h2>
             <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">See the evidence, decisions, progress, and outcome in one place—without chasing reports, rebuilding context, or managing the follow-up yourself.</p>
           </motion.div>
-          <motion.div {...revealProps} className="relative overflow-hidden rounded-[12px] sm:rounded-[16px]">
-            <video className="block aspect-video w-full object-cover" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
+          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_76%_22%,rgba(45,70,92,0.32),transparent_48%),linear-gradient(145deg,#11151A_0%,#050608_58%,#000000_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
+            <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
           </motion.div>
         </div>
       </div>

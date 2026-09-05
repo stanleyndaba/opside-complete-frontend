@@ -12,7 +12,7 @@ export function AuditImageStackVisual() {
         whileInView={{ opacity: 1, x: 1.5, y: 0, rotate: 0 }}
         viewport={{ once: true, margin: "-48px" }}
         transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute bottom-5 left-0 z-10 w-[86%] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.42)] sm:bottom-8 sm:left-4 sm:w-[82%] sm:rounded-[14px] lg:bottom-10 lg:left-0"
+        className="absolute bottom-5 left-4 z-10 w-[82%] overflow-hidden rounded-[12px] border border-[var(--margin-border)] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.42)] sm:bottom-8 sm:left-8 sm:w-[78%] sm:rounded-[14px] lg:bottom-10 lg:left-4"
       >
         <img src="/discrepancy.png" alt="Detailed discrepancy finding with evidence and recovery analysis" className="block h-auto w-full" />
       </motion.div>
