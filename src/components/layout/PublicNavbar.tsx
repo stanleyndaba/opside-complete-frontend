@@ -280,7 +280,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     <Link
                                         to="/audit"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[var(--margin-blue)] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-white shadow-[0_8px_20px_rgba(11,116,222,0.18)] transition-[background-color,box-shadow] duration-200 hover:bg-[var(--margin-blue-hover)] hover:shadow-[0_12px_26px_rgba(11,116,222,0.24)]">
+                                        className="flex min-h-[48px] w-full items-center justify-center gap-1 rounded-[8px] bg-[#E5E5E0] px-3 py-3 text-center font-sans text-[13px] font-bold tracking-normal text-[#111111] shadow-[0_8px_20px_rgba(0,0,0,0.18)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D4D4CF] hover:shadow-[0_12px_26px_rgba(0,0,0,0.24)]">
                                         Start the Audit <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                                     </Link>
                                     <Link
