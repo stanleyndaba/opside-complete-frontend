@@ -700,6 +700,64 @@ function MarginOperationSection() {
   );
 }
 
+const controlPrinciples = [
+  {
+    title: "Read-only access",
+    body: "Margin starts by examining your Amazon data without changing anything.",
+  },
+  {
+    title: "Evidence before action",
+    body: "Every recovery is grounded in the records that support it.",
+  },
+  {
+    title: "You approve consequential actions",
+    body: "Before Margin submits a recovery, you can see what happened, what supports it, and what Margin is going to do.",
+  },
+  {
+    title: "Everything stays visible",
+    body: "Evidence, decisions, case activity, Amazon responses, payments, and outcomes remain connected and visible.",
+  },
+];
+
+function ControlSection() {
+  return (
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 sm:py-20 md:py-24" aria-labelledby="control-section-title">
+      <div className={containerClass}>
+        <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
+          <motion.div {...revealProps} className="lg:sticky lg:top-28">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-px w-8 bg-[var(--margin-blue)]" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / Control</span>
+            </div>
+            <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
+              You stay in control.
+              <span className="mt-3 block text-[var(--margin-text-muted)]">Margin does the work.</span>
+            </h2>
+            <p className="mt-6 max-w-[500px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              Margin handles the recovery operation without taking control away from you.
+            </p>
+            <p className="mt-8 border-l-2 border-[var(--margin-blue)] pl-5 font-lora text-[22px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[27px]" style={{ fontWeight: 400 }}>
+              Margin runs the recovery. You remain the authority.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="border-t border-[var(--margin-border-strong)]">
+            {controlPrinciples.map((principle, index) => (
+              <div key={principle.title} className="grid gap-2 border-b border-[var(--margin-border)] py-5 sm:grid-cols-[minmax(180px,0.72fr)_1.28fr] sm:gap-8 sm:py-6">
+                <div className="flex items-start gap-3">
+                  <span className="font-mono text-[10px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">{String(index + 1).padStart(2, "0")}</span>
+                  <h3 className="text-[15px] font-semibold leading-6 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[16px]">{principle.title}</h3>
+                </div>
+                <p className="max-w-[520px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{principle.body}</p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function RecoveryWorkStatement() {
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28" aria-labelledby="trust-section-title">
@@ -1406,6 +1464,7 @@ export default function Index() {
         <OneRecoverySection />
         <RealityCheckSection />
         <MarginLifecycleSection />
+        <ControlSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
         <RiskSection />
