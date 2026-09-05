@@ -219,7 +219,7 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} className="min-w-0 lg:col-span-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">Financial Context</span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">07 / FINANCIAL CONTEXT</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[980px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[42px] lg:text-[44px]" style={{ fontWeight: 400 }}>
               The recovery doesn&apos;t exist in isolation.
@@ -496,7 +496,7 @@ function MarginLifecycleSection() {
           <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
-              04 / How Margin handles it
+              04 / HOW MARGIN HANDLES IT
             </span>
           </div>
           <h2
@@ -729,7 +729,7 @@ function ControlSection() {
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / Control</span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / CONTROL</span>
             </div>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               You stay in control.
@@ -766,7 +766,7 @@ function RecoveryWorkStatement() {
       <div className={containerClass}>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
           <motion.div {...revealProps} className="flex flex-col justify-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / One connected recovery record</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">06 / ONE CONNECTED RECOVERY RECORD</p>
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>Everything that matters to the recovery stays connected.</h2>
             <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">The evidence, financial context, decisions, case activity, Amazon responses, payments, reversals, and final outcome all belong to the same recovery record.</p>
             <div className="mt-5 space-y-1 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
@@ -1263,7 +1263,7 @@ function RiskSection() {
         <motion.div {...revealProps} className="max-w-[900px]">
           <div className="mb-6 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">07 / FINANCIAL CLOSURE</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">08 / FINANCIAL CLOSURE</span>
           </div>
           <h2 id="risk-section-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
             A recovery isn&apos;t finished just because Amazon says it is.
@@ -1329,7 +1329,7 @@ function OperationalEconomicsSection() {
         <motion.div {...revealProps} className="max-w-[980px]">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / The cost of doing it yourself</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / THE COST OF DOING IT YOURSELF</span>
           </div>
           <h2 id="operational-economics-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[62px]" style={{ fontWeight: 400 }}>
             You could manage recovery yourself.
@@ -1397,7 +1397,7 @@ function RecoveryOutcomeExplorer() {
         <div className="lg:sticky lg:top-16 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-start">
           <div className={`${containerClass} w-full py-16 md:py-24 lg:py-4 xl:py-6`}>
             <motion.div {...revealProps}>
-              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / What happens when things go wrong?</span></div>
+              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">09 / WHEN THINGS GO WRONG</span></div>
               <h2 id="recovery-outcome-title" className="max-w-[760px] font-lora text-[30px] leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[42px] lg:max-w-[760px] lg:text-[46px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
             </motion.div>
 
