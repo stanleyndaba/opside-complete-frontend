@@ -1503,6 +1503,10 @@ export default function Index() {
         <RecoveryWorkStatement />
 
         <AccountingEvidenceSection />
+        <MarginOperationSection />
+        <LegacyRiskSection />
+        <FullRecoveryLoopSection />
+        <ProductReframeSection />
         <RiskSection />
         <OperationalEconomicsSection />
         <RecoveryOutcomeExplorer />
