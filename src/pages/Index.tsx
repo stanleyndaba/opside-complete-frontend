@@ -1184,13 +1184,12 @@ function ProductReframeSection() {
           </motion.div>
         </div>
 
-        <RecoveryThreadSection onAuditCta={onAuditCta} />
       </div>
     </section>
   );
 }
 
-function RecoveryOutcomeExplorer({ onAuditCta }: { onAuditCta: (location: string) => void }) {
+function RecoveryOutcomeExplorer() {
   const reduceMotion = useReducedMotion();
   const outcomeSceneRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: outcomeSceneRef, offset: ["start start", "end end"] });
@@ -1277,7 +1276,8 @@ export default function Index() {
         <MarginLifecycleSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
-        <RecoveryOutcomeExplorer onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
+        <RecoveryOutcomeExplorer />
+        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
 
         {/* Section 10 — FAQ */}
