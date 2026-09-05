@@ -1444,14 +1444,14 @@ function RecoveryOutcomeExplorer() {
   return (
     <section aria-labelledby="recovery-outcome-title" className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]">
       <div ref={outcomeSceneRef} className="relative lg:min-h-[520vh]">
-        <div className="lg:sticky lg:top-20 lg:flex lg:min-h-[calc(100svh-5rem)] lg:items-start">
-          <div className={`${containerClass} w-full py-16 md:py-24 lg:py-8`}>
+        <div className="lg:sticky lg:top-16 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-start">
+          <div className={`${containerClass} w-full py-16 md:py-24 lg:py-4 xl:py-6`}>
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / What happens when things go wrong?</span></div>
-              <h2 id="recovery-outcome-title" className="max-w-[980px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
+              <h2 id="recovery-outcome-title" className="max-w-[760px] font-lora text-[30px] leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[42px] lg:max-w-[760px] lg:text-[46px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
             </motion.div>
 
-            <div className="mt-10 grid items-start gap-8 lg:mt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+            <div className="mt-8 grid items-start gap-8 lg:mt-10 lg:grid-cols-[0.84fr_1.16fr] lg:gap-14">
               <motion.div {...revealProps} className="border-t border-[var(--margin-text-primary)]">
                 {recoveryOutcomeStates.map((state, index) => {
                   const isActive = index === activeOutcome;
@@ -1465,7 +1465,7 @@ function RecoveryOutcomeExplorer() {
               </motion.div>
 
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
-                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:h-[clamp(300px,calc(100svh-20rem),520px)] lg:min-h-0">
+                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] sm:min-h-[450px] lg:h-[clamp(420px,calc(100svh-13rem),520px)] lg:min-h-0">
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
