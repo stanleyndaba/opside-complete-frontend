@@ -707,8 +707,14 @@ function RecoveryWorkStatement() {
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / One connected recovery record</p>
-            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>One connected recovery record.</h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">See the evidence, decisions, progress, and outcome in one place—without chasing reports, rebuilding context, or managing the follow-up yourself.</p>
+            <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>Everything that matters to the recovery stays connected.</h2>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">The evidence, financial context, decisions, case activity, Amazon responses, payments, reversals, and final outcome all belong to the same recovery record.</p>
+            <div className="mt-5 space-y-1 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
+              <p>No chasing reports.</p>
+              <p>No rebuilding the story.</p>
+              <p>No wondering what happened next.</p>
+            </div>
+            <p className="mt-6 font-lora text-[22px] leading-[1.05] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>One recovery. One record. One visible outcome.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_76%_22%,rgba(45,70,92,0.32),transparent_48%),linear-gradient(145deg,#11151A_0%,#050608_58%,#000000_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
             <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
