@@ -1417,7 +1417,7 @@ function OperationalEconomicsSection() {
                 <p className="mt-5 border-t border-dashed border-[#555653] pt-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#A8AAA5]">Six responsibilities · one recurring burden</p>
               </div>
               <div className="relative border-t border-[#3D3E3B] pt-6 md:ml-0 md:border-t-0 md:pl-8 md:pt-0">
-                <div className="mb-3 flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-5 w-auto invert brightness-0" /><span className="font-merriweather text-[18px] tracking-tight text-[#E7E5DF]">Margin</span><span className="ml-auto font-mono text-[9px] uppercase tracking-[0.12em] text-[#A8AAA5]">One operating layer</span></div>
+                <div className="mb-3 flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-5 w-auto invert brightness-0" /><span className="font-merriweather text-[18px] tracking-tight text-[#E7E5DF]">Margin</span></div>
                 <div className="relative -ml-2 -mr-5 mt-4 h-[70px] w-[calc(100%+1.25rem)] translate-x-px overflow-hidden rounded-[8px] bg-transparent p-1.5 sm:-ml-3 sm:-mr-8 sm:mt-6 sm:h-[76px] sm:w-[calc(100%+2rem)] md:-ml-4 md:-mr-12 md:w-[calc(100%+3rem)]"><AnimatePresence mode="wait" initial={false}><motion.div key={activeNotification.title} initial={reduceMotion ? { opacity: 1, y: 16, filter: "blur(0px)" } : { opacity: 0, y: 16, filter: "blur(5px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -16, filter: "blur(5px)" }} transition={{ duration: reduceMotion ? 0 : 1, ease: [0.22, 1, 0.36, 1] }} className="flex h-full items-center gap-2.5 rounded-[6px] bg-[#E7E5DF] px-3 py-2 text-[#343532] shadow-[0_2px_8px_rgba(52,53,50,0.08)]"><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#343532]" /><div className="min-w-0 flex-1"><p className="font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-[#6E706B]">Live recovery movement</p><p className="mt-0.5 text-[12px] font-semibold leading-4">{activeNotification.title}</p><p className="text-[11px] leading-3.5">{activeNotification.detail}</p></div><span className="hidden max-w-[78px] text-right text-[8px] leading-3 text-[#6E706B] sm:block">{activeNotification.meta}</span></motion.div></AnimatePresence></div>
                 <p className="mt-5 border-t border-[#555653] pt-3 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#D1D0C8]">The burden becomes one connected recovery record.</p>
               </div>
@@ -1504,6 +1504,7 @@ export default function Index() {
   usePageMeta(PUBLIC_ROUTE_META['/']);
   const navigate = useNavigate();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [showAllFaqs, setShowAllFaqs] = useState(false);
   const { isFull, nextBatchHours } = useOnboardingCapacity();
 
   const [isBusy, setIsBusy] = useState(false);
@@ -1547,7 +1548,7 @@ export default function Index() {
                 defaultValue="faq-0"
                 className="w-full border-t border-[var(--margin-border)]"
               >
-                {faqs.map((item, index) => (
+                {faqs.slice(0, showAllFaqs ? faqs.length : 3).map((item, index) => (
                   <AccordionItem
                     key={item.question}
                     value={`faq-${index}`}
@@ -1562,6 +1563,14 @@ export default function Index() {
                   </AccordionItem>
                 ))}
               </Accordion>
+              <Button
+                type="button"
+                onClick={() => setShowAllFaqs((current) => !current)}
+                className="landing-pressable mt-7 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]"
+              >
+                {showAllFaqs ? "Show fewer answers" : "More answers to your questions"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </div>
           </div>
         </section>
