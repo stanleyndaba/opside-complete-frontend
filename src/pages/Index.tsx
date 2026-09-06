@@ -763,6 +763,57 @@ function ControlSection() {
   );
 }
 
+function MarginStandardSection() {
+  const standardSteps = [
+    "What happened.",
+    "What should have happened.",
+    "What the evidence supports.",
+    "What should happen next.",
+    "What was actually recovered.",
+  ];
+
+  return (
+    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28" aria-labelledby="margin-standard-title">
+      <div className={containerClass}>
+        <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
+          <motion.div {...revealProps} className="max-w-[720px]">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-px w-8 bg-[var(--margin-blue)]" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">06 / THE MARGIN STANDARD</span>
+            </div>
+            <h2 id="margin-standard-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
+              Margin doesn&apos;t assume. It establishes.
+            </h2>
+            <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              A recovery is not real just because a report, system, or response says it is. Margin examines what happened, establishes what the available evidence supports, determines what action is appropriate, and keeps the financial outcome visible until the recovery is resolved.
+            </p>
+          </motion.div>
+
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[var(--margin-border)]">
+            <div className="grid sm:grid-cols-2">
+              {standardSteps.map((step, index) => (
+                <div key={step} className={`border-b border-[var(--margin-border)] px-0 py-4 sm:px-5 sm:py-5 ${index % 2 === 1 ? "sm:border-l" : ""}`}>
+                  <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">{String(index + 1).padStart(2, "0")}</span>
+                  <p className="mt-2 font-lora text-[22px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[25px]" style={{ fontWeight: 400 }}>{step}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-7 border-l border-[var(--margin-blue)] pl-5">
+              <p className="font-lora text-[23px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]" style={{ fontWeight: 400 }}>
+                Not every discrepancy is a recovery.
+                <span className="mt-1.5 block text-[var(--margin-text-muted)]">Not every recovery is complete. Not every response is a resolution.</span>
+              </p>
+              <p className="mt-5 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-8">
+                Margin finds the truth of the money—and carries the justified recovery through to the outcome.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function RecoveryWorkStatement() {
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28" aria-labelledby="trust-section-title">
@@ -1524,6 +1575,7 @@ export default function Index() {
         <RealityCheckSection />
         <MarginLifecycleSection />
         <ControlSection />
+        <MarginStandardSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
         <RiskSection />
