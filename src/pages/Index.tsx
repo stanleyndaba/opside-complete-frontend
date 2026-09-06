@@ -1275,7 +1275,7 @@ function RiskSection() {
           <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2 lg:scale-[1.03] lg:origin-center">
             <div className="mb-4 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">08 / FINANCIAL CLOSURE</span>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">09 / FINANCIAL CLOSURE</span>
             </div>
 
             <div className="overflow-hidden rounded-[10px] border border-[#4B4F50] bg-[#262829] shadow-[0_24px_70px_rgba(0,0,0,0.24)]">
@@ -1422,7 +1422,7 @@ function OperationalEconomicsSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
-            <div className="mb-3 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / THE COST OF DOING IT YOURSELF</span></div>
+            <div className="mb-3 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / THE COST OF DOING IT YOURSELF</span></div>
             <h2 id="operational-economics-title" className="font-lora text-[31px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[50px]" style={{ fontWeight: 400 }}>Recovery is not a task. It is a function.</h2>
             <p className="mt-2 font-lora text-[19px] leading-[1.05] tracking-[-0.03em] text-[var(--margin-text-muted)] sm:text-[23px]" style={{ fontWeight: 400 }}>Margin gives that function an operating layer.</p>
             <div className="mt-5 border-t border-[var(--margin-border)]"><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Recurring</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">The work returns whenever the next issue appears.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Connected</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Evidence, cases, responses, payouts, and outcomes stay together.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Owned by Margin</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Your team remains the authority without carrying the entire operating burden.</p></div></div>
@@ -1453,8 +1453,11 @@ function RecoveryOutcomeExplorer() {
         <div className="lg:sticky lg:top-16 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-start">
           <div className={`${containerClass} w-full py-16 md:py-24 lg:py-4 xl:py-6`}>
             <motion.div {...revealProps}>
-              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">09 / WHEN THINGS GO WRONG</span></div>
+              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / WHEN THINGS GO WRONG</span></div>
               <h2 id="recovery-outcome-title" className="max-w-[760px] font-lora text-[30px] leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[42px] lg:max-w-[760px] lg:text-[46px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
+              <p className="mt-4 max-w-[680px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
+                Margin treats the response as part of the recovery record—not automatically the end of it. Where the evidence and rules support another path, Margin determines the appropriate next action.
+              </p>
             </motion.div>
 
             <div className="mt-8 grid items-start gap-8 lg:mt-10 lg:grid-cols-[0.84fr_1.16fr] lg:gap-14">
