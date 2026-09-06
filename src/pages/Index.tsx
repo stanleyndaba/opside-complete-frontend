@@ -1580,11 +1580,12 @@ export default function Index() {
             <div className="grid items-center gap-8 border-y border-[var(--margin-border)] py-8 md:gap-12 md:py-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
               <motion.div {...revealProps} className="min-w-0">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">Final operational handoff</p>
-                <h2 id="final-handoff-title" className="mt-3 max-w-[650px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-                  You sell on Amazon. Margin handles the recovery.
+                <h2 id="final-handoff-title" className="mt-3 max-w-[720px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
+                  You don&apos;t have to wonder.
+                  <span className="mt-3 block text-[var(--margin-text-muted)]">You sell on Amazon. Margin handles the recovery.</span>
                 </h2>
-                <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">
-                  It finds what Amazon missed, builds the proof, carries the recovery forward, and tracks what Amazon actually paid.
+                <p className="mt-4 max-w-[680px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">
+                  Know what happened, what is justified, what Margin is doing, and whether the money came back.
                 </p>
                 <p className="mt-4 max-w-[620px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>
                   You stay informed. You stay in control. The recovery work is no longer yours to carry.
