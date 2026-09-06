@@ -777,17 +777,19 @@ function MarginStandardSection() {
     "What was actually recovered",
   ];
   const [activeStandardStep, setActiveStandardStep] = useState(0);
+  const activeStandardText = standardSteps[activeStandardStep];
 
   useEffect(() => {
     if (reduceMotion) return;
-    const interval = window.setInterval(() => {
+    const buildDuration = 900 + activeStandardText.length * 18 + 2600;
+    const timeout = window.setTimeout(() => {
       setActiveStandardStep((current) => {
         const nextOptions = standardSteps.map((_, index) => index).filter((index) => index !== current);
         return nextOptions[Math.floor(Math.random() * nextOptions.length)];
       });
-    }, 3600);
-    return () => window.clearInterval(interval);
-  }, [reduceMotion]);
+    }, buildDuration);
+    return () => window.clearTimeout(timeout);
+  }, [activeStandardText, reduceMotion]);
 
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28" aria-labelledby="margin-standard-title">
@@ -810,15 +812,25 @@ function MarginStandardSection() {
             <div className="relative flex min-h-[210px] items-center overflow-hidden border-b border-[var(--margin-border)] py-10 sm:min-h-[260px] sm:px-5 sm:py-12" aria-live="polite" aria-atomic="true">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.p
-                  key={standardSteps[activeStandardStep]}
+                  key={activeStandardText}
                   initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] }}
+                  exit={reduceMotion ? { opacity: 1 } : { opacity: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
+                  transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
                   className="max-w-[620px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#20252A] sm:text-[46px] md:text-[58px]"
-                  style={{ fontWeight: 400 }}
+                  style={{ fontWeight: 800 }}
                 >
-                  {standardSteps[activeStandardStep]}
+                  {Array.from(activeStandardText).map((character, index) => (
+                    <motion.span
+                      key={`${activeStandardText}-${index}`}
+                      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: "0.32em" }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.32, delay: reduceMotion ? 0 : index * 0.018, ease: [0.22, 1, 0.36, 1] }}
+                      className="inline-block"
+                    >
+                      {character === " " ? "\u00A0" : character}
+                    </motion.span>
+                  ))}
                 </motion.p>
               </AnimatePresence>
             </div>
