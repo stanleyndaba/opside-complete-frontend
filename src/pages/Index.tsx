@@ -1262,22 +1262,23 @@ const riskLeakPoints = [
 function RiskSection() {
   const reduceMotion = useReducedMotion();
   const reconciliationRows = [
-    { label: "Expected recovery", value: "$1,482.20", detail: "Supported by the recovery evidence" },
-    { label: "Paid by Amazon", value: "$519.10", detail: "Credited to the seller account" },
-    { label: "Verified outcome", value: "$519.10", detail: "Confirmed against the available records" },
+    { label: "Expected", value: "$1,482.20", detail: "What should have happened" },
+    { label: "Paid", value: "$519.10", detail: "What Amazon says it paid / what reached the account" },
+    { label: "Verified", value: "$519.10", detail: "What the available records actually reconcile" },
+    { label: "Remaining", value: "$963.10", detail: "What still isn't explained" },
   ];
 
   return (
-    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-10 md:py-14">
+    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-20">
       <div className={containerClass}>
-        <div className="grid items-start gap-6 lg:grid-cols-[0.84fr_1.16fr] lg:gap-10">
-          <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2">
+        <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
+          <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2 lg:scale-[1.03] lg:origin-center">
             <div className="mb-4 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
               <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">08 / FINANCIAL CLOSURE</span>
             </div>
 
-            <div className="overflow-hidden rounded-[10px] border border-[#4B4F50] bg-[#262829] shadow-[0_16px_32px_rgba(0,0,0,0.16)]">
+            <div className="overflow-hidden rounded-[10px] border border-[#4B4F50] bg-[#262829] shadow-[0_24px_70px_rgba(0,0,0,0.24)]">
               <div className="border-b border-[#4B4F50] bg-[#303334] px-3 py-2.5 sm:px-4 sm:py-3">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
@@ -1305,42 +1306,33 @@ function RiskSection() {
                   ))}
                 </div>
 
-                <div className="mt-3 border border-[#666B6C] bg-[#3B3E3F] px-2.5 py-2.5 sm:px-3">
-                  <div className="flex flex-wrap items-end justify-between gap-3">
-                    <div>
-                      <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#E7E8E6]">Unresolved balance</p>
-                      <p className="mt-0.5 text-[9px] leading-4 text-[#B7BBBB]">The recovery stays open until the difference is understood.</p>
-                    </div>
-                    <p className="font-lora text-[24px] tracking-[-0.045em] text-[#F0F1EF] sm:text-[29px]" style={{ fontWeight: 400 }}>$963.10</p>
-                  </div>
-                </div>
-
                 <div className="mt-4">
                   <div className="flex items-center justify-between font-mono text-[7px] font-semibold uppercase tracking-[0.12em] text-[#B7BBBB]">
-                    <span>Expected</span><span>Paid</span><span>Verified</span>
+                    <span>Expected</span><span>Paid</span><span>Verified</span><span>Remaining</span>
                   </div>
                   <div className="relative mt-2 flex items-center">
                     <div className="h-px w-full bg-[#727778]" />
                     <motion.div
                       aria-hidden="true"
                       className="absolute left-0 h-1.5 w-1.5 rounded-full bg-[#E7E8E6]"
-                      animate={reduceMotion ? { left: "66%" } : { left: ["0%", "66%", "66%"] }}
-                      transition={reduceMotion ? { duration: 0 } : { duration: 2.8, repeat: Infinity, repeatDelay: 1.6, ease: [0.22, 1, 0.36, 1] }}
+                      animate={reduceMotion ? { left: "100%" } : { left: ["0%", "66%", "100%", "100%"] }}
+                      transition={reduceMotion ? { duration: 0 } : { duration: 3.4, repeat: Infinity, repeatDelay: 1.6, ease: [0.22, 1, 0.36, 1] }}
                     />
                     <div className="absolute left-0 right-0 flex justify-between">
                       <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
                       <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
                       <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
+                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
                     </div>
                   </div>
-                  <div className="mt-1 flex items-center justify-between font-mono text-[7px] uppercase tracking-[0.1em] text-[#BFC3C3]"><span>Difference detected</span><span>Not closed</span></div>
+                  <div className="mt-1 flex items-center justify-between font-mono text-[7px] uppercase tracking-[0.1em] text-[#BFC3C3]"><span>Remaining delta</span><span>Not closed</span></div>
                 </div>
               </div>
             </div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 border-l border-[#727778] pl-4 md:pl-5 lg:order-1 lg:mt-2">
-            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Expected / Paid / Verified</p>
+            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Expected / Paid / Verified / Remaining</p>
             <h2 id="financial-closure-title" className="mt-2 max-w-[500px] font-lora text-[26px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[38px]" style={{ fontWeight: 400 }}>
               A recovery is not closed until the money agrees.
             </h2>
@@ -1350,9 +1342,10 @@ function RiskSection() {
 
             <div className="mt-5 border-t border-[var(--margin-border)]">
               {[
-                ["Expected", "What the evidence and recovery rules support."],
-                ["Paid", "What Amazon actually credited to the seller account."],
-                ["Verified", "What Margin can reconcile against the available financial records."],
+                ["Expected", "What should have happened."],
+                ["Paid", "What Amazon says it paid / what reached the account."],
+                ["Verified", "What the available records actually reconcile."],
+                ["Remaining", "What still isn't explained."],
               ].map(([label, body]) => (
                 <div key={label} className="border-b border-[var(--margin-border)] py-2.5">
                   <h3 className="text-[11px] font-semibold text-[var(--margin-text-primary)] md:text-[12px]">{label}</h3>
