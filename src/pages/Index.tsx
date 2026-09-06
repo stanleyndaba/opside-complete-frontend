@@ -770,26 +770,63 @@ function ControlSection() {
 function MarginStandardSection() {
   const reduceMotion = useReducedMotion();
   const standardSteps = [
-    "What happened",
-    "What should have happened",
-    "What the evidence supports",
-    "What should happen next",
-    "What was actually recovered",
+    "What happened?",
+    "What should have happened?",
+    "What the evidence supports?",
+    "What should happen next?",
+    "What was actually recovered?",
   ];
   const [activeStandardStep, setActiveStandardStep] = useState(0);
+  const [standardPhase, setStandardPhase] = useState<"typing" | "pause" | "deleting" | "empty">("typing");
+  const [visibleStandardLength, setVisibleStandardLength] = useState(reduceMotion ? standardSteps[0].length : 0);
   const activeStandardText = standardSteps[activeStandardStep];
+  const visibleStandardText = activeStandardText.slice(0, visibleStandardLength);
 
   useEffect(() => {
-    if (reduceMotion) return;
-    const buildDuration = 900 + activeStandardText.length * 18 + 2600;
+    if (reduceMotion) {
+      setVisibleStandardLength(activeStandardText.length);
+      setStandardPhase("pause");
+      return;
+    }
+
+    let delay = 0;
+    if (standardPhase === "typing") {
+      if (visibleStandardLength < activeStandardText.length) delay = 58;
+      else {
+        setStandardPhase("pause");
+        return;
+      }
+    } else if (standardPhase === "pause") {
+      delay = 1900;
+    } else if (standardPhase === "deleting") {
+      if (visibleStandardLength > 0) delay = 34;
+      else {
+        setStandardPhase("empty");
+        return;
+      }
+    } else {
+      delay = 280;
+    }
+
     const timeout = window.setTimeout(() => {
-      setActiveStandardStep((current) => {
-        const nextOptions = standardSteps.map((_, index) => index).filter((index) => index !== current);
-        return nextOptions[Math.floor(Math.random() * nextOptions.length)];
-      });
-    }, buildDuration);
+      if (standardPhase === "typing") {
+        setVisibleStandardLength((length) => Math.min(length + 1, activeStandardText.length));
+      } else if (standardPhase === "pause") {
+        setStandardPhase("deleting");
+      } else if (standardPhase === "deleting") {
+        setVisibleStandardLength((length) => Math.max(length - 1, 0));
+      } else {
+        setActiveStandardStep((current) => {
+          const nextOptions = standardSteps.map((_, index) => index).filter((index) => index !== current);
+          return nextOptions[Math.floor(Math.random() * nextOptions.length)];
+        });
+        setVisibleStandardLength(0);
+        setStandardPhase("typing");
+      }
+    }, delay);
+
     return () => window.clearTimeout(timeout);
-  }, [activeStandardText, reduceMotion]);
+  }, [activeStandardText, reduceMotion, standardPhase, visibleStandardLength]);
 
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28" aria-labelledby="margin-standard-title">
@@ -818,19 +855,9 @@ function MarginStandardSection() {
                   exit={reduceMotion ? { opacity: 1 } : { opacity: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
                   transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
                   className="max-w-[620px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#20252A] sm:text-[46px] md:text-[58px]"
-                  style={{ fontWeight: 800 }}
+                  style={{ fontWeight: 400 }}
                 >
-                  {Array.from(activeStandardText).map((character, index) => (
-                    <motion.span
-                      key={`${activeStandardText}-${index}`}
-                      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: "0.32em" }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.32, delay: reduceMotion ? 0 : index * 0.018, ease: [0.22, 1, 0.36, 1] }}
-                      className="inline-block"
-                    >
-                      {character === " " ? "\u00A0" : character}
-                    </motion.span>
-                  ))}
+                  {visibleStandardText || "\u00A0"}
                 </motion.p>
               </AnimatePresence>
             </div>
