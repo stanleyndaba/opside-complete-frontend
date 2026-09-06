@@ -1408,7 +1408,7 @@ function OperationalEconomicsSection() {
     <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
       <div className={containerClass}>
         <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-          <motion.div {...revealProps} className="relative min-w-0 overflow-hidden rounded-[12px] border border-[#373735] bg-[#1B1B1B] p-4 text-[#E7E5DF] sm:p-6 md:p-8 lg:h-[520px] lg:p-10">
+          <motion.div {...revealProps} className="relative min-w-0 h-[430px] overflow-hidden rounded-[12px] border border-[#373735] bg-[#1B1B1B] p-4 text-[#E7E5DF] sm:h-[470px] sm:p-6 md:h-auto md:p-8 lg:h-[520px] lg:p-10">
             <div className="mb-7 flex items-center justify-between gap-4"><span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#A8AAA5]">The work keeps coming back</span><span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#A8AAA5]">Every month</span></div>
             <div className="relative grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-0">
               <div className="relative md:pr-8">
@@ -1422,7 +1422,7 @@ function OperationalEconomicsSection() {
                 <p className="mt-5 border-t border-[#555653] pt-3 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#D1D0C8]">The burden becomes one connected recovery record.</p>
               </div>
             </div>
-            <div className="pointer-events-none absolute bottom-[78px] left-[55%] top-[42px] hidden w-px bg-[#737570] md:block" aria-hidden="true" /><div className="mt-7 border-t border-[#3D3E3B] pt-3 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[#E7E5DF] sm:text-[22px]" style={{ fontWeight: 400 }}>The work is transferred. The authority stays with you.</div>
+            <div className="pointer-events-none absolute bottom-[116px] left-[55%] top-[42px] hidden w-px -translate-x-px bg-[#737570] md:block" aria-hidden="true" /><div className="mt-7 border-t border-[#3D3E3B] pt-3 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[#E7E5DF] sm:text-[22px]" style={{ fontWeight: 400 }}>The work is transferred. The authority stays with you.</div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
