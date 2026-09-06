@@ -1333,7 +1333,7 @@ function RiskSection() {
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 border-l border-[#727778] pl-4 md:pl-5 lg:order-1 lg:mt-2">
             <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Expected / Paid / Verified / Remaining</p>
-            <h2 id="financial-closure-title" className="mt-2 max-w-[500px] font-lora text-[26px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[38px]" style={{ fontWeight: 400 }}>
+            <h2 id="financial-closure-title" className="mt-2 max-w-[620px] font-lora text-[30px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]" style={{ fontWeight: 400 }}>
               A recovery is not closed until the money agrees.
             </h2>
             <p className="mt-3 max-w-[480px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-6">
@@ -1354,9 +1354,9 @@ function RiskSection() {
               ))}
             </div>
 
-            <p className="mt-5 max-w-[480px] font-lora text-[20px] leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>
+            <p className="mt-5 max-w-[560px] font-lora text-[22px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[27px]" style={{ fontWeight: 400 }}>
               A response is not a financial closure.
-              <span className="mt-2 block text-[var(--margin-text-muted)]">The recovery is finished when the outcome reconciles.</span>
+              <span className="mt-2 block text-[var(--margin-text-muted)]">The recovery is finished when the outcome reconciles—not when the first answer arrives.</span>
             </p>
           </motion.div>
         </div>
@@ -1454,9 +1454,9 @@ function RecoveryOutcomeExplorer() {
           <div className={`${containerClass} w-full py-16 md:py-24 lg:py-4 xl:py-6`}>
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / WHEN THINGS GO WRONG</span></div>
-              <h2 id="recovery-outcome-title" className="max-w-[760px] font-lora text-[30px] leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[42px] lg:max-w-[760px] lg:text-[46px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
-              <p className="mt-4 max-w-[680px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-                Margin treats the response as part of the recovery record—not automatically the end of it. Where the evidence and rules support another path, Margin determines the appropriate next action.
+              <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px] lg:text-[58px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
+              <p className="mt-4 max-w-[760px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
+                Margin doesn&apos;t give up at the first answer. It treats the response as part of the recovery record—not automatically the end of it. Where the evidence and rules support another path, Margin determines the appropriate next action.
               </p>
             </motion.div>
 
