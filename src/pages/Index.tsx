@@ -463,7 +463,7 @@ function RealityCheckSection() {
         </motion.div>
         <motion.div {...revealProps} className="mt-6 border-y border-[var(--margin-border)] py-3 md:mt-8 md:py-4">
           <p className="font-mono text-[11px] font-semibold tracking-[0.02em] text-[var(--margin-blue)] sm:text-[12px] md:text-[13px]">
-            Find <span className="px-1 text-[var(--margin-border-strong)]">→</span> Investigate <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Handle <span className="px-1 text-[var(--margin-border-strong)]">→</span> Verify
+            Understand <span className="px-1 text-[var(--margin-border-strong)]">→</span> Establish <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Recover <span className="px-1 text-[var(--margin-border-strong)]">→</span> Verify <span className="px-1 text-[var(--margin-border-strong)]">→</span> Close
           </p>
         </motion.div>
         <motion.p {...revealProps} className="mt-5 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:mt-7 md:text-[23px]" style={{ fontWeight: 400 }}>
