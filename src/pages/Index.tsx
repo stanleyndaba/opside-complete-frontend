@@ -1265,100 +1265,100 @@ function RiskSection() {
   ];
 
   return (
-    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-16">
+    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-10 md:py-14">
       <div className={containerClass}>
-        <div className="grid items-start gap-8 lg:grid-cols-[0.84fr_1.16fr] lg:gap-12">
+        <div className="grid items-start gap-6 lg:grid-cols-[0.84fr_1.16fr] lg:gap-10">
           <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2">
-            <div className="mb-5 flex items-center gap-3">
+            <div className="mb-4 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">08 / FINANCIAL CLOSURE</span>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">08 / FINANCIAL CLOSURE</span>
             </div>
 
-            <div className="overflow-hidden border border-[#D8E3EA] bg-[#F4F6F5] shadow-[0_18px_40px_rgba(24,32,38,0.06)]">
-              <div className="border-b border-[#D8E3EA] bg-white px-4 py-3 sm:px-5 sm:py-4">
+            <div className="overflow-hidden border border-[#4B4F50] bg-[#262829] shadow-[0_16px_32px_rgba(0,0,0,0.16)]">
+              <div className="border-b border-[#4B4F50] bg-[#303334] px-3 py-2.5 sm:px-4 sm:py-3">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Recovery record</p>
-                    <p className="mt-1.5 font-lora text-[20px] leading-none tracking-[-0.035em] text-[#182026] sm:text-[24px]">ACME-CASE-2005</p>
-                    <p className="mt-1.5 text-[10px] leading-4 text-[#66737F]">FBA reimbursement · Shipment FBA17XJ4K2</p>
+                    <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#B7BBBB]">Recovery record</p>
+                    <p className="mt-1 font-lora text-[19px] leading-none tracking-[-0.035em] text-[#E7E8E6] sm:text-[22px]">ACME-CASE-2005</p>
+                    <p className="mt-1 text-[9px] leading-4 text-[#AEB3B3]">FBA reimbursement · Shipment FBA17XJ4K2</p>
                   </div>
-                  <div className="border border-[#BFD6E8] bg-[#F1F7FC] px-2.5 py-1.5 text-right">
-                    <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.13em] text-[#0B74DE]">Financial closure</p>
-                    <p className="mt-0.5 text-[10px] font-semibold text-[#182026]">Balance remains</p>
+                  <div className="border border-[#666B6C] bg-[#414445] px-2 py-1 text-right">
+                    <p className="font-mono text-[7px] font-semibold uppercase tracking-[0.13em] text-[#D5D7D6]">Financial closure</p>
+                    <p className="mt-0.5 text-[9px] font-semibold text-[#E7E8E6]">Balance remains</p>
                   </div>
                 </div>
               </div>
 
-              <div className="px-4 py-4 sm:px-5 sm:py-5">
-                <div className="border-t border-[#CBD6DC]">
+              <div className="px-3 py-3.5 sm:px-4 sm:py-4">
+                <div className="border-t border-[#55595A]">
                   {reconciliationRows.map((row, index) => (
-                    <div key={row.label} className="grid gap-1.5 border-b border-[#D8E3EA] py-3 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-4">
+                    <div key={row.label} className="grid gap-1 border-b border-[#4B4F50] py-2.5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-3">
                       <div>
-                        <p className="text-[12px] font-semibold text-[#182026]">{row.label}</p>
-                        <p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{row.detail}</p>
+                        <p className="text-[11px] font-semibold text-[#E7E8E6]">{row.label}</p>
+                        <p className="mt-0.5 text-[9px] leading-4 text-[#AEB3B3]">{row.detail}</p>
                       </div>
-                      <p className={`font-lora text-[22px] tracking-[-0.035em] ${index === 0 ? "text-[#182026]" : "text-[#4D5B66]"}`} style={{ fontWeight: 400 }}>{row.value}</p>
+                      <p className={`font-lora text-[20px] tracking-[-0.035em] ${index === 0 ? "text-[#F0F1EF]" : "text-[#D0D3D2]"}`} style={{ fontWeight: 400 }}>{row.value}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 border border-[#BFD6E8] bg-[#EDF6FC] px-3 py-3 sm:px-4">
+                <div className="mt-3 border border-[#666B6C] bg-[#3B3E3F] px-2.5 py-2.5 sm:px-3">
                   <div className="flex flex-wrap items-end justify-between gap-3">
                     <div>
-                      <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">Unresolved balance</p>
-                      <p className="mt-0.5 text-[10px] leading-4 text-[#4D5B66]">The recovery stays open until the difference is understood.</p>
+                      <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#E7E8E6]">Unresolved balance</p>
+                      <p className="mt-0.5 text-[9px] leading-4 text-[#B7BBBB]">The recovery stays open until the difference is understood.</p>
                     </div>
-                    <p className="font-lora text-[27px] tracking-[-0.045em] text-[#0B74DE] sm:text-[32px]" style={{ fontWeight: 400 }}>$963.10</p>
+                    <p className="font-lora text-[24px] tracking-[-0.045em] text-[#F0F1EF] sm:text-[29px]" style={{ fontWeight: 400 }}>$963.10</p>
                   </div>
                 </div>
 
-                <div className="mt-5">
-                  <div className="flex items-center justify-between font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">
+                <div className="mt-4">
+                  <div className="flex items-center justify-between font-mono text-[7px] font-semibold uppercase tracking-[0.12em] text-[#B7BBBB]">
                     <span>Expected</span><span>Paid</span><span>Verified</span>
                   </div>
-                  <div className="relative mt-3 flex items-center">
-                    <div className="h-px w-full bg-[#BFD6E8]" />
+                  <div className="relative mt-2 flex items-center">
+                    <div className="h-px w-full bg-[#727778]" />
                     <motion.div
                       aria-hidden="true"
-                      className="absolute left-0 h-1.5 w-1.5 rounded-full bg-[#0B74DE]"
+                      className="absolute left-0 h-1.5 w-1.5 rounded-full bg-[#E7E8E6]"
                       animate={reduceMotion ? { left: "66%" } : { left: ["0%", "66%", "66%"] }}
                       transition={reduceMotion ? { duration: 0 } : { duration: 2.8, repeat: Infinity, repeatDelay: 1.6, ease: [0.22, 1, 0.36, 1] }}
                     />
                     <div className="absolute left-0 right-0 flex justify-between">
-                      <span className="h-2 w-2 rounded-full border border-[#0B74DE] bg-white" />
-                      <span className="h-2 w-2 rounded-full border border-[#0B74DE] bg-white" />
-                      <span className="h-2 w-2 rounded-full border border-[#0B74DE] bg-white" />
+                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
+                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
+                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
                     </div>
                   </div>
-                  <div className="mt-2 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.1em] text-[#0B74DE]"><span>Difference detected</span><span>Not closed</span></div>
+                  <div className="mt-1 flex items-center justify-between font-mono text-[7px] uppercase tracking-[0.1em] text-[#BFC3C3]"><span>Difference detected</span><span>Not closed</span></div>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 border-l border-[var(--margin-blue)] pl-5 md:pl-6 lg:order-1 lg:mt-3">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">Expected / Paid / Verified</p>
-            <h2 id="financial-closure-title" className="mt-3 max-w-[520px] font-lora text-[28px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[42px]" style={{ fontWeight: 400 }}>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 border-l border-[#727778] pl-4 md:pl-5 lg:order-1 lg:mt-2">
+            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Expected / Paid / Verified</p>
+            <h2 id="financial-closure-title" className="mt-2 max-w-[500px] font-lora text-[26px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[38px]" style={{ fontWeight: 400 }}>
               A recovery is not closed until the money agrees.
             </h2>
-            <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            <p className="mt-3 max-w-[480px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-6">
               Amazon can confirm a response without confirming the financial result. Margin compares what the recovery should have produced with what actually reached the seller account, then keeps the difference visible until it is understood.
             </p>
 
-            <div className="mt-6 border-t border-[var(--margin-border)]">
+            <div className="mt-5 border-t border-[var(--margin-border)]">
               {[
                 ["Expected", "What the evidence and recovery rules support."],
                 ["Paid", "What Amazon actually credited to the seller account."],
                 ["Verified", "What Margin can reconcile against the available financial records."],
               ].map(([label, body]) => (
-                <div key={label} className="border-b border-[var(--margin-border)] py-3">
-                  <h3 className="text-[12px] font-semibold text-[var(--margin-text-primary)] md:text-[13px]">{label}</h3>
-                  <p className="mt-1 max-w-[430px] text-[11px] leading-4.5 text-[var(--margin-text-secondary)] md:text-[12px]">{body}</p>
+                <div key={label} className="border-b border-[var(--margin-border)] py-2.5">
+                  <h3 className="text-[11px] font-semibold text-[var(--margin-text-primary)] md:text-[12px]">{label}</h3>
+                  <p className="mt-0.5 max-w-[420px] text-[10px] leading-4 text-[var(--margin-text-secondary)] md:text-[11px]">{body}</p>
                 </div>
               ))}
             </div>
 
-            <p className="mt-6 max-w-[500px] font-lora text-[21px] leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[26px]" style={{ fontWeight: 400 }}>
+            <p className="mt-5 max-w-[480px] font-lora text-[20px] leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>
               A response is not a financial closure.
               <span className="mt-2 block text-[var(--margin-text-muted)]">The recovery is finished when the outcome reconciles.</span>
             </p>
