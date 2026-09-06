@@ -768,13 +768,26 @@ function ControlSection() {
 }
 
 function MarginStandardSection() {
+  const reduceMotion = useReducedMotion();
   const standardSteps = [
-    "What happened.",
-    "What should have happened.",
-    "What the evidence supports.",
-    "What should happen next.",
-    "What was actually recovered.",
+    "What happened",
+    "What should have happened",
+    "What the evidence supports",
+    "What should happen next",
+    "What was actually recovered",
   ];
+  const [activeStandardStep, setActiveStandardStep] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const interval = window.setInterval(() => {
+      setActiveStandardStep((current) => {
+        const nextOptions = standardSteps.map((_, index) => index).filter((index) => index !== current);
+        return nextOptions[Math.floor(Math.random() * nextOptions.length)];
+      });
+    }, 3600);
+    return () => window.clearInterval(interval);
+  }, [reduceMotion]);
 
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28" aria-labelledby="margin-standard-title">
@@ -794,13 +807,20 @@ function MarginStandardSection() {
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-t border-[var(--margin-border)]">
-            <div className="grid sm:grid-cols-2">
-              {standardSteps.map((step, index) => (
-                <div key={step} className={`border-b border-[var(--margin-border)] px-0 py-4 sm:px-5 sm:py-5 ${index % 2 === 1 ? "sm:border-l" : ""}`}>
-                  <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">{String(index + 1).padStart(2, "0")}</span>
-                  <p className="mt-2 font-lora text-[22px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[25px]" style={{ fontWeight: 400 }}>{step}</p>
-                </div>
-              ))}
+            <div className="relative flex min-h-[210px] items-center overflow-hidden border-b border-[var(--margin-border)] py-10 sm:min-h-[260px] sm:px-5 sm:py-12" aria-live="polite" aria-atomic="true">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.p
+                  key={standardSteps[activeStandardStep]}
+                  initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] }}
+                  className="max-w-[620px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#20252A] sm:text-[46px] md:text-[58px]"
+                  style={{ fontWeight: 400 }}
+                >
+                  {standardSteps[activeStandardStep]}
+                </motion.p>
+              </AnimatePresence>
             </div>
             <div className="mt-7 border-l border-[var(--margin-blue)] pl-5">
               <p className="font-lora text-[23px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]" style={{ fontWeight: 400 }}>
