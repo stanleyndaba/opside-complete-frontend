@@ -738,6 +738,9 @@ function ControlSection() {
             <p className="mt-6 max-w-[500px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
               Margin handles the recovery operation without taking control away from you.
             </p>
+            <p className="mt-5 max-w-[500px] font-lora text-[19px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px]" style={{ fontWeight: 400 }}>
+              You don&apos;t have to manage the recovery to remain responsible for it.
+            </p>
             <p className="mt-8 border-l-2 border-[var(--margin-blue)] pl-5 font-lora text-[22px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[27px]" style={{ fontWeight: 400 }}>
               Margin runs the recovery. You remain the authority.
             </p>
