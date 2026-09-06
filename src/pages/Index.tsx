@@ -1265,54 +1265,54 @@ function RiskSection() {
   ];
 
   return (
-    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
+    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-16">
       <div className={containerClass}>
-        <div className="grid items-start gap-12 lg:grid-cols-[1.16fr_0.84fr] lg:gap-20">
-          <motion.div {...revealProps} className="min-w-0">
+        <div className="grid items-start gap-8 lg:grid-cols-[0.84fr_1.16fr] lg:gap-12">
+          <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">08 / FINANCIAL CLOSURE</span>
             </div>
 
             <div className="overflow-hidden border border-[#D8E3EA] bg-[#F4F6F5] shadow-[0_18px_40px_rgba(24,32,38,0.06)]">
-              <div className="border-b border-[#D8E3EA] bg-white px-5 py-4 sm:px-7 sm:py-5">
+              <div className="border-b border-[#D8E3EA] bg-white px-4 py-3 sm:px-5 sm:py-4">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Recovery record</p>
-                    <p className="mt-2 font-lora text-[23px] leading-none tracking-[-0.035em] text-[#182026] sm:text-[28px]">ACME-CASE-2005</p>
-                    <p className="mt-2 text-[11px] leading-5 text-[#66737F]">FBA reimbursement · Shipment FBA17XJ4K2</p>
+                    <p className="mt-1.5 font-lora text-[20px] leading-none tracking-[-0.035em] text-[#182026] sm:text-[24px]">ACME-CASE-2005</p>
+                    <p className="mt-1.5 text-[10px] leading-4 text-[#66737F]">FBA reimbursement · Shipment FBA17XJ4K2</p>
                   </div>
-                  <div className="border border-[#BFD6E8] bg-[#F1F7FC] px-3 py-2 text-right">
+                  <div className="border border-[#BFD6E8] bg-[#F1F7FC] px-2.5 py-1.5 text-right">
                     <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.13em] text-[#0B74DE]">Financial closure</p>
-                    <p className="mt-1 text-[11px] font-semibold text-[#182026]">Balance remains</p>
+                    <p className="mt-0.5 text-[10px] font-semibold text-[#182026]">Balance remains</p>
                   </div>
                 </div>
               </div>
 
-              <div className="px-5 py-5 sm:px-7 sm:py-7">
+              <div className="px-4 py-4 sm:px-5 sm:py-5">
                 <div className="border-t border-[#CBD6DC]">
                   {reconciliationRows.map((row, index) => (
-                    <div key={row.label} className="grid gap-2 border-b border-[#D8E3EA] py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6">
+                    <div key={row.label} className="grid gap-1.5 border-b border-[#D8E3EA] py-3 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-4">
                       <div>
-                        <p className="text-[13px] font-semibold text-[#182026]">{row.label}</p>
-                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">{row.detail}</p>
+                        <p className="text-[12px] font-semibold text-[#182026]">{row.label}</p>
+                        <p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{row.detail}</p>
                       </div>
-                      <p className={`font-lora text-[26px] tracking-[-0.035em] ${index === 0 ? "text-[#182026]" : "text-[#4D5B66]"}`} style={{ fontWeight: 400 }}>{row.value}</p>
+                      <p className={`font-lora text-[22px] tracking-[-0.035em] ${index === 0 ? "text-[#182026]" : "text-[#4D5B66]"}`} style={{ fontWeight: 400 }}>{row.value}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-5 border border-[#BFD6E8] bg-[#EDF6FC] px-4 py-4 sm:px-5">
+                <div className="mt-4 border border-[#BFD6E8] bg-[#EDF6FC] px-3 py-3 sm:px-4">
                   <div className="flex flex-wrap items-end justify-between gap-3">
                     <div>
                       <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">Unresolved balance</p>
-                      <p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">The recovery stays open until the difference is understood.</p>
+                      <p className="mt-0.5 text-[10px] leading-4 text-[#4D5B66]">The recovery stays open until the difference is understood.</p>
                     </div>
-                    <p className="font-lora text-[31px] tracking-[-0.045em] text-[#0B74DE] sm:text-[38px]" style={{ fontWeight: 400 }}>$963.10</p>
+                    <p className="font-lora text-[27px] tracking-[-0.045em] text-[#0B74DE] sm:text-[32px]" style={{ fontWeight: 400 }}>$963.10</p>
                   </div>
                 </div>
 
-                <div className="mt-7">
+                <div className="mt-5">
                   <div className="flex items-center justify-between font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">
                     <span>Expected</span><span>Paid</span><span>Verified</span>
                   </div>
@@ -1336,29 +1336,29 @@ function RiskSection() {
             </div>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-l border-[var(--margin-blue)] pl-6 md:pl-8 lg:mt-14">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 border-l border-[var(--margin-blue)] pl-5 md:pl-6 lg:order-1 lg:mt-3">
             <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">Expected / Paid / Verified</p>
-            <h2 id="financial-closure-title" className="mt-4 max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
+            <h2 id="financial-closure-title" className="mt-3 max-w-[520px] font-lora text-[28px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[34px] md:text-[42px]" style={{ fontWeight: 400 }}>
               A recovery is not closed until the money agrees.
             </h2>
-            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+            <p className="mt-4 max-w-[500px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
               Amazon can confirm a response without confirming the financial result. Margin compares what the recovery should have produced with what actually reached the seller account, then keeps the difference visible until it is understood.
             </p>
 
-            <div className="mt-9 border-t border-[var(--margin-border)]">
+            <div className="mt-6 border-t border-[var(--margin-border)]">
               {[
                 ["Expected", "What the evidence and recovery rules support."],
                 ["Paid", "What Amazon actually credited to the seller account."],
                 ["Verified", "What Margin can reconcile against the available financial records."],
               ].map(([label, body]) => (
-                <div key={label} className="border-b border-[var(--margin-border)] py-4">
-                  <h3 className="text-[13px] font-semibold text-[var(--margin-text-primary)] md:text-[14px]">{label}</h3>
-                  <p className="mt-1.5 max-w-[470px] text-[12px] leading-5 text-[var(--margin-text-secondary)] md:text-[13px]">{body}</p>
+                <div key={label} className="border-b border-[var(--margin-border)] py-3">
+                  <h3 className="text-[12px] font-semibold text-[var(--margin-text-primary)] md:text-[13px]">{label}</h3>
+                  <p className="mt-1 max-w-[430px] text-[11px] leading-4.5 text-[var(--margin-text-secondary)] md:text-[12px]">{body}</p>
                 </div>
               ))}
             </div>
 
-            <p className="mt-8 max-w-[560px] font-lora text-[24px] leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[30px]" style={{ fontWeight: 400 }}>
+            <p className="mt-6 max-w-[500px] font-lora text-[21px] leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[26px]" style={{ fontWeight: 400 }}>
               A response is not a financial closure.
               <span className="mt-2 block text-[var(--margin-text-muted)]">The recovery is finished when the outcome reconciles.</span>
             </p>
