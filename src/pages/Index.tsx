@@ -506,7 +506,7 @@ function MarginLifecycleSection() {
           >
             <span className="block">Margin doesn&apos;t give you another list to work through.</span>
             <span className="mt-3 block text-[var(--margin-text-muted)]">
-              It takes the recovery from finding the problem to resolving the outcome.
+              Margin doesn&apos;t just identify a recovery. It takes responsibility for moving it toward resolution.
             </span>
           </h2>
         </motion.div>
@@ -515,7 +515,7 @@ function MarginLifecycleSection() {
             {...revealProps}
             className="mt-4 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"
           >
-            Margin investigates what happened, gathers the evidence, prepares the recovery, manages the case, follows what happens next, and keeps the outcome moving.
+            Margin investigates what happened, establishes what the evidence supports, prepares the appropriate recovery action, manages the case, follows what happens next, and verifies the financial outcome.
           </motion.p>
         </div>
         </div>
