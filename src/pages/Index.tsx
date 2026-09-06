@@ -1274,7 +1274,7 @@ function RiskSection() {
               <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">08 / FINANCIAL CLOSURE</span>
             </div>
 
-            <div className="overflow-hidden border border-[#4B4F50] bg-[#262829] shadow-[0_16px_32px_rgba(0,0,0,0.16)]">
+            <div className="overflow-hidden rounded-[10px] border border-[#4B4F50] bg-[#262829] shadow-[0_16px_32px_rgba(0,0,0,0.16)]">
               <div className="border-b border-[#4B4F50] bg-[#303334] px-3 py-2.5 sm:px-4 sm:py-3">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
@@ -1394,7 +1394,7 @@ function OperationalEconomicsSection() {
   useEffect(() => {
     if (reduceMotion || !sectionInView) return;
     const responsibilityTimer = window.setInterval(() => setResponsibilityIndex((current) => (current + 1) % responsibilityCycle.length), 1800);
-    const notificationTimer = window.setInterval(() => setNotificationIndex((current) => (current + 1) % marginNotifications.length), 1500);
+    const notificationTimer = window.setInterval(() => setNotificationIndex((current) => (current + 1) % marginNotifications.length), 2000);
     return () => {
       window.clearInterval(responsibilityTimer);
       window.clearInterval(notificationTimer);
@@ -1408,7 +1408,7 @@ function OperationalEconomicsSection() {
     <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
       <div className={containerClass}>
         <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-          <motion.div {...revealProps} className="relative min-w-0 overflow-hidden rounded-[12px] border border-[#373735] bg-[#1B1B1B] p-5 text-[#E7E5DF] sm:p-8 md:p-10">
+          <motion.div {...revealProps} className="relative min-w-0 overflow-hidden rounded-[12px] border border-[#373735] bg-[#1B1B1B] p-5 text-[#E7E5DF] sm:p-8 md:p-10 lg:h-[520px] lg:p-10">
             <div className="mb-7 flex items-center justify-between gap-4"><span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#A8AAA5]">The work keeps coming back</span><span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#A8AAA5]">Every month</span></div>
             <div className="relative grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-0">
               <div className="relative md:pr-8">
@@ -1416,13 +1416,13 @@ function OperationalEconomicsSection() {
                 <div className="relative min-h-[174px] py-1"><div className="absolute left-0 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#777A76] text-[#E7E5DF]"><svg aria-hidden="true" viewBox="0 0 36 24" className="h-5 w-7 fill-none stroke-current" strokeWidth="1.35"><circle cx="18" cy="7" r="3.2" /><path d="M11.5 19c.4-3.3 2.8-5.2 6.5-5.2s6.1 1.9 6.5 5.2" /><circle cx="7.5" cy="9" r="2.5" /><path d="M2.5 19c.3-2.6 2.1-4.2 5-4.2 1.5 0 2.8.4 3.7 1.2" /><circle cx="28.5" cy="9" r="2.5" /><path d="M33.5 19c-.3-2.6-2.1-4.2-5-4.2-1.5 0-2.8.4-3.7 1.2" /></svg></div><div className="absolute left-[52px] right-[106px] top-1/2 h-px -translate-y-1/2 bg-[#777A76]"><motion.span aria-hidden="true" className="absolute -top-[3px] h-[7px] w-[7px] rounded-full bg-[#FF5A1F] shadow-[0_0_0_4px_rgba(255,90,31,0.18)]" initial={{ left: "0%" }} animate={reduceMotion || !sectionInView ? { left: "0%" } : { left: ["0%", "100%", "0%"] }} transition={{ duration: reduceMotion ? 0 : 1.8, ease: "easeInOut", repeat: reduceMotion ? 0 : Infinity, repeatDelay: 0.2 }} /></div><div className="absolute right-0 top-0 flex h-full w-[94px] flex-col justify-between py-1 text-[12px] font-medium leading-4 text-[#A8AAA5] sm:w-[106px] sm:text-[13px]">{responsibilityCycle.map((step) => <span key={step} className={step === activeResponsibility ? "text-[#E7E5DF]" : ""}>{step}</span>)}</div></div>
                 <p className="mt-5 border-t border-dashed border-[#555653] pt-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#A8AAA5]">Six responsibilities · one recurring burden</p>
               </div>
-              <div className="relative border-t border-[#3D3E3B] pt-6 md:ml-0 md:border-l md:border-t-0 md:pl-8 md:pt-0">
+              <div className="relative border-t border-[#3D3E3B] pt-6 md:ml-0 md:border-t-0 md:pl-8 md:pt-0">
                 <div className="mb-3 flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-5 w-auto invert brightness-0" /><span className="font-merriweather text-[18px] tracking-tight text-[#E7E5DF]">Margin</span><span className="ml-auto font-mono text-[9px] uppercase tracking-[0.12em] text-[#A8AAA5]">One operating layer</span></div>
-                <div className="relative -ml-3 -mr-5 mt-6 h-[76px] w-[calc(100%+1.25rem)] overflow-hidden rounded-[8px] bg-transparent p-1.5 sm:-ml-4 sm:-mr-8 sm:w-[calc(100%+2rem)] md:-ml-5 md:-mr-12 md:w-[calc(100%+3rem)]"><AnimatePresence mode="wait" initial={false}><motion.div key={activeNotification.title} initial={reduceMotion ? { opacity: 1, y: 16, filter: "blur(0px)" } : { opacity: 0, y: 16, filter: "blur(5px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -16, filter: "blur(5px)" }} transition={{ duration: reduceMotion ? 0 : 0.75, ease: [0.22, 1, 0.36, 1] }} className="flex h-full items-center gap-2.5 rounded-[6px] bg-[#E7E5DF] px-3 py-2 text-[#343532] shadow-[0_2px_8px_rgba(52,53,50,0.08)]"><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#343532]" /><div className="min-w-0 flex-1"><p className="font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-[#6E706B]">Live recovery movement</p><p className="mt-0.5 text-[12px] font-semibold leading-4">{activeNotification.title}</p><p className="text-[11px] leading-3.5">{activeNotification.detail}</p></div><span className="hidden max-w-[78px] text-right text-[8px] leading-3 text-[#6E706B] sm:block">{activeNotification.meta}</span></motion.div></AnimatePresence></div>
+                <div className="relative -ml-2 -mr-5 mt-6 h-[76px] w-[calc(100%+1.25rem)] translate-x-px overflow-hidden rounded-[8px] bg-transparent p-1.5 sm:-ml-3 sm:-mr-8 sm:w-[calc(100%+2rem)] md:-ml-4 md:-mr-12 md:w-[calc(100%+3rem)]"><AnimatePresence mode="wait" initial={false}><motion.div key={activeNotification.title} initial={reduceMotion ? { opacity: 1, y: 16, filter: "blur(0px)" } : { opacity: 0, y: 16, filter: "blur(5px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -16, filter: "blur(5px)" }} transition={{ duration: reduceMotion ? 0 : 1, ease: [0.22, 1, 0.36, 1] }} className="flex h-full items-center gap-2.5 rounded-[6px] bg-[#E7E5DF] px-3 py-2 text-[#343532] shadow-[0_2px_8px_rgba(52,53,50,0.08)]"><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#343532]" /><div className="min-w-0 flex-1"><p className="font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-[#6E706B]">Live recovery movement</p><p className="mt-0.5 text-[12px] font-semibold leading-4">{activeNotification.title}</p><p className="text-[11px] leading-3.5">{activeNotification.detail}</p></div><span className="hidden max-w-[78px] text-right text-[8px] leading-3 text-[#6E706B] sm:block">{activeNotification.meta}</span></motion.div></AnimatePresence></div>
                 <p className="mt-5 border-t border-[#555653] pt-3 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#D1D0C8]">The burden becomes one connected recovery record.</p>
               </div>
             </div>
-            <div className="pointer-events-none absolute left-[57%] top-[42px] hidden h-[calc(100%-84px)] w-px bg-[#737570] md:block" aria-hidden="true" /><div className="mt-7 border-t border-[#3D3E3B] pt-3 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[#E7E5DF] sm:text-[22px]" style={{ fontWeight: 400 }}>The work is transferred. The authority stays with you.</div>
+              <div className="pointer-events-none absolute left-[57%] top-[42px] hidden h-[calc(100%-84px)] w-px bg-[#737570] md:block" aria-hidden="true" /><div className="mt-7 border-t border-[#3D3E3B] pt-3 text-center font-lora text-[18px] leading-tight tracking-[-0.02em] text-[#E7E5DF] sm:text-[22px]" style={{ fontWeight: 400 }}>The work is transferred. The authority stays with you.</div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
