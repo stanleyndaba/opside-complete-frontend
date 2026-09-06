@@ -27,6 +27,7 @@ import {
   PlayCircle,
   ReceiptText,
   SearchCheck,
+  Users,
   UserCheck,
   Square,
 } from "lucide-react";
@@ -1382,7 +1383,27 @@ function OperationalEconomicsSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, amount: 0.28 });
-  const selfPath = ["Audit", "Evidence", "Cases", "Deadlines", "Payouts", "Outcomes"];
+  const responsibilityCycle = ["Audit", "Cases", "Payouts", "Deadlines", "Evidence", "Outcomes"];
+  const marginNotifications = [
+    { title: "Amazon activity", detail: "Dispute charge", meta: "New recovery signal" },
+    { title: "Recovery record", detail: "Evidence linked", meta: "Connected and supported" },
+    { title: "Verified outcome", detail: "Payout reconciled", meta: "Outcome kept visible" },
+  ];
+  const [responsibilityIndex, setResponsibilityIndex] = useState(0);
+  const [notificationIndex, setNotificationIndex] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion || !sectionInView) return;
+    const responsibilityTimer = window.setInterval(() => setResponsibilityIndex((current) => (current + 1) % responsibilityCycle.length), 1800);
+    const notificationTimer = window.setInterval(() => setNotificationIndex((current) => (current + 1) % marginNotifications.length), 1500);
+    return () => {
+      window.clearInterval(responsibilityTimer);
+      window.clearInterval(notificationTimer);
+    };
+  }, [reduceMotion, sectionInView, responsibilityCycle.length, marginNotifications.length]);
+
+  const activeResponsibility = responsibilityCycle[responsibilityIndex];
+  const notificationStack = [0, 1, 2].map((offset) => marginNotifications[(notificationIndex + offset) % marginNotifications.length]);
 
   return (
     <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
@@ -1393,13 +1414,12 @@ function OperationalEconomicsSection() {
             <div className="relative grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-0">
               <div className="relative md:pr-8">
                 <div className="mb-3 flex items-center justify-between"><span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#E7E5DF]">Your team</span><span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#A8AAA5]">Owns the function</span></div>
-                <div className="pointer-events-none absolute -left-2 right-5 top-[48px] space-y-[27px] opacity-20" aria-hidden="true">{selfPath.map((step) => <div key={`ghost-${step}`} className="h-px bg-[#B7B8B2]" />)}</div>
-                <div className="relative space-y-3">{selfPath.map((step, index) => <div key={step} className="relative flex items-center gap-3"><span className="relative z-10 h-2 w-2 shrink-0 rounded-full bg-[#B7B8B2]" /><div className="relative h-px flex-1 bg-[#777A76]"><motion.span aria-hidden="true" className="absolute -top-[3px] h-[7px] w-[7px] rounded-full bg-[#D1D0C8]" initial={{ left: "0%", opacity: 0 }} animate={reduceMotion || !sectionInView ? { left: "0%", opacity: 0 } : { left: ["0%", "100%"], opacity: [0, 1, 1, 0] }} transition={{ duration: 3.8, delay: index * 0.16, ease: "easeInOut", repeat: reduceMotion ? 0 : Infinity, repeatDelay: 1.4 }} /></div><span className="w-[68px] shrink-0 text-[12px] font-medium leading-4 text-[#D1D0C8] sm:w-[82px] sm:text-[13px]">{step}</span></div>)}</div>
+                <div className="relative flex items-center gap-4 py-2"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#777A76] text-[#E7E5DF]"><Users size={20} strokeWidth={1.4} /></div><div className="h-px flex-1 bg-[#A8AAA5]" /><AnimatePresence mode="wait" initial={false}><motion.span key={activeResponsibility} initial={reduceMotion ? { opacity: 1 } : { opacity: 0, filter: "blur(8px)", y: 5 }} animate={{ opacity: 1, filter: "blur(0px)", y: 0 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(8px)", y: -5 }} transition={{ duration: reduceMotion ? 0 : 1, ease: [0.22, 1, 0.36, 1] }} className="w-[92px] shrink-0 text-[17px] font-medium leading-5 text-[#E7E5DF] sm:w-[108px] sm:text-[19px]">{activeResponsibility}</motion.span></AnimatePresence></div>
                 <p className="mt-5 border-t border-dashed border-[#555653] pt-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#A8AAA5]">Six responsibilities · one recurring burden</p>
               </div>
               <div className="relative border-t border-[#3D3E3B] pt-6 md:ml-0 md:border-l md:border-t-0 md:pl-8 md:pt-0">
-                <div className="mb-3"><span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#E7E5DF]">With Margin</span><span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.12em] text-[#A8AAA5]">One operating layer</span></div>
-                <div className="relative mt-6 h-[96px] rounded-[8px] border border-[#555653] bg-[#D1D0C8] p-4"><div className="absolute left-4 right-4 top-1/2 h-[2px] -translate-y-1/2 bg-[#343532]" /><motion.span aria-hidden="true" className="absolute top-1/2 -ml-1.5 h-3 w-3 -translate-y-1/2 rounded-full bg-[#343532] shadow-[0_0_0_5px_rgba(52,53,50,0.18)]" initial={{ left: "16%" }} animate={reduceMotion || !sectionInView ? { left: "16%" } : { left: ["16%", "84%"] }} transition={{ duration: 5.2, ease: "easeInOut", repeat: reduceMotion ? 0 : Infinity, repeatDelay: 1.2 }} /><div className="absolute inset-x-4 bottom-3 flex justify-between gap-2 text-[10px] font-medium leading-3 text-[#343532]"><span>Amazon<br />activity</span><span className="text-center">Recovery<br />record</span><span className="text-right">Verified<br />outcome</span></div></div>
+                <div className="mb-3 flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-5 w-auto invert brightness-0" /><span className="font-merriweather text-[18px] tracking-tight text-[#E7E5DF]">Margin</span><span className="ml-auto font-mono text-[9px] uppercase tracking-[0.12em] text-[#A8AAA5]">One operating layer</span></div>
+                <div className="relative mt-6 space-y-2 overflow-hidden rounded-[8px] border border-[#555653] bg-[#D1D0C8] p-2.5">{notificationStack.map((notification, index) => <motion.div key={`${notification.title}-${notificationIndex}`} initial={reduceMotion ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(5px)" }} animate={{ opacity: index === 0 ? 1 : 0.82 - index * 0.14, y: 0, filter: "blur(0px)" }} transition={{ duration: reduceMotion ? 0 : 0.8, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }} className="flex min-h-[54px] items-center gap-3 rounded-[6px] border border-[#B5B5AD] bg-[#E7E5DF] px-3 py-2 text-[#343532] shadow-[0_2px_8px_rgba(52,53,50,0.08)]"><span className="h-2 w-2 shrink-0 rounded-full bg-[#343532]" /><div className="min-w-0 flex-1"><p className="text-[11px] font-semibold uppercase tracking-[0.05em]">{notification.title}</p><p className="mt-0.5 text-[12px] font-medium">{notification.detail}</p></div><span className="hidden text-right text-[9px] leading-3 text-[#6E706B] sm:block">{notification.meta}</span></motion.div>)}</div>
                 <p className="mt-5 border-t border-[#555653] pt-3 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#D1D0C8]">The burden becomes one connected recovery record.</p>
               </div>
             </div>
