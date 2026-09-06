@@ -55,6 +55,21 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
         </motion.div>
       </div>
 
+    </div>
+  </section>
+);
+
+export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
+  <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28" aria-labelledby="recovery-routing-title">
+    <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
+      <motion.div {...revealProps} className="max-w-[760px]">
+        <div className="mb-5 flex items-center gap-3">
+          <div className="h-px w-8 bg-[var(--margin-blue)]" />
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / ROUTING</span>
+        </div>
+        <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Choose the recovery path that fits the work.</h2>
+        <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The Audit establishes what is happening first. Then Margin routes you to the right level of support—one justified recovery or an operating layer for work that keeps returning.</p>
+      </motion.div>
       <div className="mt-12 grid gap-0 border-y border-[var(--margin-border)] md:mt-16 lg:grid-cols-2">
         {pathOptions.map((option, index) => (
           <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`relative p-5 sm:p-7 md:p-9 ${index > 0 ? "border-t border-[var(--margin-border)] lg:border-l lg:border-t-0" : ""}`}>
@@ -79,7 +94,6 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
           </motion.div>
         ))}
       </div>
-
       <motion.div {...revealProps} className="mt-7 border-l border-[var(--margin-border)] pl-5">
         <p className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">Not ready to continue? That is fine.</p>
         <p className="mt-2 text-[14px] leading-6 text-[var(--margin-text-secondary)]">The Audit is free. Margin establishes that a recovery exists before asking you to decide whether any work is worth managing.</p>

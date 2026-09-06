@@ -36,7 +36,7 @@ import { DemoVideoModal } from "@/components/demo/DemoVideoModal";
 import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
-import { RecoveryOfferSection } from "@/components/landing/RecoveryDecisionSections";
+import { RecoveryOfferSection, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
 import { AuditImageStackVisual } from "@/components/landing/AuditImageStackVisual";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
@@ -219,7 +219,7 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} className="min-w-0 lg:col-span-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">07 / FINANCIAL CONTEXT</span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">              08 / FINANCIAL CONTEXT</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[980px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[42px] lg:text-[44px]" style={{ fontWeight: 400 }}>
               The recovery doesn&apos;t exist in isolation.
@@ -377,7 +377,7 @@ function KineticHeroSection({
       <div className="pointer-events-none absolute inset-0 overflow-hidden"><motion.div className="absolute left-[-16%] top-[42%] h-px w-[62%] origin-left bg-gradient-to-r from-transparent via-[rgba(11,116,222,0.52)] to-transparent opacity-60" animate={reduceMotion ? undefined : { x: ["0%", "118%"], opacity: [0, 0.62, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} style={{ rotate: "-8deg" }} /></div>
       <div className="relative z-10 flex w-full items-center">
         <div className="max-w-[1040px]">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="inline-flex max-w-full items-center rounded-[5px] border border-white/[0.12] bg-[#20385B]/72 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase leading-none tracking-tight text-slate-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.035)] backdrop-blur-xl sm:text-[11px]">Amazon FBA revenue recovery & reconciliation</motion.div>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="inline-flex max-w-full items-center rounded-[5px] border border-white/[0.12] bg-[#20385B]/72 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase leading-none tracking-tight text-slate-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.035)] backdrop-blur-xl sm:text-[11px]">01 / DELEGATION · AMAZON FBA RECOVERY</motion.div>
           <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
             <motion.span className="block text-white" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Amazon recovery shouldn&apos;t be <span className="text-slate-400">another job you have to do.</span></motion.span>
           </div>
@@ -405,6 +405,10 @@ function OneRecoverySection() {
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28 text-center">
       <div className={containerClass}>
         <motion.div {...revealProps} className="mx-auto max-w-[860px]">
+          <div className="mb-5 flex items-center justify-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">02 / CATEGORY</span>
+          </div>
           <h2 className="font-lora text-[34px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[54px]" style={{ fontWeight: 400 }}>
             One Recovery Operation for Your Amazon Business
           </h2>
@@ -448,7 +452,7 @@ function RealityCheckSection() {
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
           <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">02 / The pain · 03 / The reframe</span>
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              03 / THE PROBLEM</span>
           </div>
           <p className="mb-3 font-lora text-[19px] leading-tight tracking-[-0.025em] text-[var(--margin-text-muted)] sm:text-[23px]" style={{ fontWeight: 400 }}>You already have enough to manage.</p>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
@@ -496,7 +500,7 @@ function MarginLifecycleSection() {
           <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
-              04 / HOW MARGIN HANDLES IT
+              04 / AUTONOMY
             </span>
           </div>
           <h2
@@ -820,7 +824,7 @@ function RecoveryWorkStatement() {
       <div className={containerClass}>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
           <motion.div {...revealProps} className="flex flex-col justify-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">06 / ONE CONNECTED RECOVERY RECORD</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              07 / ONE RECORD</p>
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>Everything that matters to the recovery stays connected.</h2>
             <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">The evidence, financial context, decisions, case activity, Amazon responses, payments, reversals, and final outcome all belong to the same recovery record.</p>
             <div className="mt-5 space-y-1 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
@@ -1583,12 +1587,17 @@ export default function Index() {
         <OperationalEconomicsSection />
         {false && <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />}
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
+        <RecoveryRoutingSection onAuditCta={handleClaimAccessClick} />
 
-        {/* Section 10 — FAQ */}
-        <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56">
+        {/* Section 14 — Trust / FAQ */}
+        <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
-              <h2 className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
+              <div className="mb-5 flex items-center gap-3">
+                <div className="h-px w-8 bg-[var(--margin-blue)]" />
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">14 / TRUST / FAQ</span>
+              </div>
+              <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
                 <span className="text-[var(--margin-text-primary)] font-lora">Before you run the Audit.</span> <span className="text-[var(--margin-text-muted)] font-lora">A few things to know.</span>
               </h2>
             </motion.div>
@@ -1631,7 +1640,7 @@ export default function Index() {
           <div className={containerClass}>
             <div className="grid items-center gap-8 border-y border-[var(--margin-border)] py-8 md:gap-12 md:py-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
               <motion.div {...revealProps} className="min-w-0">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">Final operational handoff</p>
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">15 / FINAL DELEGATION</p>
                 <h2 id="final-handoff-title" className="mt-3 max-w-[720px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
                   You don&apos;t have to wonder.
                   <span className="mt-3 block text-[var(--margin-text-muted)]">You sell on Amazon. Margin handles the recovery.</span>
