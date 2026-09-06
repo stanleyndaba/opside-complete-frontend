@@ -1257,29 +1257,113 @@ const riskLeakPoints = [
 ];
 
 function RiskSection() {
+  const reduceMotion = useReducedMotion();
+  const reconciliationRows = [
+    { label: "Expected recovery", value: "$1,482.20", detail: "Supported by the recovery evidence" },
+    { label: "Paid by Amazon", value: "$519.10", detail: "Credited to the seller account" },
+    { label: "Verified outcome", value: "$519.10", detail: "Confirmed against the available records" },
+  ];
+
   return (
-    <section aria-labelledby="risk-section-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
+    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
       <div className={containerClass}>
-        <motion.div {...revealProps} className="max-w-[900px]">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="h-px w-8 bg-[var(--margin-blue)]" />
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">08 / FINANCIAL CLOSURE</span>
-          </div>
-          <h2 id="risk-section-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[60px]" style={{ fontWeight: 400 }}>
-            A recovery isn&apos;t finished just because Amazon says it is.
-          </h2>
-          <p className="mt-7 max-w-[780px] text-[16px] leading-8 text-[var(--margin-text-secondary)] md:text-[19px] md:leading-9">
-            A recovery can lose value after the opportunity is found. Evidence can be missing, a case can be rejected, a response can go unanswered, a payment can be incomplete, or a reimbursement can later be reversed.
-          </p>
-          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {["Underpayment", "Partial recovery", "Reversal", "Incomplete outcome", "Next supported action"].map((item) => (
-              <div key={item} className="border border-[var(--margin-border)] bg-white px-4 py-4 text-[13px] font-semibold leading-5 text-[var(--margin-text-primary)]">{item}</div>
-            ))}
-          </div>
-          <p className="mt-10 max-w-[820px] font-lora text-[27px] leading-[1.08] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[46px]" style={{ fontWeight: 400 }}>
-            Margin follows the money and keeps the state visible.
-          </p>
-        </motion.div>
+        <div className="grid items-start gap-12 lg:grid-cols-[1.16fr_0.84fr] lg:gap-20">
+          <motion.div {...revealProps} className="min-w-0">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-px w-8 bg-[var(--margin-blue)]" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">08 / FINANCIAL CLOSURE</span>
+            </div>
+
+            <div className="overflow-hidden border border-[#D8E3EA] bg-[#F4F6F5] shadow-[0_18px_40px_rgba(24,32,38,0.06)]">
+              <div className="border-b border-[#D8E3EA] bg-white px-5 py-4 sm:px-7 sm:py-5">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Recovery record</p>
+                    <p className="mt-2 font-lora text-[23px] leading-none tracking-[-0.035em] text-[#182026] sm:text-[28px]">ACME-CASE-2005</p>
+                    <p className="mt-2 text-[11px] leading-5 text-[#66737F]">FBA reimbursement · Shipment FBA17XJ4K2</p>
+                  </div>
+                  <div className="border border-[#BFD6E8] bg-[#F1F7FC] px-3 py-2 text-right">
+                    <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.13em] text-[#0B74DE]">Financial closure</p>
+                    <p className="mt-1 text-[11px] font-semibold text-[#182026]">Balance remains</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-5 py-5 sm:px-7 sm:py-7">
+                <div className="border-t border-[#CBD6DC]">
+                  {reconciliationRows.map((row, index) => (
+                    <div key={row.label} className="grid gap-2 border-b border-[#D8E3EA] py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6">
+                      <div>
+                        <p className="text-[13px] font-semibold text-[#182026]">{row.label}</p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#66737F]">{row.detail}</p>
+                      </div>
+                      <p className={`font-lora text-[26px] tracking-[-0.035em] ${index === 0 ? "text-[#182026]" : "text-[#4D5B66]"}`} style={{ fontWeight: 400 }}>{row.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 border border-[#BFD6E8] bg-[#EDF6FC] px-4 py-4 sm:px-5">
+                  <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0B74DE]">Unresolved balance</p>
+                      <p className="mt-1 text-[11px] leading-5 text-[#4D5B66]">The recovery stays open until the difference is understood.</p>
+                    </div>
+                    <p className="font-lora text-[31px] tracking-[-0.045em] text-[#0B74DE] sm:text-[38px]" style={{ fontWeight: 400 }}>$963.10</p>
+                  </div>
+                </div>
+
+                <div className="mt-7">
+                  <div className="flex items-center justify-between font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">
+                    <span>Expected</span><span>Paid</span><span>Verified</span>
+                  </div>
+                  <div className="relative mt-3 flex items-center">
+                    <div className="h-px w-full bg-[#BFD6E8]" />
+                    <motion.div
+                      aria-hidden="true"
+                      className="absolute left-0 h-1.5 w-1.5 rounded-full bg-[#0B74DE]"
+                      animate={reduceMotion ? { left: "66%" } : { left: ["0%", "66%", "66%"] }}
+                      transition={reduceMotion ? { duration: 0 } : { duration: 2.8, repeat: Infinity, repeatDelay: 1.6, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                    <div className="absolute left-0 right-0 flex justify-between">
+                      <span className="h-2 w-2 rounded-full border border-[#0B74DE] bg-white" />
+                      <span className="h-2 w-2 rounded-full border border-[#0B74DE] bg-white" />
+                      <span className="h-2 w-2 rounded-full border border-[#0B74DE] bg-white" />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.1em] text-[#0B74DE]"><span>Difference detected</span><span>Not closed</span></div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="border-l border-[var(--margin-blue)] pl-6 md:pl-8 lg:mt-14">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">Expected / Paid / Verified</p>
+            <h2 id="financial-closure-title" className="mt-4 max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
+              A recovery is not closed until the money agrees.
+            </h2>
+            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              Amazon can confirm a response without confirming the financial result. Margin compares what the recovery should have produced with what actually reached the seller account, then keeps the difference visible until it is understood.
+            </p>
+
+            <div className="mt-9 border-t border-[var(--margin-border)]">
+              {[
+                ["Expected", "What the evidence and recovery rules support."],
+                ["Paid", "What Amazon actually credited to the seller account."],
+                ["Verified", "What Margin can reconcile against the available financial records."],
+              ].map(([label, body]) => (
+                <div key={label} className="border-b border-[var(--margin-border)] py-4">
+                  <h3 className="text-[13px] font-semibold text-[var(--margin-text-primary)] md:text-[14px]">{label}</h3>
+                  <p className="mt-1.5 max-w-[470px] text-[12px] leading-5 text-[var(--margin-text-secondary)] md:text-[13px]">{body}</p>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-8 max-w-[560px] font-lora text-[24px] leading-[1.06] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[30px]" style={{ fontWeight: 400 }}>
+              A response is not a financial closure.
+              <span className="mt-2 block text-[var(--margin-text-muted)]">The recovery is finished when the outcome reconciles.</span>
+            </p>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
