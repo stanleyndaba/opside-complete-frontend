@@ -227,8 +227,17 @@ export default function EvidenceMatch() {
   const isDocumentMatch = (id: string) => documentMatches.has(id);
 
   return (
-    <main className="flex h-[100dvh] items-center justify-center overflow-hidden bg-[#FAFAF7] p-2 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-3">
-      <section className="grid h-[calc(100dvh-88px)] max-h-[500px] min-h-0 w-full max-w-6xl grid-cols-1 gap-0 overflow-hidden border border-[#CFE0EA] bg-white lg:grid-cols-2">
+    <main className="min-h-screen bg-[#FAFAF7] p-4 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-[1180px]">
+        <header className="mb-6 flex flex-col gap-4 border-b border-[#DCE8EE] pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence control</p>
+            <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Evidence matching</h1>
+            <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Connect shipment records, receiving evidence, and case readiness before a recovery moves forward.</p>
+          </div>
+          <div className="flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#4D5B66]"><span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />Evidence review</div>
+        </header>
+      <section className="grid min-h-[620px] w-full grid-cols-1 gap-0 overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] lg:grid-cols-2">
         <div className="relative flex min-h-0 flex-col overflow-hidden border-b border-[#DCE8EE] bg-white lg:border-b-0 lg:border-r">
           <div className="z-10 flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div className="flex items-center gap-2">
@@ -293,7 +302,7 @@ export default function EvidenceMatch() {
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-col overflow-hidden bg-[#F8FAFC]">
+        <div className="flex min-h-0 flex-col overflow-hidden border-t border-[#DCE8EE] bg-[#F8FAFC] lg:border-l lg:border-t-0">
           <div className="flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div>
               <div className="font-mono text-[10px] font-medium uppercase tracking-tight text-[#0B74DE]">
@@ -315,6 +324,7 @@ export default function EvidenceMatch() {
           </div>
         </div>
       </section>
+      </div>
 
       <div className="hidden">
         {activeHighlights.length}

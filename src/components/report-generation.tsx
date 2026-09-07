@@ -128,10 +128,19 @@ export default function ReportGeneration() {
   };
 
   return (
-    <main className="font-apple-system flex min-h-screen items-center justify-center bg-[#FAFAF7] p-3 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6">
+    <main className="min-h-screen bg-[#FAFAF7] p-4 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-[1180px]">
+        <header className="mb-6 flex flex-col gap-4 border-b border-[#DCE8EE] pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence output</p>
+            <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Report generation</h1>
+            <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Bind verified evidence and investigation reasoning into a clear recovery record ready for review.</p>
+          </div>
+          <div className="flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#4D5B66]"><span className={`h-1.5 w-1.5 rounded-full ${phase === 'output' ? 'bg-emerald-500' : 'bg-[#0B74DE]'}`} />{phase === 'output' ? 'Ready' : 'Generating'}</div>
+        </header>
       <section
-        className={`flex w-full max-w-5xl flex-col overflow-hidden border border-[#CFE0EA] bg-white ${
-          phase === 'output' ? 'h-[min(340px,calc(100vh-48px))]' : 'h-[min(540px,calc(100vh-48px))]'
+        className={`flex min-h-[620px] w-full flex-col overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
+          phase === 'output' ? 'h-[min(420px,calc(100vh-180px))]' : 'h-[min(620px,calc(100vh-180px))]'
         }`}
       >
         <header className="flex min-h-14 items-center justify-between border-b border-[#DCE8EE] bg-white px-4 sm:px-6">
@@ -184,7 +193,7 @@ export default function ReportGeneration() {
           </div>
         </header>
 
-        <div className="relative flex-1 overflow-hidden bg-[#FAFAF7]">
+        <div className="relative flex-1 overflow-hidden border-t border-[#DCE8EE] bg-[#FAFAF7]">
           <AnimatePresence mode="wait">
             {phase === 'extracting' && (
               <motion.div
@@ -426,6 +435,7 @@ export default function ReportGeneration() {
           </AnimatePresence>
         </div>
       </section>
+      </div>
 
       <AnimatePresence>
         {showPreview && (
