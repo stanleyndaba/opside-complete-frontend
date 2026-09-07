@@ -129,17 +129,9 @@ export default function ReportGeneration() {
 
   return (
     <main className="min-h-screen bg-[#FAFAF7] p-4 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-[1180px]">
-        <header className="mb-6 flex flex-col gap-4 border-b border-[#DCE8EE] pb-6 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence output</p>
-            <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Report generation</h1>
-            <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Bind verified evidence and investigation reasoning into a clear recovery record ready for review.</p>
-          </div>
-          <div className="flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#4D5B66]"><span className={`h-1.5 w-1.5 rounded-full ${phase === 'output' ? 'bg-emerald-500' : 'bg-[#0B74DE]'}`} />{phase === 'output' ? 'Ready' : 'Generating'}</div>
-        </header>
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
       <section
-        className={`flex min-h-[620px] w-full flex-col overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
+        className={`flex min-h-[620px] w-full flex-col overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] ${
           phase === 'output' ? 'h-[min(420px,calc(100vh-180px))]' : 'h-[min(620px,calc(100vh-180px))]'
         }`}
       >
@@ -406,7 +398,7 @@ export default function ReportGeneration() {
                         <button
                           type="button"
                           onClick={() => setShowPreview(true)}
-                          className="flex h-8 items-center rounded-[2px] border border-[#101820] bg-[#101820] px-5 text-sm font-medium text-white transition-colors hover:border-[#0B1117] hover:bg-[#0B1117]"
+                          className="flex h-8 items-center rounded-[4px] border border-[#182026] bg-[#182026] px-5 text-sm font-medium text-white transition-colors hover:border-[#303334] hover:bg-[#303334]"
                         >
                           View
                         </button>

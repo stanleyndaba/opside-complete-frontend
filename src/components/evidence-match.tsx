@@ -168,7 +168,7 @@ function MatchAnalysisViz() {
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="h-8 w-full rounded-[2px] bg-[#182026] font-mono text-[11px] font-medium tracking-tight text-white"
+              className="h-8 w-full rounded-[4px] bg-[#182026] font-mono text-[11px] font-medium tracking-tight text-white hover:bg-[#303334]"
               type="button"
             >
               Evidence Match Confirmed
@@ -228,16 +228,8 @@ export default function EvidenceMatch() {
 
   return (
     <main className="min-h-screen bg-[#FAFAF7] p-4 text-[#182026] selection:bg-[#0B74DE]/16 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-[1180px]">
-        <header className="mb-6 flex flex-col gap-4 border-b border-[#DCE8EE] pb-6 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-[13px] font-medium tracking-tight text-[#66737F]">Evidence control</p>
-            <h1 className="mt-1.5 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[38px]">Evidence matching</h1>
-            <p className="mt-2.5 text-[14px] leading-6 text-[#66737F]">Connect shipment records, receiving evidence, and case readiness before a recovery moves forward.</p>
-          </div>
-          <div className="flex items-center gap-2 text-[13px] font-medium tracking-tight text-[#4D5B66]"><span className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />Evidence review</div>
-        </header>
-      <section className="grid min-h-[620px] w-full grid-cols-1 gap-0 overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] lg:grid-cols-2">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1180px] items-center">
+      <section className="grid min-h-[620px] w-full grid-cols-1 gap-0 overflow-hidden rounded-[5px] border border-[#DCE8EE] bg-white shadow-[0_1px_2px_rgba(24,32,38,0.03)] lg:grid-cols-2">
         <div className="relative flex min-h-0 flex-col overflow-hidden border-b border-[#DCE8EE] bg-white lg:border-b-0 lg:border-r">
           <div className="z-10 flex items-center justify-between border-b border-[#DCE8EE] bg-white px-4 py-3">
             <div className="flex items-center gap-2">
