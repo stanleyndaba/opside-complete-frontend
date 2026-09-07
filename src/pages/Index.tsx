@@ -1566,16 +1566,15 @@ function RecoveryOutcomeExplorer() {
       <div ref={outcomeSceneRef} className="relative lg:min-h-[520vh]">
         <div className="lg:sticky lg:top-16 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-start">
           <div className={`${containerClass} w-full py-16 md:py-24 lg:py-4 xl:py-6`}>
-            <motion.div {...revealProps}>
-              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / WHEN THINGS GO WRONG</span></div>
-              <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px] lg:text-[58px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
-              <p className="mt-4 max-w-[760px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
-                Margin doesn&apos;t give up at the first answer. It treats the response as part of the recovery record—not automatically the end of it. Where the evidence and rules support another path, Margin determines the appropriate next action.
-              </p>
-            </motion.div>
-
-            <div className="mt-8 grid items-start gap-8 lg:mt-10 lg:grid-cols-[0.84fr_1.16fr] lg:gap-14">
+            <div className="grid items-start gap-8 lg:grid-cols-[0.84fr_1.16fr] lg:gap-14">
               <motion.div {...revealProps}>
+                <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">10 / WHEN THINGS GO WRONG</span></div>
+                <h2 id="recovery-outcome-title" className="max-w-[820px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px] lg:text-[58px]" style={{ fontWeight: 400 }}>A recovery doesn&apos;t disappear when Amazon says no.</h2>
+                <p className="mt-4 max-w-[760px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">
+                  Margin doesn&apos;t give up at the first answer. It treats the response as part of the recovery record—not automatically the end of it. Where the evidence and rules support another path, Margin determines the appropriate next action.
+                </p>
+
+                <div className="mt-8">
                 {recoveryOutcomeStates.map((state, index) => {
                   const isActive = index === activeOutcome;
                   return (
@@ -1585,6 +1584,7 @@ function RecoveryOutcomeExplorer() {
                     </div>
                   );
                 })}
+                </div>
               </motion.div>
 
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="lg:sticky lg:top-24 lg:self-start">
