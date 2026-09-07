@@ -870,21 +870,21 @@ function MarginStandardSection() {
 
     let delay = 0;
     if (standardPhase === "typing") {
-      if (visibleStandardLength < activeStandardText.length) delay = 58;
+      if (visibleStandardLength < activeStandardText.length) delay = 39;
       else {
         setStandardPhase("pause");
         return;
       }
     } else if (standardPhase === "pause") {
-      delay = 1900;
+      delay = 1267;
     } else if (standardPhase === "deleting") {
-      if (visibleStandardLength > 0) delay = 34;
+      if (visibleStandardLength > 0) delay = 23;
       else {
         setStandardPhase("empty");
         return;
       }
     } else {
-      delay = 280;
+      delay = 187;
     }
 
     const timeout = window.setTimeout(() => {
@@ -931,8 +931,8 @@ function MarginStandardSection() {
                   key={activeStandardText}
                   initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={reduceMotion ? { opacity: 1 } : { opacity: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
-                  transition={{ duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  exit={reduceMotion ? { opacity: 1 } : { opacity: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
+                  transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="max-w-[620px] font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[#20252A] sm:text-[46px] md:text-[58px]"
                   style={{ fontWeight: 400 }}
                 >
