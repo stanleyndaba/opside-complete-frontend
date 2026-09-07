@@ -776,29 +776,29 @@ function ControlSection() {
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="overflow-hidden rounded-[8px] bg-[#1C1D1D] p-5 text-[#F2F1EC] shadow-[0_24px_65px_rgba(24,32,38,0.14)] sm:p-7 md:p-9">
-            <div className="flex items-center justify-between border-b border-white/15 pb-5">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="overflow-hidden rounded-[8px] bg-[#1C1D1D] p-4 text-[#F2F1EC] shadow-[0_24px_65px_rgba(24,32,38,0.14)] sm:p-5 md:p-6">
+            <div className="flex items-center justify-between border-b border-white/15 pb-3">
               <div>
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#AEB5B5]">The operating boundary</p>
-                <p className="mt-1.5 font-lora text-[21px] leading-none tracking-[-0.03em] text-white sm:text-[24px]">Authority stays with you.</p>
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#AEB5B5]">The operating boundary</p>
+                <p className="mt-1 font-lora text-[20px] leading-none tracking-[-0.03em] text-white sm:text-[22px]">Authority stays with you.</p>
               </div>
-              <span className="rounded-[4px] border border-white/15 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-[#B8C0C0]">Live record</span>
+              <span className="rounded-[4px] border border-white/15 px-2 py-1 font-mono text-[9px] uppercase tracking-tight text-[#B8C0C0]">Live record</span>
             </div>
 
-            <div className="grid gap-7 py-7 md:grid-cols-[0.8fr_1.2fr] md:gap-8">
-              <div className="relative border-b border-white/15 pb-7 md:border-b-0 md:border-r md:pb-0 md:pr-8">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[#AEB5B5]">Your authority</p>
-                <div className="mt-5 space-y-3">
+            <div className="grid gap-4 py-4 md:grid-cols-[0.8fr_1.2fr] md:gap-5">
+              <div className="relative border-b border-white/15 pb-4 md:border-b-0 md:border-r md:pb-0 md:pr-5">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#AEB5B5]">Your authority</p>
+                <div className="mt-3 grid grid-cols-3 gap-2 md:block md:space-y-2">
                   {[
                     ["Read-only access", "See the records first."],
                     ["Approve action", "Decide before submission."],
                     ["Stay informed", "Keep the outcome visible."],
                   ].map(([title, detail], index) => (
-                    <div key={title} className="flex items-start gap-3">
-                      <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${index === 1 && isApproval ? "bg-[#0B74DE] shadow-[0_0_0_4px_rgba(11,116,222,0.16)]" : "bg-[#B9C0BE]"}`} />
-                      <div>
-                        <p className="text-[13px] font-semibold text-[#F2F1EC]">{title}</p>
-                        <p className="mt-0.5 text-[11px] leading-5 text-[#AEB5B5]">{detail}</p>
+                    <div key={title} className="flex items-start gap-2 md:gap-3">
+                      <span className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full md:mt-1.5 md:h-2 md:w-2 ${index === 1 && isApproval ? "bg-[#0B74DE] shadow-[0_0_0_3px_rgba(11,116,222,0.16)] md:shadow-[0_0_0_4px_rgba(11,116,222,0.16)]" : "bg-[#B9C0BE]"}`} />
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-semibold leading-4 text-[#F2F1EC] md:text-[13px]">{title}</p>
+                        <p className="mt-0.5 text-[10px] leading-3.5 text-[#AEB5B5] md:text-[11px] md:leading-4">{detail}</p>
                       </div>
                     </div>
                   ))}
@@ -807,11 +807,11 @@ function ControlSection() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[#AEB5B5]">Margin operates</p>
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#AEB5B5]">Margin operates</p>
                   <span className="font-mono text-[10px] text-[#AEB5B5]">{String(activeControlStep + 1).padStart(2, "0")} / 05</span>
                 </div>
-                <div className="relative mt-5 pl-5">
-                  <div className="absolute bottom-3 left-[3px] top-3 w-px bg-white/20" />
+                <div className="relative mt-3 pl-4">
+                  <div className="absolute bottom-2 left-[3px] top-2 w-px bg-white/20" />
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={step.label}
@@ -819,12 +819,12 @@ function ControlSection() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
                       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      className="relative rounded-[5px] border border-white/15 bg-white/[0.07] p-4"
+                      className="relative rounded-[5px] border border-white/15 bg-white/[0.07] p-2.5 sm:p-3"
                     >
-                      <span className={`absolute -left-[24px] top-5 h-2 w-2 rounded-full ${isHandled ? "bg-[#76A9FF]" : "bg-[#D3D8D5]"} shadow-[0_0_0_4px_#1C1D1D]`} />
-                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[#B9C0C0]">{step.label}</p>
-                      <p className="mt-2 text-[17px] font-medium tracking-[-0.02em] text-white">{step.detail}</p>
-                      <p className="mt-3 text-[11px] leading-5 text-[#AEB5B5]">
+                      <span className={`absolute -left-[20px] top-4 h-2 w-2 rounded-full ${isHandled ? "bg-[#76A9FF]" : "bg-[#D3D8D5]"} shadow-[0_0_0_4px_#1C1D1D]`} />
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#B9C0C0]">{step.label}</p>
+                      <p className="mt-1.5 text-[16px] font-medium tracking-[-0.02em] text-white">{step.detail}</p>
+                      <p className="mt-2 text-[11px] leading-4 text-[#AEB5B5]">
                         {isApproval ? "Margin has prepared the record. Your decision is the only action needed." : isHandled ? "The recovery continues without another task returning to your team." : "The recovery record is moving through Margin's operating layer."}
                       </p>
                     </motion.div>
@@ -833,8 +833,8 @@ function ControlSection() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 border-t border-white/15 pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="font-lora text-[18px] leading-tight tracking-[-0.025em] text-white sm:text-[20px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
+            <div className="flex flex-col gap-2 border-t border-white/15 pt-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="font-lora text-[17px] leading-tight tracking-[-0.025em] text-white sm:text-[19px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
               <div className="h-1 w-full overflow-hidden rounded-full bg-white/10 sm:w-32">
                 <motion.div className="h-full bg-[#76A9FF]" animate={{ width: `${((activeControlStep + 1) / controlSteps.length) * 100}%` }} transition={{ duration: 0.5 }} />
               </div>
