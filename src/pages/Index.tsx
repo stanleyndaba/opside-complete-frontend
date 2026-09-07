@@ -726,6 +726,32 @@ const controlPrinciples = [
 ];
 
 function ControlSection() {
+  const reduceMotion = useReducedMotion();
+  const [activeControlStep, setActiveControlStep] = useState(0);
+
+  const controlSteps = [
+    { label: "Amazon activity", detail: "New recovery signal", tone: "signal" },
+    { label: "Evidence ready", detail: "Records connected", tone: "evidence" },
+    { label: "Seller review", detail: "Approval required", tone: "approval" },
+    { label: "Margin handling", detail: "Submission and follow-up", tone: "handled" },
+    { label: "Outcome visible", detail: "Response and payout tracked", tone: "outcome" },
+  ];
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setActiveControlStep(controlSteps.length - 1);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setActiveControlStep((current) => (current + 1) % controlSteps.length);
+    }, 2600);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  const step = controlSteps[activeControlStep];
+  const isApproval = step.tone === "approval";
+  const isHandled = activeControlStep >= 3;
+
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 sm:py-20 md:py-24" aria-labelledby="control-section-title">
       <div className={containerClass}>
@@ -750,16 +776,69 @@ function ControlSection() {
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="border-t border-[var(--margin-border-strong)]">
-            {controlPrinciples.map((principle, index) => (
-              <div key={principle.title} className="grid gap-2 border-b border-[var(--margin-border)] py-5 sm:grid-cols-[minmax(180px,0.72fr)_1.28fr] sm:gap-8 sm:py-6">
-                <div className="flex items-start gap-3">
-                  <span className="font-mono text-[10px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">{String(index + 1).padStart(2, "0")}</span>
-                  <h3 className="text-[15px] font-semibold leading-6 tracking-[-0.02em] text-[var(--margin-text-primary)] md:text-[16px]">{principle.title}</h3>
-                </div>
-                <p className="max-w-[520px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{principle.body}</p>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="overflow-hidden rounded-[8px] bg-[#1C1D1D] p-5 text-[#F2F1EC] shadow-[0_24px_65px_rgba(24,32,38,0.14)] sm:p-7 md:p-9">
+            <div className="flex items-center justify-between border-b border-white/15 pb-5">
+              <div>
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#AEB5B5]">The operating boundary</p>
+                <p className="mt-1.5 font-lora text-[21px] leading-none tracking-[-0.03em] text-white sm:text-[24px]">Authority stays with you.</p>
               </div>
-            ))}
+              <span className="rounded-[4px] border border-white/15 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-[#B8C0C0]">Live record</span>
+            </div>
+
+            <div className="grid gap-7 py-7 md:grid-cols-[0.8fr_1.2fr] md:gap-8">
+              <div className="relative border-b border-white/15 pb-7 md:border-b-0 md:border-r md:pb-0 md:pr-8">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[#AEB5B5]">Your authority</p>
+                <div className="mt-5 space-y-3">
+                  {[
+                    ["Read-only access", "See the records first."],
+                    ["Approve action", "Decide before submission."],
+                    ["Stay informed", "Keep the outcome visible."],
+                  ].map(([title, detail], index) => (
+                    <div key={title} className="flex items-start gap-3">
+                      <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${index === 1 && isApproval ? "bg-[#0B74DE] shadow-[0_0_0_4px_rgba(11,116,222,0.16)]" : "bg-[#B9C0BE]"}`} />
+                      <div>
+                        <p className="text-[13px] font-semibold text-[#F2F1EC]">{title}</p>
+                        <p className="mt-0.5 text-[11px] leading-5 text-[#AEB5B5]">{detail}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[#AEB5B5]">Margin operates</p>
+                  <span className="font-mono text-[10px] text-[#AEB5B5]">{String(activeControlStep + 1).padStart(2, "0")} / 05</span>
+                </div>
+                <div className="relative mt-5 pl-5">
+                  <div className="absolute bottom-3 left-[3px] top-3 w-px bg-white/20" />
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={step.label}
+                      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
+                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      className="relative rounded-[5px] border border-white/15 bg-white/[0.07] p-4"
+                    >
+                      <span className={`absolute -left-[24px] top-5 h-2 w-2 rounded-full ${isHandled ? "bg-[#76A9FF]" : "bg-[#D3D8D5]"} shadow-[0_0_0_4px_#1C1D1D]`} />
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[#B9C0C0]">{step.label}</p>
+                      <p className="mt-2 text-[17px] font-medium tracking-[-0.02em] text-white">{step.detail}</p>
+                      <p className="mt-3 text-[11px] leading-5 text-[#AEB5B5]">
+                        {isApproval ? "Margin has prepared the record. Your decision is the only action needed." : isHandled ? "The recovery continues without another task returning to your team." : "The recovery record is moving through Margin's operating layer."}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3 border-t border-white/15 pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="font-lora text-[18px] leading-tight tracking-[-0.025em] text-white sm:text-[20px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
+              <div className="h-1 w-full overflow-hidden rounded-full bg-white/10 sm:w-32">
+                <motion.div className="h-full bg-[#76A9FF]" animate={{ width: `${((activeControlStep + 1) / controlSteps.length) * 100}%` }} transition={{ duration: 0.5 }} />
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
