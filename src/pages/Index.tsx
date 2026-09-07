@@ -1160,7 +1160,7 @@ function NeedsEvidenceImageStack() {
     <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img
-          src="/gmaillist.png"
+          src="/emaillist.png"
           alt="Evidence request list"
           className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] -rotate-[1.5deg] rounded-[16px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]"
         />
