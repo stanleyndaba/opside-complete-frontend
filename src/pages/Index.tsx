@@ -493,7 +493,7 @@ function MarginLifecycleSection() {
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
         <motion.div {...revealProps} className="relative order-2 h-fit self-start overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:order-1 lg:p-7">
-          <video className="block aspect-video w-full rounded-[8px] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/workflow.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
+          <video className="block aspect-[1.45] w-full rounded-[4px] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/workflow.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
         <motion.div {...revealProps} className="max-w-[980px]">
@@ -1160,7 +1160,7 @@ function NeedsEvidenceImageStack() {
     <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img
-          src="/emaillist.png"
+          src="/gmaillist.png"
           alt="Evidence request list"
           className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] -rotate-[1.5deg] rounded-[16px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]"
         />
