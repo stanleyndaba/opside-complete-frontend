@@ -21,6 +21,12 @@ type ApprovedReimbursement = {
   settlementId: string | null;
   filingDate: string | null;
   approvalDate: string | null;
+  expectedAmount?: number;
+  paidAmount?: number;
+  verifiedAmount?: number;
+  remainingAmount?: number;
+  closureStatus?: 'RECOVERY CLOSED' | 'NOT CLOSED';
+  settlementDate?: string | null;
 };
 
 type RecoveryLedgerRow = {
@@ -71,6 +77,49 @@ const formatDate = (value: string | null | undefined) => {
 
 const closeoutFilters = ['All closeouts', 'Paid and reconciled', 'Clean settlement match', 'Paid with variance note'];
 
+const demoReimbursementOutcomes: ApprovedReimbursement[] = [
+  {
+    caseNumber: 'ACME-CASE-2005',
+    amazonCaseId: 'AMZ-ACME-42005',
+    seller: 'ACME Corp',
+    disputeName: 'Store unavailable',
+    amount: 963.10,
+    currency: 'USD',
+    proofReference: 'SETTLE-ACME-PAYOUT-01',
+    closeout: 'Clean settlement match',
+    updated: '2026-06-14T19:07:45.215Z',
+    settlementId: 'SETTLE-ACME-PAYOUT-01',
+    filingDate: 'Jun 3, 2026',
+    approvalDate: 'Jun 10, 2026',
+    expectedAmount: 963.10,
+    paidAmount: 963.10,
+    verifiedAmount: 963.10,
+    remainingAmount: 0,
+    closureStatus: 'RECOVERY CLOSED',
+    settlementDate: '2026-06-14T19:07:45.215Z',
+  },
+  {
+    caseNumber: 'ACME-CASE-2006',
+    amazonCaseId: 'AMZ-ACME-42006',
+    seller: 'ACME Corp',
+    disputeName: 'Store unavailable',
+    amount: 500,
+    currency: 'USD',
+    proofReference: 'SETTLE-ACME-PAYOUT-02',
+    closeout: 'Partial settlement',
+    updated: '2026-06-12T19:07:45.215Z',
+    settlementId: 'SETTLE-ACME-PAYOUT-02',
+    filingDate: 'Jun 1, 2026',
+    approvalDate: 'Jun 8, 2026',
+    expectedAmount: 634.88,
+    paidAmount: 500,
+    verifiedAmount: 500,
+    remainingAmount: 134.88,
+    closureStatus: 'NOT CLOSED',
+    settlementDate: '2026-06-12T19:07:45.215Z',
+  },
+];
+
 export default function ApprovedReimbursements() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant, isReady } = useTenant();
@@ -90,6 +139,11 @@ export default function ApprovedReimbursements() {
       setLoading(true);
       setLoadError(null);
       try {
+        if (activeSlug === 'demo-workspace') {
+          if (!cancelled) setRecords(demoReimbursementOutcomes);
+          return;
+        }
+
         const ledgerResponse = await api.getRecoveriesLedger({ page: 1, page_size: 500, sort_by: 'last_updated_at', sort_dir: 'desc' }, activeSlug);
         if (!ledgerResponse.ok || !ledgerResponse.data?.success) {
           throw new Error(ledgerResponse.error || 'Unable to load recovery outcomes.');
@@ -145,6 +199,12 @@ export default function ApprovedReimbursements() {
             settlementId: proof.settlement_id || proof.payout_batch_id || null,
             filingDate: row.submission_proof?.submitted_at || null,
             approvalDate: row.last_updated_at || null,
+            expectedAmount: financial.verified_paid_amount + Math.max(financial.variance_amount || 0, 0),
+            paidAmount: financial.verified_paid_amount,
+            verifiedAmount: financial.verified_paid_amount,
+            remainingAmount: Math.max(financial.variance_amount || 0, 0),
+            closureStatus: hasVariance ? 'NOT CLOSED' : 'RECOVERY CLOSED',
+            settlementDate: proof.event_date || null,
           }];
         });
 
@@ -382,6 +442,39 @@ export default function ApprovedReimbursements() {
 
                 <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
                   <div className="space-y-6 pb-3">
+                    {/* Financial closure formation */}
+                    <section className="border-b border-[#E7EEF2] pb-5">
+                      <div className="flex items-baseline justify-between gap-4">
+                        <h3 className="font-lora text-[19px] font-normal tracking-tight text-[#182026]">Financial closeout</h3>
+                        <span className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Expected → paid → verified</span>
+                      </div>
+                      <div className="mt-3 grid grid-cols-2 gap-px overflow-hidden rounded-md border border-[#DCE8EE] bg-[#DCE8EE] sm:grid-cols-4">
+                        {[
+                          ['Expected', selectedItem.expectedAmount],
+                          ['Paid', selectedItem.paidAmount],
+                          ['Verified', selectedItem.verifiedAmount],
+                          ['Remaining', selectedItem.remainingAmount],
+                        ].map(([label, value]) => (
+                          <div key={String(label)} className="bg-white p-3">
+                            <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
+                            <p className="mt-1 text-[17px] font-semibold tabular-nums tracking-tight text-[#182026]">
+                              {typeof value === 'number' ? formatMoney(value, selectedItem.currency) : 'Not available'}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className={`mt-3 border-l-2 pl-3 ${selectedItem.closureStatus === 'RECOVERY CLOSED' ? 'border-emerald-500' : 'border-amber-500'}`}>
+                        <p className="text-[13px] font-semibold text-[#182026]">
+                          {selectedItem.closureStatus === 'RECOVERY CLOSED' ? '✓ Recovery Closed' : 'Not Closed'}
+                        </p>
+                        <p className="mt-1 text-[12px] leading-5 text-[#66737F]">
+                          {selectedItem.closureStatus === 'RECOVERY CLOSED'
+                            ? 'Financial outcome fully reconciled.'
+                            : `${formatMoney(selectedItem.remainingAmount || 0, selectedItem.currency)} remains unreconciled.`}
+                        </p>
+                      </div>
+                    </section>
+
                     {/* Financial Outcome */}
                     <section>
                       <div className="flex items-baseline justify-between gap-4">
