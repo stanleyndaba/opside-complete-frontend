@@ -3,7 +3,7 @@ import { ChevronRight, Search, X } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
@@ -27,6 +27,13 @@ type ApprovedReimbursement = {
   remainingAmount?: number;
   closureStatus?: 'RECOVERY CLOSED' | 'NOT CLOSED';
   settlementDate?: string | null;
+  amazonResponseAmount?: number;
+  financialEvidenceAmount?: number;
+  closureReason?: string;
+  nextAction?: string;
+  evidenceSource?: string;
+  settlementStatus?: string;
+  attributionStatus?: string;
 };
 
 type RecoveryLedgerRow = {
@@ -97,6 +104,13 @@ const demoReimbursementOutcomes: ApprovedReimbursement[] = [
     remainingAmount: 0,
     closureStatus: 'RECOVERY CLOSED',
     settlementDate: '2026-06-14T19:07:45.215Z',
+    amazonResponseAmount: 963.10,
+    financialEvidenceAmount: 963.10,
+    closureReason: 'Expected, paid, and verified amounts reconcile completely.',
+    nextAction: 'Recovery closed. No further action required.',
+    evidenceSource: 'Settlement SETTLE-ACME-PAYOUT-01',
+    settlementStatus: 'Paid',
+    attributionStatus: 'Payment confidently attributed to this recovery',
   },
   {
     caseNumber: 'ACME-CASE-2006',
@@ -117,8 +131,98 @@ const demoReimbursementOutcomes: ApprovedReimbursement[] = [
     remainingAmount: 134.88,
     closureStatus: 'NOT CLOSED',
     settlementDate: '2026-06-12T19:07:45.215Z',
+    amazonResponseAmount: 634.88,
+    financialEvidenceAmount: 500,
+    closureReason: 'Partial payment identified. The expected amount was not fully recovered.',
+    nextAction: 'Margin is monitoring the next settlement for the remaining balance.',
+    evidenceSource: 'Settlement SETTLE-ACME-PAYOUT-02',
+    settlementStatus: 'Partially paid',
+    attributionStatus: 'Payment attributed to this recovery',
   },
 ];
+
+function FinancialClosureDetail({ item }: { item: ApprovedReimbursement }) {
+  const isClosed = item.closureStatus === 'RECOVERY CLOSED';
+  const amount = (value: number | undefined) => typeof value === 'number' ? formatMoney(value, item.currency) : 'Not available';
+  const timeline = [
+    ['Recovery identified', 'Discrepancy linked to the recovery record.'],
+    ['Submitted', `Case submitted to Amazon on ${item.filingDate || 'the recorded filing date'}.`],
+    ['Amazon responded', `Amazon response recorded at ${amount(item.amazonResponseAmount)}.`],
+    ['Payment detected', `${item.settlementStatus || 'Payment'} recorded in the settlement trail.`],
+    ['Payment verified', `${amount(item.financialEvidenceAmount)} supported by ${item.evidenceSource || item.proofReference}.`],
+    [isClosed ? 'Closed' : 'Still open', isClosed ? 'Financial outcome fully reconciled.' : 'Remaining difference requires continued monitoring.'],
+  ];
+
+  return (
+    <section className="mt-8 border-y border-[#DCE8EE] bg-white" aria-labelledby="financial-truth-title">
+      <div className="border-b border-[#DCE8EE] px-5 py-5 sm:px-7">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Recovery financial outcome</p>
+            <h2 id="financial-truth-title" className="mt-2 font-lora text-[28px] font-normal leading-tight tracking-tight text-[#182026]">
+              {isClosed ? 'Recovery Closed' : 'Financially Unresolved'}
+            </h2>
+            <p className="mt-1 text-[13px] text-[#66737F]">{item.caseNumber} · {item.disputeName}</p>
+          </div>
+          <p className={`text-[12px] font-semibold uppercase tracking-tight ${isClosed ? 'text-emerald-700' : 'text-amber-700'}`}>
+            {isClosed ? 'Financial outcome reconciled' : 'Payment exists, closure not achieved'}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-0 border-b border-[#DCE8EE] sm:grid-cols-5">
+        {[
+          ['Expected entitlement', item.expectedAmount],
+          ['Amazon response', item.amazonResponseAmount],
+          ['Financial evidence', item.financialEvidenceAmount],
+          ['Verified outcome', item.verifiedAmount],
+          ['Remaining', item.remainingAmount],
+        ].map(([label, value], index) => (
+          <div key={String(label)} className={`border-b border-[#E7EEF2] px-5 py-4 sm:border-b-0 sm:px-4 ${index < 4 ? 'sm:border-r sm:border-[#E7EEF2]' : ''}`}>
+            <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
+            <p className="mt-1 text-[19px] font-semibold tabular-nums tracking-tight text-[#182026]">{amount(value as number | undefined)}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid gap-8 px-5 py-6 sm:px-7 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+        <div>
+          <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Why this is {isClosed ? 'closed' : 'still open'}</h3>
+          <p className="mt-2 max-w-[620px] text-[14px] leading-6 text-[#4D5B66]">{item.closureReason || (isClosed ? 'Financial outcome fully reconciled.' : 'The available financial records do not establish full closure.')}</p>
+
+          <div className="mt-6 border-t border-[#E7EEF2] pt-5">
+            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Financial evidence</p>
+            <div className="mt-3 grid gap-3 text-[13px] sm:grid-cols-2">
+              <div><span className="text-[#66737F]">Settlement reference</span><p className="mt-1 font-mono text-[12px] text-[#182026]">{item.settlementId || item.proofReference}</p></div>
+              <div><span className="text-[#66737F]">Settlement date</span><p className="mt-1 text-[#182026]">{formatDate(item.settlementDate || item.updated)}</p></div>
+              <div><span className="text-[#66737F]">Settlement status</span><p className="mt-1 text-[#182026]">{item.settlementStatus || 'Recorded'}</p></div>
+              <div><span className="text-[#66737F]">Payment attribution</span><p className="mt-1 text-[#182026]">{item.attributionStatus || 'Available records linked'}</p></div>
+            </div>
+          </div>
+
+          <div className="mt-6 border-l-2 border-[#0B74DE] pl-4">
+            <p className="text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">Next state</p>
+            <p className="mt-1 text-[14px] font-medium text-[#182026]">{item.nextAction || (isClosed ? 'Recovery closed.' : 'Margin is monitoring.')}</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Recovery evidence chain</h3>
+          <div className="relative mt-4 space-y-4 pl-5">
+            <div className="absolute bottom-2 left-[3px] top-2 w-px bg-[#DCE8EE]" />
+            {timeline.map(([title, detail], index) => (
+              <div key={title} className="relative">
+                <div className={`absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full border-2 border-white ${index === timeline.length - 1 && isClosed ? 'bg-emerald-500' : 'bg-[#0B74DE]'}`} />
+                <p className="text-[13px] font-semibold text-[#182026]">{title}</p>
+                <p className="mt-1 text-[12px] leading-5 text-[#66737F]">{detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function ApprovedReimbursements() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
@@ -140,7 +244,10 @@ export default function ApprovedReimbursements() {
       setLoadError(null);
       try {
         if (activeSlug === 'demo-workspace') {
-          if (!cancelled) setRecords(demoReimbursementOutcomes);
+          if (!cancelled) {
+            setRecords(demoReimbursementOutcomes);
+            setSelectedItem(demoReimbursementOutcomes[0]);
+          }
           return;
         }
 
@@ -205,6 +312,13 @@ export default function ApprovedReimbursements() {
             remainingAmount: Math.max(financial.variance_amount || 0, 0),
             closureStatus: hasVariance ? 'NOT CLOSED' : 'RECOVERY CLOSED',
             settlementDate: proof.event_date || null,
+            amazonResponseAmount: financial.verified_paid_amount + Math.max(financial.variance_amount || 0, 0),
+            financialEvidenceAmount: financial.verified_paid_amount,
+            closureReason: hasVariance ? 'The available payment evidence does not reconcile to the expected amount.' : 'Expected, paid, and verified amounts reconcile completely.',
+            nextAction: hasVariance ? 'Margin will reconcile the next settlement.' : 'Recovery closed. No further action required.',
+            evidenceSource: proof.settlement_id || proof.payout_batch_id || proof.reference_id || 'Financial event record',
+            settlementStatus: financial.payout_status === 'partially_paid' ? 'Partially paid' : 'Paid',
+            attributionStatus: 'Payment attributed to this recovery',
           }];
         });
 
@@ -404,10 +518,12 @@ export default function ApprovedReimbursements() {
               <Button variant="ghost" size="sm" disabled className="text-[12px] font-bold text-[#9CA3AF]">Next</Button>
             </div>
           </div>
+
+          {selectedItem && <FinancialClosureDetail item={selectedItem} />}
         </div>
 
         {/* Resolution Side-Sheet */}
-        <Sheet open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
+        {false && <Sheet open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
           <SheetContent className="w-full border-l border-[#DCE8EE] bg-white p-0 shadow-[0_18px_45px_rgba(24,32,38,0.16)] sm:max-w-[560px]">
             {selectedItem && (
               <div className="flex h-full flex-col">
@@ -561,7 +677,7 @@ export default function ApprovedReimbursements() {
               </div>
             )}
           </SheetContent>
-        </Sheet>
+        </Sheet>}
       </div>
     </PageLayout>
   );
