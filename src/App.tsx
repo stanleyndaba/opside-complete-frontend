@@ -65,6 +65,7 @@ const LearningInsights = lazy(() => import("./pages/LearningInsights"));
 const AdminRevenue = lazy(() => import("./pages/AdminRevenue"));
 const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
+const ConsumerRecovery = lazy(() => import("./pages/ConsumerRecovery"));
 
 const Sales = lazy(() => import("./pages/Sales"));
 const SalesLeads = lazy(() => import("./pages/SalesLeads"));
@@ -273,6 +274,7 @@ const App = () => (
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
+                        <Route path="/consumer-recovery" element={<ConsumerRecovery />} />
                         <Route path="/sales" element={<Sales />} />
                         <Route path="/amazon-fba-reimbursement" element={<AmazonFbaReimbursement />} />
                         <Route path="/amazon-lost-inventory-reimbursement" element={<ReimbursementAcquisitionPage />} />

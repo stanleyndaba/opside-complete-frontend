@@ -143,6 +143,9 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         <Link to="/sales" className={desktopNavLinkClass}>
                             ENTERPRISE
                         </Link>
+                        <Link to="/consumer-recovery" className={desktopNavLinkClass}>
+                            Consumer Recovery
+                        </Link>
                     </nav>
 
                     <div className="flex items-center gap-3 sm:gap-4">
@@ -269,6 +272,12 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
                                     Company
+                                </Link>
+                                <Link
+                                    to="/consumer-recovery"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="flex items-center rounded-none px-3.5 py-4 text-[15px] font-sans font-medium tracking-normal text-[#17212B] transition-colors hover:bg-[#FAFBFC] hover:text-[#17212B]">
+                                    Consumer Recovery
                                 </Link>
                                 <div className="border-t border-[#E8EDF0] px-3.5 pb-3 pt-5">
                                     <p className="font-sans text-[15px] font-medium leading-5 text-[#17212B]">Not sure where to start?</p>

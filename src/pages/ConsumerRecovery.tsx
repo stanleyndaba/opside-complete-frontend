@@ -1,0 +1,66 @@
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { PublicNavbar } from "@/components/layout/PublicNavbar";
+import { BrandFooter } from "@/components/layout/BrandFooter";
+
+const containerClass = "mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12";
+
+export default function ConsumerRecovery() {
+  return (
+    <div className="min-h-screen bg-[var(--margin-canvas)] text-[var(--margin-text-primary)]">
+      <PublicNavbar variant="light" wide />
+
+      <main>
+        <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] pb-20 pt-36 sm:pb-28 sm:pt-44 lg:pb-36 lg:pt-52">
+          <div className="pointer-events-none absolute inset-0 opacity-50 [background-image:linear-gradient(rgba(37,49,58,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(37,49,58,0.045)_1px,transparent_1px)] [background-size:72px_72px]" />
+          <div className={`${containerClass} relative`}>
+            <div className="max-w-[860px]">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">
+                Consumer Recovery
+              </p>
+              <h1 className="mt-5 max-w-[780px] font-lora text-[44px] leading-[0.98] tracking-[-0.05em] text-[var(--margin-text-primary)] sm:text-[64px] md:text-[78px] lg:text-[92px]">
+                The same recovery engine.
+                <span className="block text-[var(--margin-text-muted)]">Now for consumers.</span>
+              </h1>
+              <p className="mt-8 max-w-[680px] text-[17px] leading-8 text-[var(--margin-text-secondary)] sm:text-[20px] sm:leading-9">
+                Margin is extending its financial recovery infrastructure beyond businesses.
+              </p>
+              <p className="mt-4 max-w-[680px] text-[17px] leading-8 text-[var(--margin-text-secondary)] sm:text-[20px] sm:leading-9">
+                We&apos;re starting with high-value Amazon claims where customers believe they&apos;re owed meaningful money but don&apos;t have the time or expertise to pursue the issue themselves.
+              </p>
+
+              <div className="mt-10 flex flex-wrap items-center gap-5 border-t border-[var(--margin-border)] pt-6">
+                <div>
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">Target launch</p>
+                  <p className="mt-1 text-[16px] font-medium text-[var(--margin-text-primary)]">Late November 2026</p>
+                </div>
+                <Link
+                  to="/waitlist"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-[8px] bg-[var(--margin-blue)] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_10px_24px_rgba(11,116,222,0.18)] transition-[background-color,transform] duration-200 hover:bg-[#0869c9] hover:-translate-y-px"
+                >
+                  Join Early Access
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-20 grid gap-0 border-y border-[var(--margin-border)] sm:grid-cols-3 lg:mt-28">
+              {[
+                ["Find the issue", "Identify high-value claims worth pursuing."],
+                ["Connect the proof", "Bring the records behind the claim together."],
+                ["Move toward recovery", "Keep the next step clear and inspectable."],
+              ].map(([title, description]) => (
+                <div key={title} className="border-b border-[var(--margin-border)] py-7 sm:border-b-0 sm:border-r sm:px-7 sm:first:pl-0 sm:last:border-r-0 sm:last:pr-0">
+                  <h2 className="font-lora text-[23px] tracking-[-0.035em] text-[var(--margin-text-primary)]">{title}</h2>
+                  <p className="mt-3 max-w-[260px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <BrandFooter wide />
+    </div>
+  );
+}
