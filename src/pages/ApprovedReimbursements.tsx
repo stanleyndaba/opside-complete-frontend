@@ -88,8 +88,8 @@ const demoReimbursementOutcomes: ApprovedReimbursement[] = [
   {
     caseNumber: 'ACME-CASE-2005',
     amazonCaseId: 'AMZ-ACME-42005',
-    seller: 'ACME Corp',
-    disputeName: 'Store unavailable',
+    seller: 'Northstar Home Goods',
+    disputeName: 'Inbound shipment shortage',
     amount: 963.10,
     currency: 'USD',
     proofReference: 'SETTLE-ACME-PAYOUT-01',
@@ -115,8 +115,8 @@ const demoReimbursementOutcomes: ApprovedReimbursement[] = [
   {
     caseNumber: 'ACME-CASE-2006',
     amazonCaseId: 'AMZ-ACME-42006',
-    seller: 'ACME Corp',
-    disputeName: 'Store unavailable',
+    seller: 'Blue Ridge Supply',
+    disputeName: 'Settlement mismatch',
     amount: 500,
     currency: 'USD',
     proofReference: 'SETTLE-ACME-PAYOUT-02',
