@@ -219,13 +219,13 @@ function AccountingEvidenceSection() {
           <motion.div {...revealProps} className="min-w-0 lg:col-span-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[#0B74DE]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">              08 / FINANCIAL CONTEXT</span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">08 / THE CONTEXT MARGIN HANDLES</span>
             </div>
             <h2 id="accounting-section-title" className="max-w-[980px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[42px] lg:text-[44px]" style={{ fontWeight: 400 }}>
-              The recovery doesn&apos;t exist in isolation.
+              You shouldn&apos;t have to piece it together.
             </h2>
             <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Amazon shows you the event. Your financial records show you what that event was worth. Margin brings the relevant pieces together so the recovery can be understood, supported, and ultimately closed.
+              Margin brings together the information it needs to understand, support, and close the recovery—so you don&apos;t have to dig through reports, settlements, accounting records, emails, and files yourself.
             </p>
           </motion.div>
 
@@ -233,36 +233,33 @@ function AccountingEvidenceSection() {
 
         <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
-            <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-6 md:p-7">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#B4B4B4]">Recovery context</span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#858585]">Live record</span>
+            <div className="relative overflow-hidden rounded-[10px] border border-[#3E4244] bg-[radial-gradient(circle_at_50%_50%,rgba(126,68,58,0.45),transparent_52%),linear-gradient(135deg,#171616_0%,#342322_48%,#111111_100%)] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-6 md:p-7">
+              <div className="relative min-h-[390px] overflow-hidden border border-white/10 bg-black/20 p-3 sm:min-h-[430px] sm:p-5">
+                <div className="absolute inset-0 opacity-25" style={{ backgroundImage: "linear-gradient(30deg,rgba(255,255,255,0.08) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.08) 87.5%,rgba(255,255,255,0.08)),linear-gradient(150deg,rgba(255,255,255,0.08) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.08) 87.5%,rgba(255,255,255,0.08))", backgroundSize: "72px 124px" }} />
+                <div className="relative grid grid-cols-3 gap-3 sm:gap-5">
+                  {accountingSources.slice(0, 6).map((source) => (
+                    <div key={source.id} className="flex aspect-square items-center justify-center rounded-[10px] border border-[#5C4E4C] bg-[#F8F8F6] shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+                      <img src={source.src} alt={source.name} className="h-10 w-10 object-contain sm:h-12 sm:w-12" />
+                    </div>
+                  ))}
+                </div>
+                <div className="absolute left-1/2 top-1/2 z-10 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[12px] bg-[#171313] shadow-[0_18px_35px_rgba(0,0,0,0.42)] sm:h-24 sm:w-24">
+                  <img src="/logo-abstract.svg" alt="Margin" className="h-10 w-10 brightness-0 invert sm:h-12 sm:w-12" />
+                </div>
+                <div className="absolute bottom-5 left-1/2 z-20 w-[86%] -translate-x-1/2 border border-[#6C5550] bg-[#F8F8F6] px-4 py-3 shadow-[0_12px_25px_rgba(0,0,0,0.2)] sm:bottom-7 sm:w-[76%]">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#69717A]">Recovery handled</span>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#0B74DE]">Connected</span>
+                  </div>
+                  <p className="mt-2 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-[#182026] sm:text-[23px]">Understood → Handled → Reconciled</p>
+                </div>
               </div>
-              <div className="mt-5 grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch">
-                <div className="rounded-[7px] border border-white/10 bg-white/[0.06] p-3.5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#A6A6A6]">Amazon event</span>
-                  <p className="mt-3 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-white">Inventory adjustment</p>
-                  <p className="mt-2 text-[11px] leading-5 text-[#9C9C9C]">Shipment · fee · reimbursement</p>
-                </div>
-                <div className="hidden items-center justify-center px-1 sm:flex"><div className="h-px w-8 bg-[#777777]" /></div>
-                <div className="rounded-[7px] border border-[#666666] bg-white/[0.07] p-3.5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#BEBEBE]">Financial context</span>
-                  <p className="mt-3 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-white">Amount supported</p>
-                  <p className="mt-2 text-[11px] leading-5 text-[#A0A0A0]">Cost · settlement · payment</p>
-                </div>
+              <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
+                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#C8B8B5]">The records you already use</span>
+                <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-[#A99895]">read-only · purpose-limited</span>
               </div>
-              <div className="mt-3 rounded-[7px] border border-[#858585] bg-[linear-gradient(135deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04))] p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#E1E1E1]">Margin recovery record</span>
-                  <span className="rounded-full border border-[#969696]/60 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.08em] text-[#E1E1E1]">Understood</span>
-                </div>
-                <p className="mt-3 max-w-[420px] font-lora text-[23px] leading-[1.02] tracking-[-0.03em] text-white">The event, its value, and its outcome stay connected.</p>
-              </div>
-              <div className="mt-5 border-t border-white/10 pt-3">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#A6A6A6]">Relevant context sources</span>
-                  <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-[#858585]">read-only · purpose-limited</span>
-                </div>
+              {/* The source rail stays animated, but the seller sees the complete connected system first. */}
+              <div className="mt-3 border-t border-white/10 pt-3">
                 <div className="relative overflow-hidden">
                   <div className="space-y-2">
                     {accountingRows.map((row, rowIndex) => (
@@ -303,11 +300,11 @@ function AccountingEvidenceSection() {
                 You shouldn&apos;t have to search through your books, emails, settlements, and reports to reconstruct the story.
               </p>
               <p className="mt-3 font-lora text-[24px] leading-[1.05] tracking-[-0.04em] text-[#182026] sm:text-[29px] md:text-[34px]" style={{ fontWeight: 400 }}>
-                Margin brings the financial context to the recovery.
-                <span className="mt-1.5 block text-[#0B74DE]">Not another accounting system. Not another place to manage your books.</span>
+                Margin gets what it needs.
+                <span className="mt-1.5 block text-[#0B74DE]">You don&apos;t have to go looking for the answer.</span>
               </p>
               <p className="mt-3 text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-6">
-                Just the context Margin needs to handle the recovery properly.
+                Amazon, accounting, settlements, files, and email—organized around the recovery they support.
               </p>
               <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
