@@ -188,7 +188,7 @@ function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section data-navbar-theme="dark" className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
+    <section data-navbar-theme="light" className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden rounded-[12px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:rounded-[16px] sm:p-5 lg:order-1 lg:p-7">
