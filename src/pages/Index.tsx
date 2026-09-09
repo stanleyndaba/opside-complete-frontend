@@ -234,24 +234,23 @@ function AccountingEvidenceSection() {
         <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
             <div className="relative overflow-hidden rounded-[10px] border border-[#3E4244] bg-[radial-gradient(circle_at_50%_50%,rgba(126,68,58,0.45),transparent_52%),linear-gradient(135deg,#171616_0%,#342322_48%,#111111_100%)] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-6 md:p-7">
-              <div className="relative min-h-[390px] overflow-hidden border border-white/10 bg-black/20 p-3 sm:min-h-[430px] sm:p-5">
-                <div className="absolute inset-0 opacity-25" style={{ backgroundImage: "linear-gradient(30deg,rgba(255,255,255,0.08) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.08) 87.5%,rgba(255,255,255,0.08)),linear-gradient(150deg,rgba(255,255,255,0.08) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.08) 87.5%,rgba(255,255,255,0.08))", backgroundSize: "72px 124px" }} />
-                <div className="relative grid grid-cols-3 gap-3 sm:gap-5">
-                  {accountingSources.slice(0, 6).map((source) => (
-                    <div key={source.id} className="flex aspect-square items-center justify-center rounded-[10px] border border-[#5C4E4C] bg-[#F8F8F6] shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
-                      <img src={source.src} alt={source.name} className="h-10 w-10 object-contain sm:h-12 sm:w-12" />
-                    </div>
+              <div className="relative min-h-[390px] overflow-hidden border border-white/10 bg-[radial-gradient(circle_at_50%_45%,rgba(130,72,60,0.46),transparent_48%),linear-gradient(135deg,#171616_0%,#342322_48%,#111111_100%)] py-8 sm:min-h-[430px] sm:py-10">
+                <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(30deg,rgba(255,255,255,0.12) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.12) 87.5%,rgba(255,255,255,0.12)),linear-gradient(150deg,rgba(255,255,255,0.12) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.12) 87.5%,rgba(255,255,255,0.12))", backgroundSize: "84px 145px" }} />
+                <div className="relative space-y-5 sm:space-y-7">
+                  {[0, 1].map((rowIndex) => (
+                    <motion.div
+                      key={rowIndex}
+                      className="flex w-max gap-4 sm:gap-6"
+                      animate={reduceMotion ? { x: rowIndex === 0 ? -72 : -170 } : { x: rowIndex === 0 ? [-72, -250] : [-170, -360] }}
+                      transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
+                    >
+                      {[...accountingSources, ...accountingSources].map((source, index) => (
+                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center rounded-[10px] border-[7px] border-[#5A504E] bg-[#F8F8F6] shadow-[0_14px_28px_rgba(0,0,0,0.28)] sm:h-[150px] sm:w-[150px]">
+                          <img src={source.src} alt={source.name} className="h-16 w-16 object-contain sm:h-[76px] sm:w-[76px]" />
+                        </div>
+                      ))}
+                    </motion.div>
                   ))}
-                </div>
-                <div className="absolute left-1/2 top-1/2 z-10 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[12px] bg-[#171313] shadow-[0_18px_35px_rgba(0,0,0,0.42)] sm:h-24 sm:w-24">
-                  <img src="/logo-abstract.svg" alt="Margin" className="h-10 w-10 brightness-0 invert sm:h-12 sm:w-12" />
-                </div>
-                <div className="absolute bottom-5 left-1/2 z-20 w-[86%] -translate-x-1/2 border border-[#6C5550] bg-[#F8F8F6] px-4 py-3 shadow-[0_12px_25px_rgba(0,0,0,0.2)] sm:bottom-7 sm:w-[76%]">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#69717A]">Recovery handled</span>
-                    <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#0B74DE]">Connected</span>
-                  </div>
-                  <p className="mt-2 font-lora text-[20px] leading-[1.02] tracking-[-0.03em] text-[#182026] sm:text-[23px]">Understood → Handled → Reconciled</p>
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
