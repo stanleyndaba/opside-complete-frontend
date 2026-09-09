@@ -186,16 +186,6 @@ const accountingRows = [
 
 function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
-  const [activeEvidence, setActiveEvidence] = useState(0);
-  const activeSource = accountingSources[activeEvidence % accountingSources.length];
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const interval = window.setInterval(() => {
-      setActiveEvidence((current) => (current + 1) % accountingSources.length);
-    }, 1900);
-    return () => window.clearInterval(interval);
-  }, [reduceMotion]);
 
   const accountingHighlights = [
     {
@@ -233,9 +223,9 @@ function AccountingEvidenceSection() {
 
         <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
-            <div className="relative overflow-hidden rounded-[10px] border border-[#3E4244] bg-[radial-gradient(circle_at_50%_50%,rgba(126,68,58,0.45),transparent_52%),linear-gradient(135deg,#171616_0%,#342322_48%,#111111_100%)] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.18)] sm:p-6 md:p-7">
-              <div className="relative min-h-[390px] overflow-hidden border border-white/10 bg-[radial-gradient(circle_at_50%_45%,rgba(130,72,60,0.46),transparent_48%),linear-gradient(135deg,#171616_0%,#342322_48%,#111111_100%)] py-8 sm:min-h-[430px] sm:py-10">
-                <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(30deg,rgba(255,255,255,0.12) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.12) 87.5%,rgba(255,255,255,0.12)),linear-gradient(150deg,rgba(255,255,255,0.12) 12%,transparent 12.5%,transparent 87%,rgba(255,255,255,0.12) 87.5%,rgba(255,255,255,0.12))", backgroundSize: "84px 145px" }} />
+            <div className="relative overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-[#FAFAF7] p-4 shadow-[0_28px_90px_rgba(37,49,58,0.08)] sm:p-6 md:p-7">
+              <div className="relative min-h-[390px] overflow-hidden border border-[#E4EDF1] bg-[#F8FAFC] py-8 sm:min-h-[430px] sm:py-10">
+                <div className="pointer-events-none absolute inset-0 opacity-45" style={{ backgroundImage: "linear-gradient(30deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42)),linear-gradient(150deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42))", backgroundSize: "84px 145px" }} />
                 <div className="relative space-y-5 sm:space-y-7">
                   {[0, 1].map((rowIndex) => (
                     <motion.div
@@ -244,41 +234,13 @@ function AccountingEvidenceSection() {
                       animate={reduceMotion ? { x: rowIndex === 0 ? -72 : -170 } : { x: rowIndex === 0 ? [-72, -250] : [-170, -360] }}
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
-                      {[...accountingSources, ...accountingSources].map((source, index) => (
-                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center rounded-[10px] border-[7px] border-[#5A504E] bg-[#F8F8F6] shadow-[0_14px_28px_rgba(0,0,0,0.28)] sm:h-[150px] sm:w-[150px]">
+                      {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
+                        <div key={`${source.id}-${rowIndex}-${index}`} className="flex h-[132px] w-[132px] shrink-0 items-center justify-center rounded-[10px] border-[7px] border-[#DCE8EE] bg-white shadow-[0_14px_28px_rgba(37,49,58,0.12)] sm:h-[150px] sm:w-[150px]">
                           <img src={source.src} alt={source.name} className="h-16 w-16 object-contain sm:h-[76px] sm:w-[76px]" />
                         </div>
                       ))}
                     </motion.div>
                   ))}
-                </div>
-              </div>
-              <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[#C8B8B5]">The records you already use</span>
-                <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-[#A99895]">read-only · purpose-limited</span>
-              </div>
-              {/* The source rail stays animated, but the seller sees the complete connected system first. */}
-              <div className="mt-3 border-t border-white/10 pt-3">
-                <div className="relative overflow-hidden">
-                  <div className="space-y-2">
-                    {accountingRows.map((row, rowIndex) => (
-                      <motion.div
-                        key={rowIndex}
-                        className="flex w-max gap-2"
-                        animate={reduceMotion ? { x: rowIndex === 0 ? 0 : -44 } : { x: rowIndex === 0 ? [0, -76] : [-44, 20] }}
-                        transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 26, repeat: Infinity, ease: "linear" }}
-                      >
-                        {[...row, ...row].map((source, index) => {
-                          const isActive = source.id === activeSource.id;
-                          return (
-                            <div key={`${source.id}-${rowIndex}-${index}`} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[7px] border ${isActive ? "border-[#D2D2D2] bg-white" : "border-white/10 bg-white/[0.06]"}`}>
-                              <img src={source.src} alt={source.name} className={`max-h-6 max-w-6 object-contain ${isActive ? "opacity-100" : "opacity-70"}`} />
-                            </div>
-                          );
-                        })}
-                      </motion.div>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
