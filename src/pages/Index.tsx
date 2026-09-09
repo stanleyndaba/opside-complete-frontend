@@ -887,10 +887,13 @@ function MarginStandardSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">06 / THE MARGIN STANDARD</span>
             </div>
             <h2 id="margin-standard-title" className="font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>
-              Margin doesn&apos;t assume. It establishes.
+              If something needs recovering, Margin handles it.
             </h2>
             <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              A recovery is not real just because a report, system, or response says it is. Margin examines what happened, establishes what the available evidence supports, determines what action is appropriate, and keeps the financial outcome visible until the recovery is resolved.
+              Margin investigates what happened, builds what is needed, handles the recovery, follows the outcome, and keeps going until the money is accounted for.
+            </p>
+            <p className="mt-6 font-lora text-[22px] leading-[1.05] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>
+              No guessing. No chasing. No unnecessary claims.
             </p>
           </motion.div>
 
@@ -912,11 +915,10 @@ function MarginStandardSection() {
             </div>
             <div className="mt-7 border-l border-[var(--margin-blue)] pl-5">
               <p className="font-lora text-[23px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]" style={{ fontWeight: 400 }}>
-                Not every discrepancy is a recovery.
-                <span className="mt-1.5 block text-[var(--margin-text-muted)]">Not every recovery is complete. Not every response is a resolution.</span>
+                Margin doesn&apos;t assume. It establishes.
               </p>
               <p className="mt-5 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-8">
-                Margin finds the truth of the money—and carries the justified recovery through to the outcome.
+                If the evidence supports a recovery, Margin acts. If it doesn&apos;t, Margin tells you. If the outcome isn&apos;t complete, Margin keeps it visible.
               </p>
             </div>
           </motion.div>
