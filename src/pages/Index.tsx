@@ -925,7 +925,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       copy: "You notice an issue and it becomes another thread to manage—an email to your FBA person, a message to your VA, a request for an invoice, a follow-up with Amazon, another document to find. The information, decisions, and next steps start living in different places.",
       visual: (
         <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
-          <img src="/delivered.png" alt="Delivered shipment with an unresolved inventory discrepancy" className="h-full w-full rounded-[4px] object-cover" />
+          <img src="/discrepancy.png" alt="Amazon discrepancy requiring recovery work" className="h-full w-full rounded-[4px] object-cover" />
         </div>
       ),
     },
@@ -934,7 +934,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       copy: "Amazon asks for evidence. A case gets rejected. A document needs to be supplied. Someone needs to respond, follow up, or determine what should happen next. The recovery can stall not because the problem isn’t real, but because someone has to keep carrying the case forward.",
       visual: (
         <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
-          <img src="/charged.png" alt="Unresolved account charge without a linked source event" className="h-full w-full rounded-[4px] object-cover" />
+          <img src="/openmail.png" alt="Open recovery correspondence requiring follow-up" className="h-full w-full rounded-[4px] object-cover" />
         </div>
       ),
     },
@@ -943,7 +943,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       copy: "A reimbursement or credit comes through, but the work isn’t necessarily over. You still need to know whether the amount was complete, whether it appeared where expected, whether anything was reversed, and whether the recovery can actually be closed.",
       visual: (
         <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
-          <img src="/paid.png" alt="Paid reimbursement with an unresolved settlement outcome" className="h-full w-full rounded-[4px] object-cover" />
+          <img src="/recoveryclose.png" alt="Recovery outcome ready to be closed" className="h-full w-full rounded-[4px] object-cover" />
         </div>
       ),
     },
