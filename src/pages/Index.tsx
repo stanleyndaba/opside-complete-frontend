@@ -334,15 +334,17 @@ function OneRecoverySection() {
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">02 / CATEGORY</span>
             </div>
-            <h2 className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
+            <h2 className="max-w-[700px] font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
               One Recovery Operation for Your Amazon Business
             </h2>
-            <div className="mt-6 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+            <div className="mt-5 max-w-[620px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
               <p>When something needs recovering, Margin takes it from finding the problem to getting the outcome.</p>
-              <p className="mt-5 font-semibold text-[var(--margin-text-primary)]">
+              <p className="mt-4 font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
                 You don&apos;t have to figure out what happened, build the case, chase Amazon, or keep checking whether the money came back.
               </p>
-              <p className="mt-5 font-semibold text-[var(--margin-text-primary)]">Margin handles the recovery.</p>
+              <p className="mt-4 font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
+                Margin handles the recovery.
+              </p>
             </div>
           </motion.div>
         </div>
