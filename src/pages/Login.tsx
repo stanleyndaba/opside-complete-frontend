@@ -1796,13 +1796,13 @@ const Login = () => {
             {mode === 'login' && (
               <div className="mt-8 space-y-5">
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Your Audit results and recovery work are right where you left them.
+                  Your recovery work is right where you left it.
                 </p>
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Sign in to review your Audit results, see what needs attention, and pick up where you left off.
+                  See what happened, what needs attention, what Margin is handling, and where each recovery stands.
                 </p>
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Margin keeps your records, evidence, decisions, and recovery progress together—so you do not have to start from scratch each time.
+                  Your records, evidence, decisions, and recovery progress stay connected—so you can come back without having to piece everything together again.
                 </p>
                 <p className="pt-2 font-merriweather text-[16px] font-semibold tracking-tight text-[#182026]">
                   Clear recovery work. You stay in control.
