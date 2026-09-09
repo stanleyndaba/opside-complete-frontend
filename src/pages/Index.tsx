@@ -191,16 +191,15 @@ function AccountingEvidenceSection() {
     <section data-navbar-theme="light" className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden rounded-[12px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:rounded-[16px] sm:p-5 lg:order-1 lg:p-7">
-            <div className="relative overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-[#FAFAF7] p-4 shadow-[0_18px_60px_rgba(37,49,58,0.08)] sm:p-6 md:p-7">
-              <div className="relative min-h-[390px] overflow-hidden border border-[#E4EDF1] bg-[#F8FAFC] py-8 sm:min-h-[430px] sm:py-10">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
+              <div className="relative min-h-[390px] overflow-hidden py-8 sm:min-h-[430px] sm:py-10">
                 <div className="pointer-events-none absolute inset-0 opacity-45" style={{ backgroundImage: "linear-gradient(30deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42)),linear-gradient(150deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42))", backgroundSize: "84px 145px" }} />
                 <div className="relative space-y-5 sm:space-y-7">
                   {[0, 1].map((rowIndex) => (
                     <motion.div
                       key={rowIndex}
                       className="flex w-max gap-4 sm:gap-6"
-                      animate={reduceMotion ? { x: rowIndex === 0 ? -72 : -170 } : { x: rowIndex === 0 ? [-72, -250] : [-170, -360] }}
+                      animate={reduceMotion ? { x: rowIndex === 0 ? -72 : -170 } : { x: rowIndex === 0 ? [-72, -250] : [-360, -170] }}
                       transition={reduceMotion ? { duration: 0 } : { duration: rowIndex === 0 ? 22 : 27, repeat: Infinity, ease: "linear" }}
                     >
                       {[...accountingRows[rowIndex], ...accountingRows[rowIndex]].map((source, index) => (
@@ -212,7 +211,6 @@ function AccountingEvidenceSection() {
                   ))}
                 </div>
               </div>
-            </div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
