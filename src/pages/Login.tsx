@@ -462,7 +462,7 @@ const Login = () => {
   }, []);
 
   const heading = mode === 'signup'
-    ? 'Start with a clear view of your Amazon records.'
+    ? 'Find out what your Amazon records actually support.'
     : mode === 'recovery'
       ? 'Reset your password'
     : 'Welcome back to Margin.';
@@ -1769,7 +1769,10 @@ const Login = () => {
             {mode === 'signup' && (
               <div className="mt-8 space-y-8">
                 <p className="text-[18px] leading-relaxed text-[#4D5B66]">
-                  Create your free Margin account, run a read-only Recovery Audit, and see what your Amazon records support. Margin will show you what it finds and help you understand what—if anything—makes sense to do next.
+                  Create your free Margin account and run a read-only Recovery Audit.
+                </p>
+                <p className="text-[18px] leading-relaxed text-[#4D5B66]">
+                  Margin examines your available Amazon records, shows you what the evidence supports, and makes clear what needs attention—and what doesn&apos;t.
                 </p>
                 
                 <div className="flex flex-col gap-4 border-t border-[#D8E3EA] pt-8">
@@ -1783,7 +1786,7 @@ const Login = () => {
                   </div>
                   <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
-                    <span>See your result before deciding</span>
+                    <span>See the result before deciding</span>
                   </div>
                   <div className="flex items-center gap-3 text-[14px] font-semibold text-[#182026]">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#0B74DE]" />
