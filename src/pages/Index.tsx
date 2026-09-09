@@ -1685,7 +1685,7 @@ export default function Index() {
       <PublicNavbar variant="light" wide />
       
       <main>
-        <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/get-started"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <OneRecoverySection />
         <RealityCheckSection />
         <MarginLifecycleSection />
