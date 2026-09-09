@@ -176,12 +176,13 @@ const accountingSources = [
   { id: "dropbox", name: "Dropbox", context: "supporting files", src: "/Dropbox_Icon.svg.png", route: "M 12 86 H 30 V 94 H 50" },
   { id: "outlook", name: "Outlook", context: "supplier correspondence", src: "/outlookicon.webp", route: "M 50 86 V 94" },
   { id: "onedrive", name: "OneDrive", context: "working documents", src: "/onedriive.png", route: "M 88 86 H 70 V 94 H 50" },
+  { id: "adobe_sign", name: "Adobe Sign", context: "signed documents", src: "/dobe.png", route: "M 12 14 H 28 V 94 H 50" },
 ];
 
 const getAccountingRow = (order: string[]) => order.map((id) => accountingSources.find((source) => source.id === id)!).filter(Boolean);
 const accountingRows = [
-  getAccountingRow(["drive", "amazon", "slack", "outlook", "quickbooks", "gmail", "onedrive", "xero", "dropbox"]),
-  getAccountingRow(["xero", "gmail", "dropbox", "amazon", "onedrive", "quickbooks", "drive", "outlook", "slack"]),
+  getAccountingRow(["amazon", "slack", "outlook", "adobe_sign", "quickbooks"]),
+  getAccountingRow(["gmail", "dropbox", "drive", "onedrive", "xero"]),
 ];
 
 function AccountingEvidenceSection() {
@@ -193,7 +194,8 @@ function AccountingEvidenceSection() {
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
               <div className="relative min-h-[390px] overflow-hidden py-8 sm:min-h-[430px] sm:py-10">
-                <div className="pointer-events-none absolute inset-0 opacity-45" style={{ backgroundImage: "linear-gradient(30deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42)),linear-gradient(150deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42))", backgroundSize: "84px 145px" }} />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#FAFAF7] via-[#FAFAF7]/85 to-transparent sm:w-24" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#FAFAF7] via-[#FAFAF7]/85 to-transparent sm:w-24" />
                 <div className="relative space-y-5 sm:space-y-7">
                   {[0, 1].map((rowIndex) => (
                     <motion.div
