@@ -130,7 +130,7 @@ export const PublicNavbar = ({ variant = 'dark', wide = false }: PublicNavbarPro
                         </Link>
                     </div>
 
-                    <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
+                    <nav className="absolute left-[42%] hidden -translate-x-1/2 items-center gap-1 md:flex">
                         <div className="hidden lg:block">
                             <ApisMegaMenu variant={effectiveVariant} />
                         </div>
