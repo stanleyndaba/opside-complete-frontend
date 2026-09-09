@@ -318,18 +318,13 @@ function KineticHeroSection({
   );
 }
 
-import recoveryImg from "@/assets/recoveryy.png";
 
 function OneRecoverySection() {
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
       <div className={containerClass}>
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
-          <motion.div {...revealProps} className="order-2 relative overflow-hidden rounded-[12px] border border-white/10 bg-[#101820] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:rounded-[16px] sm:p-5 lg:order-1">
-            <img src={recoveryImg} alt="Recovery Operation" className="block w-full rounded-[4px] object-cover" style={{ imageRendering: 'high-quality' }} />
-          </motion.div>
-
-          <motion.div {...revealProps} className="order-1 lg:order-2 lg:pt-2">
+        <div className="grid items-center gap-12 lg:grid-cols-1 xl:gap-24">
+          <motion.div {...revealProps} className="order-1 lg:pt-2">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">02 / CATEGORY</span>
