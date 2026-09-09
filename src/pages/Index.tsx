@@ -476,10 +476,8 @@ function MarginLifecycleSection() {
             className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]"
             style={{ fontWeight: 400 }}
           >
-            <span className="block">Margin doesn&apos;t give you another list to work through.</span>
-            <span className="mt-3 block text-[var(--margin-text-muted)]">
-              Margin doesn&apos;t just identify a recovery. It takes responsibility for moving it toward resolution.
-            </span>
+            <span className="block">You don&apos;t get another list.</span>
+            <span className="mt-3 block text-[var(--margin-text-muted)]">You get it handled.</span>
           </h2>
         </motion.div>
 
@@ -487,7 +485,14 @@ function MarginLifecycleSection() {
             {...revealProps}
             className="mt-4 max-w-[780px] text-[14px] leading-6 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7"
           >
-            Margin investigates what happened, establishes what the evidence supports, prepares the appropriate recovery action, manages the case, follows what happens next, and verifies the financial outcome.
+            Margin takes the recovery from finding the problem to getting the outcome. It investigates what happened, handles the case, follows up with Amazon, and keeps going until you know what happened to the money.
+          </motion.p>
+          <motion.p
+            {...revealProps}
+            className="mt-4 max-w-[780px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]"
+            style={{ fontWeight: 400 }}
+          >
+            Margin takes responsibility for moving the recovery toward resolution.
           </motion.p>
         </div>
         </div>
