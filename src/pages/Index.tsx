@@ -405,9 +405,13 @@ function OneRecoverySection() {
           <h2 className="font-lora text-[34px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[54px]" style={{ fontWeight: 400 }}>
             One Recovery Operation for Your Amazon Business
           </h2>
-          <p className="mt-6 text-[16px] leading-7 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-8">
-            From the first discrepancy to the final dollar, Margin keeps the recovery together—what happened, what supports it, what action is appropriate, and whether the money actually came back.
-          </p>
+          <div className="mx-auto mt-6 max-w-[780px] text-[16px] leading-7 text-[var(--margin-text-secondary)] md:text-[18px] md:leading-8">
+            <p>When something needs recovering, Margin takes it from finding the problem to getting the outcome.</p>
+            <p className="mt-5 font-semibold text-[var(--margin-text-primary)]">
+              You don&apos;t have to figure out what happened, build the case, chase Amazon, or keep checking whether the money came back.
+            </p>
+            <p className="mt-5 font-semibold text-[var(--margin-text-primary)]">Margin handles the recovery.</p>
+          </div>
         </motion.div>
       </div>
       <div className="mx-auto mt-12 w-full max-w-[1440px] px-0 sm:mt-16 sm:px-4 md:mt-20 md:px-6">
