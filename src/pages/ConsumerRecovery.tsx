@@ -30,13 +30,13 @@ export default function ConsumerRecovery() {
               </p>
 
               <div className="mt-10 flex flex-col gap-4 border-t border-[var(--margin-border)] pt-6 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-                <div className="order-2 sm:order-1">
+                <div className="order-2 sm:order-1 lg:hidden">
                   <p className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[var(--margin-text-muted)]">Target launch</p>
                   <p className="mt-1 text-[13px] font-medium text-[var(--margin-text-muted)] sm:text-[16px] sm:text-[var(--margin-text-primary)]">Late November 2026</p>
                 </div>
                 <Link
                   to="/waitlist"
-                  className="order-1 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[8px] bg-[var(--margin-blue)] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_10px_24px_rgba(11,116,222,0.18)] transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#0869c9] sm:order-2 sm:w-auto"
+                  className="order-1 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[8px] bg-[var(--margin-blue)] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_10px_24px_rgba(11,116,222,0.18)] transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#0869c9] sm:order-2 sm:w-auto lg:order-1 lg:mr-auto"
                 >
                   Get Early Access
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
