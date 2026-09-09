@@ -325,7 +325,7 @@ function OneRecoverySection() {
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
       <div className={containerClass}>
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
-          <motion.div {...revealProps} className="order-2 relative overflow-hidden rounded-[12px] border border-white/10 bg-[#1B1B1B] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:rounded-[16px] sm:p-5 lg:order-1">
+          <motion.div {...revealProps} className="order-2 relative overflow-hidden rounded-[12px] border border-white/10 bg-[#101820] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:rounded-[16px] sm:p-5 lg:order-1">
             <img src={recoveryImg} alt="Recovery Operation" className="block w-full rounded-[4px] object-cover" style={{ imageRendering: 'high-quality' }} />
           </motion.div>
 
@@ -425,7 +425,7 @@ function MarginLifecycleSection() {
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-2 h-fit self-start overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:order-1 lg:p-7">
+        <motion.div {...revealProps} className="relative order-2 h-fit self-start overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(104,146,180,0.16),transparent_36%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:order-1 lg:p-7">
           <div className="isolate overflow-hidden rounded-[12px]" style={{ clipPath: "inset(0 round 12px)", WebkitClipPath: "inset(0 round 12px)" }}>
             <video className="block aspect-[1.45] w-full scale-[1.04] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/workflow.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
           </div>
@@ -911,7 +911,7 @@ function RecoveryWorkStatement() {
             </div>
             <p className="mt-6 font-lora text-[22px] leading-[1.05] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>One recovery. One record. One visible outcome.</p>
           </motion.div>
-          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
+          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(104,146,180,0.16),transparent_36%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
             <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
           </motion.div>
         </div>
@@ -1187,7 +1187,7 @@ const recoveryOutcomeStates = [
 
 function NeedsEvidenceImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img
           src="/emaillist.png"
@@ -1206,7 +1206,7 @@ function NeedsEvidenceImageStack() {
 
 function RejectedImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img src="/resubmit.png" alt="Resubmission workspace" className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] rotate-0 rounded-[5px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]" />
         <img src="/rejectedreason.png" alt="Rejected case reason" className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] -rotate-[0.5deg] rounded-[5px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]" />
@@ -1217,7 +1217,7 @@ function RejectedImageStack() {
 
 function UnderpaidImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img src="/evidenceatt.png" alt="Evidence attached to an underpaid recovery" className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] rotate-0 rounded-[5px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]" />
         <img src="/underpayemail.png" alt="Underpayment recovery email" className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] rotate-[0.5deg] rounded-[5px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]" />
@@ -1228,7 +1228,7 @@ function UnderpaidImageStack() {
 
 function AppealableImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img src="/financial.png" alt="Financial recovery record" className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] rotate-0 rounded-[5px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]" />
         <img src="/realappeal.png" alt="Appeal record ready for review" className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] rotate-[0.5deg] rounded-[5px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]" />
@@ -1239,7 +1239,7 @@ function AppealableImageStack() {
 
 function FinancialClosureImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#252522] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img
           src="/approved%20reimbursement.png"
@@ -1492,7 +1492,7 @@ function RiskSection() {
                 </div>
               </div>
             </div>
-            <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#252522] shadow-[0_24px_70px_rgba(0,0,0,0.24)] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
+            <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] shadow-[0_24px_70px_rgba(0,0,0,0.24)] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
               <FinancialClosureImageStack />
             </div>
           </motion.div>
@@ -1570,7 +1570,7 @@ function OperationalEconomicsSection() {
     <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
       <div className={containerClass}>
         <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-          <motion.div {...revealProps} className="relative min-w-0 h-[380px] overflow-hidden rounded-[10px] border border-[#373735] bg-[#1B1B1B] p-3 text-[#E7E5DF] sm:h-[410px] sm:p-4 md:h-auto md:p-5 lg:h-[390px] lg:p-6">
+          <motion.div {...revealProps} className="relative min-w-0 h-[380px] overflow-hidden rounded-[10px] border border-[#373735] bg-[#101820] p-3 text-[#E7E5DF] sm:h-[410px] sm:p-4 md:h-auto md:p-5 lg:h-[390px] lg:p-6">
             <div className="mb-4 flex items-center justify-between gap-4"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#A8AAA5]">The work keeps coming back</span><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#A8AAA5]">Every month</span></div>
             <div className="relative grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:gap-0">
               <div className="relative md:pr-8">
@@ -1628,8 +1628,8 @@ function RecoveryOutcomeExplorer() {
               </motion.div>
 
               <motion.div {...revealProps} className="order-3 mt-0 lg:order-2 lg:row-span-2 lg:sticky lg:top-24 lg:self-start">
-                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#1B1B1B] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.12),transparent_35%)]" />
+                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#101820] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.16),transparent_35%)]" />
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                       key={activeState.title}
@@ -1781,7 +1781,7 @@ export default function Index() {
               </motion.div>
 
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-                <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-5">
+                <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(104,146,180,0.16),transparent_36%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-5">
                   <AuditImageStackVisual />
                 </div>
               </motion.div>
