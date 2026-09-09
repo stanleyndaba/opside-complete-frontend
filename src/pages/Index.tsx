@@ -1014,33 +1014,43 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
   return (
     <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 sm:py-24 md:py-32" aria-labelledby="recovery-thread-title">
       <div className={containerClass}>
-        <motion.div {...revealProps} className="mx-auto max-w-[820px] text-center">
-          <div className="mb-5 flex items-center justify-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The recovery thread</span><div className="h-px w-8 bg-[var(--margin-blue)]" /></div>
-          <h2 id="recovery-thread-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[58px]" style={{ fontWeight: 400 }}>You run the business. Margin keeps the recovery work legible.</h2>
-          <p className="mx-auto mt-6 max-w-[760px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">A shipment can be marked delivered while the units never reconcile. A fee can appear without an obvious explanation. A reimbursement can look complete and still fail to match the final settlement. The difficult part is connecting the event, the evidence, the claim, and the money.</p>
-        </motion.div>
+        <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
+          <div className="order-2 space-y-5 lg:order-1">
+            {recoveryThreadCards.map((card, index) => (
+              <motion.div key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }}>
+                {card.visual}
+              </motion.div>
+            ))}
+          </div>
 
-        <div className="mt-14 grid border-y border-[#D8DEDA] md:grid-cols-3">
-          {recoveryThreadCards.map((card, index) => (
-            <motion.article key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className={`px-0 py-8 md:px-7 md:py-10 ${index > 0 ? "border-t border-[#D8DEDA] md:border-l md:border-t-0" : ""}`}>
-              {card.visual}
-              <h3 className="mt-7 font-lora text-[25px] leading-[1.06] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]">{card.title}</h3>
-              <p className="mt-4 text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{card.copy}</p>
-            </motion.article>
-          ))}
+          <div className="order-1 lg:order-2 lg:pt-2">
+            <motion.div {...revealProps}>
+              <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The recovery thread</span></div>
+              <h2 id="recovery-thread-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You run the business. <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span></h2>
+              <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">A shipment can be marked delivered while the units never reconcile. A fee can appear without an obvious explanation. A reimbursement can look complete and still fail to match the final settlement.</p>
+            </motion.div>
+
+            <div className="mt-10 border-t border-[#D8DEDA]">
+              {recoveryThreadCards.map((card, index) => (
+                <motion.article key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="border-b border-[#D8DEDA] py-5 md:py-6">
+                  <div className="flex items-baseline gap-3"><span className="font-mono text-[10px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">0{index + 1}</span><h3 className="font-lora text-[25px] leading-[1.06] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]">{card.title}</h3></div>
+                  <p className="mt-3 max-w-[620px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{card.copy}</p>
+                </motion.article>
+              ))}
+            </div>
+
+            <motion.div {...revealProps} className="pt-8 md:pt-10">
+              <p className="font-lora text-[24px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[30px]" style={{ fontWeight: 400 }}>These are not separate problems when you are the seller. <span className="text-[var(--margin-text-muted)]">They become one unresolved recovery thread.</span></p>
+              <div className="mt-8 border-t border-[#D8DEDA] pt-7">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The product bridge</p>
+                <h3 className="mt-3 font-lora text-[30px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>Margin connects the thread.</h3>
+                <p className="mt-4 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Margin examines your Amazon records, shows you what the evidence supports, and helps move the approved recovery work forward—so you can see what happened, what needs attention, and whether Amazon actually paid.</p>
+                <Button onClick={() => onAuditCta("recovery_thread_audit")} className="mt-7 h-12 rounded-[8px] bg-[var(--margin-blue)] px-6 text-[13px] font-semibold text-white shadow-none hover:bg-[var(--margin-blue-hover)]">Start a free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.08em] text-[#7A878E]">Read-only. See the result before deciding. Nothing is submitted without your approval.</p>
+              </div>
+            </motion.div>
+          </div>
         </div>
-
-        <motion.div {...revealProps} className="mt-12 border-y border-[#D8DEDA] py-8 text-center md:mt-16 md:py-10">
-          <p className="font-lora text-[24px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[30px] md:text-[38px]" style={{ fontWeight: 400 }}>These are not separate problems when you are the seller. They become one unresolved recovery thread.</p>
-        </motion.div>
-
-        <motion.div {...revealProps} className="mx-auto max-w-[760px] pt-14 text-center md:pt-20">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The product bridge</p>
-          <h3 className="mt-4 font-lora text-[30px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[46px]" style={{ fontWeight: 400 }}>Margin connects the thread.</h3>
-          <p className="mx-auto mt-5 max-w-[680px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Margin examines your Amazon records, shows you what the evidence supports, and helps move the approved recovery work forward—so you can see what happened, what needs attention, and whether Amazon actually paid.</p>
-          <Button onClick={() => onAuditCta("recovery_thread_audit")} className="mt-8 h-12 rounded-[8px] bg-[var(--margin-blue)] px-6 text-[13px] font-semibold text-white shadow-none hover:bg-[var(--margin-blue-hover)]">Start a free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" /></Button>
-          <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.08em] text-[#7A878E]">Read-only. See the result before deciding. Nothing is submitted without your approval.</p>
-        </motion.div>
       </div>
     </section>
   );
