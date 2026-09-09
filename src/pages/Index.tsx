@@ -921,8 +921,8 @@ function RecoveryWorkStatement() {
 function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) => void }) {
   const recoveryThreadCards = [
     {
-      title: "Delivered. Not reconciled.",
-      copy: "An inbound shipment reaches Amazon, but the units do not appear where they should. The carrier confirms delivery. Amazon’s inventory record tells a different story.",
+      title: "Found it. Now someone has to handle it.",
+      copy: "You notice an issue and it becomes another thread to manage—an email to your FBA person, a message to your VA, a request for an invoice, a follow-up with Amazon, another document to find. The information, decisions, and next steps start living in different places.",
       visual: (
         <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
           <img src="/delivered.png" alt="Delivered shipment with an unresolved inventory discrepancy" className="h-full w-full rounded-[4px] object-cover" />
@@ -930,8 +930,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       ),
     },
     {
-      title: "Charged. Not explained.",
-      copy: "A fee appears in the account, but the seller cannot confidently trace it to the shipment, adjustment, service, or event that created it. The amount is real. The explanation is missing.",
+      title: "Proved it. Now keep it moving.",
+      copy: "Amazon asks for evidence. A case gets rejected. A document needs to be supplied. Someone needs to respond, follow up, or determine what should happen next. The recovery can stall not because the problem isn’t real, but because someone has to keep carrying the case forward.",
       visual: (
         <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
           <img src="/charged.png" alt="Unresolved account charge without a linked source event" className="h-full w-full rounded-[4px] object-cover" />
@@ -939,8 +939,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       ),
     },
     {
-      title: "Paid. Not closed.",
-      copy: "A reimbursement or credit appears, but the seller still needs to know whether it was complete, later reversed, correctly reflected in settlement, and financially reconciled.",
+      title: "Paid. Now make sure it’s actually finished.",
+      copy: "A reimbursement or credit comes through, but the work isn’t necessarily over. You still need to know whether the amount was complete, whether it appeared where expected, whether anything was reversed, and whether the recovery can actually be closed.",
       visual: (
         <div className="relative aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-white/96 p-2.5 shadow-[0_18px_60px_rgba(37,49,58,0.08)] backdrop-blur-md sm:p-3">
           <img src="/paid.png" alt="Paid reimbursement with an unresolved settlement outcome" className="h-full w-full rounded-[4px] object-cover" />
@@ -965,7 +965,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The recovery thread</span></div>
               <h2 id="recovery-thread-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You run the business. <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span></h2>
-              <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">A shipment can be marked delivered while the units never reconcile. A fee can appear without an obvious explanation. A reimbursement can look complete and still fail to match the final settlement.</p>
+              <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Getting a recovery started is rarely the hard part.</p>
+              <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The work is everything that happens between <span className="font-semibold text-[var(--margin-text-primary)]">“something is wrong”</span> and <span className="font-semibold text-[var(--margin-text-primary)]">“this is actually finished.”</span></p>
             </motion.div>
 
             <div className="mt-10 border-t border-[#D8DEDA]">
@@ -982,7 +983,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
               <div className="mt-8 border-t border-[#D8DEDA] pt-7">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The product bridge</p>
                 <h3 className="mt-3 font-lora text-[30px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>Margin connects the thread.</h3>
-                <p className="mt-4 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Margin examines your Amazon records, shows you what the evidence supports, and helps move the approved recovery work forward—so you can see what happened, what needs attention, and whether Amazon actually paid.</p>
+              <p className="mt-4 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Margin keeps the recovery connected from the first finding through the final financial outcome—what happened, what evidence supports it, what needs to happen next, what Amazon did, and whether the money actually came back.</p>
+              <p className="mt-4 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">So you don&apos;t have to become the person coordinating, proving, chasing, and reconciling every recovery yourself.</p>
                 <Button onClick={() => onAuditCta("recovery_thread_audit")} className="mt-7 h-12 rounded-[8px] bg-[var(--margin-blue)] px-6 text-[13px] font-semibold text-white shadow-none hover:bg-[var(--margin-blue-hover)]">Start a free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" /></Button>
                 <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.08em] text-[#7A878E]">Read-only. See the result before deciding. Nothing is submitted without your approval.</p>
               </div>
