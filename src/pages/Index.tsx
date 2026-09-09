@@ -416,13 +416,16 @@ function RealityCheckSection() {
           </div>
           <p className="mb-3 font-lora text-[19px] leading-tight tracking-[-0.025em] text-[var(--margin-text-muted)] sm:text-[23px]" style={{ fontWeight: 400 }}>You already have enough to manage.</p>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
-            Finding the problem is easy. Getting it resolved is the work.
+            Recovery shouldn&apos;t be another job.
           </h2>
           <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
-            A reimbursement can be found and still never become money you keep. Margin investigates what happened, gathers the proof, prepares the case, handles Amazon follow-up, and verifies the final payment.
+            You shouldn&apos;t have to find the issue, figure out what happened, gather the proof, deal with Amazon, chase the outcome, and check whether the money actually came back.
           </p>
           <p className="mt-4 max-w-[720px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
-            That is the work Margin takes off your plate.
+            Margin handles it.
+          </p>
+          <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+            It takes the recovery from the first finding through to the final outcome—so you can get back to running your business instead of running another recovery operation.
           </p>
         </motion.div>
         <motion.div {...revealProps} className="mt-6 border-y border-[var(--margin-border)] py-3 md:mt-8 md:py-4">
@@ -432,6 +435,9 @@ function RealityCheckSection() {
         </motion.div>
         <motion.p {...revealProps} className="mt-5 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:mt-7 md:text-[23px]" style={{ fontWeight: 400 }}>
           You don&apos;t manage the recovery step by step. <span className="text-[var(--margin-text-muted)]">Margin runs the operation.</span>
+        </motion.p>
+        <motion.p {...revealProps} className="mt-4 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:text-[23px]" style={{ fontWeight: 400 }}>
+          You sell. <span className="text-[var(--margin-text-muted)]">Margin handles the recovery.</span>
         </motion.p>
         </div>
         <motion.div {...revealProps} className="relative">
