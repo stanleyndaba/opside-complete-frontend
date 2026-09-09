@@ -1708,6 +1708,7 @@ export default function Index() {
       
       <main>
         <KineticHeroSection onAuditCta={() => handleClaimAccessClick("hero_connect_amazon", "sp_api")} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <OneRecoverySection />
         <RealityCheckSection />
         <MarginLifecycleSection />
@@ -1718,7 +1719,6 @@ export default function Index() {
         <RiskSection />
         <RecoveryOutcomeExplorer />
         <OperationalEconomicsSection />
-        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <RecoveryRoutingSection onAuditCta={handleClaimAccessClick} />
 
