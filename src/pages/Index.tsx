@@ -187,43 +187,12 @@ const accountingRows = [
 function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
 
-  const accountingHighlights = [
-    {
-      heading: "Understand what happened",
-      body: "Amazon records can show the shipment, inventory movement, fee, adjustment, or reimbursement.",
-    },
-    {
-      heading: "Understand what it’s worth",
-      body: "Relevant financial records help establish the amount involved, what should have happened, and whether the recovery is actually supported.",
-    },
-    {
-      heading: "Know what was settled",
-      body: "Margin connects the recovery to the financial outcome, so you can see whether the money was paid, adjusted, reversed, or still outstanding.",
-    },
-  ];
-
   return (
     <section data-navbar-theme="dark" className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
-        <div className={`${containerClass} min-w-0`}>
-        <div className="grid min-w-0 gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
-          <motion.div {...revealProps} className="min-w-0 lg:col-span-2">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-px w-8 bg-[#0B74DE]" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">08 / THE CONTEXT MARGIN HANDLES</span>
-            </div>
-            <h2 id="accounting-section-title" className="max-w-[980px] break-words font-lora text-[28px] leading-[1.04] tracking-[-0.04em] text-[#182026] sm:text-[38px] md:text-[42px] lg:text-[44px]" style={{ fontWeight: 400 }}>
-              You shouldn&apos;t have to piece it together.
-            </h2>
-            <p className="mt-4 max-w-[760px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
-              Margin brings together the information it needs to understand, support, and close the recovery—so you don&apos;t have to dig through reports, settlements, accounting records, emails, and files yourself.
-            </p>
-          </motion.div>
-
-        </div>
-
-        <div className="mt-8 grid min-w-0 items-start gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-12 xl:mt-12">
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative min-w-0 lg:pt-2">
-            <div className="relative overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-[#FAFAF7] p-4 shadow-[0_28px_90px_rgba(37,49,58,0.08)] sm:p-6 md:p-7">
+      <div className={`${containerClass} min-w-0`}>
+        <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden rounded-[12px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.08),transparent_36%),linear-gradient(145deg,#1B1B1B_0%,#101010_58%,#080808_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:rounded-[16px] sm:p-5 lg:order-1 lg:p-7">
+            <div className="relative overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-[#FAFAF7] p-4 shadow-[0_18px_60px_rgba(37,49,58,0.08)] sm:p-6 md:p-7">
               <div className="relative min-h-[390px] overflow-hidden border border-[#E4EDF1] bg-[#F8FAFC] py-8 sm:min-h-[430px] sm:py-10">
                 <div className="pointer-events-none absolute inset-0 opacity-45" style={{ backgroundImage: "linear-gradient(30deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42)),linear-gradient(150deg,rgba(207,224,234,0.42) 12%,transparent 12.5%,transparent 87%,rgba(207,224,234,0.42) 87.5%,rgba(207,224,234,0.42))", backgroundSize: "84px 145px" }} />
                 <div className="relative space-y-5 sm:space-y-7">
@@ -246,28 +215,24 @@ function AccountingEvidenceSection() {
             </div>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="min-w-0 lg:order-2 lg:pt-5">
-            <div className="border-t border-[#C9D1D6]">
-              {accountingHighlights.map((highlight) => (
-                <div key={highlight.heading} className="border-b border-[#C9D1D6] py-3.5 md:py-4">
-                  <h3 className="text-[13px] font-semibold leading-5 text-[#182026] md:text-[14px]">{highlight.heading}</h3>
-                  <p className="mt-1.5 max-w-[440px] text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-5">{highlight.body}</p>
-                </div>
-              ))}
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.18 }} className="order-1 min-w-0 lg:order-2 lg:pt-2">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-px w-8 bg-[#0B74DE]" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[#0B74DE]">08 / THE CONTEXT MARGIN HANDLES</span>
             </div>
-
-            <div className="mt-6">
-              <p className="text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-6">
-                You shouldn&apos;t have to search through your books, emails, settlements, and reports to reconstruct the story.
+            <h2 id="accounting-section-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[#182026] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>
+              You don&apos;t have to go looking for the answer.
+            </h2>
+            <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[#4D5B66] md:text-[17px] md:leading-8">
+              Margin pulls together the relevant information it needs to understand, support, and close the recovery—so you don&apos;t have to search through reports, settlements, books, emails, and files to figure it out.
+            </p>
+            <div className="mt-8 border-t border-[#C9D1D6] pt-5">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#66737F]">Amazon · Accounting · Settlements · Files · Email</p>
+              <p className="mt-4 font-lora text-[24px] leading-[1.05] tracking-[-0.04em] text-[#182026] sm:text-[30px]" style={{ fontWeight: 400 }}>
+                Margin does the digging.
+                <span className="mt-1.5 block text-[#0B74DE]">You get the recovery handled.</span>
               </p>
-              <p className="mt-3 font-lora text-[24px] leading-[1.05] tracking-[-0.04em] text-[#182026] sm:text-[29px] md:text-[34px]" style={{ fontWeight: 400 }}>
-                Margin gets what it needs.
-                <span className="mt-1.5 block text-[#0B74DE]">You don&apos;t have to go looking for the answer.</span>
-              </p>
-              <p className="mt-3 text-[12px] leading-5 text-[#4D5B66] md:text-[13px] md:leading-6">
-                Amazon, accounting, settlements, files, and email—organized around the recovery they support.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F]">
+              <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66737F]">
                 <span>Read-only.</span><span className="text-[#B5C2CA]">·</span><span>Purpose-limited.</span><span className="text-[#B5C2CA]">·</span><span>Your books remain your books.</span>
               </div>
             </div>
