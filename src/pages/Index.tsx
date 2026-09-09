@@ -1531,18 +1531,18 @@ function RiskSection() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 border-l border-[#727778] pl-4 md:pl-5 lg:order-1 lg:mt-2">
             <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Expected / Paid / Verified / Remaining</p>
             <h2 id="financial-closure-title" className="mt-2 max-w-[620px] font-lora text-[30px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]" style={{ fontWeight: 400 }}>
-              A recovery is not closed until the money agrees.
+              You shouldn&apos;t have to wonder if you actually got paid.
             </h2>
             <p className="mt-3 max-w-[480px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-6">
-              Amazon can confirm a response without confirming the financial result. Margin compares what the recovery should have produced with what actually reached the seller account, then keeps the difference visible until it is understood.
+              Margin checks the recovery against the financial records and keeps track of what&apos;s been paid, what&apos;s been verified, and what&apos;s still outstanding.
             </p>
 
             <div className="mt-5 border-t border-[var(--margin-border)]">
               {[
-                ["Expected", "What should have happened."],
-                ["Paid", "What Amazon says it paid / what reached the account."],
-                ["Verified", "What the available records actually reconcile."],
-                ["Remaining", "What still isn't explained."],
+                ["Expected", "What you should have received."],
+                ["Paid", "What was actually paid."],
+                ["Verified", "What Margin can confirm."],
+                ["Remaining", "What still needs attention."],
               ].map(([label, body]) => (
                 <div key={label} className="border-b border-[var(--margin-border)] py-2.5">
                   <h3 className="text-[11px] font-semibold text-[var(--margin-text-primary)] md:text-[12px]">{label}</h3>
@@ -1552,8 +1552,8 @@ function RiskSection() {
             </div>
 
             <p className="mt-5 max-w-[560px] font-lora text-[22px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[27px]" style={{ fontWeight: 400 }}>
-              A response is not a financial closure.
-              <span className="mt-2 block text-[var(--margin-text-muted)]">The recovery is finished when the outcome reconciles—not when the first answer arrives.</span>
+              When the numbers agree, you&apos;re done.
+              <span className="mt-2 block text-[var(--margin-text-muted)]">If they don&apos;t, Margin keeps it open.</span>
             </p>
           </motion.div>
         </div>
