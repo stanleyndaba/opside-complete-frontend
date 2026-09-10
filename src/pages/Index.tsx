@@ -1677,7 +1677,6 @@ export default function Index() {
       <main>
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/get-started"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
         <MarginEngineSection />
-        <OneRecoverySection />
         <RealityCheckSection />
         <MarginLifecycleSection />
         <ControlSection />
