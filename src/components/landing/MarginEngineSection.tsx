@@ -1,16 +1,16 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, Check, CircleDollarSign, FileCheck2, GitBranch, SearchCheck, ShieldCheck, Waypoints } from "lucide-react";
+import { ArrowDown, Building2, Check, CheckCircle2, CircleDollarSign, FileCheck2, Layers, Store, WalletCards } from "lucide-react";
 
 const inputs = [
-  { title: "Financial events", label: "What money moved", items: ["Orders", "Settlements", "Fees", "Refunds", "Payouts", "Adjustments"], icon: CircleDollarSign },
-  { title: "Operational events", label: "What physically happened", items: ["Shipments", "Inventory", "Returns", "FBA movements", "Fulfillment events", "Account activity"], icon: Waypoints },
-  { title: "Commercial context", label: "What the transaction means", items: ["SKU / ASIN", "Product data", "Order value", "Sales activity", "Marketplace context", "Seller configuration"], icon: GitBranch },
+  { title: "Financial Events", label: "What money moved", items: ["Orders", "Settlements", "Fees", "Refunds", "Payouts", "Adjustments"], icon: Building2 },
+  { title: "Operational Events", label: "What physically happened", items: ["Shipments", "Inventory", "Returns", "FBA movements", "Fulfillment events", "Account activity"], icon: Layers },
+  { title: "Commercial Context", label: "What the transaction means", items: ["SKU / ASIN", "Product data", "Order value", "Sales activity", "Marketplace context", "Seller configuration"], icon: Store },
 ];
 
 const outputs = [
-  { title: "Findings", label: "Financial truth", copy: "Understand what happened.", items: ["What happened", "Should have happened", "What is missing", "Already resolved"], icon: SearchCheck },
-  { title: "Recovery", label: "Action on legitimate entitlement", copy: "Act on what is legitimately owed.", items: ["Evidence packages", "Claims", "Disputes", "Appeals", "Follow-ups"], icon: FileCheck2 },
-  { title: "Control", label: "What remains financially open", copy: "Know what is resolved and what remains open.", items: ["Recovered", "Reconciled", "Outstanding", "Unresolved", "Monitored"], icon: ShieldCheck },
+  { title: "Findings", label: "Financial truth", copy: "Understand what happened.", items: ["What happened", "Should have happened", "What is missing", "Already resolved"], icon: FileCheck2 },
+  { title: "Recovery", label: "Action on legitimate entitlement", copy: "Act on what is legitimately owed.", items: ["Evidence packages", "Claims", "Disputes", "Appeals", "Follow-ups"], icon: WalletCards },
+  { title: "Control", label: "What remains financially open", copy: "Know what is resolved and what remains open.", items: ["Recovered", "Reconciled", "Outstanding", "Unresolved", "Monitored"], icon: CheckCircle2 },
 ];
 
 const questions = ["What happened?", "What should have happened?", "What’s missing?", "What are we entitled to?", "What proves it?", "What should happen next?", "Did the money actually arrive?"];
@@ -19,9 +19,8 @@ function DataCard({ item, index }: { item: typeof inputs[number]; index: number 
   const Icon = item.icon;
   return (
     <motion.article initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: index * 0.08, duration: 0.45 }} className="relative rounded-[7px] border border-[#D8E7EC] bg-white/75 p-4 shadow-[0_10px_24px_rgba(72,103,122,0.06)] backdrop-blur-xl">
-      <div className="flex items-center gap-2"><Icon className="h-4 w-4 text-[#0B74DE]" strokeWidth={1.6} /><h3 className="text-[13px] font-semibold capitalize tracking-tight text-[#34414A]">{item.title}</h3></div>
-      <p className="mt-2 font-mono text-[9px] font-semibold uppercase tracking-tight text-[#78909B]">{item.label}</p>
-      <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-[#536872]">{item.items.map((entry) => <span key={entry}>{entry}</span>)}</div>
+      <div className="flex items-center gap-3"><span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Icon className="h-full w-full" strokeWidth={1.5} /></span><h3 className="text-[13px] font-semibold tracking-tight text-[#34414A]">{item.title}</h3></div>
+      <div className="mt-4 space-y-2" aria-hidden="true"><div className="h-px w-[78%] bg-[#D8E3E8]" /><div className="h-px w-[58%] bg-[#D8E3E8]" /><div className="h-px w-[88%] bg-[#D8E3E8]" /></div>
     </motion.article>
   );
 }
@@ -30,10 +29,8 @@ function OutputCard({ item, index }: { item: typeof outputs[number]; index: numb
   const Icon = item.icon;
   return (
     <motion.article initial={{ opacity: 0, x: 12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: index * 0.08, duration: 0.45 }} className="relative rounded-[7px] border border-[#D8E7EC] bg-white/75 p-4 shadow-[0_10px_24px_rgba(72,103,122,0.06)] backdrop-blur-xl">
-      <div className="flex items-center gap-2"><Icon className="h-4 w-4 text-[#0B74DE]" strokeWidth={1.6} /><h3 className="font-lora text-[18px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>{item.title}</h3></div>
-      <p className="mt-2 font-mono text-[9px] font-semibold uppercase tracking-tight text-[#78909B]">{item.label}</p>
-      <p className="mt-3 text-[11px] font-medium leading-4 text-[#536872]">{item.copy}</p>
-      <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-[#536872]">{item.items.map((entry) => <span key={entry}>{entry}</span>)}</div>
+      <div className="flex items-center gap-3"><span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Icon className="h-full w-full" strokeWidth={1.5} /></span><h3 className="font-lora text-[18px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>{item.title}</h3></div>
+      <div className="mt-4 space-y-2" aria-hidden="true"><div className="h-px w-[84%] bg-[#D8E3E8]" /><div className="h-px w-[64%] bg-[#D8E3E8]" /><div className="h-px w-[74%] bg-[#D8E3E8]" /></div>
     </motion.article>
   );
 }
