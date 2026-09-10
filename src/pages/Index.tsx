@@ -301,10 +301,10 @@ function KineticHeroSection({
         <div className="max-w-[1040px]">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }} className="inline-flex max-w-full items-center rounded-[5px] border border-white/[0.12] bg-[#20385B]/72 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase leading-none tracking-tight text-slate-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.035)] backdrop-blur-xl sm:text-[11px]">01 / DELEGATION · AMAZON FBA RECOVERY</motion.div>
           <div id="margin-hero-title" className="mt-6 max-w-[1040px] font-lora text-[42px] leading-[0.96] tracking-[-0.045em] min-[390px]:text-[48px] sm:mt-7 sm:text-[68px] md:text-[82px] lg:text-[96px]" style={{ fontWeight: 400 }}>
-            <motion.span className="block text-white" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Is everything actually okay <span className="text-slate-400">with your Amazon business?</span></motion.span>
+            <motion.span className="block text-white" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.58, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>Is everything actually okay <span className="text-[#8FB5C9]">with your Amazon business?</span></motion.span>
           </div>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.58, ease: [0.22, 1, 0.36, 1] }} className="mt-5 max-w-[760px] text-[15px] leading-[1.6] text-slate-300 sm:mt-8 sm:text-[18px] sm:leading-[1.75] md:text-[20px]">Margin finds what needs attention, handles the recovery, and keeps going until you know what happened to the money.</motion.p>
-          <p className="mt-4 font-lora text-[14px] leading-6 tracking-[-0.01em] text-slate-400 sm:mt-5 sm:text-[16px]">You keep selling. Margin handles the recovery.</p>
+          <p className="mt-4 text-[13px] font-medium leading-6 tracking-[-0.01em] text-[#B7CFDC] sm:mt-5 sm:text-[15px]">You keep selling. Margin handles the recovery.</p>
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} className="mt-6 flex w-full flex-col items-stretch gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-6">
             <Button onClick={onAuditCta} aria-label="Get it handled" className="landing-pressable group relative h-[54px] w-full justify-center overflow-hidden rounded-[8px] bg-[#E5E5E0] px-6 text-[15px] font-bold text-[#111111] shadow-[0_18px_48px_rgba(0,0,0,0.24)] transition-[background-color,box-shadow] duration-200 hover:bg-[#D4D4CF] sm:h-[56px] sm:w-auto sm:px-10 sm:text-[16px]"><div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />Get It Handled <ArrowRight className="ml-2 h-5 w-5" /></Button>
           </motion.div>
@@ -334,10 +334,10 @@ function OneRecoverySection() {
             </h2>
             <div className="mt-5 max-w-[620px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
               <p>When something needs recovering, Margin takes it from finding the problem to getting the outcome.</p>
-              <p className="mt-4 font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
+              <p className="mt-4 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
                 You don&apos;t have to figure out what happened, build the case, chase Amazon, or keep checking whether the money came back.
               </p>
-              <p className="mt-4 font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
+              <p className="mt-4 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">
                 Margin handles the recovery.
               </p>
             </div>
@@ -376,14 +376,14 @@ function RealityCheckSection() {
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              03 / THE PROBLEM</span>
           </div>
-          <p className="mb-3 font-lora text-[19px] leading-tight tracking-[-0.025em] text-[var(--margin-text-muted)] sm:text-[23px]" style={{ fontWeight: 400 }}>You already have enough to manage.</p>
+          <p className="mb-3 text-[15px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">You already have enough to manage.</p>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
             Recovery shouldn&apos;t be another job.
           </h2>
           <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
             You shouldn&apos;t have to find the issue, figure out what happened, gather the proof, deal with Amazon, chase the outcome, and check whether the money actually came back.
           </p>
-          <p className="mt-4 max-w-[720px] font-lora text-[19px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[23px] md:text-[27px]" style={{ fontWeight: 400 }}>
+          <p className="mt-4 max-w-[720px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">
             Margin handles it.
           </p>
           <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
@@ -395,8 +395,8 @@ function RealityCheckSection() {
             Understand <span className="px-1 text-[var(--margin-border-strong)]">→</span> Establish <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Recover <span className="px-1 text-[var(--margin-border-strong)]">→</span> Verify <span className="px-1 text-[var(--margin-border-strong)]">→</span> Close
           </p>
         </motion.div>
-        <motion.p {...revealProps} className="mt-5 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:mt-7 md:text-[23px]" style={{ fontWeight: 400 }}>
-          You don&apos;t manage the recovery step by step. <span className="text-[var(--margin-text-muted)]">Margin runs the operation.</span>
+        <motion.p {...revealProps} className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8 md:mt-7">
+          You don&apos;t manage the recovery step by step. <span className="font-medium text-[#48677A]">Margin runs the operation.</span>
         </motion.p>
         <motion.p {...revealProps} className="mt-4 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:text-[23px]" style={{ fontWeight: 400 }}>
           You sell. <span className="text-[var(--margin-text-muted)]">Margin handles the recovery.</span>
@@ -698,12 +698,12 @@ function ControlSection() {
             </div>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
               You stay in control.
-              <span className="mt-3 block text-[var(--margin-text-muted)]">The work leaves your plate.</span>
+              <span className="mt-3 block font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">The work leaves your plate.</span>
             </h2>
             <p className="mt-6 max-w-[500px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
               Margin handles the recovery from investigation to outcome. You approve what needs your approval, stay informed, and step in only when a decision is actually yours to make.
             </p>
-            <p className="mt-8 border-l-2 border-[var(--margin-blue)] pl-5 font-lora text-[22px] leading-[1.08] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[27px]" style={{ fontWeight: 400 }}>
+            <p className="mt-8 border-l-2 border-[var(--margin-blue)] pl-5 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
               Margin does the work. You make the decisions that matter.
             </p>
           </motion.div>
@@ -854,7 +854,7 @@ function MarginStandardSection() {
             <p className="mt-6 max-w-[660px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
               Margin investigates what happened, builds what is needed, handles the recovery, follows the outcome, and keeps going until the money is accounted for.
             </p>
-            <p className="mt-6 font-lora text-[22px] leading-[1.05] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>
+            <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
               No guessing. No chasing. No unnecessary claims.
             </p>
           </motion.div>
@@ -876,7 +876,7 @@ function MarginStandardSection() {
               </AnimatePresence>
             </div>
             <div className="mt-7 border-l border-[var(--margin-blue)] pl-5">
-              <p className="font-lora text-[23px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]" style={{ fontWeight: 400 }}>
+              <p className="text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
                 Margin doesn&apos;t assume. It establishes.
               </p>
               <p className="mt-5 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-8">
@@ -904,7 +904,7 @@ function RecoveryWorkStatement() {
               <p>No rebuilding the story.</p>
               <p>No wondering what happened next.</p>
             </div>
-            <p className="mt-6 font-lora text-[22px] leading-[1.05] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[28px]" style={{ fontWeight: 400 }}>One recovery. One record. One visible outcome.</p>
+            <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">One recovery. One record. One visible outcome.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(104,146,180,0.16),transparent_36%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
             <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
@@ -1132,7 +1132,7 @@ function FullRecoveryLoopSection() {
         </motion.div>
 
         <motion.div {...revealProps} className="mt-8 border-t border-[var(--margin-border)] pt-6 md:mt-10 md:pt-7">
-          <p className="max-w-[700px] font-lora text-[26px] leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[42px]" style={{ fontWeight: 400 }}>
+          <p className="max-w-[700px] text-[17px] font-semibold leading-8 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[20px] sm:leading-9 md:text-[24px]">
             One continuous recovery lifecycle.
             <span className="mt-2 block font-sans text-[16px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[20px] md:text-[24px]">Not disconnected tools.</span>
           </p>
