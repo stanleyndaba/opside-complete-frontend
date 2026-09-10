@@ -1892,45 +1892,43 @@ export default function Audit() {
               <PanelLeftOpen className="h-[18px] w-[18px]" aria-hidden="true" />
             </button>
             <Sheet open={isAuditControlsOpen} onOpenChange={setIsAuditControlsOpen}>
-              <SheetContent side="left" className="w-[min(360px,calc(100vw-24px))] border-transparent bg-transparent p-3 text-[#191B20] shadow-none backdrop-blur-0 sm:w-[360px] [&>button]:right-5 [&>button]:top-5 [&>button]:z-10 [&>button]:rounded-full [&>button]:p-1 [&>button]:opacity-60">
+              <SheetContent side="left" className="w-[min(440px,calc(100vw-24px))] border-transparent bg-transparent p-3 text-[#191B20] shadow-none backdrop-blur-0 sm:w-[440px] [&>button]:right-5 [&>button]:top-5 [&>button]:z-10 [&>button]:rounded-full [&>button]:p-1 [&>button]:opacity-60">
                 <div className="flex h-auto max-h-[calc(100vh-48px)] flex-col rounded-[12px] border border-[#D7D7D1] bg-white font-sans shadow-[0_8px_24px_rgba(25,27,32,0.08)]">
-                  <SheetHeader className="border-b border-[#E8E7E1] px-5 pb-2.5 pt-3.5 pr-14 text-left">
-                    <div className="flex items-center gap-2"><FileText className="h-3.5 w-3.5 text-[#595E68]" aria-hidden="true" /><SheetTitle className="font-lora text-[18px] font-normal leading-5 tracking-[-0.02em] text-[#191B20]">Audit controls</SheetTitle></div>
-                    <SheetDescription className="mt-1.5 text-[12px] leading-4.5 text-[#595E68]">Review the audit record and workspace controls.</SheetDescription>
+                  <SheetHeader className="border-b border-[#E8E7E1] px-5 pb-3 pt-4 pr-14 text-left">
+                    <SheetTitle className="font-sans text-[18px] font-semibold leading-5 tracking-tight text-[#191B20]">Audit control</SheetTitle>
                   </SheetHeader>
                   <div className="min-h-0 flex-1 overflow-y-auto px-5 py-1">
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <Database className="h-3.5 w-3.5 shrink-0 text-[#595E68]" aria-hidden="true" />
-                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold text-[#191B20]">View audit scope</span><span className="mt-0.5 block text-[11px] leading-4.5 text-[#777A82]">See what Margin examined</span></span>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Database className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">View audit scope</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
                     <Link to={auditReportUploadHref} onClick={() => setIsAuditControlsOpen(false)} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <FilePlus2 className="h-3.5 w-3.5 shrink-0 text-[#595E68]" aria-hidden="true" />
-                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold text-[#191B20]">Use Amazon reports</span><span className="mt-0.5 block text-[11px] leading-4.5 text-[#777A82]">Upload reports instead</span></span>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><FilePlus2 className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Use Amazon reports</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </Link>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsPeriodSelectorOpen(true); trackEvent('audit_period_selector_opened', { source_page: '/audit' }); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <Calendar className="h-3.5 w-3.5 shrink-0 text-[#595E68]" aria-hidden="true" />
-                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold text-[#191B20]">Audit history</span><span className="mt-0.5 block text-[11px] leading-4.5 text-[#777A82]">Select a recorded audit</span></span>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Calendar className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Audit history</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); openAuditLog(); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <TerminalSquare className="h-3.5 w-3.5 shrink-0 text-[#595E68]" aria-hidden="true" />
-                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold text-[#191B20]">Audit activity</span><span className="mt-0.5 block text-[11px] leading-4.5 text-[#777A82]">Review the lifecycle record</span></span>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><TerminalSquare className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Audit activity</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); openScheduleDialog(); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <CalendarClock className="h-3.5 w-3.5 shrink-0 text-[#595E68]" aria-hidden="true" />
-                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold text-[#191B20]">Schedules</span><span className="mt-0.5 block text-[11px] leading-4.5 text-[#777A82]">{weeklyAuditEnabled ? 'Review active preference' : 'Set a workspace preference'}</span></span>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><CalendarClock className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Schedules</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); openShareDialog(); }} className="flex min-h-11 w-full items-center gap-3 py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <HeartHandshake className="h-3.5 w-3.5 shrink-0 text-[#595E68]" aria-hidden="true" />
-                      <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold text-[#191B20]">Invite a seller</span><span className="mt-0.5 block text-[11px] leading-4.5 text-[#777A82]">Share the audit path</span></span>
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><HeartHandshake className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Invite a seller</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
                   </div>
-                  <div className="border-t border-[#E8E7E1] px-5 py-2.5"><p className="text-[11px] leading-4.5 text-[#777A82]">Audit records identify potential scope from available data. Filing, evidence use, and recovery action remain seller-controlled and evidence-dependent.</p></div>
                 </div>
               </SheetContent>
             </Sheet>
