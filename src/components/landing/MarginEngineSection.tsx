@@ -49,15 +49,29 @@ export function MarginEngineSection() {
         </div>
 
         <div className="relative grid items-center gap-8 lg:grid-cols-[0.9fr_1.2fr_0.9fr] lg:gap-12">
-          <div className="space-y-3">{inputs.map((item, index) => <DataCard key={item.title} item={item} index={index} />)}</div>
+          <svg className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full overflow-visible lg:block" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="none" stroke="#B8CBD3" strokeWidth="1.15" opacity="0.78">
+              <path d="M245 82 C300 82 305 150 370 150" />
+              <path d="M245 250 C300 250 310 250 370 250" />
+              <path d="M245 418 C300 418 305 350 370 350" />
+              <path d="M630 150 C695 150 700 82 755 82" />
+              <path d="M630 250 C690 250 700 250 755 250" />
+              <path d="M630 350 C695 350 700 418 755 418" />
+            </g>
+            <g fill="#8FAEBB">
+              <circle cx="370" cy="150" r="2.5" /><circle cx="370" cy="250" r="2.5" /><circle cx="370" cy="350" r="2.5" />
+              <circle cx="630" cy="150" r="2.5" /><circle cx="630" cy="250" r="2.5" /><circle cx="630" cy="350" r="2.5" />
+            </g>
+          </svg>
+          <div className="relative z-10 space-y-3">{inputs.map((item, index) => <DataCard key={item.title} item={item} index={index} />)}</div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.55 }} className="relative rounded-[10px] border border-[#BFDCE6] bg-white/78 p-5 shadow-[0_18px_50px_rgba(72,103,122,0.10)] backdrop-blur-2xl sm:p-7">
+          <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.55 }} className="relative z-10 rounded-[10px] border border-[#BFDCE6] bg-white/78 p-5 shadow-[0_18px_50px_rgba(72,103,122,0.10)] backdrop-blur-2xl sm:p-7">
             <div className="border-b border-[#D8E7EC] pb-4"><div className="flex items-center gap-2.5"><img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" /><span className="font-merriweather text-base tracking-tight text-[#34414A]">Margin</span></div><h3 className="mt-4 font-lora text-[25px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>Financial Event Resolution</h3></div>
             <p className="hidden border-b border-[#D8E7EC] py-5 text-[12px] leading-6 tracking-tight text-[#536872] sm:block">{questions.join("  ·  ")}</p>
             {!reduceMotion && <motion.div aria-hidden="true" className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/50 to-transparent" animate={{ x: ["-15%", "15%", "-15%"], opacity: [0.2, 0.7, 0.2] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />}
           </motion.div>
 
-          <div className="space-y-3">{outputs.map((item, index) => <OutputCard key={item.title} item={item} index={index} />)}</div>
+          <div className="relative z-10 space-y-3">{outputs.map((item, index) => <OutputCard key={item.title} item={item} index={index} />)}</div>
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-2 text-center text-[11px] font-mono uppercase tracking-tight text-[#64808D] lg:hidden"><ArrowDown className="h-4 w-4 text-[#0B74DE]" /> Reality → Truth → Resolution → Control</div>
