@@ -398,8 +398,8 @@ function RealityCheckSection() {
         <motion.p {...revealProps} className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8 md:mt-7">
           You don&apos;t manage the recovery step by step. <span className="font-medium text-[#48677A]">Margin runs the operation.</span>
         </motion.p>
-        <motion.p {...revealProps} className="mt-4 max-w-[760px] font-lora text-[17px] leading-[1.12] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[20px] md:text-[23px]" style={{ fontWeight: 400 }}>
-          You sell. <span className="text-[var(--margin-text-muted)]">Margin handles the recovery.</span>
+        <motion.p {...revealProps} className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
+          You sell. <span className="font-medium text-[#48677A]">Margin handles the recovery.</span>
         </motion.p>
         </div>
         <motion.div {...revealProps} className="relative">
@@ -439,7 +439,7 @@ function MarginLifecycleSection() {
             style={{ fontWeight: 400 }}
           >
             <span className="block">You don&apos;t get another list.</span>
-            <span className="mt-3 block text-[var(--margin-text-muted)]">You get it handled.</span>
+            <span className="mt-3 block font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">You get it handled.</span>
           </h2>
         </motion.div>
 
