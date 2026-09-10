@@ -45,6 +45,7 @@ import { ANALYTICS_EVENTS } from "@/lib/analyticsEvents";
 import { trackEarlyAccessCtaClicked, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
+import { MarginEngineSection } from "@/components/landing/MarginEngineSection";
 
 const DEMO_VIDEO_URL = "https://youtu.be/B0ksWTlYbRo";
 const DEMO_VIDEO_THUMBNAIL_URL = "/margin-logo-reveal.gif";
@@ -1675,6 +1676,7 @@ export default function Index() {
       
       <main>
         <KineticHeroSection onAuditCta={() => { trackEarlyAccessCtaClicked("hero_connect_amazon"); navigate("/get-started"); }} isFull={isFull} nextBatchHours={nextBatchHours} />
+        <MarginEngineSection />
         <OneRecoverySection />
         <RealityCheckSection />
         <MarginLifecycleSection />
