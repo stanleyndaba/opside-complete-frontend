@@ -961,7 +961,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           <div className="order-1 lg:order-2 lg:pt-2">
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The recovery thread</span></div>
-              <h2 id="recovery-thread-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You run the business. <span className="text-[var(--margin-text-muted)]">Margin keeps the recovery work legible.</span></h2>
+              <h2 id="recovery-thread-title" className="max-w-[700px] font-lora text-[36px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[46px] md:text-[56px]" style={{ fontWeight: 400 }}>You run the business. <span className="font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">Margin keeps the recovery work legible.</span></h2>
               <p className="mt-6 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Getting a recovery started is rarely the hard part.</p>
               <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The work is everything that happens between <span className="font-semibold text-[var(--margin-text-primary)]">“something is wrong”</span> and <span className="font-semibold text-[var(--margin-text-primary)]">“this is actually finished.”</span></p>
             </motion.div>
@@ -976,7 +976,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
             </div>
 
             <motion.div {...revealProps} className="pt-8 md:pt-10">
-              <p className="font-lora text-[24px] leading-[1.08] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[30px]" style={{ fontWeight: 400 }}>These are not separate problems when you are the seller. <span className="text-[var(--margin-text-muted)]">They become one unresolved recovery thread.</span></p>
+              <p className="text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">These are not separate problems when you are the seller. <span className="font-medium text-[#48677A]">They become one unresolved recovery thread.</span></p>
               <div className="mt-8 border-t border-[#D8DEDA] pt-7">
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The product bridge</p>
                 <h3 className="mt-3 font-lora text-[30px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>Margin connects the thread.</h3>
@@ -1134,7 +1134,7 @@ function FullRecoveryLoopSection() {
         <motion.div {...revealProps} className="mt-8 border-t border-[var(--margin-border)] pt-6 md:mt-10 md:pt-7">
           <p className="max-w-[700px] font-lora text-[26px] leading-[1.04] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[32px] md:text-[42px]" style={{ fontWeight: 400 }}>
             One continuous recovery lifecycle.
-            <span className="mt-2 block text-[var(--margin-text-muted)]">Not disconnected tools.</span>
+            <span className="mt-2 block font-sans text-[16px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[20px] md:text-[24px]">Not disconnected tools.</span>
           </p>
           <p className="mt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--margin-blue)]">
             That is the architecture.
@@ -1343,7 +1343,7 @@ function ProductReframeSection() {
             style={{ fontWeight: 400 }}
           >
             Margin is not another place to look for problems.
-            <span className="mt-3 block text-[var(--margin-text-muted)]">It is where the recovery operation stays in view.</span>
+            <span className="mt-3 block font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">It is where the recovery operation stays in view.</span>
           </h2>
         </motion.div>
 
@@ -1515,9 +1515,9 @@ function RiskSection() {
               ))}
             </div>
 
-            <p className="mt-5 max-w-[560px] font-lora text-[22px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[27px]" style={{ fontWeight: 400 }}>
+            <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
               When the numbers agree, you&apos;re done.
-              <span className="mt-2 block text-[var(--margin-text-muted)]">If they don&apos;t, Margin keeps it open.</span>
+              <span className="mt-2 block font-sans text-[13px] font-medium leading-6 tracking-normal text-[#48677A] sm:text-[15px]">If they don&apos;t, Margin keeps it open.</span>
             </p>
           </motion.div>
         </div>
@@ -1585,9 +1585,9 @@ function OperationalEconomicsSection() {
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
             <div className="mb-3 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / THE COST OF DOING IT YOURSELF</span></div>
             <h2 id="operational-economics-title" className="font-lora text-[31px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[50px]" style={{ fontWeight: 400 }}>Recovery is not a task. It is a function.</h2>
-            <p className="mt-2 max-w-[720px] font-lora text-[19px] leading-[1.05] tracking-[-0.03em] text-[var(--margin-text-muted)] sm:text-[23px]" style={{ fontWeight: 400 }}>Margin takes ownership of the recovery work so your team doesn&apos;t have to build and maintain the function themselves.</p>
+            <p className="mt-2 max-w-[720px] font-sans text-[15px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">Margin takes ownership of the recovery work so your team doesn&apos;t have to build and maintain the function themselves.</p>
             <div className="mt-5 border-t border-[var(--margin-border)]"><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Recurring</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">The work returns whenever the next issue appears.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Connected</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Evidence, cases, responses, payouts, and outcomes stay together.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Owned by Margin</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Your team remains the authority without carrying the entire operating burden.</p></div></div>
-            <p className="mt-5 max-w-[520px] font-lora text-[21px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[26px]" style={{ fontWeight: 400 }}>You are not adding another tool to operate.<span className="mt-1.5 block text-[var(--margin-text-muted)]">You are removing another function from your workload.</span></p>
+            <p className="mt-5 max-w-[520px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">You are not adding another tool to operate.<span className="mt-1.5 block font-medium text-[#48677A]">You are removing another function from your workload.</span></p>
           </motion.div>
         </div>
       </div>
@@ -1706,7 +1706,7 @@ export default function Index() {
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">14 / TRUST / FAQ</span>
               </div>
               <h2 id="trust-faq-title" className="font-lora text-[34px] font-medium leading-tight tracking-[-0.045em] sm:text-[42px] md:text-[46px]" style={{ fontWeight: 400 }}>
-                <span className="text-[var(--margin-text-primary)] font-lora">Before you run the Audit.</span> <span className="text-[var(--margin-text-muted)] font-lora">A few things to know.</span>
+                <span className="text-[var(--margin-text-primary)]">Before you run the Audit.</span> <span className="font-sans text-[18px] font-medium tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">A few things to know.</span>
               </h2>
             </motion.div>
             <div className="mt-10 md:mt-14 max-w-4xl">
@@ -1751,12 +1751,12 @@ export default function Index() {
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">15 / FINAL DELEGATION</p>
                 <h2 id="final-handoff-title" className="mt-3 max-w-[720px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
                   You don&apos;t have to wonder.
-                  <span className="mt-3 block text-[var(--margin-text-muted)]">You sell on Amazon. Margin handles the recovery.</span>
+                  <span className="mt-3 block font-sans text-[17px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[21px] md:text-[24px]">You sell on Amazon. Margin handles the recovery.</span>
                 </h2>
                 <p className="mt-4 max-w-[680px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">
                   Know what happened, what is justified, what Margin is doing, and whether the money came back.
                 </p>
-                <p className="mt-4 max-w-[620px] font-lora text-[20px] leading-[1.1] tracking-[-0.03em] text-[var(--margin-text-primary)] sm:text-[24px]" style={{ fontWeight: 400 }}>
+                <p className="mt-4 max-w-[620px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
                   You stay informed. You stay in control. The recovery work is no longer yours to carry.
                 </p>
                 <div className="mt-5 grid gap-x-5 gap-y-2 border-y border-[var(--margin-border-subtle)] py-3 sm:grid-cols-2">
@@ -1767,7 +1767,7 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
-                <p className="mt-5 font-lora text-[24px] leading-[1.04] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[30px]" style={{ fontWeight: 400 }}>
+                <p className="mt-5 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
                   You sell. Margin runs the recovery operation.
                 </p>
                 <Button onClick={() => handleClaimAccessClick("homepage_early_access_section")} className="landing-pressable mt-5 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]">
