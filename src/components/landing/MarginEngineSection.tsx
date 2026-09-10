@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, Building2, Check, CheckCircle2, FileCheck2, Layers, Store, WalletCards } from "lucide-react";
+import { ArrowDown, Building2, CheckCircle2, FileCheck2, Layers, Store, WalletCards } from "lucide-react";
 
 const inputs = [
   { title: "Financial Events", subtitle: "Amazon says one thing. Your bank says another. Your reports say something else.", label: "What money moved", items: ["Orders", "Settlements", "Fees", "Refunds", "Payouts", "Adjustments"], icon: Building2 },
@@ -12,8 +12,6 @@ const outputs = [
   { title: "Recovery", label: "Action on legitimate entitlement", copy: "Get back what you're owed.", items: ["Evidence packages", "Claims", "Disputes", "Appeals", "Follow-ups"], icon: WalletCards },
   { title: "Control", label: "What remains financially open", copy: "Know where your money stands.", items: ["Recovered", "Reconciled", "Outstanding", "Unresolved", "Monitored"], icon: CheckCircle2 },
 ];
-
-const questions = ["What happened?", "What should have happened?", "What’s missing?", "What are we entitled to?", "What proves it?", "What should happen next?", "Did the money actually arrive?"];
 
 function DataCard({ item, index }: { item: typeof inputs[number]; index: number }) {
   const Icon = item.icon;
@@ -50,9 +48,7 @@ export function MarginEngineSection() {
           <div className="space-y-3">{inputs.map((item, index) => <DataCard key={item.title} item={item} index={index} />)}</div>
 
           <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.55 }} className="relative rounded-[10px] border border-[#BFDCE6] bg-white/78 p-5 shadow-[0_18px_50px_rgba(72,103,122,0.10)] backdrop-blur-2xl sm:p-7">
-            <div className="flex items-start justify-between gap-4 border-b border-[#D8E7EC] pb-4"><div><p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Margin Engine</p><h3 className="mt-2 font-lora text-[25px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>Financial Event Resolution</h3></div><div className="rounded-full bg-[#D9EEF5] p-2 text-[#0B74DE]"><FileCheck2 className="h-5 w-5" /></div></div>
-            <div className="mt-5 space-y-2">{questions.map((question, index) => <motion.div key={question} initial={{ opacity: 0.45 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.06 }} className="flex items-center gap-2 text-[12px] text-[#536872]"><span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#EAF5F8] text-[#0B74DE]"><Check className="h-2.5 w-2.5" /></span>{question}</motion.div>)}</div>
-            <div className="mt-6 flex flex-wrap gap-2 border-t border-[#D8E7EC] pt-4">{["Relationships", "Definitions", "Rules", "Evidence", "Outcomes"].map((item) => <span key={item} className="rounded-full bg-[#F1F7F9] px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-tight text-[#64808D]">{item}</span>)}</div>
+            <div className="border-b border-[#D8E7EC] pb-4"><div className="flex items-center gap-2.5"><img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" /><span className="font-merriweather text-base tracking-tight text-[#34414A]">Margin</span></div><h3 className="mt-4 font-lora text-[25px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>Financial Event Resolution</h3></div>
             {!reduceMotion && <motion.div aria-hidden="true" className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/50 to-transparent" animate={{ x: ["-15%", "15%", "-15%"], opacity: [0.2, 0.7, 0.2] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />}
           </motion.div>
 
