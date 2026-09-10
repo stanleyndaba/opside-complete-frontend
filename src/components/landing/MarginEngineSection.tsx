@@ -48,24 +48,27 @@ export function MarginEngineSection() {
 
         <div className="relative grid items-center gap-6 lg:grid-cols-[0.8fr_1fr_0.8fr] lg:gap-9">
           <svg className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full overflow-visible lg:block" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
-            <g fill="none" stroke="#B8CBD3" strokeWidth="1.15" opacity="0.78">
+            <g fill="none" stroke="#B8CBD3" strokeWidth="1.15" strokeDasharray="2.5 4" opacity="0.78">
               <path d="M245 82 C285 82 286 182 328 238" />
               <path d="M245 250 C278 250 298 250 328 250" />
               <path d="M245 418 C285 418 286 318 328 262" />
               <path d="M332 250 C345 250 356 250 370 250" />
-              <path d="M630 150 C695 150 700 82 755 82" />
-              <path d="M630 250 C690 250 700 250 755 250" />
-              <path d="M630 350 C695 350 700 418 755 418" />
+            </g>
+            <g fill="none" stroke="#B8CBD3" strokeWidth="1.15" opacity="0.78">
+              <path d="M630 250 C645 250 656 250 670 250" />
+              <path d="M672 238 C714 182 715 82 755 82" />
+              <path d="M672 250 C702 250 722 250 755 250" />
+              <path d="M672 262 C714 318 715 418 755 418" />
             </g>
             <g fill="#34414A">
-              <circle cx="330" cy="250" r="5" /><circle cx="370" cy="250" r="3.5" />
+              <circle cx="330" cy="250" r="5" /><circle cx="370" cy="250" r="3.5" /><circle cx="670" cy="250" r="5" /><circle cx="630" cy="250" r="3.5" />
               <circle cx="630" cy="150" r="2.5" /><circle cx="630" cy="250" r="2.5" /><circle cx="630" cy="350" r="2.5" />
             </g>
           </svg>
           <div className="relative z-10 space-y-3">{inputs.map((item, index) => <DataCard key={item.title} item={item} index={index} />)}</div>
 
           <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.55 }} className="relative z-10 rounded-[10px] border border-[#BFDCE6] bg-white/78 p-4 shadow-[0_18px_50px_rgba(72,103,122,0.10)] backdrop-blur-2xl sm:p-5">
-            <div className="border-b border-[#D8E7EC] pb-3"><div className="flex items-center gap-2"><img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-4 w-auto object-contain" /><span className="font-merriweather text-[14px] tracking-tight text-[#34414A]">Margin</span></div><h3 className="mt-3 font-lora text-[20px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>Financial Resolution Engine</h3></div>
+            <div className="border-b border-[#D8E7EC] pb-3"><div className="flex items-center gap-2"><img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-4 w-auto object-contain" /><span className="font-merriweather text-[14px] tracking-tight text-[#34414A]">Margin</span></div><h3 className="mt-3 font-lora text-[20px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>Financial Event Resolution</h3></div>
             <p className="hidden border-b border-[#D8E7EC] py-3 text-[11px] leading-5 tracking-tight text-[#536872] sm:block">{questions.join("  ·  ")}</p>
             {!reduceMotion && <motion.div aria-hidden="true" className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/50 to-transparent" animate={{ x: ["-15%", "15%", "-15%"], opacity: [0.2, 0.7, 0.2] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />}
           </motion.div>
