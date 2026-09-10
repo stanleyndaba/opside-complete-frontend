@@ -708,18 +708,18 @@ function ControlSection() {
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="overflow-hidden rounded-[8px] bg-[#1C1D1D] p-4 text-[#F2F1EC] shadow-[0_24px_65px_rgba(24,32,38,0.14)] sm:p-5 md:p-6">
-            <div className="flex items-center justify-between border-b border-white/15 pb-3">
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden rounded-[10px] border border-white/70 bg-[linear-gradient(135deg,rgba(217,238,245,0.86),rgba(255,255,255,0.72))] p-4 text-[#34414A] shadow-[0_18px_55px_rgba(72,103,122,0.12)] backdrop-blur-2xl sm:p-5 md:p-6">
+            <div className="flex items-center justify-between border-b border-[#8EA9B5]/30 pb-3">
               <div>
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#AEB5B5]">The operating boundary</p>
-                <p className="mt-1 font-lora text-[20px] leading-none tracking-[-0.03em] text-white sm:text-[22px]">Authority stays with you.</p>
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5D7480]">The operating boundary</p>
+                <p className="mt-1 font-lora text-[20px] leading-none tracking-tight text-[#34414A] sm:text-[22px]">Authority stays with you.</p>
               </div>
-              <span className="rounded-[4px] border border-white/15 px-2 py-1 font-mono text-[9px] uppercase tracking-tight text-[#B8C0C0]">Live record</span>
+              <span className="rounded-[4px] border border-[#8EA9B5]/35 bg-white/35 px-2 py-1 font-mono text-[9px] uppercase tracking-tight text-[#5D7480]">Live record</span>
             </div>
 
             <div className="grid gap-4 py-4 md:grid-cols-[0.8fr_1.2fr] md:gap-5">
-              <div className="relative border-b border-white/15 pb-4 md:border-b-0 md:border-r md:pb-0 md:pr-5">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#AEB5B5]">Your authority</p>
+              <div className="relative border-b border-[#8EA9B5]/30 pb-4 md:border-b-0 md:border-r md:pr-5">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5D7480]">Your authority</p>
                 <div className="mt-3 grid grid-cols-3 gap-2 md:block md:space-y-2">
                   {[
                     ["Read-only access", "See the records first."],
@@ -729,8 +729,8 @@ function ControlSection() {
                     <div key={title} className="flex items-start gap-2 md:gap-3">
                       <span className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full md:mt-1.5 md:h-2 md:w-2 ${index === 1 && isApproval ? "bg-[#0B74DE] shadow-[0_0_0_3px_rgba(11,116,222,0.16)] md:shadow-[0_0_0_4px_rgba(11,116,222,0.16)]" : "bg-[#B9C0BE]"}`} />
                       <div className="min-w-0">
-                        <p className="text-[11px] font-semibold leading-4 text-[#F2F1EC] md:text-[13px]">{title}</p>
-                        <p className="mt-0.5 text-[10px] leading-3.5 text-[#AEB5B5] md:text-[11px] md:leading-4">{detail}</p>
+                        <p className="text-[11px] font-semibold leading-4 text-[#34414A] md:text-[13px]">{title}</p>
+                        <p className="mt-0.5 text-[10px] leading-3.5 text-[#6B7D86] md:text-[11px] md:leading-4">{detail}</p>
                       </div>
                     </div>
                   ))}
@@ -739,11 +739,11 @@ function ControlSection() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#AEB5B5]">Margin operates</p>
-                  <span className="font-mono text-[10px] text-[#AEB5B5]">{String(activeControlStep + 1).padStart(2, "0")} / 05</span>
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5D7480]">Margin operates</p>
+                  <span className="font-mono text-[10px] text-[#6B7D86]">{String(activeControlStep + 1).padStart(2, "0")} / 05</span>
                 </div>
                 <div className="relative mt-3 pl-4">
-                  <div className="absolute bottom-2 left-[3px] top-2 w-px bg-white/20" />
+                  <div className="absolute bottom-2 left-[3px] top-2 w-px bg-[#8EA9B5]/35" />
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={step.label}
@@ -751,12 +751,12 @@ function ControlSection() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
                       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      className="relative rounded-[5px] border border-white/15 bg-white/[0.07] p-2.5 sm:p-3"
+                      className="relative rounded-[5px] border border-white/75 bg-white/55 p-2.5 sm:p-3"
                     >
-                      <span className={`absolute -left-[20px] top-4 h-2 w-2 rounded-full ${isHandled ? "bg-[#76A9FF]" : "bg-[#D3D8D5]"} shadow-[0_0_0_4px_#1C1D1D]`} />
-                      <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#B9C0C0]">{step.label}</p>
-                      <p className="mt-1.5 text-[16px] font-medium tracking-[-0.02em] text-white">{step.detail}</p>
-                      <p className="mt-2 text-[11px] leading-4 text-[#AEB5B5]">
+                      <span className={`absolute -left-[20px] top-4 h-2 w-2 rounded-full ${isHandled ? "bg-[#0B74DE]" : "bg-[#9AAEB7]"} shadow-[0_0_0_4px_#D9EEF5]`} />
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5D7480]">{step.label}</p>
+                      <p className="mt-1.5 text-[16px] font-medium tracking-tight text-[#34414A]">{step.detail}</p>
+                      <p className="mt-2 text-[11px] leading-4 text-[#6B7D86]">
                         {isApproval ? "Margin has prepared the record. Your decision is the only action needed." : isHandled ? "The recovery continues without another task returning to your team." : "The recovery record is moving through Margin's operating layer."}
                       </p>
                     </motion.div>
@@ -765,9 +765,9 @@ function ControlSection() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 border-t border-white/15 pt-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="font-lora text-[17px] leading-tight tracking-[-0.025em] text-white sm:text-[19px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
-              <div className="h-1 w-full overflow-hidden rounded-full bg-white/10 sm:w-32">
+            <div className="flex flex-col gap-2 border-t border-[#8EA9B5]/30 pt-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="font-lora text-[17px] leading-tight tracking-tight text-[#34414A] sm:text-[19px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
+              <div className="h-1 w-full overflow-hidden rounded-full bg-[#8EA9B5]/25 sm:w-32">
                 <motion.div className="h-full bg-[#76A9FF]" animate={{ width: `${((activeControlStep + 1) / controlSteps.length) * 100}%` }} transition={{ duration: 0.5 }} />
               </div>
             </div>
@@ -1565,21 +1565,21 @@ function OperationalEconomicsSection() {
     <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]">
       <div className={containerClass}>
         <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-          <motion.div {...revealProps} className="relative min-w-0 h-[380px] overflow-hidden rounded-[10px] border border-[#373735] bg-[#101820] p-3 text-[#E7E5DF] sm:h-[410px] sm:p-4 md:h-auto md:p-5 lg:h-[390px] lg:p-6">
-            <div className="mb-4 flex items-center justify-between gap-4"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#A8AAA5]">The work keeps coming back</span><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#A8AAA5]">Every month</span></div>
+          <motion.div {...revealProps} className="relative min-w-0 h-[380px] overflow-hidden rounded-[10px] border border-white/70 bg-[linear-gradient(135deg,rgba(217,238,245,0.84),rgba(255,255,255,0.74))] p-3 text-[#34414A] shadow-[0_18px_55px_rgba(72,103,122,0.12)] backdrop-blur-2xl sm:h-[410px] sm:p-4 md:h-auto md:p-5 lg:h-[390px] lg:p-6">
+            <div className="mb-4 flex items-center justify-between gap-4"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#5D7480]">The work keeps coming back</span><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#5D7480]">Every month</span></div>
             <div className="relative grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:gap-0">
               <div className="relative md:pr-8">
-                <div className="mb-2 flex items-center justify-between"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#E7E5DF]">Your team</span><span className="font-mono text-[8px] uppercase tracking-tight text-[#A8AAA5]">Owns the function</span></div>
-                <div className="relative min-h-[112px] py-1 sm:min-h-[124px] md:min-h-[132px]"><div className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#777A76] text-[#E7E5DF]"><svg aria-hidden="true" viewBox="0 0 36 24" className="h-4 w-6 fill-none stroke-current" strokeWidth="1.35"><circle cx="18" cy="7" r="3.2" /><path d="M11.5 19c.4-3.3 2.8-5.2 6.5-5.2s6.1 1.9 6.5 5.2" /><circle cx="7.5" cy="9" r="2.5" /><path d="M2.5 19c.3-2.6 2.1-4.2 5-4.2 1.5 0 2.8.4 3.7 1.2" /><circle cx="28.5" cy="9" r="2.5" /><path d="M33.5 19c-.3-2.6-2.1-4.2-5-4.2-1.5 0-2.8.4-3.7 1.2" /></svg></div><div className="absolute left-[42px] right-[92px] top-1/2 h-px -translate-y-1/2 bg-[#777A76]"><motion.span aria-hidden="true" className="absolute -top-[3px] h-[7px] w-[7px] rounded-full bg-[#FF5A1F] shadow-[0_0_0_3px_rgba(255,90,31,0.18)]" initial={{ left: "0%" }} animate={reduceMotion || !sectionInView ? { left: "0%" } : { left: ["0%", "100%", "0%"] }} transition={{ duration: reduceMotion ? 0 : 1.8, ease: "easeInOut", repeat: reduceMotion ? 0 : Infinity, repeatDelay: 0.2 }} /></div><div className="absolute right-0 top-0 flex h-full w-[82px] flex-col justify-between py-1 text-[11px] font-medium leading-3.5 text-[#A8AAA5] sm:w-[92px] sm:text-[12px]">{responsibilityCycle.map((step) => <span key={step} className={step === activeResponsibility ? "text-[#E7E5DF]" : ""}>{step}</span>)}</div></div>
-                <p className="mt-3 border-t border-dashed border-[#555653] pt-2 text-center font-mono text-[8px] font-semibold uppercase tracking-tight text-[#A8AAA5]">Six responsibilities · one recurring burden</p>
+                <div className="mb-2 flex items-center justify-between"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#34414A]">Your team</span><span className="font-mono text-[8px] uppercase tracking-tight text-[#6B7D86]">Owns the function</span></div>
+                <div className="relative min-h-[112px] py-1 sm:min-h-[124px] md:min-h-[132px]"><div className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#8EA9B5]/55 text-[#48677A]"><svg aria-hidden="true" viewBox="0 0 36 24" className="h-4 w-6 fill-none stroke-current" strokeWidth="1.35"><circle cx="18" cy="7" r="3.2" /><path d="M11.5 19c.4-3.3 2.8-5.2 6.5-5.2s6.1 1.9 6.5 5.2" /><circle cx="7.5" cy="9" r="2.5" /><path d="M2.5 19c.3-2.6 2.1-4.2 5-4.2 1.5 0 2.8.4 3.7 1.2" /><circle cx="28.5" cy="9" r="2.5" /><path d="M33.5 19c-.3-2.6-2.1-4.2-5-4.2-1.5 0-2.8.4-3.7 1.2" /></svg></div><div className="absolute left-[42px] right-[92px] top-1/2 h-px -translate-y-1/2 bg-[#8EA9B5]/55"><motion.span aria-hidden="true" className="absolute -top-[3px] h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_rgba(11,116,222,0.16)]" initial={{ left: "0%" }} animate={reduceMotion || !sectionInView ? { left: "0%" } : { left: ["0%", "100%", "0%"] }} transition={{ duration: reduceMotion ? 0 : 1.8, ease: "easeInOut", repeat: reduceMotion ? 0 : Infinity, repeatDelay: 0.2 }} /></div><div className="absolute right-0 top-0 flex h-full w-[82px] flex-col justify-between py-1 text-[11px] font-medium leading-3.5 text-[#6B7D86] sm:w-[92px] sm:text-[12px]">{responsibilityCycle.map((step) => <span key={step} className={step === activeResponsibility ? "text-[#34414A]" : ""}>{step}</span>)}</div></div>
+                <p className="mt-3 border-t border-dashed border-[#8EA9B5]/40 pt-2 text-center font-mono text-[8px] font-semibold uppercase tracking-tight text-[#6B7D86]">Six responsibilities · one recurring burden</p>
               </div>
-              <div className="relative border-t border-[#3D3E3B] pt-4 md:ml-0 md:border-t-0 md:pl-6 md:pt-0">
-                <div className="mb-2 flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-4 w-auto invert brightness-0" /><span className="font-merriweather text-[16px] tracking-tight text-[#E7E5DF]">Margin</span></div>
+              <div className="relative border-t border-[#8EA9B5]/30 pt-4 md:ml-0 md:border-t-0 md:pl-6 md:pt-0">
+                <div className="mb-2 flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-4 w-auto" /><span className="font-merriweather text-[16px] tracking-tight text-[#34414A]">Margin</span></div>
                 <div className="relative -ml-2 -mr-4 mt-3 h-[56px] w-[calc(100%+1rem)] translate-x-px overflow-hidden rounded-[6px] bg-transparent p-1 sm:-ml-2 sm:-mr-5 sm:mt-4 sm:h-[62px] sm:w-[calc(100%+1.5rem)] md:-ml-3 md:-mr-8 md:w-[calc(100%+2rem)]"><AnimatePresence mode="wait" initial={false}><motion.div key={activeNotification.title} initial={reduceMotion ? { opacity: 1, y: 12, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(5px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, filter: "blur(5px)" }} transition={{ duration: reduceMotion ? 0 : 1, ease: [0.22, 1, 0.36, 1] }} className="flex h-full items-center gap-2 rounded-[5px] bg-[#E7E5DF] px-2.5 py-1.5 text-[#343532] shadow-[0_2px_8px_rgba(52,53,50,0.08)]"><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#343532]" /><div className="min-w-0 flex-1"><p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#6E706B]">Live recovery movement</p><p className="mt-0.5 text-[11px] font-semibold leading-3.5">{activeNotification.title}</p><p className="text-[10px] leading-3">{activeNotification.detail}</p></div><span className="hidden max-w-[68px] text-right text-[7px] leading-3 text-[#6E706B] sm:block">{activeNotification.meta}</span></motion.div></AnimatePresence></div>
-                <p className="mt-3 border-t border-[#555653] pt-2 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#D1D0C8]">The burden becomes one connected recovery record.</p>
+                <p className="mt-3 border-t border-[#8EA9B5]/40 pt-2 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#6B7D86]">The burden becomes one connected recovery record.</p>
               </div>
             </div>
-            <div className="pointer-events-none absolute bottom-[38%] left-[55%] top-[34px] hidden w-px -translate-x-[2px] bg-[#737570] md:block" aria-hidden="true" /><div className="mt-4 border-t border-[#3D3E3B] pt-2 text-center font-lora text-[16px] leading-tight tracking-tight text-[#E7E5DF] sm:text-[19px]" style={{ fontWeight: 400 }}>The work is transferred. The authority stays with you.</div>
+            <div className="pointer-events-none absolute bottom-[38%] left-[55%] top-[34px] hidden w-px -translate-x-[2px] bg-[#8EA9B5]/35 md:block" aria-hidden="true" /><div className="mt-4 border-t border-[#8EA9B5]/35 pt-2 text-center font-lora text-[16px] leading-tight tracking-tight text-[#34414A] sm:text-[19px]" style={{ fontWeight: 400 }}>The work is transferred. The authority stays with you.</div>
           </motion.div>
 
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
