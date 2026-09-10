@@ -75,7 +75,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
       </motion.div>
       <div className="mt-12 flex flex-col gap-3 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
         {pathOptions.map((option, index) => (
-          <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} className={`relative rounded-[5px] border border-[#C9D9E0] p-5 transition-colors duration-300 sm:p-7 md:p-9 lg:min-w-0 lg:flex-1 ${index === 0 ? "bg-[#D9EEF5]" : "bg-white"}`}>
+          <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} className={`relative rounded-[5px] p-5 transition-[filter,opacity,background-color] duration-500 will-change-[filter,opacity] sm:p-7 md:p-9 lg:min-w-0 lg:flex-1 ${index === 0 ? "bg-[#D9EEF5]" : "bg-white"} ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{option.label}</p>
             <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
             <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">{option.copy}</p>
