@@ -712,7 +712,7 @@ function ControlSection() {
             <div className="flex items-center justify-between border-b border-[#8EA9B5]/30 pb-3">
               <div>
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#5D7480]">The operating boundary</p>
-                <p className="mt-1 font-lora text-[10px] leading-none tracking-tight text-[#34414A] sm:text-[11px]">Authority stays with you.</p>
+                <p className="mt-1 font-lora text-[13px] leading-none tracking-tight text-[#34414A] sm:text-[14px]">Authority stays with you.</p>
               </div>
             </div>
 
@@ -761,7 +761,7 @@ function ControlSection() {
             </div>
 
             <div className="border-t border-[#8EA9B5]/30 pt-3">
-              <p className="font-lora text-[9px] leading-tight tracking-tight text-[#34414A] sm:text-[10px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
+              <p className="font-lora text-[12px] leading-tight tracking-tight text-[#34414A] sm:text-[13px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
             </div>
           </motion.div>
         </div>
