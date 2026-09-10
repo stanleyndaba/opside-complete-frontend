@@ -123,7 +123,7 @@ export default function InformationRequired() {
 
   if (isSubmitted) {
     return (
-      <div className="h-screen overflow-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
+      <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
         <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
           <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
@@ -149,7 +149,7 @@ export default function InformationRequired() {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
+    <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
       <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
         <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
@@ -165,7 +165,7 @@ export default function InformationRequired() {
             <div className="max-w-2xl border-b border-[#E8E7E1] pb-4">
               <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#595E68]">
                 <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4F3ED] text-[#191B20]"><FileText className="h-3.5 w-3.5" aria-hidden="true" /></span>
-                <span>AUDIT IN PROGRESS</span>
+                <span>Commercial Agent</span>
               </div>
               <h1 id="information-required-title" className="font-lora text-[28px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[34px]">Sub-agents found activities worth investigating.</h1>
               <p className="mt-2 max-w-xl text-[14px] leading-5 text-[#595E68]">Margin has identified activity in your account that warrants a closer look. To build a solid report, we need a few additional Amazon records from you.</p>
