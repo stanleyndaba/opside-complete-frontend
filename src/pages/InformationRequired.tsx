@@ -124,9 +124,9 @@ export default function InformationRequired() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
+      <div className="h-screen overflow-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
         <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
-          <div className="mx-auto flex min-h-14 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
               <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
             </Link>
@@ -134,15 +134,15 @@ export default function InformationRequired() {
           </div>
         </header>
 
-        <main className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-          <section className="mx-auto max-w-3xl rounded-[14px] border border-[#E8E7E1] bg-white p-6 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-10" aria-labelledby="files-received-title">
+        <main className="mx-auto max-w-[1280px] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+          <section className="mx-auto max-w-3xl rounded-[14px] border border-[#E8E7E1] bg-white p-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-8" aria-labelledby="files-received-title">
             <div className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-[#DDF7F0] text-[#0E766C]">
               <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
             </div>
-            <p className="mt-7 text-[12px] font-semibold text-[#595E68]">REVIEW IN PROGRESS</p>
-            <h1 id="files-received-title" className="mt-3 max-w-2xl font-lora text-[34px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[44px]">Files received.</h1>
+            <p className="mt-5 text-[12px] font-semibold text-[#595E68]">REVIEW IN PROGRESS</p>
+            <h1 id="files-received-title" className="mt-2 max-w-2xl font-lora text-[32px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[40px]">Files received.</h1>
             <p className="mt-4 max-w-2xl text-[15px] leading-6 text-[#595E68] sm:text-[16px]">Our review team has received your files. We&apos;ll continue your Audit after we&apos;ve examined the additional records.</p>
-            <div className="mt-8 border-t border-[#E8E7E1] pt-5 text-[13px] leading-6 text-[#777A82]">Your Audit is still in progress. You can safely leave this page.</div>
+            <div className="mt-6 border-t border-[#E8E7E1] pt-4 text-[13px] leading-6 text-[#777A82]">Your Audit is still in progress. You can safely leave this page.</div>
           </section>
         </main>
       </div>
@@ -150,9 +150,9 @@ export default function InformationRequired() {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
+    <div className="h-screen overflow-hidden bg-[#FBFAF7] font-sans text-[#191B20]">
       <header className="sticky top-0 z-50 border-b border-[#E8E7E1] bg-[#FBFAF7]/95 backdrop-blur">
-        <div className="mx-auto flex min-h-14 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex min-h-12 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
             <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
           </Link>
@@ -160,21 +160,21 @@ export default function InformationRequired() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start">
-          <section className="min-w-0 rounded-[14px] border border-[#E8E7E1] bg-white p-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-8" aria-labelledby="information-required-title">
-            <div className="max-w-2xl border-b border-[#E8E7E1] pb-6">
+      <main className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_270px] xl:items-start">
+          <section className="min-w-0 rounded-[14px] border border-[#E8E7E1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-5" aria-labelledby="information-required-title">
+            <div className="max-w-2xl border-b border-[#E8E7E1] pb-4">
               <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#595E68]">
                 <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4F3ED] text-[#191B20]"><FileText className="h-3.5 w-3.5" aria-hidden="true" /></span>
                 <span>AUDIT IN PROGRESS</span>
               </div>
-              <h1 id="information-required-title" className="font-lora text-[30px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[36px]">We found something worth investigating.</h1>
-              <p className="mt-3 max-w-xl text-[15px] leading-6 text-[#595E68]">Margin has identified activity in your account that warrants a closer look. To build a solid report, we need a few additional Amazon records from you.</p>
-              <p className="mt-3 max-w-xl text-[15px] leading-6 text-[#595E68]">Your Audit isn&apos;t finished yet. These files will help our review team verify what happened and complete your report.</p>
+              <h1 id="information-required-title" className="font-lora text-[28px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[34px]">Margin sub-agents found something worth investigating.</h1>
+              <p className="mt-2 max-w-xl text-[14px] leading-5 text-[#595E68]">Margin has identified activity in your account that warrants a closer look. To build a solid report, we need a few additional Amazon records from you.</p>
+              <p className="mt-2 max-w-xl text-[14px] leading-5 text-[#595E68]">Your Audit isn&apos;t finished yet. These files will help our review team verify what happened and complete your report.</p>
             </div>
 
-            <div className="mt-6 space-y-6">
-              <section className="rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4 sm:p-5" aria-labelledby="send-files-title">
+            <div className="mt-4 space-y-4">
+              <section className="rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-3.5 sm:p-4" aria-labelledby="send-files-title">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#D7D7D1] pb-3">
                   <div>
                     <h2 id="send-files-title" className="text-[15px] font-semibold text-[#191B20]">Send us the files</h2>
@@ -183,9 +183,9 @@ export default function InformationRequired() {
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D7D7D1] bg-white px-2.5 py-1 text-[12px] font-medium text-[#595E68]"><Files className="h-3.5 w-3.5" aria-hidden="true" /> Up to 10 files</span>
                 </div>
 
-                <div onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }} onDragLeave={(event) => { event.preventDefault(); setIsDragging(false); }} onDrop={onDrop} onClick={() => inputRef.current?.click()} className={`mt-4 cursor-pointer rounded-[10px] border border-dashed p-5 text-center transition-colors sm:p-8 ${isDragging ? 'border-[#3F51A8] bg-[#E9ECFF]' : 'border-[#B8B9B4] bg-white hover:border-[#8D8F89]'}`} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') inputRef.current?.click(); }} aria-label="Choose files to send to Margin">
-                  <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[10px] border border-[#D7D7D1] bg-[#FBFAF7] text-[#191B20]"><Upload className="h-5 w-5" aria-hidden="true" /></span>
-                  <h3 className="mt-3 text-[16px] font-semibold text-[#191B20]">Drag and drop your files here</h3>
+                <div onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }} onDragLeave={(event) => { event.preventDefault(); setIsDragging(false); }} onDrop={onDrop} onClick={() => inputRef.current?.click()} className={`mt-3 cursor-pointer rounded-[10px] border border-dashed p-4 text-center transition-colors sm:p-5 ${isDragging ? 'border-[#3F51A8] bg-[#E9ECFF]' : 'border-[#B8B9B4] bg-white hover:border-[#8D8F89]'}`} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') inputRef.current?.click(); }} aria-label="Choose files to send to Margin">
+                  <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-[10px] border border-[#D7D7D1] bg-[#FBFAF7] text-[#191B20]"><Upload className="h-4 w-4" aria-hidden="true" /></span>
+                  <h3 className="mt-2 text-[15px] font-semibold text-[#191B20]">Drag and drop your files here</h3>
                   <p className="mt-1 text-[13px] leading-5 text-[#595E68]">or choose files</p>
                   <input ref={inputRef} type="file" multiple accept={ACCEPTED_FILE_EXTENSIONS.join(',')} onChange={(event) => { if (event.target.files) handleFiles(event.target.files); event.target.value = ''; }} className="sr-only" />
                 </div>
@@ -218,13 +218,13 @@ export default function InformationRequired() {
                 </section>
               ) : null}
 
-              <section className="border-t border-[#E8E7E1] pt-5" aria-labelledby="message-title">
+              <section className="border-t border-[#E8E7E1] pt-4" aria-labelledby="message-title">
                 <label id="message-title" htmlFor="additional-message" className="text-[15px] font-semibold text-[#191B20]">Anything we should know?</label>
                 <p className="mt-1 text-[12px] leading-5 text-[#595E68]">Optional — tell us anything unusual about these files or your account.</p>
-                <textarea id="additional-message" value={message} onChange={(event) => setMessage(event.target.value)} rows={4} placeholder="Optional — tell us anything unusual about these files or your account." className="mt-3 block w-full resize-y rounded-[10px] border border-[#D7D7D1] bg-white px-3 py-2.5 text-[13px] text-[#191B20] outline-none placeholder:text-[#999B9A] focus:border-[#5165C7] focus:ring-2 focus:ring-[#E9ECFF]" />
+                <textarea id="additional-message" value={message} onChange={(event) => setMessage(event.target.value)} rows={2} placeholder="Optional — tell us anything unusual about these files or your account." className="mt-2 block w-full resize-none rounded-[10px] border border-[#D7D7D1] bg-white px-3 py-2 text-[13px] text-[#191B20] outline-none placeholder:text-[#999B9A] focus:border-[#5165C7] focus:ring-2 focus:ring-[#E9ECFF]" />
               </section>
 
-              <section className="border-t border-[#E8E7E1] pt-5" aria-labelledby="send-cta-title">
+              <section className="border-t border-[#E8E7E1] pt-4" aria-labelledby="send-cta-title">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="send-cta-title" className="text-[15px] font-semibold text-[#191B20]">Ready to continue?</h2><p className="mt-1 text-[12px] leading-5 text-[#595E68]">{validFiles.length > 0 && !hasInvalidFiles ? `${validFiles.length} file${validFiles.length === 1 ? '' : 's'} ready to send.` : 'Add at least one valid file to continue.'}</p></div><Button onClick={sendFiles} disabled={validFiles.length === 0 || hasInvalidFiles || isSending} className="h-10 rounded-[10px] bg-[#3F51A8] px-4 text-[13px] font-semibold text-white shadow-none hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 disabled:opacity-45">{isSending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}{isSending ? 'Sending files' : 'Send files to Margin'}</Button></div>
                 {hasInvalidFiles ? <div role="alert" className="mt-4 flex items-start gap-2 rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] px-3 py-2.5 text-[12px] leading-5 text-[#595E68]"><Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /><p>Remove the files that need review before sending.</p></div> : null}
               </section>
