@@ -21,6 +21,7 @@ function DataCard({ item, index }: { item: typeof inputs[number]; index: number 
     <motion.article initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: index * 0.08, duration: 0.45 }} className="relative rounded-[7px] border border-[#D8E7EC] bg-white/75 p-4 shadow-[0_10px_24px_rgba(72,103,122,0.06)] backdrop-blur-xl">
       <div className="flex items-center gap-3"><span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Icon className="h-full w-full" strokeWidth={1.5} /></span><h3 className="text-[13px] font-semibold tracking-tight text-[#34414A]">{item.title}</h3></div>
       <p className="mt-3 text-[11px] leading-5 text-[#536872]">{item.subtitle}</p>
+      <div className="mt-4 space-y-2" aria-hidden="true"><div className="h-px w-[78%] bg-[#D8E3E8]" /><div className="h-px w-[58%] bg-[#D8E3E8]" /><div className="h-px w-[88%] bg-[#D8E3E8]" /></div>
     </motion.article>
   );
 }
@@ -31,6 +32,7 @@ function OutputCard({ item, index }: { item: typeof outputs[number]; index: numb
     <motion.article initial={{ opacity: 0, x: 12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: index * 0.08, duration: 0.45 }} className="relative rounded-[7px] border border-[#D8E7EC] bg-white/75 p-4 shadow-[0_10px_24px_rgba(72,103,122,0.06)] backdrop-blur-xl">
       <div className="flex items-center gap-3"><span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Icon className="h-full w-full" strokeWidth={1.5} /></span><h3 className="font-lora text-[18px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>{item.title}</h3></div>
       <p className="mt-3 text-[12px] font-medium leading-5 text-[#536872]">{item.copy}</p>
+      <div className="mt-4 space-y-2" aria-hidden="true"><div className="h-px w-[84%] bg-[#D8E3E8]" /><div className="h-px w-[64%] bg-[#D8E3E8]" /><div className="h-px w-[74%] bg-[#D8E3E8]" /></div>
     </motion.article>
   );
 }
