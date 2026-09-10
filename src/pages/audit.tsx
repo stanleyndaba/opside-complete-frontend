@@ -1900,22 +1900,17 @@ export default function Audit() {
                   <div className="min-h-0 flex-1 overflow-y-auto px-5 py-1">
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
                       <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Database className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">View audit scope</span></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Scopes</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
-                    <Link to={auditReportUploadHref} onClick={() => setIsAuditControlsOpen(false)} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><FilePlus2 className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Use Amazon reports</span></span>
-                      <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
-                    </Link>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsPeriodSelectorOpen(true); trackEvent('audit_period_selector_opened', { source_page: '/audit' }); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
                       <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Calendar className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Audit history</span></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">History</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); openAuditLog(); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
                       <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><TerminalSquare className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Audit activity</span></span>
+                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Activity</span></span>
                       <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
                     </button>
                     <button type="button" onClick={() => { setIsAuditControlsOpen(false); openScheduleDialog(); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
