@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@clerk/react';
-import { AlertTriangle, ArrowRight, ArrowRightLeft, Calendar, CalendarClock, Check, CircleDollarSign, Copy, Database, Download, FilePlus2, FileText, HeartHandshake, Loader2, Mail, PanelLeftOpen, Search, TerminalSquare } from 'lucide-react';
+import { AlertTriangle, ArrowRight, ArrowRightLeft, Calendar, CalendarClock, Check, ChevronDown, CircleDollarSign, Copy, Database, Download, FilePlus2, FileText, HeartHandshake, Loader2, Mail, Search, TerminalSquare } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import CommercialRecommendation from '@/components/audit/CommercialRecommendation';
@@ -394,7 +395,6 @@ export default function Audit() {
   const [isRecoverOnceReviewOpen, setIsRecoverOnceReviewOpen] = useState(false);
   const [isSecurityProtocolOpen, setIsSecurityProtocolOpen] = useState(false);
   const [isAuditLogOpen, setIsAuditLogOpen] = useState(false);
-  const [isAuditControlsOpen, setIsAuditControlsOpen] = useState(false);
   const [isPeriodSelectorOpen, setIsPeriodSelectorOpen] = useState(false);
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
   const [isScopeDialogOpen, setIsScopeDialogOpen] = useState(false);
@@ -1792,6 +1792,36 @@ export default function Audit() {
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button type="button" className="inline-flex h-10 items-center gap-1.5 rounded-[10px] border-0 bg-transparent px-2 text-[12px] font-medium text-[#595E68] outline-none transition-colors hover:bg-[#F0F0EC] hover:text-[#191B20] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-3 sm:text-[13px]">
+                  Audit Control
+                  <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-52 rounded-[10px] border border-[#D7D7D1] bg-white p-1.5 shadow-[0_14px_35px_rgba(25,27,32,0.12)]">
+                <DropdownMenuItem onClick={() => { setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="cursor-pointer gap-2 rounded-[7px] px-3 py-2.5 text-[12px] font-sans font-semibold tracking-tight text-[#182026] focus:bg-[#F3F5F4] focus:text-[#0B74DE]">
+                  <Database className="h-4 w-4 text-[#6B7280]" strokeWidth={1.5} aria-hidden="true" />
+                  Scopes
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setIsPeriodSelectorOpen(true); trackEvent('audit_period_selector_opened', { source_page: '/audit' }); }} className="cursor-pointer gap-2 rounded-[7px] px-3 py-2.5 text-[12px] font-sans font-semibold tracking-tight text-[#182026] focus:bg-[#F3F5F4] focus:text-[#0B74DE]">
+                  <Calendar className="h-4 w-4 text-[#6B7280]" strokeWidth={1.5} aria-hidden="true" />
+                  History
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={openAuditLog} className="cursor-pointer gap-2 rounded-[7px] px-3 py-2.5 text-[12px] font-sans font-semibold tracking-tight text-[#182026] focus:bg-[#F3F5F4] focus:text-[#0B74DE]">
+                  <TerminalSquare className="h-4 w-4 text-[#6B7280]" strokeWidth={1.5} aria-hidden="true" />
+                  Activity
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={openScheduleDialog} className="cursor-pointer gap-2 rounded-[7px] px-3 py-2.5 text-[12px] font-sans font-semibold tracking-tight text-[#182026] focus:bg-[#F3F5F4] focus:text-[#0B74DE]">
+                  <CalendarClock className="h-4 w-4 text-[#6B7280]" strokeWidth={1.5} aria-hidden="true" />
+                  Schedules
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={openShareDialog} className="cursor-pointer gap-2 rounded-[7px] px-3 py-2.5 text-[12px] font-sans font-semibold tracking-tight text-[#182026] focus:bg-[#F3F5F4] focus:text-[#0B74DE]">
+                  <HeartHandshake className="h-4 w-4 text-[#6B7280]" strokeWidth={1.5} aria-hidden="true" />
+                  Invite a seller
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <button type="button" onClick={() => setIsExportDialogOpen(true)} className="inline-flex h-10 items-center gap-1.5 rounded-[10px] border-0 bg-[#F0F0EC] px-3 text-[12px] font-medium text-[#191B20] outline-none transition-colors hover:bg-[#E7E7E1] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 sm:px-4 sm:text-[13px]" title="Export summary">
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">Export summary</span>
@@ -1881,53 +1911,6 @@ export default function Audit() {
             ) : null}
           </section>
 
-          <aside className="space-y-4 xl:sticky xl:top-20" aria-label="Audit context">
-            <button
-              type="button"
-              onClick={() => setIsAuditControlsOpen(true)}
-              aria-label="Open audit controls"
-              aria-expanded={isAuditControlsOpen}
-              className="fixed left-4 top-1/2 z-30 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#D7D7D1] bg-white text-[#595E68] shadow-[0_10px_28px_rgba(25,27,32,0.12)] outline-none transition-[transform,box-shadow,color] duration-200 hover:-translate-y-1/2 hover:text-[#191B20] hover:shadow-[0_14px_32px_rgba(25,27,32,0.16)] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2 active:scale-[0.97]"
-            >
-              <PanelLeftOpen className="h-[18px] w-[18px]" aria-hidden="true" />
-            </button>
-            <Sheet open={isAuditControlsOpen} onOpenChange={setIsAuditControlsOpen}>
-              <SheetContent side="left" className="w-[min(440px,calc(100vw-24px))] border-transparent bg-transparent p-3 text-[#191B20] shadow-none backdrop-blur-0 sm:w-[440px] [&>button]:right-5 [&>button]:top-5 [&>button]:z-10 [&>button]:rounded-full [&>button]:p-1 [&>button]:opacity-60">
-                <div className="flex h-auto max-h-[calc(100vh-48px)] flex-col rounded-[12px] border border-[#D7D7D1] bg-white font-sans shadow-[0_8px_24px_rgba(25,27,32,0.08)]">
-                  <SheetHeader className="border-b border-[#E8E7E1] px-5 pb-3 pt-4 pr-14 text-left">
-                    <SheetTitle className="font-sans text-[18px] font-semibold leading-5 tracking-tight text-[#191B20]">Audit control</SheetTitle>
-                  </SheetHeader>
-                  <div className="min-h-0 flex-1 overflow-y-auto px-5 py-1">
-                    <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsScopeDialogOpen(true); trackEvent('audit_scope_opened', { source_page: '/audit', audit_id: audit?.id || null }); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Database className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Scopes</span></span>
-                      <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
-                    </button>
-                    <button type="button" onClick={() => { setIsAuditControlsOpen(false); setIsPeriodSelectorOpen(true); trackEvent('audit_period_selector_opened', { source_page: '/audit' }); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><Calendar className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">History</span></span>
-                      <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
-                    </button>
-                    <button type="button" onClick={() => { setIsAuditControlsOpen(false); openAuditLog(); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><TerminalSquare className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Activity</span></span>
-                      <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
-                    </button>
-                    <button type="button" onClick={() => { setIsAuditControlsOpen(false); openScheduleDialog(); }} className="flex min-h-11 w-full items-center gap-3 border-b border-[#E8E7E1] py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><CalendarClock className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Schedules</span></span>
-                      <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
-                    </button>
-                    <button type="button" onClick={() => { setIsAuditControlsOpen(false); openShareDialog(); }} className="flex min-h-11 w-full items-center gap-3 py-2 text-left outline-none transition-colors hover:text-[#3F51A8] focus-visible:ring-2 focus-visible:ring-[#5165C7]">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[#6B7280]"><HeartHandshake className="h-full w-full" strokeWidth={1.5} aria-hidden="true" /></span>
-                      <span className="min-w-0 flex-1"><span className="block text-[12px] font-sans font-semibold tracking-tight text-[#182026]">Invite a seller</span></span>
-                      <ArrowRight className="h-3 w-3 text-[#777A82]" aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </aside>
         </div>
       </main>
 
