@@ -6,7 +6,6 @@ import {
   CircleAlert,
   FileText,
   Files,
-  Info,
   Loader2,
   Upload,
   X,
@@ -130,7 +129,7 @@ export default function InformationRequired() {
             <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
               <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
             </Link>
-            <span className="inline-flex min-h-10 items-center rounded-[10px] bg-[#F0F0EC] px-4 text-[13px] font-medium text-[#595E68]">Audit in progress</span>
+            <span className="inline-flex min-h-10 items-center rounded-[10px] bg-[#F0F0EC] px-4 text-[13px] font-medium text-[#595E68]">In progress</span>
           </div>
         </header>
 
@@ -156,19 +155,19 @@ export default function InformationRequired() {
           <Link to="/" title="Margin home" className="inline-flex min-w-0 items-center gap-2.5 rounded-md px-1.5 py-2 outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">
             <span className="font-merriweather text-[18px] font-semibold tracking-tight text-[#191B20]">Margin</span>
           </Link>
-          <span className="inline-flex min-h-10 items-center rounded-[10px] bg-[#F0F0EC] px-4 text-[13px] font-medium text-[#595E68]">Audit in progress</span>
+          <span className="inline-flex min-h-10 items-center rounded-[10px] bg-[#F0F0EC] px-4 text-[13px] font-medium text-[#595E68]">In progress</span>
         </div>
       </header>
 
       <main className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_270px] xl:items-start">
+        <div className="mx-auto max-w-3xl">
           <section className="min-w-0 rounded-[14px] border border-[#E8E7E1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-5" aria-labelledby="information-required-title">
             <div className="max-w-2xl border-b border-[#E8E7E1] pb-4">
               <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#595E68]">
                 <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4F3ED] text-[#191B20]"><FileText className="h-3.5 w-3.5" aria-hidden="true" /></span>
                 <span>AUDIT IN PROGRESS</span>
               </div>
-              <h1 id="information-required-title" className="font-lora text-[28px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[34px]">Margin sub-agents found something worth investigating.</h1>
+              <h1 id="information-required-title" className="font-lora text-[28px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[34px]">Sub-agents found activities worth investigating.</h1>
               <p className="mt-2 max-w-xl text-[14px] leading-5 text-[#595E68]">Margin has identified activity in your account that warrants a closer look. To build a solid report, we need a few additional Amazon records from you.</p>
               <p className="mt-2 max-w-xl text-[14px] leading-5 text-[#595E68]">Your Audit isn&apos;t finished yet. These files will help our review team verify what happened and complete your report.</p>
             </div>
@@ -230,14 +229,7 @@ export default function InformationRequired() {
               </section>
             </div>
           </section>
-
-          <aside className="space-y-4 xl:sticky xl:top-20" aria-label="Audit context">
-            <section className="rounded-[14px] border border-[#E8E7E1] bg-white p-5">
-              <div className="flex items-center gap-2"><Info className="h-4 w-4 text-[#595E68]" aria-hidden="true" /><h2 className="text-[14px] font-semibold text-[#191B20]">Audit context</h2></div>
-              <p className="mt-3 text-[13px] leading-5 text-[#595E68]">Your Audit is still in progress. These records help Margin verify what happened and complete your report.</p>
-              <div className="mt-4 border-t border-[#E8E7E1] pt-4 text-[12px] leading-5 text-[#777A82]">No technical setup is needed. Just send the records you already have.</div>
-            </section>
-          </aside>
+          <p className="mt-3 text-center text-[12px] leading-5 text-[#777A82]">No technical setup is needed. Just send the records you already have.</p>
         </div>
       </main>
     </div>
