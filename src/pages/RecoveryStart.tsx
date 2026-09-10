@@ -3,8 +3,8 @@ import { ArrowRight } from 'lucide-react';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 
-const optionClass = 'group flex min-h-12 items-center justify-between gap-3 rounded-[10px] border border-[#D7D7D1] bg-white px-4 py-3 text-left text-[13px] font-semibold text-[#191B20] outline-none transition-colors hover:border-[#B8B9B4] hover:bg-[#FBFAF7] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2';
-const primaryOptionClass = 'group flex min-h-12 items-center justify-between gap-3 rounded-[10px] border border-[#3F51A8] bg-[#3F51A8] px-4 py-3 text-left text-[13px] font-semibold text-white outline-none transition-colors hover:border-[#31418D] hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2';
+const optionClass = 'group flex min-h-10 items-center justify-between gap-3 rounded-[10px] border border-[#D7D7D1] bg-white px-3.5 py-2.5 text-left text-[13px] font-semibold text-[#191B20] outline-none transition-colors hover:border-[#B8B9B4] hover:bg-[#FBFAF7] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2';
+const primaryOptionClass = 'group flex min-h-10 items-center justify-between gap-3 rounded-[10px] border border-[#3F51A8] bg-[#3F51A8] px-3.5 py-2.5 text-left text-[13px] font-semibold text-white outline-none transition-colors hover:border-[#31418D] hover:bg-[#31418D] focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2';
 
 export default function RecoveryStart() {
   usePageMeta({
@@ -26,9 +26,9 @@ export default function RecoveryStart() {
       </header>
 
       <main className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <section className="mx-auto max-w-3xl rounded-[14px] border border-[#E8E7E1] bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-8" aria-labelledby="recovery-start-title">
+        <section className="mx-auto max-w-3xl rounded-[14px] border border-transparent bg-white p-4 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:p-8" aria-labelledby="recovery-start-title">
           <div className="max-w-2xl border-b border-[#E8E7E1] pb-5">
-            <p className="mb-3 text-[12px] font-semibold text-[#595E68]">Agents Starting</p>
+            <p className="mb-3 text-[12px] font-semibold text-[#595E68]">Agent E313</p>
             <h1 id="recovery-start-title" className="font-lora text-[29px] font-normal leading-[1.08] tracking-[-0.02em] text-[#191B20] sm:text-[38px]">How would you like to begin?</h1>
             <p className="mt-3 max-w-xl text-[14px] leading-6 text-[#595E68] sm:text-[15px]">Choose the way you want Margin to start understanding your recovery work.</p>
           </div>
