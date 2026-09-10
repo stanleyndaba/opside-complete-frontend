@@ -38,7 +38,7 @@ const revealProps = {
 };
 
 export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
-  <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
+  <section className="relative bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} className="max-w-[780px]">
@@ -63,7 +63,7 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
   const [activePath, setActivePath] = useState<number | null>(null);
 
   return (
-  <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28" aria-labelledby="recovery-routing-title">
+  <section className="relative bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="recovery-routing-title">
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <motion.div {...revealProps} className="max-w-[760px]">
         <div className="mb-5 flex items-center gap-3">

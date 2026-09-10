@@ -189,7 +189,7 @@ function AccountingEvidenceSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section data-navbar-theme="light" className="relative overflow-x-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 md:py-24" aria-labelledby="accounting-section-title">
+    <section data-navbar-theme="light" className="relative overflow-x-hidden bg-[#FAFAF7] py-10 md:py-16" aria-labelledby="accounting-section-title">
       <div className={`${containerClass} min-w-0`}>
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 min-w-0 overflow-hidden lg:order-1">
@@ -254,7 +254,7 @@ function HistoricalVideoPreviewSections() {
   return (
     <>
       {historicalVideoSections.map((section, sectionIndex) => (
-        <section key={section.id} aria-labelledby={`${section.id}-title`} className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28">
+        <section key={section.id} aria-labelledby={`${section.id}-title`} className="relative overflow-hidden bg-white py-10 sm:py-[52px] md:py-[73px]">
           <div className={containerClass}>
             <motion.div {...revealProps} className="max-w-[900px]">
               <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{String(sectionIndex + 1).padStart(2, "0")} / {section.label}</span></div>
@@ -321,7 +321,7 @@ function KineticHeroSection({
 
 function OneRecoverySection() {
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-[52px] md:py-[73px]">
       <div className={containerClass}>
         <div className="grid items-center gap-12 lg:grid-cols-1 xl:gap-24">
           <motion.div {...revealProps} className="order-1 lg:pt-2">
@@ -367,7 +367,7 @@ const realityCheckWords = realityCheckStages.flatMap((stage) => stage.words);
 
 function RealityCheckSection() {
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-[52px] md:py-[73px]">
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
         <div className="flex flex-col justify-center">
@@ -416,7 +416,7 @@ function MarginLifecycleSection() {
   return (
     <section
       aria-labelledby="margin-lifecycle-title"
-      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28"
+      className="relative overflow-hidden bg-white py-10 sm:py-[52px] md:py-[73px]"
     >
       <div className={containerClass}>
         <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
@@ -541,7 +541,7 @@ function MarginOperationSection() {
   });
 
   return (
-    <section ref={operationScrollRef} className="relative border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 md:py-28">
+    <section ref={operationScrollRef} className="relative bg-[#FAFAF7] py-[52px] md:py-[73px]">
       <div className={containerClass}>
         <div className="grid gap-12 lg:grid-cols-[0.72fr_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-32 lg:h-fit">
@@ -688,7 +688,7 @@ function ControlSection() {
   const isHandled = activeControlStep >= 3;
 
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-16 sm:py-20 md:py-24" aria-labelledby="control-section-title">
+    <section className="relative overflow-hidden bg-[#FAFAF7] py-10 sm:py-[52px] md:py-16" aria-labelledby="control-section-title">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
@@ -840,7 +840,7 @@ function MarginStandardSection() {
   }, [activeStandardText, reduceMotion, standardPhase, visibleStandardLength]);
 
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 sm:py-20 md:py-28" aria-labelledby="margin-standard-title">
+    <section className="relative overflow-hidden bg-white py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="margin-standard-title">
       <div className={containerClass}>
         <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <motion.div {...revealProps} className="max-w-[720px]">
@@ -892,7 +892,7 @@ function MarginStandardSection() {
 
 function RecoveryWorkStatement() {
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28" aria-labelledby="trust-section-title">
+    <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="trust-section-title">
       <div className={containerClass}>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
           <motion.div {...revealProps} className="flex flex-col justify-center">
@@ -947,7 +947,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
   ];
 
   return (
-    <section className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[#FAFAF7] py-20 sm:py-24 md:py-32" aria-labelledby="recovery-thread-title">
+    <section className="relative overflow-hidden bg-[#FAFAF7] py-[52px] sm:py-16 md:py-[73px]" aria-labelledby="recovery-thread-title">
       <div className={containerClass}>
         <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-16 xl:gap-24">
           <div className="order-2 space-y-5 lg:order-1">
@@ -969,7 +969,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
             <div className="mt-10 border-t border-[#D8DEDA]">
               {recoveryThreadCards.map((card, index) => (
                 <motion.article key={card.title} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} className="border-b border-[#D8DEDA] py-5 md:py-6">
-                  <div className="flex items-baseline gap-3"><span className="font-mono text-[10px] font-semibold tracking-[0.12em] text-[var(--margin-blue)]">0{index + 1}</span><h3 className="font-lora text-[25px] leading-[1.06] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]">{card.title}</h3></div>
+                  <h3 className="font-lora text-[25px] leading-[1.06] tracking-[-0.035em] text-[var(--margin-text-primary)] sm:text-[29px]">{card.title}</h3>
                   <p className="mt-3 max-w-[620px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">{card.copy}</p>
                 </motion.article>
               ))}
@@ -1036,7 +1036,7 @@ function FullRecoveryLoopSection() {
   return (
     <section
       aria-labelledby="full-recovery-loop-title"
-      className="relative overflow-hidden border-b border-[var(--margin-border)] bg-white py-16 md:py-20"
+      className="relative overflow-hidden bg-white py-10 md:py-[52px]"
     >
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[900px]">
@@ -1327,7 +1327,7 @@ function ProductReframeSection() {
     <section
       ref={sectionRef}
       aria-labelledby="product-reframe-title"
-      className="relative overflow-hidden border-t border-[var(--margin-border)] bg-white py-20 md:py-28"
+      className="relative overflow-hidden bg-white py-[52px] md:py-[73px]"
     >
       <div className={containerClass}>
         <motion.div {...revealProps} className="max-w-[1040px]">
@@ -1427,7 +1427,7 @@ function RiskSection() {
   ];
 
   return (
-    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-12 md:py-20">
+    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-8 md:py-[52px]">
       <div className={containerClass}>
         <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
           <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2 lg:scale-[1.03] lg:origin-center">
@@ -1562,7 +1562,7 @@ function OperationalEconomicsSection() {
   const activeNotification = marginNotifications[notificationIndex];
 
   return (
-    <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-16 sm:py-20 md:py-28">
+    <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]">
       <div className={containerClass}>
         <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
           <motion.div {...revealProps} className="relative min-w-0 h-[380px] overflow-hidden rounded-[10px] border border-[#373735] bg-[#101820] p-3 text-[#E7E5DF] sm:h-[410px] sm:p-4 md:h-auto md:p-5 lg:h-[390px] lg:p-6">
@@ -1609,7 +1609,7 @@ function RecoveryOutcomeExplorer() {
   const activeState = recoveryOutcomeStates[activeOutcome];
 
   return (
-    <section aria-labelledby="recovery-outcome-title" className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)]">
+    <section aria-labelledby="recovery-outcome-title" className="relative bg-[var(--margin-canvas)]">
       <div ref={outcomeSceneRef} className="relative lg:min-h-[520vh]">
         <div className="lg:sticky lg:top-16 lg:flex lg:min-h-[calc(100svh-4rem)] lg:items-start">
           <div className={`${containerClass} w-full py-16 md:py-24 lg:py-4 xl:py-6`}>
@@ -1698,7 +1698,7 @@ export default function Index() {
         <RecoveryRoutingSection onAuditCta={handleClaimAccessClick} />
 
         {/* Section 14 — Trust / FAQ */}
-        <section className="relative border-b border-[var(--margin-border)] bg-[var(--margin-canvas)] py-32 md:py-56" aria-labelledby="trust-faq-title">
+        <section className="relative bg-[var(--margin-canvas)] py-[83px] md:py-[146px]" aria-labelledby="trust-faq-title">
           <div className={containerClass}>
             <motion.div {...revealProps}>
               <div className="mb-5 flex items-center gap-3">
@@ -1744,7 +1744,7 @@ export default function Index() {
         </section>
 
         {/* Final CTA — compact operational handoff */}
-        <section className="relative overflow-hidden border-t border-[var(--margin-border)] bg-[var(--margin-canvas)] py-8 sm:py-10 md:py-14" aria-labelledby="final-handoff-title">
+        <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-5 sm:py-6 md:py-9" aria-labelledby="final-handoff-title">
           <div className={containerClass}>
             <div className="grid items-center gap-8 border-y border-[var(--margin-border)] py-8 md:gap-12 md:py-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
               <motion.div {...revealProps} className="min-w-0">
