@@ -51,15 +51,16 @@ export function MarginEngineSection() {
         <div className="relative grid items-center gap-8 lg:grid-cols-[0.9fr_1.2fr_0.9fr] lg:gap-12">
           <svg className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full overflow-visible lg:block" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
             <g fill="none" stroke="#B8CBD3" strokeWidth="1.15" opacity="0.78">
-              <path d="M245 82 C300 82 305 150 370 150" />
-              <path d="M245 250 C300 250 310 250 370 250" />
-              <path d="M245 418 C300 418 305 350 370 350" />
+              <path d="M245 82 C285 82 286 182 328 238" />
+              <path d="M245 250 C278 250 298 250 328 250" />
+              <path d="M245 418 C285 418 286 318 328 262" />
+              <path d="M332 250 C345 250 356 250 370 250" />
               <path d="M630 150 C695 150 700 82 755 82" />
               <path d="M630 250 C690 250 700 250 755 250" />
               <path d="M630 350 C695 350 700 418 755 418" />
             </g>
-            <g fill="#8FAEBB">
-              <circle cx="370" cy="150" r="2.5" /><circle cx="370" cy="250" r="2.5" /><circle cx="370" cy="350" r="2.5" />
+            <g fill="#34414A">
+              <circle cx="330" cy="250" r="5" /><circle cx="370" cy="250" r="3.5" />
               <circle cx="630" cy="150" r="2.5" /><circle cx="630" cy="250" r="2.5" /><circle cx="630" cy="350" r="2.5" />
             </g>
           </svg>
