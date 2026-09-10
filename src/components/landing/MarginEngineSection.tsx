@@ -13,6 +13,8 @@ const outputs = [
   { title: "Control", label: "What remains financially open", copy: "Know where your money stands.", items: ["Recovered", "Reconciled", "Outstanding", "Unresolved", "Monitored"], icon: CheckCircle2 },
 ];
 
+const questions = ["What happened?", "What should have happened?", "What’s missing?", "What are we entitled to?", "What proves it?", "What should happen next?", "Did the money actually arrive?"];
+
 function DataCard({ item, index }: { item: typeof inputs[number]; index: number }) {
   const Icon = item.icon;
   return (
@@ -49,6 +51,7 @@ export function MarginEngineSection() {
 
           <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.55 }} className="relative rounded-[10px] border border-[#BFDCE6] bg-white/78 p-5 shadow-[0_18px_50px_rgba(72,103,122,0.10)] backdrop-blur-2xl sm:p-7">
             <div className="border-b border-[#D8E7EC] pb-4"><div className="flex items-center gap-2.5"><img src="/logoimagetwo.png" alt="Margin" width="20" height="20" className="h-5 w-auto object-contain" /><span className="font-merriweather text-base tracking-tight text-[#34414A]">Margin</span></div><h3 className="mt-4 font-lora text-[25px] leading-none tracking-tight text-[#34414A]" style={{ fontWeight: 400 }}>Financial Event Resolution</h3></div>
+            <p className="hidden border-b border-[#D8E7EC] py-5 text-[12px] leading-6 tracking-tight text-[#536872] sm:block">{questions.join("  ·  ")}</p>
             {!reduceMotion && <motion.div aria-hidden="true" className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#0B74DE]/50 to-transparent" animate={{ x: ["-15%", "15%", "-15%"], opacity: [0.2, 0.7, 0.2] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />}
           </motion.div>
 
