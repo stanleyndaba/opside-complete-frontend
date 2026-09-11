@@ -941,9 +941,59 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       visual: <img src="/discrepancy.png" alt="Amazon discrepancy requiring recovery work" className="h-full w-full rounded-[4px] object-cover" />,
     },
     {
-      title: "Proved it. Now keep it moving.",
-      copy: "Amazon asks for evidence. A case gets rejected. A document needs to be supplied. Someone needs to respond, follow up, or determine what should happen next. The recovery can stall not because the problem isn’t real, but because someone has to keep carrying the case forward.",
-      visual: <img src="/openmail.png" alt="Open recovery correspondence requiring follow-up" className="h-full w-full rounded-[4px] object-cover" />,
+      title: "Keep the recovery moving.",
+      copy: "A recovery is not just a case to open. It needs requests answered, evidence gathered, decisions made, and next steps kept visible. Margin manages the work between the finding and the outcome, so nothing stalls because the next action was unclear.",
+      visual: (
+        <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.98),transparent_38%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
+          <motion.div aria-hidden="true" className="absolute -right-12 -top-10 h-40 w-40 rounded-full bg-[#D8E8F4]/75 blur-2xl" animate={{ x: [0, -14, 0], y: [0, 12, 0], scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
+          <motion.div aria-hidden="true" className="absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-[#D9EEE8]/70 blur-2xl" animate={{ x: [0, 16, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
+          <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
+          <motion.div
+            className="absolute left-[6%] right-[6%] top-1/2 -translate-y-1/2"
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="grid grid-cols-[0.86fr_1.14fr] items-start gap-2.5 sm:gap-3">
+              <div className="rounded-[9px] border border-white/80 bg-white/56 px-2.5 py-2.5 shadow-[0_14px_30px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3 sm:py-3">
+                <p className="font-mono text-[7px] font-semibold uppercase tracking-[0.08em] text-[#748188] sm:text-[8px]">Recovery context</p>
+                <div className="mt-2 flex items-center gap-1.5">
+                  <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-4 w-4 shrink-0 object-contain sm:h-5 sm:w-5" />
+                  <p className="truncate text-[9px] font-semibold tracking-[-0.02em] text-[#26333A] sm:text-[10px]">Amazon reimbursement</p>
+                </div>
+                <div className="mt-3 border-t border-[#D9E2E2]/80 pt-2">
+                  <p className="font-mono text-[7px] uppercase tracking-[0.06em] text-[#859198]">Status</p>
+                  <p className="mt-1 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Evidence requested</p>
+                </div>
+                <div className="mt-2 border-t border-[#D9E2E2]/80 pt-2">
+                  <p className="font-mono text-[7px] uppercase tracking-[0.06em] text-[#859198]">Next milestone</p>
+                  <p className="mt-1 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit supporting documents</p>
+                </div>
+              </div>
+              <div className="space-y-1.5 pt-3 sm:pt-4">
+                <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-[0.08em] text-[#748188] sm:text-[8px]">Next actions</p>
+                <div className="flex items-center gap-2 rounded-[8px] border border-white/80 bg-white/64 px-2 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-2.5">
+                  <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
+                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#344149] sm:text-[10px]">Request BOL and POD</span>
+                  <img src="/gd.png" alt="Google Drive" className="h-4 w-4 shrink-0 object-contain" />
+                </div>
+                <div className="flex items-center gap-2 rounded-[8px] border border-white/70 bg-white/54 px-2 py-2 shadow-[0_9px_20px_rgba(56,74,82,0.08)] backdrop-blur-lg sm:px-2.5">
+                  <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/64" aria-hidden="true" />
+                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#46535A] sm:text-[10px]">Review Amazon response</span>
+                  <img src="/gmailicon.png" alt="Gmail" className="h-4 w-4 shrink-0 object-contain" />
+                </div>
+                <div className="flex items-center gap-2 rounded-[8px] border border-white/65 bg-white/46 px-2 py-2 shadow-[0_8px_18px_rgba(56,74,82,0.06)] backdrop-blur-md sm:px-2.5">
+                  <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/58" aria-hidden="true" />
+                  <span className="min-w-0 flex-1 truncate text-[9px] font-medium text-[#566167] sm:text-[10px]">Prepare next submission</span>
+                  <span className="rounded-[3px] bg-[#E8F0F5] px-1 py-0.5 font-mono text-[7px] font-semibold uppercase tracking-[0.04em] text-[#557184]">Margin</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      ),
     },
     {
       title: "Different tools. One recovery thread.",
