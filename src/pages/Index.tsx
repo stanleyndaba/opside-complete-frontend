@@ -946,8 +946,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       visual: <img src="/openmail.png" alt="Open recovery correspondence requiring follow-up" className="h-full w-full rounded-[4px] object-cover" />,
     },
     {
-      title: "Paid. Now make sure it’s actually finished.",
-      copy: "A reimbursement or credit comes through, but the work isn’t necessarily over. You still need to know whether the amount was complete, whether it appeared where expected, whether anything was reversed, and whether the recovery can actually be closed.",
+      title: "Different tools. One recovery thread.",
+      copy: "The work may happen across email, documents, and team messages, but the recovery should not become fragmented. Margin keeps every request, response, document, and next step connected and visible, so the recovery keeps moving without you coordinating every handoff.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.96),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_52%,#F9FAF8_100%)]" />
