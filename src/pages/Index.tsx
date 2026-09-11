@@ -38,6 +38,7 @@ import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
 import { RecoveryOfferSection, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
 import { AuditImageStackVisual } from "@/components/landing/AuditImageStackVisual";
+import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -1819,19 +1820,6 @@ function RecoveryOutcomeExplorer() {
 }
 
 
-function RecoverOncePagePreview() {
-  return (
-    <div className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3">
-      <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] px-2"><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">margin.app/recover-once</span></div>
-      <div className="relative h-[520px] overflow-hidden rounded-b-[6px] bg-[#FBFAF7] sm:h-[600px]">
-        <iframe title="Recover Once page preview" src="/recover-once" className="h-full w-full border-0 bg-[#FBFAF7]" loading="lazy" />
-      </div>
-      <p className="px-1 pt-2 text-center font-mono text-[9px] uppercase tracking-tight text-[#647783]">Scroll the live offer page</p>
-    </div>
-  );
-}
-
-
 function BrowserChrome({ path }: { path: string }) {
   return (
     <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] px-2">
@@ -1967,7 +1955,7 @@ export default function Index() {
               </motion.div>
 
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-                <RecoverOncePagePreview />
+                <FinalDelegationPreview />
               </motion.div>
             </div>
           </div>

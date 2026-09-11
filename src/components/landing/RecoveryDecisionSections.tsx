@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AuditImageStackVisual } from "@/components/landing/AuditImageStackVisual";
+import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 
 interface LandingAuditCtaProps {
   onAuditCta: (location: string) => void;
@@ -51,7 +51,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">
-          <AuditImageStackVisual />
+          <FinalDelegationPreview />
         </motion.div>
       </div>
 
