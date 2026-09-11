@@ -951,7 +951,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="grid grid-cols-[1.05fr_0.95fr] items-start gap-2.5 sm:gap-3">
+            <div className="grid grid-cols-[1.16fr_0.84fr] items-start gap-2.5 sm:gap-3">
               <div className="rounded-[9px] border border-white/80 bg-white/58 px-2.5 py-2.5 shadow-[0_14px_30px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3 sm:py-3">
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Finding</p>
@@ -965,14 +965,13 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                   <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Amount under review</p>
                   <p className="mt-0.5 font-lora text-[15px] font-semibold tracking-[-0.04em] text-[#26333A] sm:text-[17px]">$853.60</p>
                 </div>
-                <p className="mt-1 text-[8px] leading-3 text-[#66747A] sm:text-[9px]">Settlement SETTLE-ACME-0013</p>
+                  <p className="mt-1 text-[8px] leading-3 text-[#66747A] sm:text-[9px]">Settlement ACME-013</p>
                 <div className="mt-2 border-t border-[#D9E2E2]/80 pt-1.5">
                   <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Found on</p>
-                  <p className="mt-0.5 text-[8px] font-medium leading-3 text-[#3C4A50] sm:text-[9px]">Jan 26, 2026, 12:06 PM</p>
+                  <p className="mt-0.5 text-[8px] font-medium leading-3 text-[#3C4A50] sm:text-[9px]">June 27, 2026, 12:06 PM</p>
                 </div>
               </div>
               <div className="space-y-1.5 pt-2 sm:pt-3">
-                <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Analysis</p>
                 <div className="rounded-[8px] border border-white/80 bg-white/64 px-2.5 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-3">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[8px] font-medium text-[#4A585F] sm:text-[9px]">Investigation complete</span>
@@ -1019,7 +1018,6 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
               <div className="rounded-[9px] border border-white/80 bg-white/56 px-2 py-2 shadow-[0_14px_30px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-2.5 sm:py-2.5">
                 <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Recovery context</p>
                 <div className="mt-1.5 flex items-center gap-1.5">
-                  <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-4 w-4 shrink-0 object-contain sm:h-5 sm:w-5" />
                   <p className="truncate text-[9px] font-semibold tracking-[-0.02em] text-[#26333A] sm:text-[10px]">Amazon reimbursement</p>
                 </div>
                 <div className="mt-2 border-t border-[#D9E2E2]/80 pt-1.5">
