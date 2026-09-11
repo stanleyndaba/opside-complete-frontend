@@ -408,8 +408,9 @@ function MarginLifecycleSection() {
       className="relative overflow-hidden bg-white py-10 sm:py-[52px] md:py-[73px]"
     >
       <div className={containerClass}>
-        <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-        <motion.div {...revealProps} className="relative order-2 h-fit self-start overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(104,146,180,0.16),transparent_36%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:order-1 lg:p-7">
+        <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
+        <motion.div {...revealProps} className="relative order-2 h-fit self-start overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:order-1">
+          <BrowserChrome path="margin.app/workspace" />
           <div className="isolate overflow-hidden rounded-[12px]" style={{ clipPath: "inset(0 round 12px)", WebkitClipPath: "inset(0 round 12px)" }}>
             <video className="block aspect-[1.45] w-full scale-[1.04] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/workflow.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
           </div>
@@ -875,7 +876,7 @@ function RecoveryWorkStatement() {
   return (
     <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="trust-section-title">
       <div className={containerClass}>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              07 / ONE RECORD</p>
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>You shouldn&apos;t have to piece the recovery together.</h2>
@@ -887,7 +888,8 @@ function RecoveryWorkStatement() {
             </div>
             <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">One recovery. One record. One visible outcome.</p>
           </motion.div>
-          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(104,146,180,0.16),transparent_36%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.22)] sm:p-5 lg:p-7">
+          <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
+            <BrowserChrome path="margin.app/recovery-workspace" />
             <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
           </motion.div>
         </div>
@@ -1039,8 +1041,9 @@ function FullRecoveryLoopSection() {
         <motion.div {...revealProps} className="mt-8 md:mt-10">
           <div
             aria-label="A living orchestration of the full recovery loop"
-            className="recovery-orchestra-canvas relative hidden overflow-hidden border-y border-[var(--margin-border)] lg:block"
+            className="recovery-orchestra-canvas relative hidden overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] lg:block"
           >
+            <div className="relative z-20"><BrowserChrome path="margin.app/recovery-loop" /></div>
             <svg
               aria-hidden="true"
               className="recovery-orchestra-lines pointer-events-none absolute inset-0 h-full w-full"
@@ -1410,7 +1413,7 @@ function RiskSection() {
   return (
     <section aria-labelledby="financial-closure-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-8 md:py-[52px]">
       <div className={containerClass}>
-        <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
+        <div className="grid items-start gap-8 lg:grid-cols-[0.62fr_1.38fr] lg:gap-10">
           <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2 lg:scale-[1.03] lg:origin-center">
             <div className="mb-4 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
@@ -1468,8 +1471,11 @@ function RiskSection() {
                 </div>
               </div>
             </div>
-            <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] shadow-[0_24px_70px_rgba(0,0,0,0.24)] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
+            <div className="relative min-h-[360px] overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:min-h-[450px] sm:p-3 lg:h-[560px] lg:min-h-0">
+              <BrowserChrome path="margin.app/financial-closure" />
+              <div className="h-[calc(100%-28px)] overflow-hidden rounded-b-[6px] bg-[#101820]">
               <FinancialClosureImageStack />
+              </div>
             </div>
           </motion.div>
 
@@ -1604,7 +1610,9 @@ function RecoveryOutcomeExplorer() {
               </motion.div>
 
               <motion.div {...revealProps} className="order-3 mt-0 lg:order-2 lg:row-span-2 lg:sticky lg:top-24 lg:self-start">
-                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] bg-[#101820] sm:min-h-[450px] lg:h-[520px] lg:min-h-0">
+                <div className="relative min-h-[360px] overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:min-h-[450px] sm:p-3 lg:h-[560px] lg:min-h-0">
+                  <BrowserChrome path="margin.app/recovery-outcomes" />
+                  <div className="relative h-[calc(100%-28px)] overflow-hidden rounded-b-[6px] bg-[#101820]">
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.16),transparent_35%)]" />
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
@@ -1618,6 +1626,7 @@ function RecoveryOutcomeExplorer() {
                       {activeState.title === "Needs evidence" ? <NeedsEvidenceImageStack /> : activeState.title === "Rejected" ? <RejectedImageStack /> : activeState.title === "Recovery Outcome" ? <UnderpaidImageStack /> : activeState.title === "Appealable" ? <AppealableImageStack /> : <OutcomeWorkspace state={activeState} index={activeOutcome} reduceMotion={Boolean(reduceMotion)} />}
                     </motion.div>
                   </AnimatePresence>
+                  </div>
                 </div>
               </motion.div>
 
@@ -1656,6 +1665,17 @@ function RecoverOncePagePreview() {
   );
 }
 
+
+function BrowserChrome({ path }: { path: string }) {
+  return (
+    <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] px-2">
+      <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
+      <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
+      <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
+      <span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">{path}</span>
+    </div>
+  );
+}
 
 function DiscrepancyModalVisual() {
   const [mode, setMode] = useState<'finding' | 'proof'>('finding');
