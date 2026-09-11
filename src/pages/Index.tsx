@@ -950,7 +950,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           <motion.div aria-hidden="true" className="absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-[#D9EEE8]/70 blur-2xl" animate={{ x: [0, 16, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
           <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
           <motion.div
-            className="absolute left-[6%] right-[6%] top-1/2 -translate-y-1/2"
+            className="absolute left-[6%] right-[6%] top-[25%] -translate-y-1/2"
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
