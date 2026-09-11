@@ -945,17 +945,17 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           <motion.div aria-hidden="true" className="absolute -bottom-12 -right-10 h-40 w-40 rounded-full bg-[#D8E8F4]/75 blur-2xl" animate={{ x: [0, -14, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
           <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
           <motion.div
-            className="absolute left-[6%] right-[6%] top-[30%] -translate-y-1/2"
+            className="absolute left-[6%] right-[6%] top-[20%] -translate-y-1/2"
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="grid grid-cols-[0.9fr_1.1fr] items-start gap-2.5 sm:gap-3">
+            <div className="grid grid-cols-[1.05fr_0.95fr] items-start gap-2.5 sm:gap-3">
               <div className="rounded-[9px] border border-white/80 bg-white/58 px-2.5 py-2.5 shadow-[0_14px_30px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3 sm:py-3">
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Finding</p>
-                  <span className="rounded-[3px] bg-[#FFF0E3] px-1 py-0.5 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#9A6638]">Explain</span>
+                  <span className="rounded-[3px] bg-[#E8F0F7] px-1 py-0.5 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#47708B]">A1</span>
                 </div>
                 <div className="mt-2 flex items-center gap-1.5">
                   <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-4 w-4 shrink-0 object-contain sm:h-5 sm:w-5" />
@@ -963,7 +963,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                 </div>
                 <div className="mt-2 border-t border-[#D9E2E2]/80 pt-1.5">
                   <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Amount under review</p>
-                  <p className="mt-0.5 text-[15px] font-semibold tracking-[-0.04em] text-[#26333A] sm:text-[17px]">$853.60</p>
+                  <p className="mt-0.5 font-lora text-[15px] font-semibold tracking-[-0.04em] text-[#26333A] sm:text-[17px]">$853.60</p>
                 </div>
                 <p className="mt-1 text-[8px] leading-3 text-[#66747A] sm:text-[9px]">Settlement SETTLE-ACME-0013</p>
                 <div className="mt-2 border-t border-[#D9E2E2]/80 pt-1.5">
@@ -972,17 +972,17 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                 </div>
               </div>
               <div className="space-y-1.5 pt-2 sm:pt-3">
-                <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Margin analysis</p>
+                <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Analysis</p>
                 <div className="rounded-[8px] border border-white/80 bg-white/64 px-2.5 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-3">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[8px] font-medium text-[#4A585F] sm:text-[9px]">Investigation complete</span>
                     <span className="h-1.5 w-1.5 rounded-full bg-[#4D9A74]" aria-hidden="true" />
                   </div>
                   <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1.5 border-t border-[#D9E2E2]/80 pt-1.5">
-                    <div><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Charge applied</p><p className="mt-0.5 text-[9px] font-semibold text-[#344149] sm:text-[10px]">$1,638.91</p></div>
-                    <div><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Expected outcome</p><p className="mt-0.5 text-[9px] font-semibold text-[#344149] sm:text-[10px]">$785.31</p></div>
+                    <div><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Charge applied</p><p className="mt-0.5 font-lora text-[9px] font-semibold text-[#344149] sm:text-[10px]">$1,638.91</p></div>
+                    <div><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Expected outcome</p><p className="mt-0.5 font-lora text-[9px] font-semibold text-[#344149] sm:text-[10px]">$785.31</p></div>
                   </div>
-                  <div className="mt-1.5 border-t border-[#D9E2E2]/80 pt-1.5"><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Difference</p><p className="mt-0.5 text-[12px] font-semibold tracking-[-0.03em] text-[#0B74DE] sm:text-[14px]">$853.60</p></div>
+                  <div className="mt-1.5 border-t border-[#D9E2E2]/80 pt-1.5"><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Difference</p><p className="mt-0.5 font-lora text-[12px] font-semibold tracking-[-0.03em] text-[#0B74DE] sm:text-[14px]">$853.60</p></div>
                 </div>
                 <div className="flex items-center gap-2 rounded-[8px] border border-white/70 bg-white/48 px-2.5 py-2 shadow-[0_8px_18px_rgba(56,74,82,0.07)] backdrop-blur-md sm:px-3">
                   <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/65" aria-hidden="true" />
