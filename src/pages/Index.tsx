@@ -941,8 +941,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
       visual: <img src="/discrepancy.png" alt="Amazon discrepancy requiring recovery work" className="h-full w-full rounded-[4px] object-cover" />,
     },
     {
-      title: "Keep the recovery moving.",
-      copy: "A recovery is not just a case to open. It needs requests answered, evidence gathered, decisions made, and next steps kept visible. Margin manages the work between the finding and the outcome, so nothing stalls because the next action was unclear.",
+      title: "Every recovery step, kept in view.",
+      copy: "A case is only one part of the work. Margin keeps evidence requests, response reviews, submission steps, reversals, and appeals visible together, so the recovery does not stall between one action and the next.",
       visual: (
         <div className="relative isolate h-full overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,255,255,0.98),transparent_38%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_54%,#F9FAF8_100%)]" />
