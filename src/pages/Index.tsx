@@ -1077,13 +1077,6 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           ))}
         </div>
 
-        <motion.div {...revealProps} className="mt-10 border-t border-[#D8DEDA] pt-7 md:mt-12 md:pt-8">
-          <p className="max-w-[700px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">These are not separate problems when you are the seller. <span className="font-medium text-[#48677A]">They become one unresolved recovery thread.</span></p>
-          <div className="mt-7 grid gap-6 border-t border-[#D8DEDA] pt-7 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end lg:gap-12">
-            <div><p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">The product bridge</p><h3 className="mt-3 font-lora text-[30px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>Margin connects the thread.</h3></div>
-            <div><p className="max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">Margin keeps the recovery connected from the first finding through the final financial outcome—what happened, what evidence supports it, what needs to happen next, what Amazon did, and whether the money actually came back.</p><p className="mt-4 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[16px] md:leading-8">So you don&apos;t have to become the person coordinating, proving, chasing, and reconciling every recovery yourself.</p><Button onClick={() => onAuditCta("recovery_thread_audit")} className="mt-6 h-12 rounded-[8px] bg-[var(--margin-blue)] px-6 text-[13px] font-semibold text-white shadow-none hover:bg-[var(--margin-blue-hover)]">Start a free Recovery Audit <ArrowRight className="ml-2 h-4 w-4" /></Button><p className="mt-4 font-mono text-[9px] uppercase tracking-[0.08em] text-[#7A878E]">Read-only. See the result before deciding. Nothing is submitted without your approval.</p></div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
