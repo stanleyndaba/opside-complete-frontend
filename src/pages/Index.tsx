@@ -370,38 +370,26 @@ function RealityCheckSection() {
   return (
     <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-[52px] md:py-[73px]">
       <div className={containerClass}>
-        <div className="grid items-stretch gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-10">
         <div className="flex flex-col justify-center">
         <motion.div {...revealProps} className="flex max-w-[900px] flex-col justify-center">
           <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[var(--margin-blue)]" />
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              03 / THE PROBLEM</span>
           </div>
-          <p className="mb-3 text-[15px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">You already have enough to manage.</p>
           <h2 className="font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
             Recovery shouldn&apos;t be another job.
           </h2>
-          <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+          <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
             You shouldn&apos;t have to find the issue, figure out what happened, gather the proof, deal with Amazon, chase the outcome, and check whether the money actually came back.
           </p>
-          <p className="mt-4 max-w-[720px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">
+          <p className="mt-3 max-w-[720px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">
             Margin handles it.
           </p>
-          <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
+          <p className="mt-3 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">
             It takes the recovery from the first finding through to the final outcome—so you can get back to running your business instead of running another recovery operation.
           </p>
         </motion.div>
-        <motion.div {...revealProps} className="mt-6 border-y border-[var(--margin-border)] py-3 md:mt-8 md:py-4">
-          <p className="font-mono text-[11px] font-semibold tracking-[0.02em] text-[var(--margin-blue)] sm:text-[12px] md:text-[13px]">
-            Understand <span className="px-1 text-[var(--margin-border-strong)]">→</span> Establish <span className="px-1 text-[var(--margin-border-strong)]">→</span> Prove <span className="px-1 text-[var(--margin-border-strong)]">→</span> Recover <span className="px-1 text-[var(--margin-border-strong)]">→</span> Verify <span className="px-1 text-[var(--margin-border-strong)]">→</span> Close
-          </p>
-        </motion.div>
-        <motion.p {...revealProps} className="mt-5 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8 md:mt-7">
-          You don&apos;t manage the recovery step by step. <span className="font-medium text-[#48677A]">Margin runs the operation.</span>
-        </motion.p>
-        <motion.p {...revealProps} className="mt-4 max-w-[760px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-          You sell. <span className="font-medium text-[#48677A]">Margin handles the recovery.</span>
-        </motion.p>
         </div>
         <motion.div {...revealProps} className="relative">
           <DiscrepancyModalVisual />
