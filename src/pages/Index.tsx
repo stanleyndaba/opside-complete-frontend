@@ -965,7 +965,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           />
           <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
           <motion.div
-            className="absolute left-[9%] right-[9%] top-[39%] -translate-y-1/2"
+            className="absolute left-[9%] right-[9%] top-[29%] -translate-y-1/2"
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
