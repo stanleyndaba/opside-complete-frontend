@@ -46,7 +46,7 @@ export default function RecoverOnce() {
       </header>
 
       <main className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_310px] lg:gap-10">
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
           <article className="min-w-0 rounded-[16px] bg-white px-5 py-6 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-8 sm:py-9" aria-labelledby="recover-once-title">
             <header className="border-b border-[#E8E7E1] pb-7">
               <div className="mb-4 flex items-center gap-2 text-[12px] font-semibold text-[#595E68]"><span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4F3ED] text-[#191B20]"><FileText className="h-3.5 w-3.5" aria-hidden="true" /></span><span>Recover Once</span></div>
