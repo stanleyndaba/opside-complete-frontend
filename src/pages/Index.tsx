@@ -251,6 +251,41 @@ const historicalVideoSections = [
   { id: "payout-reconciliation-preview", label: "Payout reconciliation", title: "The recovery is not complete until the money is checked.", body: "Margin keeps the case outcome connected to the payout record so approved value and actual settlement can be compared.", videos: ["/CasesTable.mp4", "/EvidenceCalibration.mp4"] },
 ] as const;
 
+function DeferredVideo({ src, label, className }: { src: string; label: string; className?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const node = videoRef.current;
+    if (!node || shouldLoad) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setShouldLoad(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setShouldLoad(true);
+      observer.disconnect();
+    }, { rootMargin: "600px 0px" });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [shouldLoad]);
+
+  return (
+    <video
+      ref={videoRef}
+      className={className}
+      src={shouldLoad ? src : undefined}
+      autoPlay={shouldLoad}
+      loop
+      muted
+      playsInline
+      preload="none"
+      aria-label={label}
+    />
+  );
+}
+
 function HistoricalVideoPreviewSections() {
   return (
     <>
@@ -264,7 +299,7 @@ function HistoricalVideoPreviewSections() {
             </motion.div>
             <div className={`mt-10 grid gap-5 ${section.videos.length > 2 ? "sm:grid-cols-2" : "lg:grid-cols-2"}`}>
               {section.videos.map((video, videoIndex) => (
-                <motion.div key={`${video}-${videoIndex}`} {...revealProps} transition={{ ...revealProps.transition, delay: videoIndex * 0.08 }} className="relative overflow-hidden rounded-[12px] sm:rounded-[16px]"><video className="block aspect-video w-full object-cover" src={video} autoPlay loop muted playsInline preload="auto" aria-label={`${section.label} demonstration ${videoIndex + 1}`} /></motion.div>
+                <motion.div key={`${video}-${videoIndex}`} {...revealProps} transition={{ ...revealProps.transition, delay: videoIndex * 0.08 }} className="relative overflow-hidden rounded-[12px] bg-[#F3F7F8] sm:rounded-[16px]"><DeferredVideo className="block aspect-video w-full object-cover" src={video} label={`${section.label} demonstration ${videoIndex + 1}`} /></motion.div>
               ))}
             </div>
           </div>
@@ -412,7 +447,7 @@ function MarginLifecycleSection() {
         <motion.div {...revealProps} className="relative order-2 h-fit self-start overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:order-1">
           <BrowserChrome path="margin.app/workspace" />
           <div className="isolate overflow-hidden rounded-[12px]" style={{ clipPath: "inset(0 round 12px)", WebkitClipPath: "inset(0 round 12px)" }}>
-            <video className="block aspect-[1.45] w-full scale-[1.04] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/workflow.mp4" autoPlay loop muted playsInline preload="auto" aria-label="How Margin handles recovery work" />
+            <DeferredVideo className="block aspect-[1.45] w-full scale-[1.04] object-contain shadow-[0_20px_60px_rgba(0,0,0,0.18)]" src="/workflow.mp4" label="How Margin handles recovery work" />
           </div>
         </motion.div>
         <div className="order-1 flex flex-col justify-center lg:order-2">
@@ -890,7 +925,7 @@ function RecoveryWorkStatement() {
           </motion.div>
           <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
             <BrowserChrome path="margin.app/recovery-workspace" />
-            <video className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.34)]" src="/section_5.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Margin connected recovery record demonstration" />
+            <DeferredVideo className="block aspect-video w-full rounded-[8px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.18)]" src="/section_5.mp4" label="Margin connected recovery record demonstration" />
           </motion.div>
         </div>
       </div>

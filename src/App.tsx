@@ -192,16 +192,31 @@ type WindowWithIdleCallback = Window & {
   cancelIdleCallback?: (handle: number) => void;
 };
 
-const RouteSkeleton = () => (
-  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] px-5 text-[#182026]">
-    <div className="inline-flex max-w-full items-center justify-center gap-2.5 sm:gap-3">
-      <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto shrink-0 object-contain sm:h-7" />
-      <span className="route-loading-brand-text brand-wordmark font-merriweather text-xl tracking-normal text-[#182026] sm:text-2xl">
-        Margin
-      </span>
+const RouteSkeleton = () => {
+  const [isTakingTooLong, setIsTakingTooLong] = React.useState(false);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setIsTakingTooLong(true), 10000);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#FAFAF7] px-5 text-[#182026]">
+      <div className="flex max-w-md flex-col items-center justify-center text-center">
+        <div className="inline-flex items-center justify-center gap-2.5 sm:gap-3">
+          <img src="/logoimagetwo.png" alt="Margin" className="h-6 w-auto shrink-0 object-contain sm:h-7" />
+          <span className="route-loading-brand-text brand-wordmark font-merriweather text-xl tracking-normal text-[#182026] sm:text-2xl">Margin</span>
+        </div>
+        {isTakingTooLong ? (
+          <div className="mt-8 border-t border-[#DCE8EE] pt-5">
+            <p className="text-[14px] leading-6 text-[#5F6D77]">This page is taking longer than expected to load.</p>
+            <button type="button" onClick={() => window.location.reload()} className="mt-4 rounded-md bg-[#0B74DE] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#075EA8]">Reload Margin</button>
+          </div>
+        ) : null}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const appRoute = (element: React.ReactNode) => (
   <AppAccessGate>{element}</AppAccessGate>
