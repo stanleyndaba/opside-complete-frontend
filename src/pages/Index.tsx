@@ -1752,20 +1752,13 @@ export default function Index() {
         {/* Final CTA — compact operational handoff */}
         <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-5 sm:py-6 md:py-9" aria-labelledby="final-handoff-title">
           <div className={containerClass}>
-            <div className="grid items-center gap-8 border-y border-[var(--margin-border)] py-8 md:gap-12 md:py-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-12">
+            <div className="grid items-center gap-6 border-y border-[var(--margin-border)] py-6 md:gap-8 md:py-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-10">
               <motion.div {...revealProps} className="min-w-0">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">15 / FINAL DELEGATION</p>
-                <h2 id="final-handoff-title" className="mt-3 max-w-[720px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
+                <h2 id="final-handoff-title" className="mt-2 max-w-[720px] font-lora text-[30px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[44px]" style={{ fontWeight: 400 }}>
                   You don&apos;t have to wonder.
-                  <span className="mt-3 block font-sans text-[17px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[21px] md:text-[24px]">You sell on Amazon. Margin handles the recovery.</span>
                 </h2>
-                <p className="mt-4 max-w-[680px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-7">
-                  Know what happened, what is justified, what Margin is doing, and whether the money came back.
-                </p>
-                <p className="mt-4 max-w-[620px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-                  You stay informed. You stay in control. The recovery work is no longer yours to carry.
-                </p>
-                <div className="mt-5 grid gap-x-5 gap-y-2 border-y border-[var(--margin-border-subtle)] py-3 sm:grid-cols-2">
+                <div className="mt-4 grid gap-x-5 gap-y-2 border-y border-[var(--margin-border-subtle)] py-2.5 sm:grid-cols-2">
                   {["Finds the recovery.", "Builds the case.", "Carries it forward.", "Keeps the outcome visible."].map((item) => (
                     <div key={item} className="flex items-center gap-2 text-[12px] leading-5 text-[var(--margin-text-secondary)] md:text-[13px]">
                       <Check className="h-3.5 w-3.5 shrink-0 text-[var(--margin-blue)]" />
@@ -1773,7 +1766,7 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
-                <p className="mt-5 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
+                <p className="mt-4 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
                   You sell. Margin runs the recovery operation.
                 </p>
                 <Button onClick={() => handleClaimAccessClick("homepage_early_access_section")} className="landing-pressable mt-5 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]">
