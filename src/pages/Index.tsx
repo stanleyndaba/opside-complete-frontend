@@ -1655,6 +1655,41 @@ function RecoveryOutcomeExplorer() {
   );
 }
 
+
+const recoverOnceDemoStates = [
+  { label: 'Audit result', title: 'One defined discrepancy', detail: '17 affected units across two related shipments.', status: 'Finding identified' },
+  { label: 'Evidence', title: '14 of 17 units supported', detail: 'Shipment, carrier, and inventory records align.', status: 'Evidence matched' },
+  { label: 'Offer', title: 'Recover Once is a fit', detail: '$6,240 estimated value · $179 fixed fee · 0% commission.', status: 'Frozen offer' },
+  { label: 'Seller control', title: 'Ready for your review', detail: 'Nothing is submitted without your approval.', status: 'Decision required' },
+];
+
+function RecoverOnceDemo() {
+  const reduceMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeState = recoverOnceDemoStates[activeIndex];
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => setActiveIndex((current) => (current + 1) % recoverOnceDemoStates.length), 3200);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  return (
+    <div className="relative overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-[#F7FAF9] p-3 shadow-[0_18px_55px_rgba(72,103,122,0.12)] sm:p-4">
+      <div className="flex items-center justify-between border-b border-[#D9E2E6] pb-3"><div className="flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-4 w-auto" /><span className="font-merriweather text-[15px] tracking-tight text-[#24323A]">Margin</span></div><span className="rounded-full bg-white px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-tight text-[#647783]">Recover Once</span></div>
+      <div className="grid gap-4 pt-4 sm:grid-cols-[minmax(0,1fr)_170px]">
+        <div className="min-w-0 rounded-[9px] border border-[#D9E2E6] bg-white p-4 sm:p-5">
+          <div className="flex items-center justify-between gap-3"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#0B74DE]">{activeState.label}</span><span className="text-[10px] text-[#7A8B93]">Audit → recovery</span></div>
+          <AnimatePresence mode="wait" initial={false}><motion.div key={activeState.title} initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }} transition={{ duration: reduceMotion ? 0 : 0.35 }}><h3 className="mt-5 font-lora text-[25px] leading-tight tracking-[-0.03em] text-[#17242B] sm:text-[30px]">{activeState.title}</h3><p className="mt-2 max-w-[400px] text-[12px] leading-5 text-[#667984] sm:text-[13px]">{activeState.detail}</p><div className="mt-5 flex items-center gap-2 border-t border-[#E5ECEF] pt-3"><span className="h-1.5 w-1.5 rounded-full bg-[#2E8B72]" /><span className="text-[11px] font-medium text-[#344A55]">{activeState.status}</span></div></motion.div></AnimatePresence>
+        </div>
+        <div className="rounded-[9px] border border-[#D9E2E6] bg-[#EFF5F4] p-3"><p className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#647783]">Offer summary</p><p className="mt-3 text-[22px] font-semibold tracking-tight text-[#17242B]">$6,240</p><p className="mt-1 text-[10px] leading-4 text-[#667984]">estimated value</p><div className="mt-4 border-t border-[#D9E2E6] pt-3"><p className="text-[11px] font-semibold text-[#17242B]">$179 fixed fee</p><p className="mt-1 text-[10px] text-[#667984]">0% Margin commission</p></div></div>
+      </div>
+      <div className="mt-3 grid grid-cols-4 gap-1.5">{recoverOnceDemoStates.map((state, index) => <button key={state.label} type="button" aria-label={`Show ${state.label}`} onClick={() => setActiveIndex(index)} className={`h-1.5 rounded-full transition-colors ${index === activeIndex ? 'bg-[#0B74DE]' : 'bg-[#D9E2E6]'}`} />)}</div>
+      <div className="mt-3 flex items-center justify-between gap-3 text-[10px] text-[#7A8B93]"><span>Seller-controlled recovery</span><span>{activeIndex + 1} / {recoverOnceDemoStates.length}</span></div>
+    </div>
+  );
+}
+
 export default function Index() {
   usePageMeta(PUBLIC_ROUTE_META['/']);
   const navigate = useNavigate();
@@ -1769,9 +1804,7 @@ export default function Index() {
               </motion.div>
 
               <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-                <div className="relative overflow-hidden rounded-[10px] border border-white/10 bg-[radial-gradient(circle_at_80%_12%,rgba(104,146,180,0.16),transparent_36%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-5">
-                  <AuditImageStackVisual />
-                </div>
+                <RecoverOnceDemo />
               </motion.div>
             </div>
           </div>
