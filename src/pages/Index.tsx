@@ -975,7 +975,6 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                 <div className="rounded-[8px] border border-white/80 bg-white/64 px-2.5 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-3">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[8px] font-medium text-[#4A585F] sm:text-[9px]">Investigation complete</span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#4D9A74]" aria-hidden="true" />
                   </div>
                   <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1.5 border-t border-[#D9E2E2]/80 pt-1.5">
                     <div><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Charge applied</p><p className="mt-0.5 font-lora text-[9px] font-semibold text-[#344149] sm:text-[10px]">$1,638.91</p></div>
