@@ -1752,7 +1752,7 @@ export default function Index() {
         {/* Final CTA — compact operational handoff */}
         <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-5 sm:py-6 md:py-9" aria-labelledby="final-handoff-title">
           <div className={containerClass}>
-            <div className="grid items-center gap-8 border-y border-[var(--margin-border)] py-8 md:gap-12 md:py-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+            <div className="grid items-center gap-8 border-y border-[var(--margin-border)] py-8 md:gap-12 md:py-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-12">
               <motion.div {...revealProps} className="min-w-0">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">15 / FINAL DELEGATION</p>
                 <h2 id="final-handoff-title" className="mt-3 max-w-[720px] font-lora text-[32px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>
