@@ -49,7 +49,7 @@ export default function RecoverOnce() {
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
           <article className="min-w-0 rounded-[16px] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-6 sm:py-5" aria-labelledby="recover-once-title">
             <header className="border-b border-[#E8E7E1] pb-7">
-              <h1 id="recover-once-title" className="max-w-2xl font-sans text-[14px] font-semibold uppercase leading-[1.04] tracking-tight text-[#191B20] sm:text-[17px]">Audit Complete</h1>
+              <p id="recover-once-title" className="max-w-2xl text-[14px] leading-6 text-[#595E68] sm:text-[15px]">Investigation complete within 7 min, across 10 442 placements</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">We reviewed <strong className="font-semibold text-[#191B20]">3,214 orders, 41 inbound shipments, and 22 returns</strong> from <strong className="font-semibold text-[#191B20]">1 February to 30 April 2026</strong>.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">We found <strong className="font-semibold text-[#191B20]">one defined inbound-shipment discrepancy</strong> affecting <strong className="font-semibold text-[#191B20]">17 units across two related shipments</strong>, both tied to the same supplier delivery and concentrated in the week of 10 March.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] font-medium leading-6 text-[#191B20]">This is one specific event identified in the records reviewed — <strong className="font-semibold">not a general account warning.</strong></p>
