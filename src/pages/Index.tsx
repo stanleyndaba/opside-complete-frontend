@@ -37,7 +37,6 @@ import { CookieConsent } from "@/components/landing/CookieConsent";
 import { PwaInstallButton } from "@/components/PwaInstallButton";
 import { useNavigate, Link } from "react-router-dom";
 import { RecoveryOfferSection, RecoveryRoutingSection } from "@/components/landing/RecoveryDecisionSections";
-import { AuditImageStackVisual } from "@/components/landing/AuditImageStackVisual";
 import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPreview";
 import { useOnboardingCapacity } from "@/hooks/useOnboardingCapacity";
 import { PUBLIC_ROUTE_META } from "@/config/seo";
