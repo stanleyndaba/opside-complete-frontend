@@ -913,7 +913,37 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
     {
       title: "Paid. Now make sure it’s actually finished.",
       copy: "A reimbursement or credit comes through, but the work isn’t necessarily over. You still need to know whether the amount was complete, whether it appeared where expected, whether anything was reversed, and whether the recovery can actually be closed.",
-      visual: <img src="/recoveryclose.png" alt="Recovery outcome ready to be closed" className="h-full w-full rounded-[4px] object-cover" />,
+      visual: (
+        <div className="relative isolate aspect-[1.55] overflow-hidden rounded-[8px] border border-[#D8E2E8]/80 bg-[#F7F9F8] shadow-[0_18px_60px_rgba(37,49,58,0.08)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.96),transparent_36%),linear-gradient(135deg,#F8FAF9_0%,#EEF3F1_52%,#F9FAF8_100%)]" />
+          <motion.div
+            aria-hidden="true"
+            className="absolute -left-8 -top-10 h-36 w-36 rounded-full bg-[#D9EEE8]/75 blur-2xl"
+            animate={{ x: [0, 18, 0], y: [0, 12, 0], scale: [1, 1.12, 1] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            aria-hidden="true"
+            className="absolute -bottom-12 -right-8 h-40 w-40 rounded-full bg-[#DCE7F4]/80 blur-2xl"
+            animate={{ x: [0, -16, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }}
+            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          />
+          <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
+          <motion.div
+            className="absolute left-[9%] right-[9%] top-1/2 -translate-y-1/2"
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="relative flex items-center gap-3 rounded-[10px] border border-white/80 bg-white/62 px-3 py-3 shadow-[0_14px_32px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:px-4 sm:py-3.5">
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
+              <span className="min-w-0 flex-1 truncate font-sans text-[12px] font-medium tracking-[-0.02em] text-[#26333A] sm:text-[14px]">Reply to Amazon&apos;s Previous Email</span>
+              <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
+            </div>
+          </motion.div>
+        </div>
+      ),
     },
   ];
 
