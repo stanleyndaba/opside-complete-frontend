@@ -1166,7 +1166,7 @@ const recoveryOutcomeStates = [
 
 function NeedsEvidenceImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(11,116,222,0.05),transparent_35%),linear-gradient(145deg,#F7FBFC_0%,#FFFFFF_58%,#F2F6F7_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img
           src="/emaillist.png"
@@ -1185,7 +1185,7 @@ function NeedsEvidenceImageStack() {
 
 function RejectedImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(11,116,222,0.05),transparent_35%),linear-gradient(145deg,#F7FBFC_0%,#FFFFFF_58%,#F2F6F7_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img src="/resubmit.png" alt="Resubmission workspace" className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] rotate-0 rounded-[5px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]" />
         <img src="/rejectedreason.png" alt="Rejected case reason" className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] -rotate-[0.5deg] rounded-[5px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]" />
@@ -1196,7 +1196,7 @@ function RejectedImageStack() {
 
 function UnderpaidImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(11,116,222,0.05),transparent_35%),linear-gradient(145deg,#F7FBFC_0%,#FFFFFF_58%,#F2F6F7_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img src="/evidenceatt.png" alt="Evidence attached to an underpaid recovery" className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] rotate-0 rounded-[5px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]" />
         <img src="/underpayemail.png" alt="Underpayment recovery email" className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] rotate-[0.5deg] rounded-[5px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]" />
@@ -1207,7 +1207,7 @@ function UnderpaidImageStack() {
 
 function AppealableImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(11,116,222,0.05),transparent_35%),linear-gradient(145deg,#F7FBFC_0%,#FFFFFF_58%,#F2F6F7_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img src="/financial.png" alt="Financial recovery record" className="absolute left-0 top-[12%] z-0 h-[76%] w-[76%] rotate-0 rounded-[5px] border border-white/15 object-cover object-left-top shadow-[0_20px_45px_rgba(0,0,0,0.28)] sm:top-[10%] sm:h-[78%] sm:w-[78%]" />
         <img src="/realappeal.png" alt="Appeal record ready for review" className="absolute right-0 top-[4%] z-10 h-[86%] w-[78%] rotate-[0.5deg] rounded-[5px] border border-[#E4E2DC] bg-white object-cover object-left-top shadow-[0_24px_55px_rgba(0,0,0,0.34)] sm:h-[88%] sm:w-[80%]" />
@@ -1218,7 +1218,7 @@ function AppealableImageStack() {
 
 function FinancialClosureImageStack() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.12),transparent_35%),linear-gradient(145deg,#17232D_0%,#101820_58%,#0B1116_100%)] p-4 sm:p-7 md:p-9">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_78%_18%,rgba(11,116,222,0.05),transparent_35%),linear-gradient(145deg,#F7FBFC_0%,#FFFFFF_58%,#F2F6F7_100%)] p-4 sm:p-7 md:p-9">
       <div className="relative h-full w-full">
         <img
           src="/approved%20reimbursement.png"
@@ -1473,7 +1473,7 @@ function RiskSection() {
             </div>
             <div className="relative min-h-[360px] overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:min-h-[450px] sm:p-3 lg:h-[560px] lg:min-h-0">
               <BrowserChrome path="margin.app/financial-closure" />
-              <div className="h-[calc(100%-28px)] overflow-hidden rounded-b-[6px] bg-[#101820]">
+              <div className="h-[calc(100%-28px)] overflow-hidden rounded-b-[6px] bg-white">
               <FinancialClosureImageStack />
               </div>
             </div>
@@ -1612,8 +1612,8 @@ function RecoveryOutcomeExplorer() {
               <motion.div {...revealProps} className="order-3 mt-0 lg:order-2 lg:row-span-2 lg:sticky lg:top-24 lg:self-start">
                 <div className="relative min-h-[360px] overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:min-h-[450px] sm:p-3 lg:h-[560px] lg:min-h-0">
                   <BrowserChrome path="margin.app/recovery-outcomes" />
-                  <div className="relative h-[calc(100%-28px)] overflow-hidden rounded-b-[6px] bg-[#101820]">
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(104,146,180,0.16),transparent_35%)]" />
+                  <div className="relative h-[calc(100%-28px)] overflow-hidden rounded-b-[6px] bg-white">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(11,116,222,0.05),transparent_35%)]" />
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                       key={activeState.title}
