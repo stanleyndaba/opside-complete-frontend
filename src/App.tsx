@@ -76,7 +76,8 @@ const SellerboardAlternative = lazy(() => import("./pages/SellerboardAlternative
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const RecoveryStart = lazy(() => import("./pages/RecoveryStart"));
 const InformationRequired = lazy(() => import("./pages/InformationRequired"));
-const RecoverOnce = lazy(() => import("./pages/RecoverOnce"));`r`nconst RecoveryWorkspace = lazy(() => import("./pages/RecoveryWorkspace"));
+const RecoverOnce = lazy(() => import('./pages/RecoverOnce'));
+const RecoveryWorkspace = lazy(() => import('./pages/RecoveryWorkspace'));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const Standalone = lazy(() => import("./pages/standalone"));
@@ -286,7 +287,8 @@ const App = () => (
                         <Route path="/" element={<Index />} />
                         <Route path="/get-started" element={<RecoveryStart />} />
                         <Route path="/information-required" element={<InformationRequired />} />
-                        <Route path="/recover-once" element={<RecoverOnce />} />`r`n                        <Route path="/recovery-workspace" element={<RecoveryWorkspace />} />
+                        <Route path='/recover-once' element={<RecoverOnce />} />
+                        <Route path='/recovery-workspace' element={<RecoveryWorkspace />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/connect-amazon" element={<Navigate to="/audit" replace />} />
                         <Route path="/careers" element={<Careers />} />
@@ -472,4 +474,5 @@ const App = () => (
 );
 
 export default App;
+
 
