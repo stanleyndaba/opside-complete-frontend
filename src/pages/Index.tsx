@@ -976,31 +976,31 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="relative min-h-[190px]">
-              <div className="absolute left-0 right-[8%] top-0 rounded-[11px] border border-white/85 bg-white/62 px-3 py-3 shadow-[0_16px_34px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3.5 sm:py-3.5">
-                <div className="flex items-start justify-between gap-2 border-b border-[#D9E2E2]/80 pb-2.5">
+              <div className="absolute left-0 right-[8%] top-0 rounded-[11px] border border-white/85 bg-white/62 px-2.5 py-2.5 shadow-[0_16px_34px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3 sm:py-3">
+                <div className="flex items-start justify-between gap-2 border-b border-[#D9E2E2]/80 pb-1.5">
                   <div>
-                    <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Recovery context</p>
-                    <p className="mt-1 text-[10px] font-semibold leading-3.5 tracking-[-0.02em] text-[#26333A] sm:text-[11px]">Amazon reimbursement</p>
+                    <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Context</p>
+                    <p className="mt-0.5 text-[10px] font-semibold leading-3.5 tracking-[-0.02em] text-[#26333A] sm:text-[11px]">Amazon reimbursement</p>
                   </div>
                 </div>
-                <div className="space-y-3 pt-3">
+                <div className="space-y-2 pt-2">
                   <div>
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Status</p>
-                    <p className="mt-1 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Evidence requested</p>
+                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Evidence requested</p>
                   </div>
                   <div>
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Next milestone</p>
-                    <p className="mt-1 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit supporting documents</p>
+                    <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit supporting documents</p>
                   </div>
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#D9E2E2]/80 pt-3">
-                  <div className="rounded-[6px] bg-white/45 px-2 py-1.5">
+                <div className="mt-2 grid grid-cols-2 gap-1.5 border-t border-[#D9E2E2]/80 pt-2">
+                  <div className="rounded-[6px] bg-white/45 px-1.5 py-1">
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Reversals</p>
-                    <p className="mt-1 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Watch</p>
+                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Watch</p>
                   </div>
-                  <div className="rounded-[6px] bg-white/45 px-2 py-1.5">
+                  <div className="rounded-[6px] bg-white/45 px-1.5 py-1">
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Appeals</p>
-                    <p className="mt-1 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Ready</p>
+                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Ready</p>
                   </div>
                 </div>
               </div>
