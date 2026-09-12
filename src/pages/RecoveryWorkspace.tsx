@@ -41,8 +41,8 @@ export default function RecoveryWorkspace() {
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-10">
           <article className="min-w-0 rounded-[16px] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-6 sm:py-5" aria-labelledby="recovery-workspace-title">
             <header className="border-b border-[#E8E7E1] pb-7">
-              <h1 id="recovery-workspace-title" className="max-w-2xl font-lora text-[24px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[29px]">A complete view of your ongoing recovery operation</h1>
-              <p className="mt-2 inline-block max-w-2xl text-[14px] leading-6 text-[#595E68] sm:text-[15px]">Investigation completed across <strong className="font-semibold text-[#191B20]">3,214 orders, 41 inbound shipments, 22 returns, 17 fee records, and 86 inventory movements</strong> in 7 minutes.</p>
+              <h1 id="recovery-workspace-title" className="max-w-2xl font-lora text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">A complete view of your ongoing recovery operation</h1>
+              <p className="mt-2 inline-block max-w-2xl text-[13px] leading-5 text-[#595E68] sm:text-[14px]">Investigation completed across <strong className="font-semibold text-[#191B20]">3,214 orders, 41 inbound shipments, 22 returns, 17 fee records, and 86 inventory movements</strong> in 7 minutes.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">We found the same type of recovery issue occurring across <strong className="font-semibold text-[#191B20]">4 independent incidents</strong> in separate periods.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">This is not one bounded event. The evidence indicates a <strong className="font-semibold text-[#191B20]">recurring recovery pattern</strong>.</p>
             </header>
