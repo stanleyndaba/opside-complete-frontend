@@ -935,53 +935,26 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           <motion.div aria-hidden="true" className="absolute -bottom-12 -right-10 h-40 w-40 rounded-full bg-[#D8E8F4]/75 blur-2xl" animate={{ x: [0, -14, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
           <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
           <motion.div
-            className="absolute left-[6%] right-[6%] top-[8%] -translate-y-1/2"
+            className="absolute left-[9%] right-[9%] top-[18%] -translate-y-1/2 lg:top-[7%]"
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="grid grid-cols-[1.16fr_0.84fr] items-start gap-2.5 sm:gap-3">
-              <div className="rounded-[9px] border border-white/80 bg-white/58 px-2.5 py-2.5 shadow-[0_14px_30px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3 sm:py-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Finding</p>
-                  <span className="rounded-[3px] bg-[#E8F0F7] px-1 py-0.5 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#47708B]">A1</span>
+            <div className="space-y-2.5">
+              {[
+                ["Phantom Refund", "/gmailicon.png", "Gmail"],
+                ["SLA Breach Compensation", "/gd.png", "Google Drive"],
+                ["Dispute Charge", "/outlookicon.webp", "Outlook"],
+                ["Removal Auditor", "/logoimagetwo.png", "Margin"],
+                ["Warehouse Damage", "/slack-icon-2019.png", "Slack"],
+              ].map(([label, icon, alt], index) => (
+                <div key={label} className={`flex items-center gap-3 rounded-[10px] border border-white/70 px-3 py-2.5 shadow-[0_${14 - index * 2}px_${32 - index * 3}px_rgba(56,74,82,0.${12 - index}),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur-lg sm:px-4 sm:py-3 ${index === 0 ? "bg-white/62" : index === 1 ? "bg-white/54" : index === 2 ? "bg-white/48" : "bg-white/42"}`}>
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/60" aria-hidden="true" />
+                  <span className="min-w-0 flex-1 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#344149] sm:text-[13px]">{label}</span>
+                  <img src={icon} alt={alt} className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
                 </div>
-                <div className="mt-2 flex items-center gap-1.5">
-                  <img src="/amazon-logo-transparent-circle.png" alt="Amazon" className="h-4 w-4 shrink-0 object-contain sm:h-5 sm:w-5" />
-                  <p className="truncate text-[9px] font-semibold tracking-[-0.02em] text-[#26333A] sm:text-[10px]">Duplicate charge</p>
-                </div>
-                <div className="mt-2 border-t border-[#D9E2E2]/80 pt-1.5">
-                  <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Amount under review</p>
-                  <p className="mt-0.5 font-lora text-[15px] font-semibold tracking-[-0.04em] text-[#26333A] sm:text-[17px]">$853.60</p>
-                </div>
-                  <p className="mt-1 text-[8px] leading-3 text-[#66747A] sm:text-[9px]">Settlement ACME-013</p>
-                <div className="mt-2 border-t border-[#D9E2E2]/80 pt-1.5">
-                  <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Found on</p>
-                  <p className="mt-0.5 text-[8px] font-medium leading-3 text-[#3C4A50] sm:text-[9px]">June 27, 2026, 12:06 PM</p>
-                </div>
-              </div>
-              <div className="space-y-1.5 pt-2 sm:pt-3">
-                <div className="rounded-[8px] border border-white/80 bg-white/64 px-2.5 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[8px] font-medium text-[#4A585F] sm:text-[9px]">Investigation complete</span>
-                  </div>
-                  <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1.5 border-t border-[#D9E2E2]/80 pt-1.5">
-                    <div><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Charge applied</p><p className="mt-0.5 font-lora text-[9px] font-semibold text-[#344149] sm:text-[10px]">$1,638.91</p></div>
-                    <div><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Expected outcome</p><p className="mt-0.5 font-lora text-[9px] font-semibold text-[#344149] sm:text-[10px]">$785.31</p></div>
-                  </div>
-                  <div className="mt-1.5 border-t border-[#D9E2E2]/80 pt-1.5"><p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Difference</p><p className="mt-0.5 font-lora text-[12px] font-semibold tracking-[-0.03em] text-[#0B74DE] sm:text-[14px]">$853.60</p></div>
-                </div>
-                <div className="flex items-center gap-2 rounded-[8px] border border-white/70 bg-white/48 px-2.5 py-2 shadow-[0_8px_18px_rgba(56,74,82,0.07)] backdrop-blur-md sm:px-3">
-                  <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/65" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 truncate text-[8px] font-medium text-[#4A585F] sm:text-[9px]">Duplicate financial event</span>
-                  <span className="rounded-[3px] bg-[#E8F0F5] px-1 py-0.5 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#557184]">Ready</span>
-                </div>
-              </div>
-            </div>
-            <div className="mt-2.5 flex items-center justify-between gap-2 rounded-[8px] border border-white/75 bg-white/54 px-2.5 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.08)] backdrop-blur-lg sm:px-3">
-              <div className="min-w-0"><p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188]">Preparing case</p><p className="mt-0.5 truncate text-[8px] font-medium text-[#3C4A50] sm:text-[9px]">Next action: Open recovery case</p></div>
-              <span className="shrink-0 rounded-[3px] bg-[#E5F1EB] px-1.5 py-0.5 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#48765E]">Margin</span>
+              ))}
             </div>
           </motion.div>
         </div>
