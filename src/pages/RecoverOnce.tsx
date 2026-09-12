@@ -64,7 +64,22 @@ export default function RecoverOnce() {
               <h2 id="what-margin-found" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What Margin will handle</h2>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The records currently support the discrepancy for <strong className="font-semibold text-[#191B20]">14 of the 17 affected units</strong>. The remaining 3 units still require final verification.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">The shipment manifest, carrier receiving record, and inventory adjustment records align for the supported units. The remaining financial question is whether Amazon has already reimbursed any of the affected units and, if so, what amount remains outstanding.</p>
-              <div className="mt-1.5 grid gap-3 sm:grid-cols-3"><div className="rounded-[10px] bg-[#F4F3ED] p-4"><p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">Supported</p><p className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20]">14 / 17</p><p className="mt-1 text-[12px] text-[#595E68]">affected units</p></div><div className="rounded-[10px] bg-[#F4F3ED] p-4"><p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">Shipments</p><p className="mt-1 text-[24px] font-semibold tracking-[-0.03em] text-[#191B20]">2</p><p className="mt-1 text-[12px] text-[#595E68]">related shipments</p></div><div className="rounded-[10px] bg-[#F4F3ED] p-4"><p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">Type</p><p className="mt-1 text-[17px] font-semibold tracking-[-0.02em] text-[#191B20]">Bounded</p><p className="mt-1 text-[12px] text-[#595E68]">one defined discrepancy</p></div></div>
+              <div className="mt-3 border-y border-[#E8E7E1] py-1.5">
+                <dl className="grid gap-0 sm:grid-cols-3 sm:divide-x sm:divide-[#E8E7E1]">
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 py-1.5 sm:block sm:px-3 sm:first:pl-0 sm:last:pr-0">
+                    <dt className="text-[10px] font-semibold uppercase tracking-tight text-[#777A82]">Supported units</dt>
+                    <dd className="text-right text-[13px] font-semibold tracking-[-0.02em] text-[#191B20] sm:mt-0.5 sm:text-left">14 / 17 <span className="font-normal text-[#595E68]">affected units</span></dd>
+                  </div>
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t border-[#E8E7E1] py-1.5 sm:block sm:border-t-0 sm:px-3 sm:first:pl-0 sm:last:pr-0">
+                    <dt className="text-[10px] font-semibold uppercase tracking-tight text-[#777A82]">Shipments</dt>
+                    <dd className="text-right text-[13px] font-semibold tracking-[-0.02em] text-[#191B20] sm:mt-0.5 sm:text-left">2 <span className="font-normal text-[#595E68]">related shipments</span></dd>
+                  </div>
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t border-[#E8E7E1] py-1.5 sm:block sm:border-t-0 sm:px-3 sm:first:pl-0 sm:last:pr-0">
+                    <dt className="text-[10px] font-semibold uppercase tracking-tight text-[#777A82]">Finding type</dt>
+                    <dd className="text-right text-[13px] font-semibold tracking-[-0.02em] text-[#191B20] sm:mt-0.5 sm:text-left">Bounded <span className="font-normal text-[#595E68]">· one defined discrepancy</span></dd>
+                  </div>
+                </dl>
+              </div>
               <div className="mt-1.5 border-l-2 border-[#3F51A8] pl-4"><p className="text-[12px] font-semibold text-[#595E68]">Estimated value associated with the discrepancy</p><p className="mt-1.5 text-[14px] font-semibold text-[#191B20]">17 affected units × $367.06 estimated value per unit = $6,240.02</p><p className="mt-1.5 text-[14px] font-semibold tracking-[-0.02em] text-[#191B20]">Estimated value: $6,240</p><p className="mt-1.5 text-[12px] leading-5 text-[#595E68]">This is an estimate based on the records reviewed. It is <strong className="font-semibold text-[#191B20]">not a guaranteed reimbursement amount</strong> and does not mean Amazon owes $6,240.</p></div>
             </section>
 
