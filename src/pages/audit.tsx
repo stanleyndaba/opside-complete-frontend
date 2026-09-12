@@ -1938,16 +1938,17 @@ export default function Audit() {
           <div className="grid flex-1 gap-5 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_minmax(260px,0.72fr)] sm:px-7 sm:py-6">
             <div className="min-w-0">
               <section aria-label="Workspace audit result" className="rounded-[10px] border border-[#D7D7D1] bg-[#F4F3ED] p-4">
-                <p className="text-[12px] font-semibold text-[#191B20]">Your Audit Result</p>
+                <p className="text-[12px] font-semibold text-[#191B20]">The pattern in the records</p>
                 <p className="mt-3 text-[13px] leading-5 text-[#595E68]">We reviewed <strong className="font-semibold text-[#191B20]">{typeof teaser.recordsReviewed === 'number' ? teaser.recordsReviewed.toLocaleString() : 'Not established from the evidence reviewed'} records</strong> across the available evidence for <strong className="font-semibold text-[#191B20]">{selectedAuditPeriodLabel || 'Not established from the evidence reviewed'}</strong>.</p>
-                <p className="mt-3 text-[13px] leading-5 text-[#595E68]">The Audit recorded a recurring recovery route. The exact incident count and issue description are <strong className="font-semibold text-[#191B20]">Not established from the evidence reviewed</strong> in the current commercial record.</p>
-                <p className="mt-3 text-[13px] font-semibold leading-5 text-[#191B20]">This is not one bounded event. The evidence indicates a recurring recovery pattern.</p>
+                <p className="mt-3 text-[13px] leading-5 text-[#595E68]">The important finding is not the record count by itself. It is that the Audit points to the same recovery condition appearing as an ongoing route through the account, rather than remaining inside one shipment, settlement, or bounded event.</p>
+                <p className="mt-3 text-[13px] leading-5 text-[#595E68]">That distinction is easy to miss when each record is reviewed on its own. The exact incident count and issue description are <strong className="font-semibold text-[#191B20]">not established from the evidence reviewed</strong> in the current commercial record, so Margin will not invent precision the records do not support.</p>
+                <p className="mt-3 text-[13px] font-semibold leading-5 text-[#191B20]">This is why the finding is being treated as a recurring recovery problem, not a single Recover Once event.</p>
               </section>
 
               <section className="mt-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4">
                 <p className="text-[12px] font-semibold text-[#191B20]">What this means</p>
-                <p className="mt-2 text-[12px] leading-5 text-[#595E68]">A single recovery operation can address what has already happened. It does not address the fact that the same type of issue is continuing to appear.</p>
-                <p className="mt-3 text-[12px] font-semibold leading-5 text-[#191B20]">Recover Once closes a defined incident. Workspace keeps Margin responsible for the recurring recovery problem.</p>
+                <p className="mt-2 text-[12px] leading-5 text-[#595E68]">A single recovery operation can address what has already happened. It cannot answer the more consequential question: whether the same condition will be waiting again in the next set of account records.</p>
+                <p className="mt-3 text-[12px] font-semibold leading-5 text-[#191B20]">Recover Once closes a defined incident. Workspace keeps Margin responsible for examining whether the pattern continues, separating new incidents, and carrying the supported work forward.</p>
               </section>
 
               <section className="mt-5 rounded-[10px] border border-[#E8E7E1] bg-white p-4">
