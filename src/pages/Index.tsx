@@ -943,16 +943,15 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           >
             <div className="space-y-2.5">
               {[
-                ["Phantom Refund", "/gmailicon.png", "Gmail"],
-                ["SLA Breach Compensation", "/gd.png", "Google Drive"],
-                ["Dispute Charge", "/outlookicon.webp", "Outlook"],
-                ["Removal Auditor", "/logoimagetwo.png", "Margin"],
-                ["Warehouse Damage", "/slack-icon-2019.png", "Slack"],
-              ].map(([label, icon, alt], index) => (
+                "Phantom Refund",
+                "SLA Breach Compensation",
+                "Dispute Charge",
+                "Removal Auditor",
+                "Warehouse Damage",
+              ].map((label, index) => (
                 <div key={label} className={`flex items-center gap-3 rounded-[10px] border border-white/70 px-3 py-2.5 shadow-[0_12px_28px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur-lg sm:px-4 sm:py-3 ${index === 0 ? "bg-white/62" : index === 1 ? "bg-white/54" : index === 2 ? "bg-white/48" : "bg-white/42"}`}>
                   <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/60" aria-hidden="true" />
                   <span className="min-w-0 flex-1 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#344149] sm:text-[13px]">{label}</span>
-                  <img src={icon} alt={alt} className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
                 </div>
               ))}
             </div>
