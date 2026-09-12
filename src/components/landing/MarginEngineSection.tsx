@@ -3,7 +3,7 @@ import { FinalDelegationPreview } from "@/components/landing/FinalDelegationPrev
 
 export function MarginEngineSection() {
   return (
-    <section className="relative hidden overflow-hidden bg-[#F4FAFC] py-[52px] md:block md:py-[76px]" aria-labelledby="margin-engine-title">
+    <section className="relative overflow-hidden bg-[#F4FAFC] py-[52px] md:py-[76px]" aria-labelledby="margin-engine-title">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(178,220,232,0.28),transparent_38%)]" />
       <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8">
         <div className="mb-10 max-w-[720px] md:mb-14">
