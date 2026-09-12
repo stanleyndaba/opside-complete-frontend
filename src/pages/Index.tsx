@@ -975,8 +975,8 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="grid grid-cols-[0.98fr_1.02fr] items-start gap-3 sm:gap-4">
-              <div className="rounded-[11px] border border-white/85 bg-white/62 px-3 py-3 shadow-[0_16px_34px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3.5 sm:py-3.5">
+            <div className="relative min-h-[190px]">
+              <div className="absolute left-0 right-[8%] top-0 rounded-[11px] border border-white/85 bg-white/62 px-3 py-3 shadow-[0_16px_34px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3.5 sm:py-3.5">
                 <div className="flex items-start justify-between gap-2 border-b border-[#D9E2E2]/80 pb-2.5">
                   <div>
                     <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Recovery context</p>
@@ -1005,7 +1005,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                   </div>
                 </div>
               </div>
-              <div className="space-y-1.5 pt-3 sm:pt-4">
+              <div className="relative z-10 ml-[18%] w-[82%] space-y-1.5 pt-3 sm:pt-4">
                 <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Next actions</p>
                 <div className="flex items-center gap-2 rounded-[8px] border border-white/80 bg-white/64 px-2 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-2.5">
                   <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
