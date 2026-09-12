@@ -8,7 +8,7 @@ export function FinalDelegationPreview({ compactMobile = false }: { compactMobil
         <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
         <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
       </div>
-      <div className={`relative ${compactMobile ? "h-[360px]" : "h-[520px]"} overflow-hidden rounded-[5px] bg-[#FBFAF7] sm:h-[600px]`}>
+      <div className={`relative ${compactMobile ? "h-[300px]" : "h-[520px]"} overflow-hidden rounded-[5px] bg-[#FBFAF7] sm:h-[600px]`}>
         <iframe title="Recover Once page preview" src="/recover-once" className="h-full w-full border-0 bg-[#FBFAF7]" loading="lazy" />
       </div>
     </div>
