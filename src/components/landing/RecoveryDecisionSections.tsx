@@ -77,7 +77,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
           <p className="mt-4 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Margin gives your team one place to understand what happened, establish what the evidence supports, and manage recovery across the operation.</p>
           <Link to="/speak-to-sales" className="landing-pressable mt-6 inline-flex h-11 items-center rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] transition-colors hover:bg-[var(--margin-blue-hover)]">Explore Enterprise <ArrowRight className="ml-2 h-4 w-4" /></Link>
           <p className="mt-5 max-w-[540px] text-[14px] leading-6 text-[var(--margin-text-secondary)]">Then let the visual do the proving.</p>
-          <div className="mt-4 border-l border-[var(--margin-border)] pl-4 text-[13px] leading-6 text-[var(--margin-text-muted)]"><p>US · CA · MX · UK · EU</p><p>Multiple markets / one examination</p><p className="mt-1 font-semibold text-[var(--margin-text-primary)]">Complexity doesn&apos;t change the job. Margin handles it.</p></div>
+          <div className="mt-4 border-l border-[var(--margin-border)] pl-4 text-[13px] leading-6 text-[var(--margin-text-muted)]"><p>US · CA · MX · UK · EU + More MPs</p><p>Multiple markets / one examination</p><p className="mt-1 font-semibold text-[var(--margin-text-primary)]">Complexity doesn&apos;t change the job. Margin handles it.</p></div>
         </motion.div>
       </div>
     </div>
