@@ -291,6 +291,7 @@ const App = () => (
                         <Route path='/recover-once' element={<RecoverOnce />} />
                         <Route path='/recovery-workspace' element={<RecoveryWorkspace />} />
                         <Route path='/speak-to-sales' element={<SpeakToSales />} />
+                        <Route path='/talk-to-sales' element={<SpeakToSales />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/connect-amazon" element={<Navigate to="/audit" replace />} />
                         <Route path="/careers" element={<Careers />} />
@@ -476,4 +477,3 @@ const App = () => (
 );
 
 export default App;
-
