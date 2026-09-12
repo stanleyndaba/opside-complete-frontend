@@ -59,6 +59,26 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
   </section>
 );
 
+export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => (
+  <section className="relative bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="recovery-audit-duplicate-title">
+    <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
+      <div className="grid gap-10 lg:grid-cols-[1.26fr_0.74fr] lg:items-center lg:gap-16">
+        <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-1">
+          <FinalDelegationPreview compactMobile src="/recovery-workspace" title="Recovery Workspace page preview" />
+        </motion.div>
+        <motion.div {...revealProps} className="order-1 max-w-[780px] lg:order-2">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">12 / THE AUDIT</span>
+          </div>
+          <h2 id="recovery-audit-duplicate-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the Audit. Find out what is actually happening.</h2>
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Before you choose a recovery path, Margin reconstructs the relevant activity from the records available to you. We reconcile what was expected with what was received, identify what the records substantiate, separate confirmed findings from open questions, and show you the next step only when the evidence supports one.</p>
+        </motion.div>
+      </div>
+    </div>
+  </section>
+);
+
 export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => {
   const [activePath, setActivePath] = useState<number | null>(null);
 
