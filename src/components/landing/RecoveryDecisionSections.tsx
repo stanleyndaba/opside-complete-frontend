@@ -47,7 +47,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
             <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">12 / THE AUDIT</span>
           </div>
           <h2 className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Start with the Audit. Find out what is actually happening.</h2>
-          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">You do not need to decide which recovery service you need before you know what is happening in your account. Margin examines the available records, establishes what can be supported, shows you what remains unresolved, and then tells you what—if anything—should happen next.</p>
+          <p className="mt-5 max-w-[760px] text-[15px] leading-7 tracking-[-0.01em] text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">Before you choose a recovery path, Margin reconstructs the relevant activity from the records available to you. We reconcile what was expected with what was received, identify what the records substantiate, separate confirmed findings from open questions, and show you the next step only when the evidence supports one.</p>
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">

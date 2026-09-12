@@ -7,12 +7,10 @@ export function FinalDelegationPreview() {
         <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
         <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
         <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
-        <span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">margin.app/recover-once</span>
       </div>
       <div className="relative h-[520px] overflow-hidden rounded-[5px] bg-[#FBFAF7] sm:h-[600px]">
         <iframe title="Recover Once page preview" src="/recover-once" className="h-full w-full border-0 bg-[#FBFAF7]" loading="lazy" />
       </div>
-      <p className="px-1 pt-2 text-center font-mono text-[9px] uppercase tracking-tight text-[#647783]">Scroll the live offer page</p>
     </div>
   );
 }
