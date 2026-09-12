@@ -12,7 +12,7 @@ export function MarginEngineSection() {
         </div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:relative lg:left-[-7%] lg:max-w-[1350px]">
-          <FinalDelegationPreview />
+          <FinalDelegationPreview compactMobile />
         </motion.div>
 
         <p className="mt-10 text-center font-lora text-[18px] leading-tight tracking-tight text-[#34414A] sm:text-[22px]" style={{ fontWeight: 400 }}>Every financial discrepancy becomes a traceable decision.</p>
