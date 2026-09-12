@@ -896,14 +896,6 @@ function MarginStandardSection() {
                 </motion.p>
               </AnimatePresence>
             </div>
-            <div className="mt-7 border-l border-[var(--margin-blue)] pl-5">
-              <p className="text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-                Margin doesn&apos;t assume. It establishes.
-              </p>
-              <p className="mt-5 max-w-[620px] text-[14px] leading-7 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-8">
-                If the evidence supports a recovery, Margin acts. If it doesn&apos;t, Margin tells you. If the outcome isn&apos;t complete, Margin keeps it visible.
-              </p>
-            </div>
           </motion.div>
         </div>
       </div>
@@ -920,12 +912,6 @@ function RecoveryWorkStatement() {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              07 / ONE RECORD</p>
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>You shouldn&apos;t have to piece the recovery together.</h2>
             <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Everything Margin needs to understand the recovery stays connected in one place—evidence, decisions, Amazon responses, payments, reversals, and the final outcome.</p>
-            <div className="mt-5 space-y-1 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--margin-text-muted)]">
-              <p>No chasing reports.</p>
-              <p>No rebuilding the story.</p>
-              <p>No wondering what happened next.</p>
-            </div>
-            <p className="mt-6 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">One recovery. One record. One visible outcome.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
             <BrowserChrome path="margin.app/recovery-workspace" />
@@ -1741,7 +1727,6 @@ function OperationalEconomicsSection() {
             <h2 id="operational-economics-title" className="font-lora text-[31px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[50px]" style={{ fontWeight: 400 }}>Recovery is not a task. It is a function.</h2>
             <p className="mt-2 max-w-[720px] font-sans text-[15px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">Margin takes ownership of the recovery work so your team doesn&apos;t have to build and maintain the function themselves.</p>
             <div className="mt-5 border-t border-[var(--margin-border)]"><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Recurring</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">The work returns whenever the next issue appears.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Connected</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Evidence, cases, responses, payouts, and outcomes stay together.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Owned by Margin</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Your team remains the authority without carrying the entire operating burden.</p></div></div>
-            <p className="mt-5 max-w-[520px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">You are not adding another tool to operate.<span className="mt-1.5 block font-medium text-[#48677A]">You are removing another function from your workload.</span></p>
           </motion.div>
         </div>
       </div>
