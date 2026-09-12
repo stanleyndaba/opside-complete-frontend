@@ -42,19 +42,19 @@ export default function RecoveryWorkspace() {
           <article className="min-w-0 rounded-[16px] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-6 sm:py-5" aria-labelledby="recovery-workspace-title">
             <header className="border-b border-[#E8E7E1] pb-7">
               <h1 id="recovery-workspace-title" className="max-w-2xl font-lora text-[15px] leading-[1.2] tracking-[-0.02em] text-[#191B20] sm:text-[17px]">Your Audit Result</h1>
-              <p className="mt-2 inline-block max-w-2xl text-[14px] leading-6 text-[#595E68] sm:text-[15px]">We reviewed <strong className="font-semibold text-[#191B20]">[X orders / Y shipments / Z returns / fees / inventory movements]</strong> across <strong className="font-semibold text-[#191B20]">[date range]</strong>.</p>
-              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">We found the same type of recovery issue occurring across <strong className="font-semibold text-[#191B20]">[N independent incidents]</strong> in separate periods.</p>
+              <p className="mt-2 inline-block max-w-2xl text-[14px] leading-6 text-[#595E68] sm:text-[15px]">We reviewed <strong className="font-semibold text-[#191B20]">3,214 orders, 41 inbound shipments, 22 returns, 17 fee records, and 86 inventory movements</strong> across <strong className="font-semibold text-[#191B20]">1 February to 30 April 2026</strong>.</p>
+              <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">We found the same type of recovery issue occurring across <strong className="font-semibold text-[#191B20]">4 independent incidents</strong> in separate periods.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">This is not one bounded event. The evidence indicates a <strong className="font-semibold text-[#191B20]">recurring recovery pattern</strong>.</p>
             </header>
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-we-found">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">The pattern</p>
               <h2 id="what-we-found" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What we found</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]"><strong className="font-semibold text-[#191B20]">[Issue type]</strong> appeared in <strong className="font-semibold text-[#191B20]">[N] independent incidents</strong>:</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]"><strong className="font-semibold text-[#191B20]">Inbound-shipment receiving discrepancies</strong> appeared in <strong className="font-semibold text-[#191B20]">4 independent incidents</strong>:</p>
               <ul className="mt-2 list-inside list-disc space-y-1.5 text-[14px] text-[#595E68]">
-                <li><strong className="font-semibold text-[#191B20]">[Incident 1]</strong> — [period, scope, brief description]</li>
-                <li><strong className="font-semibold text-[#191B20]">[Incident 2]</strong> — [period, scope, brief description]</li>
-                <li><strong className="font-semibold text-[#191B20]">[Additional incidents]</strong></li>
+                <li><strong className="font-semibold text-[#191B20]">10 March 2026</strong> — 17 affected units across two related shipments; the receiving and inventory records diverge after the same supplier delivery</li>
+                <li><strong className="font-semibold text-[#191B20]">24 March 2026</strong> — 9 affected units across one shipment; the settlement record does not reconcile to the receiving quantity</li>
+                <li><strong className="font-semibold text-[#191B20]">9 April and 22 April 2026</strong></li>
               </ul>
               <p className="mt-2 text-[14px] leading-6 text-[#595E68]">These are separate incidents, not multiple records from one delivery, shipment, or event.</p>
             </section>
@@ -68,15 +68,15 @@ export default function RecoveryWorkspace() {
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="what-we-can-support">
               <h2 id="what-we-can-support" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">What we can support</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">[Evidence status for each incident.]</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Three incidents are supported enough to enter evidence preparation: the shipment manifests, carrier receiving records, and inventory adjustments align for 31 of the 44 affected units. One incident remains review-only while the settlement and payout records are reconciled.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#191B20] font-semibold">What remains unverified:</p>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">[Explicit evidence gaps, if any.]</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">For 13 affected units, the available records do not yet establish whether Amazon has already reimbursed the units or what amount, if any, remains outstanding. Margin will not count those units as recovered or recoverable until that question is answered.</p>
               <p className="mt-3 text-[14px] leading-6 text-[#595E68]">We will not treat an unverified condition as a confirmed recovery opportunity.</p>
             </section>
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="why-recovery-workspace">
               <h2 id="why-recovery-workspace" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Why Recovery Workspace</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Your existing <strong className="font-semibold text-[#191B20]">[N] qualifying incidents are included</strong> in Workspace.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Your existing <strong className="font-semibold text-[#191B20]">3 qualifying incidents are included</strong> in Workspace.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">You do not pay another recovery fee to have Margin work on those incidents.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Workspace is for sellers who do not want recovery work to depend on remembering to look for the next problem after every incident.</p>
             </section>
@@ -120,7 +120,7 @@ export default function RecoveryWorkspace() {
 
             <section className="border-b border-[#E8E7E1] py-5" aria-labelledby="existing-incidents">
               <h2 id="existing-incidents" className="mt-1.5 inline-block border-b border-[#D4D4D0] pb-1 font-lora text-[15px] font-normal leading-tight tracking-[-0.02em]">Existing incidents: what happens first</h2>
-              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Your <strong className="font-semibold text-[#191B20]">[N] incidents already identified by this Audit are included</strong>.</p>
+              <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Your <strong className="font-semibold text-[#191B20]">4 incidents already identified by this Audit are included</strong>.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Assuming the available evidence is sufficient, they typically enter evidence preparation within <strong className="font-semibold text-[#191B20]">1–2 business days after approval</strong>.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">New incidents follow their own preparation status and timing as new account data becomes available.</p>
               <p className="mt-1.5 text-[14px] leading-6 text-[#595E68]">Amazon's response time is outside Margin's control.</p>
@@ -174,7 +174,7 @@ export default function RecoveryWorkspace() {
                   <p className="mt-1 text-[14px] leading-6 text-[#595E68]">For a recurring problem you want Margin to keep examining and managing over time.</p>
                 </div>
               </div>
-              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">If you would rather only resolve the <strong className="font-semibold text-[#191B20]">[N] incidents already identified</strong>, Recover Once remains available for that defined scope.</p>
+              <p className="mt-3 text-[14px] leading-6 text-[#595E68]">If you would rather only resolve the <strong className="font-semibold text-[#191B20]">4 incidents already identified</strong>, Recover Once remains available for that defined scope.</p>
             </section>
 
             <section className="pt-8" aria-labelledby="what-you-control">
@@ -206,7 +206,7 @@ export default function RecoveryWorkspace() {
                 <p className="mt-1 text-[13px] leading-5 text-[#595E68]">No percentage of recovered money is charged.</p>
               </div>
               
-              <div className="mt-4 border-t border-[#E8E7E1] pt-5"><p className="text-[12px] font-semibold text-[#191B20]">Before you continue</p><p className="mt-1.5 text-[12px] italic leading-5 text-[#595E68]">I approve Margin to begin Recovery Workspace at $109/month. I understand that the [N] incidents identified in this Audit are included, that Workspace provides ongoing examination and recovery work for qualifying, evidence-supported issues, and that Amazon makes the final decision on any submitted recovery matter. I understand that nothing is submitted without my approval.</p></div>
+              <div className="mt-4 border-t border-[#E8E7E1] pt-5"><p className="text-[12px] font-semibold text-[#191B20]">Before you continue</p><p className="mt-1.5 text-[12px] italic leading-5 text-[#595E68]">I approve Margin to begin Recovery Workspace at $109/month. I understand that the 4 incidents identified in this Audit are included, that Workspace provides ongoing examination and recovery work for qualifying, evidence-supported issues, and that Amazon makes the final decision on any submitted recovery matter. I understand that nothing is submitted without my approval.</p></div>
               
               <button type="button" className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] bg-[#3F51A8] px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#31418D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5165C7] focus-visible:ring-offset-2">Start Recovery Workspace — $109/month</button>
               
