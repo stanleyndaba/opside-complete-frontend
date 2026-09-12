@@ -68,7 +68,7 @@ export default function SpeakToSales() {
           <article className="min-w-0 rounded-[16px] bg-white px-5 py-5 shadow-[0_1px_2px_rgba(25,27,32,0.05)] sm:px-6 sm:py-5" aria-labelledby="talk-to-sales-title">
             <header className="border-b border-[#E8E7E1] pb-7">
               <p className="text-[11px] font-semibold uppercase tracking-tight text-[#777A82]">Recovery Program Review</p>
-              <h1 id="talk-to-sales-title" className="mt-1.5 max-w-2xl font-lora text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">Your recovery situation requires a broader review.</h1>
+              <h1 id="talk-to-sales-title" className="mt-1.5 max-w-2xl font-lora text-[20px] leading-[1.08] tracking-[-0.03em] text-[#191B20] sm:text-[24px]">Complex scale review</h1>
               <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[#595E68]"><strong className="font-semibold text-[#191B20]">{formatNumber(scope.orders)} orders · {formatNumber(scope.shipments)} shipments · {formatNumber(scope.returns)} returns · {formatNumber(scope.feeRecords)} fee records · {formatNumber(scope.inventoryMovements)} inventory movements</strong></p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">Across <strong className="font-semibold text-[#191B20]">{scope.marketplaces} marketplaces</strong> from <strong className="font-semibold text-[#191B20]">{scope.dateRange}</strong>.</p>
               <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-[#595E68]">The Audit identified a recovery situation that does not fit responsibly into a standard Recover Once operation or Recovery Workspace.</p>
