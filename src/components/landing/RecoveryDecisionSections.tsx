@@ -51,7 +51,7 @@ export const RecoveryOfferSection: React.FC<LandingAuditCtaProps> = ({ onAuditCt
         </motion.div>
 
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative">
-          <FinalDelegationPreview />
+          <FinalDelegationPreview compactMobile />
         </motion.div>
       </div>
 
