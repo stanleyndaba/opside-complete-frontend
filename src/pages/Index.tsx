@@ -975,28 +975,33 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="grid grid-cols-[0.86fr_1.14fr] items-start gap-2.5 sm:gap-3">
-              <div className="rounded-[9px] border border-white/80 bg-white/56 px-2 py-2 shadow-[0_14px_30px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-2.5 sm:py-2.5">
-                <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Recovery context</p>
-                <div className="mt-1.5 flex items-center gap-1.5">
-                  <p className="truncate text-[9px] font-semibold tracking-[-0.02em] text-[#26333A] sm:text-[10px]">Amazon reimbursement</p>
-                </div>
-                <div className="mt-2 border-t border-[#D9E2E2]/80 pt-1.5">
-                  <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Status</p>
-                  <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Evidence requested</p>
-                </div>
-                <div className="mt-1.5 border-t border-[#D9E2E2]/80 pt-1.5">
-                  <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Next milestone</p>
-                  <p className="mt-0.5 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit supporting documents</p>
-                </div>
-                <div className="mt-1.5 grid grid-cols-2 gap-1.5 border-t border-[#D9E2E2]/80 pt-1.5">
+            <div className="grid grid-cols-[0.98fr_1.02fr] items-start gap-3 sm:gap-4">
+              <div className="rounded-[11px] border border-white/85 bg-white/62 px-3 py-3 shadow-[0_16px_34px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.96)] backdrop-blur-xl sm:px-3.5 sm:py-3.5">
+                <div className="flex items-start justify-between gap-2 border-b border-[#D9E2E2]/80 pb-2.5">
                   <div>
-                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Reversals</p>
-                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Watch</p>
+                    <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Recovery context</p>
+                    <p className="mt-1 text-[10px] font-semibold leading-3.5 tracking-[-0.02em] text-[#26333A] sm:text-[11px]">Amazon reimbursement</p>
+                  </div>
+                  <span className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_rgba(11,116,222,0.12)]" aria-hidden="true" />
+                </div>
+                <div className="space-y-3 pt-3">
+                  <div>
+                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Status</p>
+                    <p className="mt-1 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Evidence requested</p>
                   </div>
                   <div>
+                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Next milestone</p>
+                    <p className="mt-1 text-[9px] font-medium leading-3.5 text-[#26333A] sm:text-[10px]">Submit supporting documents</p>
+                  </div>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#D9E2E2]/80 pt-3">
+                  <div className="rounded-[6px] bg-white/45 px-2 py-1.5">
+                    <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Reversals</p>
+                    <p className="mt-1 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Watch</p>
+                  </div>
+                  <div className="rounded-[6px] bg-white/45 px-2 py-1.5">
                     <p className="font-mono text-[7px] uppercase tracking-tight text-[#859198]">Appeals</p>
-                    <p className="mt-0.5 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Ready</p>
+                    <p className="mt-1 text-[9px] font-medium text-[#26333A] sm:text-[10px]">Ready</p>
                   </div>
                 </div>
               </div>
