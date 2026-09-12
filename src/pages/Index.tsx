@@ -1004,7 +1004,7 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                   </div>
                 </div>
               </div>
-              <div className="relative z-10 ml-[18%] w-[82%] space-y-1.5 pt-3 sm:pt-4">
+              <div className="relative z-10 ml-[11%] w-[89%] space-y-1.5 pt-3 sm:pt-4">
                 <p className="mb-1 font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Next actions</p>
                 <div className="flex items-center gap-2 rounded-[8px] border border-white/80 bg-white/64 px-2 py-2 shadow-[0_10px_22px_rgba(56,74,82,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] backdrop-blur-lg sm:px-2.5">
                   <span className="flex h-3 w-3 shrink-0 items-center justify-center rounded-[3px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
