@@ -1055,22 +1055,22 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
           >
             <div className="relative flex items-center gap-3 rounded-[10px] border border-white/80 bg-white/62 px-3 py-3 shadow-[0_14px_32px_rgba(56,74,82,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:px-4 sm:py-3.5">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/70" aria-hidden="true" />
-              <span className="min-w-0 flex-1 truncate font-sans text-[12px] font-medium tracking-[-0.02em] text-[#26333A] sm:text-[14px]">Reply to Amazon&apos;s Previous Email</span>
+              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[12px] font-medium tracking-[-0.02em] text-[#26333A] sm:text-[14px]">Reply to Amazon&apos;s Email</span><span className="mt-0.5 block truncate font-sans text-[10px] tracking-[-0.01em] text-[#667177] sm:text-[11px]">First draft complete</span></span>
               <img src="/gmailicon.png" alt="Gmail" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
             <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/48 px-3 py-2.5 shadow-[0_12px_28px_rgba(56,74,82,0.08),inset_0_1px_0_rgba(255,255,255,0.88)] backdrop-blur-lg sm:px-4 sm:py-3">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/62" aria-hidden="true" />
-              <span className="min-w-0 flex-1 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#3A474D] sm:text-[13px]">Fetching BOL, POD</span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#3A474D] sm:text-[13px]">Fetching BOL, POD <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Fetching in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] tracking-[-0.01em] text-[#667177] sm:text-[11px]">4/7 complete</span></span>
               <img src="/gd.png" alt="Google Drive" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
             <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/42 px-3 py-2.5 shadow-[0_10px_24px_rgba(56,74,82,0.06),inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md sm:px-4 sm:py-3">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/56" aria-hidden="true" />
-              <span className="min-w-0 flex-1 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#4A555B] sm:text-[13px]">Confirming ASIN/SKU</span>
+              <span className="min-w-0 flex-1"><span className="flex items-center gap-2 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#4A555B] sm:text-[13px]">Confirming ASIN/SKU <span className="h-3 w-3 shrink-0 rounded-full border-2 border-[#87949A]/35 border-t-[#66757C]" aria-label="Validation in progress" /></span><span className="mt-0.5 block truncate font-sans text-[10px] tracking-[-0.01em] text-[#667177] sm:text-[11px]">Validating meta-data match...</span></span>
               <img src="/outlookicon.webp" alt="Outlook" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
             <div className="mt-2.5 flex items-center gap-3 rounded-[10px] border border-white/70 bg-white/38 px-3 py-2.5 shadow-[0_8px_20px_rgba(56,74,82,0.05),inset_0_1px_0_rgba(255,255,255,0.78)] backdrop-blur-md sm:px-4 sm:py-3">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-[#C8D0CD] bg-white/52" aria-hidden="true" />
-              <span className="min-w-0 flex-1 truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#566167] sm:text-[13px]">Flagging the next recovery step</span>
+              <span className="min-w-0 flex-1"><span className="block truncate font-sans text-[11px] font-medium tracking-[-0.02em] text-[#566167] sm:text-[13px]">Flagging the next recovery step</span><span className="mt-0.5 block truncate font-sans text-[10px] tracking-[-0.01em] text-[#667177] sm:text-[11px]">Ready for the next recovery...</span></span>
               <img src="/slack-icon-2019.png" alt="Slack" className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6" />
             </div>
           </motion.div>
