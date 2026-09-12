@@ -982,7 +982,6 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
                     <p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#748188] sm:text-[8px]">Recovery context</p>
                     <p className="mt-1 text-[10px] font-semibold leading-3.5 tracking-[-0.02em] text-[#26333A] sm:text-[11px]">Amazon reimbursement</p>
                   </div>
-                  <span className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_rgba(11,116,222,0.12)]" aria-hidden="true" />
                 </div>
                 <div className="space-y-3 pt-3">
                   <div>
