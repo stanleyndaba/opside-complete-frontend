@@ -11,7 +11,7 @@ export function MarginEngineSection() {
           <p className="mt-4 text-[15px] leading-7 text-[#536872] sm:text-[17px]">Margin turns fragmented Amazon events into financial truth, entitlement, evidence, action, and control.</p>
         </div>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:relative lg:left-[-7%] lg:max-w-[1350px]">
+        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="mx-auto w-full max-w-[1040px] lg:max-w-[1350px]">
           <FinalDelegationPreview compactMobile />
         </motion.div>
 
