@@ -65,7 +65,7 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
     <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
       <div className="grid gap-10 lg:grid-cols-[1.26fr_0.74fr] lg:items-center lg:gap-16">
         <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="relative order-2 lg:order-1">
-          <FinalDelegationPreview compactMobile src="/filing-pipeline-preview" title="Filing Pipeline page preview" />
+          <FinalDelegationPreview compactMobile src="/speak-to-sales" title="Enterprise Recovery Program Review page preview" />
         </motion.div>
         <motion.div {...revealProps} className="order-1 max-w-[780px] lg:order-2">
           <div className="mb-5 flex items-center gap-3">
