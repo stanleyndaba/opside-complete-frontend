@@ -901,14 +901,14 @@ function RecoveryWorkStatement() {
   return (
     <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="trust-section-title">
       <div className={containerClass}>
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-10">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <motion.div {...revealProps} className="flex flex-col justify-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">              07 / ONE RECORD</p>
             <h2 id="trust-section-title" className="mt-4 font-lora text-[32px] leading-[1.03] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[48px]" style={{ fontWeight: 400 }}>You shouldn&apos;t have to piece the recovery together.</h2>
-            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Everything Margin needs to understand the recovery stays connected in one place—evidence, decisions, Amazon responses, payments, reversals, and the final outcome.</p>
+            <p className="mt-4 max-w-[780px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">Margin connects the shipment, evidence, decision, Amazon response, payout, and outcome into one operating record—so the next action is grounded in what actually happened, not reconstructed from fragments.</p>
           </motion.div>
           <motion.div {...revealProps} className="relative overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
-            <BrowserChrome path="margin.app/recovery-workspace" />
+            <BrowserChrome hidePath />
             <OneRecordAnalysisVisual />
           </motion.div>
         </div>
@@ -1704,13 +1704,13 @@ function RecoveryOutcomeExplorer() {
 }
 
 
-function BrowserChrome({ path }: { path: string }) {
+function BrowserChrome({ path, hidePath = false }: { path?: string; hidePath?: boolean }) {
   return (
     <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] px-2">
       <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
       <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
       <span className="h-2 w-2 rounded-full bg-[#D7DAD7]" />
-      <span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">{path}</span>
+      {!hidePath && path ? <span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">{path}</span> : <span className="flex-1" aria-hidden="true" />}
     </div>
   );
 }
