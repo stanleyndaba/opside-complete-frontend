@@ -887,6 +887,10 @@ function OneRecordAnalysisVisual() {
               <span className="min-w-0"><span className="block text-[10px] font-semibold leading-4 tracking-[-0.01em] text-[#2C4652]">{title}</span><span className="mt-0.5 block text-[9px] leading-4 text-[#66818F]">{detail}</span></span>
             </div>
           ))}
+          <div className="mt-1 flex items-center justify-between border-t border-[#BFD8E6]/70 pt-3 text-[10px] font-semibold tracking-[-0.01em] text-[#263D48]">
+            <span>Proceed to Dispute</span>
+            <ArrowRight className="h-3.5 w-3.5 text-[#446B7B]" aria-hidden="true" />
+          </div>
         </div>
       </div>
     </div>
