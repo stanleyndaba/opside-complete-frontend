@@ -59,14 +59,14 @@ export default function EvidenceRequired() {
       <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]">
         <header className="border-b border-[#E7EEF2] px-5 pb-4 pt-5 sm:px-6">
           <p className="text-[10px] font-medium tracking-tight text-[#66737F]">Supporting evidence</p>
-          <h1 className="mt-1 font-lora text-[23px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[27px]">Documents and evidence history</h1>
+          <h1 className="mt-1 font-lora text-[17px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[20px]">Evidentiary records for case &quot;RFD-16942-INB&quot;</h1>
           <p className="mt-2 text-[12px] leading-5 tracking-tight text-[#66737F]">Each item is supporting context for the case record. A document or event is not automatically proof of filing, payment, or closure.</p>
         </header>
         <section className="px-5 pb-5 pt-4 sm:px-6">
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Matched Documents</h2><span className="text-[11px] font-medium text-[#9AA7B0]">({matchedDocuments.length})</span><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="space-y-3">
             {matchedDocuments.map((item) => <article key={item.file} className="flex items-center gap-3 rounded-[7px] border border-[#DCE8EE] bg-[#F9FAFB] px-3 py-3 sm:px-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-[#E4E8EA] bg-white text-[#D64B4B]"><FileText className="h-4 w-4" /><span className="sr-only">PDF</span></div>
+              <div className="flex h-9 w-9 shrink-0 flex-col items-center justify-center rounded-[6px] border border-[#F0C9C9] bg-[#FFF8F8] text-[#D64B4B]"><FileText className="h-3.5 w-3.5" /><span className="-mt-0.5 text-[7px] font-bold leading-none tracking-tight">PDF</span></div>
               <div className="min-w-0 flex-1"><p className="truncate text-[12px] font-semibold tracking-tight text-[#182026]">{item.title}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#66737F]">{item.subtitle}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#9AA7B0]">File: {item.file}</p></div>
               <div className="hidden max-w-[310px] text-[10px] leading-4 text-[#66737F] lg:block">{item.detail}</div>
               <div className="flex shrink-0 items-center gap-3"><span className="rounded-[6px] border border-[#DCE8EE] bg-white px-2 py-1 text-[10px] font-medium tracking-tight text-[#66737F]">{item.confidence}</span><button type="button" onClick={() => showDocument(item)} className="inline-flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#0B74DE] hover:underline">View<ArrowRight className="h-3.5 w-3.5" /></button></div>
