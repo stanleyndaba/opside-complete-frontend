@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowRight, CheckCircle2, FileText } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 type EvidenceItem = {
   kind: string;
@@ -39,6 +39,15 @@ const matchedDocuments: EvidenceItem[] = [
     detail: "Seller purchase order connecting the expected quantity, SKU, ASIN, marketplace, agreed unit cost, and receiving expectation to the shipment record.",
     source: "Seller procurement record · US marketplace",
   },
+  {
+    kind: "receiving",
+    title: "receiving RECEIVE-ONT8-1847 - Amazon fulfillment",
+    subtitle: "Receiving report · 42 received / 48 expected · 6-unit variance",
+    file: "RECEIVE-ONT8-1847.csv",
+    confidence: "99%",
+    detail: "Fulfillment-center receiving event showing the six-unit delta at ONT8, with receipt timestamp, shipment identifier, and received quantity tied back to the inbound plan.",
+    source: "Amazon receiving record · ONT8",
+  },
 ];
 
 const evidenceLog = [
@@ -66,7 +75,7 @@ export default function EvidenceRequired() {
           <div className="mb-4 flex items-center gap-2"><h2 className="text-[12px] font-semibold tracking-tight text-[#66737F]">Matched Documents</h2><span className="text-[11px] font-medium text-[#9AA7B0]">({matchedDocuments.length})</span><div className="h-px flex-1 bg-[#DCE8EE]" /></div>
           <div className="space-y-3">
             {matchedDocuments.map((item) => <article key={item.file} className="flex items-center gap-3 rounded-[7px] border border-[#DCE8EE] bg-[#F9FAFB] px-3 py-3 sm:px-4">
-              <div className="flex h-9 w-9 shrink-0 flex-col items-center justify-center rounded-[6px] border border-[#F0C9C9] bg-[#FFF8F8] text-[#D64B4B]"><FileText className="h-3.5 w-3.5" /><span className="-mt-0.5 text-[7px] font-bold leading-none tracking-tight">PDF</span></div>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-[#F0C9C9] bg-[#FFF8F8] p-1"><img src="/pdf-file-icon.webp" alt="PDF" className="h-full w-full object-contain" /></div>
               <div className="min-w-0 flex-1"><p className="truncate text-[12px] font-semibold tracking-tight text-[#182026]">{item.title}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#66737F]">{item.subtitle}</p><p className="mt-1 truncate text-[10px] tracking-tight text-[#9AA7B0]">File: {item.file}</p></div>
               <div className="hidden max-w-[310px] text-[10px] leading-4 text-[#66737F] lg:block">{item.detail}</div>
               <div className="flex shrink-0 items-center gap-3"><span className="rounded-[6px] border border-[#DCE8EE] bg-white px-2 py-1 text-[10px] font-medium tracking-tight text-[#66737F]">{item.confidence}</span><button type="button" onClick={() => showDocument(item)} className="inline-flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#0B74DE] hover:underline">View<ArrowRight className="h-3.5 w-3.5" /></button></div>
