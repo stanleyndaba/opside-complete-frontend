@@ -716,7 +716,7 @@ function ControlSection() {
   return (
     <section className="relative overflow-hidden bg-[#FAFAF7] py-10 sm:py-[52px] md:py-16" aria-labelledby="control-section-title">
       <div className={containerClass}>
-        <div className="grid items-start gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
+        <div className="grid items-start gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
           <motion.div {...revealProps} className="lg:sticky lg:top-28">
             <div className="mb-5 flex items-center gap-3">
               <div className="h-px w-8 bg-[var(--margin-blue)]" />
