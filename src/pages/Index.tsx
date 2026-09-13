@@ -723,75 +723,18 @@ function ControlSection() {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">05 / CONTROL</span>
             </div>
             <h2 id="control-section-title" className="max-w-[620px] font-lora text-[34px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[56px]" style={{ fontWeight: 400 }}>
-              You stay in control.
-              <span className="mt-3 block font-sans text-[18px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[22px] md:text-[26px]">The work leaves your plate.</span>
+              From Finding to Resolution
             </h2>
-            <p className="mt-6 max-w-[500px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
-              Margin handles the recovery from investigation to outcome. You approve what needs your approval, stay informed, and step in only when a decision is actually yours to make.
+            <p className="mt-6 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              Margin doesn&apos;t stop when a recovery is identified.
             </p>
-            <p className="mt-8 border-l-2 border-[var(--margin-blue)] pl-5 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-              Margin does the work. You make the decisions that matter.
+            <p className="mt-4 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">
+              It takes each recovery through the work required to get to an outcome — from approval and filing to payout, reconciliation, and closure.
             </p>
           </motion.div>
 
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative isolate overflow-hidden rounded-[14px] border border-white/80 bg-[linear-gradient(135deg,rgba(214,237,247,0.9),rgba(255,255,255,0.7)_56%,rgba(224,240,246,0.78))] p-5 text-[#34414A] shadow-[0_24px_75px_rgba(42,91,116,0.16),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-2xl sm:p-6 md:p-8">
-            <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#BFE2F3]/55 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-[#D5F0EA]/55 blur-3xl" />
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
-            <div className="relative z-10 flex items-center justify-between border-b border-[#7FA7B9]/30 pb-4">
-              <div>
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#47708B]">The operating boundary</p>
-                <p className="mt-1 font-lora text-[14px] leading-none tracking-tight text-[#263A45] sm:text-[16px]">Authority stays with you.</p>
-              </div>
-            </div>
-
-            <div className="relative z-10 grid gap-5 py-5 md:grid-cols-[0.8fr_1.2fr] md:gap-6">
-              <div className="relative rounded-[10px] border border-white/75 bg-white/34 p-3.5 pb-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] backdrop-blur-lg md:border-b-0 md:border-r md:pr-6">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#47708B]">Your authority</p>
-                <div className="mt-3 grid grid-cols-3 gap-2 md:block md:space-y-2">
-                  {[
-                    ["Read-only access", "See the records first."],
-                    ["Approve action", "Decide before submission."],
-                    ["Stay informed", "Keep the outcome visible."],
-                  ].map(([title, detail], index) => (
-                    <div key={title} className="flex items-start gap-2 md:gap-3">
-                      <span className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full md:mt-1.5 md:h-2 md:w-2 ${index === 1 && isApproval ? "bg-[#0B74DE] shadow-[0_0_0_3px_rgba(11,116,222,0.16)] md:shadow-[0_0_0_4px_rgba(11,116,222,0.16)]" : "bg-[#91B2C1]"}`} />
-                      <div className="min-w-0">
-                        <p className="text-[11px] font-semibold leading-4 text-[#263A45] md:text-[13px]">{title}</p>
-                        <p className="mt-0.5 text-[10px] leading-3.5 text-[#6B7D86] md:text-[11px] md:leading-4">{detail}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <div>
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#47708B]">Margin operates</p>
-                </div>
-                <div className="relative mt-3">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={step.label}
-                      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
-                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      className="relative flex h-[42px] items-center overflow-hidden rounded-[8px] border border-white/80 bg-white/58 px-3 shadow-[0_12px_26px_rgba(42,91,116,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] sm:h-[48px] sm:px-4"
-                    >
-                      <span className={`mr-2 h-1.5 w-1.5 shrink-0 rounded-full ${isHandled ? "bg-[#0B74DE]" : "bg-[#9AAEB7]"}`} />
-                      <p className="min-w-0 truncate font-mono text-[7px] font-semibold uppercase tracking-tight text-[#47708B] sm:text-[8px]">{step.label}</p>
-                      <span className="mx-1.5 text-[8px] text-[#91B2C1]">·</span>
-                      <p className="min-w-0 truncate text-[9px] font-medium leading-none tracking-tight text-[#263A45] sm:text-[10px]">{step.detail}</p>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative z-10 border-t border-[#7FA7B9]/30 pt-4">
-              <p className="font-lora text-[13px] leading-tight tracking-tight text-[#263A45] sm:text-[14px]">{isHandled ? "Seller action: none required." : isApproval ? "Seller action: approve when ready." : "Margin is carrying the recovery forward."}</p>
-            </div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="relative overflow-hidden rounded-[14px] border border-[#DCE8EE] bg-white shadow-[0_24px_75px_rgba(42,91,116,0.12)]">
+            <FinalDelegationPreview compactMobile src="/filing-pipeline-preview" title="Recovery Pipeline page preview" />
           </motion.div>
         </div>
       </div>
