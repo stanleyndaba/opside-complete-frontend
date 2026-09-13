@@ -1582,77 +1582,6 @@ function RiskSection() {
   );
 }
 
-const operationalBuildSteps = [
-  "Audit activity",
-  "Gather evidence",
-  "Manage cases",
-  "Watch deadlines",
-  "Review payouts",
-  "Check outcomes",
-];
-
-function OperationalEconomicsSection() {
-  const reduceMotion = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const sectionInView = useInView(sectionRef, { once: true, amount: 0.28 });
-  const responsibilityCycle = ["Audit", "Cases", "Payouts", "Deadlines", "Evidence", "Outcomes"];
-  const marginNotifications = [
-    { title: "Amazon activity", detail: "Dispute charge", meta: "New recovery signal" },
-    { title: "Recovery record", detail: "Evidence linked", meta: "Connected and supported" },
-    { title: "Verified outcome", detail: "Payout reconciled", meta: "Outcome kept visible" },
-  ];
-  const [responsibilityIndex, setResponsibilityIndex] = useState(0);
-  const [notificationIndex, setNotificationIndex] = useState(0);
-
-  useEffect(() => {
-    if (reduceMotion || !sectionInView) return;
-    const responsibilityTimer = window.setInterval(() => setResponsibilityIndex((current) => (current + 1) % responsibilityCycle.length), 1800);
-    const notificationTimer = window.setInterval(() => setNotificationIndex((current) => (current + 1) % marginNotifications.length), 2000);
-    return () => {
-      window.clearInterval(responsibilityTimer);
-      window.clearInterval(notificationTimer);
-    };
-  }, [reduceMotion, sectionInView, responsibilityCycle.length, marginNotifications.length]);
-
-  const activeResponsibility = responsibilityCycle[responsibilityIndex];
-  const activeNotification = marginNotifications[notificationIndex];
-
-  return (
-    <section ref={sectionRef} aria-labelledby="operational-economics-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]">
-      <div className={containerClass}>
-        <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-          <motion.div {...revealProps} className="relative isolate min-w-0 h-[380px] overflow-hidden rounded-[14px] border border-white/80 bg-[linear-gradient(135deg,rgba(211,237,248,0.9),rgba(255,255,255,0.7)_54%,rgba(221,241,247,0.8))] p-4 text-[#34414A] shadow-[0_24px_75px_rgba(42,91,116,0.16),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-2xl sm:h-[410px] sm:p-5 md:h-auto md:p-6 lg:h-[390px] lg:p-7">
-            <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#BFE2F3]/55 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-[#D5F0EA]/55 blur-3xl" />
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
-            <div className="relative z-10 mb-5 flex items-center justify-between gap-4 border-b border-[#7FA7B9]/30 pb-4"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#47708B]">The work keeps coming back</span><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#47708B]">Every month</span></div>
-            <div className="relative z-10 grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:gap-0">
-              <div className="relative rounded-[10px] border border-white/65 bg-white/24 p-3.5 md:mr-4 md:pr-8">
-                <div className="mb-2 flex items-center justify-between"><span className="font-mono text-[9px] font-semibold uppercase tracking-tight text-[#263A45]">Your team</span><span className="font-mono text-[8px] uppercase tracking-tight text-[#6B7D86]">Owns the function</span></div>
-                <div className="relative min-h-[112px] py-1 sm:min-h-[124px] md:min-h-[132px]"><div className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#8EA9B5]/55 text-[#48677A]"><svg aria-hidden="true" viewBox="0 0 36 24" className="h-4 w-6 fill-none stroke-current" strokeWidth="1.35"><circle cx="18" cy="7" r="3.2" /><path d="M11.5 19c.4-3.3 2.8-5.2 6.5-5.2s6.1 1.9 6.5 5.2" /><circle cx="7.5" cy="9" r="2.5" /><path d="M2.5 19c.3-2.6 2.1-4.2 5-4.2 1.5 0 2.8.4 3.7 1.2" /><circle cx="28.5" cy="9" r="2.5" /><path d="M33.5 19c-.3-2.6-2.1-4.2-5-4.2-1.5 0-2.8.4-3.7 1.2" /></svg></div><div className="absolute left-[42px] right-[92px] top-1/2 h-px -translate-y-1/2 bg-[#8EA9B5]/55"><motion.span aria-hidden="true" className="absolute -top-[3px] h-[7px] w-[7px] rounded-full bg-[#0B74DE] shadow-[0_0_0_3px_rgba(11,116,222,0.16)]" initial={{ left: "0%" }} animate={reduceMotion || !sectionInView ? { left: "0%" } : { left: ["0%", "100%", "0%"] }} transition={{ duration: reduceMotion ? 0 : 1.8, ease: "easeInOut", repeat: reduceMotion ? 0 : Infinity, repeatDelay: 0.2 }} /></div><div className="absolute right-0 top-0 flex h-full w-[82px] flex-col justify-between py-1 text-[11px] font-medium leading-3.5 text-[#6B7D86] sm:w-[92px] sm:text-[12px]">{responsibilityCycle.map((step) => <span key={step} className={step === activeResponsibility ? "text-[#34414A]" : ""}>{step}</span>)}</div></div>
-                <p className="mt-3 border-t border-dashed border-[#7FA7B9]/40 pt-2 text-center font-mono text-[8px] font-semibold uppercase tracking-tight text-[#47708B]">Six responsibilities · one recurring burden</p>
-              </div>
-              <div className="relative rounded-[10px] border border-white/65 bg-white/30 p-3.5 pt-4 md:ml-0 md:border-t-0 md:pl-6 md:pt-4">
-                <div className="mb-2 flex items-center gap-2"><img src="/logoimagetwo.png" alt="" className="h-4 w-auto" /><span className="font-merriweather text-[16px] tracking-tight text-[#263A45]">Margin</span></div>
-                <div className="relative -ml-2 -mr-4 mt-3 h-[56px] w-[calc(100%+1rem)] translate-x-px overflow-hidden rounded-[8px] border border-white/75 bg-white/48 p-1 shadow-[0_12px_26px_rgba(42,91,116,0.09),inset_0_1px_0_rgba(255,255,255,0.9)] sm:-ml-2 sm:-mr-5 sm:mt-4 sm:h-[62px] sm:w-[calc(100%+1.5rem)] md:-ml-3 md:-mr-8 md:w-[calc(100%+2rem)]"><AnimatePresence mode="wait" initial={false}><motion.div key={activeNotification.title} initial={reduceMotion ? { opacity: 1, y: 12, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(5px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, filter: "blur(5px)" }} transition={{ duration: reduceMotion ? 0 : 1, ease: [0.22, 1, 0.36, 1] }} className="flex h-full items-center gap-2 rounded-[6px] bg-white/58 px-2.5 py-1.5 text-[#263A45] shadow-[0_8px_18px_rgba(42,91,116,0.08)] backdrop-blur-lg"><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#0B74DE]" /><div className="min-w-0 flex-1"><p className="font-mono text-[7px] font-semibold uppercase tracking-tight text-[#47708B]">Live recovery movement</p><p className="mt-0.5 text-[11px] font-semibold leading-3.5">{activeNotification.title}</p><p className="text-[10px] leading-3">{activeNotification.detail}</p></div><span className="hidden max-w-[68px] text-right text-[7px] leading-3 text-[#47708B] sm:block">{activeNotification.meta}</span></motion.div></AnimatePresence></div>
-                <p className="mt-3 border-t border-[#7FA7B9]/40 pt-2 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#47708B]">The burden becomes one connected recovery record.</p>
-              </div>
-            </div>
-            <div className="pointer-events-none absolute bottom-[38%] left-[55%] top-[72px] z-10 hidden w-px -translate-x-[2px] bg-[#7FA7B9]/35 md:block" aria-hidden="true" /><div className="relative z-10 mt-5 border-t border-[#7FA7B9]/35 pt-3 text-center font-lora text-[16px] leading-tight tracking-tight text-[#263A45] sm:text-[19px]" style={{ fontWeight: 400 }}>The work is transferred. The authority stays with you.</div>
-          </motion.div>
-
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }}>
-            <div className="mb-3 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / THE COST OF DOING IT YOURSELF</span></div>
-            <h2 id="operational-economics-title" className="font-lora text-[31px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[40px] md:text-[50px]" style={{ fontWeight: 400 }}>Recovery is not a task. It is a function.</h2>
-            <p className="mt-2 max-w-[720px] font-sans text-[15px] font-medium leading-7 tracking-[-0.01em] text-[#48677A] sm:text-[17px] sm:leading-8">Margin takes ownership of the recovery work so your team doesn&apos;t have to build and maintain the function themselves.</p>
-            <div className="mt-5 border-t border-[var(--margin-border)]"><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Recurring</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">The work returns whenever the next issue appears.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Connected</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Evidence, cases, responses, payouts, and outcomes stay together.</p></div><div className="border-b border-[var(--margin-border)] py-2.5"><p className="text-[13px] font-semibold text-[var(--margin-text-primary)]">Owned by Margin</p><p className="mt-0.5 text-[12px] leading-4 text-[var(--margin-text-secondary)]">Your team remains the authority without carrying the entire operating burden.</p></div></div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function RecoveryOutcomeExplorer() {
   const reduceMotion = useReducedMotion();
   const outcomeSceneRef = useRef<HTMLDivElement>(null);
@@ -1782,7 +1711,6 @@ export default function Index() {
         <AccountingEvidenceSection />
         <RiskSection />
         <RecoveryOutcomeExplorer />
-        <OperationalEconomicsSection />
         <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
