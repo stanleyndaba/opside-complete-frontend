@@ -1,119 +1,74 @@
-import React, { useMemo, useState } from "react";
-import { Check, ChevronDown, CircleAlert, Clock3, Search, Send, WalletCards } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowUpRight, ChevronDown, Search } from "lucide-react";
 
-type PipelineTab = "approval" | "filing" | "filed" | "attention" | "payout" | "completed";
+type TabId = "approval" | "filing" | "filed" | "attention" | "payout" | "resolved";
+type Tone = "ready" | "moving" | "filed" | "attention" | "payout" | "resolved";
 
-type PipelineRecord = {
-  id: string;
-  marketplace: string;
-  recovery: string;
+type RecordCard = {
+  reference: string;
+  type: string;
+  title: string;
   amount: string;
-  evidence: string;
+  detail: string;
+  meta: string;
+  priority?: string;
+  proof: string;
+  days?: string;
+  route: string;
+  packet: string;
+  safety: string;
+  checks: string[];
   status: string;
   next: string;
-  tone: "blue" | "amber" | "green" | "red" | "slate";
+  movement: string;
+  docs: string[];
+  tone: Tone;
 };
 
-const tabs: { id: PipelineTab; label: string; count: number }[] = [
-  { id: "approval", label: "Awaiting approval", count: 4 },
-  { id: "filing", label: "Filing in progress", count: 2 },
-  { id: "filed", label: "Filed", count: 6 },
+const tabs: Array<{ id: TabId; label: string; count: number }> = [
+  { id: "approval", label: "Awaiting approval", count: 11 },
+  { id: "filing", label: "Filing in progress", count: 4 },
+  { id: "filed", label: "Filed", count: 16 },
   { id: "attention", label: "Needs attention", count: 3 },
-  { id: "payout", label: "Awaiting payout", count: 5 },
-  { id: "completed", label: "Completed", count: 18 },
+  { id: "payout", label: "Awaiting payout", count: 7 },
+  { id: "resolved", label: "Resolved Cases", count: 28 },
 ];
 
-const records: Record<PipelineTab, PipelineRecord[]> = {
-  approval: [
-    { id: "REC-10482", marketplace: "US", recovery: "Duplicate charge", amount: "$853.60", evidence: "Proof complete", status: "Ready to file", next: "Review and approve", tone: "blue" },
-    { id: "REC-10476", marketplace: "CA", recovery: "Warehouse damage", amount: "$1,240.00", evidence: "3 sources matched", status: "Approval required", next: "Review evidence", tone: "blue" },
-    { id: "REC-10471", marketplace: "UK", recovery: "SLA breach compensation", amount: "$418.25", evidence: "Proof complete", status: "Ready to file", next: "Review and approve", tone: "blue" },
-  ],
-  filing: [
-    { id: "REC-10454", marketplace: "US", recovery: "Phantom refund", amount: "$672.18", evidence: "Packet assembled", status: "Submitting", next: "Amazon response", tone: "amber" },
-    { id: "REC-10439", marketplace: "MX", recovery: "Dispute charge", amount: "$296.40", evidence: "Packet assembled", status: "Evidence upload", next: "Capture receipt", tone: "amber" },
-  ],
-  filed: [
-    { id: "REC-10398", marketplace: "US", recovery: "Removal auditor", amount: "$2,108.00", evidence: "Submitted 18 Jun", status: "Under review", next: "Monitor response", tone: "slate" },
-    { id: "REC-10386", marketplace: "EU", recovery: "Warehouse damage", amount: "$934.70", evidence: "Submitted 17 Jun", status: "Under review", next: "Monitor response", tone: "slate" },
-    { id: "REC-10372", marketplace: "CA", recovery: "Duplicate charge", amount: "$517.90", evidence: "Submitted 14 Jun", status: "Response received", next: "Review decision", tone: "slate" },
-  ],
-  attention: [
-    { id: "REC-10361", marketplace: "UK", recovery: "SLA breach compensation", amount: "$781.30", evidence: "Missing delivery proof", status: "Blocked", next: "Request document", tone: "red" },
-    { id: "REC-10348", marketplace: "US", recovery: "Dispute charge", amount: "$1,054.22", evidence: "Conflicting records", status: "Needs review", next: "Resolve mismatch", tone: "red" },
-    { id: "REC-10327", marketplace: "EU", recovery: "Phantom refund", amount: "$389.00", evidence: "Amazon response unclear", status: "Escalation ready", next: "Review response", tone: "red" },
-  ],
-  payout: [
-    { id: "REC-10294", marketplace: "US", recovery: "Duplicate charge", amount: "$1,638.91", evidence: "Approved 12 Jun", status: "Awaiting payout", next: "Check settlement", tone: "amber" },
-    { id: "REC-10282", marketplace: "CA", recovery: "Warehouse damage", amount: "$246.80", evidence: "Approved 10 Jun", status: "Awaiting payout", next: "Check settlement", tone: "amber" },
-    { id: "REC-10264", marketplace: "MX", recovery: "Removal auditor", amount: "$927.15", evidence: "Approved 08 Jun", status: "Partial payout", next: "Reconcile balance", tone: "amber" },
-  ],
-  completed: [
-    { id: "REC-10188", marketplace: "US", recovery: "Phantom refund", amount: "$540.00", evidence: "Paid 06 Jun", status: "Recovered", next: "Record closed", tone: "green" },
-    { id: "REC-10173", marketplace: "UK", recovery: "Duplicate charge", amount: "$312.45", evidence: "Paid 04 Jun", status: "Recovered", next: "Record closed", tone: "green" },
-    { id: "REC-10144", marketplace: "EU", recovery: "SLA breach compensation", amount: "$1,204.66", evidence: "Paid 31 May", status: "Recovered", next: "Record closed", tone: "green" },
-  ],
+const cards: Record<TabId, RecordCard[]> = {
+  approval: [{ reference: "RFD-16874-INB", type: "Seller decision", title: "Inbound Shipment Shortage", amount: "$184.72", detail: "Amazon received fewer units than the shipment plan shows, and the invoice plus BOL prove the shipped quantity.", meta: "FBA17KQ2N6P8 · 8 units · SKU NS-HOME-ORGANIZER-2PK · ASIN B0C7N2Q9KM", priority: "High priority", proof: "94% ready", days: "31 days left", route: "Seller Central / FBA inventory reimbursement / Inbound shortage", packet: "Invoice, BOL, shipment plan, receive delta", safety: "Low risk - duplicate reimbursement check passed", checks: ["Policy window valid", "Unit cost verified", "No prior reimbursement found"], status: "Approve filing", next: "Approve filing now", movement: "Updated 9 minutes ago", docs: ["INV-NS-7419.pdf", "BOL-FBA17KQ2N6P8.pdf", "shipment-plan.csv", "receive-delta.csv"], tone: "ready" }],
+  filing: [{ reference: "RFD-16821-REM", type: "Filing in progress", title: "Removal Order Shortage", amount: "$612.40", detail: "The removal shipment was confirmed below the expected unit count and the evidence packet is being sent through the selected route.", meta: "Removal order R-88421 · 14 units · SKU NS-COFFEE-GRINDER · ASIN B09Q4M2L7H", proof: "Packet assembled", days: "Response expected in 12 days", route: "Seller Central / FBA removal reimbursement", packet: "Removal order, carrier receipt, inventory ledger", safety: "Duplicate claim check passed", checks: ["Evidence packet locked", "Submission receipt pending", "Seller approval recorded"], status: "Submitting", next: "Capture Amazon receipt", movement: "Updated 4 minutes ago", docs: ["removal-order.pdf", "carrier-receipt.pdf", "inventory-ledger.csv"], tone: "moving" }],
+  filed: [{ reference: "RFD-16790-DMG", type: "Filed with Amazon", title: "Warehouse Damage", amount: "$1,240.00", detail: "The recovery packet is with Amazon. Margin is keeping the filing, evidence, and response window connected.", meta: "FBA warehouse WHS-04 · 22 units · SKU NS-AIR-PURIFIER · ASIN B0D4L8P1CX", proof: "Submitted 18 Jun", route: "Seller Central / FBA inventory reimbursement / Damage", packet: "Damage report, unit photos, receiving record", safety: "Policy route verified", checks: ["Submission receipt captured", "Case number linked", "Response window active"], status: "Under review", next: "Monitor response", movement: "Updated 1 hour ago", docs: ["damage-report.pdf", "receiving-record.csv", "unit-photos.zip"], tone: "filed" }],
+  attention: [{ reference: "RFD-16741-SLA", type: "Needs attention", title: "SLA Breach Compensation", amount: "$781.30", detail: "The policy route is supported, but delivery proof is still missing before the recovery can move into filing.", meta: "Order 114-9216734-441 · SKU NS-BABY-MONITOR · ASIN B0B8R6K2VP", proof: "Missing delivery proof", route: "Seller Central / Service level compensation", packet: "Order history, carrier scan, customer contact", safety: "Hold until proof is attached", checks: ["Order event matched", "Policy window valid", "Carrier document requested"], status: "Blocked", next: "Request document", movement: "Updated 22 minutes ago", docs: ["order-history.csv", "carrier-scan.pdf"], tone: "attention" }],
+  payout: [{ reference: "RFD-16682-CHG", type: "Awaiting payout", title: "Duplicate Charge", amount: "$1,638.91", detail: "Amazon approved the supported recovery. Margin is checking the settlement trail for the expected credit and any partial reversal.", meta: "Settlement SETTLE-ACME-004 · SKU NS-AIR-FILTER-3PK · ASIN B0C7N2Q9KM", proof: "Approved 12 Jun", route: "Settlement reconciliation / Seller reimbursement", packet: "Approval notice, settlement report, charge ledger", safety: "Reversal watch active", checks: ["Approval linked", "Settlement period identified", "Payout not yet matched"], status: "Awaiting payout", next: "Check settlement", movement: "Updated yesterday", docs: ["approval-notice.pdf", "settlement-report.csv", "charge-ledger.csv"], tone: "payout" }],
+  resolved: [{ reference: "RFD-16594-REF", type: "Resolved recovery", title: "Phantom Refund", amount: "$540.00", detail: "The approved recovery was matched to the settlement and the financial outcome is now recorded as complete.", meta: "Order 113-7748216-592 · SKU NS-TRAVEL-ADAPTER · ASIN B08H3F6M1Q", proof: "Paid 06 Jun", route: "Settlement reconciliation / Confirmed reimbursement", packet: "Approval notice, settlement line, payout record", safety: "Final balance verified", checks: ["Payout matched", "No reversal detected", "Recovery record closed"], status: "Recovered", next: "Record closed", movement: "Updated 3 days ago", docs: ["approval-notice.pdf", "settlement-line.csv", "payout-record.csv"], tone: "resolved" }],
 };
 
-const toneStyles: Record<PipelineRecord["tone"], string> = {
-  blue: "border-[#CFE2F2] bg-[#F2F8FC] text-[#1967A3]",
-  amber: "border-[#E8D8B8] bg-[#FCF8EE] text-[#8A641B]",
-  green: "border-[#C9E3D7] bg-[#F2FAF5] text-[#26704E]",
-  red: "border-[#E8CCCC] bg-[#FFF6F5] text-[#A23A3A]",
-  slate: "border-[#D8E3E8] bg-[#F7FAFB] text-[#546575]",
+const toneClasses: Record<Tone, { card: string; badge: string; status: string }> = {
+  ready: { card: "border-[#D8E3E8] bg-white", badge: "border-[#BFE3D7] bg-[#F1FAF6] text-[#26704E]", status: "bg-[#F1F3F4] text-[#36404A]" },
+  moving: { card: "border-[#D8E3E8] bg-white", badge: "border-[#CFE2F2] bg-[#F2F8FC] text-[#1967A3]", status: "bg-[#FCF8EE] text-[#8A641B]" },
+  filed: { card: "border-[#D8E3E8] bg-white", badge: "border-[#CFE2F2] bg-[#F2F8FC] text-[#1967A3]", status: "bg-[#F7FAFB] text-[#546575]" },
+  attention: { card: "border-[#E8CCCC] bg-[#FFFDFC]", badge: "border-[#E8CCCC] bg-[#FFF6F5] text-[#A23A3A]", status: "bg-[#FFF6F5] text-[#A23A3A]" },
+  payout: { card: "border-[#D8E3E8] bg-white", badge: "border-[#E8D8B8] bg-[#FCF8EE] text-[#8A641B]", status: "bg-[#FCF8EE] text-[#8A641B]" },
+  resolved: { card: "border-[#C9E3D7] bg-white", badge: "border-[#C9E3D7] bg-[#F2FAF5] text-[#26704E]", status: "bg-[#F2FAF5] text-[#26704E]" },
 };
 
-export default function FilingPipelinePreview() {
-  const [activeTab, setActiveTab] = useState<PipelineTab>("approval");
-  const [query, setQuery] = useState("");
-  const activeLabel = tabs.find((tab) => tab.id === activeTab)?.label;
-  const visibleRecords = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) return records[activeTab];
-    return records[activeTab].filter((record) => Object.values(record).join(" ").toLowerCase().includes(normalized));
-  }, [activeTab, query]);
-
-  return (
-    <main className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026]">
-      <div className="mx-auto max-w-[1280px] px-4 py-5 sm:px-6 sm:py-7">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#0B74DE] text-white"><Send className="h-4 w-4" /></div>
-            <div><p className="text-[13px] font-semibold tracking-tight text-[#182026]">Filing pipeline</p><p className="text-[10px] tracking-tight text-[#7B8A97]">Recovery cases under Margin&apos;s control</p></div>
-          </div>
-          <div className="hidden items-center gap-2 text-[10px] font-semibold tracking-tight text-[#6B7C88] sm:flex"><span className="h-2 w-2 rounded-full bg-[#43A878]" /> Updated 2 min ago</div>
-        </div>
-
-        <section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.04)]">
-          <div className="flex flex-col gap-4 border-b border-[#DCE8EE] px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
-            <div><p className="text-[10px] font-semibold tracking-tight text-[#7B8A97]">Submission and payout view</p><h1 className="mt-1 font-lora text-[24px] font-normal leading-tight tracking-tight text-[#182026]">Your recovery operation, in motion.</h1></div>
-            <div className="flex h-8 items-center gap-2 rounded-[7px] border border-[#D8E3E8] bg-[#FBFCFD] px-2.5 sm:w-[210px]"><Search className="h-3.5 w-3.5 shrink-0 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="min-w-0 flex-1 bg-transparent text-[11px] tracking-tight text-[#182026] outline-none placeholder:text-[#9AA7B0]" /></div>
-          </div>
-
-          <div className="overflow-x-auto border-b border-[#D8E3E8]">
-            <div className="flex min-w-max gap-6 px-4 sm:px-5">
-              {tabs.map((tab) => (
-                <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} className={`relative flex items-center gap-1.5 whitespace-nowrap border-b-2 px-0 py-3 text-[11px] font-medium tracking-tight transition-colors ${activeTab === tab.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>
-                  {tab.label}<span className={`rounded-full px-1.5 py-0.5 text-[9px] ${activeTab === tab.id ? "bg-[#E8F3FC] text-[#0B74DE]" : "bg-[#F2F5F7] text-[#7B8A97]"}`}>{tab.count}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-3 border-b border-[#EEF2F4] bg-[#FCFDFE] px-4 py-3 sm:px-5"><div><p className="text-[12px] font-semibold tracking-tight text-[#182026]">{activeLabel}</p><p className="mt-0.5 text-[10px] tracking-tight text-[#7B8A97]">Showing {visibleRecords.length} of the current records</p></div><div className="hidden items-center gap-1.5 text-[10px] tracking-tight text-[#7B8A97] sm:flex"><WalletCards className="h-3.5 w-3.5" /> Protected workflow</div></div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[850px] border-collapse text-left">
-              <thead><tr className="border-b border-[#DCE8EE] bg-[#F8FAFB] text-[9px] font-semibold uppercase tracking-tight text-[#7B8A97]"><th className="px-4 py-3 sm:px-5">Recovery</th><th className="px-3 py-3">Marketplace</th><th className="px-3 py-3">Amount</th><th className="px-3 py-3">Evidence</th><th className="px-3 py-3">Status</th><th className="px-3 py-3">Next action</th><th className="px-3 py-3" /></tr></thead>
-              <tbody>{visibleRecords.map((record) => <tr key={record.id} className="border-b border-[#EEF2F4] last:border-0 hover:bg-[#FBFCFD]"><td className="px-4 py-3.5 sm:px-5"><p className="text-[11px] font-semibold tracking-tight text-[#182026]">{record.recovery}</p><p className="mt-0.5 text-[10px] tracking-tight text-[#8A99A3]">{record.id}</p></td><td className="px-3 py-3.5 text-[11px] font-semibold tracking-tight text-[#546575]">{record.marketplace}</td><td className="px-3 py-3.5 text-[12px] font-semibold tracking-tight text-[#182026] tabular-nums">{record.amount}</td><td className="px-3 py-3.5 text-[10px] tracking-tight text-[#66737F]">{record.evidence}</td><td className="px-3 py-3.5"><span className={`inline-flex items-center gap-1 rounded-[5px] border px-2 py-1 text-[9px] font-semibold tracking-tight ${toneStyles[record.tone]}`}>{record.tone === "green" ? <Check className="h-3 w-3" /> : record.tone === "red" ? <CircleAlert className="h-3 w-3" /> : record.tone === "amber" ? <Clock3 className="h-3 w-3" /> : null}{record.status}</span></td><td className="px-3 py-3.5 text-[10px] font-medium tracking-tight text-[#546575]">{record.next}</td><td className="px-3 py-3.5"><ChevronDown className="h-3.5 w-3.5 -rotate-90 text-[#A4B0B8]" /></td></tr>)}</tbody>
-            </table>
-            {visibleRecords.length === 0 ? <div className="px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}
-          </div>
-        </section>
-      </div>
-    </main>
-  );
+function Metrics({ card }: { card: RecordCard }) {
+  return <div className="min-w-0 lg:border-l lg:border-[#D8E3E8] lg:pl-5"><div className="flex items-center justify-between gap-4"><div><div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Proof posture</div><span className="mt-1 inline-flex rounded-full bg-[#F1F3F4] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#36404A]">{card.proof}</span></div>{card.days ? <div className="text-[11px] font-medium tracking-tight text-[#546575]">{card.days}</div> : null}</div><div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#546575]"><div className="flex items-start justify-between gap-3"><span className="text-[#8FA0AD]">Amazon route</span><span className="max-w-[70%] text-right text-[#4B5563]">{card.route}</span></div><div className="flex items-start justify-between gap-3"><span className="text-[#8FA0AD]">Evidence packet</span><span className="max-w-[70%] text-right text-[#4B5563]">{card.packet}</span></div><div className="flex items-start justify-between gap-3"><span className="text-[#8FA0AD]">Safety</span><span className="max-w-[70%] text-right text-[#4B5563]">{card.safety}</span></div></div><div className="mt-3 space-y-1.5">{card.checks.map((check) => <div key={check} className="flex items-center gap-2 text-[10px] font-medium tracking-tight text-[#6B7C88]"><span className={`h-1.5 w-1.5 shrink-0 rounded-full ${card.tone === "attention" ? "bg-[#B34B4B]" : "bg-[#07845A]"}`} />{check}</div>)}</div></div>;
 }
 
-export const __previewRecords = records;
-        
+function RecoveryCard({ card }: { card: RecordCard }) {
+  const classes = toneClasses[card.tone];
+  return <article className={`rounded-[10px] border shadow-[0_2px_8px_rgba(24,32,38,0.03)] ${classes.card}`}><div className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.12fr)_minmax(360px,1fr)_minmax(220px,0.56fr)] lg:items-start lg:p-5"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-tight ${classes.badge}`}>{card.type}</span><span className="text-[11px] font-semibold tracking-tight text-[#8FA0AD]">Ref {card.reference}</span>{card.priority ? <span className="text-[11px] font-semibold tracking-tight text-[#047857]">{card.priority}</span> : null}</div><div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1"><h3 className="text-[14px] font-medium tracking-tight text-[#111827]">{card.title}</h3><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#111827]">{card.amount}</span></div><p className="mt-2 text-[13px] leading-5 tracking-tight text-[#4D5B66]">{card.detail}</p><div className="mt-2 text-[10px] leading-4 tracking-tight text-[#8A99A5]">{card.meta}</div><div className="mt-3 flex flex-wrap gap-2">{card.docs.map((doc) => <span key={doc} className="inline-flex max-w-full rounded-[8px] border border-[#D8E3E8] bg-[#F8FAFB] px-2.5 py-1 text-[10px] font-semibold tracking-tight text-[#546575]"><span className="truncate">{doc}</span></span>)}</div></div><Metrics card={card} /><div className="flex flex-col items-start gap-2 lg:items-end"><button type="button" className={`inline-flex h-9 w-full items-center justify-center gap-2 rounded-[8px] px-3 text-[10px] font-semibold tracking-tight lg:w-[210px] ${classes.status}`}>{card.status}<ArrowUpRight className="h-3.5 w-3.5" /></button><button type="button" className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-white px-3 text-[10px] font-semibold tracking-tight text-[#182026] lg:w-[210px]">Review packet<ArrowUpRight className="h-3.5 w-3.5" /></button><div className="mt-2 w-full text-[11px] tracking-tight text-[#7B8A97] lg:w-[210px]"><div className="flex justify-between gap-3"><span>Next step</span><span className="text-right font-semibold text-[#4B5563]">{card.next}</span></div><div className="mt-2 flex justify-between gap-3"><span>Control</span><span className="text-right font-semibold text-[#4B5563]">Nothing submits until approved</span></div><div className="mt-2 flex justify-between gap-3"><span>Last movement</span><span className="text-right font-semibold text-[#4B5563]">{card.movement}</span></div></div></div></div></article>;
+}
+
+export default function FilingPipelinePreview() {
+  const [activeTab, setActiveTab] = useState<TabId>("approval");
+  const [query, setQuery] = useState("");
+  const tab = tabs.find((item) => item.id === activeTab)!;
+  const sectionTitle = activeTab === "approval" ? "Awaiting Approval" : tab.label;
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleCards = cards[activeTab].filter((card) => !normalizedQuery || Object.values(card).join(" ").toLowerCase().includes(normalizedQuery));
+  return <main className="min-h-screen bg-[#FAFAF7] font-sans text-[#182026]"><div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 sm:py-6"><section className="overflow-hidden rounded-[10px] border border-[#DCE8EE] bg-white shadow-[0_2px_8px_rgba(24,32,38,0.03)]"><header className="border-b border-[#DCE8EE] px-5 py-5 sm:px-6"><div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Filing lifecycle</div><h1 className="mt-1 font-lora text-[27px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[30px]">Recovery cases under Margin&apos;s control</h1><p className="mt-2 max-w-4xl text-[12px] leading-5 tracking-tight text-[#66737F]">Each stage shows what Margin has established, what Amazon has received, what remains under watch, and the next controlled action.</p></header><div className="overflow-x-auto border-b border-[#D8E3E8]"><div className="flex min-w-max gap-7 px-5 sm:px-6">{tabs.map((item) => <button key={item.id} type="button" onClick={() => setActiveTab(item.id)} className={`relative whitespace-nowrap border-b-2 px-0 py-4 text-[12px] font-medium tracking-tight transition-colors ${activeTab === item.id ? "border-[#0B74DE] text-[#0B74DE]" : "border-transparent text-[#66737F] hover:text-[#182026]"}`}>{item.label}</button>)}</div></div><div className="px-5 py-5 sm:px-6"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div className="space-y-1.5"><div className="flex flex-wrap items-baseline gap-x-3"><h2 className="font-lora text-[23px] font-normal tracking-tight text-[#182026]">{sectionTitle}</h2><span className="text-[13px] font-semibold tabular-nums tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "$2,475.44" : tab.id === "payout" ? "$4,912.20" : tab.id === "resolved" ? "$18,640.82" : "$3,274.68"}</span></div><p className="max-w-3xl text-[13px] leading-5 tracking-tight text-[#4D5B66]">{tab.id === "approval" ? "Seller-approved filing queue. Review proof, risk, route, and upside before anything is sent." : tab.id === "filing" ? "Live Amazon submissions with packet status, route, evidence, ETA, and proof capture." : tab.id === "attention" ? "Cases that need a recorded decision before the controlled workflow can continue." : "Margin keeps the evidence, response, payout, and next controlled action connected."}</p><p className="text-[11px] font-medium tracking-tight text-[#8A99A5]">{tab.count} seller decisions in this view</p></div><div className="flex items-center gap-2"><div className="flex h-9 items-center gap-2 rounded-[8px] border border-[#D8E3E8] bg-[#FBFCFD] px-3"><Search className="h-3.5 w-3.5 text-[#8A99A3]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search records" className="w-[145px] bg-transparent text-[11px] tracking-tight outline-none placeholder:text-[#9AA7B0]" /></div><button type="button" className="hidden h-9 items-center gap-2 rounded-[8px] bg-[#F1F3F4] px-3 text-[10px] font-semibold tracking-tight text-[#36404A] sm:inline-flex">Review queue<ChevronDown className="h-3.5 w-3.5" /></button></div></div><div className="mt-5 space-y-3">{visibleCards.map((card) => <RecoveryCard key={card.reference} card={card} />)}{visibleCards.length === 0 ? <div className="rounded-[10px] border border-dashed border-[#D8E3E8] px-5 py-12 text-center text-[12px] text-[#7B8A97]">No records match this search.</div> : null}</div></div></section></div></main>;
+}
+
+export const __previewRecords = cards;
