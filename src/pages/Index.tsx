@@ -1760,9 +1760,9 @@ export default function Index() {
         <MarginStandardSection />
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
+        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <RiskSection />
         <RecoveryOutcomeExplorer />
-        <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <RecoveryRoutingSection onAuditCta={handleClaimAccessClick} />
