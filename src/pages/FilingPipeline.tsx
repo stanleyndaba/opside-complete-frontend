@@ -118,7 +118,6 @@ const PIPELINE_EXPLAINER_CLASS = 'mt-1.5 max-w-3xl text-[13px] font-normal leadi
 const PIPELINE_META_CLASS = 'mt-2 text-[11px] font-medium tracking-tight text-[#66737F]';
 const PIPELINE_PROGRESS_LABEL_CLASS = 'mt-1 font-lora text-[16px] font-normal tracking-tight text-[#182026]';
 const PIPELINE_PROGRESS_VALUE_CLASS = 'text-right text-[11px] font-medium tabular-nums tracking-tight text-[#66737F]';
-const PIPELINE_PROGRESS_TRACK_CLASS = 'mt-3 h-1.5 overflow-hidden rounded-full bg-[#E7EEF2]';
 
 type ActiveFilingPreview = {
   currentAction: string;
@@ -2804,15 +2803,11 @@ function ReadyFilingCard({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] font-medium tracking-tight text-[#7B8A97]">Proof posture</div>
-                <div className={PIPELINE_PROGRESS_LABEL_CLASS}>{confidence}% source-ready</div>
+                <span className="inline-flex items-center rounded-full bg-[#F1F3F4] px-2.5 py-1 text-[10px] font-medium tracking-tight text-[#36404A]">{confidence}% ready</span>
               </div>
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {preview.daysLeft} days left
               </div>
-            </div>
-
-            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-[#0B74DE]" style={{ width: `${confidence}%` }} />
             </div>
 
             <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#546575]">
@@ -2841,13 +2836,13 @@ function ReadyFilingCard({
           </div>
 
           <div className="flex flex-col gap-3 lg:items-end">
-            <span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold tracking-tight', classes.chip)}>
+            <span className={cn('inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight', classes.chip)}>
               <FileCheck2 className="h-3.5 w-3.5" />
               Seller controlled
             </span>
 
             <div className="flex w-full flex-col gap-2 lg:max-w-[240px]">
-              <Button asChild size="sm" className="h-9 w-full rounded-[8px] border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
+              <Button asChild size="sm" className="h-9 w-full rounded-[8px] border-0 bg-[#F1F3F4] px-4 font-sans text-[10px] font-medium tracking-tight text-[#36404A] hover:bg-[#E5E8EA] hover:text-[#182026]">
                 <Link to={decisionHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
               </Button>
               <Button asChild size="sm" variant="outline" className="h-9 w-full rounded-[8px] border-[#D8E3E8] bg-white text-[10px] font-semibold tracking-tight text-[#111827] hover:bg-[#F3F6F8] hover:text-[#111827]">
@@ -2929,10 +2924,6 @@ function ActiveFilingCard({
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 Step {preview.step} of {preview.totalSteps}
               </div>
-            </div>
-
-            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-[#0B74DE]" style={{ width: `${progress}%` }} />
             </div>
 
             <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
@@ -3051,10 +3042,6 @@ function FiledFilingCard({
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {progress}% monitored
               </div>
-            </div>
-
-            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-[#66A9E8]" style={{ width: `${progress}%` }} />
             </div>
 
             <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
@@ -3190,10 +3177,6 @@ function PayoutTrackingCard({
               </div>
             </div>
 
-            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-[#9B91D6]" style={{ width: `${progress}%` }} />
-            </div>
-
             <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
               <div className="flex items-start justify-between gap-4">
                 <span className="text-[#8A99A5]">Reconciliation source</span>
@@ -3326,10 +3309,6 @@ function CompletedRecoveryCard({
               <div className={PIPELINE_PROGRESS_VALUE_CLASS}>
                 {progress}% closed
               </div>
-            </div>
-
-            <div className={PIPELINE_PROGRESS_TRACK_CLASS}>
-              <div className="h-full rounded-full bg-[#5BC9A8]" style={{ width: `${progress}%` }} />
             </div>
 
             <div className="mt-3 grid gap-2 text-[11px] font-medium tracking-tight text-[#66737F]">
@@ -3588,8 +3567,8 @@ export default function FilingPipeline() {
       amount: formatMoney(readyTotal),
       countLabel: `${readyRows.length} seller decision${readyRows.length === 1 ? '' : 's'} waiting`,
       action: readyRows.length ? (
-        <Button asChild size="sm" className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
-          <Link to={disputeCasesHref}>Approve Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+        <Button asChild size="sm" className="h-10 rounded-md border-0 bg-[#F1F3F4] px-4 font-sans text-[10px] font-medium tracking-tight text-[#36404A] hover:bg-[#E5E8EA] hover:text-[#182026]">
+          <Link to={disputeCasesHref}>Approve all submissions<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
       content: disputeLoading ? (
@@ -3672,7 +3651,7 @@ export default function FilingPipeline() {
       amount: formatMoney(totalAmount(attentionRows.map(disputeAmount))),
       countLabel: `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} gated`,
       action: attentionRows.length ? (
-        <Button asChild size="sm" className="h-10 rounded-md border border-[#0B74DE] bg-[#0B74DE] px-4 font-sans text-[10px] font-semibold tracking-tight text-white hover:bg-[#0968C8] hover:text-white">
+        <Button asChild size="sm" className="h-10 rounded-md border-0 bg-[#F1F3F4] px-4 font-sans text-[10px] font-medium tracking-tight text-[#36404A] hover:bg-[#E5E8EA] hover:text-[#182026]">
           <Link to={disputeCasesHref}>Review queue<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
         </Button>
       ) : null,
