@@ -83,6 +83,7 @@ const SpeakToSales = lazy(() => import('./pages/SpeakToSales'));
 const FilingPipelinePreview = lazy(() => import('./pages/FilingPipelinePreview'));
 const EvidenceRequired = lazy(() => import('./pages/EvidenceRequired'));
 const AmazonThreadReview = lazy(() => import('./pages/AmazonThreadReview'));
+const ProgressReview = lazy(() => import('./pages/ProgressReview'));
 const DocumentUploads = lazy(() => import("@/components/documentuploads"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const Standalone = lazy(() => import("./pages/standalone"));
@@ -299,6 +300,7 @@ const App = () => (
                         <Route path='/filing-pipeline-preview' element={<FilingPipelinePreview />} />
                         <Route path='/evidence-required' element={<EvidenceRequired />} />
                         <Route path='/amazon-thread-review' element={<AmazonThreadReview />} />
+                        <Route path='/progress-review' element={<ProgressReview />} />
                         <Route path='/appeals-review' element={<AppealsReview />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/connect-amazon" element={<Navigate to="/audit" replace />} />
