@@ -196,6 +196,17 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/sales'),
     image: SITE_META.image,
   },
+  '/progress-review': {
+    path: '/progress-review',
+    title: 'Progress Review | Margin',
+    description: 'Review the recorded operational history of an Amazon FBA recovery from detection through settlement response.',
+    canonical: routeUrl('/progress-review'),
+    ogTitle: 'Progress Review | Margin',
+    ogDescription: 'Review the operational milestones, evidence, filing activity, and Amazon response recorded for an FBA recovery.',
+    ogUrl: routeUrl('/progress-review'),
+    image: SITE_META.image,
+    robots: 'noindex, nofollow',
+  },
   '/privacy': {
     path: '/privacy',
     title: 'Privacy Policy | Margin',

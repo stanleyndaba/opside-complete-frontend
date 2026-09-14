@@ -1085,6 +1085,24 @@ const routes = [
       ],
     },
   },
+  {
+    path: '/progress-review',
+    title: 'Progress Review | Margin',
+    description: 'Review the recorded operational history of an Amazon FBA recovery from detection through settlement response.',
+    ogTitle: 'Progress Review | Margin',
+    ogDescription: 'Review the operational milestones, evidence, filing activity, and Amazon response recorded for an FBA recovery.',
+    shell: {
+      label: 'Recovery record',
+      h1: 'Progress review',
+      intro: 'Review the recorded operational history of an Amazon FBA recovery from detection through settlement response.',
+      sections: [
+        {
+          heading: 'Operational history',
+          body: 'This page contains the recorded recovery milestones, evidence links, filing activity, and Amazon response history for review.',
+        },
+      ],
+    },
+  },
 ];
 
 const htmlEscape = (value) =>
