@@ -20,6 +20,11 @@ const amounts = [
   ['Remaining', '$0.00'],
 ] as const;
 
+const verifiedOutcomes = [
+  ['Inbound shipment shortage', 'Northstar Home Goods', 'ACME-CASE-2005', 'AMZ-ACME-42005', '$963.10', 'Clean settlement match', 'SETTLE-ACME-PAYOUT-01', '2026-06-14T19:07:45.215Z'],
+  ['Settlement mismatch', 'Blue Ridge Supply', 'ACME-CASE-2006', 'AMZ-ACME-42006', '$500.00', 'Partial settlement', 'SETTLE-ACME-PAYOUT-02', '2026-06-12T19:07:45.215Z'],
+] as const;
+
 export default function FinancialReconciliation() {
   usePageMeta({
     title: 'Financial Reconciliation | Margin',
@@ -41,6 +46,40 @@ export default function FinancialReconciliation() {
       </header>
 
       <main className="mx-auto max-w-[1180px] px-5 py-8 sm:px-7 sm:py-12">
+        <section className="border-b border-[#DCE5E5] pb-8 sm:pb-10" aria-labelledby="approved-reimbursements-title">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Verified outcomes</p>
+              <h2 id="approved-reimbursements-title" className="mt-2 font-lora text-[28px] leading-tight tracking-[-0.035em] text-[#182026]">Approved reimbursements</h2>
+              <p className="mt-2 max-w-[680px] text-[13px] leading-6 text-[#66737F]">Cases with both a recorded approval and positive payment evidence linked to the tenant&apos;s financial event trail.</p>
+            </div>
+            <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View impact report <ArrowRight className="h-3.5 w-3.5" /></Link>
+          </div>
+          <div className="mt-6 grid gap-0 border-y border-[#E2E8E7] sm:grid-cols-3">
+            {[
+              ['Approval evidence', '2 recorded', 'Each displayed outcome has filing-linked approval truth.'],
+              ['Verified paid', '$1,463.10', 'Positive reimbursement events matched to these outcomes.'],
+              ['Payout proof', '2 linked', 'Each entry exposes a recorded settlement, payout batch, or event reference.'],
+            ].map(([label, value, detail], index) => (
+              <div key={label} className={`px-3 py-4 sm:px-4 ${index < 2 ? 'border-b border-[#E2E8E7] sm:border-b-0 sm:border-r' : ''}`}>
+                <p className="text-[10px] font-medium uppercase tracking-tight text-[#71818A]">{label}</p>
+                <p className="mt-1.5 font-lora text-[22px] tracking-[-0.03em] text-[#182026]">{value}</p>
+                <p className="mt-1 text-[11px] leading-5 text-[#66737F]">{detail}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 flex items-center gap-3 rounded-[8px] border border-[#E2E8E7] bg-white px-3 py-2.5 text-[12px] text-[#8A99A5]">
+            <span className="text-[16px]">⌕</span><span className="flex-1">Query outcomes by case ID, seller, or amount...</span><span className="rounded-[5px] bg-[#F1F3F4] px-2 py-1 font-mono text-[10px] text-[#66737F]">⌘ K</span>
+          </div>
+          <div className="mt-5 overflow-x-auto rounded-[8px] border border-[#E2E8E7] bg-white">
+            <table className="w-full min-w-[900px] border-collapse text-left">
+              <thead><tr className="border-b border-[#E2E8E7] text-[10px] font-medium tracking-tight text-[#71818A]"><th className="px-4 py-3">Recovery outcome</th><th className="px-4 py-3">Registry reference</th><th className="px-4 py-3">Amazon case</th><th className="px-4 py-3 text-right">Reimbursed</th><th className="px-4 py-3">Closeout</th><th className="px-4 py-3">Recorded</th></tr></thead>
+              <tbody>{verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded]) => <tr key={registry} className="border-b border-[#EEF1F0] last:border-b-0"><td className="px-4 py-4"><p className="text-[12px] font-semibold text-[#182026]">{outcome}</p><p className="mt-1 text-[11px] text-[#66737F]">{seller}</p></td><td className="px-4 py-4 font-mono text-[11px] text-[#4D5B66]">{registry}</td><td className="px-4 py-4 font-mono text-[11px] text-[#4D5B66]">{amazonCase}</td><td className="px-4 py-4 text-right text-[13px] font-semibold tabular-nums text-[#182026]">{reimbursed}</td><td className="px-4 py-4"><p className="text-[11px] font-semibold text-[#182026]">{closeout}</p><p className="mt-1 font-mono text-[10px] text-[#66737F]">{settlement}</p></td><td className="px-4 py-4 font-mono text-[10px] text-[#66737F]">{recorded}</td></tr>)}</tbody>
+            </table>
+          </div>
+          <p className="mt-3 text-[11px] text-[#8A99A5]">Showing 2 of 2 verified outcomes</p>
+        </section>
+
         <section className="border-b border-[#DCE5E5] pb-8 sm:pb-10" aria-labelledby="reconciliation-title">
           <div className="flex items-center gap-3"><div className="h-px w-8 bg-[#0B74DE]" /><span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Recovery financial outcome</span></div>
           <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
