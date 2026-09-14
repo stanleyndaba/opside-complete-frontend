@@ -1729,54 +1729,45 @@ export default function Index() {
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-24" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
-              <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-stretch border-t border-[var(--margin-border)] pt-12 md:pt-16">
+              <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start pt-12 md:pt-16">
 
-                {/* Left heading */}
-                <motion.div {...revealProps} className="lg:w-1/3 flex flex-col justify-start">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">15 / FINAL DELEGATION</p>
-                  <h2 id="final-handoff-title" className="mt-4 font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[42px]" style={{ fontWeight: 400 }}>
-                    You have a business to run. Let Margin handle the recovery.
+                {/* Left label */}
+                <motion.div {...revealProps} className="lg:w-[200px] shrink-0">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)] mb-1">15 / FINAL DELEGATION</p>
+                  <h2 id="final-handoff-title" className="font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
+                    Get started
                   </h2>
                 </motion.div>
 
                 {/* Two cards */}
-                <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                  {/* Card 1 — "Help me understand" */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col h-full rounded-[16px] bg-gradient-to-br from-[#E2EAE7] to-[#C9D6D3] p-8 sm:p-10 relative overflow-hidden group">
-                    <h3 className="text-[24px] font-medium tracking-tight text-[#191B20] mb-5 leading-tight">
+                  {/* Card 1 — light */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col rounded-[16px] bg-gradient-to-br from-[#E2EAE7] to-[#C9D6D3] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]">
+                    <h3 className="text-[22px] font-semibold tracking-tight text-[#191B20] leading-tight sm:text-[24px]">
                       You don&apos;t have to wonder.
                     </h3>
-                    <ul className="space-y-3 mb-10 text-[15px] leading-relaxed text-[#48677A] flex-grow font-medium">
-                      <li>What happened</li>
-                      <li>What should have happened</li>
-                      <li>What&apos;s missing</li>
-                      <li>What can be recovered</li>
-                    </ul>
-                    <p className="text-[16px] font-semibold tracking-tight text-[#191B20] mb-8">
-                      Run the Recovery Audit.
+                    <p className="mt-3 text-[15px] leading-relaxed text-[#48677A] font-medium">
+                      Understand what happened, identify what&apos;s unresolved, and decide what deserves action.
                     </p>
-                    <div className="mt-auto">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-12 rounded-[8px] bg-white text-[#191B20] font-semibold text-[14px] px-5 shadow-sm hover:bg-gray-50 flex items-center justify-between w-full sm:w-auto min-w-[180px] border border-gray-200/50">
-                        Start Audit Now <ArrowRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+                    <div className="mt-auto pt-16">
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-11 rounded-[8px] bg-white/80 backdrop-blur-sm text-[#191B20] font-semibold text-[13px] px-5 hover:bg-white flex items-center gap-2 w-fit border border-gray-200/40 shadow-sm">
+                        Start Audit Now <ArrowRight className="h-4 w-4 text-gray-400" />
                       </Button>
                     </div>
                   </motion.div>
 
-                  {/* Card 2 — "Take this off my plate" */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col h-full rounded-[16px] bg-[#191B20] p-8 sm:p-10 relative overflow-hidden group">
-                    <h3 className="text-[24px] font-medium tracking-tight text-white mb-5 leading-tight">
+                  {/* Card 2 — dark */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col rounded-[16px] bg-[#191B20] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]">
+                    <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
                       Let it be handled.
                     </h3>
-                    <p className="text-[15px] leading-relaxed text-[#858792] flex-grow mb-10 font-medium">
-                      You shouldn&apos;t have to manage every discrepancy, case, rejection, and follow-up yourself.
+                    <p className="mt-3 text-[15px] leading-relaxed text-[#858792] font-medium">
+                      You sell. Margin runs the recovery operation — every discrepancy, case, rejection, and follow-up.
                     </p>
-                    <p className="text-[16px] font-semibold tracking-tight text-white mb-8">
-                      You sell. Margin runs the recovery operation.
-                    </p>
-                    <div className="mt-auto">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-12 rounded-[8px] bg-white text-[#191B20] font-semibold text-[14px] px-5 shadow-sm hover:bg-gray-50 flex items-center justify-between w-full sm:w-auto min-w-[180px] border border-transparent">
-                        Get It Handled <ArrowRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+                    <div className="mt-auto pt-16">
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-11 rounded-[8px] bg-white/10 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/20 flex items-center gap-2 w-fit border border-white/15 shadow-sm">
+                        Get It Handled <ArrowRight className="h-4 w-4 text-white/50" />
                       </Button>
                     </div>
                   </motion.div>
