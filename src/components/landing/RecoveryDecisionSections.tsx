@@ -101,12 +101,12 @@ export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAudit
           {pathOptions.map((option, index) => {
             const isFirst = index === 0;
             const gradientStyle = isFirst 
-              ? 'radial-gradient(ellipse at 20% 80%, #2a4365 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #44337a 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #2c5282 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #1a365d 0%, transparent 45%), linear-gradient(145deg, #2b6cb0 0%, #553c9a 40%, #1a202c 100%)'
-              : 'radial-gradient(ellipse at 30% 70%, #702459 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, #97266d 0%, transparent 50%), radial-gradient(ellipse at 50% 30%, #521b41 0%, transparent 50%), radial-gradient(ellipse at 20% 20%, #805ad5 0%, transparent 45%), linear-gradient(145deg, #b83280 0%, #6b46c1 40%, #2d3748 100%)';
+              ? 'radial-gradient(ellipse at 15% 85%, #c97b4a 0%, transparent 50%), radial-gradient(ellipse at 75% 15%, #d4a0b8 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, #dbb896 0%, transparent 45%), radial-gradient(ellipse at 85% 75%, #c48a6e 0%, transparent 40%), linear-gradient(145deg, #d1a0a0 0%, #cc9870 35%, #d4a87a 70%, #c8907a 100%)'
+              : 'radial-gradient(ellipse at 25% 75%, #6b7a54 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, #a8b098 0%, transparent 50%), radial-gradient(ellipse at 45% 35%, #c2c8b8 0%, transparent 45%), radial-gradient(ellipse at 70% 80%, #8a9a6e 0%, transparent 40%), linear-gradient(145deg, #b8bda8 0%, #96a480 35%, #7a8e60 70%, #5e7244 100%)';
             
             return (
             <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white/80">{option.label}</p>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white/90">{option.label}</p>
               <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-white sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
               <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-white/80 md:text-[15px] md:leading-7">{option.copy}</p>
               <div className="mt-7 grid gap-0 border-y border-white/20 sm:grid-cols-2">
