@@ -12,14 +12,6 @@ const timeline = [
   ['Closed', 'Financial outcome fully reconciled.'],
 ] as const;
 
-const amounts = [
-  ['Expected entitlement', '$963.10'],
-  ['Amazon response', '$963.10'],
-  ['Financial evidence', '$963.10'],
-  ['Verified outcome', '$963.10'],
-  ['Remaining', '$0.00'],
-] as const;
-
 const verifiedOutcomes = [
   ['Inbound shipment shortage', 'Northstar Home Goods', 'RFD-16942-INB', '19822888381', '$2,410.50', 'Clean settlement match', 'SETTLE-205-771', 'Jun 11, 2026'],
   ['Customer return reimbursement', 'Harbor & Pine Living', 'RFD-16987-RET', '19823011427', '$1,876.20', 'Clean settlement match', 'SETTLE-205-804', 'Jun 10, 2026'],
@@ -100,14 +92,7 @@ export default function FinancialReconciliation() {
         </section>
 
         <section className="border-b border-[#DCE5E5] py-5 sm:py-6" aria-label="Reconciliation amounts">
-          <div className="max-w-[520px] divide-y divide-[#E2E8E7] border-y border-[#E2E8E7]">
-            {amounts.map(([label, value], index) => (
-              <div key={label} className="flex items-baseline justify-between gap-6 px-3 py-2.5 sm:px-4">
-                <p className="text-[10px] font-medium uppercase tracking-tight text-[#71818A]">{label}</p>
-                <p className="font-lora text-[17px] tracking-[-0.03em] text-[#182026]">{value}</p>
-              </div>
-            ))}
-          </div>
+          <p className="max-w-[760px] text-[14px] leading-6 tracking-tight text-[#4D5B66]">The recovery was expected to produce <span className="font-semibold text-[#182026]">$963.10</span>. Amazon recorded a response of <span className="font-semibold text-[#182026]">$963.10</span>, and the financial evidence verified the same <span className="font-semibold text-[#182026]">$963.10</span> outcome. The recovery is fully reconciled, with <span className="font-semibold text-[#182026]">$0.00</span> remaining.</p>
         </section>
 
         <section className="grid gap-6 border-b border-[#DCE5E5] py-6 sm:py-7 lg:grid-cols-[1fr_0.9fr] lg:gap-10">
