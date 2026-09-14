@@ -847,57 +847,57 @@ function MarginStandardSection() {
 }
 
 function OneRecordAnalysisVisual() {
-  const checks = [
-    ['Delta confirmed', '14 received against 17 planned; the three-unit shortage remains explicit.'],
-    ['Shipment identity bound', 'FBA shipment, SKU, ASIN, and supplier delivery resolve to one event.'],
-    ['Receiving trail aligned', 'Carrier delivery and warehouse intake support the same delivery window.'],
-    ['Adjustment gap preserved', 'The inventory adjustment does not explain or restore the missing units.'],
-    ['Reimbursement not found', 'No matching payout is recorded for the supported shortage in the reviewed period.'],
-    ['Submission basis prepared', 'The supported delta is separated from the units that still require proof.'],
-  ];
-
-  return (
-    <div className="relative isolate overflow-hidden rounded-[8px] border border-[#BFD8E6]/80 bg-[#EAF4F8] shadow-[0_18px_60px_rgba(37,91,116,0.16)]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DDECF3_50%,#F5FAFB_100%)]" />
-      <motion.div aria-hidden="true" className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-[#B9E0EF]/65 blur-3xl" animate={{ x: [0, 16, 0], y: [0, 12, 0], scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
-      <motion.div aria-hidden="true" className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -15, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
-      <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
-      <div className="relative grid gap-3 p-3 sm:p-4 lg:grid-cols-[1.32fr_0.68fr] lg:gap-4">
-        <div className="rounded-[10px] border border-white/85 bg-white/58 p-3 shadow-[0_16px_34px_rgba(56,95,112,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:p-4">
-          <div className="flex items-center justify-between gap-3 border-b border-[#C9DDE5]/80 pb-2">
-            <div>
-              <p className="font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66818F]">FBA evidence extraction</p>
-              <p className="mt-0.5 text-[12px] font-semibold tracking-[-0.02em] text-[#263D48] sm:text-[13px]">Shortage variance (delta)</p>
+    const checks = [
+      ['Delta confirmed', '14 received against 17 planned; the three-unit shortage remains explicit.'],
+      ['Shipment identity bound', 'FBA shipment, SKU, ASIN, and supplier delivery resolve to one event.'],
+      ['Receiving trail aligned', 'Carrier delivery and warehouse intake support the same delivery window.'],
+      ['Adjustment gap preserved', 'The inventory adjustment does not explain or restore the missing units.'],
+      ['Reimbursement not found', 'No matching payout is recorded for the supported shortage in the reviewed period.'],
+      ['Submission basis prepared', 'The supported delta is separated from the units that still require proof.'],
+    ];
+  
+    return (
+      <div className="relative isolate overflow-hidden rounded-[8px] border border-[#BFD8E6]/80 bg-[#EAF4F8] shadow-[0_18px_60px_rgba(37,91,116,0.16)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DDECF3_50%,#F5FAFB_100%)]" />
+        <motion.div aria-hidden="true" className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-[#B9E0EF]/65 blur-3xl" animate={{ x: [0, 16, 0], y: [0, 12, 0], scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
+        <motion.div aria-hidden="true" className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -15, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
+        <div className="relative grid gap-3 p-3 sm:p-4 lg:grid-cols-[1.32fr_0.68fr] lg:gap-4">
+          <div className="rounded-[10px] border border-white/85 bg-white/58 p-3 shadow-[0_16px_34px_rgba(56,95,112,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl sm:p-4">
+            <div className="flex items-center justify-between gap-3 border-b border-[#C9DDE5]/80 pb-2">
+              <div>
+                <p className="text-[11px] font-medium tracking-tight text-[#66737F]">FBA evidence extraction</p>
+                <p className="mt-0.5 font-lora text-[14px] font-normal leading-tight tracking-tight text-[#182026] sm:text-[15px]">Shortage variance (delta)</p>
+              </div>
+              <span className="rounded-full bg-[#E3F0F5] px-2 py-1 text-[10px] font-medium tracking-tight text-[#0B74DE]">Analyzed</span>
             </div>
-            <span className="rounded-full bg-[#E3F0F5] px-2 py-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#3E7185]">Analyzed</span>
-          </div>
-          <div className="mt-2.5 space-y-1.5 text-[10px] leading-5 text-[#526C77] sm:text-[11px] sm:leading-5">
-            <p>Amazon&apos;s receiving record shows <strong className="font-semibold text-[#263D48]">14 units received</strong> against a shipment plan for 17 units.</p>
-            <p><span className="rounded-[3px] bg-[#F5E7A9]/85 px-1 text-[#4D4A32]">The three-unit delta survives every receiving record reviewed</span>; it is not a simple posting delay or a duplicate line.</p>
-            <p><span className="rounded-[3px] bg-[#CDEBE2]/90 px-1 text-[#315D56]">Carrier delivery and warehouse intake records agree on the delivery window</span>, proving the shipment arrived while leaving the shortage inside Amazon&apos;s receiving trail.</p>
-            <p><span className="rounded-[3px] bg-[#EACEDB]/85 px-1 text-[#6A4054]">The subsequent inventory adjustment does not reconcile the three units</span>, and the payout records reviewed do not show that Amazon has already reimbursed them.</p>
-            <p>This is the distinction a surface-level review misses: the records support a defined shortage, but only <strong className="font-semibold text-[#263D48]">14 of 17 affected units</strong> are presently defensible for filing. Margin keeps the remaining three unresolved rather than overstating the claim.</p>
-          </div>
-        </div>
-        <div className="space-y-1.5 p-1 sm:p-2">
-          <p className="mb-1 font-mono text-[8px] font-semibold uppercase tracking-tight text-[#66818F]">Meta-detail extracted</p>
-          {checks.map(([title, detail]) => (
-            <div key={title} className="flex items-start gap-2 rounded-[7px] border border-white/70 bg-white/44 px-2 py-1.5 shadow-[0_8px_18px_rgba(56,95,112,0.08),inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md">
-              <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16866B] text-white" aria-hidden="true"><Check className="h-2 w-2" strokeWidth={3} /></span>
-              <span className="min-w-0"><span className="block text-[9px] font-semibold leading-3.5 tracking-[-0.01em] text-[#2C4652]">{title}</span><span className="mt-0.5 block text-[8px] leading-3.5 text-[#66818F]">{detail}</span></span>
+            <div className="mt-2.5 space-y-1.5 text-[11px] leading-5 text-[#4D5B66]">
+              <p>Amazon&apos;s receiving record shows <strong className="font-semibold text-[#182026]">14 units received</strong> against a shipment plan for 17 units.</p>
+              <p><span className="rounded-[3px] bg-[#F5E7A9]/85 px-1 text-[#4D4A32]">The three-unit delta survives every receiving record reviewed</span>; it is not a simple posting delay or a duplicate line.</p>
+              <p><span className="rounded-[3px] bg-[#CDEBE2]/90 px-1 text-[#315D56]">Carrier delivery and warehouse intake records agree on the delivery window</span>, proving the shipment arrived while leaving the shortage inside Amazon&apos;s receiving trail.</p>
+              <p><span className="rounded-[3px] bg-[#EACEDB]/85 px-1 text-[#6A4054]">The subsequent inventory adjustment does not reconcile the three units</span>, and the payout records reviewed do not show that Amazon has already reimbursed them.</p>
+              <p>This is the distinction a surface-level review misses: the records support a defined shortage, but only <strong className="font-semibold text-[#182026]">14 of 17 affected units</strong> are presently defensible for filing. Margin keeps the remaining three unresolved rather than overstating the claim.</p>
             </div>
-          ))}
-          <div className="mt-1 flex items-center justify-between border-t border-[#BFD8E6]/70 pt-3 text-[10px] font-semibold tracking-[-0.01em] text-[#263D48]">
-            <span>Proceed to Dispute</span>
-            <ArrowRight className="h-3.5 w-3.5 text-[#446B7B]" aria-hidden="true" />
+          </div>
+          <div className="space-y-1.5 p-1 sm:p-2">
+            <p className="mb-1 text-[11px] font-medium tracking-tight text-[#66737F]">Meta-detail extracted</p>
+            {checks.map(([title, detail]) => (
+              <div key={title} className="flex items-start gap-2 rounded-[7px] border border-white/70 bg-white/44 px-2 py-1.5 shadow-[0_8px_18px_rgba(56,95,112,0.08),inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md">
+                <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#16866B] text-white" aria-hidden="true"><Check className="h-2 w-2" strokeWidth={3} /></span>
+                <span className="min-w-0"><span className="block text-[10px] font-semibold leading-3.5 tracking-tight text-[#182026]">{title}</span><span className="mt-0.5 block text-[9px] leading-3.5 text-[#66737F]">{detail}</span></span>
+              </div>
+            ))}
+            <div className="mt-1 flex items-center justify-between border-t border-[#BFD8E6]/70 pt-3 text-[11px] font-medium tracking-tight text-[#182026]">
+              <span>Proceed to Dispute</span>
+              <ArrowRight className="h-3.5 w-3.5 text-[#0B74DE]" aria-hidden="true" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function RecoveryWorkStatement() {
+    );
+  }
+  
+  function RecoveryWorkStatement() {
   return (
     <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="trust-section-title">
       <div className={containerClass}>
