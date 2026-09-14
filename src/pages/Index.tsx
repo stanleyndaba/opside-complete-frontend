@@ -1098,6 +1098,50 @@ function RecoveryThreadSection({ onAuditCta }: { onAuditCta: (location: string) 
   );
 }
 
+function NestedRecoveryBrowsers() {
+  const [activeBrowser, setActiveBrowser] = useState<'progress' | 'evidence'>('progress');
+  const browsers = {
+    progress: { label: 'Progress review', path: '/progress-review' },
+    evidence: { label: 'Evidence required', path: '/evidence-required' },
+  } as const;
+
+  return (
+    <section className="relative overflow-hidden border-t border-[#D8DEDA] bg-[#F4F8F8] py-[52px] sm:py-16 md:py-[73px]" aria-labelledby="nested-recovery-title">
+      <div className={containerClass}>
+        <div className="grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-center lg:gap-14">
+          <motion.div {...revealProps}>
+            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">Connected operational view</span></div>
+            <h2 id="nested-recovery-title" className="max-w-[560px] font-lora text-[34px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[52px]" style={{ fontWeight: 400 }}>Margin reviews the work, communicates the position, and keeps the evidence attached.</h2>
+            <p className="mt-5 max-w-[560px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The recovery does not live in one screen. Progress, Amazon communication, and matched evidence need to remain connected while the operation moves forward.</p>
+            <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Nested recovery pages">
+              {(Object.keys(browsers) as Array<'progress' | 'evidence'>).map((key) => (
+                <button key={key} type="button" role="tab" aria-selected={activeBrowser === key} onClick={() => setActiveBrowser(key)} className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${activeBrowser === key ? 'bg-[#DCEBF2] text-[#284B5B]' : 'bg-white/70 text-[#6A7D86] hover:bg-white'}`}>{browsers[key].label}</button>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div {...revealProps} className="relative min-h-[470px] overflow-hidden rounded-[12px] border border-[#C8DCE5]/80 bg-[#E5F0F3] p-3 shadow-[0_24px_70px_rgba(37,91,116,0.16)] sm:min-h-[570px] sm:p-4">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DCECF2_52%,#F6FAFB_100%)]" />
+            <motion.div aria-hidden="true" className="absolute -left-14 -top-16 h-48 w-48 rounded-full bg-[#B9E0EF]/60 blur-3xl" animate={{ x: [0, 18, 0], y: [0, 14, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} />
+            <motion.div aria-hidden="true" className="absolute -bottom-16 -right-12 h-52 w-52 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -16, 0], y: [0, -12, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} />
+            <div className="relative h-full min-h-[440px] sm:min-h-[538px]">
+              {(Object.keys(browsers) as Array<'progress' | 'evidence'>).map((key) => {
+                const isActive = activeBrowser === key;
+                const browser = browsers[key];
+                return (
+                  <div key={key} role="button" tabIndex={0} onClick={() => setActiveBrowser(key)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActiveBrowser(key); }} aria-label={`Show ${browser.label}`} className={`absolute overflow-hidden rounded-[10px] border text-left transition-all duration-500 ${key === 'progress' ? 'left-[3%] top-[5%] h-[76%] w-[78%]' : 'bottom-[3%] right-[3%] h-[73%] w-[78%]'} ${isActive ? 'z-20 border-white/95 shadow-[0_24px_48px_rgba(37,73,91,0.25)]' : 'z-10 border-white/65 shadow-[0_12px_30px_rgba(37,73,91,0.14)]'}`}>
+                    <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] bg-[#E9EEEC] px-2"><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="h-2 w-2 rounded-full bg-[#D7DAD7]" /><span className="ml-2 min-w-0 flex-1 truncate text-center font-sans text-[9px] text-[#7A8B93]">{browser.path}</span></div>
+                    <iframe title={`${browser.label} live preview`} src={browser.path} className={`h-[calc(100%-28px)] w-full border-0 bg-[#FBFAF7] ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`} loading="lazy" />
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FullRecoveryLoopSection() {
   const reduceMotion = useReducedMotion();
   const [activeEvent, setActiveEvent] = useState(0);
@@ -1710,6 +1754,7 @@ export default function Index() {
         <RecoveryWorkStatement />
         <AccountingEvidenceSection />
         <RecoveryThreadSection onAuditCta={() => handleClaimAccessClick("recovery_thread_audit", "sp_api")} />
+        <NestedRecoveryBrowsers />
         <RiskSection />
         <RecoveryOutcomeExplorer />
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
