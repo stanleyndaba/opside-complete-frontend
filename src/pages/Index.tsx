@@ -1726,38 +1726,66 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Final CTA — compact operational handoff */}
-        <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-5 sm:py-6 md:py-9" aria-labelledby="final-handoff-title">
-          <div className={containerClass}>
-            <div className="grid items-center gap-6 border-y border-[var(--margin-border)] py-6 md:gap-8 md:py-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-10">
-              <motion.div {...revealProps} className="min-w-0">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">15 / FINAL DELEGATION</p>
-                <h2 id="final-handoff-title" className="mt-2 max-w-[720px] font-lora text-[30px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[44px]" style={{ fontWeight: 400 }}>
-                  You don&apos;t have to wonder.
-                </h2>
-                <div className="mt-4 grid gap-x-5 gap-y-2 border-y border-[var(--margin-border-subtle)] py-2.5 sm:grid-cols-2">
-                  {["Finds the recovery.", "Builds the case.", "Carries it forward.", "Keeps the outcome visible."].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-[12px] leading-5 text-[var(--margin-text-secondary)] md:text-[13px]">
-                      <Check className="h-3.5 w-3.5 shrink-0 text-[var(--margin-blue)]" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-4 text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-                  You sell. Margin runs the recovery operation.
-                </p>
-                <Button onClick={() => handleClaimAccessClick("homepage_early_access_section")} className="landing-pressable mt-5 h-11 rounded-[7px] bg-[var(--margin-blue)] px-6 text-[13px] font-bold text-white shadow-[0_12px_26px_rgba(23,92,211,0.18)] hover:bg-[var(--margin-blue-hover)]">
-                  Get It Handled <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </motion.div>
+        {/* Closing CTA */}
+          <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-24" aria-labelledby="final-handoff-title">
+            <div className={containerClass}>
+              <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-stretch border-t border-[var(--margin-border)] pt-12 md:pt-16">
 
-              <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="min-w-0">
-                <AuditImageStackVisual />
-              </motion.div>
+                {/* Left heading */}
+                <motion.div {...revealProps} className="lg:w-1/3 flex flex-col justify-start">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)]">15 / FINAL DELEGATION</p>
+                  <h2 id="final-handoff-title" className="mt-4 font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[42px]" style={{ fontWeight: 400 }}>
+                    You have a business to run. Let Margin handle the recovery.
+                  </h2>
+                  <p className="mt-5 text-[16px] leading-relaxed text-[var(--margin-text-secondary)] max-w-md">
+                    Why manage it yourself when you can hire an agent to handle it?
+                  </p>
+                </motion.div>
+
+                {/* Two cards */}
+                <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                  {/* Card 1 – light */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col h-full rounded-[16px] bg-gradient-to-br from-[#E2EAE7] to-[#C9D6D3] p-8 sm:p-10 relative overflow-hidden group">
+                    <h3 className="text-[24px] font-medium tracking-tight text-[#191B20] mb-5 leading-tight">
+                      You don&apos;t have to wonder.
+                    </h3>
+                    <ul className="space-y-3 mb-10 text-[15px] leading-relaxed text-[#48677A] flex-grow font-medium">
+                      <li>Finds the recovery.</li>
+                      <li>Builds the case.</li>
+                      <li>Carries it forward.</li>
+                      <li>Keeps the outcome visible.</li>
+                    </ul>
+                    <p className="text-[16px] font-semibold tracking-tight text-[#191B20] mb-8">
+                      You sell. Margin runs the recovery operation.
+                    </p>
+                    <div className="mt-auto">
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-12 rounded-[8px] bg-white text-[#191B20] font-semibold text-[14px] px-5 shadow-sm hover:bg-gray-50 flex items-center justify-between w-full sm:w-auto min-w-[180px] border border-gray-200/50">
+                        Start Audit Now <ArrowRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+                      </Button>
+                    </div>
+                  </motion.div>
+
+                  {/* Card 2 – dark */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col h-full rounded-[16px] bg-[#191B20] p-8 sm:p-10 relative overflow-hidden group">
+                    <h3 className="text-[24px] font-medium tracking-tight text-white mb-5 leading-tight">
+                      You have a business to run.<br />Let Margin handle the recovery.
+                    </h3>
+                    <p className="text-[15px] leading-relaxed text-[#858792] flex-grow mb-10 font-medium">
+                      Why manage it yourself when you can hire an agent to handle it?
+                    </p>
+                    <div className="mt-auto">
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-12 rounded-[8px] bg-white text-[#191B20] font-semibold text-[14px] px-5 shadow-sm hover:bg-gray-50 flex items-center justify-between w-full sm:w-auto min-w-[180px] border border-transparent">
+                        Get It Handled <ArrowRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+                      </Button>
+                    </div>
+                  </motion.div>
+
+                </div>
+              </div>
             </div>
-          </div>
-        </section>
-      </main>
+          </section>
+        </main>
 
       <DemoVideoModal
         open={isDemoOpen}
