@@ -1554,122 +1554,20 @@ function ProductReframeSection() {
   );
 }
 
-const riskLeakPoints = [
-  { label: "Not found", detail: "the signal never surfaces" },
-  { label: "Not investigated", detail: "the question stays open" },
-  { label: "Unsupported", detail: "the evidence is not ready" },
-  { label: "Not filed", detail: "the case never moves" },
-  { label: "Unanswered", detail: "the next request is missed" },
-  { label: "Rejected", detail: "the first answer becomes final" },
-  { label: "Partly paid", detail: "the balance goes unchecked" },
-  { label: "Assumed complete", detail: "the payout is never reconciled" },
-];
-
 function RiskSection() {
-  const reduceMotion = useReducedMotion();
-  const reconciliationRows = [
-    { label: "Expected", value: "$1,482.20", detail: "What should have happened" },
-    { label: "Paid", value: "$519.10", detail: "What Amazon says it paid / what reached the account" },
-    { label: "Verified", value: "$519.10", detail: "What the available records actually reconcile" },
-    { label: "Remaining", value: "$963.10", detail: "What still isn't explained" },
-  ];
-
   return (
-    <section aria-labelledby="financial-closure-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-8 md:py-[52px]">
+    <section aria-labelledby="amazon-thread-title" className="relative overflow-hidden bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]">
       <div className={containerClass}>
-        <div className="grid items-start gap-8 lg:grid-cols-[0.62fr_1.38fr] lg:gap-10">
-          <motion.div {...revealProps} className="order-2 min-w-0 lg:order-2 lg:scale-[1.03] lg:origin-center">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-[var(--margin-blue)]" />
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#66737F]">09 / FINANCIAL CLOSURE</span>
-            </div>
-
-            <div className="hidden overflow-hidden rounded-[10px] border border-[#4B4F50] bg-[#262829] shadow-[0_24px_70px_rgba(0,0,0,0.24)]">
-              <div className="border-b border-[#4B4F50] bg-[#303334] px-3 py-2.5 sm:px-4 sm:py-3">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-[#B7BBBB]">Recovery record</p>
-                    <p className="mt-1 font-lora text-[19px] leading-none tracking-[-0.035em] text-[#E7E8E6] sm:text-[22px]">ACME-CASE-2005</p>
-                    <p className="mt-1 text-[9px] leading-4 text-[#AEB3B3]">FBA reimbursement · Shipment FBA17XJ4K2</p>
-                  </div>
-                  <div className="border border-[#666B6C] bg-[#414445] px-2 py-1 text-right">
-                    <p className="font-mono text-[7px] font-semibold uppercase tracking-[0.13em] text-[#D5D7D6]">Financial closure</p>
-                    <p className="mt-0.5 text-[9px] font-semibold text-[#E7E8E6]">Balance remains</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-3 py-3.5 sm:px-4 sm:py-4">
-                <div className="border-t border-[#55595A]">
-                  {reconciliationRows.map((row, index) => (
-                    <div key={row.label} className="grid gap-1 border-b border-[#4B4F50] py-2.5 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-3">
-                      <div>
-                        <p className="text-[11px] font-semibold text-[#E7E8E6]">{row.label}</p>
-                        <p className="mt-0.5 text-[9px] leading-4 text-[#AEB3B3]">{row.detail}</p>
-                      </div>
-                      <p className={`font-lora text-[20px] tracking-[-0.035em] ${index === 0 ? "text-[#F0F1EF]" : "text-[#D0D3D2]"}`} style={{ fontWeight: 400 }}>{row.value}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4">
-                  <div className="flex items-center justify-between font-mono text-[7px] font-semibold uppercase tracking-[0.12em] text-[#B7BBBB]">
-                    <span>Expected</span><span>Paid</span><span>Verified</span><span>Remaining</span>
-                  </div>
-                  <div className="relative mt-2 flex items-center">
-                    <div className="h-px w-full bg-[#727778]" />
-                    <motion.div
-                      aria-hidden="true"
-                      className="absolute left-0 h-1.5 w-1.5 rounded-full bg-[#E7E8E6]"
-                      animate={reduceMotion ? { left: "100%" } : { left: ["0%", "66%", "100%", "100%"] }}
-                      transition={reduceMotion ? { duration: 0 } : { duration: 3.4, repeat: Infinity, repeatDelay: 1.6, ease: [0.22, 1, 0.36, 1] }}
-                    />
-                    <div className="absolute left-0 right-0 flex justify-between">
-                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
-                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
-                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
-                      <span className="h-2 w-2 rounded-full border border-[#D5D7D6] bg-[#303334]" />
-                    </div>
-                  </div>
-                  <div className="mt-1 flex items-center justify-between font-mono text-[7px] uppercase tracking-[0.1em] text-[#BFC3C3]"><span>Remaining delta</span><span>Not closed</span></div>
-                </div>
-              </div>
-            </div>
-            <div className="relative min-h-[360px] overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:min-h-[450px] sm:p-3 lg:h-[560px] lg:min-h-0">
-              <BrowserChrome path="margin.app/financial-closure" />
-              <div className="h-[calc(100%-28px)] overflow-hidden rounded-b-[6px] bg-white">
-              <FinancialClosureImageStack />
-              </div>
-            </div>
+        <div className="grid items-start gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12">
+          <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
+            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">09 / THE AMAZON THREAD</span></div>
+            <h2 id="amazon-thread-title" className="max-w-[620px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[52px]" style={{ fontWeight: 400 }}>The recovery stops living in your inbox.</h2>
+            <p className="mt-4 max-w-[560px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">You should not have to search through Amazon cases, remember which shipment a reply belonged to, or work out whether a reimbursement was complete. The full exchange stays attached to the recovery: what was submitted, what Amazon accepted, what was paid, and what still needs evidence.</p>
+            <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">Fewer open loops. Fewer repeated explanations. A clear next action when Amazon&apos;s answer is incomplete.</p>
           </motion.div>
-
-          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-1 border-l border-[#727778] pl-4 md:pl-5 lg:order-1 lg:mt-2">
-            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-[#66737F]">Expected / Paid / Verified / Remaining</p>
-            <h2 id="financial-closure-title" className="mt-2 max-w-[620px] font-lora text-[30px] leading-[1.01] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[48px]" style={{ fontWeight: 400 }}>
-              You shouldn&apos;t have to wonder if you actually got paid.
-            </h2>
-            <p className="mt-3 max-w-[480px] text-[13px] leading-6 text-[var(--margin-text-secondary)] md:text-[14px] md:leading-6">
-              Margin checks the recovery against the financial records and keeps track of what&apos;s been paid, what&apos;s been verified, and what&apos;s still outstanding.
-            </p>
-
-            <div className="mt-5 border-t border-[var(--margin-border)]">
-              {[
-                ["Expected", "What you should have received."],
-                ["Paid", "What was actually paid."],
-                ["Verified", "What Margin can confirm."],
-                ["Remaining", "What still needs attention."],
-              ].map(([label, body]) => (
-                <div key={label} className="border-b border-[var(--margin-border)] py-2.5">
-                  <h3 className="text-[11px] font-semibold text-[var(--margin-text-primary)] md:text-[12px]">{label}</h3>
-                  <p className="mt-0.5 max-w-[420px] text-[10px] leading-4 text-[var(--margin-text-secondary)] md:text-[11px]">{body}</p>
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-5 max-w-[560px] text-[15px] font-semibold leading-7 tracking-[-0.01em] text-[var(--margin-text-primary)] sm:text-[17px] sm:leading-8">
-              When the numbers agree, you&apos;re done.
-              <span className="mt-2 block font-sans text-[13px] font-medium leading-6 tracking-normal text-[#48677A] sm:text-[15px]">If they don&apos;t, Margin keeps it open.</span>
-            </p>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.12 }} className="order-2 min-w-0 overflow-hidden rounded-[12px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3 lg:p-4">
+            <BrowserChrome path="margin.app/amazon-thread-review" />
+            <iframe title="Amazon Thread Review page preview" src="/amazon-thread-review" className="block h-[520px] w-full rounded-b-[8px] border-0 bg-[#FBFAF7] sm:h-[600px]" loading="lazy" />
           </motion.div>
         </div>
       </div>
