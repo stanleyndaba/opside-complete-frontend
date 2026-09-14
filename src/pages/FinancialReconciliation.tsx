@@ -44,13 +44,13 @@ export default function FinancialReconciliation() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1180px] px-5 py-8 sm:px-7 sm:py-12">
-        <section className="border-b border-[#DCE5E5] pb-8 sm:pb-10" aria-labelledby="approved-reimbursements-title">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <main className="mx-auto max-w-[1180px] px-5 py-5 sm:px-7 sm:py-7">
+        <section className="border-b border-[#DCE5E5] pb-5 sm:pb-6" aria-labelledby="approved-reimbursements-title">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Verified outcomes</p>
               <h2 id="approved-reimbursements-title" className="mt-1 font-lora text-[22px] leading-tight tracking-[-0.035em] text-[#182026]">Reconciled cases</h2>
-              <p className="mt-2 max-w-[680px] text-[13px] leading-6 text-[#66737F]">Cases with both a recorded approval and positive payment evidence linked to the tenant&apos;s financial event trail.</p>
+              <p className="mt-1 max-w-[680px] text-[12px] leading-5 text-[#66737F]">Cases with both a recorded approval and positive payment evidence linked to the tenant&apos;s financial event trail.</p>
             </div>
             <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View impact report <ArrowRight className="h-3.5 w-3.5" /></Link>
           </div>
@@ -60,10 +60,10 @@ export default function FinancialReconciliation() {
               ['Verified paid', '$17,383.40', 'Positive reimbursement events matched to these outcomes.'],
               ['Payout proof', '7 linked', 'Each entry exposes a recorded settlement, payout batch, or event reference.'],
             ].map(([label, value, detail], index) => (
-              <div key={label} className={`px-3 py-3 sm:px-4 ${index < 2 ? 'border-b border-[#E2E8E7] sm:border-b-0 sm:border-r' : ''}`}>
+              <div key={label} className={`px-3 py-2 sm:px-4 ${index < 2 ? 'border-b border-[#E2E8E7] sm:border-b-0 sm:border-r' : ''}`}>
                 <p className="text-[10px] font-medium uppercase tracking-tight text-[#71818A]">{label}</p>
                 <p className="mt-1 font-lora text-[17px] tracking-[-0.03em] text-[#182026]">{value}</p>
-                <p className="mt-1 text-[11px] leading-5 text-[#66737F]">{detail}</p>
+                <p className="mt-0.5 text-[10px] leading-4 text-[#66737F]">{detail}</p>
               </div>
             ))}
           </div>
@@ -72,44 +72,44 @@ export default function FinancialReconciliation() {
           </div>
           <div className="mt-3 overflow-x-auto rounded-[8px] border border-[#E2E8E7] bg-white">
             <table className="w-full min-w-[900px] border-collapse text-left">
-              <thead><tr className="border-b border-[#E2E8E7] text-[10px] font-medium tracking-tight text-[#71818A]"><th className="px-4 py-3">Recovery outcome</th><th className="px-4 py-3">Registry reference</th><th className="px-4 py-3">Amazon case</th><th className="px-4 py-3 text-right">Reimbursed</th><th className="px-4 py-3">Closeout</th><th className="px-4 py-3">Recorded</th></tr></thead>
-              <tbody>{verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded]) => <tr key={registry} className="border-b border-[#EEF1F0] last:border-b-0"><td className="px-4 py-4"><p className="text-[12px] font-semibold text-[#182026]">{outcome}</p><p className="mt-1 text-[11px] text-[#66737F]">{seller}</p></td><td className="px-4 py-4 font-mono text-[11px] text-[#4D5B66]">{registry}</td><td className="px-4 py-4 font-mono text-[11px] text-[#4D5B66]">{amazonCase}</td><td className="px-4 py-4 text-right text-[13px] font-semibold tabular-nums text-[#182026]">{reimbursed}</td><td className="px-4 py-4"><p className="text-[11px] font-semibold text-[#182026]">{closeout}</p><p className="mt-1 font-mono text-[10px] text-[#66737F]">{settlement}</p></td><td className="px-4 py-4 font-mono text-[10px] text-[#66737F]">{recorded}</td></tr>)}</tbody>
+              <thead><tr className="border-b border-[#E2E8E7] text-[10px] font-medium tracking-tight text-[#71818A]"><th className="px-3 py-2">Recovery outcome</th><th className="px-3 py-2">Registry reference</th><th className="px-3 py-2">Amazon case</th><th className="px-3 py-2 text-right">Reimbursed</th><th className="px-3 py-2">Closeout</th><th className="px-3 py-2">Recorded</th></tr></thead>
+              <tbody>{verifiedOutcomes.map(([outcome, seller, registry, amazonCase, reimbursed, closeout, settlement, recorded]) => <tr key={registry} className="border-b border-[#EEF1F0] last:border-b-0"><td className="px-3 py-2.5"><p className="text-[11px] font-semibold text-[#182026]">{outcome}</p><p className="mt-0.5 text-[10px] text-[#66737F]">{seller}</p></td><td className="px-3 py-2.5 font-mono text-[10px] text-[#4D5B66]">{registry}</td><td className="px-3 py-2.5 font-mono text-[10px] text-[#4D5B66]">{amazonCase}</td><td className="px-3 py-2.5 text-right text-[12px] font-semibold tabular-nums text-[#182026]">{reimbursed}</td><td className="px-3 py-2.5"><p className="text-[10px] font-semibold text-[#182026]">{closeout}</p><p className="mt-0.5 font-mono text-[9px] text-[#66737F]">{settlement}</p></td><td className="px-3 py-2.5 font-mono text-[9px] text-[#66737F]">{recorded}</td></tr>)}</tbody>
             </table>
           </div>
           <p className="mt-2 text-[11px] text-[#8A99A5]">Showing 9 of 9 reconciled cases</p>
         </section>
 
-        <section className="border-b border-[#DCE5E5] pb-8 sm:pb-10" aria-labelledby="reconciliation-title">
+        <section className="border-b border-[#DCE5E5] pb-5 sm:pb-6" aria-labelledby="reconciliation-title">
           <div className="flex items-center gap-3"><div className="h-px w-8 bg-[#0B74DE]" /><span className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Recovery financial outcome</span></div>
-          <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <h1 id="reconciliation-title" className="font-lora text-[14px] leading-tight tracking-[-0.045em] text-[#182026] sm:text-[20px]">Recovery Closed</h1>
-              <p className="mt-3 text-[14px] text-[#66737F] sm:text-[15px]">ACME-CASE-2005 · Inbound shipment shortage</p>
+              <p className="mt-1 text-[12px] text-[#66737F]">RFD-16942-INB · Inbound shipment shortage</p>
             </div>
             <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#E5F4EC] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-[#23734D] lg:self-auto"><Check className="h-3.5 w-3.5" strokeWidth={2.5} /> Financial outcome reconciled</div>
           </div>
-          <p className="mt-5 max-w-[680px] text-[15px] leading-7 text-[#4D5B66]">The expected entitlement, Amazon response, settlement evidence, and verified outcome all reconcile to the same amount. There is no remaining balance to carry forward.</p>
+          <p className="mt-3 max-w-[680px] text-[13px] leading-5 text-[#4D5B66]">The expected entitlement, Amazon response, settlement evidence, and verified outcome all reconcile to the same amount. There is no remaining balance to carry forward.</p>
         </section>
 
         <section className="border-b border-[#DCE5E5] py-5 sm:py-6" aria-label="Reconciliation amounts">
-          <p className="max-w-[760px] text-[14px] leading-6 tracking-tight text-[#4D5B66]">The recovery was expected to produce <span className="font-semibold text-[#182026]">$963.10</span>. Amazon recorded a response of <span className="font-semibold text-[#182026]">$963.10</span>, and the financial evidence verified the same <span className="font-semibold text-[#182026]">$963.10</span> outcome. The recovery is fully reconciled, with <span className="font-semibold text-[#182026]">$0.00</span> remaining.</p>
+          <p className="max-w-[760px] text-[12px] leading-5 tracking-tight text-[#4D5B66]">The recovery was expected to produce <span className="font-semibold text-[#182026]">$963.10</span>. Amazon recorded a response of <span className="font-semibold text-[#182026]">$963.10</span>, and the financial evidence verified the same <span className="font-semibold text-[#182026]">$963.10</span> outcome. The recovery is fully reconciled, with <span className="font-semibold text-[#182026]">$0.00</span> remaining.</p>
         </section>
 
         <section className="grid gap-6 border-b border-[#DCE5E5] py-6 sm:py-7 lg:grid-cols-[1fr_0.9fr] lg:gap-10">
           <div>
             <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Closeout decision</p>
-            <h2 className="mt-2 font-lora text-[26px] leading-tight tracking-[-0.035em] text-[#182026]">Why this is closed</h2>
-            <p className="mt-3 max-w-[610px] text-[14px] leading-6 text-[#4D5B66]">Expected, paid, and verified amounts reconcile completely.</p>
-            <div className="mt-7 border-t border-[#E2E8E7] pt-5">
+            <h2 className="mt-1 font-lora text-[20px] leading-tight tracking-[-0.035em] text-[#182026]">Why this is closed</h2>
+            <p className="mt-2 max-w-[610px] text-[12px] leading-5 text-[#4D5B66]">Expected, paid, and verified amounts reconcile completely.</p>
+            <div className="mt-5 border-t border-[#E2E8E7] pt-4">
               <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Financial evidence</p>
-              <dl className="mt-4 grid gap-4 text-[13px] sm:grid-cols-2">
+              <dl className="mt-3 grid gap-3 text-[12px] sm:grid-cols-2">
                 <div><dt className="text-[#71818A]">Settlement reference</dt><dd className="mt-1 font-mono text-[12px] text-[#182026]">SETTLE-ACME-PAYOUT-01</dd></div>
                 <div><dt className="text-[#71818A]">Settlement date</dt><dd className="mt-1 text-[#182026]">Jun 14, 2026</dd></div>
                 <div><dt className="text-[#71818A]">Settlement status</dt><dd className="mt-1 text-[#182026]">Paid</dd></div>
                 <div><dt className="text-[#71818A]">Payment attribution</dt><dd className="mt-1 text-[#182026]">Payment confidently attributed to this recovery</dd></div>
               </dl>
             </div>
-            <div className="mt-7 border-l-2 border-[#198A68] pl-4">
+            <div className="mt-5 border-l-2 border-[#198A68] pl-4">
               <p className="text-[10px] font-semibold uppercase tracking-tight text-[#71818A]">Next state</p>
               <p className="mt-1 text-[14px] font-medium text-[#182026]">Recovery closed. No further action required.</p>
             </div>
@@ -131,7 +131,7 @@ export default function FinancialReconciliation() {
           </div>
         </section>
 
-        <section className="flex flex-col gap-4 pt-7 sm:flex-row sm:items-center sm:justify-between">
+        <section className="flex flex-col gap-3 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <div><p className="text-[12px] font-semibold text-[#182026]">The seller position is clear.</p><p className="mt-1 text-[12px] leading-5 text-[#66737F]">The recovery is closed because the financial record supports closure.</p></div>
           <Link to="/approved-reimbursements" className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#0B74DE] hover:text-[#075AAB]">View verified outcomes <ArrowRight className="h-3.5 w-3.5" /></Link>
         </section>
