@@ -1729,10 +1729,10 @@ export default function Index() {
         {/* Closing CTA */}
           <section className="relative overflow-hidden bg-[var(--margin-canvas)] py-12 sm:py-16 md:py-24" aria-labelledby="final-handoff-title">
             <div className={containerClass}>
-              <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start pt-12 md:pt-16">
+              <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start pt-12 md:pt-16">
 
                 {/* Left label */}
-                <motion.div {...revealProps} className="lg:w-[200px] shrink-0">
+                <motion.div {...revealProps} className="lg:w-[180px] shrink-0">
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--margin-blue)] mb-1">15 / FINAL DELEGATION</p>
                   <h2 id="final-handoff-title" className="font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px]" style={{ fontWeight: 400 }}>
                     Get started
@@ -1740,10 +1740,10 @@ export default function Index() {
                 </motion.div>
 
                 {/* Two cards */}
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
 
-                  {/* Card 1 — light */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col rounded-[16px] bg-gradient-to-br from-[#E2EAE7] to-[#C9D6D3] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]">
+                  {/* Card 1 — light iridescent */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'linear-gradient(135deg, #d5dbd8 0%, #c4cec8 18%, #bfc8c9 35%, #c7c9d4 55%, #d0ccd6 72%, #c8c5c0 100%)' }}>
                     <h3 className="text-[22px] font-semibold tracking-tight text-[#191B20] leading-tight sm:text-[24px]">
                       You don&apos;t have to wonder.
                     </h3>
@@ -1751,14 +1751,14 @@ export default function Index() {
                       Understand what happened, identify what&apos;s unresolved, and decide what deserves action.
                     </p>
                     <div className="mt-auto pt-16">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-11 rounded-[8px] bg-white/80 backdrop-blur-sm text-[#191B20] font-semibold text-[13px] px-5 hover:bg-white flex items-center gap-2 w-fit border border-gray-200/40 shadow-sm">
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-11 rounded-[4px] bg-white/80 backdrop-blur-sm text-[#191B20] font-semibold text-[13px] px-5 hover:bg-white flex items-center gap-2 w-fit border border-gray-200/40 shadow-sm">
                         Start Audit Now <ArrowRight className="h-4 w-4 text-gray-400" />
                       </Button>
                     </div>
                   </motion.div>
 
-                  {/* Card 2 — dark */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col rounded-[16px] bg-[#191B20] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]">
+                  {/* Card 2 — dark iridescent */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'linear-gradient(135deg, #1a1c21 0%, #1e2028 18%, #1d2230 35%, #22202e 55%, #252127 72%, #1f1e1c 100%)' }}>
                     <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
                       Let it be handled.
                     </h3>
@@ -1766,7 +1766,7 @@ export default function Index() {
                       You sell. Margin runs the recovery operation — every discrepancy, case, rejection, and follow-up.
                     </p>
                     <div className="mt-auto pt-16">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-11 rounded-[8px] bg-white/10 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/20 flex items-center gap-2 w-fit border border-white/15 shadow-sm">
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-11 rounded-[4px] bg-white/10 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/20 flex items-center gap-2 w-fit border border-white/15 shadow-sm">
                         Get It Handled <ArrowRight className="h-4 w-4 text-white/50" />
                       </Button>
                     </div>
