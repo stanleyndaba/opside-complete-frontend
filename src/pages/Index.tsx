@@ -857,7 +857,7 @@ function OneRecordAnalysisVisual() {
     ];
   
     return (
-      <div className="relative isolate overflow-hidden rounded-[8px] border border-[#BFD8E6]/80 bg-[#EAF4F8] shadow-[0_18px_60px_rgba(37,91,116,0.16)]">
+    <div className="relative isolate max-h-[360px] overflow-y-auto rounded-[8px] border border-[#BFD8E6]/80 bg-[#EAF4F8] shadow-[0_18px_60px_rgba(37,91,116,0.16)] sm:max-h-none sm:overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.95),transparent_34%),linear-gradient(135deg,#EAF5F9_0%,#DDECF3_50%,#F5FAFB_100%)]" />
         <motion.div aria-hidden="true" className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-[#B9E0EF]/65 blur-3xl" animate={{ x: [0, 16, 0], y: [0, 12, 0], scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
         <motion.div aria-hidden="true" className="absolute -bottom-16 -right-10 h-48 w-48 rounded-full bg-[#C9D5F0]/65 blur-3xl" animate={{ x: [0, -15, 0], y: [0, -10, 0], scale: [1.05, 0.92, 1.05] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
