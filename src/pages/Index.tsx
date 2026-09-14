@@ -1742,32 +1742,32 @@ export default function Index() {
                 {/* Two cards */}
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
 
-                  {/* Card 1 — light iridescent */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'linear-gradient(135deg, #d5dbd8 0%, #c4cec8 18%, #bfc8c9 35%, #c7c9d4 55%, #d0ccd6 72%, #c8c5c0 100%)' }}>
-                    <h3 className="text-[22px] font-semibold tracking-tight text-[#191B20] leading-tight sm:text-[24px]">
+                  {/* Card 1 — warm aurora */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'radial-gradient(ellipse at 20% 80%, #d4956a 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #c9a0c4 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #d4b896 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #e8c4a0 0%, transparent 45%), linear-gradient(145deg, #cba4b8 0%, #d5b8a0 40%, #c9a888 100%)' }}>
+                    <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
                       You don&apos;t have to wonder.
                     </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-[#48677A] font-medium">
+                    <p className="mt-3 text-[15px] leading-relaxed text-white/80 font-medium">
                       Understand what happened, identify what&apos;s unresolved, and decide what deserves action.
                     </p>
                     <div className="mt-auto pt-16">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-11 rounded-[4px] bg-white/80 backdrop-blur-sm text-[#191B20] font-semibold text-[13px] px-5 hover:bg-white flex items-center gap-2 w-fit border border-gray-200/40 shadow-sm">
-                        Start Audit Now <ArrowRight className="h-4 w-4 text-gray-400" />
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
+                        Start Audit Now <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
                     </div>
                   </motion.div>
 
-                  {/* Card 2 — dark iridescent */}
-                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'linear-gradient(135deg, #1a1c21 0%, #1e2028 18%, #1d2230 35%, #22202e 55%, #252127 72%, #1f1e1c 100%)' }}>
+                  {/* Card 2 — cool sage earth */}
+                  <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col rounded-[4px] p-8 sm:p-10 relative overflow-hidden group min-h-[420px]" style={{ background: 'radial-gradient(ellipse at 30% 70%, #4a5e3a 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, #8a9a7e 0%, transparent 50%), radial-gradient(ellipse at 50% 30%, #b0b8a8 0%, transparent 50%), radial-gradient(ellipse at 20% 20%, #c4c8be 0%, transparent 45%), linear-gradient(145deg, #b8bdb0 0%, #8a9680 40%, #5a6e4a 100%)' }}>
                     <h3 className="text-[22px] font-semibold tracking-tight text-white leading-tight sm:text-[24px]">
                       Let it be handled.
                     </h3>
-                    <p className="mt-3 text-[15px] leading-relaxed text-[#858792] font-medium">
+                    <p className="mt-3 text-[15px] leading-relaxed text-white/75 font-medium">
                       You sell. Margin runs the recovery operation — every discrepancy, case, rejection, and follow-up.
                     </p>
                     <div className="mt-auto pt-16">
-                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-11 rounded-[4px] bg-white/10 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/20 flex items-center gap-2 w-fit border border-white/15 shadow-sm">
-                        Get It Handled <ArrowRight className="h-4 w-4 text-white/50" />
+                      <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-11 rounded-[4px] bg-white/20 backdrop-blur-sm text-white font-semibold text-[13px] px-5 hover:bg-white/30 flex items-center gap-2 w-fit border border-white/20 shadow-sm">
+                        Get It Handled <ArrowRight className="h-4 w-4 text-white/60" />
                       </Button>
                     </div>
                   </motion.div>
