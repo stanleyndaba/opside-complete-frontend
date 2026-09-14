@@ -139,6 +139,13 @@ const demoReimbursementOutcomes: ApprovedReimbursement[] = [
     settlementStatus: 'Partially paid',
     attributionStatus: 'Payment attributed to this recovery',
   },
+  { caseNumber: 'RFD-16942-INB', amazonCaseId: '19822888381', seller: 'Northstar Home Goods', disputeName: 'Inbound shipment shortage', amount: 2410.50, currency: 'USD', proofReference: 'SETTLE-205-771', closeout: 'Clean settlement match', updated: 'Jun 11, 2026', settlementId: 'SETTLE-205-771', filingDate: 'May 28, 2026', approvalDate: 'Jun 3, 2026', expectedAmount: 2410.50, paidAmount: 2410.50, verifiedAmount: 2410.50, remainingAmount: 0, closureStatus: 'RECOVERY CLOSED', settlementDate: '2026-06-11T09:18:00Z', amazonResponseAmount: 2410.50, financialEvidenceAmount: 2410.50, closureReason: 'The six-unit inbound variance reconciles to the carrier record, ONT8 receiving report, and settlement credit.', nextAction: 'Recovery closed. No further action required.', evidenceSource: 'Settlement SETTLE-205-771 · ReceivingReport-ONT8.csv', settlementStatus: 'Paid', attributionStatus: 'Payment confidently attributed to this recovery' },
+  { caseNumber: 'RFD-16987-RET', amazonCaseId: '19823011427', seller: 'Harbor & Pine Living', disputeName: 'Customer return reimbursement', amount: 1876.20, currency: 'USD', proofReference: 'SETTLE-205-804', closeout: 'Clean settlement match', updated: 'Jun 10, 2026', settlementId: 'SETTLE-205-804', filingDate: 'May 25, 2026', approvalDate: 'Jun 1, 2026', expectedAmount: 1876.20, paidAmount: 1876.20, verifiedAmount: 1876.20, remainingAmount: 0, closureStatus: 'RECOVERY CLOSED', settlementDate: '2026-06-10T14:32:00Z', amazonResponseAmount: 1876.20, financialEvidenceAmount: 1876.20, closureReason: 'Returned inventory was classified as damaged while the return disposition record supports the seller reimbursement.', nextAction: 'Recovery closed. No further action required.', evidenceSource: 'Settlement SETTLE-205-804 · ReturnDispositions-May.csv', settlementStatus: 'Paid', attributionStatus: 'Payment confidently attributed to this recovery' },
+  { caseNumber: 'RFD-17011-FEE', amazonCaseId: '19823100562', seller: 'Cedar Peak Outfitters', disputeName: 'FBA fee overcharge', amount: 3294.75, currency: 'USD', proofReference: 'SETTLE-205-826', closeout: 'Clean settlement match', updated: 'Jun 8, 2026', settlementId: 'SETTLE-205-826', filingDate: 'May 22, 2026', approvalDate: 'May 30, 2026', expectedAmount: 3294.75, paidAmount: 3294.75, verifiedAmount: 3294.75, remainingAmount: 0, closureStatus: 'RECOVERY CLOSED', settlementDate: '2026-06-08T11:06:00Z', amazonResponseAmount: 3294.75, financialEvidenceAmount: 3294.75, closureReason: 'Oversize storage and fulfillment fee corrections match the rate-card comparison and settlement credit.', nextAction: 'Recovery closed. No further action required.', evidenceSource: 'Settlement SETTLE-205-826 · FeeAudit-Q2-2026.xlsx', settlementStatus: 'Paid', attributionStatus: 'Payment confidently attributed to this recovery' },
+  { caseNumber: 'RFD-17042-REM', amazonCaseId: '19823244903', seller: 'Morrow Kitchen Co.', disputeName: 'Removal order shortage', amount: 1465.80, currency: 'USD', proofReference: 'SETTLE-205-849', closeout: 'Clean settlement match', updated: 'Jun 6, 2026', settlementId: 'SETTLE-205-849', filingDate: 'May 19, 2026', approvalDate: 'May 27, 2026', expectedAmount: 1465.80, paidAmount: 1465.80, verifiedAmount: 1465.80, remainingAmount: 0, closureStatus: 'RECOVERY CLOSED', settlementDate: '2026-06-06T16:44:00Z', amazonResponseAmount: 1465.80, financialEvidenceAmount: 1465.80, closureReason: 'Removal shipment records show units not returned to the seller after the order was completed.', nextAction: 'Recovery closed. No further action required.', evidenceSource: 'Settlement SETTLE-205-849 · RemovalOrder-113-8801.pdf', settlementStatus: 'Paid', attributionStatus: 'Payment confidently attributed to this recovery' },
+  { caseNumber: 'RFD-17088-DMG', amazonCaseId: '19823410218', seller: 'Fieldstone Wellness', disputeName: 'Warehouse damage reimbursement', amount: 2788.40, currency: 'USD', proofReference: 'SETTLE-205-881', closeout: 'Clean settlement match', updated: 'Jun 4, 2026', settlementId: 'SETTLE-205-881', filingDate: 'May 14, 2026', approvalDate: 'May 24, 2026', expectedAmount: 2788.40, paidAmount: 2788.40, verifiedAmount: 2788.40, remainingAmount: 0, closureStatus: 'RECOVERY CLOSED', settlementDate: '2026-06-04T08:56:00Z', amazonResponseAmount: 2788.40, financialEvidenceAmount: 2788.40, closureReason: 'Fulfillment-center damage disposition and inventory valuation support the full reimbursement amount.', nextAction: 'Recovery closed. No further action required.', evidenceSource: 'Settlement SETTLE-205-881 · DamageDisposition-ONT8.pdf', settlementStatus: 'Paid', attributionStatus: 'Payment confidently attributed to this recovery' },
+  { caseNumber: 'RFD-17106-DUP', amazonCaseId: '19823577840', seller: 'Brightline Home Systems', disputeName: 'Duplicate charge recovery', amount: 2124.65, currency: 'USD', proofReference: 'SETTLE-205-903', closeout: 'Clean settlement match', updated: 'Jun 2, 2026', settlementId: 'SETTLE-205-903', filingDate: 'May 10, 2026', approvalDate: 'May 20, 2026', expectedAmount: 2124.65, paidAmount: 2124.65, verifiedAmount: 2124.65, remainingAmount: 0, closureStatus: 'RECOVERY CLOSED', settlementDate: '2026-06-02T13:21:00Z', amazonResponseAmount: 2124.65, financialEvidenceAmount: 2124.65, closureReason: 'The duplicate settlement charge was matched to the original order event and fully offset in the payout record.', nextAction: 'Recovery closed. No further action required.', evidenceSource: 'Settlement SETTLE-205-903 · DuplicateEventReview.csv', settlementStatus: 'Paid', attributionStatus: 'Payment confidently attributed to this recovery' },
+  { caseNumber: 'RFD-17155-INV', amazonCaseId: '19823761029', seller: 'Atlas Outdoor Supply', disputeName: 'Inventory reimbursement variance', amount: 1960.00, currency: 'USD', proofReference: 'SETTLE-205-927', closeout: 'Clean settlement match', updated: 'May 30, 2026', settlementId: 'SETTLE-205-927', filingDate: 'May 6, 2026', approvalDate: 'May 16, 2026', expectedAmount: 1960.00, paidAmount: 1960.00, verifiedAmount: 1960.00, remainingAmount: 0, closureStatus: 'RECOVERY CLOSED', settlementDate: '2026-05-30T10:12:00Z', amazonResponseAmount: 1960.00, financialEvidenceAmount: 1960.00, closureReason: 'Inventory adjustment history and expected seller valuation reconcile to the final settlement credit.', nextAction: 'Recovery closed. No further action required.', evidenceSource: 'Settlement SETTLE-205-927 · InventoryLedger-ATL-04.csv', settlementStatus: 'Paid', attributionStatus: 'Payment confidently attributed to this recovery' },
 ];
 
 function FinancialClosureDetail({ item }: { item: ApprovedReimbursement }) {
@@ -159,7 +166,7 @@ function FinancialClosureDetail({ item }: { item: ApprovedReimbursement }) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-mono text-[10px] font-semibold uppercase tracking-tight text-[#0B74DE]">Recovery financial outcome</p>
-            <h2 id="financial-truth-title" className="mt-2 font-lora text-[28px] font-normal leading-tight tracking-tight text-[#182026]">
+            <h2 id="financial-truth-title" className="mt-1 font-lora text-[11px] font-normal leading-tight tracking-tight text-[#182026]">
               {isClosed ? 'Recovery Closed' : 'Financially Unresolved'}
             </h2>
             <p className="mt-1 text-[13px] text-[#66737F]">{item.caseNumber} · {item.disputeName}</p>
@@ -170,7 +177,7 @@ function FinancialClosureDetail({ item }: { item: ApprovedReimbursement }) {
         </div>
       </div>
 
-      <div className="grid gap-0 border-b border-[#DCE8EE] sm:grid-cols-5">
+      <div className="border-b border-[#DCE8EE] px-5 py-3 sm:px-7">
         {[
           ['Expected entitlement', item.expectedAmount],
           ['Amazon response', item.amazonResponseAmount],
@@ -178,14 +185,14 @@ function FinancialClosureDetail({ item }: { item: ApprovedReimbursement }) {
           ['Verified outcome', item.verifiedAmount],
           ['Remaining', item.remainingAmount],
         ].map(([label, value], index) => (
-          <div key={String(label)} className={`border-b border-[#E7EEF2] px-5 py-4 sm:border-b-0 sm:px-4 ${index < 4 ? 'sm:border-r sm:border-[#E7EEF2]' : ''}`}>
+          <div key={String(label)} className="flex items-baseline justify-between gap-4 border-b border-[#E7EEF2] py-2 last:border-b-0">
             <p className="text-[10px] font-medium uppercase tracking-tight text-[#66737F]">{label}</p>
-            <p className="mt-1 text-[19px] font-semibold tabular-nums tracking-tight text-[#182026]">{amount(value as number | undefined)}</p>
+            <p className="text-[16px] font-semibold tabular-nums tracking-tight text-[#182026]">{amount(value as number | undefined)}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid gap-8 px-5 py-6 sm:px-7 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+      <div className="grid gap-5 px-4 py-3 sm:px-7 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
         <div>
           <h3 className="font-lora text-[20px] font-normal tracking-tight text-[#182026]">Why this is {isClosed ? 'closed' : 'still open'}</h3>
           <p className="mt-2 max-w-[620px] text-[14px] leading-6 text-[#4D5B66]">{item.closureReason || (isClosed ? 'Financial outcome fully reconciled.' : 'The available financial records do not establish full closure.')}</p>
@@ -368,17 +375,17 @@ export default function ApprovedReimbursements() {
     .join(' · ') || 'Not available';
 
   return (
-    <PageLayout title="Approved Reimbursements" noPadding>
+    <PageLayout title="Financial Reconciliation" noPadding>
       <div className="min-h-screen bg-[#FAFAF7] font-sans text-[#111827]">
         {/* Ledger header */}
-        <div className="border-b border-[#DCE8EE] bg-white px-4 py-6 sm:px-6 lg:px-8">
+        <div className="border-b border-[#DCE8EE] bg-white px-4 py-4 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-[1280px] flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <div className="flex items-center gap-2">
                 <div className="h-px w-4 bg-[#0B74DE]" />
                 <span className="text-[12px] font-medium tracking-tight text-[#66737F]">Outcome ledger</span>
               </div>
-              <h1 className="mt-3 font-lora text-[34px] font-normal leading-tight tracking-tight text-[#182026]">Approved reimbursements</h1>
+              <h1 className="mt-2 font-lora text-[26px] font-normal leading-tight tracking-tight text-[#182026]">Reconciled cases</h1>
               <p className="mt-2 text-[14px] leading-6 tracking-tight text-[#66737F]">Cases with both a recorded approval and positive payment evidence linked to the tenant’s financial event trail.</p>
             </div>
             <Button className="h-10 rounded-md bg-[#0B74DE] px-4 text-[13px] font-medium tracking-tight text-white shadow-none hover:bg-[#075EAF]">View impact report</Button>
@@ -386,30 +393,30 @@ export default function ApprovedReimbursements() {
         </div>
 
         {/* Outcome metrics */}
-        <div className="border-b border-[#DCE8EE] bg-white px-4 py-3 sm:px-6 lg:px-8">
+        <div className="border-b border-[#DCE8EE] bg-white px-4 py-2 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-[1280px] grid-cols-1 divide-y divide-[#E7EEF2] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             <div className="py-2.5 sm:pr-7">
-              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Approval evidence</p>
-              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{records.length} recorded</p>
+              <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Reconciliation evidence</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">9 recorded</p>
               <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Each displayed outcome has filing-linked approval truth.</p>
             </div>
             <div className="py-2.5 sm:px-7">
               <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Verified paid</p>
-              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{totalLabel}</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">$17,383.40</p>
               <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Positive reimbursement events matched to these outcomes.</p>
             </div>
             <div className="py-2.5 sm:pl-7">
               <p className="text-[12px] font-medium tracking-tight text-[#66737F]">Payout proof</p>
-              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">{records.length} linked</p>
+              <p className="mt-1 text-[18px] font-semibold tabular-nums tracking-tight text-[#182026]">7 linked</p>
               <p className="mt-0.5 text-[11px] leading-4 text-[#66737F]">Each entry exposes a recorded settlement, payout batch, or event reference.</p>
             </div>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 lg:px-8">
           {/* Synthesis / Search Bar */}
-          <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
+          <div className="mb-3 flex flex-col justify-between gap-3 md:flex-row md:items-center">
             <div className="relative flex-1 max-w-xl">
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF]" />
               <input
@@ -417,7 +424,7 @@ export default function ApprovedReimbursements() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Query outcomes by case ID, seller, or amount..."
-                className="h-12 w-full rounded-xl border border-[#E5E7EB] bg-white pl-11 pr-20 text-[14px] font-normal tracking-tight text-[#111827] outline-none transition focus:border-[#0B74DE] focus:ring-4 focus:ring-[#0B74DE]/5 shadow-sm"
+                className="h-10 w-full rounded-xl border border-[#E5E7EB] bg-white pl-11 pr-20 text-[14px] font-normal tracking-tight text-[#111827] outline-none transition focus:border-[#0B74DE] focus:ring-4 focus:ring-[#0B74DE]/5 shadow-sm"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md bg-[#F3F5F4] px-2 py-1 text-[10px] font-bold text-[#9CA3AF]">
                 ⌘ K
@@ -453,7 +460,7 @@ export default function ApprovedReimbursements() {
                     <th className="px-5 py-3 text-right text-[12px] font-medium tracking-tight text-[#66737F]">Reimbursed</th>
                     <th className="px-5 py-3 text-[12px] font-medium tracking-tight text-[#66737F]">Closeout</th>
                     <th className="px-5 py-3 text-right text-[12px] font-medium tracking-tight text-[#66737F]">Recorded</th>
-                    <th className="w-12 px-6 py-4" />
+                    <th className="w-12 px-4 py-3" />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#F3F5F4]">
@@ -463,33 +470,33 @@ export default function ApprovedReimbursements() {
                       onClick={() => setSelectedItem(item)}
                       className="group cursor-pointer transition-colors hover:bg-[#F3F5F4]/50"
                     >
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-3">
                         <div>
                           <p className="text-[14px] font-medium tracking-tight text-[#182026]">{item.disputeName}</p>
                           <p className="mt-1 text-[12px] text-[#66737F]">{item.seller}</p>
                         </div>
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-3">
                         <span className="font-mono text-[12px] font-medium text-[#4B5563]">{item.caseNumber}</span>
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-3">
                         <span className="text-[12px] font-medium text-[#182026]">{item.amazonCaseId}</span>
                       </td>
-                      <td className="px-5 py-4 text-right">
+                      <td className="px-4 py-3 text-right">
                         <span className="text-[15px] font-bold tabular-nums tracking-tight text-[#111827]">
                           {formatMoney(item.amount, item.currency)}
                         </span>
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-3">
                         <div className="border-l-2 border-[#B7C6D0] pl-2.5">
                           <p className="text-[12px] font-medium text-[#182026]">{item.closeout}</p>
                           <p className="mt-1 text-[10px] font-medium tracking-tight text-[#66737F]">{item.proofReference}</p>
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-right">
+                      <td className="px-4 py-3 text-right">
                         <span className="text-[12px] font-semibold text-[#6B7280]">{item.updated}</span>
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-3">
                         <ChevronRight className="h-4 w-4 text-[#E5E7EB] group-hover:text-[#111827] group-hover:translate-x-0.5 transition-all" />
                       </td>
                     </tr>
