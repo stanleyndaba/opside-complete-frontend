@@ -1737,27 +1737,24 @@ export default function Index() {
                   <h2 id="final-handoff-title" className="mt-4 font-lora text-[32px] leading-tight tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[38px] md:text-[42px]" style={{ fontWeight: 400 }}>
                     You have a business to run. Let Margin handle the recovery.
                   </h2>
-                  <p className="mt-5 text-[16px] leading-relaxed text-[var(--margin-text-secondary)] max-w-md">
-                    Why manage it yourself when you can hire an agent to handle it?
-                  </p>
                 </motion.div>
 
                 {/* Two cards */}
                 <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                  {/* Card 1 – light */}
+                  {/* Card 1 — "Help me understand" */}
                   <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="flex flex-col h-full rounded-[16px] bg-gradient-to-br from-[#E2EAE7] to-[#C9D6D3] p-8 sm:p-10 relative overflow-hidden group">
                     <h3 className="text-[24px] font-medium tracking-tight text-[#191B20] mb-5 leading-tight">
                       You don&apos;t have to wonder.
                     </h3>
                     <ul className="space-y-3 mb-10 text-[15px] leading-relaxed text-[#48677A] flex-grow font-medium">
-                      <li>Finds the recovery.</li>
-                      <li>Builds the case.</li>
-                      <li>Carries it forward.</li>
-                      <li>Keeps the outcome visible.</li>
+                      <li>What happened</li>
+                      <li>What should have happened</li>
+                      <li>What&apos;s missing</li>
+                      <li>What can be recovered</li>
                     </ul>
                     <p className="text-[16px] font-semibold tracking-tight text-[#191B20] mb-8">
-                      You sell. Margin runs the recovery operation.
+                      Run the Recovery Audit.
                     </p>
                     <div className="mt-auto">
                       <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_audit")} className="landing-pressable h-12 rounded-[8px] bg-white text-[#191B20] font-semibold text-[14px] px-5 shadow-sm hover:bg-gray-50 flex items-center justify-between w-full sm:w-auto min-w-[180px] border border-gray-200/50">
@@ -1766,13 +1763,16 @@ export default function Index() {
                     </div>
                   </motion.div>
 
-                  {/* Card 2 – dark */}
+                  {/* Card 2 — "Take this off my plate" */}
                   <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.2 }} className="flex flex-col h-full rounded-[16px] bg-[#191B20] p-8 sm:p-10 relative overflow-hidden group">
                     <h3 className="text-[24px] font-medium tracking-tight text-white mb-5 leading-tight">
-                      You have a business to run.<br />Let Margin handle the recovery.
+                      Let it be handled.
                     </h3>
                     <p className="text-[15px] leading-relaxed text-[#858792] flex-grow mb-10 font-medium">
-                      Why manage it yourself when you can hire an agent to handle it?
+                      You shouldn&apos;t have to manage every discrepancy, case, rejection, and follow-up yourself.
+                    </p>
+                    <p className="text-[16px] font-semibold tracking-tight text-white mb-8">
+                      You sell. Margin runs the recovery operation.
                     </p>
                     <div className="mt-auto">
                       <Button onClick={() => handleClaimAccessClick("homepage_closing_cta_handled")} className="landing-pressable h-12 rounded-[8px] bg-white text-[#191B20] font-semibold text-[14px] px-5 shadow-sm hover:bg-gray-50 flex items-center justify-between w-full sm:w-auto min-w-[180px] border border-transparent">
