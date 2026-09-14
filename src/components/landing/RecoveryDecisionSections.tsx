@@ -84,48 +84,54 @@ export const RecoveryOfferSectionDuplicate: React.FC<LandingAuditCtaProps> = ({ 
 );
 
 export const RecoveryRoutingSection: React.FC<LandingAuditCtaProps> = ({ onAuditCta }) => {
-  const [activePath, setActivePath] = useState<number | null>(null);
-
-  return (
-  <section className="relative bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="recovery-routing-title">
-    <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
-      <motion.div {...revealProps} className="max-w-[760px]">
-        <div className="mb-5 flex items-center gap-3">
-          <div className="h-px w-8 bg-[var(--margin-blue)]" />
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / ROUTING</span>
+    const [activePath, setActivePath] = useState<number | null>(null);
+  
+    return (
+    <section className="relative bg-[var(--margin-canvas)] py-10 sm:py-[52px] md:py-[73px]" aria-labelledby="recovery-routing-title">
+      <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-6 md:px-8 lg:px-10 2xl:px-12">
+        <motion.div {...revealProps} className="max-w-[760px]">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px w-8 bg-[var(--margin-blue)]" />
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">13 / ROUTING</span>
+          </div>
+          <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Choose the recovery path that fits the work.</h2>
+          <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The Audit establishes what is happening first. Then Margin routes you to the right level of support-one justified recovery or an operating layer for work that keeps returning.</p>
+        </motion.div>
+        <div className="mt-12 flex flex-col gap-4 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
+          {pathOptions.map((option, index) => {
+            const isFirst = index === 0;
+            const gradientStyle = isFirst 
+              ? 'radial-gradient(ellipse at 20% 80%, #2a4365 0%, transparent 55%), radial-gradient(ellipse at 70% 20%, #44337a 0%, transparent 50%), radial-gradient(ellipse at 40% 40%, #2c5282 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #1a365d 0%, transparent 45%), linear-gradient(145deg, #2b6cb0 0%, #553c9a 40%, #1a202c 100%)'
+              : 'radial-gradient(ellipse at 30% 70%, #702459 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, #97266d 0%, transparent 50%), radial-gradient(ellipse at 50% 30%, #521b41 0%, transparent 50%), radial-gradient(ellipse at 20% 20%, #805ad5 0%, transparent 45%), linear-gradient(145deg, #b83280 0%, #6b46c1 40%, #2d3748 100%)';
+            
+            return (
+            <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} style={{ background: gradientStyle }} className={`relative rounded-[8px] p-6 sm:p-8 md:p-10 transition-[filter,opacity] duration-500 will-change-[filter,opacity] lg:min-w-0 lg:flex-1 ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-white/80">{option.label}</p>
+              <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-white sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
+              <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-white/80 md:text-[15px] md:leading-7">{option.copy}</p>
+              <div className="mt-7 grid gap-0 border-y border-white/20 sm:grid-cols-2">
+                {option.items.map((item) => (
+                  <div key={item} className="flex items-start gap-2 border-b border-white/10 py-3 text-[12px] leading-5 text-white/90 last:border-b-0 sm:pr-4 md:text-[13px]">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-white/70" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-7 pt-2">
+                <p className="text-[26px] font-semibold tracking-[-0.05em] text-white md:text-[30px]">{option.price}</p>
+                {option.subPrice && <p className="mt-1 text-[13px] font-medium text-white/70">{option.subPrice}</p>}
+                <Button onClick={() => onAuditCta(option.ctaLocation)} className="mt-6 h-12 rounded-[6px] bg-white text-[#191B20] px-6 text-[14px] font-semibold hover:bg-gray-100 shadow-sm">
+                  {option.cta}<ArrowRight className="ml-2 h-4 w-4 text-gray-500" />
+                </Button>
+              </div>
+            </motion.div>
+          )})}
         </div>
-        <h2 id="recovery-routing-title" className="font-lora text-[34px] leading-[1.02] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[44px] md:text-[58px]" style={{ fontWeight: 400 }}>Choose the recovery path that fits the work.</h2>
-        <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-[var(--margin-text-secondary)] md:text-[17px] md:leading-8">The Audit establishes what is happening first. Then Margin routes you to the right level of support—one justified recovery or an operating layer for work that keeps returning.</p>
-      </motion.div>
-      <div className="mt-12 flex flex-col gap-3 md:mt-16 lg:flex-row" onMouseLeave={() => setActivePath(null)}>
-        {pathOptions.map((option, index) => (
-          <motion.div key={option.label} {...revealProps} transition={{ ...revealProps.transition, delay: index * 0.08 }} onMouseEnter={() => setActivePath(index)} animate={{ flexGrow: activePath === null ? 1 : activePath === index ? 1.14 : 0.86 }} className={`relative rounded-[5px] p-5 transition-[filter,opacity,background-color] duration-500 will-change-[filter,opacity] sm:p-7 md:p-9 lg:min-w-0 lg:flex-1 ${index === 0 ? "bg-[#D9EEF5]" : "bg-white"} ${activePath !== null && activePath !== index ? "lg:blur-[2.5px] lg:opacity-55" : "lg:blur-0 lg:opacity-100"}`}>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">{option.label}</p>
-            <h3 className="mt-4 font-lora text-[29px] leading-[1.04] tracking-[-0.04em] text-[var(--margin-text-primary)] sm:text-[36px] md:text-[42px]" style={{ fontWeight: 400 }}>{option.title}</h3>
-            <p className="mt-4 max-w-[520px] text-[14px] leading-6 text-[var(--margin-text-secondary)] md:text-[15px] md:leading-7">{option.copy}</p>
-            <div className="mt-7 grid gap-0 border-y border-[var(--margin-border-subtle)] sm:grid-cols-2">
-              {option.items.map((item) => (
-                <div key={item} className="flex items-start gap-2 border-b border-[var(--margin-border-subtle)] py-2.5 text-[12px] leading-5 text-[var(--margin-text-secondary)] last:border-b-0 sm:pr-4 md:text-[13px]">
-                  <Check className="mt-1 h-3.5 w-3.5 shrink-0 text-[var(--margin-blue)]" />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-7 pt-1">
-              <p className="text-[26px] font-semibold tracking-[-0.05em] text-[var(--margin-text-primary)] md:text-[30px]">{option.price}</p>
-              {option.subPrice && <p className="mt-1 text-[13px] font-medium text-[var(--margin-text-muted)]">{option.subPrice}</p>}
-              <Button onClick={() => onAuditCta(option.ctaLocation)} className="mt-5 h-11 rounded-[8px] bg-[var(--margin-blue)] px-5 text-[13px] font-semibold text-white hover:bg-[var(--margin-blue-hover)]">
-                {option.cta}<ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </motion.div>
-        ))}
+        <motion.div {...revealProps} className="mt-9 border-l-2 border-[var(--margin-border)] pl-5">
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">Not ready to continue? That is fine.</p>
+          <p className="mt-2 text-[14px] leading-6 text-[var(--margin-text-secondary)]">The Audit is free. Margin establishes that a recovery exists before asking you to decide whether any work is worth managing.</p>
+        </motion.div>
       </div>
-      <motion.div {...revealProps} className="mt-7 border-l border-[var(--margin-border)] pl-5">
-        <p className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--margin-text-primary)]">Not ready to continue? That is fine.</p>
-        <p className="mt-2 text-[14px] leading-6 text-[var(--margin-text-secondary)]">The Audit is free. Margin establishes that a recovery exists before asking you to decide whether any work is worth managing.</p>
-      </motion.div>
-    </div>
-  </section>
+    </section>
   );
 };
