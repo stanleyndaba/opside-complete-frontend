@@ -1595,6 +1595,26 @@ function RecoveryOutcomeExplorer() {
 }
 
 
+function FinancialReconciliationSection() {
+  return (
+    <section aria-labelledby="financial-reconciliation-title" className="relative overflow-hidden bg-white py-12 sm:py-[64px] md:py-[84px]">
+      <div className={containerClass}>
+        <div className="grid items-start gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-center lg:gap-14">
+          <motion.div {...revealProps} className="order-1 border-l border-[#D8DEDA] pl-4 md:pl-5">
+            <div className="mb-5 flex items-center gap-3"><div className="h-px w-8 bg-[var(--margin-blue)]" /><span className="font-mono text-[11px] font-semibold uppercase tracking-tight text-[var(--margin-blue)]">11 / FINANCIAL RECONCILIATION</span></div>
+            <h2 id="financial-reconciliation-title" className="max-w-[560px] font-lora text-[32px] leading-[1.03] tracking-[-0.045em] text-[var(--margin-text-primary)] sm:text-[42px] md:text-[50px]" style={{ fontWeight: 400 }}>Know where the money landed.</h2>
+            <p className="mt-4 max-w-[580px] text-[14px] leading-6 text-[var(--margin-text-secondary)] sm:text-[15px] sm:leading-7">Once a recovery is paid, the work should get quieter—not create another spreadsheet to reconcile. A clear financial record shows what was expected, what Amazon credited, what the evidence confirms, and what remains. The seller can stop chasing settlement lines and get back to operating.</p>
+          </motion.div>
+          <motion.div {...revealProps} transition={{ ...revealProps.transition, delay: 0.1 }} className="order-2 min-w-0 overflow-hidden rounded-[10px] border border-[#D9E2E6] bg-[#E9EEEC] p-2 shadow-[0_20px_60px_rgba(72,103,122,0.14)] sm:p-3">
+            <FinalDelegationPreview compactMobile src="/financial-reconciliation" title="Financial reconciliation page preview" />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 function BrowserChrome({ path, hidePath = false }: { path?: string; hidePath?: boolean }) {
   return (
     <div className="flex h-7 items-center gap-1.5 border-b border-[#D9E2E6] px-2">
@@ -1655,6 +1675,7 @@ export default function Index() {
         <NestedRecoveryBrowsers />
         <RiskSection />
         <RecoveryOutcomeExplorer />
+        <FinancialReconciliationSection />
         <RecoveryOfferSectionDuplicate onAuditCta={handleClaimAccessClick} />
         <RecoveryOfferSection onAuditCta={handleClaimAccessClick} />
         <RecoveryRoutingSection onAuditCta={handleClaimAccessClick} />
