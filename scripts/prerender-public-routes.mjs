@@ -643,6 +643,28 @@ const routes = [
     },
   },
   {
+    path: '/progress-review',
+    title: 'Progress Review | Margin',
+    description:
+      'Review the work completed across an Amazon recovery operation, including agent progress, evidence coverage, and the remaining controlled steps.',
+    ogTitle: 'Progress Review | Margin',
+    ogDescription:
+      'See what has been reviewed, what evidence is connected, and what remains in an Amazon recovery operation.',
+    shell: {
+      label: 'Recovery operation review',
+      h1: 'Progress Review',
+      intro:
+        'See what has been reviewed, what evidence is connected, and what remains in an Amazon recovery operation.',
+      sections: [
+        {
+          heading: 'A reviewable record of the work',
+          body:
+            'The progress view keeps completed review steps, evidence coverage, and the remaining controlled actions visible in one place.',
+        },
+      ],
+    },
+  },
+  {
     path: '/amazon-fba-reimbursement',
     title: 'Amazon FBA Reimbursement Service | Margin',
     description:

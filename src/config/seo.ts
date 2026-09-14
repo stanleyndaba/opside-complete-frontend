@@ -40,6 +40,18 @@ export const PUBLIC_ROUTE_META: Record<string, RouteMeta> = {
     ogUrl: routeUrl('/pricing'),
     image: SITE_META.image,
   },
+  '/progress-review': {
+    path: '/progress-review',
+    title: 'Progress Review | Margin',
+    description:
+      'Review the work completed across an Amazon recovery operation, including agent progress, evidence coverage, and the remaining controlled steps.',
+    canonical: routeUrl('/progress-review'),
+    ogTitle: 'Progress Review | Margin',
+    ogDescription:
+      'See what has been reviewed, what evidence is connected, and what remains in an Amazon recovery operation.',
+    ogUrl: routeUrl('/progress-review'),
+    image: SITE_META.image,
+  },
   '/amazon-fba-reimbursement': {
     path: '/amazon-fba-reimbursement',
     title: 'Amazon FBA Reimbursement Service | Margin',
